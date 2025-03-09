@@ -1,3 +1,4 @@
+
 import React, { useRef, useCallback, useEffect, useState } from 'react';
 import { lazy, Suspense } from 'react';
 import { BackgroundEffects } from '@/components/features/BackgroundEffects';
@@ -23,11 +24,11 @@ export const SectionsContainer: React.FC<SectionsContainerProps> = ({
   const sectionsRef = useRef<(HTMLElement | null)[]>([]);
   const [visibleSections, setVisibleSections] = useState<{[key: number]: boolean}>({
     0: true, // Hero section is visible by default
-    1: true, 
-    2: true,
-    3: true,
-    4: true,
-    5: true
+    1: false, 
+    2: false,
+    3: false,
+    4: false,
+    5: false
   });
   
   // Optimized Intersection Observer with useCallback to avoid recreating functions
@@ -51,10 +52,10 @@ export const SectionsContainer: React.FC<SectionsContainerProps> = ({
     );
     
     sectionsRef.current.forEach((section, index) => {
-      if (!section) return;
-      
-      section.setAttribute('data-section-index', index.toString());
-      observer.observe(section);
+      if (section) {
+        section.setAttribute('data-section-index', index.toString());
+        observer.observe(section);
+      }
     });
 
     // Safety timeout to make all sections visible if they aren't already
@@ -113,7 +114,7 @@ export const SectionsContainer: React.FC<SectionsContainerProps> = ({
         >
           <div className="relative z-10">
             <Suspense fallback={<SectionLoader />}>
-              <OptimizedHowItWorks />
+              {visibleSections[1] && <OptimizedHowItWorks />}
             </Suspense>
           </div>
         </section>
@@ -126,7 +127,7 @@ export const SectionsContainer: React.FC<SectionsContainerProps> = ({
         >
           <div className="max-w-7xl mx-auto relative z-10 py-10 sm:py-16 lg:py-20">
             <Suspense fallback={<SectionLoader />}>
-              <PreviewSearch />
+              {visibleSections[2] && <PreviewSearch />}
             </Suspense>
           </div>
         </section>
@@ -137,7 +138,7 @@ export const SectionsContainer: React.FC<SectionsContainerProps> = ({
           className="w-full"
         >
           <Suspense fallback={<SectionLoader />}>
-            <FeaturesSectionWithHoverEffects />
+            {visibleSections[3] && <FeaturesSectionWithHoverEffects />}
           </Suspense>
         </section>
 
@@ -147,7 +148,7 @@ export const SectionsContainer: React.FC<SectionsContainerProps> = ({
           className="w-full"
         >
           <Suspense fallback={<SectionLoader />}>
-            <Pricing />
+            {visibleSections[4] && <Pricing />}
           </Suspense>
         </section>
 
@@ -157,7 +158,7 @@ export const SectionsContainer: React.FC<SectionsContainerProps> = ({
           className="relative w-full"
         >
           <div className="relative z-10 max-w-7xl mx-auto py-14 sm:py-20 lg:py-24">
-            <CallToActionSection />
+            {visibleSections[5] && <CallToActionSection />}
           </div>
         </section>
       </div>

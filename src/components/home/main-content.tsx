@@ -1,10 +1,9 @@
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { BannerSection } from './banner-section';
 import { SectionsContainer } from './sections-container';
 import Footer from '@/components/Footer';
-import CallToActionSection from '@/components/CallToActionSection';
 
 interface MainContentProps {
   showBanner: boolean;
@@ -27,13 +26,12 @@ export const MainContent: React.FC<MainContentProps> = ({
   
   return (
     <main className="flex-1 pb-16 sm:pb-0 w-full">
-      {showBanner && !isMobile && (
-        <BannerSection 
-          showBanner={showBanner} 
-          setShowBanner={setShowBanner} 
-          handleTryNowClick={handleTryNowClick} 
-        />
-      )}
+      {/* Use conditional rendering inside the component */}
+      <BannerSection 
+        showBanner={showBanner && !isMobile}
+        setShowBanner={setShowBanner}
+        handleTryNowClick={handleTryNowClick}
+      />
 
       <SectionsContainer
         showGlowDialog={showGlowDialog}
