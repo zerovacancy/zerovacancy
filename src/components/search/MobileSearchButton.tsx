@@ -5,11 +5,10 @@ import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 export const MobileSearchButton = () => {
+  // Always call hooks at the top level
   const isMobile = useIsMobile();
   
-  // Only display on mobile devices
-  if (!isMobile) return null;
-  
+  // Use conditional rendering instead of early return
   return (
     <button
       className={cn(
@@ -21,7 +20,8 @@ export const MobileSearchButton = () => {
         "shadow-md hover:shadow-lg",
         "flex items-center justify-center text-sm sm:text-base",
         "mt-3",
-        "touch-manipulation" // Add touch optimization
+        "touch-manipulation", // Add touch optimization
+        !isMobile && "hidden" // Hide on desktop instead of returning null
       )}
       type="button"
       aria-label="Search creators"

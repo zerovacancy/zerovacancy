@@ -8,6 +8,7 @@ import BeamsBackground from '@/components/ui/beams-background';
 import { cn } from '@/lib/utils';
 
 const OptimizedHowItWorks: React.FC = () => {
+  // Always call hooks at the top level
   const isMobile = useIsMobile();
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   const [activeStep, setActiveStep] = useState<number>(0);
@@ -23,31 +24,36 @@ const OptimizedHowItWorks: React.FC = () => {
 
   // Add intersection observer to trigger animations when section is visible
   useEffect(() => {
-    // Skip complex observer setup on mobile for performance
-    if (isMobile) {
-      setIsVisible(true);
-      return;
-    }
+    // Create a flag variable instead of returning early
+    let shouldObserve = !isMobile;
+    
+    if (shouldObserve) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting) {
+            setIsVisible(true);
+          }
+        },
+        { threshold: 0.2 }
+      );
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.2 }
-    );
-
-    const section = document.getElementById('how-it-works-section');
-    if (section) {
-      observer.observe(section);
-    }
-
-    return () => {
+      const section = document.getElementById('how-it-works-section');
       if (section) {
-        observer.unobserve(section);
+        observer.observe(section);
       }
-    };
+
+      return () => {
+        if (section) {
+          observer.unobserve(section);
+        }
+      };
+    } else {
+      // For mobile, just set isVisible to true
+      setIsVisible(true);
+      
+      // Return empty cleanup function to maintain hook consistency
+      return () => {};
+    }
   }, [isMobile]);
 
   // Handle step interaction

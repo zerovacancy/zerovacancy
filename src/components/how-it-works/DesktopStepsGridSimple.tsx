@@ -16,8 +16,10 @@ const DesktopStepsGridSimple: React.FC<DesktopStepsGridSimpleProps> = ({
   activeStep,
   onStepInteraction
 }) => {
+  // Move the hook call to the top level to ensure consistent hook calling
   const isMobile = useIsMobile();
   
+  // Remove potential early return and use conditional rendering instead
   return (
     <div className={cn(
       "hidden md:block w-full mx-auto relative pt-8",
