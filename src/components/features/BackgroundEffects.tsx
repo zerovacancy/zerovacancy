@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect, useState } from 'react';
 import { GradientBlobBackground } from '@/components/ui/gradient-blob-background';
 import { cn } from '@/lib/utils';
@@ -82,14 +81,14 @@ export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({
       ref={containerRef} 
       id={id} 
       className={cn(
-        "relative w-full", 
-        isMobile ? "overflow-visible" : "overflow-hidden", 
+        "relative w-full mobile-section", 
+        "overflow-visible",  // Always use overflow visible
         className
       )}
     >
       {isVisible ? (
         <GradientBlobBackground 
-          className={isMobile ? "overflow-visible" : "overflow-visible"}
+          className="overflow-visible"
           blobColors={blobColors}
           blobOpacity={isMobile ? Math.min(blobOpacity, 0.1) : blobOpacity}
           withSpotlight={isMobile ? false : withSpotlight}
@@ -103,7 +102,7 @@ export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({
         </GradientBlobBackground>
       ) : (
         // Fallback to ensure content is visible even if effects are disabled
-        <div className={cn("relative w-full", baseColor)}>
+        <div className={cn("relative w-full overflow-visible", baseColor)}>
           {children}
         </div>
       )}

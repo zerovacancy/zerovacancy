@@ -6,17 +6,26 @@ import { cn } from "@/lib/utils"
 
 interface ScrollAreaProps extends React.ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.Root> {
   disableOnMobile?: boolean;
+  preserveHorizontalScroll?: boolean;
 }
 
 const ScrollArea = React.forwardRef<
   React.ElementRef<typeof ScrollAreaPrimitive.Root>,
   ScrollAreaProps
->(({ className, children, disableOnMobile = false, ...props }, ref) => {
+>(({ className, children, disableOnMobile = true, preserveHorizontalScroll = false, ...props }, ref) => {
   const isMobile = useIsMobile();
   
   // If on mobile and disableOnMobile is true, just render the children directly
   if (isMobile && disableOnMobile) {
-    return <div className={cn("h-full w-full", className)}>{children}</div>;
+    return (
+      <div className={cn(
+        "h-full w-full", 
+        preserveHorizontalScroll ? "scroll-container-horizontal" : "overflow-visible",
+        className
+      )}>
+        {children}
+      </div>
+    );
   }
   
   return (
