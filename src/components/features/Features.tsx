@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import { features } from "./feature-data";
 import { FeatureHeader } from "./FeatureHeader";
@@ -26,42 +25,47 @@ export function FeaturesSectionWithHoverEffects() {
   
   // Improve scrolling by preventing scroll snap or scroll jumps
   useEffect(() => {
-    // Skip this complex scroll handling on mobile
-    if (isMobile) return;
-    
-    const section = sectionRef.current;
-    if (!section) return;
-    
-    // Ensure this section doesn't cause scroll jumping
+    // Create the handler outside of the conditional
     const handleWheel = (e: WheelEvent) => {
-      const { deltaY } = e;
-      const scrollHeight = section.scrollHeight;
-      const viewportHeight = window.innerHeight;
-      
-      // Only if the section is taller than the viewport or we're close to section boundaries
-      if (scrollHeight > viewportHeight) {
-        const rect = section.getBoundingClientRect();
-        const isNearTop = rect.top > -100 && rect.top < 100;
-        const isNearBottom = rect.bottom > viewportHeight - 100 && rect.bottom < viewportHeight + 100;
+      if (!isMobile) {
+        const { deltaY } = e;
+        const section = sectionRef.current;
+        if (!section) return;
         
-        if ((isNearTop && deltaY < 0) || (isNearBottom && deltaY > 0)) {
-          // We're at the edge of the section and scrolling beyond it
-          return;
-        }
+        const scrollHeight = section.scrollHeight;
+        const viewportHeight = window.innerHeight;
         
-        // Otherwise, we're scrolling within this section
-        if (Math.abs(deltaY) > 20) {
-          // For larger scroll amounts, let the browser handle it
-          return;
+        // Only if the section is taller than the viewport or we're close to section boundaries
+        if (scrollHeight > viewportHeight) {
+          const rect = section.getBoundingClientRect();
+          const isNearTop = rect.top > -100 && rect.top < 100;
+          const isNearBottom = rect.bottom > viewportHeight - 100 && rect.bottom < viewportHeight + 100;
+          
+          if ((isNearTop && deltaY < 0) || (isNearBottom && deltaY > 0)) {
+            // We're at the edge of the section and scrolling beyond it
+            return;
+          }
+          
+          // Otherwise, we're scrolling within this section
+          if (Math.abs(deltaY) > 20) {
+            // For larger scroll amounts, let the browser handle it
+            return;
+          }
         }
       }
     };
     
-    section.addEventListener('wheel', handleWheel, { passive: true });
+    const section = sectionRef.current;
+    if (section) {
+      section.addEventListener('wheel', handleWheel, { passive: true });
+      
+      return () => {
+        section.removeEventListener('wheel', handleWheel);
+      };
+    }
     
-    return () => {
-      section.removeEventListener('wheel', handleWheel);
-    };
+    // Return empty cleanup function if section isn't available
+    return () => {};
   }, [isMobile]);
   
   return (

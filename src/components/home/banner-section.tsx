@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Star } from 'lucide-react';
 import { Banner } from '@/components/ui/banner';
 import { Button } from '@/components/ui/button';
@@ -17,7 +17,6 @@ export const BannerSection: React.FC<BannerSectionProps> = ({
   setShowBanner, 
   handleTryNowClick 
 }) => {
-  // Remove early return and use conditional rendering instead
   return (
     <div className="relative">
       {showBanner && (

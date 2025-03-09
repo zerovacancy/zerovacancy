@@ -24,36 +24,31 @@ const OptimizedHowItWorks: React.FC = () => {
 
   // Add intersection observer to trigger animations when section is visible
   useEffect(() => {
-    // Create a flag variable instead of returning early
-    let shouldObserve = !isMobile;
-    
-    if (shouldObserve) {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          if (entries[0].isIntersecting) {
-            setIsVisible(true);
-          }
-        },
-        { threshold: 0.2 }
-      );
-
-      const section = document.getElementById('how-it-works-section');
-      if (section) {
-        observer.observe(section);
-      }
-
-      return () => {
-        if (section) {
-          observer.unobserve(section);
+    // Create observer regardless of mobile status
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setIsVisible(true);
         }
-      };
+      },
+      { threshold: 0.2 }
+    );
+
+    const section = document.getElementById('how-it-works-section');
+    
+    // Only observe if we're not on mobile and there's a section to observe
+    if (!isMobile && section) {
+      observer.observe(section);
     } else {
       // For mobile, just set isVisible to true
       setIsVisible(true);
-      
-      // Return empty cleanup function to maintain hook consistency
-      return () => {};
     }
+
+    return () => {
+      if (section) {
+        observer.unobserve(section);
+      }
+    };
   }, [isMobile]);
 
   // Handle step interaction

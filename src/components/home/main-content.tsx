@@ -24,6 +24,7 @@ export const MainContent: React.FC<MainContentProps> = ({
     setShowGlowDialog(true);
   };
   
+  // No early returns - use conditional rendering instead
   return (
     <main className="flex-1 pb-16 sm:pb-0 w-full">
       {/* Use conditional rendering inside the component */}
