@@ -1,6 +1,8 @@
+
 import React, { useRef, useEffect, useState } from 'react';
 import { GradientBlobBackground } from '@/components/ui/gradient-blob-background';
 import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface BackgroundEffectsProps {
   className?: string;
@@ -16,7 +18,7 @@ interface BackgroundEffectsProps {
   pattern?: 'dots' | 'grid' | 'none';
   baseColor?: string;
   animationSpeed?: 'slow' | 'medium' | 'fast';
-  id?: string; // Added id prop for easier targeting
+  id?: string;
 }
 
 export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({ 
@@ -36,7 +38,8 @@ export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({
   id
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(true); // Default to visible to ensure content is shown
+  const [isVisible, setIsVisible] = useState(true);
+  const isMobile = useIsMobile();
 
   // Only render heavy effects when the component is in view
   useEffect(() => {
@@ -75,18 +78,26 @@ export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({
   }, []);
 
   return (
-    <div ref={containerRef} id={id} className={cn("relative w-full overflow-hidden", className)}>
+    <div 
+      ref={containerRef} 
+      id={id} 
+      className={cn(
+        "relative w-full", 
+        isMobile ? "overflow-visible" : "overflow-hidden", 
+        className
+      )}
+    >
       {isVisible ? (
         <GradientBlobBackground 
-          className="overflow-visible"
+          className={isMobile ? "overflow-visible" : "overflow-visible"}
           blobColors={blobColors}
-          blobOpacity={blobOpacity}
-          withSpotlight={withSpotlight}
+          blobOpacity={isMobile ? Math.min(blobOpacity, 0.1) : blobOpacity}
+          withSpotlight={isMobile ? false : withSpotlight}
           spotlightClassName={spotlightClassName}
-          pattern={pattern}
+          pattern={isMobile ? "none" : pattern}
           baseColor={baseColor}
           blobSize="large"
-          animationSpeed={animationSpeed}
+          animationSpeed={isMobile ? "slow" : animationSpeed}
         >
           {children}
         </GradientBlobBackground>

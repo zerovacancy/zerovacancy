@@ -47,3 +47,65 @@ body {
 .smooth-scroll {
   scroll-behavior: smooth;
 }
+
+/* Mobile-specific scroll optimizations */
+@media (max-width: 768px) {
+  /* Single scroll context on the body */
+  body {
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+    height: 100%;
+  }
+  
+  /* Prevent creation of scroll contexts */
+  #root, 
+  main, 
+  section, 
+  div:not(.scroll-container-horizontal),
+  [class*="container"] {
+    overflow: visible !important;
+    overflow-y: visible !important;
+    transform: translateZ(0);
+  }
+  
+  /* Allow horizontal scrolling for carousels */
+  .scroll-container-horizontal {
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    padding-bottom: 8px;
+    width: 100% !important;
+  }
+  
+  /* Fix for radix scroll area component */
+  [data-radix-scroll-area-viewport] {
+    overflow: visible !important;
+    overflow-y: visible !important;
+  }
+  
+  /* Disable scrollbar for Radix components */
+  [data-radix-scroll-area-scrollbar] {
+    display: none !important;
+  }
+  
+  /* Optimize touch interaction */
+  a, button, [role="button"], input, select, textarea {
+    touch-action: manipulation;
+  }
+  
+  /* Fix for bottom nav bar */
+  .bottom-navigation-fixed {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    background: white;
+    border-top: 1px solid rgba(0,0,0,0.1);
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+}
