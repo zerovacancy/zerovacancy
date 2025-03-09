@@ -5,6 +5,7 @@ import SectionHeaderSimple from './SectionHeaderSimple';
 import MobileStepsGridSimple from './MobileStepsGridSimple';
 import DesktopStepsGridSimple from './DesktopStepsGridSimple';
 import BeamsBackground from '@/components/ui/beams-background';
+import { cn } from '@/lib/utils';
 
 const OptimizedHowItWorks: React.FC = () => {
   const isMobile = useIsMobile();
