@@ -1,4 +1,5 @@
-import React, { useRef, useState } from 'react';
+
+import React, { useRef, useState, useEffect } from 'react';
 import { CreatorCard } from '../creator/CreatorCard';
 import { ChevronDown, Filter, ChevronUp, ChevronRight, ChevronLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -27,9 +28,30 @@ export const CreatorsList: React.FC<CreatorsListProps> = ({
   const filterTagsRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [scrollPosition, setScrollPosition] = useState(0);
+  const [showScrollButtons, setShowScrollButtons] = useState(false);
 
   // Filter tags with improved styling
   const filterTags = ["All Services", "Photography", "Video Tours", "Drone Footage", "3D Tours", "Floor Plans", "Virtual Staging"];
+  
+  // Update scroll indicators when content changes
+  useEffect(() => {
+    if (isMobile && scrollContainerRef.current) {
+      const checkScrollable = () => {
+        const container = scrollContainerRef.current;
+        if (!container) return;
+        
+        const hasOverflow = container.scrollWidth > container.clientWidth;
+        setShowScrollButtons(hasOverflow);
+      };
+      
+      checkScrollable();
+      window.addEventListener('resize', checkScrollable);
+      
+      return () => {
+        window.removeEventListener('resize', checkScrollable);
+      };
+    }
+  }, [isMobile, creators]);
   
   // Function to handle horizontal scroll on mobile
   const scrollHorizontally = (direction: 'left' | 'right') => {
@@ -67,22 +89,22 @@ export const CreatorsList: React.FC<CreatorsListProps> = ({
     <div className="relative">
       {/* Filters section with horizontal scrolling on mobile */}
       <div className="mb-4 sm:mb-6">
-        {/* Horizontally scrollable filter tags for mobile */}
-        <div className="overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none'] relative" ref={filterTagsRef}>
+        <div className="overflow-x-auto scrollbar-hide relative" ref={filterTagsRef}>
           {/* Gradient fade indicators for horizontal scroll */}
           {isMobile && <>
               <div className="absolute left-0 top-0 h-full w-6 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
               <div className="absolute right-0 top-0 h-full w-6 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
             </>}
           
-          <div className="flex space-x-2 pb-1 min-w-max" role="tablist">
-            {filterTags.map((tag, index) => <button 
+          <div className="flex space-x-2 pb-1 min-w-max px-2" role="tablist">
+            {filterTags.map((tag, index) => (
+              <button 
                 key={index} 
                 className={cn(
                   "transition-all whitespace-nowrap rounded-full border border-gray-200", 
                   "font-medium shadow-sm hover:bg-indigo-50 hover:border-indigo-200 hover:text-indigo-800", 
                   index === 0 ? "bg-indigo-50 text-indigo-700 border-indigo-200" : "bg-white text-gray-700", 
-                  isMobile ? "text-xs px-2.5 py-1" : "text-sm px-3 py-1.5",
+                  isMobile ? "text-xs px-3 py-1.5 min-h-[32px]" : "text-sm px-3 py-1.5",
                   "focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1"
                 )}
                 role="tab"
@@ -91,7 +113,8 @@ export const CreatorsList: React.FC<CreatorsListProps> = ({
               >
                 {index === 0 && <Filter className={cn("inline-block mr-1.5", isMobile ? "w-2.5 h-2.5" : "w-3 h-3")} aria-hidden="true" />}
                 {tag}
-              </button>)}
+              </button>
+            ))}
           </div>
         </div>
       </div>
@@ -100,7 +123,7 @@ export const CreatorsList: React.FC<CreatorsListProps> = ({
       {isMobile ? (
         <div className="relative">
           {/* Navigation arrows for mobile */}
-          {creators.length > 1 && (
+          {creators.length > 1 && showScrollButtons && (
             <>
               <AnimatePresence>
                 {canScrollLeft && (
@@ -137,7 +160,7 @@ export const CreatorsList: React.FC<CreatorsListProps> = ({
           {/* Horizontal scroll container for mobile */}
           <div 
             ref={scrollContainerRef}
-            className="flex overflow-x-auto gap-4 pb-4 pt-1 snap-x snap-mandatory touch-pan-x scroll-container-optimized [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']"
+            className="flex overflow-x-auto gap-4 pb-4 pt-1 snap-x snap-mandatory scroll-container-horizontal scrollbar-hide"
             onScroll={handleScroll}
             role="list"
             aria-label="Creators list"
@@ -183,7 +206,8 @@ export const CreatorsList: React.FC<CreatorsListProps> = ({
                   key={index}
                   className={cn(
                     "w-2 h-2 rounded-full transition-all duration-300",
-                    scrollPosition / (scrollContainerRef.current?.clientWidth || 1) === index
+                    // Use approximate scroll position to determine active index
+                    Math.round(scrollPosition / (scrollContainerRef.current?.clientWidth || 1)) === index
                       ? "bg-indigo-600 scale-110"
                       : "bg-gray-300 scale-100"
                   )}
@@ -204,13 +228,14 @@ export const CreatorsList: React.FC<CreatorsListProps> = ({
           )}
         </div>
       ) : (
-        // DESKTOP: Grid layout (unchanged)
+        // DESKTOP: Grid layout
         <div 
           className="grid gap-4 sm:gap-5 md:gap-6 sm:grid-cols-2 lg:grid-cols-3"
           role="list"
           aria-label="Creators list"
         >
-          {creators.map((creator, index) => <motion.div 
+          {creators.map((creator, index) => (
+            <motion.div 
               key={creator.name} 
               initial={{ opacity: 0, y: 20 }} 
               animate={{ opacity: 1, y: 0 }} 
@@ -227,12 +252,15 @@ export const CreatorsList: React.FC<CreatorsListProps> = ({
                 loadedImages={loadedImages} 
                 imageRef={imageRef} 
               />
-            </motion.div>)}
+            </motion.div>
+          ))}
           
-          {creators.length === 0 && <div className="col-span-full text-center py-10">
+          {creators.length === 0 && (
+            <div className="col-span-full text-center py-10">
               <div className="text-gray-500">No creators found</div>
               <p className="text-sm text-gray-400 mt-2">Try adjusting your filters</p>
-            </div>}
+            </div>
+          )}
         </div>
       )}
       

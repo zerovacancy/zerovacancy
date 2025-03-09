@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ErrorBoundary } from 'react-error-boundary';
 import ErrorFallback from './components/ErrorFallback';
 import { Toaster } from '@/components/ui/toaster';
+import { MobileOptimizer } from './components/mobile/MobileOptimizer';
 
 // Lazy load all pages for improved performance
 const Index = lazy(() => import('./pages/index'));
@@ -32,37 +33,30 @@ function App() {
       import('./pages/index');
     }, 200);
     
-    // Add passive event listeners to improve scrolling performance
-    const passiveOption = { passive: true };
-    document.addEventListener('touchstart', () => {}, passiveOption);
-    document.addEventListener('touchmove', () => {}, passiveOption);
-    document.addEventListener('wheel', () => {}, passiveOption);
-    
     return () => {
       clearTimeout(timer);
-      document.removeEventListener('touchstart', () => {});
-      document.removeEventListener('touchmove', () => {});
-      document.removeEventListener('wheel', () => {});
     };
   }, []);
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <Router>
-        <div className="app-container relative">
-          <Suspense fallback={<PageLoader />}>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/payment-confirmation" element={<PaymentConfirmation />} />
-              <Route path="/terms" element={<Terms />} />
-              <Route path="/account" element={<Account />} />
-              <Route path="/connect/success" element={<ConnectSuccess />} />
-              <Route path="/connect/refresh" element={<ConnectRefresh />} />
-              <Route path="/connect/onboarding" element={<ConnectOnboarding />} />
-            </Routes>
-          </Suspense>
-        </div>
-        <Toaster />
+        <MobileOptimizer>
+          <div className="app-container relative">
+            <Suspense fallback={<PageLoader />}>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/payment-confirmation" element={<PaymentConfirmation />} />
+                <Route path="/terms" element={<Terms />} />
+                <Route path="/account" element={<Account />} />
+                <Route path="/connect/success" element={<ConnectSuccess />} />
+                <Route path="/connect/refresh" element={<ConnectRefresh />} />
+                <Route path="/connect/onboarding" element={<ConnectOnboarding />} />
+              </Routes>
+            </Suspense>
+          </div>
+          <Toaster />
+        </MobileOptimizer>
       </Router>
     </ErrorBoundary>
   );

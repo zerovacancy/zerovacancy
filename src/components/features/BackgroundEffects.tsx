@@ -1,10 +1,12 @@
+
 import React, { useRef, useEffect, useState } from 'react';
 import { GradientBlobBackground } from '@/components/ui/gradient-blob-background';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 
-type PatternType = 'dots' | 'grid' | 'none';
-type AnimationSpeedType = 'slow' | 'medium' | 'fast';
+// Define proper types for pattern and animation speed
+export type PatternType = 'dots' | 'grid' | 'none';
+export type AnimationSpeedType = 'slow' | 'medium' | 'fast';
 
 interface BackgroundEffectsProps {
   className?: string;
@@ -45,9 +47,9 @@ export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({
   const [isVisible, setIsVisible] = useState(true);
   const isMobile = useIsMobile();
 
-  // Only render heavy effects when the component is in view
+  // Optimize for mobile: Skip expensive effects when on mobile devices
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!containerRef.current || isMobile) return;
     
     const observer = new IntersectionObserver(
       (entries) => {
@@ -57,8 +59,7 @@ export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({
         } else {
           // Only hide when scrolled far away (optimization)
           if (Math.abs(entry.boundingClientRect.top) > window.innerHeight * 2) {
-            // Keep content visible but disable expensive effects
-            // setIsVisible(false); - Removed to ensure content is always visible
+            setIsVisible(false);
           }
         }
       },
@@ -79,17 +80,17 @@ export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({
       observer.disconnect();
       clearTimeout(safetyTimeout);
     };
-  }, []);
+  }, [isMobile]);
 
-  // On mobile, return only the children with basic styling
+  // On mobile, return a much simpler version to improve performance
   if (isMobile) {
     return (
       <div 
         ref={containerRef}
         id={id}
         className={cn(
-          "relative w-full mobile-section", 
-          "flex-1 flex flex-col overflow-visible bg-white",
+          "relative w-full overflow-visible bg-white", 
+          "flex-1 flex flex-col",
           className,
           layoutClassName
         )}
@@ -104,8 +105,7 @@ export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({
       ref={containerRef} 
       id={id} 
       className={cn(
-        "relative w-full mobile-section", 
-        "overflow-visible",
+        "relative w-full overflow-visible", 
         className
       )}
     >

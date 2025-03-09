@@ -41,10 +41,6 @@ const NavItem = ({ icon, label, to = '/' }: NavItemProps) => {
 };
 
 export const BottomNav = () => {
-  // Force return null to hide the bottom nav completely
-  return null; 
-  
-  // The below code is kept but won't execute due to the early return above
   const isMobile = useIsMobile();
   
   if (!isMobile) return null;

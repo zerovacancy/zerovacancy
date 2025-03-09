@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef, lazy, Suspense, useCallback } from 'react';
 import Header from '../components/Header';
 import { Hero } from '../components/hero/Hero';
@@ -20,10 +21,13 @@ const Pricing = lazy(() => import('@/components/Pricing'));
 const PreviewSearch = lazy(() => import('@/components/preview-search'));
 
 // Simple loading fallback
-const SectionLoader = () => <div className="w-full py-16 flex items-center justify-center">
-    <div className="w-8 h-8 border-4 border-gray-200"></div>
-    <div className="w-full h-full rounded-full border-4 border-blue-600 animate-spin absolute top-0 left-0 border-t-transparent"></div>
-  </div>;
+const SectionLoader = () => (
+  <div className="w-full py-16 flex items-center justify-center">
+    <div className="w-8 h-8 border-4 border-gray-200 rounded-full relative">
+      <div className="w-8 h-8 rounded-full border-4 border-blue-600 animate-spin absolute top-0 left-0 border-t-transparent"></div>
+    </div>
+  </div>
+);
 
 /**
  * Main landing page component with performance optimizations
@@ -36,8 +40,7 @@ const Index = () => {
   const [visibleSections, setVisibleSections] = useState<{
     [key: number]: boolean;
   }>({
-    0: true,
-    // Hero section is visible by default
+    0: true, // Hero section is visible by default
     1: true,
     2: true,
     3: true,
@@ -121,7 +124,7 @@ const Index = () => {
   };
   
   return (
-    <div className={cn("flex flex-col min-h-screen w-full", isMobile && "mobile-view")}>
+    <div className={cn("flex flex-col min-h-screen w-full relative", isMobile && "mobile-view")}>
       <Header />
       {showBanner && !isMobile && (
         <div className="relative">
@@ -183,7 +186,7 @@ const Index = () => {
         className={cn("py-0", isMobile && "mobile-background")}
         layoutClassName="flex-1 pb-16 sm:pb-0 w-full"
       >
-        <div className={cn("space-y-0 w-full", isMobile && "mobile-sections-container")}>
+        <div className={cn("space-y-0 w-full overflow-visible", isMobile && "mobile-sections-container")}>
           {/* Hero Section - Always visible */}
           <section ref={addSectionRef(0)} className={cn("w-full", isMobile && "mobile-section mobile-hero")}>
             <Hero />
@@ -223,14 +226,13 @@ const Index = () => {
 
           {/* Final CTA Section */}
           <div ref={addSectionRef(5)} className={cn("relative w-full", isMobile && "mobile-section mobile-cta")}>
-            <div className={cn("relative z-10 max-w-7xl mx-auto py-14 sm:py-20 lg:py-24 bg-[brand-text-light] bg-white", isMobile && "py-8 mobile-content-container")}>
+            <div className={cn("relative z-10 max-w-7xl mx-auto py-14 sm:py-20 lg:py-24", isMobile && "py-8 mobile-content-container")}>
               <CallToActionSection />
             </div>
           </div>
         </div>
       </BackgroundEffects>
       
-      {/* Fix the Footer component by adding a className prop to the Footer component definition */}
       <Footer />
       <BottomNav />
       <GlowDialog open={showGlowDialog} onOpenChange={setShowGlowDialog} />
