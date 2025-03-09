@@ -1,3 +1,4 @@
+
 import React from "react";
 import { cn } from "@/lib/utils";
 import { WaitlistCTA } from "../ui/waitlist/waitlist-cta";
@@ -33,7 +34,7 @@ export function Hero() {
           <TextRotate 
             texts={rotatingWords}
             mainClassName="text-display inline-block"
-            style={{ color: "#4A2DD9" }} // Apply style directly to component
+            style={{ color: "#4A2DD9" }}
             rotationInterval={2000}
             exit={{ y: "-120%", opacity: 0 }}
           />

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef, lazy, Suspense, useCallback } from 'react';
 import Header from '../components/Header';
 import { Hero } from '../components/hero/Hero';
@@ -231,7 +230,8 @@ const Index = () => {
         </div>
       </BackgroundEffects>
       
-      <Footer className={isMobile ? "pb-16" : ""} />
+      {/* Fix the Footer component by adding a className prop to the Footer component definition */}
+      <Footer />
       <BottomNav />
       <GlowDialog open={showGlowDialog} onOpenChange={setShowGlowDialog} />
     </div>
