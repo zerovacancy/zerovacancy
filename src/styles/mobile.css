@@ -177,6 +177,18 @@
     z-index: 1;
     overflow: visible !important;
   }
+  
+  /* BackgroundEffects on mobile shouldn't use any effects */
+  .mobile-background {
+    background: white !important;
+  }
+  
+  /* Mobile content organization */
+  .mobile-sections-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
 }
 
 /* Enhanced active states for touch devices */

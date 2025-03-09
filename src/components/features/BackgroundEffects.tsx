@@ -3,6 +3,9 @@ import { GradientBlobBackground } from '@/components/ui/gradient-blob-background
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 
+type PatternType = 'dots' | 'grid' | 'none';
+type AnimationSpeedType = 'slow' | 'medium' | 'fast';
+
 interface BackgroundEffectsProps {
   className?: string;
   children?: React.ReactNode;
@@ -14,10 +17,11 @@ interface BackgroundEffectsProps {
   blobOpacity?: number;
   withSpotlight?: boolean;
   spotlightClassName?: string;
-  pattern?: 'dots' | 'grid' | 'none';
+  pattern?: PatternType;
   baseColor?: string;
-  animationSpeed?: 'slow' | 'medium' | 'fast';
+  animationSpeed?: AnimationSpeedType;
   id?: string;
+  layoutClassName?: string;
 }
 
 export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({ 
@@ -34,7 +38,8 @@ export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({
   pattern = "none",
   baseColor = "bg-white/80",
   animationSpeed = 'slow',
-  id
+  id,
+  layoutClassName
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(true);
@@ -76,33 +81,51 @@ export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({
     };
   }, []);
 
+  // On mobile, return only the children with basic styling
+  if (isMobile) {
+    return (
+      <div 
+        ref={containerRef}
+        id={id}
+        className={cn(
+          "relative w-full mobile-section", 
+          "flex-1 flex flex-col overflow-visible bg-white",
+          className,
+          layoutClassName
+        )}
+      >
+        {children}
+      </div>
+    );
+  }
+
   return (
     <div 
       ref={containerRef} 
       id={id} 
       className={cn(
         "relative w-full mobile-section", 
-        "overflow-visible",  // Always use overflow visible
+        "overflow-visible",
         className
       )}
     >
       {isVisible ? (
         <GradientBlobBackground 
-          className="overflow-visible"
+          className={cn("overflow-visible", layoutClassName)}
           blobColors={blobColors}
-          blobOpacity={isMobile ? Math.min(blobOpacity, 0.1) : blobOpacity}
-          withSpotlight={isMobile ? false : withSpotlight}
+          blobOpacity={blobOpacity}
+          withSpotlight={withSpotlight}
           spotlightClassName={spotlightClassName}
-          pattern={isMobile ? "none" : pattern}
+          pattern={pattern}
           baseColor={baseColor}
           blobSize="large"
-          animationSpeed={isMobile ? "slow" : animationSpeed}
+          animationSpeed={animationSpeed}
         >
           {children}
         </GradientBlobBackground>
       ) : (
         // Fallback to ensure content is visible even if effects are disabled
-        <div className={cn("relative w-full overflow-visible", baseColor)}>
+        <div className={cn("relative w-full overflow-visible", baseColor, layoutClassName)}>
           {children}
         </div>
       )}
