@@ -1,5 +1,5 @@
 
-import { ReactNode, CSSProperties } from "react";
+import { ReactNode } from "react";
 
 export interface TextRotateProps {
   texts: string[];
@@ -19,7 +19,6 @@ export interface TextRotateProps {
   mainClassName?: string;
   splitLevelClassName?: string;
   elementLevelClassName?: string;
-  style?: CSSProperties;
 }
 
 export interface TextRotateRef {

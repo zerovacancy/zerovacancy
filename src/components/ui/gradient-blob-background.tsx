@@ -2,7 +2,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { OptimizedSpotlight } from './optimized-spotlight';
-import { useIsMobile } from '@/hooks/use-mobile';
 
 interface GradientBlobBackgroundProps {
   className?: string;
@@ -43,7 +42,6 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
 }) => {
   const [isMounted, setIsMounted] = useState(false);
   const isReducedMotion = useRef(false);
-  const isMobile = useIsMobile();
   
   // Check for reduced motion preference
   useEffect(() => {
@@ -52,7 +50,7 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
   }, []);
 
   // Don't render animations for users with reduced motion preference
-  const shouldAnimate = isMounted && !isReducedMotion.current && !isMobile;
+  const shouldAnimate = isMounted && !isReducedMotion.current;
   
   // Determine blob sizes based on the blobSize prop
   const getBlobSizeClass = (position: 'first' | 'second' | 'third') => {
@@ -90,31 +88,10 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
     return `${base * multipliers[animationSpeed]}s`;
   };
 
-  // Simplified rendering for mobile
-  if (isMobile) {
-    return (
-      <div className={cn(`relative w-full ${baseColor}`, className)} style={{overflow: 'visible', height: 'auto'}}>
-        {/* Simple colored background for mobile */}
-        <div className="absolute inset-0" style={{opacity: 0.5}}>
-          {pattern === 'dots' && (
-            <div className={`absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:20px_20px] opacity-${dotOpacity * 100}`}></div>
-          )}
-        </div>
-        
-        {/* Content */}
-        <div className="relative z-10">
-          {children}
-        </div>
-      </div>
-    );
-  }
-
-  // Only determine how many blobs to render based on screen width for desktop
+  // Only render the number of blobs needed based on screen size to reduce DOM elements
   const [windowWidth, setWindowWidth] = useState(0);
   
   useEffect(() => {
-    if (isMobile) return;
-    
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
     };
@@ -125,7 +102,7 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, [isMobile]);
+  }, []);
 
   // Determine how many blobs to render based on screen width
   const blobCount = windowWidth < 768 ? 3 : 5;

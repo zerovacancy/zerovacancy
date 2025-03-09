@@ -10,39 +10,23 @@
   scrollbar-width: none;  /* Firefox */
 }
 
-/* Improved scroll behavior - desktop only */
-@media (min-width: 769px) {
-  html {
-    scroll-behavior: smooth;
-    scroll-padding-top: 1rem;
-  }
-
-  /* Target features section specifically for smooth scrolling */
-  #features {
-    scroll-margin-top: 80px;
-  }
+/* Improved scroll behavior */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 1rem;
+  height: 100%;
 }
 
-/* Explicitly disable scroll snap on mobile */
-@media (max-width: 768px) {
-  html, body, main, section, div {
-    scroll-snap-type: none !important;
-    scroll-snap-align: none !important;
-    scroll-margin-top: 0 !important;
-    scroll-padding-top: 0 !important;
-  }
-  
-  /* Ensure elements don't become scroll containers on mobile */
-  html, body {
-    overflow-x: hidden;
-    position: relative;
-  }
-  
-  /* Ensure all sections are in the normal document flow */
-  .container, section {
-    position: relative !important;
-    transform: none !important;
-  }
+body {
+  height: 100%;
+  /* Prevent scroll chaining/bouncing effect on some browsers */
+  overscroll-behavior-y: none;
+}
+
+/* Target features section specifically for smooth scrolling */
+#features {
+  scroll-margin-top: 80px;
+  scroll-snap-align: start;
 }
 
 /* Gradual fade for scroll edges */
@@ -59,9 +43,7 @@
   scroll-snap-align: start;
 }
 
-/* Smooth scrolling for better user experience - desktop only */
-@media (min-width: 769px) {
-  .smooth-scroll {
-    scroll-behavior: smooth;
-  }
+/* Smooth scrolling for better user experience */
+.smooth-scroll {
+  scroll-behavior: smooth;
 }

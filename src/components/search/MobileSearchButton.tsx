@@ -13,14 +13,14 @@ export const MobileSearchButton = () => {
   return (
     <button
       className={cn(
-        "w-full h-12 px-6 py-3 font-semibold text-white rounded-lg",
+        "w-full h-12 sm:h-12 px-6 py-3 font-semibold text-white rounded-lg",
         "bg-gradient-to-r from-violet-600 to-indigo-600",
         "transition-all duration-300",
         "hover:from-violet-700 hover:to-indigo-700",
         "focus:outline-none focus:ring-2 focus:ring-indigo-500/30",
         "shadow-md hover:shadow-lg",
-        "flex items-center justify-center text-sm",
-        "mt-3 touch-manipulation" // Added touch-manipulation class
+        "flex items-center justify-center text-sm sm:text-base",
+        "mt-3"
       )}
       type="button"
       aria-label="Search creators"

@@ -8,7 +8,6 @@ import { EmailInput } from "./email-input";
 import { WaitlistButton } from "./waitlist-button";
 import { SocialProof } from "./social-proof";
 import { supabase } from "@/integrations/supabase/client";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 export function WaitlistCTA({
   className,
@@ -20,7 +19,6 @@ export function WaitlistCTA({
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const isMobile = useIsMobile();
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,15 +73,8 @@ export function WaitlistCTA({
   };
   
   return (
-    <div className={cn(
-      "w-full max-w-xl mx-auto",
-      isMobile ? "px-0" : "px-5 sm:px-0",
-      className
-    )}>
-      <form onSubmit={handleSubmit} className={cn(
-        "flex w-full flex-col space-y-3 sm:flex-row sm:space-y-0 sm:items-center sm:justify-center sm:gap-4",
-        isMobile && "max-w-[100vw] px-2"
-      )}>
+    <div className={cn("w-full max-w-xl mx-auto px-5 sm:px-0", className)}>
+      <form onSubmit={handleSubmit} className="flex w-full flex-col space-y-3 sm:flex-row sm:space-y-0 sm:items-center sm:justify-center sm:gap-4">
         <EmailInput 
           email={email}
           setEmail={setEmail}

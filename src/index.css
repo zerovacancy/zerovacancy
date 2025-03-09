@@ -86,20 +86,10 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  html, body {
-    overflow-x: hidden;
-    width: 100%;
-    position: relative;
-    max-width: 100vw;
-  }
-
   main {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-    padding-bottom: 0 !important; /* Adjusted from 2rem to 0 */
-    width: 100%;
-    max-width: 100vw;
-    overflow-x: hidden;
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+    padding-bottom: 2rem !important; /* Added space at the bottom */
   }
   
   .mobile-px-adjust {
@@ -118,25 +108,5 @@
   
   .mobile-text-center {
     text-align: center;
-  }
-  
-  /* Fix mobile container overflow */
-  .section-container,
-  .social-proof-container {
-    max-width: 100vw !important;
-    box-sizing: border-box;
-    overflow-x: hidden;
-  }
-
-  /* Ensure proper z-index stacking for mobile */
-  .mobile-z-fix {
-    position: relative;
-    z-index: 10;
-  }
-
-  /* Fix to prevent background effects from causing overflow issues */
-  .overflow-hidden {
-    overflow-x: hidden;
-    overflow-y: visible;
   }
 }
