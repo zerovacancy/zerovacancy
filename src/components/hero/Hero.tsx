@@ -1,54 +1,123 @@
+// src/components/hero/Hero.tsx
+// Complete replacement file with mobile optimizations
 
-import React from "react";
-import { cn } from "@/lib/utils";
-import { WaitlistCTA } from "../ui/waitlist/waitlist-cta";
-import { TextRotate } from "../ui/text-rotate";
-import { GlowingEffect } from "../ui/glowing-effect";
-import { motion } from "framer-motion";
+import React from 'react';
+import { motion } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
+import { ShimmerButton } from '@/components/ui/shimmer-button';
+import { GlowingEffects } from '@/components/ui/glowing-effects';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { cn } from '@/lib/utils';
 
-export function Hero() {
-  const rotatingWords = ["CONVERTS", "ENGAGES", "CAPTIVATES", "DRIVES LEADS"];
+export const Hero = () => {
+  const isMobile = useIsMobile();
   
-  return <section className="flex flex-col items-center justify-center px-4 sm:px-6 py-12 sm:py-16 md:py-20 min-h-[40vh] relative z-10">
-      <div className="max-w-5xl w-full mx-auto flex flex-col gap-8 sm:gap-10">
-        <h1 className="text-center flex flex-col items-center gap-3 sm:gap-4">
-          {/* Make sure text-display class is applied but allow color to be overridden */}
-          <motion.span 
-            className="text-display px-0 mx-0 relative"
-            style={{ color: "#4A2DD9" }} // Use style for the specific color to avoid class conflicts
-            initial={{ opacity: 0.8 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, repeat: Infinity, repeatType: "reverse" }}
-          >
-            PROPERTY CONTENT THAT
-            <GlowingEffect
-              blur={10}
-              spread={15}
-              glow={true}
-              variant="default"
-              disabled={false}
-              movementDuration={2}
-              borderWidth={1}
+  // Simplified mobile version with minimal animations and effects
+  if (isMobile) {
+    return (
+      <div className="px-4 pt-6 pb-10 relative">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center space-y-4">
+            <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+              Transform Your Property Marketing
+            </h1>
+            
+            <p className="text-base text-gray-600 max-w-md mx-auto">
+              Connect with creative professionals who turn your spaces into visual stories that captivate and convert.
+            </p>
+            
+            <div className="pt-4">
+              <a 
+                href="#find-creators" 
+                className="inline-flex items-center justify-center rounded-md px-4 py-2 bg-purple-600 text-white text-sm font-medium shadow-sm hover:bg-purple-700"
+              >
+                Find Your Creative Match
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </a>
+            </div>
+          </div>
+          
+          <div className="mt-8">
+            <img 
+              src="/hero-image-mobile.jpg" 
+              alt="Property photography showcase" 
+              className="w-full h-auto rounded-lg shadow-md"
             />
-          </motion.span>
-          <TextRotate 
-            texts={rotatingWords}
-            mainClassName="text-display inline-block"
-            style={{ color: "#4A2DD9" }}
-            rotationInterval={2000}
-            exit={{ y: "-120%", opacity: 0 }}
-          />
-        </h1>
-
-        <p className="paragraph-base text-center max-w-2xl mx-auto px-2">
-          Connect with creators who see beyond square footage to capture the soul of your spaces. Our curated network transforms properties into visual narratives that intrigue, inspire, and ultimately convert.
-        </p>
+          </div>
+        </div>
       </div>
+    );
+  }
+  
+  // Full desktop version with animations
+  return (
+    <div className="px-4 sm:px-6 lg:px-8 pt-8 sm:pt-10 lg:pt-12 pb-16 sm:pb-20 lg:pb-24 overflow-hidden relative">
+      <GlowingEffects 
+        variant="hero" 
+        strength="strong" 
+        className="absolute inset-0 z-0" 
+      />
       
-      <div className="w-full max-w-xl mx-auto mt-10 sm:mt-12 relative overflow-visible">
-        <WaitlistCTA />
+      <div className="max-w-7xl mx-auto relative z-10">
+        <div className="text-center space-y-6 sm:space-y-8">
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.1 }}
+            className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 leading-tight"
+          >
+            Transform Your Property Marketing
+          </motion.h1>
+          
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="text-lg sm:text-xl lg:text-2xl text-gray-600 max-w-3xl mx-auto"
+          >
+            Connect with creative professionals who turn your spaces into visual stories that captivate and convert.
+          </motion.p>
+          
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="pt-4 sm:pt-6"
+          >
+            <ShimmerButton 
+              size="lg" 
+              className={cn(
+                "bg-purple-600 hover:bg-purple-700 text-white shadow-xl",
+                "group transition-all duration-300",
+                "py-3 px-8 text-base font-medium"
+              )}
+              as="a"
+              href="#find-creators"
+            >
+              Find Your Creative Match
+              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
+            </ShimmerButton>
+          </motion.div>
+        </div>
+        
+        <motion.div 
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.7 }}
+          className="mt-12 sm:mt-16 lg:mt-20"
+        >
+          <div className="relative">
+            <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-blue-600 opacity-20 blur-lg rounded-xl"></div>
+            <img 
+              src="/hero-image.jpg" 
+              alt="Property photography showcase" 
+              className="w-full h-auto relative rounded-xl shadow-2xl"
+            />
+          </div>
+        </motion.div>
       </div>
-    </section>;
-}
+    </div>
+  );
+};
 
 export default Hero;
