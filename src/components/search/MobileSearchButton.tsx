@@ -20,7 +20,8 @@ export const MobileSearchButton = () => {
         "focus:outline-none focus:ring-2 focus:ring-indigo-500/30",
         "shadow-md hover:shadow-lg",
         "flex items-center justify-center text-sm sm:text-base",
-        "mt-3"
+        "mt-3",
+        "touch-manipulation" // Add touch optimization
       )}
       type="button"
       aria-label="Search creators"

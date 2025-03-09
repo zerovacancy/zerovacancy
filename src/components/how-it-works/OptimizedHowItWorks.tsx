@@ -22,6 +22,12 @@ const OptimizedHowItWorks: React.FC = () => {
 
   // Add intersection observer to trigger animations when section is visible
   useEffect(() => {
+    // Skip complex observer setup on mobile for performance
+    if (isMobile) {
+      setIsVisible(true);
+      return;
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
@@ -41,7 +47,7 @@ const OptimizedHowItWorks: React.FC = () => {
         observer.unobserve(section);
       }
     };
-  }, []);
+  }, [isMobile]);
 
   // Handle step interaction
   const handleStepInteraction = (index: number) => {
@@ -51,10 +57,13 @@ const OptimizedHowItWorks: React.FC = () => {
   return (
     <BeamsBackground 
       id="how-it-works-section"
-      className="py-8 sm:py-16 lg:py-20"
-      intensity="subtle"
+      className={cn(
+        "py-8 sm:py-16 lg:py-20",
+        isMobile ? "mobile-simple-bg" : ""
+      )}
+      intensity={isMobile ? "subtle" : "medium"}
     >
-      <div className={`max-w-6xl mx-auto relative px-4 sm:px-6 lg:px-10 transition-all duration-700 ${isVisible ? 'opacity-100' : 'opacity-0 translate-y-10'}`}>
+      <div className={`max-w-6xl mx-auto relative px-4 sm:px-6 lg:px-10 transition-all duration-700 ${isVisible || isMobile ? 'opacity-100' : 'opacity-0 translate-y-10'}`}>
         <div className="text-center mb-6 sm:mb-12 lg:mb-16">
           <SectionHeaderSimple 
             title="THE EXPERIENCE" 

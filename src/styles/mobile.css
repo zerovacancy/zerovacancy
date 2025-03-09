@@ -46,9 +46,60 @@
   body {
     padding-bottom: 1rem;
   }
+
+  /* Fix for nested flex containers causing layout issues */
+  .mobile-layout-fix {
+    display: block !important;
+    min-height: unset !important;
+    height: auto !important;
+  }
+  
+  /* Disable complex background effects on mobile */
+  .bg-effects-disabled {
+    background: white !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  
+  /* Simplified background for mobile */
+  .mobile-simple-bg {
+    background: linear-gradient(to bottom, #f9f9ff, white) !important;
+    overflow: visible !important;
+  }
+  
+  /* Prevent overflow issues common on mobile */
+  .mobile-overflow-fix {
+    overflow: visible !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+  }
+  
+  /* Adjust z-index stacking for mobile */
+  .mobile-z-fix {
+    position: relative;
+    z-index: 10;
+  }
+  
+  /* Disable blob animations on mobile completely */
+  .disable-blobs [class*="rounded-full"], 
+  .disable-blobs [class*="blur"] {
+    display: none !important;
+  }
+
+  /* Fix section margins on mobile for better spacing */
+  section {
+    margin-bottom: 1.5rem !important;
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
+  }
 }
 
 /* Enhanced active states for touch devices */
 .touch-manipulation {
   touch-action: manipulation;
+}
+
+/* Utility class for optimizing visibility on mobile */
+.mobile-optimize-visibility {
+  content-visibility: auto;
 }

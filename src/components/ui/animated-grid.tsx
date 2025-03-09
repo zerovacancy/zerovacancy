@@ -4,6 +4,7 @@
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { animate } from "framer-motion";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export interface AnimatedGridProps {
   className?: string;
@@ -18,6 +19,10 @@ export const AnimatedGrid = memo(({
   const [isVisible, setIsVisible] = useState(false);
   const isActiveRef = useRef(false);
   const currentAngleRef = useRef(0);
+  const isMobile = useIsMobile();
+  
+  // Skip completely on mobile
+  if (isMobile) return null;
   
   // Only load after initial render to improve page load performance
   useEffect(() => {

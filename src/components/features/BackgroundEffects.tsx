@@ -1,6 +1,8 @@
+
 import React, { useRef, useEffect, useState } from 'react';
 import { GradientBlobBackground } from '@/components/ui/gradient-blob-background';
 import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface BackgroundEffectsProps {
   className?: string;
@@ -16,7 +18,7 @@ interface BackgroundEffectsProps {
   pattern?: 'dots' | 'grid' | 'none';
   baseColor?: string;
   animationSpeed?: 'slow' | 'medium' | 'fast';
-  id?: string; // Added id prop for easier targeting
+  id?: string; 
 }
 
 export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({ 
@@ -36,11 +38,12 @@ export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({
   id
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(true); // Default to visible to ensure content is shown
+  const [isVisible, setIsVisible] = useState(true);
+  const isMobile = useIsMobile();
 
-  // Only render heavy effects when the component is in view
+  // Optimize for mobile - only set up effects for desktop
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!containerRef.current || isMobile) return;
     
     const observer = new IntersectionObserver(
       (entries) => {
@@ -72,8 +75,27 @@ export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({
       observer.disconnect();
       clearTimeout(safetyTimeout);
     };
-  }, []);
+  }, [isMobile]);
 
+  // For mobile devices, render a simplified container
+  if (isMobile) {
+    return (
+      <div 
+        ref={containerRef} 
+        id={id} 
+        className={cn(
+          "relative w-full mobile-simple-bg mobile-overflow-fix", 
+          className
+        )}
+      >
+        <div className="relative z-10">
+          {children}
+        </div>
+      </div>
+    );
+  }
+
+  // Full experience for desktop
   return (
     <div ref={containerRef} id={id} className={cn("relative w-full overflow-hidden", className)}>
       {isVisible ? (

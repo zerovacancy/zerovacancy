@@ -2,6 +2,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { OptimizedSpotlight } from './optimized-spotlight';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface GradientBlobBackgroundProps {
   className?: string;
@@ -42,6 +43,7 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
 }) => {
   const [isMounted, setIsMounted] = useState(false);
   const isReducedMotion = useRef(false);
+  const isMobile = useIsMobile();
   
   // Check for reduced motion preference
   useEffect(() => {
@@ -50,7 +52,7 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
   }, []);
 
   // Don't render animations for users with reduced motion preference
-  const shouldAnimate = isMounted && !isReducedMotion.current;
+  const shouldAnimate = isMounted && !isReducedMotion.current && !isMobile;
   
   // Determine blob sizes based on the blobSize prop
   const getBlobSizeClass = (position: 'first' | 'second' | 'third') => {
@@ -88,25 +90,18 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
     return `${base * multipliers[animationSpeed]}s`;
   };
 
-  // Only render the number of blobs needed based on screen size to reduce DOM elements
-  const [windowWidth, setWindowWidth] = useState(0);
-  
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
-    
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+  // For mobile, render a simplified background
+  if (isMobile) {
+    return (
+      <div className={cn(`relative w-full mobile-simple-bg ${baseColor}`, className)}>
+        <div className="relative z-10">
+          {children}
+        </div>
+      </div>
+    );
+  }
 
-  // Determine how many blobs to render based on screen width
-  const blobCount = windowWidth < 768 ? 3 : 5;
-
+  // Full desktop experience
   return (
     <div className={cn(`relative w-full overflow-hidden ${baseColor}`, className)}>
       {/* Pattern background - only if pattern is not 'none' */}
@@ -146,24 +141,6 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
         )}
         style={shouldAnimate ? { animation: `blob ${getAnimationDuration(40)} infinite`, animationDelay: `${getAnimationDuration(15)}` } : {}}
       ></div>
-      
-      {/* Render additional blobs only for larger screens */}
-      {blobCount > 3 && (
-        <>
-          <div 
-            className={cn(
-              `absolute top-[15%] right-[25%] ${getBlobSizeClass('second')} ${blobColors.first} rounded-full mix-blend-multiply filter blur-3xl opacity-${blobOpacity * 100}`
-            )}
-            style={shouldAnimate ? { animation: `blob ${getAnimationDuration(55)} infinite`, animationDelay: `${getAnimationDuration(12)}` } : {}}
-          ></div>
-          <div 
-            className={cn(
-              `absolute top-[70%] -left-40 ${getBlobSizeClass('first')} ${blobColors.third} rounded-full mix-blend-multiply filter blur-3xl opacity-${blobOpacity * 100}`
-            )}
-            style={shouldAnimate ? { animation: `blob ${getAnimationDuration(48)} infinite`, animationDelay: `${getAnimationDuration(20)}` } : {}}
-          ></div>
-        </>
-      )}
       
       {/* Spotlight effect - only if withSpotlight is true */}
       {withSpotlight && (

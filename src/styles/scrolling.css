@@ -47,3 +47,33 @@ body {
 .smooth-scroll {
   scroll-behavior: smooth;
 }
+
+/* Mobile-specific scroll optimizations */
+@media (max-width: 768px) {
+  /* Optimize scrolling for touch devices */
+  html, body {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: auto; /* Disable smooth scrolling on mobile for better performance */
+  }
+  
+  /* Only use scroll-snapping for horizontal scrolling on mobile */
+  .snap-container {
+    scroll-snap-type: none;
+  }
+  
+  .snap-x {
+    scroll-snap-type: x proximity; /* Less strict snapping for better performance */
+  }
+  
+  /* Improve touch scrolling experience */
+  .touch-scroll {
+    -webkit-overflow-scrolling: touch;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  
+  /* Remove heavy scroll effects on mobile */
+  .scroll-fade-edges {
+    mask-image: none;
+  }
+}

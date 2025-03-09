@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from "react";
 import { features } from "./feature-data";
 import { FeatureHeader } from "./FeatureHeader";
@@ -6,6 +7,7 @@ import { AnimatePresence } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { FeaturesGrid } from "./FeaturesGrid";
 import { MobileViewButton } from "./MobileViewButton";
+import { cn } from "@/lib/utils";
 
 export function FeaturesSectionWithHoverEffects() {
   const isMobile = useIsMobile();
@@ -24,6 +26,9 @@ export function FeaturesSectionWithHoverEffects() {
   
   // Improve scrolling by preventing scroll snap or scroll jumps
   useEffect(() => {
+    // Skip this complex scroll handling on mobile
+    if (isMobile) return;
+    
     const section = sectionRef.current;
     if (!section) return;
     
@@ -57,15 +62,21 @@ export function FeaturesSectionWithHoverEffects() {
     return () => {
       section.removeEventListener('wheel', handleWheel);
     };
-  }, []);
+  }, [isMobile]);
   
   return (
     <section 
       ref={sectionRef}
-      className="relative py-14 sm:py-18 lg:py-24 px-4 sm:px-6 lg:px-8 overflow-visible"
+      className={cn(
+        "relative py-14 sm:py-18 lg:py-24 px-4 sm:px-6 lg:px-8",
+        isMobile ? "mobile-overflow-fix" : "overflow-visible"
+      )}
       id="features"
     >
-      <div className="absolute inset-0 z-0 overflow-hidden opacity-[0.15] bg-gradient-to-b from-violet-50 to-white"></div>
+      <div className={cn(
+        "absolute inset-0 z-0 opacity-[0.15]", 
+        isMobile ? "bg-white" : "bg-gradient-to-b from-violet-50 to-white overflow-hidden"
+      )}></div>
 
       <div className="max-w-6xl mx-auto relative z-10">
         <FeatureHeader 
