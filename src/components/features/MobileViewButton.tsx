@@ -1,4 +1,3 @@
-
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ChevronDown } from "lucide-react";
@@ -28,7 +27,7 @@ export const MobileViewButton = ({
         <Button 
           variant="outline" 
           size="lg"
-          className="group border-indigo-300 hover:border-indigo-500 text-indigo-600 font-medium px-6"
+          className="group border-indigo-300 hover:border-indigo-500 text-indigo-600 font-medium px-6 btn-text-tertiary"
           onClick={toggleShowAllCards}
           aria-expanded={showAllCards}
           aria-label="Show less services"
@@ -42,7 +41,7 @@ export const MobileViewButton = ({
         <Button 
           variant="default"
           size="lg" 
-          className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-medium px-6"
+          className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-medium px-6 btn-text-primary"
           onClick={isMobile ? toggleShowAllCards : undefined}
           aria-label="View all services"
         >

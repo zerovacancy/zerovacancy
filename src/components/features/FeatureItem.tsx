@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -155,10 +154,10 @@ export const FeatureItem = ({
                 <p className="text-sm text-gray-600 leading-relaxed">
                   {isExpanded || !isLongDesc ? 
                     description : 
-                    (<>
-                      {`${description.substring(0, truncationPoint).trim()}`}
+                    <>
+                      {description.substring(0, truncationPoint).trim()}
                       <span className="text-indigo-500"> ...</span>
-                    </>)
+                    </>
                   }
                 </p>
               </div>

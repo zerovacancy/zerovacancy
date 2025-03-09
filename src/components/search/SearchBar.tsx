@@ -14,7 +14,6 @@ interface SearchBarProps {
 }
 
 export const SearchBar: React.FC<SearchBarProps> = ({ value = '', onLocationSelect }) => {
-  // Always call hooks at the top level
   const [showMoreFilters, setShowMoreFilters] = useState(false);
   const isMobile = useIsMobile();
 
@@ -44,10 +43,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({ value = '', onLocationSele
           <SearchButton />
         </div>
 
-        {/* Mobile Search Button - moved here to make sure component is always rendered */}
-        <div className={isMobile ? "block" : "hidden"}>
-          <MobileSearchButton />
-        </div>
+        {/* Mobile Search Button */}
+        <MobileSearchButton />
 
         {/* Advanced filter section with reduced top spacing */}
         <div className="pt-0 mt-0">

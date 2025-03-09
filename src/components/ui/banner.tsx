@@ -41,7 +41,8 @@ interface BannerProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps
   onClose?: () => void;
 }
 
-export function Banner({
+// Change from function declaration to const declaration with export
+export const Banner = ({
   className,
   variant,
   size,
@@ -52,7 +53,7 @@ export function Banner({
   onClose,
   children,
   ...props
-}: BannerProps) {
+}: BannerProps) => {
   const isMobile = useIsMobile();
   
   return (
@@ -109,4 +110,7 @@ export function Banner({
       )}
     </div>
   );
-}
+};
+
+// Add this line to ensure the component is exported correctly both ways
+export default Banner;

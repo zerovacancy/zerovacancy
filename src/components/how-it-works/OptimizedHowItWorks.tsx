@@ -5,10 +5,8 @@ import SectionHeaderSimple from './SectionHeaderSimple';
 import MobileStepsGridSimple from './MobileStepsGridSimple';
 import DesktopStepsGridSimple from './DesktopStepsGridSimple';
 import BeamsBackground from '@/components/ui/beams-background';
-import { cn } from '@/lib/utils';
 
 const OptimizedHowItWorks: React.FC = () => {
-  // Always call hooks at the top level
   const isMobile = useIsMobile();
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
   const [activeStep, setActiveStep] = useState<number>(0);
@@ -24,7 +22,6 @@ const OptimizedHowItWorks: React.FC = () => {
 
   // Add intersection observer to trigger animations when section is visible
   useEffect(() => {
-    // Create observer regardless of mobile status
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
@@ -35,13 +32,8 @@ const OptimizedHowItWorks: React.FC = () => {
     );
 
     const section = document.getElementById('how-it-works-section');
-    
-    // Only observe if we're not on mobile and there's a section to observe
-    if (!isMobile && section) {
+    if (section) {
       observer.observe(section);
-    } else {
-      // For mobile, just set isVisible to true
-      setIsVisible(true);
     }
 
     return () => {
@@ -49,7 +41,7 @@ const OptimizedHowItWorks: React.FC = () => {
         observer.unobserve(section);
       }
     };
-  }, [isMobile]);
+  }, []);
 
   // Handle step interaction
   const handleStepInteraction = (index: number) => {
@@ -59,13 +51,10 @@ const OptimizedHowItWorks: React.FC = () => {
   return (
     <BeamsBackground 
       id="how-it-works-section"
-      className={cn(
-        "py-8 sm:py-16 lg:py-20",
-        isMobile ? "mobile-simple-bg" : ""
-      )}
-      intensity={isMobile ? "subtle" : "medium"}
+      className="py-8 sm:py-16 lg:py-20"
+      intensity="subtle"
     >
-      <div className={`max-w-6xl mx-auto relative px-4 sm:px-6 lg:px-10 transition-all duration-700 ${isVisible || isMobile ? 'opacity-100' : 'opacity-0 translate-y-10'}`}>
+      <div className={`max-w-6xl mx-auto relative px-4 sm:px-6 lg:px-10 transition-all duration-700 ${isVisible ? 'opacity-100' : 'opacity-0 translate-y-10'}`}>
         <div className="text-center mb-6 sm:mb-12 lg:mb-16">
           <SectionHeaderSimple 
             title="THE EXPERIENCE" 
