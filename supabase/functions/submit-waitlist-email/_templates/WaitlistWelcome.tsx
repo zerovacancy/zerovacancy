@@ -26,19 +26,22 @@ export const WaitlistWelcomeEmail = ({
   
   return (
     <Html>
-      <Head />
+      <Head>
+        <title>ZeroVacancy Waitlist Confirmation</title>
+        <meta name="color-scheme" content="light dark" />
+        <meta name="supported-color-schemes" content="light dark" />
+      </Head>
       <Preview>Access Confirmed</Preview>
       <Body style={main}>
         <Container style={container}>
           <Section style={logoContainer}>
             <Img
-              src="/logo.png" 
-              width="36"
-              height="36"
-              alt="ZeroVacancy Logo"
-              style={logo}
+              src="https://e.hypermatic.com/917628fb4cc5a7383f6be1b7a7d84e53.jpg"
+              width="600"
+              height="auto"
+              alt="ZeroVacancy"
+              style={imgStyle}
             />
-            <Text style={logoText}>zerovacancy</Text>
           </Section>
           
           <Hr style={divider} />
@@ -92,8 +95,9 @@ export default WaitlistWelcomeEmail;
 
 // Styles
 const main = {
-  backgroundColor: '#ffffff',
+  backgroundColor: '#f5f5f5',
   fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+  wordSpacing: 'normal',
 }
 
 const container = {
@@ -103,10 +107,17 @@ const container = {
 }
 
 const logoContainer = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  padding: '20px 0',
+  padding: '0',
+  textAlign: 'center' as const,
+}
+
+const imgStyle = {
+  border: '0',
+  display: 'block',
+  outline: 'none',
+  textDecoration: 'none',
+  height: 'auto',
+  width: '100%',
 }
 
 const logo = {
