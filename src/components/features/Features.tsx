@@ -30,27 +30,29 @@
             description="Everything you need to showcase your properties with stunning visuals and engaging content that attracts the right buyers."
           />
 
-          <FeaturesGrid
-            features={features}
-            visibleFeatures={visibleFeatures}
-            isMobile={isMobile}
-            showAllCards={showAllCards}
-            toggleShowAllCards={toggleShowAllCards}
-          />
+          {/* Features grid completely separate from button */}
+          <div className="w-full">
+            <FeaturesGrid
+              features={features}
+              visibleFeatures={visibleFeatures}
+              isMobile={isMobile}
+              showAllCards={showAllCards}
+              toggleShowAllCards={toggleShowAllCards}
+            />
+          </div>
 
-          {/* Add spacer for proper button placement below cards */}
-          {isMobile && !showAllCards && <div className="h-16"></div>}
-
-          {/* View all services button correctly positioned */}
-          <AnimatePresence>
-            {(!isMobile || (isMobile && !showAllCards)) && (
-              <MobileViewButton
-                showAllCards={showAllCards}
-                toggleShowAllCards={toggleShowAllCards}
-                isMobile={isMobile}
-              />
-            )}
-          </AnimatePresence>
+          {/* Completely separate button container */}
+          <div className="w-full mt-20">
+            <AnimatePresence>
+              {(!isMobile || (isMobile && !showAllCards)) && (
+                <MobileViewButton
+                  showAllCards={showAllCards}
+                  toggleShowAllCards={toggleShowAllCards}
+                  isMobile={isMobile}
+                />
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       </section>
     );
