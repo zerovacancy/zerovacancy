@@ -23,7 +23,7 @@ export function FeaturesSectionWithHoverEffects() {
     : features;
   
   return (
-    <section className="relative py-14 sm:py-18 lg:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
+    <section className="relative py-14 sm:py-18 lg:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden" id="features">
       <div className="max-w-6xl mx-auto relative z-10">
         <FeatureHeader 
           title="THE CREATIVE ARSENAL"

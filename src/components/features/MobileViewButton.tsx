@@ -14,6 +14,12 @@ export const MobileViewButton = ({
   toggleShowAllCards, 
   isMobile 
 }: MobileViewButtonProps) => {
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleShowAllCards();
+  };
+
   return (
     <motion.div 
       className={`${isMobile ? 'mt-6' : 'mt-12 sm:mt-14'} flex justify-center ${isMobile && !showAllCards ? 'md:hidden' : ''}`}
@@ -27,8 +33,8 @@ export const MobileViewButton = ({
         <Button 
           variant="outline" 
           size="lg"
-          className="group border-indigo-300 hover:border-indigo-500 hover:bg-indigo-50/70 text-indigo-600 font-medium px-6"
-          onClick={toggleShowAllCards}
+          className="group border-indigo-300 hover:border-indigo-500 hover:bg-indigo-50/70 text-indigo-600 font-medium px-6 touch-manipulation"
+          onClick={handleClick}
         >
           Show less
           <ChevronDown className="ml-2 h-4 w-4 rotate-180 transition-transform" />
@@ -37,8 +43,8 @@ export const MobileViewButton = ({
         <Button 
           variant="default"
           size="lg" 
-          className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-medium px-6 shadow-md"
-          onClick={isMobile ? toggleShowAllCards : undefined}
+          className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-medium px-6 shadow-md touch-manipulation"
+          onClick={handleClick}
         >
           View all services
           <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -46,6 +52,6 @@ export const MobileViewButton = ({
       )}
     </motion.div>
   );
-};
+}
 
 export default MobileViewButton;
