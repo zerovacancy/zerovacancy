@@ -49,7 +49,7 @@ function App() {
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <Router>
-        <main className="relative">
+        <div className="relative">
           <Suspense fallback={<PageLoader />}>
             <Routes>
               <Route path="/" element={<Index />} />
@@ -61,7 +61,7 @@ function App() {
               <Route path="/connect/onboarding" element={<ConnectOnboarding />} />
             </Routes>
           </Suspense>
-        </main>
+        </div>
         <Toaster />
       </Router>
     </ErrorBoundary>
