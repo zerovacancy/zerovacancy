@@ -15,6 +15,14 @@ export function FeaturesSectionWithHoverEffects() {
   // Function to toggle showing all cards
   const toggleShowAllCards = () => {
     setShowAllCards(prev => !prev);
+    
+    // Prevent scroll jumping when toggling cards
+    setTimeout(() => {
+      window.scrollTo({
+        top: window.scrollY,
+        behavior: 'auto'
+      });
+    }, 10);
   };
   
   // On mobile, show only first 3 cards (including Video Production)
@@ -23,10 +31,12 @@ export function FeaturesSectionWithHoverEffects() {
     : features;
   
   return (
-    <section className="relative py-14 sm:py-18 lg:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
-      {/* Removed WarpBackground component */}
+    <section 
+      className="relative py-14 sm:py-18 lg:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden"
+      // Add scroll margin to prevent overlap with sticky elements and improve scroll behavior
+      style={{ scrollMarginTop: "2rem" }}
+    >
       <div className="absolute inset-0 z-0 overflow-hidden opacity-[0.15]">
-        {/* Simple background div instead of WarpBackground */}
         <div className="w-full h-full bg-gradient-to-b from-purple-50/30 to-white/10"></div>
       </div>
 
@@ -44,8 +54,8 @@ export function FeaturesSectionWithHoverEffects() {
           toggleShowAllCards={toggleShowAllCards}
         />
         
-        {/* View all services button (desktop and mobile) - positioned differently on mobile */}
-        <AnimatePresence>
+        {/* View all services button - with improved animation handling */}
+        <AnimatePresence mode="wait"> {/* Changed to "wait" mode to prevent layout shifts */}
           {(!isMobile || (isMobile && !showAllCards)) && (
             <MobileViewButton
               showAllCards={showAllCards}
