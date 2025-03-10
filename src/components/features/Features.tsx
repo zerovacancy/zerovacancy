@@ -1,3 +1,4 @@
+
   import { useState } from "react";
   import { features } from "./feature-data";
   import { FeatureHeader } from "./FeatureHeader";
@@ -22,7 +23,20 @@
       : features;
 
     return (
-      <section className="relative py-14 sm:py-18 lg:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
+      <BackgroundEffects
+        blobColors={{
+          first: "bg-indigo-100",
+          second: "bg-blue-100",
+          third: "bg-violet-100"
+        }}
+        blobOpacity={0.12}
+        withSpotlight={true}
+        spotlightClassName="from-indigo-500/5 via-blue-500/5 to-violet-500/5"
+        pattern="none"
+        baseColor="bg-white/80"
+        animationSpeed="slow"
+        className="py-14 sm:py-18 lg:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden"
+      >
         <div className="max-w-6xl mx-auto relative z-10">
           <FeatureHeader 
             title="Professional Content Creation Services"
@@ -53,7 +67,7 @@
             </div>
           </div>
         </div>
-      </section>
+      </BackgroundEffects>
     );
   }
 

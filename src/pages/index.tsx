@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef, lazy, Suspense, useCallback } from 'react';
 import Header from '../components/Header';
 import { Hero } from '../components/hero/Hero';
@@ -44,7 +43,6 @@ const Index = () => {
     5: true
   });
   
-  // Initialize local storage and dialog state
   useEffect(() => {
     const hasVisited = localStorage.getItem('hasVisited');
     setShowGlowDialog(!hasVisited);
@@ -53,7 +51,6 @@ const Index = () => {
     }
   }, []);
   
-  // Optimized Intersection Observer with useCallback to avoid recreating functions
   const observerCallback = useCallback((entries: IntersectionObserverEntry[]) => {
     entries.forEach(entry => {
       const index = parseInt(entry.target.getAttribute('data-section-index') || '-1', 10);
@@ -66,7 +63,6 @@ const Index = () => {
     });
   }, []);
   
-  // Use Intersection Observer to optimize rendering of sections with safety timeout
   useEffect(() => {
     const observer = new IntersectionObserver(
       observerCallback,
@@ -153,6 +149,7 @@ const Index = () => {
       )}
 
       <main className="flex-1 pb-16 sm:pb-0 w-full">
+        {/* Hero Section with its own background */}
         <BackgroundEffects 
           blobColors={{
             first: "bg-purple-100",
@@ -167,71 +164,98 @@ const Index = () => {
           className="py-0"
           animationSpeed="slow"
         >
-          <div className="space-y-0 w-full">
-            {/* Hero Section - Always visible */}
-            <section ref={addSectionRef(0)} className="w-full">
-              <Hero />
-            </section>
-            
-            {/* How It Works Section */}
-            <section 
-              ref={addSectionRef(1)} 
-              id="how-it-works" 
-              className="relative w-full"
-            >
-              <div className="relative z-10">
-                <Suspense fallback={<SectionLoader />}>
-                  <OptimizedHowItWorks />
-                </Suspense>
-              </div>
-            </section>
-            
-            {/* Search Section */}
-            <section 
-              ref={addSectionRef(2)} 
-              id="find-creators" 
-              className="relative w-full"
-            >
-              <div className="max-w-7xl mx-auto relative z-10 py-10 sm:py-16 lg:py-20">
-                <Suspense fallback={<SectionLoader />}>
-                  <PreviewSearch />
-                </Suspense>
-              </div>
-            </section>
-            
-            {/* Professional Content Creation Services */}
-            <section 
-              ref={addSectionRef(3)} 
-              className="w-full"
-            >
-              <Suspense fallback={<SectionLoader />}>
-                <FeaturesSectionWithHoverEffects />
-              </Suspense>
-            </section>
-
-            {/* Pricing Section */}
-            <section 
-              ref={addSectionRef(4)} 
-              className="w-full"
-            >
-              <Suspense fallback={<SectionLoader />}>
-                <Pricing />
-              </Suspense>
-            </section>
-
-            {/* Final CTA Section */}
-            <div 
-              ref={addSectionRef(5)} 
-              className="relative w-full"
-            >
-              <div className="relative z-10 max-w-7xl mx-auto py-14 sm:py-20 lg:py-24">
-                <CallToActionSection />
-              </div>
-            </div>
-          </div>
-          
-          <Footer />
+          <section ref={addSectionRef(0)} className="w-full">
+            <Hero />
+          </section>
         </BackgroundEffects>
+        
+        {/* How It Works Section - with own background */}
+        <section 
+          ref={addSectionRef(1)} 
+          id="how-it-works" 
+          className="relative w-full"
+        >
+          <BackgroundEffects 
+            blobColors={{
+              first: "bg-blue-100",
+              second: "bg-indigo-100",
+              third: "bg-violet-100"
+            }}
+            blobOpacity={0.1}
+            className="py-0"
+          >
+            <div className="relative z-10">
+              <Suspense fallback={<SectionLoader />}>
+                <OptimizedHowItWorks />
+              </Suspense>
+            </div>
+          </BackgroundEffects>
+        </section>
+        
+        {/* Search Section - with own background */}
+        <section 
+          ref={addSectionRef(2)} 
+          id="find-creators" 
+          className="relative w-full"
+        >
+          <BackgroundEffects 
+            blobColors={{
+              first: "bg-indigo-100",
+              second: "bg-blue-100",
+              third: "bg-indigo-100"
+            }}
+            blobOpacity={0.08}
+            className="py-0"
+          >
+            <div className="max-w-7xl mx-auto relative z-10 py-10 sm:py-16 lg:py-20">
+              <Suspense fallback={<SectionLoader />}>
+                <PreviewSearch />
+              </Suspense>
+            </div>
+          </BackgroundEffects>
+        </section>
+        
+        {/* Professional Content Creation Services - now has its own background in the component */}
+        <section 
+          ref={addSectionRef(3)} 
+          className="w-full"
+        >
+          <Suspense fallback={<SectionLoader />}>
+            <FeaturesSectionWithHoverEffects />
+          </Suspense>
+        </section>
+
+        {/* Pricing Section - already has its own background */}
+        <section 
+          ref={addSectionRef(4)} 
+          className="w-full"
+        >
+          <Suspense fallback={<SectionLoader />}>
+            <Pricing />
+          </Suspense>
+        </section>
+
+        {/* Final CTA Section - with own background */}
+        <div 
+          ref={addSectionRef(5)} 
+          className="relative w-full"
+        >
+          <BackgroundEffects 
+            blobColors={{
+              first: "bg-indigo-100",
+              second: "bg-violet-100",
+              third: "bg-blue-100"
+            }}
+            blobOpacity={0.12}
+            className="py-0"
+          >
+            <div className="relative z-10 max-w-7xl mx-auto py-14 sm:py-20 lg:py-24">
+              <CallToActionSection />
+            </div>
+          </BackgroundEffects>
+        </div>
+        
+        <Footer />
       </main>
       <BottomNav />
       <GlowDialog open={showGlowDialog} onOpenChange={setShowGlowDialog} />
