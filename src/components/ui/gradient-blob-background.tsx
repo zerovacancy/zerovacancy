@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface GradientBlobBackgroundProps {
   className?: string;
@@ -39,6 +40,7 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
   baseColor = 'bg-white/80',
 }) => {
   const [isMounted, setIsMounted] = useState(false);
+  const isMobile = useIsMobile();
   
   useEffect(() => {
     setIsMounted(true);
@@ -82,6 +84,17 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  // For mobile devices, render a simple container without effects
+  if (isMobile) {
+    return (
+      <div className={cn("relative w-full overflow-hidden bg-white", className)}>
+        <div className="relative z-10">
+          {children}
+        </div>
+      </div>
+    );
+  }
 
   // Determine how many blobs to render based on screen width
   const blobCount = windowWidth < 768 ? 3 : 5;

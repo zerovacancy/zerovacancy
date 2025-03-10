@@ -56,6 +56,32 @@
   .mobile-no-gradient {
     background-image: none !important;
   }
+
+  /* Hide all background effects on mobile */
+  .bg-gradient-to-b,
+  .bg-gradient-to-tr,
+  .bg-gradient-to-br,
+  .animate-pulse,
+  .blur-3xl,
+  .blur-2xl,
+  .blur-xl {
+    display: none !important;
+  }
+  
+  /* Force white background on mobile */
+  #features, 
+  #pricing,
+  .pricing-section,
+  .features-section,
+  .gradient-background,
+  .bg-grid-slate-100 {
+    background: white !important;
+  }
+  
+  /* Remove any background elements */
+  [class*="absolute inset-0"] {
+    display: none !important;
+  }
 }
 
 /* Enhanced active states for touch devices */

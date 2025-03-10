@@ -20,7 +20,7 @@ export function BeamsBackground({
   return (
     <div 
       id={id}
-      className={cn("relative overflow-hidden bg-white", className)}
+      className={cn("relative overflow-hidden", isMobile ? "bg-white" : "bg-white", className)}
     >
       {/* Only show background on desktop */}
       {!isMobile && <div className="absolute inset-0 bg-[#e6e3ff]/15"></div>}
