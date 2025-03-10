@@ -1,11 +1,56 @@
+"use client"
 
-import React, { forwardRef, useEffect, useImperativeHandle, useMemo } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { cn } from "@/lib/utils";
-import { TextRotateProps, TextRotateRef, WordObject } from "./types";
-import { useTextRotation } from "./use-text-rotation";
-import { processTextByType } from "./text-processing";
-import { AnimatedWord } from "./animated-word";
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useState,
+} from "react"
+import {
+  AnimatePresence,
+  AnimatePresenceProps,
+  motion,
+  MotionProps,
+  Transition,
+} from "framer-motion"
+
+import { cn } from "@/lib/utils"
+
+interface TextRotateProps {
+  texts: string[]
+  rotationInterval?: number
+  initial?: MotionProps["initial"]
+  animate?: MotionProps["animate"]
+  exit?: MotionProps["exit"]
+  animatePresenceMode?: AnimatePresenceProps["mode"]
+  animatePresenceInitial?: boolean
+  staggerDuration?: number
+  staggerFrom?: "first" | "last" | "center" | number | "random"
+  transition?: Transition
+  loop?: boolean // Whether to start from the first text when the last one is reached
+  auto?: boolean // Whether to start the animation automatically
+  splitBy?: "words" | "characters" | "lines" | string
+  onNext?: (index: number) => void
+  mainClassName?: string
+  splitLevelClassName?: string
+  elementLevelClassName?: string
+  // New prop for enhanced animations
+  enhancedAnimation?: boolean
+}
+
+export interface TextRotateRef {
+  next: () => void
+  previous: () => void
+  jumpTo: (index: number) => void
+  reset: () => void
+}
+
+interface WordObject {
+  characters: string[]
+  needsSpace: boolean
+}
 
 const TextRotate = forwardRef<TextRotateRef, TextRotateProps>(
   (
@@ -27,29 +72,119 @@ const TextRotate = forwardRef<TextRotateRef, TextRotateProps>(
       mainClassName,
       splitLevelClassName,
       elementLevelClassName,
+      enhancedAnimation = false,
       ...props
     },
     ref
   ) => {
-    const { 
-      currentTextIndex, 
-      next, 
-      previous, 
-      jumpTo, 
-      reset 
-    } = useTextRotation({
-      texts,
-      loop,
-      auto,
-      rotationInterval,
-      onNext
-    });
+    const [currentTextIndex, setCurrentTextIndex] = useState(0)
+    const [isHovering, setIsHovering] = useState(false)
 
-    // Process the current text based on split type
+    // handy function to split text into characters with support for unicode and emojis
+    const splitIntoCharacters = (text: string): string[] => {
+      if (typeof Intl !== "undefined" && "Segmenter" in Intl) {
+        const segmenter = new Intl.Segmenter("en", { granularity: "grapheme" })
+        return Array.from(segmenter.segment(text), ({ segment }) => segment)
+      }
+      // Fallback for browsers that don't support Intl.Segmenter
+      return Array.from(text)
+    }
+
     const elements = useMemo(() => {
-      const currentText = texts[currentTextIndex];
-      return processTextByType(currentText, splitBy);
-    }, [texts, currentTextIndex, splitBy]);
+      const currentText = texts[currentTextIndex]
+      if (splitBy === "characters") {
+        const text = currentText.split(" ")
+        return text.map((word, i) => ({
+          characters: splitIntoCharacters(word),
+          needsSpace: i !== text.length - 1,
+        }))
+      }
+      return splitBy === "words"
+        ? currentText.split(" ")
+        : splitBy === "lines"
+          ? currentText.split("\n")
+          : currentText.split(splitBy)
+    }, [texts, currentTextIndex, splitBy])
+
+    const getStaggerDelay = useCallback(
+      (index: number, totalChars: number) => {
+        const total = totalChars
+        
+        // Enhanced stagger effects for more natural animation
+        if (enhancedAnimation) {
+          if (staggerFrom === "first") {
+            // Smoother acceleration curve
+            return Math.pow(index / total, 0.8) * staggerDuration * total
+          }
+          if (staggerFrom === "last") {
+            // Smoother deceleration curve
+            return Math.pow((total - 1 - index) / total, 0.8) * staggerDuration * total
+          }
+          if (staggerFrom === "center") {
+            const center = Math.floor(total / 2)
+            // Bell curve for center stagger
+            return Math.pow(Math.abs(center - index) / center, 0.9) * staggerDuration * center
+          }
+          if (staggerFrom === "random") {
+            // More controlled randomness
+            return (Math.cos(index * 0.5) + 1) * staggerDuration
+          }
+        }
+        
+        // Original stagger logic
+        if (staggerFrom === "first") return index * staggerDuration
+        if (staggerFrom === "last") return (total - 1 - index) * staggerDuration
+        if (staggerFrom === "center") {
+          const center = Math.floor(total / 2)
+          return Math.abs(center - index) * staggerDuration
+        }
+        if (staggerFrom === "random") {
+          const randomIndex = Math.floor(Math.random() * total)
+          return Math.abs(randomIndex - index) * staggerDuration
+        }
+        return Math.abs(staggerFrom - index) * staggerDuration
+      },
+      [staggerFrom, staggerDuration, enhancedAnimation]
+    )
+
+    // Helper function to handle index changes and trigger callback
+    const handleIndexChange = useCallback((newIndex: number) => {
+      setCurrentTextIndex(newIndex)
+      onNext?.(newIndex)
+    }, [onNext])
+
+    const next = useCallback(() => {
+      const nextIndex = currentTextIndex === texts.length - 1
+        ? (loop ? 0 : currentTextIndex)
+        : currentTextIndex + 1
+      
+      if (nextIndex !== currentTextIndex) {
+        handleIndexChange(nextIndex)
+      }
+    }, [currentTextIndex, texts.length, loop, handleIndexChange])
+
+    const previous = useCallback(() => {
+      const prevIndex = currentTextIndex === 0
+        ? (loop ? texts.length - 1 : currentTextIndex)
+        : currentTextIndex - 1
+      
+      if (prevIndex !== currentTextIndex) {
+        handleIndexChange(prevIndex)
+      }
+    }, [currentTextIndex, texts.length, loop, handleIndexChange])
+
+    const jumpTo = useCallback((index: number) => {
+      const validIndex = Math.max(0, Math.min(index, texts.length - 1))
+      if (validIndex !== currentTextIndex) {
+        handleIndexChange(validIndex)
+      }
+    }, [texts.length, currentTextIndex, handleIndexChange])
+
+    const reset = useCallback(() => {
+      if (currentTextIndex !== 0) {
+        handleIndexChange(0)
+      }
+    }, [currentTextIndex, handleIndexChange])
 
     // Expose all navigation functions via ref
     useImperativeHandle(ref, () => ({
@@ -57,18 +192,22 @@ const TextRotate = forwardRef<TextRotateRef, TextRotateProps>(
       previous,
       jumpTo,
       reset,
-    }), [next, previous, jumpTo, reset]);
+    }), [next, previous, jumpTo, reset])
 
-    // Set up the rotation interval
+    // Auto-rotation logic
     useEffect(() => {
-      if (!auto) return;
-      const intervalId = setInterval(next, rotationInterval);
-      return () => clearInterval(intervalId);
-    }, [next, rotationInterval, auto]);
+      if (!auto || isHovering) return
+      const intervalId = setInterval(next, rotationInterval)
+      return () => clearInterval(intervalId)
+    }, [next, rotationInterval, auto, isHovering])
 
     return (
       <motion.span
         className={cn("flex flex-wrap whitespace-pre-wrap", mainClassName)}
+        onMouseEnter={() => setIsHovering(true)}
+        onMouseLeave={() => setIsHovering(false)}
+        onTouchStart={() => setIsHovering(true)}
+        onTouchEnd={() => setIsHovering(false)}
         {...props}
         layout
         transition={transition}
@@ -94,29 +233,86 @@ const TextRotate = forwardRef<TextRotateRef, TextRotateProps>(
                   characters: [el],
                   needsSpace: i !== elements.length - 1,
                 }))
-            ).map((wordObj, wordIndex, array) => (
-              <AnimatedWord
-                key={wordIndex}
-                wordObj={wordObj}
-                wordIndex={wordIndex}
-                wordArray={array}
-                initial={initial}
-                animate={animate}
-                exit={exit}
-                transition={transition}
-                staggerFrom={staggerFrom}
-                staggerDuration={staggerDuration}
-                splitLevelClassName={splitLevelClassName}
-                elementLevelClassName={elementLevelClassName}
-              />
-            ))}
+            ).map((wordObj, wordIndex, array) => {
+              const previousCharsCount = array
+                .slice(0, wordIndex)
+                .reduce((sum, word) => sum + word.characters.length, 0)
+
+              return (
+                <span
+                  key={wordIndex}
+                  className={cn("inline-flex", splitLevelClassName)}
+                >
+                  {wordObj.characters.map((char, charIndex) => {
+                    // Calculate position for enhanced animations
+                    const charPosition = previousCharsCount + charIndex
+                    const totalChars = array.reduce(
+                      (sum, word) => sum + word.characters.length, 0
+                    )
+                    const positionRatio = charPosition / totalChars
+                    
+                    // Enhanced animation variants
+                    const enhancedVariants = enhancedAnimation ? {
+                      initial: { 
+                        ...initial, 
+                        rotate: positionRatio * 10 - 5,
+                        scale: 0.8 + positionRatio * 0.4
+                      },
+                      animate: { 
+                        ...animate, 
+                        rotate: 0,
+                        scale: 1,
+                        transition: {
+                          ...transition,
+                          delay: getStaggerDelay(charPosition, totalChars)
+                        }
+                      },
+                      exit: { 
+                        ...exit, 
+                        rotate: positionRatio * -10 + 5,
+                        scale: 0.8 + (1-positionRatio) * 0.4
+                      }
+                    } : {
+                      initial,
+                      animate: {
+                        ...animate,
+                        transition: {
+                          ...transition,
+                          delay: getStaggerDelay(charPosition, totalChars)
+                        }
+                      },
+                      exit
+                    }
+                    
+                    return (
+                      <motion.span
+                        initial={enhancedVariants.initial}
+                        animate={enhancedVariants.animate}
+                        exit={enhancedVariants.exit}
+                        key={charIndex}
+                        whileHover={enhancedAnimation ? { scale: 1.2, y: -5 } : undefined}
+                        className={cn(
+                          "inline-block transform transition-colors duration-200", 
+                          elementLevelClassName
+                        )}
+                      >
+                        {char}
+                      </motion.span>
+                    )
+                  })}
+                  {wordObj.needsSpace && (
+                    <span className="whitespace-pre"> </span>
+                  )}
+                </span>
+              )
+            })}
           </motion.div>
         </AnimatePresence>
       </motion.span>
-    );
+    )
   }
-);
+)
 
-TextRotate.displayName = "TextRotate";
+TextRotate.displayName = "TextRotate"
 
-export { TextRotate };
+export { TextRotate }
