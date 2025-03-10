@@ -17,6 +17,8 @@ export function BeamsBackground({
 }: AnimatedGradientBackgroundProps) {
   const isMobile = useIsMobile();
 
+  // NOTE: No early returns before this point to avoid React hook errors
+  
   return (
     <div 
       id={id}
@@ -32,3 +34,4 @@ export function BeamsBackground({
 }
 
 export default BeamsBackground;
+

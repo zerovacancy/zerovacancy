@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect, useState } from 'react';
 import { GradientBlobBackground } from '@/components/ui/gradient-blob-background';
 import { cn } from '@/lib/utils';
@@ -41,7 +40,7 @@ export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({
   const [isVisible, setIsVisible] = useState(true); // Default to visible to ensure content is shown
   const isMobile = useIsMobile();
 
-  // Only render heavy effects when the component is in view and not on mobile
+  // We need to ensure all hooks are called before any conditional returns
   useEffect(() => {
     if (!containerRef.current || isMobile) return;
     
@@ -77,6 +76,8 @@ export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({
     };
   }, [isMobile]);
 
+  // IMPORTANT: All hooks are now called before any conditional returns
+  
   // For mobile devices, we return a simple container without effects
   if (isMobile) {
     return (

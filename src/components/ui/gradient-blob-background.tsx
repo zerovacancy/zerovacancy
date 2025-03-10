@@ -42,21 +42,6 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
   const [isMounted, setIsMounted] = useState(false);
   const isMobile = useIsMobile();
   
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-  
-  // For mobile devices, render a clean white background with no effects
-  if (isMobile) {
-    return (
-      <div className="relative w-full overflow-hidden bg-white">
-        <div className="relative z-10">
-          {children}
-        </div>
-      </div>
-    );
-  }
-
   // Determine blob sizes based on the blobSize prop
   const getBlobSizeClass = (position: 'first' | 'second' | 'third') => {
     const sizes = {
@@ -84,6 +69,8 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
   const [windowWidth, setWindowWidth] = useState(0);
   
   useEffect(() => {
+    setIsMounted(true);
+    
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
     };
@@ -95,6 +82,19 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  // IMPORTANT: All hooks must be called before any conditional returns
+  
+  // For mobile devices, render a clean white background with no effects
+  if (isMobile) {
+    return (
+      <div className="relative w-full overflow-hidden bg-white">
+        <div className="relative z-10">
+          {children}
+        </div>
+      </div>
+    );
+  }
 
   // Determine how many blobs to render based on screen width
   const blobCount = windowWidth < 768 ? 3 : 5;
@@ -159,3 +159,4 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
     </div>
   );
 };
+
