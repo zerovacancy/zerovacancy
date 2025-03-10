@@ -28,32 +28,10 @@ export const MobileOptimizer: React.FC<MobileOptimizerProps> = ({ children }) =>
         'overscroll-behavior-y', 'none'
       );
       
-      // Remove any scroll event listeners that might be causing the scroll hijacking
-      const scrollElements = document.querySelectorAll('[id*="section"], section, [class*="container"]');
-      scrollElements.forEach(el => {
-        const clone = el.cloneNode(true);
-        if (el.parentNode) {
-          el.parentNode.replaceChild(clone, el);
-        }
-      });
-      
       // Disable any scroll snap behavior
       document.documentElement.style.setProperty('scroll-snap-type', 'none');
       
-      // Force a single scroll context
-      const elements = document.querySelectorAll('div, section, main');
-      elements.forEach(el => {
-        // Cast the Element to HTMLElement to access style property
-        const htmlEl = el as HTMLElement;
-        if (htmlEl.id !== 'root' && 
-            !htmlEl.classList.contains('scroll-container-horizontal') && 
-            htmlEl !== document.body) {
-          htmlEl.style.overflow = 'visible';
-          htmlEl.style.overflowY = 'visible';
-        }
-      });
-      
-      // Add passive event listeners for performance
+      // Simplified optimization approach - avoid DOM manipulation that could cause rendering issues
       const passiveOption = { passive: true };
       
       const addPassiveListeners = () => {

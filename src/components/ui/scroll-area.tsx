@@ -21,7 +21,7 @@ const ScrollArea = React.forwardRef<
     return (
       <div className={cn(
         "h-full w-full", 
-        preserveHorizontalScroll ? "scroll-container-horizontal" : "overflow-visible",
+        preserveHorizontalScroll ? "scroll-container-horizontal" : "",
         className
       )}>
         {children}

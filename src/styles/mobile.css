@@ -9,15 +9,14 @@
     width: 100%;
     max-width: 100vw;
     overflow-x: hidden;
-    overflow-y: visible;
+    min-height: 100vh; /* Ensure minimum height */
   }
 
   /* Fix the app container */
   .app-container {
     width: 100%;
     max-width: 100vw;
-    overflow-x: hidden;
-    overflow-y: visible;
+    min-height: 100vh; /* Ensure minimum height */
   }
   
   /* Fix scrolling on iOS */
@@ -25,7 +24,6 @@
     width: 100%;
     height: 100%;
     max-width: 100vw;
-    overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-y: none;
   }
@@ -45,8 +43,6 @@
     max-width: 100vw !important;
     margin-left: 0 !important;
     margin-right: 0 !important;
-    overflow-x: hidden;
-    overflow-y: visible;
   }
   
   /* Fix section spacing and separation */
@@ -98,34 +94,12 @@
     max-width: 100vw !important;
   }
   
-  /* Prevent any potential nested scroll contexts */
-  .ScrollArea, 
-  .radix-scroll-area-component,
-  [id*="radix-"],
-  [class*="scroll-area"] {
-    overflow: visible !important;
-    overflow-y: visible !important;
-  }
-  
-  /* Fix for Radix UI scroll components */
-  [data-radix-scroll-area-viewport] {
-    overflow: visible !important;
-    overflow-y: visible !important;
-  }
-  
-  [data-radix-scroll-area-scrollbar] {
-    display: none !important;
-  }
-  
-  /* ----- Component-specific fixes ----- */
-  
   /* Fix hero section spacing */
   .Hero, [id="hero"] {
     min-height: auto !important;
     padding-top: 1.5rem !important;
     padding-bottom: 2rem !important;
     margin-bottom: 0 !important;
-    overflow: visible !important;
     background-color: white !important;
   }
   
@@ -133,7 +107,6 @@
   .mobile-features {
     padding-top: 1rem !important;
     padding-bottom: 1rem !important;
-    overflow: visible !important;
   }
   
   /* Fix feature cards */
@@ -158,13 +131,6 @@
     overscroll-behavior: contain;
   }
   
-  /* Ensure mobile sections don't create new stacking contexts unnecessarily */
-  .mobile-section {
-    position: relative;
-    z-index: 1;
-    overflow: visible !important;
-  }
-  
   /* Bottom navigation fixes */
   .bottom-navigation-fixed {
     position: fixed;
@@ -177,11 +143,6 @@
     padding-bottom: env(safe-area-inset-bottom, 0);
   }
   
-  /* Fix for horizontal scroll containers */
-  .ScrollAreaScrollbar[data-orientation="horizontal"] {
-    display: none !important;
-  }
-  
   /* Fix background blobs - make them more subtle */
   [class*="bg-purple"], [class*="bg-indigo"], [class*="bg-violet"] {
     opacity: 0.1 !important;
@@ -192,34 +153,11 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    overflow-y: visible !important;
-  }
-  
-  /* Prevent containers from interfering with scrolling */
-  .preview-search-container {
-    overflow: visible !important;
-    overflow-y: visible !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    background-color: white !important;
-  }
-  
-  /* Fix for radix components */
-  [class*="radix"] {
-    overflow: visible !important;
-  }
-  
-  /* Fix creator card containers */
-  .creator-card-container {
-    width: 100% !important;
-    max-width: 85% !important;
-    overflow: visible !important;
   }
   
   /* Fix pricing cards container */
   .pricing-container {
     overflow-x: auto !important;
-    overflow-y: visible !important;
     width: 100% !important;
     padding-left: 1rem !important;
     padding-right: 1rem !important;
@@ -232,11 +170,29 @@
     padding-right: 1rem !important;
     background-color: white !important;
   }
+
+  /* Fix creator card containers to prevent overflow */
+  .creator-card-container {
+    width: 80% !important;
+  }
 }
 
 /* Optimization for mobile scrolling */
 .mobile-view {
-  overflow: visible !important;
-  overflow-y: visible !important;
   overscroll-behavior-y: none;
+}
+
+/* Prevent background color flickering */
+.mobile-optimized {
+  background-color: white !important;
+}
+
+/* Prevent content jumps */
+.content-visible {
+  content-visibility: visible !important;
+}
+
+/* Force solid backgrounds for consistency */
+.mobile-section {
+  background-color: white !important;
 }
