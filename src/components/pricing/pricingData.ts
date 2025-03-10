@@ -4,9 +4,9 @@
 // Monthly and annual pricing values
 export const PRICING = {
   starterMonthly: 99,
-  starterAnnual: 99,
+  starterAnnual: 79,
   proMonthly: 399,
-  proAnnual: 399
+  proAnnual: 319
 };
 
 // Calculate savings
@@ -18,28 +18,28 @@ export const SAVINGS = {
 // Features for each plan with improved organization and wording
 export const FEATURES = {
   free: [
-    { text: "Browse & Discover Content Creators", primary: true },
-    { text: "Limited Access to Creator Profiles", primary: true },
-    { text: "Preview Marketplace Features", primary: true }
+    { text: "Browse & Discover Content Creators", primary: true, category: "Access & Discovery" },
+    { text: "Limited Access to Creator Profiles", primary: true, category: "Access & Discovery", tooltip: "View limited details of creator profiles before signing up" },
+    { text: "Preview Marketplace Features", primary: true, category: "Access & Discovery" }
   ],
   starter: [
-    { text: "Submit Requests for Proposals (RFPs)", primary: true },
-    { text: "Browse & Hire Premium Creators", primary: true },
-    { text: "1 Revision Included Per Project", primary: true },
-    { text: "Social Media Optimized Content", primary: true },
-    { text: "SEO-Optimized Content", primary: true },
-    { text: "Geo-Targeted Content", primary: true }
+    { text: "Submit Requests for Proposals (RFPs)", primary: true, category: "Submit Requests" },
+    { text: "Browse & Hire Premium Creators", primary: true, category: "Submit Requests" },
+    { text: "1 Revision Included Per Project", primary: true, category: "Submit Requests" },
+    { text: "Social Media Optimized Content", primary: true, category: "Content Optimization", tooltip: "Content sized and formatted optimally for social media platforms" },
+    { text: "SEO-Optimized Content", primary: true, category: "Content Optimization", tooltip: "Content enhanced to improve search engine visibility" },
+    { text: "Geo-Targeted Content", primary: true, category: "Content Optimization", tooltip: "Content optimized for specific geographic locations" }
   ],
   pro: [
-    { text: "Submit Requests for Proposals (RFPs) Instantly", primary: true },
-    { text: "Browse & Hire Premium Creators", primary: true },
-    { text: "3 Revisions Included Per Project", primary: true },
-    { text: "Social Media Optimized Content", primary: true },
-    { text: "SEO-Optimized Content", primary: true },
-    { text: "Geo-Targeted Content", primary: true },
-    { text: "Marketing Channel Optimization", primary: true },
-    { text: "7-Day Money-Back Guarantee", primary: true },
-    { text: "Performance Insights Dashboard", primary: true }
+    { text: "Submit Requests for Proposals (RFPs) Instantly", primary: true, category: "Premium Requests & Access" },
+    { text: "Browse & Hire Premium Creators", primary: true, category: "Premium Requests & Access" },
+    { text: "3 Revisions Included Per Project", primary: true, category: "Premium Requests & Access", tooltip: "Get more opportunities to refine your content" },
+    { text: "Social Media Optimized Content", primary: true, category: "Advanced Content Optimization" },
+    { text: "SEO-Optimized Content", primary: true, category: "Advanced Content Optimization" },
+    { text: "Geo-Targeted Content", primary: true, category: "Advanced Content Optimization" },
+    { text: "Marketing Channel Optimization", primary: true, category: "Advanced Content Optimization", tooltip: "Content optimized for various marketing channels including email, ads, and listings" },
+    { text: "7-Day Money-Back Guarantee", primary: true, category: "Premium Benefits" },
+    { text: "Performance Insights Dashboard", primary: true, category: "Premium Benefits", tooltip: "Analytics dashboard to track content performance" }
   ]
 };
 

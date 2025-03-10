@@ -3,9 +3,10 @@ import { cn } from "@/lib/utils";
 import { useSubscription } from "@/hooks/use-subscription";
 import PricingHeader from "./pricing/PricingHeader";
 import { BackgroundEffects } from "./pricing/BackgroundEffects";
-import { PricingContent } from "./pricing/PricingContent";
 import { CommonFeatures } from "./pricing/CommonFeatures";
 import { PricingFAQ } from "./pricing/PricingFAQ";
+import { PricingProvider } from "./pricing/PricingContext";
+import PricingContainer from "./pricing/PricingContainer";
 
 const Pricing = () => {
   const { subscription, isLoading } = useSubscription();
@@ -22,11 +23,13 @@ const Pricing = () => {
           subtitle="Choose the perfect plan for your real estate photography needs. No hidden fees."
         />
         
-        {/* Pricing toggle and content */}
-        <PricingContent 
-          subscription={subscription}
-          isLoading={isLoading}
-        />
+        {/* Pricing container with context */}
+        <PricingProvider>
+          <PricingContainer 
+            subscription={subscription}
+            isLoading={isLoading}
+          />
+        </PricingProvider>
         
         {/* Enhanced notes section */}
         <div className="mt-10 lg:mt-16">
