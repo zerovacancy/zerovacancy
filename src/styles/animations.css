@@ -1,3 +1,4 @@
+
 @tailwind utilities;
 
 @layer utilities {
@@ -93,22 +94,6 @@
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
   }
 
-  /* Enhanced border animations visibility */
-  .animate-border-beam {
-    animation: border-beam calc(var(--duration, 15) * 1s) linear infinite !important;
-    opacity: 0.8 !important;
-  }
-  
-  /* Creator card glow effect */
-  .creator-card-glow {
-    transition: opacity 0.3s ease;
-    opacity: 0;
-  }
-  
-  .group:hover .creator-card-glow {
-    opacity: 1;
-  }
-
   /* Optimized appear/disappear animations */
   .content-hidden {
     opacity: 0;
@@ -165,22 +150,5 @@
     transform: translateZ(0);
     backface-visibility: hidden;
     perspective: 1000px;
-  }
-  
-  /* Wave flow animation effect */
-  .wave-flow {
-    animation: wave-flow 10s ease-in-out infinite alternate;
-    will-change: opacity, transform;
-  }
-  
-  @keyframes wave-flow {
-    0% {
-      opacity: 0.2;
-      transform: translateY(0);
-    }
-    100% {
-      opacity: 0.3;
-      transform: translateY(10px);
-    }
   }
 }

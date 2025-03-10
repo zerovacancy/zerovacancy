@@ -87,8 +87,6 @@
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-y: contain;
     scroll-behavior: smooth;
-    scroll-snap-type: x mandatory;
-    padding-bottom: 10px;
   }
   
   /* Reduce animation complexity */
@@ -117,39 +115,4 @@
 /* Enhanced active states for touch devices */
 .touch-manipulation {
   touch-action: manipulation;
-}
-
-/* Enhanced scrolling experience for horizontal carousels */
-.snap-x {
-  scroll-snap-type: x mandatory;
-}
-
-.snap-start {
-  scroll-snap-align: start;
-}
-
-/* Smooth scrolling for better user experience */
-.smooth-scroll {
-  scroll-behavior: smooth;
-}
-
-/* Animation for scroll indicators */
-@keyframes pulse-subtle {
-  0%, 100% {
-    opacity: 0.8;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.05);
-  }
-}
-
-.animate-pulse-subtle {
-  animation: pulse-subtle 2s infinite;
-}
-
-/* Gradual fade for scroll edges */
-.scroll-fade-edges {
-  mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
 }
