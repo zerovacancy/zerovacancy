@@ -1,11 +1,11 @@
 
 import { cn } from "@/lib/utils";
 import { useSubscription } from "@/hooks/use-subscription";
-import PricingHeader from "./pricing/PricingHeader";
-import { BackgroundEffects } from "./pricing/BackgroundEffects";
-import { PricingContent } from "./pricing/PricingContent";
-import { CommonFeatures } from "./pricing/CommonFeatures";
-import { PricingFAQ } from "./pricing/PricingFAQ";
+import PricingHeader from "../pricing/PricingHeader";
+import { BackgroundEffects } from "../pricing/BackgroundEffects";
+import { PricingContent } from "../pricing/PricingContent";
+import { CommonFeatures } from "../pricing/CommonFeatures";
+import { PricingFAQ } from "../pricing/PricingFAQ";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const Pricing = () => {
