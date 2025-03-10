@@ -23,6 +23,11 @@ export function FeaturesSectionWithHoverEffects() {
   
   return (
     <section className="relative py-14 sm:py-18 lg:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden" id="features">
+      {/* Only show background on non-mobile devices */}
+      {!isMobile && (
+        <div className="absolute inset-0 bg-gradient-to-b from-indigo-50/50 to-white pointer-events-none"></div>
+      )}
+      
       <div className="max-w-6xl mx-auto relative z-10">
         <FeatureHeader 
           title="THE CREATIVE ARSENAL"
