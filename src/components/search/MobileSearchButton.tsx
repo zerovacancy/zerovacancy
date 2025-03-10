@@ -10,8 +10,10 @@ export const MobileSearchButton: React.FC = () => {
       <Button 
         className={cn(
           "w-full h-12",
-          "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white",
-          "shadow-sm hover:shadow-md transition-all duration-200",
+          // Replace gradient with solid color on mobile
+          "bg-indigo-600 sm:bg-gradient-to-r sm:from-indigo-600 sm:to-purple-600 hover:bg-indigo-700 sm:hover:from-indigo-700 sm:hover:to-purple-700 text-white",
+          // Simplify shadow on mobile
+          "shadow-sm sm:hover:shadow-md transition-all duration-200",
           "text-sm rounded-lg font-medium"
         )}
       >

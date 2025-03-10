@@ -1,143 +1,103 @@
 
 "use client";
 
-import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { ButtonHTMLAttributes, useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
-const shimmer = {
-  initial: {
-    x: "-100%"
-  },
-  animate: {
-    x: "100%"
-  },
-  transition: {
-    repeat: Infinity,
-    repeatType: "loop",
-    duration: 2,
-    ease: "linear"
-  }
-};
-
-interface ShimmerButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface ShimmerButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
+  background?: string;
   className?: string;
-  shimmerColor?: string;
-  shimmerSize?: string;
-  shimmerDuration?: string;
-  disabled?: boolean;
-  variant?: 'primary' | 'secondary' | 'tertiary';
+  shimmerClassName?: string;
+  mainColor?: string;
+  disableOnMobile?: boolean;
 }
 
-export const ShimmerButton = React.forwardRef<HTMLButtonElement, ShimmerButtonProps>(({
+export function ShimmerButton({
   children,
+  background,
   className,
-  shimmerColor = "rgba(255, 255, 255, 0.2)",
-  shimmerSize = "60%",
-  shimmerDuration = "2s",
-  disabled,
-  variant = 'primary',
+  shimmerClassName,
+  mainColor,
+  disableOnMobile = false,
   ...props
-}, ref) => {
-  const [isHovered, setIsHovered] = React.useState(false);
+}: ShimmerButtonProps) {
+  const [isMobile, setIsMobile] = useState(false);
   
-  const getVariantStyles = () => {
-    switch (variant) {
-      case 'primary':
-        return {
-          base: [
-            "bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-600",
-            "text-white",
-            "shadow-[0_4px_12px_rgba(79,70,229,0.2)]",
-            "hover:shadow-[0_6px_20px_rgba(79,70,229,0.3)]",
-            "hover:from-purple-700 hover:via-blue-700 hover:to-cyan-700",
-          ],
-          shimmerColor: "rgba(255, 255, 255, 0.2)"
-        };
-      case 'secondary':
-        return {
-          base: [
-            "bg-white",
-            "text-gray-900",
-            "border-2 border-gray-200",
-            "hover:bg-gray-50 hover:border-gray-300",
-            "shadow-sm hover:shadow"
-          ],
-          shimmerColor: "rgba(0, 0, 0, 0.05)"
-        };
-      case 'tertiary':
-        return {
-          base: [
-            "bg-gray-50/50",
-            "text-gray-700",
-            "border border-gray-200",
-            "hover:bg-gray-100/70 hover:text-gray-900"
-          ],
-          shimmerColor: "rgba(0, 0, 0, 0.03)"
-        };
-      default:
-        return {
-          base: [],
-          shimmerColor: "rgba(255, 255, 255, 0.2)"
-        };
-    }
-  };
+  // Check if mobile on mount
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+    };
+  }, []);
+  
+  // Use simplified button on mobile if disableOnMobile is true
+  if (isMobile && disableOnMobile) {
+    return (
+      <button
+        className={cn(
+          "bg-gradient-to-br from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700",
+          "text-white font-medium rounded-lg text-center relative overflow-hidden",
+          "shadow-md active:shadow-inner transition-all duration-200",
+          "active:scale-[0.98]",
+          className
+        )}
+        {...props}
+      >
+        <div className="relative z-20 flex items-center justify-center">
+          {children}
+        </div>
+      </button>
+    );
+  }
 
-  const variantStyles = getVariantStyles();
-  
   return (
-    <button 
-      ref={ref}
+    <button
       className={cn(
-        // Base styles
-        "relative group/btn overflow-hidden",
-        "h-12 px-6", // Increased height for better desktop presence
-        "inline-flex items-center justify-center gap-2",
-        "rounded-lg",
-        "font-medium text-base",
-        "transition-all duration-200",
-        
-        // Interactive States
-        "hover:scale-[1.02] active:scale-[0.98]",
-        "disabled:opacity-50 disabled:pointer-events-none",
-        "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500",
-        
-        // Variant styles
-        ...variantStyles.base,
-        
+        "inline-flex h-10 py-2 px-4 items-center justify-center rounded-md text-sm font-medium",
+        "text-white",
+        "bg-gradient-to-br from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700",
+        "overflow-hidden",
+        "shadow-md hover:shadow-lg transition-shadow duration-200",
+        "relative touch-none",
         className
-      )} 
-      onMouseEnter={() => setIsHovered(true)} 
-      onMouseLeave={() => setIsHovered(false)} 
-      disabled={disabled} 
+      )}
       {...props}
     >
-      <span className="relative z-10 flex items-center gap-2">
+      <div
+        className={cn(
+          "absolute inset-0 flex items-center justify-center w-full h-full transition-all",
+          shimmerClassName
+        )}
+      >
+        <div
+          style={{
+            backgroundImage: `conic-gradient(from 0deg at 50% 50%, ${
+              mainColor ?? "#3b82f6"
+            } 0%, transparent 60%, transparent 80%, transparent 100%)`,
+          }}
+          className={cn(
+            "w-[300%] aspect-square absolute z-[2] animate-[spin_4s_linear_infinite] opacity-0 group-hover:opacity-100",
+            "group-hover:animate-[spin_4s_linear_infinite]"
+          )}
+        />
+      </div>
+      <span className="z-10 flex items-center justify-center opacity-100">
         {children}
       </span>
-      
-      <AnimatePresence>
-        {!disabled && (
-          <motion.span 
-            className="absolute inset-0 z-0" 
-            style={{
-              background: `linear-gradient(90deg, transparent 0%, ${variantStyles.shimmerColor} ${shimmerSize}, transparent 100%)`
-            }} 
-            initial="initial" 
-            animate="animate" 
-            variants={shimmer} 
-            transition={{
-              duration: parseInt(shimmerDuration),
-              repeat: Infinity,
-              repeatType: "loop",
-              ease: "linear"
-            }} 
-          />
-        )}
-      </AnimatePresence>
+      <div
+        style={{
+          background: background ?? "transparent",
+        }}
+        className="absolute inset-[1px] rounded-md z-[1]"
+      />
     </button>
   );
-});
-
-ShimmerButton.displayName = "ShimmerButton";
+}

@@ -44,4 +44,48 @@
   * {
     @apply border-border;
   }
+  
+  /* Mobile optimization classes */
+  @media (max-width: 767px) {
+    /* Disable all animations on mobile for better performance */
+    .disable-animations-mobile * {
+      animation: none !important;
+      transition: none !important;
+      transform: none !important;
+    }
+
+    /* Disable blurs on mobile */
+    .disable-blur-mobile {
+      backdrop-filter: none !important;
+      filter: none !important;
+    }
+
+    /* Simplify gradients on mobile */
+    .simplify-gradient-mobile {
+      background: white !important;
+      background-image: none !important;
+    }
+
+    /* Reduce motion for all transition effects */
+    .reduce-motion-mobile * {
+      transition-duration: 0.1s !important;
+    }
+
+    /* Remove box shadows on mobile */
+    .remove-shadows-mobile * {
+      box-shadow: none !important;
+    }
+    
+    /* Hide purely decorative elements on mobile */
+    .hide-decorative-mobile {
+      display: none !important;
+    }
+
+    /* Optimize touch targets for mobile */
+    .optimize-touch-target {
+      min-height: 44px;
+      min-width: 44px;
+    }
+  }
 }
+

@@ -8,27 +8,39 @@ export function useIsMobile() {
   const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined)
 
   React.useEffect(() => {
-    // Initial check
-    const checkMobile = () => {
-      const width = window.innerWidth
-      setIsMobile(width < MOBILE_BREAKPOINT)
+    // Initial check at mount time
+    setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
+    
+    // Use CSS-based approach with matchMedia for efficient breakpoint detection
+    const mediaQuery = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`)
+    
+    // Update state based on media query
+    const updateIsMobile = (e: MediaQueryListEvent | MediaQueryList) => {
+      setIsMobile(e.matches)
     }
     
-    // Check on mount
-    checkMobile()
+    // Check immediately
+    updateIsMobile(mediaQuery)
     
-    // Set up event listener using matchMedia for better performance
-    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`)
-    
-    // Use the appropriate event listener based on browser support
-    const onChange = () => checkMobile()
-    mql.addEventListener("change", onChange)
+    // Use correct event listener based on browser support
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', updateIsMobile)
+    } else {
+      // For older browsers
+      mediaQuery.addListener(updateIsMobile)
+    }
     
     // Cleanup
-    return () => mql.removeEventListener("change", onChange)
+    return () => {
+      if (mediaQuery.removeEventListener) {
+        mediaQuery.removeEventListener('change', updateIsMobile)
+      } else {
+        // For older browsers
+        mediaQuery.removeListener(updateIsMobile)
+      }
+    }
   }, [])
 
-  // Return boolean value (use !! to ensure boolean)
   return !!isMobile
 }
 
@@ -36,25 +48,41 @@ export function useIsTablet() {
   const [isTablet, setIsTablet] = React.useState<boolean | undefined>(undefined)
 
   React.useEffect(() => {
-    const checkTablet = () => {
-      const width = window.innerWidth
-      setIsTablet(width >= MOBILE_BREAKPOINT && width < TABLET_BREAKPOINT)
+    // Use matchMedia for better performance
+    const mediaQuery = window.matchMedia(
+      `(min-width: ${MOBILE_BREAKPOINT}px) and (max-width: ${TABLET_BREAKPOINT - 1}px)`
+    )
+    
+    const updateIsTablet = (e: MediaQueryListEvent | MediaQueryList) => {
+      setIsTablet(e.matches)
     }
     
-    checkTablet()
+    // Check immediately
+    updateIsTablet(mediaQuery)
     
-    const handleResize = () => {
-      checkTablet()
+    // Use correct event listener based on browser support
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', updateIsTablet)
+    } else {
+      // For older browsers
+      mediaQuery.addListener(updateIsTablet)
     }
     
-    window.addEventListener('resize', handleResize)
-    
-    return () => window.removeEventListener('resize', handleResize)
+    // Cleanup
+    return () => {
+      if (mediaQuery.removeEventListener) {
+        mediaQuery.removeEventListener('change', updateIsTablet)
+      } else {
+        // For older browsers
+        mediaQuery.removeListener(updateIsTablet)
+      }
+    }
   }, [])
 
   return !!isTablet
 }
 
+// Helpers that combine breakpoints
 export function useIsMobileOrTablet() {
   const isMobile = useIsMobile()
   const isTablet = useIsTablet()
@@ -69,26 +97,32 @@ export function useViewportSize() {
   })
   
   React.useEffect(() => {
-    const updateSize = () => {
-      setSize({
-        width: window.innerWidth,
-        height: window.innerHeight
-      })
-    }
-    
-    // Throttle the resize event to improve performance
+    // Throttled resize handler for better performance
     let timeoutId: ReturnType<typeof setTimeout> | null = null
-    const throttledResize = () => {
+    
+    const handleResize = () => {
       if (timeoutId) clearTimeout(timeoutId)
-      timeoutId = setTimeout(updateSize, 100)
+      
+      timeoutId = setTimeout(() => {
+        setSize({
+          width: window.innerWidth,
+          height: window.innerHeight
+        })
+      }, 200) // Increased throttle for better performance
     }
     
-    // Initialize on mount
-    updateSize()
+    // Set initial size
+    setSize({
+      width: window.innerWidth,
+      height: window.innerHeight
+    })
     
-    window.addEventListener('resize', throttledResize)
+    window.addEventListener('resize', handleResize, { passive: true })
     
-    return () => window.removeEventListener('resize', throttledResize)
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId)
+      window.removeEventListener('resize', handleResize)
+    }
   }, [])
   
   return size

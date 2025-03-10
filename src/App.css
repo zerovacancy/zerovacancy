@@ -1,3 +1,4 @@
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -69,7 +70,7 @@
   backface-visibility: hidden;
 }
 
-/* Mobile touch optimizations */
+/* Mobile optimizations */
 @media (max-width: 768px) {
   /* Mobile optimization: Disable hover effects on mobile for better performance */
   .hover-effects-disabled {
@@ -95,6 +96,29 @@
     transition-duration: 0.3s !important;
   }
   
+  /* Hide decorative visuals on mobile */
+  .hide-decorative-mobile {
+    display: none !important;
+  }
+  
+  /* Disable all animations */
+  .disable-all-animations {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  /* Simplify backgrounds */
+  .simplify-bg-mobile {
+    background: white !important;
+    background-image: none !important;
+  }
+  
+  /* Remove blurs on mobile */
+  .remove-blur-mobile {
+    backdrop-filter: none !important;
+    filter: none !important;
+  }
+  
   /* Improve padding for mobile content */
   .mobile-content-container {
     padding-left: 0.75rem !important;
@@ -104,6 +128,11 @@
   /* Improve touch targets for mobile */
   button, a, input, select, textarea {
     min-height: 36px;
+  }
+  
+  /* Remove box shadows for better performance */
+  .mobile-no-shadow {
+    box-shadow: none !important;
   }
   
   /* We're removing the extra padding for the fixed bottom navigation */

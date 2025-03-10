@@ -1,12 +1,14 @@
 import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+
 interface AnimatedGradientBackgroundProps {
   className?: string;
   children?: React.ReactNode;
   intensity?: "subtle" | "medium" | "strong";
-  id?: string; // Add the id property to the interface
+  id?: string;
 }
+
 interface Beam {
   x: number;
   y: number;
@@ -19,6 +21,7 @@ interface Beam {
   pulse: number;
   pulseSpeed: number;
 }
+
 function createBeam(width: number, height: number): Beam {
   const angle = -35 + Math.random() * 10;
   return {
@@ -34,11 +37,12 @@ function createBeam(width: number, height: number): Beam {
     pulseSpeed: 0.02 + Math.random() * 0.03
   };
 }
+
 export function BeamsBackground({
   className,
   children,
   intensity = "medium",
-  id // Add the id parameter to the component props
+  id
 }: AnimatedGradientBackgroundProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const beamsRef = useRef<Beam[]>([]);
@@ -49,11 +53,18 @@ export function BeamsBackground({
     medium: 0.85,
     strong: 1
   };
+  
+  // Only run beam animations on non-mobile devices
   useEffect(() => {
+    // Check if mobile device - don't run animations if on mobile
+    const isMobile = window.innerWidth < 768;
+    if (isMobile) return;
+    
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
+    
     const updateCanvasSize = () => {
       const dpr = window.devicePixelRatio || 1;
       canvas.width = window.innerWidth * dpr;
@@ -68,6 +79,7 @@ export function BeamsBackground({
     };
     updateCanvasSize();
     window.addEventListener("resize", updateCanvasSize);
+    
     function resetBeam(beam: Beam, index: number, totalBeams: number) {
       if (!canvas) return beam;
       const column = index % 3;
@@ -80,6 +92,7 @@ export function BeamsBackground({
       beam.opacity = 0.2 + Math.random() * 0.1;
       return beam;
     }
+    
     function drawBeam(ctx: CanvasRenderingContext2D, beam: Beam) {
       ctx.save();
       ctx.translate(beam.x, beam.y);
@@ -100,6 +113,7 @@ export function BeamsBackground({
       ctx.fillRect(-beam.width / 2, 0, beam.width, beam.length);
       ctx.restore();
     }
+    
     function animate() {
       if (!canvas || !ctx) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -117,7 +131,9 @@ export function BeamsBackground({
       });
       animationFrameRef.current = requestAnimationFrame(animate);
     }
+    
     animate();
+    
     return () => {
       window.removeEventListener("resize", updateCanvasSize);
       if (animationFrameRef.current) {
@@ -125,25 +141,35 @@ export function BeamsBackground({
       }
     };
   }, [intensity]);
-  return <div id={id} // Pass the id to the container div
-  className={cn("relative overflow-hidden bg-white", className)}>
-            <canvas ref={canvasRef} className="absolute inset-0" style={{
-      filter: "blur(15px)"
-    }} />
 
-            <motion.div animate={{
-      opacity: [0.8, 0.9, 0.8]
-    }} transition={{
-      duration: 10,
-      ease: "easeInOut",
-      repeat: Number.POSITIVE_INFINITY
-    }} style={{
-      backdropFilter: "blur(50px)"
-    }} className="absolute inset-0 bg-[#e6e3ff]/15" />
+  return (
+    <div id={id}
+      className={cn("relative overflow-hidden bg-white", className)}>
+      {/* Only show canvas on larger screens */}
+      <canvas ref={canvasRef} className="absolute inset-0 hidden sm:block" style={{
+        filter: "blur(15px)"
+      }} />
 
-            <div className="relative z-10 w-full">
-                {children}
-            </div>
-        </div>;
+      {/* Disable blur and animation on mobile */}
+      <motion.div
+        animate={{
+          opacity: [0.8, 0.9, 0.8]
+        }}
+        transition={{
+          duration: 10,
+          ease: "easeInOut",
+          repeat: Number.POSITIVE_INFINITY
+        }}
+        style={{
+          backdropFilter: window.innerWidth >= 768 ? "blur(50px)" : "none"
+        }}
+        className="absolute inset-0 bg-[#e6e3ff]/15 hidden sm:block" />
+
+      <div className="relative z-10 w-full">
+        {children}
+      </div>
+    </div>
+  );
 }
+
 export default BeamsBackground;

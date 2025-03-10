@@ -42,16 +42,44 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
 }) => {
   const [isMounted, setIsMounted] = useState(false);
   const isReducedMotion = useRef(false);
+  const [isMobile, setIsMobile] = useState(false);
   
-  // Check for reduced motion preference
+  // Check if mobile and for reduced motion preference
   useEffect(() => {
     setIsMounted(true);
     isReducedMotion.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+    };
   }, []);
 
-  // Don't render animations for users with reduced motion preference
-  const shouldAnimate = isMounted && !isReducedMotion.current;
+  // Don't render animations for users with reduced motion preference or mobile
+  const shouldAnimate = isMounted && !isReducedMotion.current && !isMobile;
+
+  // For mobile, render simplified background without animations
+  if (isMobile) {
+    return (
+      <div className={cn(`relative w-full overflow-hidden ${baseColor}`, className)}>
+        {/* Simple gradient background for mobile */}
+        <div className="absolute inset-0 bg-gradient-to-b from-white/80 to-gray-100/80"></div>
+        
+        {/* Content */}
+        <div className="relative z-10">
+          {children}
+        </div>
+      </div>
+    );
+  }
   
+  // Desktop version with full effects
   // Determine blob sizes based on the blobSize prop
   const getBlobSizeClass = (position: 'first' | 'second' | 'third') => {
     const sizes = {
@@ -87,25 +115,6 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
     
     return `${base * multipliers[animationSpeed]}s`;
   };
-
-  // Only render the number of blobs needed based on screen size to reduce DOM elements
-  const [windowWidth, setWindowWidth] = useState(0);
-  
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
-    
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
-
-  // Determine how many blobs to render based on screen width
-  const blobCount = windowWidth < 768 ? 3 : 5;
 
   return (
     <div className={cn(`relative w-full overflow-hidden ${baseColor}`, className)}>
@@ -146,24 +155,6 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
         )}
         style={shouldAnimate ? { animation: `blob ${getAnimationDuration(40)} infinite`, animationDelay: `${getAnimationDuration(15)}` } : {}}
       ></div>
-      
-      {/* Render additional blobs only for larger screens */}
-      {blobCount > 3 && (
-        <>
-          <div 
-            className={cn(
-              `absolute top-[15%] right-[25%] ${getBlobSizeClass('second')} ${blobColors.first} rounded-full mix-blend-multiply filter blur-3xl opacity-${blobOpacity * 100}`
-            )}
-            style={shouldAnimate ? { animation: `blob ${getAnimationDuration(55)} infinite`, animationDelay: `${getAnimationDuration(12)}` } : {}}
-          ></div>
-          <div 
-            className={cn(
-              `absolute top-[70%] -left-40 ${getBlobSizeClass('first')} ${blobColors.third} rounded-full mix-blend-multiply filter blur-3xl opacity-${blobOpacity * 100}`
-            )}
-            style={shouldAnimate ? { animation: `blob ${getAnimationDuration(48)} infinite`, animationDelay: `${getAnimationDuration(20)}` } : {}}
-          ></div>
-        </>
-      )}
       
       {/* Spotlight effect - only if withSpotlight is true */}
       {withSpotlight && (
