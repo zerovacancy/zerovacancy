@@ -33,8 +33,7 @@ export const FeaturesGrid = ({
         contain: isMobile ? 'layout size' : 'none',
         willChange: isMobile ? 'height' : 'auto',
         minHeight: isMobile ? '450px' : 'auto',
-        transform: 'translateZ(0)',
-        paddingBottom: isMobile && !showAllCards ? '30px' : '0'
+        transform: 'translateZ(0)'
       }}
     >
       {visibleFeatures.map((feature, index) => (

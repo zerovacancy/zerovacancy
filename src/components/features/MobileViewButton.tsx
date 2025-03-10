@@ -24,7 +24,7 @@ export const MobileViewButton = ({
 
   return (
     <motion.div 
-      className={`h-[72px] flex justify-center items-center ${isMobile ? '-mt-16' : 'mt-12 sm:mt-14'}`}
+      className={`h-[72px] flex justify-center items-center ${isMobile ? '-mt-4' : 'mt-12 sm:mt-14'}`}
       {...motionProps}
       style={{
         contain: 'layout',
