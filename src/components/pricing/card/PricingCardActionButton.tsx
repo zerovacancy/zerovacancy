@@ -2,6 +2,7 @@
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { ColorVariant, colorVariants } from "../PricingCardColors";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface PricingCardActionButtonProps {
   cta: string;
@@ -17,6 +18,7 @@ export const PricingCardActionButton = ({
   onAction
 }: PricingCardActionButtonProps) => {
   const colorStyles = colorVariants[color];
+  const isMobile = useIsMobile();
   
   return (
     <motion.button
@@ -25,15 +27,15 @@ export const PricingCardActionButton = ({
         "mt-2 w-full px-4 py-4 rounded-xl text-white font-medium font-inter",
         "transition-all duration-300",
         isCurrentPlan ? "bg-green-500 cursor-default" : `bg-gradient-to-r ${colorStyles.highlight}`,
-        !isCurrentPlan && "hover:shadow-[0_4px_12px_rgba(0,0,0,0.15)] active:translate-y-0 group"
+        !isCurrentPlan && !isMobile && "hover:shadow-[0_4px_12px_rgba(0,0,0,0.15)] active:translate-y-0 group"
       )}
-      whileHover={{ scale: !isCurrentPlan ? 1.02 : 1 }}
-      whileTap={{ scale: !isCurrentPlan ? 0.98 : 1 }}
+      whileHover={!isMobile && !isCurrentPlan ? { scale: 1.02 } : {}}
+      whileTap={!isMobile && !isCurrentPlan ? { scale: 0.98 } : {}}
     >
       {isCurrentPlan ? "Current Plan" : (
         <span className="flex items-center justify-center">
           {cta}
-          {!isCurrentPlan && (
+          {!isCurrentPlan && !isMobile && (
             <motion.span
               className="ml-1.5 inline-block"
               initial={{ x: 0 }}
@@ -42,6 +44,9 @@ export const PricingCardActionButton = ({
             >
               →
             </motion.span>
+          )}
+          {!isCurrentPlan && isMobile && (
+            <span className="ml-1.5 inline-block">→</span>
           )}
         </span>
       )}
