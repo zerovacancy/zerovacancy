@@ -37,7 +37,6 @@ const CallToActionSection = () => {
       
       <div className="flex flex-col sm:flex-row gap-6 sm:gap-5 justify-center items-center mt-2">
         <ShimmerButton 
-          variant="primary" 
           className="w-full sm:w-auto min-w-[200px] touch-manipulation h-[52px] text-base font-semibold transition-all duration-300 hover:scale-105"
         >
           <span>Join Waitlist</span>
@@ -45,7 +44,6 @@ const CallToActionSection = () => {
         </ShimmerButton>
         
         <ShimmerButton 
-          variant="secondary" 
           className="w-full sm:w-auto min-w-[180px] touch-manipulation h-[52px] text-base font-semibold bg-gray-50 text-gray-800 border border-gray-200 hover:bg-gray-100 transition-all duration-300"
         >
           <span>Learn More</span>
