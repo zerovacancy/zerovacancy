@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { iconColors, featureIcons } from "./feature-colors";
 import { ChevronRight, Sparkles } from "lucide-react";
+import { MovingBorder } from "@/components/ui/moving-border";
 
 interface FeatureItemProps {
   title: string;
@@ -63,6 +64,23 @@ export const FeatureItem = ({
   
   const truncationPoint = findLogicalBreak(description, shortDescLimit);
   
+  // Map the borderColorBase to a suitable color for MovingBorder
+  const getMovingBorderColors = (base: string) => {
+    switch(base) {
+      case 'indigo': return ["#6366f1", "#818cf8"];
+      case 'blue': return ["#3b82f6", "#60a5fa"];
+      case 'violet': return ["#8b5cf6", "#a78bfa"];
+      case 'pink': return ["#ec4899", "#f472b6"];
+      case 'emerald': return ["#10b981", "#34d399"];
+      case 'amber': return ["#f59e0b", "#fbbf24"];
+      case 'cyan': return ["#06b6d4", "#22d3ee"];
+      case 'rose': return ["#f43f5e", "#fb7185"];
+      default: return ["#8b5cf6", "#a78bfa"];
+    }
+  };
+  
+  const borderColors = getMovingBorderColors(borderColorBase);
+  
   return (
     <motion.div
       className={cn(
@@ -77,11 +95,7 @@ export const FeatureItem = ({
         isMobile ? "active:translate-y-0" : "hover:-translate-y-1.5",
         "transition-all duration-300",
         // For partially visible card
-        isPartiallyVisible && "opacity-80 shadow-none",
-        // Add subtle border
-        `border border-${borderColorBase}-100 border-opacity-30`,
-        // Add some top margin for popular tag
-        isPopular && "mt-3 sm:mt-5" 
+        isPartiallyVisible && "opacity-80 shadow-none"
       )}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ 
@@ -98,14 +112,29 @@ export const FeatureItem = ({
         pointerEvents: isPartiallyVisible ? "none" : "auto"
       }}
     >
+      {/* Moving Border */}
+      <div className="absolute inset-0 rounded-xl sm:rounded-xl overflow-hidden">
+        <MovingBorder
+          duration={isMobile ? 4000 : 3000} 
+          rx="1rem"
+          ry="1rem"
+          pathClassName="stroke-[0.5px] md:stroke-[1px]"
+          colors={borderColors}
+          className="absolute inset-0 opacity-[0.3] group-hover:opacity-70 transition-opacity duration-500"
+        >
+          {/* Empty child needed for MovingBorder */}
+          <div className="sr-only">Moving border animation</div>
+        </MovingBorder>
+      </div>
+      
       <button
         onClick={handleClick}
         aria-expanded={isExpanded}
         className="w-full h-full flex flex-col p-4 sm:p-5 lg:p-6 z-10 relative text-left"
       >
-        {/* Popular Tag - Improved positioning to prevent cutoff */}
+        {/* Standardized Popular Tag - consistent positioning for all cards */}
         {isPopular && (
-          <div className="absolute -top-4 sm:-top-5 inset-x-0 flex justify-center z-20 px-2">
+          <div className="absolute -top-3 inset-x-0 flex justify-center z-20">
             <div className="py-1 px-2.5 flex items-center gap-1 rounded-full bg-gradient-to-r from-brand-purple-medium to-brand-purple text-white text-xs font-medium shadow-md">
               <Sparkles className="h-3 w-3" />
               <span className="font-medium">Popular</span>

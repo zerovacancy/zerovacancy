@@ -1,29 +1,29 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Anek+Devanagari:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 @layer base {
   h1 {
-    @apply text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight font-playfair text-brand-purple-dark uppercase;
+    @apply text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight font-inter text-brand-purple-dark uppercase;
   }
 
   h2 {
-    @apply text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight font-space text-brand-purple-dark uppercase;
+    @apply text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight font-inter text-brand-purple-dark uppercase;
   }
 
   h3 {
-    @apply text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight font-space text-brand-purple-medium uppercase;
+    @apply text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight font-inter text-brand-purple-medium uppercase;
   }
 
   h4 {
-    @apply text-xl sm:text-2xl font-medium font-space text-brand-purple-medium uppercase;
+    @apply text-xl sm:text-2xl font-medium font-inter text-brand-purple-medium uppercase;
   }
 
   h5 {
-    @apply text-lg sm:text-xl font-medium font-space text-brand-purple-medium uppercase;
+    @apply text-lg sm:text-xl font-medium font-inter text-brand-purple-medium uppercase;
   }
 
   h6 {
-    @apply text-base sm:text-lg font-medium font-space text-brand-purple-medium uppercase;
+    @apply text-base sm:text-lg font-medium font-inter text-brand-purple-medium uppercase;
   }
 
   p {
@@ -45,23 +45,23 @@
 
 @layer components {
   .section-title {
-    @apply text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-center tracking-tight font-playfair text-brand-purple-dark uppercase;
+    @apply text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-center tracking-tight font-inter text-brand-purple-dark uppercase;
   }
 
   .section-subtitle {
-    @apply text-base sm:text-lg text-brand-text-secondary font-normal font-space;
+    @apply text-base sm:text-lg text-brand-text-secondary font-normal font-inter;
   }
 
   .text-display {
-    @apply text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight font-playfair text-brand-purple-dark uppercase;
+    @apply text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight font-inter text-brand-purple-dark uppercase;
   }
 
   .text-heading {
-    @apply text-2xl sm:text-3xl font-semibold tracking-tight font-space text-brand-purple-medium uppercase;
+    @apply text-2xl sm:text-3xl font-semibold tracking-tight font-inter text-brand-purple-medium uppercase;
   }
 
   .text-title {
-    @apply text-xl font-medium font-space text-brand-purple-medium uppercase;
+    @apply text-xl font-medium font-inter text-brand-purple-medium uppercase;
   }
 
   .text-body {
@@ -83,7 +83,7 @@
 
   /* Special text elements */
   .text-price {
-    @apply text-brand-purple-medium font-semibold font-space;
+    @apply text-brand-purple-medium font-semibold font-inter;
   }
   
   .text-metrics {
@@ -91,11 +91,11 @@
   }
   
   .text-tag {
-    @apply text-brand-purple-medium font-space;
+    @apply text-brand-purple-medium font-inter;
   }
   
   /* Highlighted text within headers */
   .text-highlight {
-    @apply text-brand-purple font-space;
+    @apply text-brand-purple font-inter;
   }
 }

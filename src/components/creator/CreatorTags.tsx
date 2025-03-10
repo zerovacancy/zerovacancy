@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Tag } from 'lucide-react';
@@ -68,7 +67,6 @@ export const CreatorTags: React.FC<CreatorTagsProps> = ({ tags }) => {
               "transition-all duration-200 whitespace-nowrap",
               "hover:scale-105 cursor-pointer shadow-sm hover:shadow-md",
               "flex items-center gap-1",
-              "font-anek",
               getTagStyle(tag)
             )}
             role="listitem"
