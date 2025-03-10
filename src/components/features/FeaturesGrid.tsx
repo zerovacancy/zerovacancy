@@ -30,10 +30,13 @@ export const FeaturesGrid = ({
   return (
     <div 
       className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-7 relative"
-      // Add CSS overscroll-behavior to prevent scroll jumping
-      style={{ overscrollBehavior: "contain" }}
+      style={{ 
+        contain: isMobile ? 'layout size' : 'none',
+        willChange: isMobile ? 'height' : 'auto',
+        minHeight: isMobile ? '450px' : 'auto',
+        transform: 'translateZ(0)'
+      }}
     >
-      {/* Regular Features - show all features to prevent jumps */}
       {visibleFeatures.map((feature, index) => (
         <FeatureItem
           key={index}
@@ -45,8 +48,6 @@ export const FeaturesGrid = ({
           isPartiallyVisible={false}
         />
       ))}
-      
-      {/* Mobile Overlay removed to fix scroll jumping */}
     </div>
   );
 };

@@ -16,35 +16,21 @@ export function FeaturesSectionWithHoverEffects() {
   // Function to toggle showing all cards with scroll position preservation
   const toggleShowAllCards = () => {
     if (isMobile) {
-      // Remember scroll position before change
-      const scrollPosition = window.scrollY;
-      
       setShowAllCards(prev => !prev);
-      
-      // Restore scroll position after state update
-      setTimeout(() => {
-        window.scrollTo({
-          top: scrollPosition,
-          behavior: "auto" // Use auto instead of smooth to prevent additional animations
-        });
-      }, 10);
     } else {
       setShowAllCards(prev => !prev);
     }
   };
   
-  // Add scroll anchoring to prevent jumps
+  // Add scroll anchoring and containment to prevent jumps
   useEffect(() => {
     if (isMobile && sectionRef.current) {
       const section = sectionRef.current;
-      
-      // Set CSS scroll anchoring
-      section.style.cssText += "overflow-anchor: auto; scroll-snap-align: start;";
+      section.style.cssText += "overflow-anchor: auto; contain: layout;";
       
       return () => {
-        // Clean up styles
         section.style.overflowAnchor = "";
-        section.style.scrollSnapAlign = "";
+        section.style.contain = "";
       };
     }
   }, [isMobile]);
@@ -57,10 +43,10 @@ export function FeaturesSectionWithHoverEffects() {
   return (
     <section 
       ref={sectionRef}
-      className="relative py-14 sm:py-18 lg:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden"
+      className="relative py-16 sm:py-18 lg:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden"
       style={{ 
-        overscrollBehavior: "contain", // Prevent scroll chaining
-        ...(isMobile ? { willChange: "auto" } : {}) // Optimize for mobile
+        contain: isMobile ? 'layout' : 'none',
+        willChange: isMobile ? 'contents' : 'auto',
       }}
     >
       <div className="max-w-6xl mx-auto relative z-10">
@@ -77,20 +63,17 @@ export function FeaturesSectionWithHoverEffects() {
           toggleShowAllCards={toggleShowAllCards}
         />
         
-        {/* View all services button (desktop and mobile) - positioned differently on mobile */}
+        {/* View all services button (desktop and mobile) */}
         <AnimatePresence mode="wait">
-          {(!isMobile || (isMobile && !showAllCards)) && (
-            <MobileViewButton
-              showAllCards={showAllCards}
-              toggleShowAllCards={toggleShowAllCards}
-              isMobile={isMobile}
-            />
-          )}
+          <MobileViewButton
+            showAllCards={showAllCards}
+            toggleShowAllCards={toggleShowAllCards}
+            isMobile={isMobile}
+          />
         </AnimatePresence>
       </div>
     </section>
   );
 }
 
-// Export both named and default export for backward compatibility
 export default FeaturesSectionWithHoverEffects;
