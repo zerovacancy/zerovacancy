@@ -5,15 +5,17 @@ import { PreviewCard } from './PreviewCard';
 import { PreviewHeader } from './PreviewHeader';
 import { PreviewContent } from './PreviewContent';
 import type { AvailabilityStatus } from '../creator/types';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '../ui/button';
-import { ChevronRight } from 'lucide-react';
 
 const PreviewSearch = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
   const [selectedLocation, setSelectedLocation] = useState<string>('');
-  const [showAllCreators, setShowAllCreators] = useState(false);
+  const isMobile = useIsMobile();
+  const [activeCardIndex, setActiveCardIndex] = useState(0);
   
   useEffect(() => {
     if (!containerRef.current) return;
@@ -52,8 +54,12 @@ const PreviewSearch = () => {
     setSelectedLocation(location);
   };
 
-  const toggleShowAllCreators = () => {
-    setShowAllCreators(prev => !prev);
+  const navigateSlider = (direction: 'prev' | 'next') => {
+    if (direction === 'prev') {
+      setActiveCardIndex(prev => (prev > 0 ? prev - 1 : creatorData.length - 1));
+    } else {
+      setActiveCardIndex(prev => (prev < creatorData.length - 1 ? prev + 1 : 0));
+    }
   };
 
   const creatorData = [
@@ -92,9 +98,6 @@ const PreviewSearch = () => {
     }
   ];
 
-  // Only show the first creator initially, unless showAllCreators is true
-  const visibleCreators = showAllCreators ? creatorData : creatorData.slice(0, 1);
-
   return (
     <div 
       className="w-full px-2 sm:px-4 md:px-6 lg:px-8 xl:px-10 content-visibility-auto py-3 sm:py-6 md:py-8" 
@@ -110,20 +113,44 @@ const PreviewSearch = () => {
             isVisible={isVisible}
             loadedImages={loadedImages}
             handleImageLoad={handleImageLoad}
-            creatorData={visibleCreators}
+            creatorData={creatorData}
             locationValue={selectedLocation}
             onLocationSelect={handleLocationSelect}
+            activeCardIndex={activeCardIndex}
           />
           
-          {!showAllCreators && (
-            <div className="w-full flex justify-center py-4 sm:py-6">
+          {isMobile && (
+            <div className="flex justify-between items-center w-full px-4 py-3">
               <Button 
-                onClick={toggleShowAllCreators}
+                onClick={() => navigateSlider('prev')}
                 variant="outline"
-                className="group border-indigo-300 hover:border-indigo-500 hover:bg-indigo-50/70 text-indigo-600 font-medium px-6"
+                size="icon"
+                className="h-9 w-9 rounded-full bg-white shadow-sm border-indigo-100"
               >
-                Show 2 more creators
-                <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                <ChevronLeft className="h-5 w-5 text-indigo-600" />
+              </Button>
+              
+              <div className="flex space-x-1">
+                {creatorData.map((_, index) => (
+                  <span 
+                    key={index}
+                    className={cn(
+                      "block w-2 h-2 rounded-full transition-all duration-300",
+                      index === activeCardIndex 
+                        ? "bg-indigo-500 scale-125" 
+                        : "bg-indigo-200"
+                    )}
+                  />
+                ))}
+              </div>
+              
+              <Button 
+                onClick={() => navigateSlider('next')}
+                variant="outline"
+                size="icon"
+                className="h-9 w-9 rounded-full bg-white shadow-sm border-indigo-100"
+              >
+                <ChevronRight className="h-5 w-5 text-indigo-600" />
               </Button>
             </div>
           )}

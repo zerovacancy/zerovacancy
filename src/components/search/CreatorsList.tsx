@@ -1,10 +1,10 @@
 
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { CreatorCard } from '../creator/CreatorCard';
-import { ChevronDown, Filter, ChevronUp } from 'lucide-react';
+import { ChevronDown, Filter } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Creator } from '../creator/types';
 
 interface CreatorsListProps {
@@ -14,6 +14,7 @@ interface CreatorsListProps {
   onImageLoad: (imageSrc: string) => void;
   loadedImages: Set<string>;
   imageRef: (el: HTMLImageElement | null) => void;
+  activeCardIndex?: number;
 }
 
 export const CreatorsList: React.FC<CreatorsListProps> = ({
@@ -22,14 +23,11 @@ export const CreatorsList: React.FC<CreatorsListProps> = ({
   onSort,
   onImageLoad,
   loadedImages,
-  imageRef
+  imageRef,
+  activeCardIndex = 0
 }) => {
   const isMobile = useIsMobile();
   const filterTagsRef = useRef<HTMLDivElement>(null);
-  const [showAllCreators, setShowAllCreators] = useState(false);
-
-  // Determine which creators to show based on mobile state and expanded state
-  const visibleCreators = isMobile && !showAllCreators ? creators.slice(0, 1) : creators;
 
   // Filter tags with improved styling
   const filterTags = ["All Services", "Photography", "Video Tours", "Drone Footage", "3D Tours", "Floor Plans", "Virtual Staging"];
@@ -47,89 +45,79 @@ export const CreatorsList: React.FC<CreatorsListProps> = ({
             </>}
           
           <div className="flex space-x-2 pb-1 min-w-max">
-            {filterTags.map((tag, index) => <button key={index} className={cn("transition-all whitespace-nowrap rounded-full border border-gray-200", "font-medium shadow-sm hover:bg-indigo-50 hover:border-indigo-200 hover:text-indigo-800", index === 0 ? "bg-indigo-50 text-indigo-700 border-indigo-200" : "bg-white text-gray-700", isMobile ? "text-xs px-2.5 py-1" : "text-sm px-3 py-1.5" // Smaller on mobile
-          )}>
+            {filterTags.map((tag, index) => (
+              <button 
+                key={index} 
+                className={cn(
+                  "transition-all whitespace-nowrap rounded-full border border-gray-200", 
+                  "font-medium shadow-sm hover:bg-indigo-50 hover:border-indigo-200 hover:text-indigo-800", 
+                  index === 0 ? "bg-indigo-50 text-indigo-700 border-indigo-200" : "bg-white text-gray-700", 
+                  isMobile ? "text-xs px-2.5 py-1" : "text-sm px-3 py-1.5" // Smaller on mobile
+                )}
+              >
                 {index === 0 && <Filter className={cn("inline-block mr-1.5", isMobile ? "w-2.5 h-2.5" : "w-3 h-3")} />}
                 {tag}
-              </button>)}
+              </button>
+            ))}
           </div>
         </div>
       </div>
       
-      {/* Creators grid with single column on mobile, multi-column on larger screens */}
-      <div className={cn("grid gap-4 sm:gap-5 md:gap-6", isMobile ? "grid-cols-1" : "sm:grid-cols-2 lg:grid-cols-3" // Single column on mobile
-    )}>
-        {visibleCreators.map((creator, index) => <motion.div key={creator.name} initial={{
-        opacity: 0,
-        y: 20
-      }} animate={{
-        opacity: 1,
-        y: 0
-      }} transition={{
-        duration: 0.5,
-        delay: isMobile ? 0.1 * index : 0.1 + index * 0.1,
-        ease: [0.22, 1, 0.36, 1]
-      }}>
-            <CreatorCard 
-              creator={creator} 
-              onImageLoad={onImageLoad} 
-              loadedImages={loadedImages} 
-              imageRef={imageRef} 
-            />
-          </motion.div>)}
-        
-        {creators.length === 0 && <div className="col-span-full text-center py-10">
-            <div className="text-gray-500">No creators found</div>
-            <p className="text-sm text-gray-400 mt-2">Try adjusting your filters</p>
-          </div>}
-      </div>
-      
-      {/* Mobile expand/collapse button - only visible if there are more than 1 creator */}
-      {isMobile && creators.length > 1 && (
-        <div className="mt-4 mb-6 text-center">
-          <motion.button 
-            className={cn(
-              "inline-flex items-center justify-center px-6 py-3",
-              "rounded-lg", // Changed from rounded-full to rounded-lg
-              "bg-gradient-to-r from-gray-50 to-indigo-50/30",
-              "text-indigo-600/80 font-medium",
-              "border border-indigo-100/50",
-              "shadow-sm",
-              "hover:shadow-md hover:bg-indigo-50/50 transition-all duration-200",
-              "text-sm w-[85%] mx-auto",
-              "relative overflow-hidden group"
-            )}
-            onClick={() => setShowAllCreators(!showAllCreators)}
-            initial={{
-              opacity: 0,
-              y: 10
-            }}
-            animate={{
-              opacity: 1,
-              y: 0
-            }}
-            transition={{
-              duration: 0.3
-            }}
-            whileTap={{
-              scale: 0.98
-            }}
+      {/* Mobile horizontal slider */}
+      {isMobile ? (
+        <div className="relative overflow-hidden">
+          <div 
+            className="flex transition-transform duration-300 ease-in-out"
+            style={{ transform: `translateX(-${activeCardIndex * 100}%)` }}
           >
-            <span className="relative z-10 flex items-center">
-              {showAllCreators ? "Show less creators" : `Show ${creators.length - 1} more creators`}
-              {showAllCreators 
-                ? <ChevronUp className="ml-1.5 w-3.5 h-3.5 text-indigo-500/70" /> 
-                : <ChevronDown className="ml-1.5 w-3.5 h-3.5 text-indigo-500/70" />
-              }
-            </span>
-            
-            {/* Subtle shimmer effect */}
-            <span className="absolute inset-0 z-0 animate-shimmer-slide bg-gradient-to-r from-transparent via-indigo-100/20 to-transparent" />
-          </motion.button>
+            {creators.map((creator, index) => (
+              <div 
+                key={creator.name} 
+                className="w-full flex-shrink-0 px-1.5"
+              >
+                <CreatorCard 
+                  creator={creator} 
+                  onImageLoad={onImageLoad} 
+                  loadedImages={loadedImages} 
+                  imageRef={imageRef} 
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        // Desktop grid layout - show all cards
+        <div className={cn("grid gap-4 sm:gap-5 md:gap-6 sm:grid-cols-2 lg:grid-cols-3")}>
+          {creators.map((creator, index) => (
+            <motion.div 
+              key={creator.name} 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.5,
+                delay: 0.1 + index * 0.1,
+                ease: [0.22, 1, 0.36, 1]
+              }}
+            >
+              <CreatorCard 
+                creator={creator} 
+                onImageLoad={onImageLoad} 
+                loadedImages={loadedImages} 
+                imageRef={imageRef} 
+              />
+            </motion.div>
+          ))}
+          
+          {creators.length === 0 && (
+            <div className="col-span-full text-center py-10">
+              <div className="text-gray-500">No creators found</div>
+              <p className="text-sm text-gray-400 mt-2">Try adjusting your filters</p>
+            </div>
+          )}
         </div>
       )}
       
-      {/* Desktop "Show more" button - only visible on desktop */}
+      {/* Desktop "Show more" button - only visible on desktop if there are creators */}
       {!isMobile && creators.length > 0 && (
         <div className="mt-6 text-center">
           <button 
