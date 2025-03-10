@@ -53,8 +53,7 @@
               toggleShowAllCards={toggleShowAllCards}
             />
 
-            {/* Adjusted padding to ensure proper overlay positioning */}
-            <div className={`${isMobile && !showAllCards ? 'pt-10' : 'pt-6'} w-full`}>
+            <div className="w-full">
               <AnimatePresence>
                 {(!isMobile || (isMobile && !showAllCards)) && (
                   <MobileViewButton

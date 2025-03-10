@@ -28,7 +28,7 @@ export const FeaturesGrid = ({
 }: FeaturesGridProps) => {
   return (
     <div 
-      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-7 relative z-10"
+      className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-7 relative z-10 ${isMobile && !showAllCards ? 'pb-10' : ''}`}
       style={{ 
         contain: isMobile ? 'layout size' : 'none',
         willChange: isMobile ? 'height' : 'auto',
