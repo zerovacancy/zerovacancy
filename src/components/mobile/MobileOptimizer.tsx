@@ -1,6 +1,5 @@
 
 import React, { useEffect, useRef } from 'react';
-import { useIsMobile } from '@/hooks/use-mobile';
 
 interface MobileOptimizerProps {
   children: React.ReactNode;
@@ -10,20 +9,18 @@ interface MobileOptimizerProps {
  * MobileOptimizer component that provides global mobile optimizations
  * for better touch and scroll behavior.
  * 
- * Completely rewritten to prevent infinite rendering loops.
+ * Complete rewrite to avoid hook issues and prevent infinite loops.
  */
 export const MobileOptimizer: React.FC<MobileOptimizerProps> = ({ children }) => {
-  // Only detect mobile status once on mount with ref to avoid re-renders
-  const isMobileRef = useRef<boolean>();
   const optimizationsAppliedRef = useRef(false);
   
   // Run effect only once on mount
   useEffect(() => {
-    // Get the mobile status once and store in ref
-    isMobileRef.current = useIsMobile();
+    // Use direct window check for mobile status - avoid hooks outside components
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
     
     // Only apply optimizations if on mobile and not already applied
-    if (isMobileRef.current && !optimizationsAppliedRef.current) {
+    if (isMobile && !optimizationsAppliedRef.current) {
       if (document.body) {
         // Add the mobile-optimized class to the body
         document.body.classList.add('mobile-optimized');
@@ -39,7 +36,7 @@ export const MobileOptimizer: React.FC<MobileOptimizerProps> = ({ children }) =>
           'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover');
       }
       
-      // Mark optimizations as applied using ref, not state
+      // Mark optimizations as applied using ref
       optimizationsAppliedRef.current = true;
     }
     
