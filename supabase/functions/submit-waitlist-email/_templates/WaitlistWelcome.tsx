@@ -23,20 +23,19 @@ export const WaitlistWelcomeEmail = ({
   userEmail = 'valued.subscriber@example.com',
 }: WaitlistWelcomeEmailProps) => {
   const baseUrl = 'https://www.zerovacancy.ai';
-  const logoUrl = `${baseUrl}/logo.png`;
   
   return (
     <Html>
       <Head />
-      <Preview>Access Confirmed - Welcome to ZeroVacancy</Preview>
+      <Preview>Access Confirmed</Preview>
       <Body style={main}>
         <Container style={container}>
           <Section style={logoContainer}>
             <Img
-              src={logoUrl}
-              width="170"
-              height="50"
-              alt="ZeroVacancy"
+              src="/logo.png" 
+              width="36"
+              height="36"
+              alt="ZeroVacancy Logo"
               style={logo}
             />
             <Text style={logoText}>zerovacancy</Text>
@@ -153,7 +152,7 @@ const ctaSection = {
 }
 
 const button = {
-  backgroundColor: '#111827',
+  backgroundColor: '#1d4ed8',
   borderRadius: '4px',
   color: '#ffffff',
   fontSize: '16px',
@@ -162,4 +161,3 @@ const button = {
   textAlign: 'center' as const,
   display: 'inline-block',
 }
-
