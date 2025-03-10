@@ -24,14 +24,14 @@ export const MobileViewButton = ({
 
   return (
     <motion.div 
-      className={`h-[72px] flex justify-center items-center ${isMobile ? '-mt-4' : 'mt-12 sm:mt-14'}`}
+      className={`flex justify-center items-center ${isMobile ? 'mt-6' : 'mt-12 sm:mt-14'}`}
       {...motionProps}
       style={{
         contain: 'layout',
         willChange: 'opacity, transform',
         transform: 'translateZ(0)',
-        position: isMobile ? 'relative' : 'static',
-        zIndex: isMobile ? 20 : 'auto'
+        position: 'relative',
+        zIndex: 20
       }}
     >
       {isMobile && showAllCards ? (
