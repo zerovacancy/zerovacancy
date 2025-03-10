@@ -152,85 +152,87 @@ const Index = () => {
         </div>
       )}
 
-      <BackgroundEffects 
-        blobColors={{
-          first: "bg-purple-100",
-          second: "bg-indigo-100",
-          third: "bg-violet-100"
-        }}
-        blobOpacity={0.15}
-        withSpotlight={true}
-        spotlightClassName="from-purple-500/5 via-violet-500/5 to-blue-500/5"
-        baseColor="bg-white/80" 
-        pattern="none"
-        className="flex-1 pb-16 sm:pb-0 w-full py-0"
-        animationSpeed="slow"
-      >
-        <div className="space-y-0 w-full">
-          {/* Hero Section - Always visible */}
-          <section ref={addSectionRef(0)} className="w-full">
-            <Hero />
-          </section>
-          
-          {/* How It Works Section */}
-          <section 
-            ref={addSectionRef(1)} 
-            id="how-it-works" 
-            className="relative w-full"
-          >
-            <div className="relative z-10">
+      <main className="flex-1 pb-16 sm:pb-0 w-full">
+        <BackgroundEffects 
+          blobColors={{
+            first: "bg-purple-100",
+            second: "bg-indigo-100",
+            third: "bg-violet-100"
+          }}
+          blobOpacity={0.15}
+          withSpotlight={true}
+          spotlightClassName="from-purple-500/5 via-violet-500/5 to-blue-500/5"
+          baseColor="bg-white/80" 
+          pattern="none"
+          className="py-0"
+          animationSpeed="slow"
+        >
+          <div className="space-y-0 w-full">
+            {/* Hero Section - Always visible */}
+            <section ref={addSectionRef(0)} className="w-full">
+              <Hero />
+            </section>
+            
+            {/* How It Works Section */}
+            <section 
+              ref={addSectionRef(1)} 
+              id="how-it-works" 
+              className="relative w-full"
+            >
+              <div className="relative z-10">
+                <Suspense fallback={<SectionLoader />}>
+                  <OptimizedHowItWorks />
+                </Suspense>
+              </div>
+            </section>
+            
+            {/* Search Section */}
+            <section 
+              ref={addSectionRef(2)} 
+              id="find-creators" 
+              className="relative w-full"
+            >
+              <div className="max-w-7xl mx-auto relative z-10 py-10 sm:py-16 lg:py-20">
+                <Suspense fallback={<SectionLoader />}>
+                  <PreviewSearch />
+                </Suspense>
+              </div>
+            </section>
+            
+            {/* Professional Content Creation Services */}
+            <section 
+              ref={addSectionRef(3)} 
+              className="w-full"
+            >
               <Suspense fallback={<SectionLoader />}>
-                <OptimizedHowItWorks />
+                <FeaturesSectionWithHoverEffects />
               </Suspense>
-            </div>
-          </section>
-          
-          {/* Search Section */}
-          <section 
-            ref={addSectionRef(2)} 
-            id="find-creators" 
-            className="relative w-full"
-          >
-            <div className="max-w-7xl mx-auto relative z-10 py-10 sm:py-16 lg:py-20">
+            </section>
+
+            {/* Pricing Section */}
+            <section 
+              ref={addSectionRef(4)} 
+              className="w-full"
+            >
               <Suspense fallback={<SectionLoader />}>
-                <PreviewSearch />
+                <Pricing />
               </Suspense>
-            </div>
-          </section>
-          
-          {/* Professional Content Creation Services */}
-          <section 
-            ref={addSectionRef(3)} 
-            className="w-full"
-          >
-            <Suspense fallback={<SectionLoader />}>
-              <FeaturesSectionWithHoverEffects />
-            </Suspense>
-          </section>
+            </section>
 
-          {/* Pricing Section */}
-          <section 
-            ref={addSectionRef(4)} 
-            className="w-full"
-          >
-            <Suspense fallback={<SectionLoader />}>
-              <Pricing />
-            </Suspense>
-          </section>
-
-          {/* Final CTA Section */}
-          <div 
-            ref={addSectionRef(5)} 
-            className="relative w-full"
-          >
-            <div className="relative z-10 max-w-7xl mx-auto py-14 sm:py-20 lg:py-24">
-              <CallToActionSection />
+            {/* Final CTA Section */}
+            <div 
+              ref={addSectionRef(5)} 
+              className="relative w-full"
+            >
+              <div className="relative z-10 max-w-7xl mx-auto py-14 sm:py-20 lg:py-24">
+                <CallToActionSection />
+              </div>
             </div>
           </div>
-        </div>
-        
-        <Footer />
-      </BackgroundEffects>
+          
+          <Footer />
+        </BackgroundEffects>
+      </main>
       <BottomNav />
       <GlowDialog open={showGlowDialog} onOpenChange={setShowGlowDialog} />
     </div>

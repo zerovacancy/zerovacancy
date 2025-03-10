@@ -21,7 +21,7 @@ const supabaseAdmin = createClient(
 );
 
 Deno.serve(async (req) => {
-  console.log("Hello from Functions!");
+  console.log("Processing waitlist submission request");
   
   // Handle CORS preflight requests
   const corsResponse = corsOptionsHandler(req);
