@@ -7,6 +7,7 @@ import { usePricing } from "./PricingContext";
 import PricingHeader from "./PricingHeader";
 import { PLAN_DESCRIPTIONS, VALUE_PROPOSITIONS, PLAN_CTAS, FEATURES } from "./pricingData";
 import { ChevronDown, Check, Info, Sparkles, X } from "lucide-react";
+import { PricingFeature } from "./types";
 
 export const PricingContainer = () => {
   const isMobile = useIsMobile();
@@ -42,13 +43,14 @@ export const PricingContainer = () => {
   };
   
   // Helper to group features by category
-  const groupFeaturesByCategory = (features: string[]) => {
-    const result: {[key: string]: string[]} = {};
+  const groupFeaturesByCategory = (features: PricingFeature[]) => {
+    const result: {[key: string]: PricingFeature[]} = {};
     let currentCategory = "Core Features";
     
     features.forEach(feature => {
-      if (feature.startsWith("**") && feature.endsWith("**")) {
-        currentCategory = feature.slice(2, -2);
+      // Check if the feature text indicates a category
+      if (typeof feature.text === 'string' && feature.text.startsWith("**") && feature.text.endsWith("**")) {
+        currentCategory = feature.text.slice(2, -2);
         if (!result[currentCategory]) {
           result[currentCategory] = [];
         }
@@ -62,7 +64,7 @@ export const PricingContainer = () => {
     
     return result;
   };
-  
+
   // Define pricing tiers with all necessary data
   const pricingTiers = [
     {
@@ -284,7 +286,7 @@ export const PricingContainer = () => {
                                       "h-4 w-4 mt-0.5 flex-shrink-0", 
                                       colorScheme.text
                                     )} />
-                                    <span className="text-sm text-slate-700">{feature}</span>
+                                    <span className="text-sm text-slate-700">{feature.text}</span>
                                   </div>
                                 ))}
                               </div>
@@ -470,7 +472,7 @@ export const PricingContainer = () => {
                                     colorScheme.text
                                   )} />
                                 </span>
-                                <span className="text-sm text-slate-700">{feature}</span>
+                                <span className="text-sm text-slate-700">{feature.text}</span>
                               </div>
                             ))}
                           </div>
