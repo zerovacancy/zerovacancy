@@ -20,6 +20,7 @@ interface GradientBlobBackgroundProps {
   blobSize?: 'small' | 'medium' | 'large';
   baseColor?: string;
   animationSpeed?: 'slow' | 'medium' | 'fast';
+  id?: string; // Add the id prop to the interface
 }
 
 export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
@@ -38,7 +39,8 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
   blobOpacity = 0.15,
   blobSize = 'medium',
   baseColor = 'bg-white/80',
-  animationSpeed = 'medium'
+  animationSpeed = 'medium',
+  id // Make sure to include id in the component parameters
 }) => {
   const [isMounted, setIsMounted] = useState(false);
   const isReducedMotion = useRef(false);
@@ -108,7 +110,7 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
   const blobCount = windowWidth < 768 ? 3 : 5;
 
   return (
-    <div className={cn(`relative w-full overflow-hidden ${baseColor}`, className)}>
+    <div id={id} className={cn(`relative w-full overflow-hidden ${baseColor}`, className)}>
       {/* Pattern background - only if pattern is not 'none' */}
       {pattern === 'dots' && (
         <div className={`absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:20px_20px] opacity-${dotOpacity * 100}`}></div>
@@ -177,3 +179,4 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
     </div>
   );
 };
+
