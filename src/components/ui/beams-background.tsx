@@ -1,11 +1,13 @@
 import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
+
 interface AnimatedGradientBackgroundProps {
   className?: string;
   children?: React.ReactNode;
   intensity?: "subtle" | "medium" | "strong";
-  id?: string; // Add the id property to the interface
+  id?: string;
 }
 interface Beam {
   x: number;
@@ -38,7 +40,7 @@ export function BeamsBackground({
   className,
   children,
   intensity = "medium",
-  id // Add the id parameter to the component props
+  id
 }: AnimatedGradientBackgroundProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const beamsRef = useRef<Beam[]>([]);
@@ -49,11 +51,17 @@ export function BeamsBackground({
     medium: 0.85,
     strong: 1
   };
+  const isMobile = useIsMobile();
+  
   useEffect(() => {
+    // Don't run animation on mobile for better performance
+    if (isMobile) return;
+    
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
+    
     const updateCanvasSize = () => {
       const dpr = window.devicePixelRatio || 1;
       canvas.width = window.innerWidth * dpr;
@@ -124,26 +132,46 @@ export function BeamsBackground({
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [intensity]);
-  return <div id={id} // Pass the id to the container div
-  className={cn("relative overflow-hidden bg-white", className)}>
-            <canvas ref={canvasRef} className="absolute inset-0" style={{
-      filter: "blur(15px)"
-    }} />
+  }, [intensity, isMobile]);
+  
+  // For mobile, just return a simple container with children
+  if (isMobile) {
+    return (
+      <div id={id} className={cn("relative bg-white", className)}>
+        <div className="relative z-10 w-full">
+          {children}
+        </div>
+      </div>
+    );
+  }
 
-            <motion.div animate={{
-      opacity: [0.8, 0.9, 0.8]
-    }} transition={{
-      duration: 10,
-      ease: "easeInOut",
-      repeat: Number.POSITIVE_INFINITY
-    }} style={{
-      backdropFilter: "blur(50px)"
-    }} className="absolute inset-0 bg-[#e6e3ff]/15" />
+  // For desktop, return the full animated background
+  return (
+    <div id={id} className={cn("relative overflow-hidden bg-white", className)}>
+      <canvas ref={canvasRef} className="absolute inset-0" style={{
+        filter: "blur(15px)"
+      }} />
 
-            <div className="relative z-10 w-full">
-                {children}
-            </div>
-        </div>;
+      <motion.div 
+        animate={{
+          opacity: [0.8, 0.9, 0.8]
+        }} 
+        transition={{
+          duration: 10,
+          ease: "easeInOut",
+          repeat: Number.POSITIVE_INFINITY
+        }} 
+        style={{
+          backdropFilter: "blur(50px)"
+        }} 
+        className="absolute inset-0 bg-[#e6e3ff]/15" 
+      />
+
+      <div className="relative z-10 w-full">
+        {children}
+      </div>
+    </div>
+  );
 }
+
 export default BeamsBackground;

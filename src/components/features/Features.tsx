@@ -31,29 +31,31 @@ const FeaturesSectionWithHoverEffects = () => {
       id="features"
       ref={sectionRef}
     >
-      <div className="max-w-6xl mx-auto relative z-10">
-        <FeatureHeader 
-          title="THE CREATIVE ARSENAL"
-          description="Visual weaponry to transform perception and drive desire"
-        />
-        
-        <FeaturesGrid
-          features={features}
-          visibleFeatures={visibleFeatures}
-          isMobile={isMobile}
-          showAllCards={showAllCards}
-          toggleShowAllCards={toggleShowAllCards}
-        />
-        
-        {/* View all services button */}
-        <AnimatePresence mode="wait">
-          <MobileViewButton
+      <BackgroundEffects className="max-w-6xl mx-auto relative z-10">
+        <div>
+          <FeatureHeader 
+            title="THE CREATIVE ARSENAL"
+            description="Visual weaponry to transform perception and drive desire"
+          />
+          
+          <FeaturesGrid
+            features={features}
+            visibleFeatures={visibleFeatures}
+            isMobile={isMobile}
             showAllCards={showAllCards}
             toggleShowAllCards={toggleShowAllCards}
-            isMobile={isMobile}
           />
-        </AnimatePresence>
-      </div>
+          
+          {/* View all services button */}
+          <AnimatePresence mode="wait">
+            <MobileViewButton
+              showAllCards={showAllCards}
+              toggleShowAllCards={toggleShowAllCards}
+              isMobile={isMobile}
+            />
+          </AnimatePresence>
+        </div>
+      </BackgroundEffects>
     </section>
   );
 };

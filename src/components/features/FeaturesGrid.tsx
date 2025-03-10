@@ -57,7 +57,7 @@ export const FeaturesGrid = memo(({
         />
       </motion.div>
     );
-  }, [isMobile]);
+  }, []);
 
   return (
     <div 

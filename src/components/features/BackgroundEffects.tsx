@@ -39,32 +39,30 @@ export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({
 }) => {
   const isMobile = useIsMobile();
   
-  // On mobile, use simpler effects
-  const shouldUseEffects = !isMobile;
-  
-  if (shouldUseEffects) {
+  // On mobile, use minimal styling with no animations or effects
+  if (isMobile) {
     return (
-      <GradientBlobBackground 
-        className={cn("overflow-visible", className)}
-        blobColors={blobColors}
-        blobOpacity={blobOpacity}
-        withSpotlight={withSpotlight}
-        spotlightClassName={spotlightClassName}
-        pattern={pattern}
-        baseColor={baseColor}
-        animationSpeed={animationSpeed}
-        id={id}
-      >
+      <div id={id} className={cn("relative", baseColor, className)}>
         {children}
-      </GradientBlobBackground>
+      </div>
     );
   }
   
-  // On mobile, just render the children with minimal styling
+  // On desktop, use full effects
   return (
-    <div id={id} className={cn("relative", baseColor, className)}>
+    <GradientBlobBackground 
+      className={cn("overflow-visible", className)}
+      blobColors={blobColors}
+      blobOpacity={blobOpacity}
+      withSpotlight={withSpotlight}
+      spotlightClassName={spotlightClassName}
+      pattern={pattern}
+      baseColor={baseColor}
+      animationSpeed={animationSpeed}
+      id={id}
+    >
       {children}
-    </div>
+    </GradientBlobBackground>
   );
 };
 
