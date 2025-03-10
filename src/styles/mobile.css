@@ -46,6 +46,16 @@
   body {
     padding-bottom: 1rem;
   }
+  
+  /* Hide backgrounds on mobile for specific sections */
+  .mobile-no-background {
+    background: none !important;
+  }
+  
+  /* Remove gradients on mobile */
+  .mobile-no-gradient {
+    background-image: none !important;
+  }
 }
 
 /* Enhanced active states for touch devices */

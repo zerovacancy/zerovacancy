@@ -65,7 +65,10 @@ export function FeaturesSectionWithHoverEffects() {
       className="relative py-14 sm:py-18 lg:py-24 px-4 sm:px-6 lg:px-8 overflow-visible"
       id="features"
     >
-      <div className="absolute inset-0 z-0 overflow-hidden opacity-[0.15] bg-gradient-to-b from-violet-50 to-white"></div>
+      {/* Remove background for mobile, keep for desktop */}
+      {!isMobile && (
+        <div className="absolute inset-0 z-0 overflow-hidden opacity-[0.15] bg-gradient-to-b from-violet-50 to-white"></div>
+      )}
 
       <div className="max-w-6xl mx-auto relative z-10">
         <FeatureHeader 
