@@ -65,7 +65,8 @@ export default function ResendTest() {
         toast({
           title: "Partial success",
           description: "Email was added to waitlist but email delivery failed",
-          variant: "warning"
+          // Change "warning" to "default" since "warning" is not a valid variant
+          variant: "default"
         });
       }
     } catch (error: any) {
