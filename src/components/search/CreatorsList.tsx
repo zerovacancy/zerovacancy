@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { CreatorCard } from '../creator/CreatorCard';
 import { ChevronDown, Filter, ChevronUp, ChevronRight, ChevronLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -62,44 +62,67 @@ export const CreatorsList: React.FC<CreatorsListProps> = ({
       setScrollPosition(scrollContainerRef.current.scrollLeft);
     }
   };
+  
+  // Update scroll position on resize to handle orientation changes
+  useEffect(() => {
+    const handleResize = () => {
+      if (scrollContainerRef.current) {
+        setScrollPosition(scrollContainerRef.current.scrollLeft);
+      }
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
-    <div className="relative">
-      {/* Filters section with horizontal scrolling on mobile */}
-      <div className="mb-4 sm:mb-6">
-        {/* Horizontally scrollable filter tags for mobile */}
-        <div className="overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none'] relative" ref={filterTagsRef}>
-          {/* Gradient fade indicators for horizontal scroll */}
-          {isMobile && <>
+    <div className={cn("relative", isMobile && "mobile-flatten")}>
+      {/* Filters section - simplified on mobile */}
+      <div className={cn("mb-4 sm:mb-6", isMobile && "mb-3")}>
+        {/* Horizontally scrollable filter tags - direct container on mobile */}
+        <div 
+          className={cn(
+            "overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']",
+            isMobile && "mobile-scroll-optimize"
+          )} 
+          ref={filterTagsRef}
+        >
+          {/* Remove gradient fade indicators that cause nested positioning on mobile */}
+          {isMobile ? null : (
+            <>
               <div className="absolute left-0 top-0 h-full w-6 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
               <div className="absolute right-0 top-0 h-full w-6 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
-            </>}
+            </>
+          )}
           
-          <div className="flex space-x-2 pb-1 min-w-max" role="tablist">
+          <div className={cn(
+            "flex space-x-2 pb-1 min-w-max",
+            isMobile && "space-x-3 pb-2 px-1"
+          )} role="tablist">
             {filterTags.map((tag, index) => <button 
                 key={index} 
                 className={cn(
                   "transition-all whitespace-nowrap rounded-full border border-gray-200", 
                   "font-medium shadow-sm hover:bg-indigo-50 hover:border-indigo-200 hover:text-indigo-800", 
                   index === 0 ? "bg-indigo-50 text-indigo-700 border-indigo-200" : "bg-white text-gray-700", 
-                  isMobile ? "text-xs px-2.5 py-1" : "text-sm px-3 py-1.5",
+                  !isMobile ? "text-sm px-3 py-1.5" : "text-base px-4 py-3 mobile-touch-target",
                   "focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1"
                 )}
                 role="tab"
                 aria-selected={index === 0}
                 aria-label={`Filter by ${tag}`}
               >
-                {index === 0 && <Filter className={cn("inline-block mr-1.5", isMobile ? "w-2.5 h-2.5" : "w-3 h-3")} aria-hidden="true" />}
+                {index === 0 && <Filter className={cn("inline-block mr-1.5", isMobile ? "w-4 h-4" : "w-3 h-3")} aria-hidden="true" />}
                 {tag}
               </button>)}
           </div>
         </div>
       </div>
       
-      {/* MOBILE: Horizontal scrolling creator cards */}
+      {/* MOBILE: Horizontal scrolling creator cards - simplified container structure */}
       {isMobile ? (
-        <div className="relative">
-          {/* Navigation arrows for mobile */}
+        <div className={cn("relative", "mobile-flatten")}>
+          {/* Navigation arrows for mobile - better touch targets */}
           {creators.length > 1 && (
             <>
               <AnimatePresence>
@@ -108,7 +131,10 @@ export const CreatorsList: React.FC<CreatorsListProps> = ({
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 0.9 }}
                     exit={{ opacity: 0 }}
-                    className="absolute left-0 top-1/2 z-20 -translate-y-1/2 -ml-1 h-8 w-8 rounded-full bg-white/90 shadow-md flex items-center justify-center border border-gray-100 text-indigo-600"
+                    className={cn(
+                      "absolute left-0 top-1/2 z-20 -translate-y-1/2 -ml-1 bg-white/90 shadow-md flex items-center justify-center border border-gray-100 text-indigo-600",
+                      "mobile-touch-target h-10 w-10 rounded-full"
+                    )}
                     onClick={() => scrollHorizontally('left')}
                     aria-label="Scroll left"
                   >
@@ -123,7 +149,10 @@ export const CreatorsList: React.FC<CreatorsListProps> = ({
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 0.9 }}
                     exit={{ opacity: 0 }}
-                    className="absolute right-0 top-1/2 z-20 -translate-y-1/2 -mr-1 h-8 w-8 rounded-full bg-white/90 shadow-md flex items-center justify-center border border-gray-100 text-indigo-600"
+                    className={cn(
+                      "absolute right-0 top-1/2 z-20 -translate-y-1/2 -mr-1 bg-white/90 shadow-md flex items-center justify-center border border-gray-100 text-indigo-600",
+                      "mobile-touch-target h-10 w-10 rounded-full"
+                    )}
                     onClick={() => scrollHorizontally('right')}
                     aria-label="Scroll right"
                   >
@@ -134,10 +163,14 @@ export const CreatorsList: React.FC<CreatorsListProps> = ({
             </>
           )}
           
-          {/* Horizontal scroll container for mobile */}
+          {/* Horizontal scroll container - simplified for mobile */}
           <div 
             ref={scrollContainerRef}
-            className="flex overflow-x-auto gap-4 pb-4 pt-1 snap-x snap-mandatory touch-pan-x scroll-container-optimized [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']"
+            className={cn(
+              "flex gap-4 pb-4 pt-1 snap-x snap-mandatory touch-pan-x",
+              "[&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']",
+              "mobile-scroll-optimize overflow-x-auto"
+            )}
             onScroll={handleScroll}
             role="list"
             aria-label="Creators list"
@@ -145,47 +178,41 @@ export const CreatorsList: React.FC<CreatorsListProps> = ({
             {creators.map((creator, index) => (
               <div 
                 key={creator.name}
-                className="min-w-[85%] sm:min-w-[80%] snap-start"
+                className={cn(
+                  "min-w-[85%] sm:min-w-[80%] snap-start",
+                  "mobile-direct-children"
+                )}
                 role="listitem"
               >
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{
-                    duration: 0.5,
-                    delay: 0.1 * index,
-                    ease: [0.22, 1, 0.36, 1]
-                  }}
-                >
-                  <CreatorCard 
-                    creator={creator} 
-                    onImageLoad={onImageLoad} 
-                    loadedImages={loadedImages} 
-                    imageRef={imageRef} 
-                  />
-                </motion.div>
+                <CreatorCard 
+                  creator={creator} 
+                  onImageLoad={onImageLoad} 
+                  loadedImages={loadedImages} 
+                  imageRef={imageRef} 
+                />
               </div>
             ))}
             
             {creators.length === 0 && (
               <div className="w-full text-center py-10">
-                <div className="text-gray-500">No creators found</div>
-                <p className="text-sm text-gray-400 mt-2">Try adjusting your filters</p>
+                <div className="text-gray-500 mobile-text-boost">No creators found</div>
+                <p className="text-sm text-gray-400 mt-2 mobile-text-boost">Try adjusting your filters</p>
               </div>
             )}
           </div>
           
-          {/* Scrolling indicator dots */}
+          {/* Scrolling indicator dots - simpler on mobile */}
           {creators.length > 1 && (
             <div className="flex justify-center mt-3 gap-1.5">
               {creators.map((_, index) => (
                 <button
                   key={index}
                   className={cn(
-                    "w-2 h-2 rounded-full transition-all duration-300",
+                    "rounded-full transition-all duration-300",
                     scrollPosition / (scrollContainerRef.current?.clientWidth || 1) === index
                       ? "bg-indigo-600 scale-110"
-                      : "bg-gray-300 scale-100"
+                      : "bg-gray-300 scale-100",
+                    isMobile ? "w-3 h-3 mobile-touch-target p-0 m-0" : "w-2 h-2"
                   )}
                   onClick={() => {
                     if (scrollContainerRef.current) {

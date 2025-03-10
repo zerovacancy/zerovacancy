@@ -1,3 +1,4 @@
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -8,6 +9,32 @@
 @media (max-width: 768px) {
   #root {
     padding: 0.75rem;
+  }
+  
+  /* Mobile optimizations for scroll containers */
+  .mobile-scroll-container {
+    overflow: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    position: static !important;
+    height: auto !important;
+    max-height: none !important;
+  }
+  
+  /* Flatten nested containers on mobile */
+  .mobile-flatten-container {
+    display: block !important;
+    position: static !important;
+    overflow: visible !important;
+    transform: none !important;
+  }
+  
+  /* Direct content layout for mobile */
+  .mobile-direct-content > * {
+    position: static !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
   }
 }
 
@@ -111,6 +138,22 @@
   /* We're removing the extra padding for the fixed bottom navigation */
   body {
     padding-bottom: 1rem;
+  }
+  
+  /* Remove nested containers on mobile */
+  .mobile-flatten-layout {
+    position: static !important;
+    transform: none !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  
+  /* Remove all unnecessary nesting */
+  .mobile-direct-parent > * {
+    position: static !important;
+    width: 100% !important;
+    display: block !important;
   }
 }
 

@@ -2,6 +2,7 @@
 import React from "react";
 import { motion, Transition } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface AnimatedCharacterProps {
   character: string;
@@ -22,6 +23,17 @@ export const AnimatedCharacter: React.FC<AnimatedCharacterProps> = ({
   className,
   delayMs = 0
 }) => {
+  const isMobile = useIsMobile();
+  
+  // On mobile, use simpler animation to avoid performance issues
+  if (isMobile) {
+    return (
+      <span className={cn("inline-block", className)}>
+        {character}
+      </span>
+    );
+  }
+  
   return (
     <motion.span
       initial={initial}
