@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ChevronDown } from "lucide-react";
+import { memo } from "react";
 
 interface MobileViewButtonProps {
   showAllCards: boolean;
@@ -9,11 +10,12 @@ interface MobileViewButtonProps {
   isMobile: boolean;
 }
 
-export const MobileViewButton = ({ 
+export const MobileViewButton = memo(({ 
   showAllCards, 
   toggleShowAllCards, 
   isMobile 
 }: MobileViewButtonProps) => {
+  // Improved click handler to prevent default behavior
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -26,8 +28,9 @@ export const MobileViewButton = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.5, delay: 0.3 }}
+      transition={{ duration: 0.5, delay: 0.3, ease: "easeOut" }}
       key="view-all-button"
+      layout
     >
       {isMobile && showAllCards ? (
         <Button 
@@ -35,6 +38,7 @@ export const MobileViewButton = ({
           size="lg"
           className="group border-indigo-300 hover:border-indigo-500 hover:bg-indigo-50/70 text-indigo-600 font-medium px-6 touch-manipulation"
           onClick={handleClick}
+          aria-label="Show fewer services"
         >
           Show less
           <ChevronDown className="ml-2 h-4 w-4 rotate-180 transition-transform" />
@@ -45,6 +49,7 @@ export const MobileViewButton = ({
           size="lg" 
           className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-medium px-6 shadow-md touch-manipulation"
           onClick={handleClick}
+          aria-label="View all services"
         >
           View all services
           <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -52,6 +57,8 @@ export const MobileViewButton = ({
       )}
     </motion.div>
   );
-}
+});
+
+MobileViewButton.displayName = "MobileViewButton";
 
 export default MobileViewButton;
