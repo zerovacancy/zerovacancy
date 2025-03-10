@@ -33,8 +33,7 @@ export function Hero() {
           </motion.span>
           <TextRotate 
             texts={rotatingWords}
-            mainClassName="text-display inline-block"
-            className="text-[#4A2DD9]" // Use className instead of style
+            mainClassName="text-display inline-block text-[#4A2DD9]"
             rotationInterval={2000}
             exit={{ y: "-120%", opacity: 0 }}
           />
