@@ -1,0 +1,131 @@
+/* Mobile touch optimizations */
+@media (max-width: 768px) {
+  /* Remove padding from root to eliminate white space */
+  #root {
+    padding: 0;
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+
+  /* Fix full-width background issues */
+  .BackgroundEffects, 
+  section, 
+  main,
+  [class*="w-full"] {
+    width: 100% !important;
+    max-width: 100vw !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    overflow-x: hidden;
+  }
+  
+  /* Fix section spacing */
+  section {
+    margin-bottom: 2rem;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    position: relative;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.08);
+  }
+  
+  /* Add clear visual separation between sections */
+  section:after {
+    content: '';
+    position: absolute;
+    bottom: -1rem;
+    left: 0;
+    right: 0;
+    height: 1rem;
+    z-index: 1;
+  }
+  
+  /* Mobile optimization: Disable hover effects on mobile for better performance */
+  .hover-effects-disabled {
+    pointer-events: none;
+  }
+  
+  /* Increase touch target sizes */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Optimize scrolling */
+  .scroll-container-optimized {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 10px;
+  }
+  
+  /* Reduce animation complexity */
+  .reduce-animation {
+    animation-duration: 0.5s !important;
+    transition-duration: 0.3s !important;
+  }
+  
+  /* Improve padding for mobile content */
+  .mobile-content-container {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  
+  /* Fix hero section spacing */
+  .Hero, [id="hero"] {
+    min-height: auto !important;
+    padding-top: 1.5rem !important;
+    padding-bottom: 2rem !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  /* Add consistent padding for all content sections */
+  .max-w-5xl, .max-w-6xl, .max-w-7xl, .max-w-4xl {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  
+  /* Improve touch targets for mobile */
+  button, a, input, select, textarea {
+    min-height: 36px;
+  }
+  
+  /* Fix investment tiers section */
+  [class*="INVESTMENT TIERS"] {
+    margin-top: 2rem !important;
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
+  }
+  
+  /* Fix feature cards */
+  .FeatureItem, [class*="feature-item"] {
+    max-width: 100% !important;
+    margin-bottom: 1.5rem !important;
+    height: auto !important;
+    min-height: 230px !important;
+  }
+  
+  /* Body padding adjustment for bottom nav */
+  body {
+    padding-bottom: 4rem;
+  }
+}
+
+/* Enhanced active states for touch devices */
+.touch-manipulation {
+  touch-action: manipulation;
+}
+
+/* Fix background effects on mobile */
+@media (max-width: 768px) {
+  .BackgroundEffects {
+    background-color: #fcfcff !important;
+    position: relative;
+  }
+  
+  /* Reduce blob opacity on mobile */
+  [class*="bg-purple"], [class*="bg-indigo"], [class*="bg-violet"] {
+    opacity: 0.15 !important;
+  }
+}

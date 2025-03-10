@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Sparkles, Check, Info } from "lucide-react";
@@ -86,7 +85,7 @@ export const PricingTier: React.FC<PricingTierProps> = ({
         {plan.showPopular && (
           <div className="absolute top-0 left-0 right-0 mt-[-12px] flex justify-center z-10">
             <motion.div 
-              className="py-1 px-3 flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-brand-purple-medium to-brand-purple text-white text-sm shadow-md"
+              className="py-1 px-3 flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-brand-purple-medium to-brand-purple text-white text-sm shadow-md badge-popular"
               animate={{ 
                 boxShadow: ['0 2px 8px rgba(139, 92, 246, 0.2)', '0 4px 12px rgba(139, 92, 246, 0.4)', '0 2px 8px rgba(139, 92, 246, 0.2)']
               }}
@@ -110,14 +109,14 @@ export const PricingTier: React.FC<PricingTierProps> = ({
         >
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <p className="font-semibold text-xl flex items-center gap-2 text-gray-950 font-jakarta">
+              <p className="font-semibold text-xl flex items-center gap-2 text-gray-950 card-title">
                 {plan.title}
               </p>
             </div>
             
             {/* Value proposition text with subtle animation */}
             <motion.p 
-              className="text-xs text-slate-600 mb-2 font-inter"
+              className="text-xs text-slate-600 mb-2 text-caption"
               animate={isHovering ? { x: [0, 2, 0] } : {}}
               transition={{ duration: 1, repeat: isHovering ? Infinity : 0 }}
             >
@@ -127,16 +126,16 @@ export const PricingTier: React.FC<PricingTierProps> = ({
             <div className="text-slate-500 text-md font-inter">
               <div className="flex items-baseline gap-1">
                 <span className={cn(
-                  `text-${planColor}-700 font-bold text-3xl flex items-center font-jakarta`, 
+                  `text-${planColor}-700 font-bold text-3xl flex items-center text-price`, 
                   animatePriceChange && "animate-pulse-subtle"
                 )}>
                   ${" "}
                   <NumberFlow
-                    className={`text-${planColor}-700 font-bold text-4xl font-jakarta`} 
+                    className={`text-${planColor}-700 font-bold text-4xl text-price`} 
                     value={price}
                   />
                 </span>
-                <span className="text-sm text-gray-500 font-inter">
+                <span className="text-sm text-gray-500 text-caption">
                   /{period === 0 ? "month" : "month, billed yearly"}
                 </span>
               </div>
@@ -173,13 +172,13 @@ export const PricingTier: React.FC<PricingTierProps> = ({
           whileHover="hover"
           whileTap="tap"
           className={cn(
-            "w-full mt-4 rounded-xl font-medium text-sm py-3.5", // Increased height for better tap target
+            "w-full mt-4 rounded-xl font-medium text-sm py-3.5 btn-text", // Increased height for better tap target
             "touch-manipulation transition-all duration-300",
             index === 0 
-              ? "bg-blue-50 text-blue-600 hover:bg-blue-100 active:bg-blue-200"
+              ? "bg-blue-50 text-blue-600 hover:bg-blue-100 active:bg-blue-200 btn-text-secondary"
               : index === 1 
-                ? "bg-gradient-to-r from-brand-purple-medium to-brand-purple text-white shadow-md hover:shadow-lg"
-                : "bg-gradient-to-r from-emerald-600 to-emerald-500 text-white shadow-md hover:shadow-lg"
+                ? "bg-gradient-to-r from-brand-purple-medium to-brand-purple text-white shadow-md hover:shadow-lg btn-text-primary"
+                : "bg-gradient-to-r from-emerald-600 to-emerald-500 text-white shadow-md hover:shadow-lg btn-text-primary"
           )}
         >
           <motion.span

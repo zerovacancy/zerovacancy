@@ -3,7 +3,11 @@
 @import './styles/typography.css';
 @import './styles/typography-mixins.css';
 @import './styles/components.css';
+@import './styles/feature-cards.css';
+@import './styles/scrolling.css';
 @import './styles/animations.css';
+@import './styles/mobile.css';
+@import './styles/text-utilities.css';
 @import './styles/keyframes.css';
 
 /* Tailwind layers */

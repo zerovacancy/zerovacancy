@@ -45,6 +45,7 @@ export const iconColors = {
   },
 };
 
+// Export the Lucide icon components directly
 export const featureIcons = {
   Camera,
   Image,

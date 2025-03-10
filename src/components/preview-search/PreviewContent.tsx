@@ -14,7 +14,6 @@ interface PreviewContentProps {
   creatorData: Creator[];
   locationValue?: string;
   onLocationSelect: (location: string) => void;
-  activeCardIndex?: number;
 }
 
 export const PreviewContent: React.FC<PreviewContentProps> = ({
@@ -23,8 +22,7 @@ export const PreviewContent: React.FC<PreviewContentProps> = ({
   handleImageLoad,
   creatorData,
   locationValue = '',
-  onLocationSelect,
-  activeCardIndex = 0
+  onLocationSelect
 }) => {
   const isMobile = useIsMobile();
   
@@ -55,6 +53,7 @@ export const PreviewContent: React.FC<PreviewContentProps> = ({
       {/* CreatorsList container */}
       <div className={cn(
         "w-full px-3 sm:px-6 md:px-8 lg:px-10",
+        "bg-gradient-to-b from-transparent via-purple-50/20 to-purple-50/40",
         isMobile ? "pb-4 pt-2" : "pb-6 sm:pb-8 md:pb-10 pt-4 sm:pt-6 md:pt-8"
       )}>
         <AnimatePresence>
@@ -72,7 +71,6 @@ export const PreviewContent: React.FC<PreviewContentProps> = ({
                 onImageLoad={handleImageLoad} 
                 loadedImages={loadedImages}
                 imageRef={(el) => el}
-                activeCardIndex={activeCardIndex}
               />
             </motion.div>
           )}

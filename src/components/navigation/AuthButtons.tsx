@@ -19,17 +19,19 @@ const AuthButtons = ({ user, onSignInClick }: AuthButtonsProps) => {
           variant="ghost"
           size="sm"
           onClick={onSignInClick}
-          className="hidden sm:flex"
+          className="hidden sm:flex focus:ring-2 focus:ring-indigo-500/30 focus:outline-none"
+          aria-label="Sign in to your account"
         >
-          <LogIn className="h-4 w-4 mr-2" />
+          <LogIn className="h-4 w-4 mr-2" aria-hidden="true" />
           Sign In
         </Button>
       )}
       
       <Button
         size="sm"
-        className="hidden sm:flex"
+        className="hidden sm:flex focus:ring-2 focus:ring-indigo-500/30 focus:outline-none"
         onClick={() => user ? navigate('/account') : onSignInClick()}
+        aria-label={user ? "Go to my dashboard" : "Get started with our service"}
       >
         {user ? 'My Dashboard' : 'Get Started'}
       </Button>

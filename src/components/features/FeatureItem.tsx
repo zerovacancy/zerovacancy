@@ -1,5 +1,5 @@
-
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { iconColors, featureIcons } from "./feature-colors";
@@ -37,11 +37,8 @@ export const FeatureItem = ({
   // Get the icon component
   const Icon = featureIcons[icon as keyof typeof featureIcons];
   
-  // Extract the main color for border from the text color class
-  const borderColorBase = colorScheme.text.split('-')[1];
-  
-  // Set a consistent character limit for descriptions - ensure truncation at sentence breaks
-  const shortDescLimit = isMobile ? 60 : 85;
+  // Set a consistent character limit for descriptions
+  const shortDescLimit = isMobile ? 100 : 120;
   const isLongDesc = description.length > shortDescLimit;
   
   // Find the last period, comma, or space before the limit to truncate at a logical break
@@ -53,8 +50,8 @@ export const FeatureItem = ({
     const lastComma = substring.lastIndexOf(',');
     const lastSpace = substring.lastIndexOf(' ');
     
-    if (lastPeriod > limit - 15) return lastPeriod + 1;
-    if (lastComma > limit - 12) return lastComma + 1;
+    if (lastPeriod > limit - 20) return lastPeriod + 1;
+    if (lastComma > limit - 15) return lastComma + 1;
     if (lastSpace > limit - 10) return lastSpace;
     
     return limit;
@@ -62,121 +59,123 @@ export const FeatureItem = ({
   
   const truncationPoint = findLogicalBreak(description, shortDescLimit);
   
+  // Card background color based on icon - to match the example image
+  const getCardBgColor = () => {
+    switch(icon) {
+      case 'Camera': return 'bg-blue-50';
+      case 'Image': return 'bg-sky-50';
+      case 'Video': return 'bg-purple-50';
+      case 'UserCheck': return 'bg-green-50';
+      case 'Clock': return 'bg-amber-50';
+      case 'CreditCard': return 'bg-cyan-50';
+      case 'Award': return 'bg-pink-50';
+      case 'Instagram': return 'bg-rose-50';
+      default: return 'bg-blue-50';
+    }
+  };
+  
   return (
-    <button
-      className={cn(
-        "relative w-full text-left group h-full flex flex-col",
-        "rounded-xl sm:rounded-2xl transition-all duration-300",
-        "bg-white hover:bg-white/95",
-        // Enhanced border - more visible with color matching the icon theme
-        `border border-${borderColorBase}-200/40`,
-        // Consistent border radius
-        "rounded-xl sm:rounded-xl",
-        // Consistent shadow
-        "shadow-sm hover:shadow-md",
-        // Left border accent
-        `before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:rounded-l-xl before:bg-gradient-to-b ${colorScheme.gradient} before:opacity-0 group-hover:before:opacity-100 before:transition-opacity`,
-        // Consistent padding
-        "p-4 sm:p-5 lg:p-6",
-        "focus:outline-none focus:ring-2 focus:ring-primary/20",
-        // Simplified hover state on mobile
-        "transition-all duration-300",
-        // For partially visible card
-        isPartiallyVisible && "opacity-80 shadow-none"
-      )}
-      onClick={handleClick}
-      aria-expanded={isExpanded}
-      style={{
-        // Very subtle background tint matching the card's theme color
-        backgroundColor: `rgba(${borderColorBase === 'indigo' ? '237, 242, 255' : 
-                               borderColorBase === 'blue' ? '235, 245, 255' : 
-                               borderColorBase === 'violet' ? '243, 240, 255' : 
-                               borderColorBase === 'pink' ? '253, 242, 248' : 
-                               borderColorBase === 'emerald' ? '236, 253, 245' : 
-                               borderColorBase === 'amber' ? '255, 251, 235' : 
-                               borderColorBase === 'cyan' ? '236, 254, 255' : 
-                               borderColorBase === 'rose' ? '255, 241, 242' : 
-                               '255, 255, 255'}, 0.97)`,
-        // For partially visible card
-        clipPath: isPartiallyVisible ? "polygon(0 0, 100% 0, 100% 65%, 0 65%)" : "none",
-        pointerEvents: isPartiallyVisible ? "none" : "auto"
-      }}
-    >
-      {/* Standardized Popular Tag - consistent positioning for all cards */}
+    <div className="relative pt-4">
+      {/* Popular Tag - Positioned at the top left */}
       {isPopular && (
-        <div className="absolute -top-3 inset-x-0 flex justify-center z-10">
-          <div className="py-1 px-2.5 flex items-center gap-1 rounded-full bg-gradient-to-r from-brand-purple-medium to-brand-purple text-white text-xs font-medium shadow-md">
-            <Sparkles className="h-3 w-3" />
+        <div className="absolute top-0 left-4 z-20">
+          <div className="py-1.5 px-3.5 flex items-center gap-1.5 rounded-full bg-gradient-to-r from-purple-500 to-indigo-500 text-white text-xs font-medium shadow-sm">
+            <Sparkles className="h-3.5 w-3.5" />
             <span className="font-medium">Popular</span>
           </div>
         </div>
       )}
       
-      <div className="flex flex-col items-start gap-3 sm:gap-4 h-full">
-        {/* Icon container with consistent styling */}
-        <div 
-          className={cn(
-            "flex items-center justify-center",
-            "w-12 h-12 sm:w-14 sm:h-14",
-            "rounded-xl",
-            "transition-all duration-300",
-            "bg-gradient-to-br",
-            colorScheme.gradient,
-            "opacity-95",
-            "group-hover:shadow-md",
-            "border border-opacity-20",
-            `border-${colorScheme.text.split('-')[1]}-100`,
-          )}
+      <motion.div
+        className={cn(
+          "relative w-full text-left group",
+          getCardBgColor(), // Apply background color based on icon type
+          "rounded-xl",
+          // Fixed heights based on screen size
+          "h-[250px] sm:h-[280px]",
+          // Shadow and transition
+          "shadow-sm",
+          // Consistent padding
+          "p-5",
+          // For partially visible card
+          isPartiallyVisible && "opacity-80 shadow-none"
+        )}
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ 
+          opacity: 1, 
+          y: 0,
+          transition: {
+            duration: 0.4,
+            delay: index * 0.05 + 0.1
+          }
+        }}
+        viewport={{ once: true, margin: "-50px" }}
+        style={{
+          clipPath: isPartiallyVisible ? "polygon(0 0, 100% 0, 100% 65%, 0 65%)" : "none",
+          pointerEvents: isPartiallyVisible ? "none" : "auto"
+        }}
+      >
+        <button
+          onClick={handleClick}
+          aria-expanded={isExpanded}
+          className="w-full h-full flex flex-col z-10 relative text-left"
         >
-          <Icon className={cn(
-            "w-6 h-6 sm:w-7 sm:h-7",
-            "text-white",
-            "transition-all duration-300",
-          )} />
-        </div>
-        
-        <div className="text-left w-full flex-grow flex flex-col">
-          {/* Standardized title style - all black for consistent hierarchy */}
-          <h3 className={cn(
-            "text-base sm:text-lg font-bold leading-tight font-space mb-2",
-            "text-gray-900",
-            "transition-colors duration-300"
-          )}>
-            {title}
-          </h3>
-          
-          <div className={cn(
-            "w-10 h-0.5 mb-2 sm:mb-3 bg-gradient-to-r",
-            colorScheme.gradient,
-            "rounded-full transition-all duration-300 transform origin-left",
-            "group-hover:w-16"
-          )} />
-          
-          {/* Standardized description truncation */}
-          <p className="text-xs sm:text-sm text-gray-600 font-anek line-height-[1.6] group-hover:text-gray-700">
-            {isExpanded || !isLongDesc ? 
-              description : 
-              (<>
-                {`${description.substring(0, truncationPoint).trim()}`}
-                <span className="text-indigo-500"> ...</span>
-              </>)
-            }
-          </p>
-          
-          {/* Action text link - customized from feature data */}
-          <div className={cn(
-            "mt-2 sm:mt-3 text-xs font-medium flex items-center gap-1.5", 
-            colorScheme.text,
-            "transition-opacity duration-300"
-          )}>
-            {actionText || (isExpanded ? "Show less" : "Learn more")} <ChevronRight className={cn(
-              "w-3 h-3 transition-transform duration-300",
-              isExpanded ? "rotate-90" : ""
-            )} />
+          <div className="flex flex-col items-start gap-5 h-full">
+            {/* Standardized icon container - consistent sizing for all icons */}
+            <div 
+              className={cn(
+                "flex items-center justify-center",
+                "w-12 h-12 sm:w-14 sm:h-14", // Same size on mobile and desktop
+                "rounded-lg",
+                colorScheme.gradient ? `bg-gradient-to-br ${colorScheme.gradient}` : colorScheme.bg
+              )}
+            >
+              {/* Standardized icon size */}
+              <Icon className="w-6 h-6 sm:w-7 sm:h-7 text-white" aria-hidden="true" />
+            </div>
+            
+            <div className="text-left w-full flex-grow flex flex-col">
+              <div>
+                {/* Title style to match example */}
+                <h3 className="text-base font-bold leading-tight uppercase mb-2 text-gray-900">
+                  {title}
+                </h3>
+                
+                {/* Colored bar below title to match example */}
+                <div 
+                  className={cn(
+                    "w-12 h-0.5 mb-3",
+                    "rounded-full",
+                    colorScheme.gradient ? `bg-gradient-to-r ${colorScheme.gradient}` : colorScheme.bg
+                  )} 
+                />
+                
+                {/* Description with proper truncation */}
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  {isExpanded || !isLongDesc ? 
+                    description : 
+                    <>
+                      {description.substring(0, truncationPoint).trim()}
+                      <span className="text-indigo-500"> ...</span>
+                    </>
+                  }
+                </p>
+              </div>
+              
+              {/* Action text link positioned at bottom to match example */}
+              <div className={cn(
+                "mt-auto pt-3 flex items-center", 
+                colorScheme.text,
+                "text-sm font-medium"
+              )}>
+                {actionText || (isExpanded ? "Show less" : "Learn more")} 
+                <ChevronRight className="w-4 h-4 ml-1" />
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    </button>
+        </button>
+      </motion.div>
+    </div>
   );
 };
 

@@ -53,7 +53,7 @@ export const CreatorRating: React.FC<CreatorRatingProps> = ({
         
         {/* Rating text */}
         <span className={cn(
-          "font-medium text-gray-800",
+          "font-medium text-gray-800 font-inter",
           isMobile ? "text-xs" : "text-sm"
         )}>
           {rating.toFixed(1)}
@@ -62,7 +62,7 @@ export const CreatorRating: React.FC<CreatorRatingProps> = ({
         {/* Review count */}
         {reviews > 0 && (
           <span className={cn(
-            "text-gray-500 ml-1.5",
+            "text-gray-500 ml-1.5 font-inter",
             isMobile ? "text-xs" : "text-sm"
           )}>
             ({reviews})
@@ -83,6 +83,7 @@ export const CreatorRating: React.FC<CreatorRatingProps> = ({
           "flex-shrink-0", // Add this to prevent the badge from shrinking
           "min-w-fit", // Ensure minimum width based on content
           "z-10", // Ensure the badge stays on top
+          "font-space", // Use Space Grotesk font
           availabilityConfig[availabilityStatus]?.className || ""
         )}>
           {availabilityConfig[availabilityStatus]?.icon}

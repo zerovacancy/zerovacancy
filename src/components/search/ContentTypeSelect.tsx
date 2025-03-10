@@ -13,13 +13,15 @@ export const ContentTypeSelect = () => {
         "w-4 h-4 text-indigo-500/70 absolute left-4 top-1/2 -translate-y-1/2",
         "transition-all duration-200",
         "group-hover:text-indigo-600"
-      )} />
+      )} 
+      aria-hidden="true" />
       <ChevronDown className={cn(
         "w-3.5 h-3.5 text-gray-400 absolute right-4 top-1/2 -translate-y-1/2",
         "transition-all duration-300",
         "group-hover:text-gray-600 group-hover:transform group-hover:translate-y-[1px]",
         "animate-pulse-subtle" // Add subtle animation
-      )} />
+      )} 
+      aria-hidden="true" />
       <select
         className={cn(
           "w-full h-12 sm:h-12 pl-11 pr-10 appearance-none", // Increased height for mobile
@@ -31,6 +33,7 @@ export const ContentTypeSelect = () => {
           "border-0",
           "placeholder:text-gray-500" // Increased contrast for placeholder
         )}
+        aria-label="Select content type"
       >
         <option value="">[Creative medium]</option>
         <option value="professional-photography">Professional Photography</option>

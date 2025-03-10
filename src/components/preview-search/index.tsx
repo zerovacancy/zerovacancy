@@ -5,17 +5,12 @@ import { PreviewCard } from './PreviewCard';
 import { PreviewHeader } from './PreviewHeader';
 import { PreviewContent } from './PreviewContent';
 import type { AvailabilityStatus } from '../creator/types';
-import { useIsMobile } from '@/hooks/use-mobile';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { Button } from '../ui/button';
 
 const PreviewSearch = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
   const [selectedLocation, setSelectedLocation] = useState<string>('');
-  const isMobile = useIsMobile();
-  const [activeCardIndex, setActiveCardIndex] = useState(0);
   
   useEffect(() => {
     if (!containerRef.current) return;
@@ -52,14 +47,6 @@ const PreviewSearch = () => {
   const handleLocationSelect = (location: string) => {
     console.log('Location selected in PreviewSearch:', location);
     setSelectedLocation(location);
-  };
-
-  const navigateSlider = (direction: 'prev' | 'next') => {
-    if (direction === 'prev') {
-      setActiveCardIndex(prev => (prev > 0 ? prev - 1 : creatorData.length - 1));
-    } else {
-      setActiveCardIndex(prev => (prev < creatorData.length - 1 ? prev + 1 : 0));
-    }
   };
 
   const creatorData = [
@@ -104,6 +91,13 @@ const PreviewSearch = () => {
       ref={containerRef}
     >
       <div className="mx-auto relative group max-w-7xl">
+        {/* Enhanced gradient background with more subtle effects */}
+        <div className={cn(
+          "absolute -inset-0.5 sm:-inset-1 rounded-xl sm:rounded-2xl bg-gradient-to-r from-purple-800/25 via-indigo-700/30 to-purple-900/25 blur-[2px] sm:blur-sm transition-all duration-500",
+          isVisible ? "opacity-70 sm:opacity-80" : "opacity-0",
+          "group-hover:opacity-90 group-hover:blur-md"
+        )}></div>
+
         <PreviewCard isVisible={isVisible}>
           <PreviewHeader 
             title="FIND YOUR CREATIVE COLLABORATOR"
@@ -116,44 +110,7 @@ const PreviewSearch = () => {
             creatorData={creatorData}
             locationValue={selectedLocation}
             onLocationSelect={handleLocationSelect}
-            activeCardIndex={activeCardIndex}
           />
-          
-          {isMobile && (
-            <div className="flex justify-between items-center w-full px-4 py-3">
-              <Button 
-                onClick={() => navigateSlider('prev')}
-                variant="outline"
-                size="icon"
-                className="h-9 w-9 rounded-full bg-white shadow-sm border-indigo-100"
-              >
-                <ChevronLeft className="h-5 w-5 text-indigo-600" />
-              </Button>
-              
-              <div className="flex space-x-1">
-                {creatorData.map((_, index) => (
-                  <span 
-                    key={index}
-                    className={cn(
-                      "block w-2 h-2 rounded-full transition-all duration-300",
-                      index === activeCardIndex 
-                        ? "bg-indigo-500 scale-125" 
-                        : "bg-indigo-200"
-                    )}
-                  />
-                ))}
-              </div>
-              
-              <Button 
-                onClick={() => navigateSlider('next')}
-                variant="outline"
-                size="icon"
-                className="h-9 w-9 rounded-full bg-white shadow-sm border-indigo-100"
-              >
-                <ChevronRight className="h-5 w-5 text-indigo-600" />
-              </Button>
-            </div>
-          )}
         </PreviewCard>
       </div>
     </div>

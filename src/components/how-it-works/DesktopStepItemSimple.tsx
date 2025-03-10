@@ -1,8 +1,9 @@
 
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { Check, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Step } from './types';
+import { Sparkles } from 'lucide-react';
 
 interface DesktopStepItemSimpleProps {
   step: Step;
@@ -19,6 +20,36 @@ const DesktopStepItemSimple: React.FC<DesktopStepItemSimpleProps> = ({
   isActive,
   onClick
 }) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const iconRef = useRef<HTMLDivElement>(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+  
+  // Magnetic effect
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    
+    const rect = cardRef.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    
+    // Calculate distance from mouse to center
+    const distanceX = e.clientX - centerX;
+    const distanceY = e.clientY - centerY;
+    
+    // Limit the movement to a reasonable range
+    const maxDistance = 15;
+    const moveX = (distanceX / rect.width) * maxDistance;
+    const moveY = (distanceY / rect.height) * maxDistance;
+    
+    setPosition({ x: moveX, y: moveY });
+  };
+  
+  const resetPosition = () => {
+    setPosition({ x: 0, y: 0 });
+    setIsHovered(false);
+  };
+
   // Get the border color by extracting from gradient (for non-active state)
   const getBorderColor = () => {
     // Extract the primary color from gradient for border
@@ -35,6 +66,7 @@ const DesktopStepItemSimple: React.FC<DesktopStepItemSimpleProps> = ({
 
   return (
     <div 
+      ref={cardRef}
       onClick={onClick}
       className={cn(
         "relative h-full min-h-[190px] px-6 py-7 rounded-xl",
@@ -56,18 +88,30 @@ const DesktopStepItemSimple: React.FC<DesktopStepItemSimpleProps> = ({
         backgroundColor: getBackgroundTint(),
         boxShadow: isActive ? '0 4px 12px rgba(0,0,0,0.08)' : '0 2px 8px rgba(0,0,0,0.05)',
         transform: isActive ? 'translateY(-5px)' : 'translateY(0)',
+        // Magnetic effect
+        ...(isHovered && {
+          transform: `translate3d(${position.x}px, ${position.y}px, 0) ${isActive ? 'translateY(-5px)' : ''}`,
+          transition: 'transform 0.2s cubic-bezier(0.17, 0.67, 0.83, 0.67)'
+        })
       }}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={resetPosition}
       onMouseOver={(e) => {
         e.currentTarget.style.boxShadow = '0 6px 16px rgba(0,0,0,0.1)';
-        e.currentTarget.style.transform = 'translateY(-5px)';
+        if (!isActive) {
+          e.currentTarget.style.transform = `translate3d(${position.x}px, ${position.y}px, 0) translateY(-5px)`;
+        }
       }}
       onMouseOut={(e) => {
-        if (!isActive) {
-          e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.05)';
-          e.currentTarget.style.transform = 'translateY(0)';
-        } else {
-          e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)';
-          e.currentTarget.style.transform = 'translateY(-5px)';
+        if (!isHovered) {
+          if (!isActive) {
+            e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.05)';
+            e.currentTarget.style.transform = 'translateY(0)';
+          } else {
+            e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)';
+            e.currentTarget.style.transform = 'translateY(-5px)';
+          }
         }
       }}
       aria-label={`Step ${index + 1}: ${step.title}`}
@@ -94,19 +138,51 @@ const DesktopStepItemSimple: React.FC<DesktopStepItemSimpleProps> = ({
         </span>
       </div>
       
-      {/* Icon with gradient background */}
+      {/* Icon with gradient background and sparkles effect */}
       <div 
+        ref={iconRef}
         className={cn(
-          "mb-5 rounded-lg p-4 transition-all duration-300",
+          "mb-5 rounded-lg p-4 transition-all duration-300 relative overflow-hidden",
           "group-hover:scale-105 shadow-sm",
           isActive ? "animate-pulse-subtle" : "",
           step.gradientClass || step.iconClass
         )}
         style={step.gradientStyle}
+        onMouseEnter={() => {
+          if (iconRef.current) {
+            const sparklesEl = document.createElement('div');
+            sparklesEl.className = 'absolute inset-0 z-10 flex items-center justify-center';
+            
+            // Add sparkle animation
+            const sparkle = document.createElement('div');
+            sparkle.className = 'animate-ping-once absolute';
+            sparkle.style.width = '8px';
+            sparkle.style.height = '8px';
+            sparkle.style.borderRadius = '50%';
+            sparkle.style.backgroundColor = 'rgba(255,255,255,0.8)';
+            
+            sparklesEl.appendChild(sparkle);
+            iconRef.current.appendChild(sparklesEl);
+            
+            // Remove after animation completes
+            setTimeout(() => {
+              if (iconRef.current && sparklesEl.parentNode === iconRef.current) {
+                iconRef.current.removeChild(sparklesEl);
+              }
+            }, 700);
+          }
+        }}
       >
         {React.cloneElement(step.icon as React.ReactElement, {
-          className: "w-7 h-7"
+          className: "w-7 h-7 relative z-20"
         })}
+        
+        {/* Sparkles indicator when hovered */}
+        {isHovered && (
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <Sparkles className="w-10 h-10 text-white opacity-30 animate-pulse" />
+          </div>
+        )}
       </div>
       
       {/* Title */}
