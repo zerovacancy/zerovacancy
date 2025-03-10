@@ -133,7 +133,6 @@ export const ShimmerButton = React.forwardRef<HTMLButtonElement, ShimmerButtonPr
               repeatType: "loop",
               ease: "linear"
             }} 
-            aria-hidden="true"
           />
         )}
       </AnimatePresence>

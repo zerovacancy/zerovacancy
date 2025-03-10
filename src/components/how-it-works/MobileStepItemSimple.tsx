@@ -1,9 +1,8 @@
 
-import React, { useRef, useState } from 'react';
+import React from 'react';
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Step } from './types';
-import { Sparkles } from 'lucide-react';
 
 interface MobileStepItemSimpleProps {
   step: Step;
@@ -20,36 +19,6 @@ const MobileStepItemSimple: React.FC<MobileStepItemSimpleProps> = ({
   isActive,
   onClick
 }) => {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const iconRef = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [isHovered, setIsHovered] = useState(false);
-  
-  // Magnetic effect (lighter for mobile)
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
-    
-    const rect = cardRef.current.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    
-    // Calculate distance from mouse to center
-    const distanceX = e.clientX - centerX;
-    const distanceY = e.clientY - centerY;
-    
-    // Limit the movement to a smaller range for mobile cards
-    const maxDistance = 8; 
-    const moveX = (distanceX / rect.width) * maxDistance;
-    const moveY = (distanceY / rect.height) * maxDistance;
-    
-    setPosition({ x: moveX, y: moveY });
-  };
-  
-  const resetPosition = () => {
-    setPosition({ x: 0, y: 0 });
-    setIsHovered(false);
-  };
-
   // Get the border color by extracting from gradient (for non-active state)
   const getBorderColor = () => {
     // Extract the primary color from gradient for border
@@ -72,7 +41,6 @@ const MobileStepItemSimple: React.FC<MobileStepItemSimpleProps> = ({
 
   return (
     <div 
-      ref={cardRef}
       onClick={onClick}
       className={cn(
         "relative p-2 sm:p-3.5 transition-all",
@@ -93,26 +61,16 @@ const MobileStepItemSimple: React.FC<MobileStepItemSimpleProps> = ({
           ? `0 0 15px ${getGlowColor()}, 0 0 5px ${getGlowColor()}` 
           : '0 2px 8px rgba(0,0,0,0.05)',
         transition: 'all 0.3s ease-in-out',
-        // Magnetic effect
-        ...(isHovered && {
-          transform: `translate3d(${position.x}px, ${position.y}px, 0)`,
-          transition: 'transform 0.15s cubic-bezier(0.17, 0.67, 0.83, 0.67)'
-        })
       }}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={resetPosition}
       onMouseOver={(e) => {
         e.currentTarget.style.boxShadow = isActive 
           ? `0 0 20px ${getGlowColor()}, 0 0 8px ${getGlowColor()}` 
           : '0 4px 12px rgba(0,0,0,0.08)';
       }}
       onMouseOut={(e) => {
-        if (!isHovered) {
-          e.currentTarget.style.boxShadow = isActive 
-            ? `0 0 15px ${getGlowColor()}, 0 0 5px ${getGlowColor()}` 
-            : '0 2px 8px rgba(0,0,0,0.05)';
-        }
+        e.currentTarget.style.boxShadow = isActive 
+          ? `0 0 15px ${getGlowColor()}, 0 0 5px ${getGlowColor()}` 
+          : '0 2px 8px rgba(0,0,0,0.05)';
       }}
     >
       {/* Circle Number Badge with gradient */}
@@ -139,47 +97,13 @@ const MobileStepItemSimple: React.FC<MobileStepItemSimpleProps> = ({
           {step.title}
         </h4>
         
-        <div 
-          ref={iconRef}
-          className={cn(
-            "rounded-full p-1 sm:p-1.5 ml-1 relative overflow-hidden",
-            step.gradientClass || step.iconClass
-          )}
-          onMouseEnter={() => {
-            if (iconRef.current) {
-              // Create sparkle effect
-              const sparklesEl = document.createElement('div');
-              sparklesEl.className = 'absolute inset-0 z-10 flex items-center justify-center';
-              
-              const sparkle = document.createElement('div');
-              sparkle.className = 'animate-ping-once absolute';
-              sparkle.style.width = '4px';
-              sparkle.style.height = '4px';
-              sparkle.style.borderRadius = '50%';
-              sparkle.style.backgroundColor = 'rgba(255,255,255,0.8)';
-              
-              sparklesEl.appendChild(sparkle);
-              iconRef.current.appendChild(sparklesEl);
-              
-              // Remove after animation
-              setTimeout(() => {
-                if (iconRef.current && sparklesEl.parentNode === iconRef.current) {
-                  iconRef.current.removeChild(sparklesEl);
-                }
-              }, 700);
-            }
-          }}
-        >
+        <div className={cn(
+          "rounded-full p-1 sm:p-1.5 ml-1",
+          step.gradientClass || step.iconClass
+        )}>
           {React.cloneElement(step.icon as React.ReactElement, {
-            className: "w-3.5 h-3.5 sm:w-4 sm:h-4 relative z-20"
+            className: "w-3.5 h-3.5 sm:w-4 sm:h-4"
           })}
-          
-          {/* Mini sparkles on hover */}
-          {isHovered && (
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <Sparkles className="w-5 h-5 text-white opacity-40 animate-pulse" />
-            </div>
-          )}
         </div>
       </div>
       

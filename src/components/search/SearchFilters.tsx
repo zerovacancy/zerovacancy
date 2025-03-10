@@ -25,32 +25,24 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
             hover:bg-gray-50 rounded-md
             transition-colors duration-200
             border border-transparent hover:border-gray-200/70
-            focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1
           "
-          aria-expanded={showMoreFilters}
-          aria-controls="advanced-filters"
         >
           Advanced Filters
           <ChevronDown className={cn(
             "w-3.5 h-3.5 text-gray-500",
             showMoreFilters ? "rotate-180" : ""
-          )} 
-          aria-hidden="true" />
+          )} />
         </button>
       </div>
 
-      <div 
-        id="advanced-filters"
-        className={cn(
-          "grid grid-cols-1 sm:grid-cols-2 gap-3 transition-all duration-300 mt-1",
-          showMoreFilters ? "opacity-100 h-auto" : "opacity-0 h-0 overflow-hidden"
-        )}
-        aria-hidden={!showMoreFilters}
-      >
+      <div className={cn(
+        "grid grid-cols-1 sm:grid-cols-2 gap-3 transition-all duration-300 mt-1",
+        showMoreFilters ? "opacity-100 h-auto" : "opacity-0 h-0 overflow-hidden"
+      )}>
         {/* Budget Filter */}
         <div className="relative group">
-          <DollarSign className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" aria-hidden="true" />
-          <ChevronDown className="w-3.5 h-3.5 text-gray-300 absolute right-4 top-1/2 -translate-y-1/2" aria-hidden="true" />
+          <DollarSign className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
+          <ChevronDown className="w-3.5 h-3.5 text-gray-300 absolute right-4 top-1/2 -translate-y-1/2" />
           <select
             className={cn(
               "w-full h-11 px-11 rounded-lg appearance-none", // Increased height
@@ -60,7 +52,6 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
               "focus:outline-none focus:ring-2 focus:ring-primary/10",
               "group-hover:bg-gray-50"
             )}
-            aria-label="Select budget range"
           >
             <option value="">Select your budget range</option>
             <option value="0-100">$0 - $100</option>
@@ -72,8 +63,8 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
 
         {/* Rating Filter */}
         <div className="relative group">
-          <Star className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" aria-hidden="true" />
-          <ChevronDown className="w-3.5 h-3.5 text-gray-300 absolute right-4 top-1/2 -translate-y-1/2" aria-hidden="true" />
+          <Star className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
+          <ChevronDown className="w-3.5 h-3.5 text-gray-300 absolute right-4 top-1/2 -translate-y-1/2" />
           <select
             className={cn(
               "w-full h-11 px-11 rounded-lg appearance-none", // Increased height
@@ -83,7 +74,6 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
               "focus:outline-none focus:ring-2 focus:ring-primary/10",
               "group-hover:bg-gray-50"
             )}
-            aria-label="Select minimum rating"
           >
             <option value="">Minimum Rating</option>
             <option value="4.5">4.5+ Stars</option>

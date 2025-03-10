@@ -1,9 +1,6 @@
 
-import React from "react";
 import { FeatureItem } from "./FeatureItem";
 import { MobilePartialOverlay } from "./MobilePartialOverlay";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { cn } from "@/lib/utils";
 
 interface FeaturesGridProps {
   features: Array<{
@@ -33,10 +30,7 @@ export const FeaturesGrid = ({
   toggleShowAllCards
 }: FeaturesGridProps) => {
   return (
-    <div className={cn(
-      "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-7 relative",
-      isMobile && "mobile-flatten gap-5"
-    )}>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-7 relative">
       {/* Regular Features */}
       {visibleFeatures.map((feature, index) => (
         <FeatureItem
@@ -51,14 +45,12 @@ export const FeaturesGrid = ({
         />
       ))}
       
-      {/* Partial card overlay with View More button (mobile only) - simplified container */}
+      {/* Partial card overlay with View More button (mobile only) */}
       {isMobile && !showAllCards && (
-        <div className={cn("relative", "mobile-flatten")}>
-          <MobilePartialOverlay 
-            showAllCards={showAllCards} 
-            toggleShowAllCards={toggleShowAllCards} 
-          />
-        </div>
+        <MobilePartialOverlay 
+          showAllCards={showAllCards} 
+          toggleShowAllCards={toggleShowAllCards} 
+        />
       )}
     </div>
   );

@@ -29,16 +29,14 @@ export function WaitlistButton({ isLoading }: WaitlistButtonProps) {
         "text-white",
         "font-medium",
         "px-4 sm:px-5",
-        "focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2",
         "after:absolute after:inset-0 after:bg-gradient-to-r after:from-purple-500/20 after:to-blue-500/20 after:opacity-0 after:animate-pulse after:pointer-events-none group-hover:after:opacity-100"
       )} 
       style={{
         gap: '6px'
       }}
       disabled={isLoading}
-      aria-label="Join the waitlist"
     >
-      {isLoading ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : (
+      {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : (
         <>
           <span className={cn(
             "flex-shrink-0",
@@ -47,7 +45,7 @@ export function WaitlistButton({ isLoading }: WaitlistButtonProps) {
           )}>
             Join Waitlist Now
           </span>
-          <ArrowRight className="h-4 w-4 flex-shrink-0 inline-block transition-transform group-hover:translate-x-1" aria-hidden="true" />
+          <ArrowRight className="h-4 w-4 flex-shrink-0 inline-block transition-transform group-hover:translate-x-1" />
         </>
       )}
     </Button>

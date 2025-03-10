@@ -1,109 +1,135 @@
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { motion } from "framer-motion";
-import { PricingToggle } from "./PricingToggle";
-import { PricingCard } from "./card/PricingCard";
 import { PricingInteraction } from "./PricingInteraction";
-import { PricingFeature } from "./types";
+import { PricingCardList } from "./PricingCardList";
+import { PricingToggle } from "./PricingToggle";
+import { ColorVariant } from "./PricingCardColors";
+import { PRICING, FEATURES, VALUE_PROPOSITIONS, PLAN_DESCRIPTIONS, PLAN_CTAS } from "./pricingData";
 
-export interface PricingContentProps {
+interface PricingContentProps {
   subscription: any;
   isLoading: boolean;
 }
 
-export const PricingContent: React.FC<PricingContentProps> = ({
-  subscription,
-  isLoading
-}) => {
+export const PricingContent = ({ subscription, isLoading }: PricingContentProps) => {
+  const [isYearly, setIsYearly] = useState(false);
   const isMobile = useIsMobile();
-  
-  // Mock pricing plans data with correctly typed features
-  const plans = [
+
+  // Plans data for the interaction component
+  const pricingPlans = [
     {
-      title: "Free",
-      features: [
-        { text: "**Core Features**", category: "header" },
-        { text: "Up to 3 properties" },
-        { text: "Basic listing details" },
-        { text: "Standard support" },
-      ] as PricingFeature[],
-      showPopular: false,
+      title: "THE FOUNDATION",
+      price: PRICING.starterMonthly,
+      features: FEATURES.foundation
     },
     {
-      title: "Basic",
-      features: [
-        { text: "**Core Features**", category: "header" },
-        { text: "Up to 10 properties" },
-        { text: "Enhanced listing details" },
-        { text: "Priority support" },
-        { text: "**Marketing Tools**", category: "header" },
-        { text: "Social media sharing" },
-        { text: "Basic analytics dashboard" },
-      ] as PricingFeature[],
+      title: "THE NARRATIVE",
+      price: PRICING.proMonthly,
       showPopular: true,
+      features: FEATURES.narrative
     },
     {
-      title: "Professional",
+      title: "THE MASTERPIECE",
+      price: PRICING.premiumMonthly,
+      features: FEATURES.masterpiece
+    }
+  ];
+
+  // Pricing cards data with enhanced details for better conversion and categorized features
+  const pricingCards = [
+    {
+      title: "THE FOUNDATION",
+      price: PRICING.starterMonthly,
+      interval: "",
+      description: PLAN_DESCRIPTIONS.foundation,
       features: [
-        { text: "**Core Features**", category: "header" },
-        { text: "Unlimited properties" },
-        { text: "Premium listing details" },
-        { text: "24/7 support" },
-        { text: "**Marketing Tools**", category: "header" },
-        { text: "Advanced analytics dashboard" },
-        { text: "SEO-Optimized descriptions", tooltip: "Content optimized to rank higher in search results for property listings" },
-        { text: "**Content Creation**", category: "header" },
-        { text: "plus: 3 monthly content pieces", primary: true },
-      ] as PricingFeature[],
-      showPopular: false,
+        "Essential visual narrative", 
+        "Curated property moments",
+        "Core spatial storytelling",
+        "Foundational amenity presence",
+        "48-hour creative delivery"
+      ],
+      cta: PLAN_CTAS.foundation,
+      color: "blue" as ColorVariant,
+      valueProposition: VALUE_PROPOSITIONS.foundation,
+      footerText: ""
     },
+    {
+      title: "THE NARRATIVE",
+      price: PRICING.proMonthly,
+      interval: "",
+      description: PLAN_DESCRIPTIONS.narrative,
+      features: [
+        "Expanded visual storytelling", 
+        "Cinematic property sequence",
+        "Elevated aerial perspective",
+        "Environmental context",
+        "Lifestyle integration",
+        "24-hour creative delivery"
+      ],
+      cta: PLAN_CTAS.narrative,
+      highlighted: true,
+      color: "purple" as ColorVariant,
+      showPopularTag: true,
+      valueProposition: VALUE_PROPOSITIONS.narrative,
+      footerText: ""
+    },
+    {
+      title: "THE MASTERPIECE",
+      price: PRICING.premiumMonthly,
+      interval: "",
+      description: PLAN_DESCRIPTIONS.masterpiece,
+      features: [
+        "Comprehensive visual identity",
+        "Feature-length property film",
+        "Signature aerial sequences",
+        "Neighborhood integration",
+        "Staged lifestyle vignettes",
+        "Same-day priority creation",
+        "Full commercial sovereignty"
+      ],
+      cta: PLAN_CTAS.masterpiece,
+      color: "emerald" as ColorVariant,
+      valueProposition: VALUE_PROPOSITIONS.masterpiece,
+      footerText: ""
+    }
   ];
 
   return (
-    <div className="mt-12 lg:mt-16">
-      {/* Pricing cards container */}
-      {isMobile ? (
-        <PricingInteraction
-          starterMonth={49}
-          starterAnnual={490}
-          proMonth={99}
-          proAnnual={990}
-          plans={plans.slice(1, 3)}
-        />
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          {plans.map((plan, index) => (
-            <PricingCard
-              key={plan.title}
-              title={plan.title}
-              price={index === 0 ? 0 : index === 1 ? 49 : 99}
-              interval="month"
-              description="Great for getting started"
-              features={plan.features}
-              cta={index === 0 ? "Get Started Free" : "Choose Plan"}
-              highlighted={plan.showPopular}
-              showPopularTag={plan.showPopular}
-              valueProposition={
-                index === 0
-                  ? "Perfect for exploring"
-                  : index === 1
-                  ? "Ideal for growing teams"
-                  : "Best for established businesses"
-              }
-              footerText={
-                index === 2
-                  ? "7-day money-back guarantee"
-                  : undefined
-              }
-              subscription={subscription}
-              isLoading={isLoading}
-              isCurrentPlan={false}
+    <>
+      {/* Removed pricing toggle since we don't need yearly/monthly toggle */}
+      
+      {/* Pricing Cards with increased vertical spacing */}
+      <div className="mt-8 sm:mt-10">
+        {isMobile ? (
+          <div className="flex justify-center">
+            <PricingInteraction 
+              starterMonth={PRICING.starterMonthly}
+              starterAnnual={PRICING.starterAnnual}
+              proMonth={PRICING.proMonthly}
+              proAnnual={PRICING.proAnnual}
+              plans={pricingPlans}
             />
-          ))}
-        </div>
-      )}
-    </div>
+          </div>
+        ) : (
+          <PricingCardList 
+            cards={pricingCards} 
+            subscription={subscription}
+            isLoading={isLoading}
+          />
+        )}
+      </div>
+
+      {/* Add Creative Satisfaction section */}
+      <div className="mt-16 text-center">
+        <h2 className="text-2xl font-bold text-slate-900 mb-4">CREATIVE SATISFACTION</h2>
+        <p className="max-w-3xl mx-auto text-slate-600">
+          We believe in the power of collaborative vision. If you're not captivated by the final creation, 
+          we'll refine until you are. If we cannot align our visions, your investment returns to you in full.
+        </p>
+      </div>
+    </>
   );
 };

@@ -37,14 +37,13 @@ export const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
           isFocused || isValid 
             ? "bg-gradient-to-r from-indigo-600 to-purple-600" 
             : "text-gray-400"
-        )}
-        aria-hidden="true">
+        )}>
           <Mail className="h-5 w-5" />
         </div>
         
         {/* Check mark for valid email */}
         {isValid && (
-          <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-500 animate-fade-in" aria-hidden="true">
+          <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-500 animate-fade-in">
             <CheckCircle className="h-5 w-5" />
           </div>
         )}

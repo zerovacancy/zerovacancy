@@ -7,7 +7,6 @@ import { BorderBeam } from '../ui/border-beam';
 import { GlowingEffect } from '../ui/glowing-effect';
 import { AnimatedGrid } from '../ui/animated-grid';
 import { GradientBlobBackground } from '@/components/ui/gradient-blob-background';
-import { WavyBackground } from '@/components/ui/wavy-background';
 
 interface PreviewCardProps {
   isVisible: boolean;
@@ -48,20 +47,6 @@ export const PreviewCard: React.FC<PreviewCardProps> = ({ isVisible, children })
           className={isMobile ? "opacity-20" : "opacity-30"}
         />
         <AnimatedGrid className={isMobile ? "opacity-4" : "opacity-8"} />
-      </div>
-
-      {/* Adding WavyBackground for subtle animation */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden rounded-lg sm:rounded-xl">
-        <WavyBackground 
-          colors={["#9370DB10", "#C19EF908", "#8A2BE210"]}
-          waveWidth={isMobile ? 30 : 50}
-          backgroundFill="transparent" 
-          blur={isMobile ? 5 : 8}
-          speed="slow"
-          waveOpacity={isMobile ? 0.2 : 0.25}
-          className="h-full w-full"
-          containerClassName="h-full w-full absolute inset-0"
-        />
       </div>
 
       <GradientBlobBackground 

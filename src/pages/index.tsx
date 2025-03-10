@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef, lazy, Suspense, useCallback } from 'react';
 import Header from '../components/Header';
 import { Hero } from '../components/hero/Hero';
@@ -113,24 +114,20 @@ const Index = () => {
         <div className="relative">
           <Banner variant="purple" size="lg" action={
               <Button 
-                onClick={handleTryNowClick}
+                variant="secondary" 
+                size="sm" 
                 className={cn(
                   "flex text-xs sm:text-sm items-center whitespace-nowrap", 
                   "px-3 py-2 sm:px-5 sm:py-2.5 min-w-[8rem] sm:min-w-[9rem] min-h-[2.25rem] sm:min-h-[2.5rem]", 
-                  "bg-white/90 hover:bg-white/95 text-violet-600 font-bold", 
-                  "border border-violet-100", 
+                  "bg-amber-400 hover:bg-amber-300 text-gray-900 font-bold", 
+                  "border-2 border-amber-300", 
                   "transition-all duration-200", 
                   "touch-manipulation", 
-                  "shadow-[0_2px_10px_rgba(0,0,0,0.08)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.12)]",
-                  "focus:outline-none focus:ring-2 focus:ring-violet-500/40 focus:ring-offset-2",
-                  "before:absolute before:inset-0 before:z-0 before:h-[100%] before:w-[20%]",
-                  "before:animate-shimmer-slide before:bg-gradient-to-r",
-                  "before:from-transparent before:via-violet-100/30 before:to-transparent",
-                  "relative overflow-hidden"
-                )}
-                aria-label="Get early access to our platform"
+                  "shadow-[0_2px_10px_rgba(0,0,0,0.15)]"
+                )} 
+                onClick={handleTryNowClick}
               >
-                <span className="relative z-10">Get Early Access</span>
+                Get Early Access
               </Button>
             } 
             layout="complex" 
@@ -158,15 +155,15 @@ const Index = () => {
       <main className="flex-1 pb-16 sm:pb-0 w-full">
         <BackgroundEffects 
           blobColors={{
-            first: "bg-purple-200",
-            second: "bg-indigo-200",
-            third: "bg-violet-200"
+            first: "bg-purple-100",
+            second: "bg-indigo-100",
+            third: "bg-violet-100"
           }}
-          blobOpacity={0.35}
+          blobOpacity={0.15}
           withSpotlight={true}
-          spotlightClassName="from-purple-500/10 via-violet-500/10 to-blue-500/10"
-          baseColor="bg-white/60" 
-          pattern="dots"
+          spotlightClassName="from-purple-500/5 via-violet-500/5 to-blue-500/5"
+          baseColor="bg-white/80" 
+          pattern="none"
           className="py-0"
           animationSpeed="slow"
         >

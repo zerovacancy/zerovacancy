@@ -13,7 +13,6 @@ import { CreatorInfo } from './CreatorInfo';
 import { CreatorMedia } from './CreatorMedia';
 import { CreatorTags, getDefaultTags } from './CreatorTags';
 import type { CreatorCardProps } from './types';
-import { GlowingEffect } from '../ui/glowing-effect';
 
 export const CreatorCard: React.FC<CreatorCardProps> = ({ 
   creator, 
@@ -23,16 +22,11 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
 }) => {
   const isMobile = useIsMobile();
   const [showEmailDialog, setShowEmailDialog] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
   
   const tags = creator.tags || getDefaultTags(creator.name, creator.services);
   
   return (
-    <article 
-      className="group select-text h-full"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
+    <article className="group select-text h-full">
       <div className="relative h-full">
         <div className="absolute -inset-0.5 sm:-inset-0.5 rounded-xl bg-gradient-to-r from-purple-800/30 via-indigo-700/30 to-purple-900/30 opacity-60 sm:opacity-75 blur-[2px] sm:blur-sm group-hover:opacity-100 transition duration-500"></div>
         <Card className={cn(
@@ -51,18 +45,6 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               colorTo="#C19EF9" 
               duration={isMobile ? 30 : 20}
               borderWidth={isMobile ? 0.5 : 1}
-            />
-            <GlowingEffect 
-              variant="default" 
-              blur={isMobile ? 3 : 6} 
-              glow={isHovered}
-              spread={isMobile ? 10 : 18}
-              borderWidth={isMobile ? 0.5 : 1}
-              movementDuration={1.5}
-              className={cn(
-                "transition-opacity duration-300",
-                isHovered ? "opacity-100" : "opacity-0"
-              )}
             />
           </div>
 
@@ -126,13 +108,13 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               )}>
                 <ShimmerButton 
                   onClick={() => setShowEmailDialog(true)}
-                  aria-label={`Join The Collective to work with ${creator.name}`}
+                  aria-label={`Join waitlist to work with ${creator.name}`}
                   className={cn(
                     "w-full text-sm px-4 hover:scale-[1.03] active:scale-[0.98] transition-transform duration-200 group-hover:animate-pulse-subtle",
                     isMobile ? "h-10" : "h-10 sm:h-11", // Adjusted height for mobile
                   )}
                 >
-                  <span>Join The Collective</span>
+                  <span>Join Waitlist</span>
                   <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" aria-hidden="true" />
                 </ShimmerButton>
               </div>

@@ -25,7 +25,7 @@ export const MobileSearchButton = () => {
       type="button"
       aria-label="Search creators"
     >
-      <Search className="w-4 h-4 mr-2" aria-hidden="true" />
+      <Search className="w-4 h-4 mr-2" />
       <span>DISCOVER</span>
     </button>
   );

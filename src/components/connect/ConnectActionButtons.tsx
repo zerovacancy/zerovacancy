@@ -28,34 +28,31 @@ const ConnectActionButtons = ({
       {accountStatus?.isOnboarded ? (
         <Button 
           variant="default" 
-          className="w-full sm:w-auto focus:ring-2 focus:ring-indigo-500/30 focus:outline-none" 
+          className="w-full sm:w-auto" 
           onClick={() => navigate('/account')}
-          aria-label="Go to your dashboard"
         >
-          <DollarSign className="mr-2 h-4 w-4" aria-hidden="true" />
+          <DollarSign className="mr-2 h-4 w-4" />
           Go to Dashboard
         </Button>
       ) : (
         <Button 
           variant="default" 
-          className="w-full sm:w-auto focus:ring-2 focus:ring-indigo-500/30 focus:outline-none" 
+          className="w-full sm:w-auto" 
           onClick={onStartOnboarding}
           disabled={loading}
-          aria-label={accountStatus?.exists ? "Continue your onboarding process" : "Start the onboarding process"}
         >
-          <CreditCard className="mr-2 h-4 w-4" aria-hidden="true" />
+          <CreditCard className="mr-2 h-4 w-4" />
           {accountStatus?.exists ? 'Continue Onboarding' : 'Start Onboarding'}
         </Button>
       )}
       
       <Button 
         variant="outline" 
-        className="w-full sm:w-auto focus:ring-2 focus:ring-indigo-500/30 focus:outline-none" 
+        className="w-full sm:w-auto" 
         onClick={onRefreshStatus}
         disabled={loading}
-        aria-label="Refresh account status"
       >
-        <RefreshCw className="mr-2 h-4 w-4" aria-hidden="true" />
+        <RefreshCw className="mr-2 h-4 w-4" />
         Refresh Status
       </Button>
     </div>
