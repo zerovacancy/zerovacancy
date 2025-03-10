@@ -1,3 +1,4 @@
+
 import React from "react";
 import { cn } from "@/lib/utils";
 import { WaitlistCTA } from "../ui/waitlist/waitlist-cta";
@@ -12,7 +13,7 @@ export function Hero() {
       <div className="max-w-5xl w-full mx-auto flex flex-col gap-8 sm:gap-10">
         <h1 className="text-center flex flex-col items-center gap-3 sm:gap-4">
           <motion.span 
-            className="text-display text-[#4A2DD9] px-0 mx-0 relative"
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold font-inter tracking-tight leading-tight block text-[#4A2DD9] px-0 mx-0 relative"
             initial={{ opacity: 0.8 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, repeat: Infinity, repeatType: "reverse" }}
@@ -30,13 +31,13 @@ export function Hero() {
           </motion.span>
           <TextRotate 
             texts={rotatingWords}
-            mainClassName="text-display text-[#4A2DD9] inline-block"
+            mainClassName="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold font-inter text-[#4A2DD9] inline-block"
             rotationInterval={2000}
             exit={{ y: "-120%", opacity: 0 }}
           />
         </h1>
 
-        <p className="paragraph-base text-center max-w-2xl mx-auto px-2">
+        <p className="text-sm sm:text-base md:text-lg text-center text-brand-text-primary max-w-2xl mx-auto px-2 font-inter">
           Connect with creators who see beyond square footage to capture the soul of your spaces. Our curated network transforms properties into visual narratives that intrigue, inspire, and ultimately convert.
         </p>
       </div>

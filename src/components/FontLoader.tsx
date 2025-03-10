@@ -1,3 +1,4 @@
+
 import { useEffect } from 'react';
 
 const FontLoader = () => {
@@ -8,10 +9,10 @@ const FontLoader = () => {
         href: 'https://fonts.googleapis.com/css2?family=Anek+Devanagari:wght@400;500;600;700&display=swap'
       },
       {
-        href: 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap'
+        href: 'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap'
       },
       {
-        href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap'
+        href: 'https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap'
       }
     ];
 
@@ -36,6 +37,11 @@ const FontLoader = () => {
       elements.push(preloadLink, stylesheet);
     });
 
+    // Load the fonts
+    document.fonts.ready.then(() => {
+      // Fonts are loaded and ready
+    });
+    
     return () => {
       // Cleanup
       elements.forEach(element => {

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { MapPin, Image, BadgeCheck } from 'lucide-react';
@@ -33,7 +32,7 @@ export const CreatorInfo: React.FC<CreatorInfoProps> = ({ creator }) => {
       )}>
         <div className="flex items-center gap-2 sm:gap-2.5">
           <h3 className={cn(
-            "font-bold text-white font-space",
+            "font-bold text-white",
             isMobile ? "text-base" : "text-lg sm:text-xl" // Smaller text size on mobile
           )}>
             {creator.name}
@@ -60,7 +59,7 @@ export const CreatorInfo: React.FC<CreatorInfoProps> = ({ creator }) => {
               className="w-3 h-3 text-white/90 flex-shrink-0" 
               aria-hidden="true"
             />
-            <span className="text-xs text-white/90 truncate max-w-[calc(100%-20px)] font-anek">
+            <span className="text-xs text-white/90 truncate max-w-[calc(100%-20px)]">
               {creator.location} • {creator.services.join(", ")}
             </span>
           </div>
@@ -72,7 +71,7 @@ export const CreatorInfo: React.FC<CreatorInfoProps> = ({ creator }) => {
                 className="w-3.5 h-3.5 text-white/90 flex-shrink-0" 
                 aria-hidden="true"
               />
-              <span className="text-xs sm:text-sm text-white/90 font-medium font-anek">{creator.location}</span>
+              <span className="text-xs sm:text-sm text-white/90 font-medium">{creator.location}</span>
             </div>
             
             {/* Services display for desktop */}
@@ -81,7 +80,7 @@ export const CreatorInfo: React.FC<CreatorInfoProps> = ({ creator }) => {
                 className="w-3.5 h-3.5 text-white/85 flex-shrink-0"
                 aria-hidden="true"
               />
-              <p className="text-xs sm:text-sm text-white/85 font-anek">
+              <p className="text-xs sm:text-sm text-white/85">
                 {creator.services.join(" • ")}
               </p>
             </div>

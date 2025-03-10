@@ -1,15 +1,16 @@
+
 @layer components {
   /* Consistent heading styles */
   .heading-1 {
-    @apply text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-brand-purple-dark font-space uppercase;
+    @apply text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-brand-purple-dark font-inter uppercase;
   }
 
   .heading-2 {
-    @apply text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-brand-purple-dark font-space uppercase;
+    @apply text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-brand-purple-dark font-inter uppercase;
   }
 
   .heading-3 {
-    @apply text-xl sm:text-2xl lg:text-3xl font-semibold tracking-tight text-brand-purple-medium font-space uppercase;
+    @apply text-xl sm:text-2xl lg:text-3xl font-semibold tracking-tight text-brand-purple-medium font-inter uppercase;
   }
 
   /* Consistent paragraph styles */
@@ -22,12 +23,12 @@
   }
 
   .paragraph-small {
-    @apply text-xs sm:text-sm text-gray-600 font-anek leading-relaxed;
+    @apply text-xs sm:text-sm text-gray-600 font-inter leading-relaxed;
   }
 
   /* Section title with decorative element */
   .section-title-decorated {
-    @apply text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4 sm:mb-6 font-space tracking-tight text-center uppercase;
+    @apply text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4 sm:mb-6 font-inter tracking-tight text-center uppercase;
   }
 
   .section-title-decoration {

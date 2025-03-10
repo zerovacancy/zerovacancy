@@ -18,7 +18,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ value = '', onLocationSele
   const isMobile = useIsMobile();
 
   return (
-    <div className="w-full space-y-2 sm:space-y-3 font-anek" role="search" aria-label="Creator search">
+    <div className="w-full space-y-2 sm:space-y-3" role="search" aria-label="Creator search">
       <div className="flex flex-col gap-1.5 sm:gap-3">
         <div className={cn(
           "relative flex flex-col sm:flex-row w-full rounded-lg sm:rounded-xl overflow-hidden",
