@@ -111,6 +111,65 @@
     padding-left: 1rem;
     padding-right: 1rem;
   }
+  
+  /* PERFORMANCE IMPROVEMENT: Replace gradients with solid colors on mobile */
+  .mobile-gradient-replace {
+    background-image: none !important;
+    background-color: #8B5CF6 !important; /* Solid purple color */
+  }
+  
+  /* PERFORMANCE IMPROVEMENT: Hide decorative blobs on mobile */
+  .mobile-hide-decorative {
+    display: none !important;
+  }
+  
+  /* PERFORMANCE IMPROVEMENT: Simplify backgrounds */
+  .mobile-simple-bg {
+    background: white !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  /* PERFORMANCE IMPROVEMENT: Replace gradient buttons with solid colors */
+  button.bg-gradient-to-r, 
+  a.bg-gradient-to-r,
+  .bg-gradient-to-r[role="button"] {
+    background-image: none !important;
+    background-color: #8B5CF6 !important; /* Solid purple color */
+  }
+  
+  /* PERFORMANCE IMPROVEMENT: Disable animations */
+  .mobile-no-animation {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  /* PERFORMANCE IMPROVEMENT: Replace WavyBackground with simple bg */
+  .WavyBackground canvas {
+    display: none !important;
+  }
+  
+  .WavyBackground {
+    background-color: #f9fafb !important;
+  }
+  
+  /* Disable mix-blend modes on mobile */
+  .mix-blend-multiply,
+  .mix-blend-screen,
+  .mix-blend-overlay,
+  .mix-blend-darken,
+  .mix-blend-lighten {
+    mix-blend-mode: normal !important;
+  }
+  
+  /* Disable blur effects on mobile */
+  .blur-sm,
+  .blur-md,
+  .blur-lg,
+  .blur-xl,
+  .blur-2xl,
+  .blur-3xl {
+    filter: none !important;
+  }
 }
 
 /* Simpler, more efficient utility classes */
@@ -125,3 +184,4 @@
   content-visibility: auto;
   contain-intrinsic-size: auto 500px;
 }
+

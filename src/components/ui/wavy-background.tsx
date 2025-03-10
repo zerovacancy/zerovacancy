@@ -3,6 +3,7 @@
 import { cn } from "@/lib/utils";
 import React, { useEffect, useRef, useState } from "react";
 import { createNoise3D } from "simplex-noise";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export const WavyBackground = ({
   children,
@@ -36,6 +37,8 @@ export const WavyBackground = ({
     ctx: any,
     canvas: any;
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const isMobile = useIsMobile();
+
   const getSpeed = () => {
     switch (speed) {
       case "slow":
@@ -94,11 +97,16 @@ export const WavyBackground = ({
   };
 
   useEffect(() => {
-    init();
+    // Only initialize animation on desktop
+    if (!isMobile) {
+      init();
+    }
     return () => {
-      cancelAnimationFrame(animationId);
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+      }
     };
-  }, []);
+  }, [isMobile]);
 
   const [isSafari, setIsSafari] = useState(false);
   useEffect(() => {
@@ -108,6 +116,17 @@ export const WavyBackground = ({
         !navigator.userAgent.includes("Chrome")
     );
   }, []);
+
+  // On mobile, render a simple container instead
+  if (isMobile) {
+    return (
+      <div className={cn("h-full flex flex-col items-center justify-center bg-white", containerClassName)}>
+        <div className={cn("relative z-10", className)} {...props}>
+          {children}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div

@@ -37,10 +37,16 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="relative h-full">
-        <div className={cn(
-          "absolute -inset-0.5 sm:-inset-0.5 rounded-xl bg-gradient-to-r from-purple-800/30 via-indigo-700/30 to-purple-900/30 opacity-60 sm:opacity-75 blur-[2px] sm:blur-sm transition duration-500",
-          isMobile ? "opacity-50" : "group-hover:opacity-100"
-        )}></div>
+        {/* Mobile: Replace gradient backdrop with solid color */}
+        {isMobile ? (
+          <div className="absolute -inset-0.5 rounded-xl bg-purple-800/30 opacity-50 blur-[1px]"></div>
+        ) : (
+          <div className={cn(
+            "absolute -inset-0.5 sm:-inset-0.5 rounded-xl bg-gradient-to-r from-purple-800/30 via-indigo-700/30 to-purple-900/30 opacity-60 sm:opacity-75 blur-[2px] sm:blur-sm transition duration-500",
+            isMobile ? "opacity-50" : "group-hover:opacity-100"
+          )}></div>
+        )}
+        
         <Card className={cn(
           "overflow-hidden h-full",
           "will-change-transform transition-all duration-300",

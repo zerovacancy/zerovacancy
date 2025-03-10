@@ -40,3 +40,25 @@
     animation: logo-spin infinite 20s linear;
   }
 }
+
+/* Mobile-specific animations - simplified and optimized */
+@media (max-width: 768px) {
+  .animate-pulse-subtle {
+    animation: pulse-subtle 3s infinite; /* Slower animation on mobile */
+  }
+  
+  /* Disable complex animations on mobile */
+  .mobile-no-animation {
+    animation: none !important;
+  }
+  
+  /* Simple fade animation for mobile */
+  @keyframes mobile-fade {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  
+  .mobile-fade {
+    animation: mobile-fade 0.5s ease-out;
+  }
+}
