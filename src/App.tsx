@@ -1,5 +1,5 @@
 
-import React, { lazy, Suspense, useEffect } from 'react';
+import React, { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ErrorBoundary } from 'react-error-boundary';
 import ErrorFallback from './components/ErrorFallback';
@@ -26,18 +26,6 @@ const PageLoader = () => (
 );
 
 function App() {
-  // Preload critical resources
-  useEffect(() => {
-    // Preload the Index component after initial render
-    const timer = setTimeout(() => {
-      import('./pages/index');
-    }, 200);
-    
-    return () => {
-      clearTimeout(timer);
-    };
-  }, []);
-
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <Router>

@@ -26,7 +26,6 @@ body {
 /* Target features section specifically for smooth scrolling */
 #features {
   scroll-margin-top: 80px;
-  scroll-snap-align: start;
 }
 
 /* Gradual fade for scroll edges */
@@ -34,7 +33,7 @@ body {
   mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
 }
 
-/* Enhanced scrolling experience for horizontal carousels */
+/* Enhanced scrolling experience for horizontal carousels only */
 .snap-x {
   scroll-snap-type: x mandatory;
 }
@@ -60,12 +59,14 @@ body {
   
   /* Single scroll context on the body */
   body {
-    overflow-y: auto;
+    overflow-y: auto !important;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
     position: relative;
     /* Prevent scroll chaining on mobile */
     overscroll-behavior-y: contain;
+    /* Add padding for bottom nav */
+    padding-bottom: 4rem;
   }
   
   /* Fix excessive nested scroll contexts */
@@ -76,10 +77,9 @@ body {
   [class*="container"] {
     overflow: visible !important;
     overflow-y: visible !important;
-    transform: translateZ(0);
   }
   
-  /* Allow horizontal scrolling for carousels */
+  /* Allow horizontal scrolling for carousels only */
   .scroll-container-horizontal {
     overflow-x: auto !important;
     overflow-y: hidden !important;

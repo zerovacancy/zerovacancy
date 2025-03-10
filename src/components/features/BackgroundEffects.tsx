@@ -47,7 +47,25 @@ export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({
   const [isVisible, setIsVisible] = useState(true);
   const isMobile = useIsMobile();
 
-  // Optimize for mobile: Skip expensive effects when on mobile devices
+  // On mobile, return a simple white background without gradients or effects
+  if (isMobile) {
+    return (
+      <div 
+        ref={containerRef}
+        id={id}
+        className={cn(
+          "relative w-full overflow-visible bg-white", 
+          "flex-1 flex flex-col",
+          className,
+          layoutClassName
+        )}
+      >
+        {children}
+      </div>
+    );
+  }
+
+  // Only use Intersection Observer for desktop
   useEffect(() => {
     if (!containerRef.current || isMobile) return;
     
@@ -57,7 +75,6 @@ export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({
         if (entry.isIntersecting) {
           setIsVisible(true);
         } else {
-          // Only hide when scrolled far away (optimization)
           if (Math.abs(entry.boundingClientRect.top) > window.innerHeight * 2) {
             setIsVisible(false);
           }
@@ -81,24 +98,6 @@ export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({
       clearTimeout(safetyTimeout);
     };
   }, [isMobile]);
-
-  // On mobile, return a much simpler version to improve performance
-  if (isMobile) {
-    return (
-      <div 
-        ref={containerRef}
-        id={id}
-        className={cn(
-          "relative w-full overflow-visible bg-white", 
-          "flex-1 flex flex-col",
-          className,
-          layoutClassName
-        )}
-      >
-        {children}
-      </div>
-    );
-  }
 
   return (
     <div 

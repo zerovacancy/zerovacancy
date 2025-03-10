@@ -48,25 +48,28 @@ const shouldHaveIcon = (tag: string): boolean => {
 export const CreatorTags: React.FC<CreatorTagsProps> = ({ tags }) => {
   const isMobile = useIsMobile();
   
+  // For mobile, we'll show fewer tags
+  const displayTags = isMobile ? tags.slice(0, 2) : tags;
+  
   return (
     <div 
       className={cn(
         "overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']",
-        // Add horizontal scrolling hint for mobile
-        isMobile ? "after:content-[''] after:absolute after:right-0 after:top-0 after:h-full after:w-6 after:bg-gradient-to-l after:from-white after:to-transparent after:pointer-events-none" : ""
+        "w-full"
       )}
       role="list"
       aria-label="Creator specialties"
     >
-      <div className="flex flex-nowrap gap-1.5 sm:gap-2.5">
-        {tags.map((tag, index) => (
+      <div className="flex flex-nowrap gap-1.5 sm:gap-2.5 w-full">
+        {displayTags.map((tag, index) => (
           <span
             key={index}
             className={cn(
               isMobile ? "text-[10px] px-2 py-1" : "text-[10px] sm:text-xs px-2.5 py-1.5", // Smaller tags on mobile
               "rounded-full",
               "transition-all duration-200 whitespace-nowrap",
-              "hover:scale-105 cursor-pointer shadow-sm hover:shadow-md",
+              "cursor-pointer shadow-sm",
+              !isMobile && "hover:scale-105 hover:shadow-md", 
               "flex items-center gap-1",
               "font-anek",
               getTagStyle(tag)
@@ -82,6 +85,13 @@ export const CreatorTags: React.FC<CreatorTagsProps> = ({ tags }) => {
             {tag}
           </span>
         ))}
+        
+        {/* Show "+X more" indicator on mobile if there are more tags */}
+        {isMobile && tags.length > 2 && (
+          <span className="text-[10px] px-2 py-1 rounded-full bg-gray-100 text-gray-500 whitespace-nowrap font-medium">
+            +{tags.length - 2} more
+          </span>
+        )}
       </div>
     </div>
   );

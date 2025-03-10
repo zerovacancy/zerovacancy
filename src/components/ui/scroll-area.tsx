@@ -16,6 +16,7 @@ const ScrollArea = React.forwardRef<
   const isMobile = useIsMobile();
   
   // If on mobile and disableOnMobile is true, just render the children directly
+  // This prevents scroll hijacking on mobile
   if (isMobile && disableOnMobile) {
     return (
       <div className={cn(
@@ -28,6 +29,7 @@ const ScrollArea = React.forwardRef<
     );
   }
   
+  // On desktop, use the Radix ScrollArea
   return (
     <ScrollAreaPrimitive.Root
       ref={ref}

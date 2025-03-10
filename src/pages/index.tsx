@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useRef, lazy, Suspense, useCallback } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import Header from '../components/Header';
 import { Hero } from '../components/hero/Hero';
 import CallToActionSection from '../components/CallToActionSection';
@@ -36,18 +36,7 @@ const Index = () => {
   const [showBanner, setShowBanner] = useState(true);
   const [showGlowDialog, setShowGlowDialog] = useState(false);
   const isMobile = useIsMobile();
-  const sectionsRef = useRef<(HTMLElement | null)[]>([]);
-  const [visibleSections, setVisibleSections] = useState<{
-    [key: number]: boolean;
-  }>({
-    0: true, // Hero section is visible by default
-    1: true,
-    2: true,
-    3: true,
-    4: true,
-    5: true
-  });
-
+  
   // Initialize local storage and dialog state
   useEffect(() => {
     const hasVisited = localStorage.getItem('hasVisited');
@@ -56,69 +45,22 @@ const Index = () => {
       localStorage.setItem('hasVisited', 'true');
     }
   }, []);
-
-  // Optimized Intersection Observer with useCallback to avoid recreating functions
-  const observerCallback = useCallback((entries: IntersectionObserverEntry[]) => {
-    entries.forEach(entry => {
-      const index = parseInt(entry.target.getAttribute('data-section-index') || '-1', 10);
-      if (index >= 0) {
-        setVisibleSections(prev => ({
-          ...prev,
-          [index]: entry.isIntersecting || prev[index] // Keep sections visible once they've been seen
-        }));
-      }
-    });
-  }, []);
-
-  // Use Intersection Observer to optimize rendering of sections with safety timeout
-  useEffect(() => {
-    const observer = new IntersectionObserver(observerCallback, {
-      threshold: 0.1,
-      rootMargin: '200px'
-    });
-    sectionsRef.current.forEach((section, index) => {
-      if (!section) return;
-      section.setAttribute('data-section-index', index.toString());
-      observer.observe(section);
-    });
-
-    // Safety timeout to make all sections visible if they aren't already
-    const safetyTimeout = setTimeout(() => {
-      setVisibleSections({
-        0: true,
-        1: true,
-        2: true,
-        3: true,
-        4: true,
-        5: true
-      });
-    }, 1000);
-    return () => {
-      observer.disconnect();
-      clearTimeout(safetyTimeout);
-    };
-  }, [observerCallback]);
   
   const handleTryNowClick = () => {
     setShowGlowDialog(true);
   };
-
-  // Helper function to add section refs
-  const addSectionRef = (index: number) => (el: HTMLElement | null) => {
-    sectionsRef.current[index] = el;
-  };
   
-  // Mobile-specific background settings
+  // Mobile-specific background settings - simplified for performance
   const mobileBackgroundSettings = {
     blobColors: {
       first: "bg-purple-200",
       second: "bg-indigo-200",
       third: "bg-violet-200"
     },
-    blobOpacity: isMobile ? 0.2 : 0.35,
+    blobOpacity: isMobile ? 0.1 : 0.35,
     withSpotlight: !isMobile,
     spotlightClassName: "from-purple-500/10 via-violet-500/10 to-blue-500/10",
-    baseColor: "bg-white/60",
+    baseColor: "bg-white",
     pattern: "none" as const,
     animationSpeed: "slow" as const
   };
@@ -186,14 +128,14 @@ const Index = () => {
         className={cn("py-0", isMobile && "mobile-background")}
         layoutClassName="flex-1 pb-16 sm:pb-0 w-full"
       >
-        <div className={cn("space-y-0 w-full overflow-visible", isMobile && "mobile-sections-container")}>
-          {/* Hero Section - Always visible */}
-          <section ref={addSectionRef(0)} className={cn("w-full", isMobile && "mobile-section mobile-hero")}>
+        <div className={cn("space-y-4 w-full overflow-visible", isMobile && "mobile-sections-container")}>
+          {/* Hero Section */}
+          <section className={cn("w-full", isMobile && "mobile-section mobile-hero")}>
             <Hero />
           </section>
           
           {/* How It Works Section */}
-          <section ref={addSectionRef(1)} id="how-it-works" className={cn("relative w-full", isMobile && "mobile-section")}>
+          <section id="how-it-works" className={cn("relative w-full", isMobile && "mobile-section")}>
             <div className={cn("relative z-10", isMobile && "mobile-content-container")}>
               <Suspense fallback={<SectionLoader />}>
                 <OptimizedHowItWorks />
@@ -202,7 +144,7 @@ const Index = () => {
           </section>
           
           {/* Search Section */}
-          <section ref={addSectionRef(2)} id="find-creators" className={cn("relative w-full", isMobile && "mobile-section")}>
+          <section id="find-creators" className={cn("relative w-full", isMobile && "mobile-section")}>
             <div className={cn("max-w-7xl mx-auto relative z-10 py-10 sm:py-16 lg:py-20", isMobile && "mobile-content-container py-6")}>
               <Suspense fallback={<SectionLoader />}>
                 <PreviewSearch />
@@ -211,21 +153,21 @@ const Index = () => {
           </section>
           
           {/* Professional Content Creation Services */}
-          <section ref={addSectionRef(3)} className={cn("w-full", isMobile && "mobile-section mobile-features")}>
+          <section className={cn("w-full", isMobile && "mobile-section mobile-features")}>
             <Suspense fallback={<SectionLoader />}>
               <FeaturesSectionWithHoverEffects />
             </Suspense>
           </section>
 
           {/* Pricing Section */}
-          <section ref={addSectionRef(4)} className={cn("w-full", isMobile && "mobile-section mobile-pricing")}>
+          <section className={cn("w-full", isMobile && "mobile-section mobile-pricing")}>
             <Suspense fallback={<SectionLoader />}>
               <Pricing />
             </Suspense>
           </section>
 
           {/* Final CTA Section */}
-          <div ref={addSectionRef(5)} className={cn("relative w-full", isMobile && "mobile-section mobile-cta")}>
+          <div className={cn("relative w-full", isMobile && "mobile-section mobile-cta")}>
             <div className={cn("relative z-10 max-w-7xl mx-auto py-14 sm:py-20 lg:py-24", isMobile && "py-8 mobile-content-container")}>
               <CallToActionSection />
             </div>
