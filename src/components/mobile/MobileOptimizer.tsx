@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
@@ -34,13 +33,13 @@ export const MobileOptimizer: React.FC<MobileOptimizerProps> = ({ children }) =>
       // Simplified optimization approach - avoid DOM manipulation that could cause rendering issues
       const passiveOption = { passive: true };
       
-      const addPassiveListeners = () => {
-        document.addEventListener('touchstart', () => {}, passiveOption);
-        document.addEventListener('touchmove', () => {}, passiveOption);
-        document.addEventListener('wheel', () => {}, passiveOption);
-      };
+      // Define a reusable empty handler function
+      const emptyHandler = () => {};
       
-      addPassiveListeners();
+      // Add passive listeners with the same handler reference
+      document.addEventListener('touchstart', emptyHandler, passiveOption);
+      document.addEventListener('touchmove', emptyHandler, passiveOption);
+      document.addEventListener('wheel', emptyHandler, passiveOption);
       
       // Clean up on unmount
       return () => {
@@ -48,9 +47,10 @@ export const MobileOptimizer: React.FC<MobileOptimizerProps> = ({ children }) =>
         document.documentElement.style.removeProperty('overscroll-behavior-y');
         document.documentElement.style.removeProperty('scroll-snap-type');
         
-        document.removeEventListener('touchstart', () => {});
-        document.removeEventListener('touchmove', () => {});
-        document.removeEventListener('wheel', () => {});
+        // Use the same handler reference for removal
+        document.removeEventListener('touchstart', emptyHandler);
+        document.removeEventListener('touchmove', emptyHandler);
+        document.removeEventListener('wheel', emptyHandler);
         
         hasAppliedOptimizations.current = false;
       };
