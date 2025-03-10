@@ -110,26 +110,3 @@ import { useState } from "react";
 
   // Export both named and default export for backward compatibility
   export default FeaturesSectionWithHoverEffects;
-
-> this will only effect the mobile site, right?
-
-⏺ Yes, that's correct. This will only affect the mobile site because:
-
-  1. The collapsing behavior is controlled by this condition:
-  const visibleFeatures = isMobile && !showAllCards
-    ? features.slice(0, 3)
-    : features;
-
-  2. The mobile-specific CTA button only appears when isMobile is true:
-  {isMobile && (
-    <div className="w-full mt-8 flex justify-center">
-      {/* Mobile CTA button */}
-    </div>
-  )}
-
-  3. For desktop, all features are always shown, and it has its own separate button:
-  {!isMobile && (
-    <div className="mt-12 flex justify-center">
-      {/* Desktop button */}
-    </div>
-  )}
