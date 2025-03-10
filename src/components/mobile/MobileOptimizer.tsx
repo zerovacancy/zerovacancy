@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 interface MobileOptimizerProps {
@@ -15,8 +15,15 @@ export const MobileOptimizer: React.FC<MobileOptimizerProps> = ({ children }) =>
   const isMobile = useIsMobile();
   const hasAppliedOptimizations = useRef(false);
   
+  // Create a stable empty handler with useCallback
+  const emptyHandler = useCallback(() => {}, []);
+  
   useEffect(() => {
-    if (isMobile && !hasAppliedOptimizations.current) {
+    // Only run this effect when on mobile
+    if (!isMobile) return;
+    
+    if (!hasAppliedOptimizations.current) {
+      console.log("Applying mobile optimizations");
       // Prevent multiple applications of optimizations
       hasAppliedOptimizations.current = true;
       
@@ -31,32 +38,32 @@ export const MobileOptimizer: React.FC<MobileOptimizerProps> = ({ children }) =>
       // Disable any scroll snap behavior
       document.documentElement.style.setProperty('scroll-snap-type', 'none');
       
-      // Simplified optimization approach - avoid DOM manipulation that could cause rendering issues
+      // Simplified optimization approach with passive listeners
       const passiveOption = { passive: true };
       
-      // Define a reusable empty handler function
-      const emptyHandler = () => {};
-      
-      // Add passive listeners with the same handler reference
+      // Add passive listeners with the stable callback
       document.addEventListener('touchstart', emptyHandler, passiveOption);
       document.addEventListener('touchmove', emptyHandler, passiveOption);
       document.addEventListener('wheel', emptyHandler, passiveOption);
-      
-      // Clean up on unmount
-      return () => {
+    }
+    
+    // Clean up on unmount or when isMobile changes
+    return () => {
+      console.log("Cleaning up mobile optimizations");
+      if (hasAppliedOptimizations.current) {
         document.body.classList.remove('mobile-optimized');
         document.documentElement.style.removeProperty('overscroll-behavior-y');
         document.documentElement.style.removeProperty('scroll-snap-type');
         
-        // Use the same handler reference for removal
+        // Remove listeners using the same stable callback
         document.removeEventListener('touchstart', emptyHandler);
         document.removeEventListener('touchmove', emptyHandler);
         document.removeEventListener('wheel', emptyHandler);
         
         hasAppliedOptimizations.current = false;
-      };
-    }
-  }, [isMobile]);
+      }
+    };
+  }, [isMobile, emptyHandler]); // Include emptyHandler in dependencies
   
   return <>{children}</>;
 };
