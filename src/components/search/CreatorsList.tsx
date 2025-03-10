@@ -1,7 +1,7 @@
 
 import React, { useRef, useState } from 'react';
 import { CreatorCard } from '../creator/CreatorCard';
-import { ChevronDown, Filter, ChevronUp, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronDown, Filter, ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -27,132 +27,114 @@ export const CreatorsList: React.FC<CreatorsListProps> = ({
   const isMobile = useIsMobile();
   const filterTagsRef = useRef<HTMLDivElement>(null);
   const [showAllCreators, setShowAllCreators] = useState(false);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  // Determine which creators to show based on mobile state and expanded state
+  const visibleCreators = isMobile && !showAllCreators ? creators.slice(0, 1) : creators;
 
   // Filter tags with improved styling
   const filterTags = ["All Services", "Photography", "Video Tours", "Drone Footage", "3D Tours", "Floor Plans", "Virtual Staging"];
-  
-  // Scroll the container horizontally on mobile
-  const scrollHorizontal = (direction: 'left' | 'right') => {
-    if (!scrollContainerRef.current) return;
-    
-    const container = scrollContainerRef.current;
-    const scrollAmount = 320; // Approximate card width
-    
-    if (direction === 'left') {
-      container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-    } else {
-      container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-    }
-  };
   
   return (
     <div className="relative">
       {/* Filters section with horizontal scrolling on mobile */}
       <div className="mb-4 sm:mb-6">
+        {/* Horizontally scrollable filter tags for mobile */}
         <div className="overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none'] relative" ref={filterTagsRef}>
           {/* Gradient fade indicators for horizontal scroll */}
-          {isMobile && (
-            <>
+          {isMobile && <>
               <div className="absolute left-0 top-0 h-full w-6 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
               <div className="absolute right-0 top-0 h-full w-6 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
-            </>
-          )}
+            </>}
           
           <div className="flex space-x-2 pb-1 min-w-max">
-            {filterTags.map((tag, index) => (
-              <button 
-                key={index} 
-                className={cn(
-                  "transition-all whitespace-nowrap rounded-full border border-gray-200", 
-                  "font-medium shadow-sm hover:bg-indigo-50 hover:border-indigo-200 hover:text-indigo-800", 
-                  index === 0 ? "bg-indigo-50 text-indigo-700 border-indigo-200" : "bg-white text-gray-700", 
-                  isMobile ? "text-xs px-2.5 py-1" : "text-sm px-3 py-1.5" // Smaller on mobile
-                )}
-              >
+            {filterTags.map((tag, index) => <button key={index} className={cn("transition-all whitespace-nowrap rounded-full border border-gray-200", "font-medium shadow-sm hover:bg-indigo-50 hover:border-indigo-200 hover:text-indigo-800", index === 0 ? "bg-indigo-50 text-indigo-700 border-indigo-200" : "bg-white text-gray-700", isMobile ? "text-xs px-2.5 py-1" : "text-sm px-3 py-1.5" // Smaller on mobile
+          )}>
                 {index === 0 && <Filter className={cn("inline-block mr-1.5", isMobile ? "w-2.5 h-2.5" : "w-3 h-3")} />}
                 {tag}
-              </button>
-            ))}
+              </button>)}
           </div>
         </div>
       </div>
       
-      {/* Mobile horizontal scroll navigation */}
-      {isMobile && creators.length > 1 && (
-        <div className="flex justify-between mb-3">
-          <button 
-            onClick={() => scrollHorizontal('left')}
-            className="bg-white shadow-sm border border-gray-200 rounded-full p-2"
-            aria-label="Scroll left"
-          >
-            <ChevronLeft className="h-4 w-4 text-gray-600" />
-          </button>
-          <span className="text-xs text-gray-500 flex items-center">
-            Scroll to see more
-          </span>
-          <button 
-            onClick={() => scrollHorizontal('right')}
-            className="bg-white shadow-sm border border-gray-200 rounded-full p-2"
-            aria-label="Scroll right"
-          >
-            <ChevronRight className="h-4 w-4 text-gray-600" />
-          </button>
-        </div>
-      )}
-      
-      {/* Creators grid - horizontal scroll on mobile, grid on desktop */}
-      <div 
-        ref={scrollContainerRef}
-        className={cn(
-          isMobile 
-            ? "flex overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none'] pb-6 snap-x snap-mandatory" 
-            : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6"
-        )}
-      >
-        {creators.map((creator, index) => (
-          <motion.div 
-            key={creator.name} 
-            className={cn(
-              isMobile ? "flex-shrink-0 w-80 mr-4 snap-center" : ""
-            )}
-            initial={{
-              opacity: 0,
-              y: 20
-            }} 
-            animate={{
-              opacity: 1,
-              y: 0
-            }} 
-            transition={{
-              duration: 0.5,
-              delay: isMobile ? 0.1 * index : 0.1 + index * 0.1,
-              ease: [0.22, 1, 0.36, 1]
-            }}
-          >
+      {/* Creators grid with single column on mobile, multi-column on larger screens */}
+      <div className={cn("grid gap-4 sm:gap-5 md:gap-6", isMobile ? "grid-cols-1" : "sm:grid-cols-2 lg:grid-cols-3" // Single column on mobile
+    )}>
+        {visibleCreators.map((creator, index) => <motion.div key={creator.name} initial={{
+        opacity: 0,
+        y: 20
+      }} animate={{
+        opacity: 1,
+        y: 0
+      }} transition={{
+        duration: 0.5,
+        delay: isMobile ? 0.1 * index : 0.1 + index * 0.1,
+        ease: [0.22, 1, 0.36, 1]
+      }}>
             <CreatorCard 
               creator={creator} 
               onImageLoad={onImageLoad} 
               loadedImages={loadedImages} 
               imageRef={imageRef} 
             />
-          </motion.div>
-        ))}
+          </motion.div>)}
         
-        {creators.length === 0 && (
-          <div className="col-span-full text-center py-10">
+        {creators.length === 0 && <div className="col-span-full text-center py-10">
             <div className="text-gray-500">No creators found</div>
             <p className="text-sm text-gray-400 mt-2">Try adjusting your filters</p>
-          </div>
-        )}
+          </div>}
       </div>
       
-      {/* Remove vertical "Show more" button on mobile since we're using horizontal scroll */}
+      {/* Mobile expand/collapse button - only visible if there are more than 1 creator */}
+      {isMobile && creators.length > 1 && (
+        <div className="mt-4 mb-6 text-center">
+          <motion.button 
+            className={cn(
+              "inline-flex items-center justify-center px-6 py-3",
+              "rounded-lg", // Changed from rounded-full to rounded-lg
+              "bg-gradient-to-r from-gray-50 to-indigo-50/30",
+              "text-indigo-600/80 font-medium",
+              "border border-indigo-100/50",
+              "shadow-sm",
+              "hover:shadow-md hover:bg-indigo-50/50 transition-all duration-200",
+              "text-sm w-[85%] mx-auto",
+              "relative overflow-hidden group"
+            )}
+            onClick={() => setShowAllCreators(!showAllCreators)}
+            initial={{
+              opacity: 0,
+              y: 10
+            }}
+            animate={{
+              opacity: 1,
+              y: 0
+            }}
+            transition={{
+              duration: 0.3
+            }}
+            whileTap={{
+              scale: 0.98
+            }}
+          >
+            <span className="relative z-10 flex items-center">
+              {showAllCreators ? "Show less creators" : `Show ${creators.length - 1} more creators`}
+              {showAllCreators 
+                ? <ChevronUp className="ml-1.5 w-3.5 h-3.5 text-indigo-500/70" /> 
+                : <ChevronDown className="ml-1.5 w-3.5 h-3.5 text-indigo-500/70" />
+              }
+            </span>
+            
+            {/* Subtle shimmer effect */}
+            <span className="absolute inset-0 z-0 animate-shimmer-slide bg-gradient-to-r from-transparent via-indigo-100/20 to-transparent" />
+          </motion.button>
+        </div>
+      )}
+      
+      {/* Desktop "Show more" button - only visible on desktop */}
       {!isMobile && creators.length > 0 && (
         <div className="mt-6 text-center">
           <button 
             className={cn(
-              "inline-flex items-center justify-center px-5 py-2.5 rounded-lg", 
+              "inline-flex items-center justify-center px-5 py-2.5 rounded-lg", // Changed from rounded-full to rounded-lg
               "relative overflow-hidden group",
               "text-white font-semibold shadow-md shadow-indigo-200/50", 
               "hover:shadow-lg hover:shadow-indigo-300/50 hover:-translate-y-0.5", 

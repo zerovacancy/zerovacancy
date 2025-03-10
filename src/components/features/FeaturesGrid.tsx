@@ -25,6 +25,7 @@ interface FeaturesGridProps {
 }
 
 export const FeaturesGrid = memo(({
+  features,
   visibleFeatures,
   isMobile,
   showAllCards,
@@ -32,18 +33,29 @@ export const FeaturesGrid = memo(({
 }: FeaturesGridProps) => {
   // Memoize the card renderer for better performance
   const renderFeatureCard = useCallback((feature: any, index: number) => {
+    // Calculate a stable animation delay
+    const delay = Math.min(index * 0.05, 0.3);
+    
     return (
       <motion.div
         key={`feature-${feature.title}`}
         layout="position"
-        initial={{ opacity: 0, scale: 0.98 }}
+        initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.98 }}
+        exit={{ opacity: 0, scale: 0.95 }}
         transition={{ 
           duration: 0.25,
-          delay: index * 0.05,
+          delay,
           ease: "easeOut",
-          layout: { duration: 0.25, ease: "easeOut" }
+          layout: { 
+            duration: 0.25,
+            ease: "easeOut"
+          }
+        }}
+        style={{ 
+          willChange: "transform, opacity", 
+          transform: "translateZ(0)", // Force GPU rendering
+          height: isMobile ? "auto" : undefined // Set explicit height for mobile to avoid layout shifts
         }}
       >
         <FeatureItem
@@ -57,14 +69,15 @@ export const FeaturesGrid = memo(({
         />
       </motion.div>
     );
-  }, []);
+  }, [isMobile]);
 
+  // Stabilize the grid layout - especially important for mobile
   return (
     <div 
       className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-7 relative"
       style={{ 
-        minHeight: isMobile && !showAllCards ? "430px" : "auto",
-        position: "relative"
+        minHeight: isMobile ? (showAllCards ? "auto" : "350px") : "auto",
+        willChange: showAllCards ? "auto" : "contents"
       }}
     >
       <AnimatePresence mode="sync">

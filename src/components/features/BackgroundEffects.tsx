@@ -1,8 +1,6 @@
-
-import React from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { GradientBlobBackground } from '@/components/ui/gradient-blob-background';
 import { cn } from '@/lib/utils';
-import { useIsMobile } from '@/hooks/use-mobile';
 
 interface BackgroundEffectsProps {
   className?: string;
@@ -18,7 +16,7 @@ interface BackgroundEffectsProps {
   pattern?: 'dots' | 'grid' | 'none';
   baseColor?: string;
   animationSpeed?: 'slow' | 'medium' | 'fast';
-  id?: string;
+  id?: string; // Added id prop for easier targeting
 }
 
 export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({ 
@@ -37,32 +35,68 @@ export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({
   animationSpeed = 'slow',
   id
 }) => {
-  const isMobile = useIsMobile();
-  
-  // On mobile, use minimal styling with no animations or effects
-  if (isMobile) {
-    return (
-      <div id={id} className={cn("relative", baseColor, className)}>
-        {children}
-      </div>
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(true); // Default to visible to ensure content is shown
+
+  // Only render heavy effects when the component is in view
+  useEffect(() => {
+    if (!containerRef.current) return;
+    
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        } else {
+          // Only hide when scrolled far away (optimization)
+          if (Math.abs(entry.boundingClientRect.top) > window.innerHeight * 2) {
+            // Keep content visible but disable expensive effects
+            // setIsVisible(false); - Removed to ensure content is always visible
+          }
+        }
+      },
+      { 
+        threshold: 0.1,
+        rootMargin: '200px' 
+      }
     );
-  }
-  
-  // On desktop, use full effects
+    
+    observer.observe(containerRef.current);
+    
+    // Safety timeout to ensure visibility
+    const safetyTimeout = setTimeout(() => {
+      setIsVisible(true);
+    }, 500);
+    
+    return () => {
+      observer.disconnect();
+      clearTimeout(safetyTimeout);
+    };
+  }, []);
+
   return (
-    <GradientBlobBackground 
-      className={cn("overflow-visible", className)}
-      blobColors={blobColors}
-      blobOpacity={blobOpacity}
-      withSpotlight={withSpotlight}
-      spotlightClassName={spotlightClassName}
-      pattern={pattern}
-      baseColor={baseColor}
-      animationSpeed={animationSpeed}
-      id={id}
-    >
-      {children}
-    </GradientBlobBackground>
+    <div ref={containerRef} id={id} className={cn("relative w-full overflow-hidden", className)}>
+      {isVisible ? (
+        <GradientBlobBackground 
+          className="overflow-visible"
+          blobColors={blobColors}
+          blobOpacity={blobOpacity}
+          withSpotlight={withSpotlight}
+          spotlightClassName={spotlightClassName}
+          pattern={pattern}
+          baseColor={baseColor}
+          blobSize="large"
+          animationSpeed={animationSpeed}
+        >
+          {children}
+        </GradientBlobBackground>
+      ) : (
+        // Fallback to ensure content is visible even if effects are disabled
+        <div className={cn("relative w-full", baseColor)}>
+          {children}
+        </div>
+      )}
+    </div>
   );
 };
 

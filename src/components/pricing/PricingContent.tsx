@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { PricingInteraction } from "./PricingInteraction";
 import { PricingCardList } from "./PricingCardList";
+import { PricingToggle } from "./PricingToggle";
 import { ColorVariant } from "./PricingCardColors";
 import { PRICING, FEATURES, VALUE_PROPOSITIONS, PLAN_DESCRIPTIONS, PLAN_CTAS } from "./pricingData";
 
@@ -98,6 +99,8 @@ export const PricingContent = ({ subscription, isLoading }: PricingContentProps)
 
   return (
     <>
+      {/* Removed pricing toggle since we don't need yearly/monthly toggle */}
+      
       {/* Pricing Cards with increased vertical spacing */}
       <div className="mt-8 sm:mt-10">
         {isMobile ? (
