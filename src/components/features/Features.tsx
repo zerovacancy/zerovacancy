@@ -41,7 +41,7 @@ import { useState } from "react";
               toggleShowAllCards={toggleShowAllCards}
             />
 
-            {/* View all services button (only on mobile and when cards are collapsed) */}
+            {/* View all services button (only on mobile) */}
             {isMobile && (
               <div className="w-full mt-8 flex justify-center">
                 <AnimatePresence>
@@ -85,21 +85,6 @@ import { useState } from "react";
                     </motion.div>
                   )}
                 </AnimatePresence>
-              </div>
-            )}
-
-            {/* Desktop view all services button */}
-            {!isMobile && (
-              <div className="mt-12 flex justify-center">
-                <Button 
-                  variant="default"
-                  size="lg" 
-                  className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 
-  hover:to-purple-700 text-white font-medium px-6 shadow-md"
-                >
-                  View all services
-                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </Button>
               </div>
             )}
           </div>
