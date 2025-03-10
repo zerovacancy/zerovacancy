@@ -14,6 +14,11 @@ export const MobileViewButton = ({
   toggleShowAllCards, 
   isMobile 
 }: MobileViewButtonProps) => {
+  // If not mobile, don't render anything
+  if (!isMobile) {
+    return null;
+  }
+
   // Simplified animations optimized for performance
   const motionProps = {
     initial: { opacity: 0 },
@@ -24,17 +29,17 @@ export const MobileViewButton = ({
 
   return (
     <motion.div 
-      className={`h-[72px] flex justify-center items-center ${isMobile ? '-mt-4' : 'mt-12 sm:mt-14'}`}
+      className="h-[72px] flex justify-center items-center"
       {...motionProps}
       style={{
         contain: 'layout',
         willChange: 'opacity, transform',
         transform: 'translateZ(0)',
-        position: isMobile ? 'relative' : 'static',
-        zIndex: isMobile ? 20 : 'auto'
+        position: 'relative',
+        zIndex: 20
       }}
     >
-      {isMobile && showAllCards ? (
+      {showAllCards ? (
         <Button 
           variant="outline" 
           size="lg"
@@ -49,7 +54,7 @@ export const MobileViewButton = ({
           variant="default"
           size="lg" 
           className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-medium px-6 shadow-md"
-          onClick={isMobile ? toggleShowAllCards : undefined}
+          onClick={toggleShowAllCards}
         >
           View all services
           <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
