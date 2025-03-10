@@ -12,8 +12,8 @@ const SectionHeaderSimple: React.FC<SectionHeaderSimpleProps> = ({
 }) => {
   return (
     <div className="text-center w-full">
-      <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-6 font-inter tracking-tight text-center uppercase">
-        {title.toUpperCase()}
+      <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-6 font-inter tracking-tight text-center">
+        {title}
       </h2>
       
       {/* Decorative element under the heading */}

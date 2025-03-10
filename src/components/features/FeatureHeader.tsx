@@ -22,7 +22,7 @@ export const FeatureHeader = ({
       >
         <div className="flex items-center justify-center gap-1 mb-2">
           <Star className="h-4 w-4 text-indigo-400 fill-indigo-100" />
-          <span className="text-xs font-medium uppercase tracking-wider text-indigo-500 font-inter">Featured Services</span>
+          <span className="text-xs font-medium uppercase tracking-wider text-indigo-500">Featured Services</span>
           <Star className="h-4 w-4 text-indigo-400 fill-indigo-100" />
         </div>
         <div className="h-1.5 w-20 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full mx-auto mb-6 animate-pulse-subtle" />
@@ -33,9 +33,9 @@ export const FeatureHeader = ({
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
         viewport={{ once: true, margin: "-100px" }}
-        className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4 sm:mb-5 font-inter tracking-tight uppercase"
+        className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4 sm:mb-5 font-inter tracking-tight"
       >
-        {title.toUpperCase()}
+        {title}
       </motion.h2>
       
       <motion.p 
