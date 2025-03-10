@@ -5,12 +5,15 @@ import { PreviewCard } from './PreviewCard';
 import { PreviewHeader } from './PreviewHeader';
 import { PreviewContent } from './PreviewContent';
 import type { AvailabilityStatus } from '../creator/types';
+import { Button } from '../ui/button';
+import { ChevronRight } from 'lucide-react';
 
 const PreviewSearch = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
   const [selectedLocation, setSelectedLocation] = useState<string>('');
+  const [showAllCreators, setShowAllCreators] = useState(false);
   
   useEffect(() => {
     if (!containerRef.current) return;
@@ -49,6 +52,10 @@ const PreviewSearch = () => {
     setSelectedLocation(location);
   };
 
+  const toggleShowAllCreators = () => {
+    setShowAllCreators(prev => !prev);
+  };
+
   const creatorData = [
     {
       name: "Emily Johnson",
@@ -85,19 +92,15 @@ const PreviewSearch = () => {
     }
   ];
 
+  // Only show the first creator initially, unless showAllCreators is true
+  const visibleCreators = showAllCreators ? creatorData : creatorData.slice(0, 1);
+
   return (
     <div 
       className="w-full px-2 sm:px-4 md:px-6 lg:px-8 xl:px-10 content-visibility-auto py-3 sm:py-6 md:py-8" 
       ref={containerRef}
     >
       <div className="mx-auto relative group max-w-7xl">
-        {/* Enhanced gradient background with more subtle effects */}
-        <div className={cn(
-          "absolute -inset-0.5 sm:-inset-1 rounded-xl sm:rounded-2xl bg-gradient-to-r from-purple-800/25 via-indigo-700/30 to-purple-900/25 blur-[2px] sm:blur-sm transition-all duration-500",
-          isVisible ? "opacity-70 sm:opacity-80" : "opacity-0",
-          "group-hover:opacity-90 group-hover:blur-md"
-        )}></div>
-
         <PreviewCard isVisible={isVisible}>
           <PreviewHeader 
             title="FIND YOUR CREATIVE COLLABORATOR"
@@ -107,10 +110,23 @@ const PreviewSearch = () => {
             isVisible={isVisible}
             loadedImages={loadedImages}
             handleImageLoad={handleImageLoad}
-            creatorData={creatorData}
+            creatorData={visibleCreators}
             locationValue={selectedLocation}
             onLocationSelect={handleLocationSelect}
           />
+          
+          {!showAllCreators && (
+            <div className="w-full flex justify-center py-4 sm:py-6">
+              <Button 
+                onClick={toggleShowAllCreators}
+                variant="outline"
+                className="group border-indigo-300 hover:border-indigo-500 hover:bg-indigo-50/70 text-indigo-600 font-medium px-6"
+              >
+                Show 2 more creators
+                <ChevronRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </div>
+          )}
         </PreviewCard>
       </div>
     </div>
