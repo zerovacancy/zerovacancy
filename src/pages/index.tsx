@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef, lazy, Suspense, useCallback } from 'react';
 import Header from '../components/Header';
 import { Hero } from '../components/hero/Hero';
@@ -155,7 +156,7 @@ const Index = () => {
         </div>
       )}
 
-      <main className="flex-1 pb-16 sm:pb-0 w-full">
+      <div className="flex-1 pb-16 sm:pb-0 w-full">
         <BackgroundEffects 
           blobColors={{
             first: "bg-purple-200",
@@ -235,7 +236,7 @@ const Index = () => {
           
           <Footer />
         </BackgroundEffects>
-      </main>
+      </div>
       <BottomNav />
       <GlowDialog open={showGlowDialog} onOpenChange={setShowGlowDialog} />
     </div>
