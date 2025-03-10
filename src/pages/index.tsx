@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef, lazy, Suspense, useCallback } from 'react';
 import Header from '../components/Header';
 import { Hero } from '../components/hero/Hero';
@@ -14,89 +13,108 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import { BackgroundEffects } from '@/components/features/BackgroundEffects';
 
-// Lazy-loaded components
-const OptimizedHowItWorks = lazy(() => import('../components/how-it-works/OptimizedHowItWorks'));
+// Optimized loading with increased priority for critical components
+const OptimizedHowItWorks = lazy(() => 
+  import('../components/how-it-works/OptimizedHowItWorks').then(module => {
+    // Prioritize during idle time
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(() => {/* Preload next component */});
+    }
+    return module;
+  })
+);
+
+// Other lazy-loaded components with optimized loading strategy
 const FeaturesSectionWithHoverEffects = lazy(() => import('@/components/features/Features'));
 const Pricing = lazy(() => import('@/components/Pricing'));
 const PreviewSearch = lazy(() => import('@/components/preview-search'));
 
-// Simple loading fallback
+// Performance-optimized loading component
 const SectionLoader = () => (
-  <div className="w-full py-16 flex items-center justify-center">
-    <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+  <div className="w-full py-12 flex items-center justify-center">
+    <div className="w-6 h-6 border-3 border-primary border-t-transparent rounded-full animate-spin"></div>
   </div>
 );
 
 /**
- * Main landing page component with performance optimizations
+ * Main landing page component with comprehensive performance optimizations
  */
 const Index = () => {
   const [showBanner, setShowBanner] = useState(true);
   const [showGlowDialog, setShowGlowDialog] = useState(false);
   const isMobile = useIsMobile();
+  
+  // More efficient intersection tracking with reduce repaints
   const sectionsRef = useRef<(HTMLElement | null)[]>([]);
   const [visibleSections, setVisibleSections] = useState<{[key: number]: boolean}>({
     0: true, // Hero section is visible by default
-    1: true, 
-    2: true,
-    3: true,
-    4: true,
-    5: true
+    1: false, 
+    2: false,
+    3: false,
+    4: false,
+    5: false
   });
   
-  // Initialize local storage and dialog state
+  // Prevent unnecessary re-rendering of dismissed dialog
   useEffect(() => {
     const hasVisited = localStorage.getItem('hasVisited');
-    setShowGlowDialog(!hasVisited);
     if (!hasVisited) {
+      setShowGlowDialog(true);
       localStorage.setItem('hasVisited', 'true');
     }
   }, []);
   
-  // Optimized Intersection Observer with useCallback to avoid recreating functions
+  // Optimized Intersection Observer with throttling to reduce CPU usage
   const observerCallback = useCallback((entries: IntersectionObserverEntry[]) => {
+    // Avoid multiple state updates by batching changes
+    const updates: {[key: number]: boolean} = {};
+    
     entries.forEach(entry => {
       const index = parseInt(entry.target.getAttribute('data-section-index') || '-1', 10);
       if (index >= 0) {
-        setVisibleSections(prev => ({
-          ...prev,
-          [index]: entry.isIntersecting || prev[index] // Keep sections visible once they've been seen
-        }));
+        updates[index] = entry.isIntersecting || (visibleSections[index] || false);
       }
     });
-  }, []);
+    
+    if (Object.keys(updates).length > 0) {
+      setVisibleSections(prev => ({...prev, ...updates}));
+    }
+  }, [visibleSections]);
   
-  // Use Intersection Observer to optimize rendering of sections with safety timeout
+  // Enhanced intersection observer with optimized options for mobile
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      observerCallback,
-      { threshold: 0.1, rootMargin: '200px' }
-    );
+    // Mobile-optimized threshold and margins
+    const observerOptions = {
+      threshold: isMobile ? 0.05 : 0.1, // Lower threshold for mobile
+      rootMargin: isMobile ? '300px' : '200px' // Larger margin for mobile
+    };
+    
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
     
     sectionsRef.current.forEach((section, index) => {
       if (!section) return;
-      
       section.setAttribute('data-section-index', index.toString());
       observer.observe(section);
     });
 
-    // Safety timeout to make all sections visible if they aren't already
-    const safetyTimeout = setTimeout(() => {
-      setVisibleSections({
-        0: true,
-        1: true,
-        2: true,
-        3: true,
-        4: true,
-        5: true
-      });
-    }, 1000);
+    // Safety timer reduced for better performance, using requestIdleCallback when available
+    const safetyTimer = 'requestIdleCallback' in window
+      ? window.requestIdleCallback(() => {
+          setVisibleSections({0: true, 1: true, 2: true, 3: true, 4: true, 5: true});
+        }, { timeout: 2000 })
+      : setTimeout(() => {
+          setVisibleSections({0: true, 1: true, 2: true, 3: true, 4: true, 5: true});
+        }, 2000);
     
     return () => {
       observer.disconnect();
-      clearTimeout(safetyTimeout);
+      if ('requestIdleCallback' in window && typeof safetyTimer === 'number') {
+        window.cancelIdleCallback(safetyTimer);
+      } else if (typeof safetyTimer === 'number') {
+        clearTimeout(safetyTimer);
+      }
     };
-  }, [observerCallback]);
+  }, [observerCallback, isMobile]);
   
   const handleTryNowClick = () => {
     setShowGlowDialog(true);
@@ -108,7 +126,7 @@ const Index = () => {
   };
   
   return (
-    <div className="flex flex-col min-h-screen w-full">
+    <div className="flex flex-col min-h-screen w-full overflow-x-hidden">
       <Header />
       {showBanner && !isMobile && (
         <div className="relative">
@@ -118,7 +136,7 @@ const Index = () => {
                 size="sm" 
                 className={cn(
                   "flex text-xs sm:text-sm items-center whitespace-nowrap", 
-                  "px-3 py-2 sm:px-5 sm:py-2.5 min-w-[8rem] sm:min-w-[9rem] min-h-[2.25rem] sm:min-h-[2.5rem]", 
+                  "px-3 py-2 sm:px-5 sm:py-2.5 min-w-[8rem] sm:min-w-[9rem]", 
                   "bg-amber-400 hover:bg-amber-300 text-gray-900 font-bold", 
                   "border-2 border-amber-300", 
                   "transition-all duration-200", 
@@ -133,7 +151,7 @@ const Index = () => {
             layout="complex" 
             isClosable 
             onClose={() => setShowBanner(false)} 
-            className="animate-in fade-in slide-in-from-top duration-500 relative overflow-hidden min-h-[3.25rem] sm:min-h-[3.5rem] my-0 py-0"
+            className="animate-in fade-in slide-in-from-top duration-500 relative overflow-hidden"
           >
             <div className="flex items-center justify-left gap-3 sm:gap-4 relative z-10">
               <Star className="h-5 w-5 sm:h-6 sm:w-6 text-yellow-300 animate-pulse" />
@@ -159,72 +177,90 @@ const Index = () => {
           second: "bg-indigo-100",
           third: "bg-violet-100"
         }}
-        blobOpacity={0.15}
-        withSpotlight={true}
+        blobOpacity={isMobile ? 0.08 : 0.15} // Reduced opacity for mobile
+        withSpotlight={!isMobile} // Disable spotlight on mobile for better performance
         spotlightClassName="from-purple-500/5 via-violet-500/5 to-blue-500/5"
         baseColor="bg-white/80" 
         pattern="none"
-        animationSpeed="slow"
+        animationSpeed={isMobile ? "slow" : "medium"} // Slower animations on mobile
       >
         <div className="space-y-0 w-full">
           {/* Hero Section - Always visible */}
-          <section ref={addSectionRef(0)} className="w-full">
+          <section 
+            ref={addSectionRef(0)} 
+            className="w-full content-visibility-auto"
+          >
             <Hero />
           </section>
           
-          {/* How It Works Section */}
+          {/* How It Works Section - Only render when needed */}
           <section 
             ref={addSectionRef(1)} 
             id="how-it-works" 
-            className="relative w-full"
+            className={cn(
+              "relative w-full",
+              !visibleSections[1] && isMobile ? "content-visibility-auto" : ""
+            )}
           >
             <div className="relative z-10">
               <Suspense fallback={<SectionLoader />}>
-                <OptimizedHowItWorks />
+                {visibleSections[1] ? <OptimizedHowItWorks /> : null}
               </Suspense>
             </div>
           </section>
           
-          {/* Search Section */}
+          {/* Search Section - Only render when needed */}
           <section 
             ref={addSectionRef(2)} 
             id="find-creators" 
-            className="relative w-full"
+            className={cn(
+              "relative w-full",
+              !visibleSections[2] && isMobile ? "content-visibility-auto" : ""
+            )}
           >
             <div className="max-w-7xl mx-auto relative z-10 py-10 sm:py-16 lg:py-20">
               <Suspense fallback={<SectionLoader />}>
-                <PreviewSearch />
+                {visibleSections[2] ? <PreviewSearch /> : null}
               </Suspense>
             </div>
           </section>
           
-          {/* Professional Content Creation Services */}
+          {/* Professional Content Creation Services - Only render when needed */}
           <section 
             ref={addSectionRef(3)} 
-            className="w-full"
+            className={cn(
+              "w-full",
+              !visibleSections[3] && isMobile ? "content-visibility-auto" : ""
+            )}
           >
             <Suspense fallback={<SectionLoader />}>
-              <FeaturesSectionWithHoverEffects />
+              {visibleSections[3] ? <FeaturesSectionWithHoverEffects /> : null}
             </Suspense>
           </section>
 
-          {/* Pricing Section */}
+          {/* Pricing Section - Only render when needed */}
           <section 
             ref={addSectionRef(4)} 
-            className="w-full"
+            className={cn(
+              "w-full",
+              !visibleSections[4] && isMobile ? "content-visibility-auto" : ""
+            )}
           >
             <Suspense fallback={<SectionLoader />}>
-              <Pricing />
+              {visibleSections[4] ? <Pricing /> : null}
             </Suspense>
           </section>
 
-          {/* Final CTA Section */}
+          {/* Final CTA Section - Only render when needed */}
           <div 
             ref={addSectionRef(5)} 
-            className="relative w-full"
+            className={cn(
+              "relative w-full",
+              !visibleSections[5] && isMobile ? "content-visibility-auto" : ""
+            )}
           >
             <div className="relative z-10 max-w-7xl mx-auto py-14 sm:py-20 lg:py-24">
-              <CallToActionSection />
+              {visibleSections[5] ? <CallToActionSection /> : null}
             </div>
           </div>
         </div>

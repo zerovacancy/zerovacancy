@@ -1,4 +1,5 @@
-import { useState, useCallback, useRef, useEffect } from "react";
+
+import { useState, useCallback, useRef, useEffect, memo } from "react";
 import { features } from "./feature-data";
 import { FeatureHeader } from "./FeatureHeader";
 import { BackgroundEffects } from "./BackgroundEffects";
@@ -7,7 +8,8 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { FeaturesGrid } from "./FeaturesGrid";
 import { MobileViewButton } from "./MobileViewButton";
 
-export function FeaturesSectionWithHoverEffects() {
+// Memoized component to prevent unnecessary re-renders
+const FeaturesSectionWithHoverEffects = () => {
   // Create a ref for the features section and each card
   const sectionRef = useRef<HTMLElement>(null);
   const [showAllCards, setShowAllCards] = useState(false);
@@ -48,35 +50,23 @@ export function FeaturesSectionWithHoverEffects() {
     animationTimeoutRef.current = setTimeout(() => {
       isTransitioning.current = false;
       setIsScrollLocked(false);
-    }, 600); // Match this to animation duration plus a buffer
+    }, 400); // Reduced animation time for better mobile performance
   }, [isMobile]);
   
   // On mobile, always show all 4 cards including "Cinematic Identity"
   const visibleFeatures = isMobile && !showAllCards 
-    ? features.slice(0, 3) 
+    ? features.slice(0, 4)  // Show all 4 cards on mobile
     : features;
   
-  // Effect to maintain scroll position after expanding/collapsing
+  // Optimized scroll position maintenance
   useEffect(() => {
     // Only run this effect when the transition is complete and on mobile
     if (!isTransitioning.current && !isScrollLocked && isMobile && sectionRef.current) {
       if (showAllCards) {
-        // Get the current position of the section relative to viewport
-        const sectionRect = sectionRef.current.getBoundingClientRect();
-        const currentScrollY = window.scrollY;
-        const targetScrollY = currentScrollY + sectionRect.top - 20;
-        
-        // Smooth scroll to keep the section top in view
-        window.scrollTo({
-          top: targetScrollY,
-          behavior: 'auto' // Use 'auto' for performance
-        });
-      } else {
-        // When collapsing, try to maintain a reasonable scroll position
-        // based on where the user was before
+        // Simplified scroll position maintenance for better performance
         window.scrollTo({
           top: scrollPosition,
-          behavior: 'auto'
+          behavior: 'auto' // Use 'auto' for performance
         });
       }
     }
@@ -91,13 +81,16 @@ export function FeaturesSectionWithHoverEffects() {
   
   return (
     <section 
-      className="relative py-14 sm:py-18 lg:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden scroll-margin-top-8" 
+      className="relative py-12 sm:py-18 lg:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden scroll-margin-top-8" 
       id="features"
       ref={sectionRef}
       style={{ 
-        willChange: isTransitioning.current ? 'contents' : 'auto', 
-        contain: isMobile ? 'content' : 'none', // Improves performance on mobile
-        position: 'relative' // Ensure positioning context
+        willChange: isTransitioning.current ? 'transform' : 'auto', 
+        contain: isMobile ? 'layout' : 'none', // Better containment on mobile
+        contentVisibility: isMobile ? 'auto' : 'visible', // Optimize rendering on mobile
+        position: 'relative', // Ensure positioning context
+        backfaceVisibility: 'hidden', // Improve performance
+        WebkitFontSmoothing: 'antialiased', // Optimize text rendering
       }}
     >
       <div className="max-w-6xl mx-auto relative z-10">
@@ -125,7 +118,8 @@ export function FeaturesSectionWithHoverEffects() {
       </div>
     </section>
   );
-}
+};
 
 // Export both named and default export for backward compatibility
-export default FeaturesSectionWithHoverEffects;
+export { FeaturesSectionWithHoverEffects };
+export default memo(FeaturesSectionWithHoverEffects);

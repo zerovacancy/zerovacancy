@@ -1,6 +1,8 @@
+
 import React, { useRef, useEffect, useState } from 'react';
 import { GradientBlobBackground } from '@/components/ui/gradient-blob-background';
 import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface BackgroundEffectsProps {
   className?: string;
@@ -16,7 +18,7 @@ interface BackgroundEffectsProps {
   pattern?: 'dots' | 'grid' | 'none';
   baseColor?: string;
   animationSpeed?: 'slow' | 'medium' | 'fast';
-  id?: string; // Added id prop for easier targeting
+  id?: string;
 }
 
 export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({ 
@@ -36,62 +38,75 @@ export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({
   id
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(true); // Default to visible to ensure content is shown
-
-  // Only render heavy effects when the component is in view
+  const [isVisible, setIsVisible] = useState(true);
+  const isMobile = useIsMobile();
+  
+  // Mobile optimization - reduce effects when not needed
+  const shouldUseEffects = !isMobile || isVisible;
+  
+  // Optimized intersection observer for better performance
   useEffect(() => {
     if (!containerRef.current) return;
     
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const [entry] = entries;
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        } else {
-          // Only hide when scrolled far away (optimization)
-          if (Math.abs(entry.boundingClientRect.top) > window.innerHeight * 2) {
-            // Keep content visible but disable expensive effects
-            // setIsVisible(false); - Removed to ensure content is always visible
+    // Skip heavy observation on mobile devices
+    if (isMobile && 'IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          const [entry] = entries;
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+            // Only observe once for mobile to reduce CPU usage
+            observer.disconnect();
           }
+        },
+        { 
+          threshold: 0.01, // Very low threshold for mobile
+          rootMargin: '100px' // Smaller margin for better performance
         }
-      },
-      { 
-        threshold: 0.1,
-        rootMargin: '200px' 
-      }
-    );
-    
-    observer.observe(containerRef.current);
-    
-    // Safety timeout to ensure visibility
-    const safetyTimeout = setTimeout(() => {
+      );
+      
+      observer.observe(containerRef.current);
+      
+      return () => {
+        observer.disconnect();
+      };
+    } else {
+      // Desktop devices can handle more effects
       setIsVisible(true);
-    }, 500);
-    
-    return () => {
-      observer.disconnect();
-      clearTimeout(safetyTimeout);
-    };
-  }, []);
+    }
+  }, [isMobile]);
 
+  // Apply reduced animation complexity for mobile
+  const effectiveAnimationSpeed = isMobile ? 'slow' : animationSpeed;
+  const effectiveBlobOpacity = isMobile ? Math.min(blobOpacity, 0.1) : blobOpacity;
+  const effectiveWithSpotlight = isMobile ? false : withSpotlight;
+  
   return (
-    <div ref={containerRef} id={id} className={cn("relative w-full overflow-hidden", className)}>
-      {isVisible ? (
+    <div 
+      ref={containerRef} 
+      id={id} 
+      className={cn(
+        "relative w-full overflow-hidden",
+        isMobile ? "reduce-animation" : "",
+        className
+      )}
+    >
+      {shouldUseEffects ? (
         <GradientBlobBackground 
           className="overflow-visible"
           blobColors={blobColors}
-          blobOpacity={blobOpacity}
-          withSpotlight={withSpotlight}
+          blobOpacity={effectiveBlobOpacity}
+          withSpotlight={effectiveWithSpotlight}
           spotlightClassName={spotlightClassName}
           pattern={pattern}
           baseColor={baseColor}
-          blobSize="large"
-          animationSpeed={animationSpeed}
+          blobSize={isMobile ? "medium" : "large"} // Smaller blobs on mobile
+          animationSpeed={effectiveAnimationSpeed}
         >
           {children}
         </GradientBlobBackground>
       ) : (
-        // Fallback to ensure content is visible even if effects are disabled
+        // Simplified background for mobile when effects are disabled
         <div className={cn("relative w-full", baseColor)}>
           {children}
         </div>

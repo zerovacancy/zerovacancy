@@ -4,6 +4,7 @@
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { animate } from "framer-motion";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export interface AnimatedGridProps {
   className?: string;
@@ -18,12 +19,17 @@ export const AnimatedGrid = memo(({
   const [isVisible, setIsVisible] = useState(false);
   const isActiveRef = useRef(false);
   const currentAngleRef = useRef(0);
+  const isMobile = useIsMobile();
+  
+  // Skip heavy effects on mobile devices
+  const shouldRenderEffect = !isMobile || isVisible;
   
   // Only load after initial render to improve page load performance
   useEffect(() => {
+    // Skip immediate loading on mobile to prioritize core content
     const timer = setTimeout(() => {
       setIsVisible(true);
-    }, 1000); // Keep at 1s for better UX
+    }, isMobile ? 2000 : 1000); // Longer delay on mobile
 
     return () => {
       clearTimeout(timer);
@@ -31,11 +37,18 @@ export const AnimatedGrid = memo(({
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, []);
+  }, [isMobile]);
 
   // Set up intersection observer for better performance
   useEffect(() => {
     if (!containerRef.current || !isVisible) return;
+    
+    // Skip intensive observation on mobile
+    if (isMobile) {
+      // Mobile devices just show the effect without animation
+      setIsVisible(true);
+      return;
+    }
     
     const observer = new IntersectionObserver(
       (entries) => {
@@ -54,10 +67,14 @@ export const AnimatedGrid = memo(({
     observer.observe(containerRef.current);
     
     return () => observer.disconnect();
-  }, [isVisible]);
+  }, [isVisible, isMobile]);
 
+  // Optimized handleMove with throttling for better performance
   const handleMove = useCallback(
     (e?: MouseEvent | { x: number; y: number }) => {
+      // Skip on mobile devices
+      if (isMobile) return;
+      
       if (!containerRef.current || !isVisible) return;
 
       if (animationFrameRef.current) {
@@ -112,10 +129,10 @@ export const AnimatedGrid = memo(({
         const angleDiff = ((targetAngle - currentAngle + 180) % 360) - 180;
         const newAngle = currentAngle + angleDiff;
 
-        // Only animate if the angle change is significant
-        if (Math.abs(angleDiff) > 1) {
+        // Only animate if the angle change is significant for better performance
+        if (Math.abs(angleDiff) > 3) { // Increased threshold to reduce animations
           animate(currentAngle, newAngle, {
-            duration: 1,
+            duration: 0.8, // Slightly slower for smoother animation
             ease: [0.16, 1, 0.3, 1],
             onUpdate: (value) => {
               if (element) {
@@ -127,26 +144,28 @@ export const AnimatedGrid = memo(({
         }
       });
     },
-    [isVisible]
+    [isVisible, isMobile]
   );
 
+  // Set up event listeners with optimizations
   useEffect(() => {
-    if (!isVisible) return;
+    // Skip on mobile devices
+    if (isMobile || !isVisible) return;
 
-    // Optimize event listeners with passive flag
-    const handleScroll = () => {
-      // Skip animation during scroll for better performance
-      if (containerRef.current && isActiveRef.current) {
-        containerRef.current.style.setProperty("--active", "0");
-        isActiveRef.current = false;
+    // Throttle function to prevent excessive calls
+    let lastCallTime = 0;
+    const throttleTime = 1000 / 30; // Max 30 calls per second
+    
+    const throttledHandleMove = (e: PointerEvent) => {
+      const now = performance.now();
+      if (now - lastCallTime >= throttleTime) {
+        lastCallTime = now;
+        handleMove(e);
       }
     };
-    
-    const handlePointerMove = (e: PointerEvent) => handleMove(e);
 
-    // Use passive: true for better scroll performance
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    document.body.addEventListener("pointermove", handlePointerMove, {
+    // Use passive event listeners for better performance
+    document.body.addEventListener("pointermove", throttledHandleMove, {
       passive: true,
     });
 
@@ -154,15 +173,34 @@ export const AnimatedGrid = memo(({
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
-      window.removeEventListener("scroll", handleScroll);
-      document.body.removeEventListener("pointermove", handlePointerMove);
+      document.body.removeEventListener("pointermove", throttledHandleMove);
     };
-  }, [handleMove, isVisible]);
+  }, [handleMove, isVisible, isMobile]);
 
-  if (!isVisible) return null;
+  // Return simplified version for mobile
+  if (isMobile) {
+    return (
+      <div className={cn("relative jitter-fix", className)}>
+        <div
+          className="pointer-events-auto absolute inset-0 rounded-[inherit]"
+          style={{
+            background: "linear-gradient(45deg, rgba(221,123,187,0.05), rgba(215,159,30,0.05), rgba(90,146,44,0.05), rgba(76,120,148,0.05))",
+            borderRadius: "inherit",
+            transform: "translateZ(0)",
+            backfaceVisibility: "hidden",
+          }}
+        >
+          <div className="rounded-[inherit] h-full w-full" />
+        </div>
+      </div>
+    );
+  }
+
+  // Only render full effect when visible and not on mobile
+  if (!shouldRenderEffect) return null;
 
   return (
-    <div className={cn("relative will-change-transform promote-layer", className)}>
+    <div className={cn("relative will-change-transform jitter-fix", className)}>
       <div
         ref={containerRef}
         style={{
@@ -188,7 +226,7 @@ export const AnimatedGrid = memo(({
           WebkitFontSmoothing: 'antialiased',
         } as React.CSSProperties}
         className={cn(
-          "pointer-events-auto absolute inset-0 rounded-[inherit] promote-layer"
+          "pointer-events-auto absolute inset-0 rounded-[inherit] jitter-fix"
         )}
       >
         <div
@@ -202,7 +240,7 @@ export const AnimatedGrid = memo(({
             "after:[mask-clip:padding-box,border-box]",
             "after:[mask-composite:intersect]",
             "after:[mask-image:linear-gradient(#0000,#0000),conic-gradient(from_calc((var(--start))*1deg),#00000000_0deg,#fff,#00000000_calc(var(--spread)*1deg))]",
-            "promote-layer"
+            "jitter-fix"
           )}
           style={{
             transform: 'translateZ(0)',

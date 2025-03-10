@@ -8,15 +8,42 @@ const TABLET_BREAKPOINT = 1024
 const MobileContext = React.createContext<{
   isMobile: boolean;
   isTablet: boolean;
-}>({ isMobile: false, isTablet: false });
+  isLowPerformance: boolean;
+}>({ isMobile: false, isTablet: false, isLowPerformance: false });
+
+// Helper function to detect if device is likely low performance
+const detectLowPerformanceDevice = () => {
+  // Check for low memory
+  if ('deviceMemory' in navigator && (navigator as any).deviceMemory < 4) {
+    return true;
+  }
+  
+  // Check for low-end processors via hardwareConcurrency
+  if ('hardwareConcurrency' in navigator && navigator.hardwareConcurrency < 4) {
+    return true;
+  }
+  
+  // Fallback: check for iOS devices which might throttle JS
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+  
+  // Attempt to detect older devices via user agent
+  const isOlderDevice = /Android\s(4|5|6)/.test(navigator.userAgent) || 
+                      /iPhone OS (8|9|10|11|12)_/.test(navigator.userAgent);
+  
+  return isIOS || isOlderDevice;
+};
 
 // Provider that can be used to wrap the app
 export function MobileContextProvider({ children }: { children: React.ReactNode }) {
   const [isMobile, setIsMobile] = React.useState<boolean>(false);
   const [isTablet, setIsTablet] = React.useState<boolean>(false);
+  const [isLowPerformance, setIsLowPerformance] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    // Initial check
+    // Initial check for device capabilities
+    setIsLowPerformance(detectLowPerformanceDevice());
+    
+    // Initial check for screen size
     const checkMobile = () => {
       const width = window.innerWidth;
       setIsMobile(width < MOBILE_BREAKPOINT);
@@ -26,7 +53,7 @@ export function MobileContextProvider({ children }: { children: React.ReactNode 
     // Check on mount
     checkMobile();
     
-    // Throttle resize events for better performance
+    // Debounce resize events for better performance
     let timeoutId: number | null = null;
     
     const handleResize = () => {
@@ -48,7 +75,7 @@ export function MobileContextProvider({ children }: { children: React.ReactNode 
       mqlTablet.addEventListener("change", handleResize);
     } else {
       // Fallback for older browsers
-      window.addEventListener("resize", handleResize);
+      window.addEventListener("resize", handleResize, { passive: true });
     }
     
     // Cleanup
@@ -65,7 +92,7 @@ export function MobileContextProvider({ children }: { children: React.ReactNode 
   }, []);
 
   return (
-    <MobileContext.Provider value={{ isMobile, isTablet }}>
+    <MobileContext.Provider value={{ isMobile, isTablet, isLowPerformance }}>
       {children}
     </MobileContext.Provider>
   );
@@ -92,14 +119,14 @@ export function useIsMobile() {
     
     checkMobile();
     
-    // Throttle resize events
+    // Debounce resize events
     let timeoutId: number | null = null;
     const handleResize = () => {
       if (timeoutId) window.clearTimeout(timeoutId);
       timeoutId = window.setTimeout(checkMobile, 100);
     };
     
-    window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", handleResize, { passive: true });
     return () => {
       if (timeoutId) window.clearTimeout(timeoutId);
       window.removeEventListener("resize", handleResize);
@@ -107,6 +134,24 @@ export function useIsMobile() {
   }, []);
 
   return isMobile;
+}
+
+// Hook to detect if the device is likely low performance
+export function useIsLowPerformance() {
+  const context = React.useContext(MobileContext);
+  
+  if (context.isLowPerformance !== undefined) {
+    return context.isLowPerformance;
+  }
+  
+  // Fallback when context isn't available
+  const [isLowPerformance, setIsLowPerformance] = React.useState<boolean>(false);
+  
+  React.useEffect(() => {
+    setIsLowPerformance(detectLowPerformanceDevice());
+  }, []);
+  
+  return isLowPerformance;
 }
 
 // The rest of the hooks remain with performance improvements
@@ -137,7 +182,7 @@ export function useIsTablet() {
       timeoutId = window.setTimeout(checkTablet, 100);
     };
     
-    window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", handleResize, { passive: true });
     
     return () => {
       if (timeoutId) window.clearTimeout(timeoutId);
@@ -155,6 +200,7 @@ export function useIsMobileOrTablet() {
   return isMobile || isTablet;
 }
 
+// Optimized viewport size hook with debouncing
 export function useViewportSize() {
   const [size, setSize] = React.useState<{ width: number; height: number }>({
     width: typeof window !== 'undefined' ? window.innerWidth : 0,
@@ -169,9 +215,9 @@ export function useViewportSize() {
       });
     };
     
-    // Throttle the resize event to improve performance
+    // Debounce the resize event to improve performance
     let timeoutId: ReturnType<typeof setTimeout> | null = null;
-    const throttledResize = () => {
+    const debouncedResize = () => {
       if (timeoutId) clearTimeout(timeoutId);
       timeoutId = setTimeout(updateSize, 100);
     };
@@ -179,13 +225,30 @@ export function useViewportSize() {
     // Initialize on mount
     updateSize();
     
-    window.addEventListener('resize', throttledResize, { passive: true });
+    window.addEventListener('resize', debouncedResize, { passive: true });
     
     return () => {
       if (timeoutId) clearTimeout(timeoutId);
-      window.removeEventListener('resize', throttledResize);
+      window.removeEventListener('resize', debouncedResize);
     };
   }, []);
   
   return size;
+}
+
+// Hook that provides device capability information for adaptive rendering
+export function useDeviceCapabilities() {
+  const isMobile = useIsMobile();
+  const isTablet = useIsTablet();
+  const isLowPerformance = useIsLowPerformance();
+  
+  return {
+    isMobile,
+    isTablet, 
+    isLowPerformance,
+    // Use reduced animations when on mobile or low-performance devices
+    shouldUseReducedAnimations: isMobile || isLowPerformance,
+    // Use simplified UI on very constrained devices
+    shouldUseSimplifiedUI: isLowPerformance && isMobile
+  };
 }

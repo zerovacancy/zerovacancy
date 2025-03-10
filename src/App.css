@@ -1,3 +1,4 @@
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -8,6 +9,7 @@
 @media (max-width: 768px) {
   #root {
     padding: 0.75rem;
+    overflow-x: hidden; /* Prevent horizontal scrolling on mobile */
   }
 }
 
@@ -69,6 +71,12 @@
   backface-visibility: hidden;
 }
 
+/* Optimize content visibility for long pages */
+.content-visibility-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 500px;
+}
+
 /* Mobile touch optimizations */
 @media (max-width: 768px) {
   /* Mobile optimization: Disable hover effects on mobile for better performance */
@@ -91,8 +99,8 @@
   
   /* Reduce animation complexity */
   .reduce-animation {
-    animation-duration: 0.5s !important;
-    transition-duration: 0.3s !important;
+    animation-duration: 0.4s !important;
+    transition-duration: 0.2s !important;
   }
   
   /* Improve padding for mobile content */
@@ -104,15 +112,78 @@
   /* Improve touch targets for mobile */
   button, a, input, select, textarea {
     min-height: 36px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
   
   /* We're removing the extra padding for the fixed bottom navigation */
   body {
     padding-bottom: 1rem;
+    overscroll-behavior-y: none; /* Prevent overscroll bounce */
+    -webkit-text-size-adjust: 100%; /* Prevent text size adjustment */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Optimize images for mobile */
+  img {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 300px;
+  }
+  
+  /* Optimize mobile scroll with momentum scrolling */
+  .momentum-scroll {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+  
+  /* Prevent layout shifts during animations */
+  .prevent-shift {
+    transform: translateZ(0);
+    will-change: transform;
+    backface-visibility: hidden;
+  }
+  
+  /* Optimize text rendering on mobile */
+  .optimize-text-mobile {
+    text-rendering: optimizeSpeed;
+    text-size-adjust: 100%;
+  }
+  
+  /* Accelerate animations with GPU */
+  .gpu-accelerate {
+    will-change: transform;
+    transform: translate3d(0,0,0);
   }
 }
 
 /* Enhanced active states for touch devices */
 .touch-manipulation {
   touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Viewport content optimization */
+.content-visibility-auto {
+  content-visibility: auto;
+}
+
+/* Optimize scrolling experience */
+html, body {
+  scroll-behavior: smooth;
+  overscroll-behavior-y: none; /* Prevent pull-to-refresh on mobile */
+}
+
+/* Font optimization for better performance */
+body, h1, h2, h3, h4, h5, h6, p, span, a, button {
+  text-rendering: optimizeSpeed;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Remove jitter during animations */
+.jitter-fix {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  will-change: transform;
 }

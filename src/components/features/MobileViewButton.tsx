@@ -15,7 +15,7 @@ export const MobileViewButton = memo(({
   toggleShowAllCards, 
   isMobile 
 }: MobileViewButtonProps) => {
-  // Improved click handler to prevent default behavior and propagation
+  // Improved click handler with better event management
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -27,26 +27,27 @@ export const MobileViewButton = memo(({
 
   // Animation settings optimized for mobile performance
   const buttonAnimationSettings = {
-    initial: { opacity: 0, y: 10 },
+    initial: { opacity: 0, y: 5 }, // Reduced movement for better performance
     animate: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: -10 },
+    exit: { opacity: 0, y: -5 }, // Reduced movement for better performance
     transition: { 
-      duration: 0.3, 
+      duration: 0.2, // Faster animation for mobile
       ease: "easeOut",
-      // Reduced animation complexity for mobile
-      delay: 0.1
+      delay: 0.05 // Minimal delay for better responsiveness
     }
   };
 
   return (
     <motion.div 
-      className={`mt-8 flex justify-center ${isMobile && !showAllCards ? 'md:hidden' : ''}`}
+      className={`mt-6 flex justify-center ${isMobile && !showAllCards ? 'md:hidden' : ''}`}
       {...buttonAnimationSettings}
       key={`view-button-${showAllCards ? 'less' : 'more'}`}
       layout="position"
       style={{ 
         willChange: "transform, opacity", 
-        transform: "translateZ(0)" // Force GPU rendering
+        transform: "translateZ(0)", // Force GPU rendering
+        backfaceVisibility: "hidden", // Prevent flickering
+        WebkitFontSmoothing: "antialiased", // Smooth rendering
       }}
     >
       {isMobile && showAllCards ? (
@@ -56,6 +57,10 @@ export const MobileViewButton = memo(({
           className="group border-indigo-300 hover:border-indigo-500 hover:bg-indigo-50/70 text-indigo-600 font-medium px-6 touch-manipulation"
           onClick={handleClick}
           aria-label="Show fewer services"
+          style={{
+            textRendering: "optimizeLegibility",
+            WebkitTapHighlightColor: "transparent",
+          }}
         >
           Show less
           <ChevronDown className="ml-2 h-4 w-4 rotate-180 transition-transform" />
@@ -67,6 +72,10 @@ export const MobileViewButton = memo(({
           className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-medium px-6 shadow-md touch-manipulation"
           onClick={handleClick}
           aria-label="View all services"
+          style={{
+            textRendering: "optimizeLegibility",
+            WebkitTapHighlightColor: "transparent",
+          }}
         >
           View all services
           <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
