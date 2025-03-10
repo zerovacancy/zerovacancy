@@ -75,10 +75,7 @@ export const FeatureItem = ({
   };
   
   return (
-    <div className={cn(
-      "relative pt-4",
-      isMobile && "mb-4 feature-item-mobile"
-    )}>
+    <div className="relative pt-4">
       {/* Popular Tag - Positioned at the top left */}
       {isPopular && (
         <div className="absolute top-0 left-4 z-20">
@@ -94,12 +91,12 @@ export const FeatureItem = ({
           "relative w-full text-left group",
           getCardBgColor(), // Apply background color based on icon type
           "rounded-xl",
-          // Fixed heights based on screen size, adjusted for mobile
-          isMobile ? "h-auto min-h-[200px]" : "h-[250px] sm:h-[280px]",
+          // Fixed heights based on screen size
+          "h-[250px] sm:h-[280px]",
           // Shadow and transition
           "shadow-sm",
           // Consistent padding
-          isMobile ? "p-4" : "p-5",
+          "p-5",
           // For partially visible card
           isPartiallyVisible && "opacity-80 shadow-none"
         )}
@@ -108,8 +105,8 @@ export const FeatureItem = ({
           opacity: 1, 
           y: 0,
           transition: {
-            duration: isMobile ? 0.3 : 0.4,
-            delay: isMobile ? index * 0.03 + 0.1 : index * 0.05 + 0.1
+            duration: 0.4,
+            delay: index * 0.05 + 0.1
           }
         }}
         viewport={{ once: true, margin: "-50px" }}
@@ -128,25 +125,19 @@ export const FeatureItem = ({
             <div 
               className={cn(
                 "flex items-center justify-center",
-                isMobile ? "w-10 h-10" : "w-12 h-12 sm:w-14 sm:h-14", // Smaller on mobile
+                "w-12 h-12 sm:w-14 sm:h-14", // Same size on mobile and desktop
                 "rounded-lg",
                 colorScheme.gradient ? `bg-gradient-to-br ${colorScheme.gradient}` : colorScheme.bg
               )}
             >
               {/* Standardized icon size */}
-              <Icon className={cn(
-                "text-white",
-                isMobile ? "w-5 h-5" : "w-6 h-6 sm:w-7 sm:h-7"
-              )} aria-hidden="true" />
+              <Icon className="w-6 h-6 sm:w-7 sm:h-7 text-white" aria-hidden="true" />
             </div>
             
             <div className="text-left w-full flex-grow flex flex-col">
               <div>
                 {/* Title style to match example */}
-                <h3 className={cn(
-                  "text-base font-bold leading-tight uppercase mb-2 text-gray-900",
-                  isMobile && "text-sm"
-                )}>
+                <h3 className="text-base font-bold leading-tight uppercase mb-2 text-gray-900">
                   {title}
                 </h3>
                 
@@ -160,10 +151,7 @@ export const FeatureItem = ({
                 />
                 
                 {/* Description with proper truncation */}
-                <p className={cn(
-                  "text-sm text-gray-600 leading-relaxed",
-                  isMobile && "text-xs"
-                )}>
+                <p className="text-sm text-gray-600 leading-relaxed">
                   {isExpanded || !isLongDesc ? 
                     description : 
                     <>
@@ -178,13 +166,10 @@ export const FeatureItem = ({
               <div className={cn(
                 "mt-auto pt-3 flex items-center", 
                 colorScheme.text,
-                isMobile ? "text-xs" : "text-sm font-medium"
+                "text-sm font-medium"
               )}>
                 {actionText || (isExpanded ? "Show less" : "Learn more")} 
-                <ChevronRight className={cn(
-                  "ml-1",
-                  isMobile ? "w-3 h-3" : "w-4 h-4"
-                )} />
+                <ChevronRight className="w-4 h-4 ml-1" />
               </div>
             </div>
           </div>
