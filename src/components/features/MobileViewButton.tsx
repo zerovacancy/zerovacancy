@@ -14,8 +14,8 @@ export const MobileViewButton = ({
   toggleShowAllCards, 
   isMobile 
 }: MobileViewButtonProps) => {
-  // If not mobile, don't render anything
-  if (!isMobile) {
+  // Only show on mobile when not showing all cards
+  if (!isMobile || showAllCards) {
     return null;
   }
 
@@ -29,37 +29,24 @@ export const MobileViewButton = ({
 
   return (
     <motion.div 
-      className="h-[72px] flex justify-center items-center"
+      className="absolute bottom-0 left-0 right-0 flex justify-center items-center py-4"
       {...motionProps}
       style={{
         contain: 'layout',
         willChange: 'opacity, transform',
         transform: 'translateZ(0)',
-        position: 'relative',
         zIndex: 20
       }}
     >
-      {showAllCards ? (
-        <Button 
-          variant="outline" 
-          size="lg"
-          className="group border-indigo-300 hover:border-indigo-500 hover:bg-indigo-50/70 text-indigo-600 font-medium px-6"
-          onClick={toggleShowAllCards}
-        >
-          Show less
-          <ChevronDown className="ml-2 h-4 w-4 rotate-180 transition-transform" />
-        </Button>
-      ) : (
-        <Button 
-          variant="default"
-          size="lg" 
-          className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-medium px-6 shadow-md"
-          onClick={toggleShowAllCards}
-        >
-          View all services
-          <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-        </Button>
-      )}
+      <Button 
+        variant="default"
+        size="lg" 
+        className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-medium px-6 shadow-md"
+        onClick={toggleShowAllCards}
+      >
+        View all services
+        <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+      </Button>
     </motion.div>
   );
 };
