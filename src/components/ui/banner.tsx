@@ -1,4 +1,3 @@
-
 import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { Star, Sparkle } from "lucide-react";
@@ -42,7 +41,8 @@ interface BannerProps extends React.HTMLAttributes<HTMLDivElement>, VariantProps
   onClose?: () => void;
 }
 
-export function Banner({
+// Change from function declaration to const declaration with export
+export const Banner = ({
   className,
   variant,
   size,
@@ -53,7 +53,7 @@ export function Banner({
   onClose,
   children,
   ...props
-}: BannerProps) {
+}: BannerProps) => {
   const isMobile = useIsMobile();
   
   return (
@@ -96,6 +96,21 @@ export function Banner({
           </div>
         )}
       </div>
+      
+      {isClosable && onClose && (
+        <button 
+          onClick={onClose}
+          className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1 rounded-full hover:bg-white/10 transition-colors"
+          aria-label="Close banner"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
+      )}
     </div>
   );
-}
+};
+
+// Add this line to ensure the component is exported correctly both ways
+export default Banner;

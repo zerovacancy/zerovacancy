@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef, lazy, Suspense, useCallback } from 'react';
 import Header from '../components/Header';
 import { Hero } from '../components/hero/Hero';
@@ -37,11 +36,11 @@ const Index = () => {
   const sectionsRef = useRef<(HTMLElement | null)[]>([]);
   const [visibleSections, setVisibleSections] = useState<{[key: number]: boolean}>({
     0: true, // Hero section is visible by default
-    1: false, 
-    2: false,
-    3: false,
-    4: false,
-    5: false
+    1: true, 
+    2: true,
+    3: true,
+    4: true,
+    5: true
   });
   
   // Initialize local storage and dialog state
@@ -60,20 +59,17 @@ const Index = () => {
       if (index >= 0) {
         setVisibleSections(prev => ({
           ...prev,
-          [index]: entry.isIntersecting
+          [index]: entry.isIntersecting || prev[index] // Keep sections visible once they've been seen
         }));
       }
     });
   }, []);
   
-  // Use Intersection Observer to optimize rendering of sections with reduced rootMargin
+  // Use Intersection Observer to optimize rendering of sections with safety timeout
   useEffect(() => {
     const observer = new IntersectionObserver(
       observerCallback,
-      { 
-        threshold: 0.15, 
-        rootMargin: '50px' // Reduced from 200px to 50px to prevent aggressive loading
-      }
+      { threshold: 0.1, rootMargin: '200px' }
     );
     
     sectionsRef.current.forEach((section, index) => {
@@ -84,7 +80,6 @@ const Index = () => {
     });
 
     // Safety timeout to make all sections visible if they aren't already
-    // but with a longer delay to prevent premature loading
     const safetyTimeout = setTimeout(() => {
       setVisibleSections({
         0: true,
@@ -94,7 +89,7 @@ const Index = () => {
         4: true,
         5: true
       });
-    }, 3000); // Increased from 1000ms to 3000ms
+    }, 1000);
     
     return () => {
       observer.disconnect();
@@ -160,7 +155,7 @@ const Index = () => {
         </div>
       )}
 
-      <div className="flex-1 pb-16 sm:pb-0 w-full">
+      <main className="flex-1 pb-16 sm:pb-0 w-full">
         <BackgroundEffects 
           blobColors={{
             first: "bg-purple-200",
@@ -175,7 +170,7 @@ const Index = () => {
           className="py-0"
           animationSpeed="slow"
         >
-          <div className="space-y-12 w-full"> {/* Changed from space-y-0 to space-y-12 to add separation */}
+          <div className="space-y-0 w-full">
             {/* Hero Section - Always visible */}
             <section ref={addSectionRef(0)} className="w-full">
               <Hero />
@@ -185,73 +180,62 @@ const Index = () => {
             <section 
               ref={addSectionRef(1)} 
               id="how-it-works" 
-              className="relative w-full pt-8" // Added top padding
+              className="relative w-full"
             >
-              {visibleSections[1] && (
-                <div className="relative z-10">
-                  <Suspense fallback={<SectionLoader />}>
-                    <OptimizedHowItWorks />
-                  </Suspense>
-                </div>
-              )}
+              <div className="relative z-10">
+                <Suspense fallback={<SectionLoader />}>
+                  <OptimizedHowItWorks />
+                </Suspense>
+              </div>
             </section>
             
             {/* Search Section */}
             <section 
               ref={addSectionRef(2)} 
               id="find-creators" 
-              className="relative w-full pt-8" // Added top padding
+              className="relative w-full"
             >
-              {visibleSections[2] && (
-                <div className="max-w-7xl mx-auto relative z-10 py-10 sm:py-16 lg:py-20">
-                  <Suspense fallback={<SectionLoader />}>
-                    <PreviewSearch />
-                  </Suspense>
-                </div>
-              )}
+              <div className="max-w-7xl mx-auto relative z-10 py-10 sm:py-16 lg:py-20">
+                <Suspense fallback={<SectionLoader />}>
+                  <PreviewSearch />
+                </Suspense>
+              </div>
             </section>
             
             {/* Professional Content Creation Services */}
             <section 
               ref={addSectionRef(3)} 
-              className="w-full pt-8 mb-16" // Added top padding and bottom margin
+              className="w-full"
             >
-              {visibleSections[3] && (
-                <Suspense fallback={<SectionLoader />}>
-                  <FeaturesSectionWithHoverEffects />
-                </Suspense>
-              )}
+              <Suspense fallback={<SectionLoader />}>
+                <FeaturesSectionWithHoverEffects />
+              </Suspense>
             </section>
 
             {/* Pricing Section */}
             <section 
               ref={addSectionRef(4)} 
-              className="w-full pt-8" // Added top padding
-              id="pricing" // Added ID for better targeting
+              className="w-full"
             >
-              {visibleSections[4] && (
-                <Suspense fallback={<SectionLoader />}>
-                  <Pricing />
-                </Suspense>
-              )}
+              <Suspense fallback={<SectionLoader />}>
+                <Pricing />
+              </Suspense>
             </section>
 
             {/* Final CTA Section */}
             <div 
               ref={addSectionRef(5)} 
-              className="relative w-full pt-8" // Added top padding
+              className="relative w-full"
             >
-              {visibleSections[5] && (
-                <div className="relative z-10 max-w-7xl mx-auto py-14 sm:py-20 lg:py-24">
-                  <CallToActionSection />
-                </div>
-              )}
+              <div className="relative z-10 max-w-7xl mx-auto py-14 sm:py-20 lg:py-24">
+                <CallToActionSection />
+              </div>
             </div>
           </div>
           
           <Footer />
         </BackgroundEffects>
-      </div>
+      </main>
       <BottomNav />
       <GlowDialog open={showGlowDialog} onOpenChange={setShowGlowDialog} />
     </div>

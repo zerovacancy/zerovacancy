@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { ChevronDown, Check, Sparkles, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -256,3 +255,5 @@ export const PricingCard = ({
     </motion.div>
   );
 };
+
+export default PricingCard;

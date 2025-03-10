@@ -21,7 +21,9 @@ const config: Config = {
       fontFamily: {
         'inter': ['Inter', 'sans-serif'],
         'jakarta': ['Inter', 'sans-serif'], // Keeping the jakarta class for backward compatibility but using Inter
-        'space': ['Inter', 'sans-serif'], // Changed to Inter for consistency
+        'space': ['Space Grotesk', 'sans-serif'], // Changed to Space Grotesk
+        'playfair': ['Playfair Display', 'serif'], // Added Playfair Display
+        'anek': ['Anek Devanagari', 'sans-serif'], // Added Anek Devanagari
       },
       backgroundSize: {
         "shine-size": "200% 200%",
