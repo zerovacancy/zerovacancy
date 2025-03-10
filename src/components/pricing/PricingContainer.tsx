@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -177,7 +176,7 @@ export const PricingContainer = () => {
               <motion.div
                 key={tier.title}
                 className={cn(
-                  "rounded-xl overflow-hidden border-2 transition-all",
+                  "rounded-xl overflow-hidden border-2 transition-all mt-6",
                   tier.popularPlan ? "border-brand-purple shadow-lg" : "border-slate-200",
                   tier.popularPlan && "relative"
                 )}
@@ -185,9 +184,9 @@ export const PricingContainer = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
-                {/* Popular tag */}
+                {/* Popular tag - Fixed positioning */}
                 {tier.popularPlan && (
-                  <div className="absolute -top-4 inset-x-0 flex justify-center z-10">
+                  <div className="absolute -top-5 inset-x-0 flex justify-center z-10">
                     <div className="px-4 py-1 bg-brand-purple text-white rounded-full text-sm font-medium shadow-md flex items-center gap-1.5">
                       <Sparkles className="h-3.5 w-3.5" />
                       Most Popular
@@ -385,7 +384,7 @@ export const PricingContainer = () => {
               <motion.div
                 key={tier.title}
                 className={cn(
-                  "rounded-2xl border-2 overflow-hidden transition-all",
+                  "rounded-2xl border-2 overflow-hidden transition-all mt-6",
                   tier.popularPlan 
                     ? `border-brand-purple shadow-xl ${colorScheme.border} scale-105 z-10` 
                     : "border-slate-200",
@@ -395,9 +394,9 @@ export const PricingContainer = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
-                {/* Popular tag */}
+                {/* Popular tag - Fixed positioning for desktop */}
                 {tier.popularPlan && (
-                  <div className="absolute -top-4 inset-x-0 flex justify-center z-10">
+                  <div className="absolute -top-5 inset-x-0 flex justify-center z-10">
                     <div className="px-4 py-1 bg-brand-purple text-white rounded-full text-sm font-medium shadow-md flex items-center gap-1.5">
                       <Sparkles className="h-3.5 w-3.5" />
                       Most Popular
