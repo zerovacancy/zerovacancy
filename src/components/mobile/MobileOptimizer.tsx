@@ -43,11 +43,13 @@ export const MobileOptimizer: React.FC<MobileOptimizerProps> = ({ children }) =>
       // Force a single scroll context
       const elements = document.querySelectorAll('div, section, main');
       elements.forEach(el => {
-        if (el.id !== 'root' && 
-            !el.classList.contains('scroll-container-horizontal') && 
-            el !== document.body) {
-          el.style.overflow = 'visible';
-          el.style.overflowY = 'visible';
+        // Cast the Element to HTMLElement to access style property
+        const htmlEl = el as HTMLElement;
+        if (htmlEl.id !== 'root' && 
+            !htmlEl.classList.contains('scroll-container-horizontal') && 
+            htmlEl !== document.body) {
+          htmlEl.style.overflow = 'visible';
+          htmlEl.style.overflowY = 'visible';
         }
       });
       
