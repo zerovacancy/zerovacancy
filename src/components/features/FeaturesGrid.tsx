@@ -46,7 +46,7 @@ export const FeaturesGrid = ({
       ))}
       
       {/* Partial card overlay with View More button (mobile only) */}
-      {isMobile && !showAllCards && (
+      {isMobile && !showAllCards && features.length > visibleFeatures.length && (
         <MobilePartialOverlay 
           showAllCards={showAllCards} 
           toggleShowAllCards={toggleShowAllCards} 

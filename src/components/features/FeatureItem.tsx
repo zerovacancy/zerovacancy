@@ -1,6 +1,5 @@
 
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { iconColors, featureIcons } from "./feature-colors";
@@ -64,7 +63,7 @@ export const FeatureItem = ({
   const truncationPoint = findLogicalBreak(description, shortDescLimit);
   
   return (
-    <motion.button
+    <button
       className={cn(
         "relative w-full text-left group h-full flex flex-col",
         "rounded-xl sm:rounded-2xl transition-all duration-300",
@@ -80,40 +79,24 @@ export const FeatureItem = ({
         // Consistent padding
         "p-4 sm:p-5 lg:p-6",
         "focus:outline-none focus:ring-2 focus:ring-primary/20",
-        // Enhanced hover transition - less pronounced on mobile for better performance
-        isMobile ? "active:translate-y-0" : "hover:-translate-y-1.5 hover:border-transparent",
+        // Simplified hover state on mobile
         "transition-all duration-300",
         // For partially visible card
         isPartiallyVisible && "opacity-80 shadow-none"
       )}
       onClick={handleClick}
       aria-expanded={isExpanded}
-      whileHover={isMobile ? {} : { 
-        scale: 1.01,
-        boxShadow: "0 8px 20px rgba(0,0,0,0.08)"
-      }}
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ 
-        opacity: 1, 
-        y: 0,
-        transition: {
-          duration: 0.4,
-          delay: index * 0.05 + 0.1
-        }
-      }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ type: "spring", stiffness: 300, damping: 20 }}
       style={{
         // Very subtle background tint matching the card's theme color
         backgroundColor: `rgba(${borderColorBase === 'indigo' ? '237, 242, 255' : 
-                                 borderColorBase === 'blue' ? '235, 245, 255' : 
-                                 borderColorBase === 'violet' ? '243, 240, 255' : 
-                                 borderColorBase === 'pink' ? '253, 242, 248' : 
-                                 borderColorBase === 'emerald' ? '236, 253, 245' : 
-                                 borderColorBase === 'amber' ? '255, 251, 235' : 
-                                 borderColorBase === 'cyan' ? '236, 254, 255' : 
-                                 borderColorBase === 'rose' ? '255, 241, 242' : 
-                                 '255, 255, 255'}, 0.97)`,
+                               borderColorBase === 'blue' ? '235, 245, 255' : 
+                               borderColorBase === 'violet' ? '243, 240, 255' : 
+                               borderColorBase === 'pink' ? '253, 242, 248' : 
+                               borderColorBase === 'emerald' ? '236, 253, 245' : 
+                               borderColorBase === 'amber' ? '255, 251, 235' : 
+                               borderColorBase === 'cyan' ? '236, 254, 255' : 
+                               borderColorBase === 'rose' ? '255, 241, 242' : 
+                               '255, 255, 255'}, 0.97)`,
         // For partially visible card
         clipPath: isPartiallyVisible ? "polygon(0 0, 100% 0, 100% 65%, 0 65%)" : "none",
         pointerEvents: isPartiallyVisible ? "none" : "auto"
@@ -131,7 +114,7 @@ export const FeatureItem = ({
       
       <div className="flex flex-col items-start gap-3 sm:gap-4 h-full">
         {/* Icon container with consistent styling */}
-        <motion.div 
+        <div 
           className={cn(
             "flex items-center justify-center",
             "w-12 h-12 sm:w-14 sm:h-14",
@@ -144,16 +127,13 @@ export const FeatureItem = ({
             "border border-opacity-20",
             `border-${colorScheme.text.split('-')[1]}-100`,
           )}
-          whileHover={{ scale: 1.05, rotate: 5 }}
         >
           <Icon className={cn(
             "w-6 h-6 sm:w-7 sm:h-7",
             "text-white",
             "transition-all duration-300",
-            "group-hover:scale-110",
-            "group-hover:animate-subtle-bounce"
           )} />
-        </motion.div>
+        </div>
         
         <div className="text-left w-full flex-grow flex flex-col">
           {/* Standardized title style - all black for consistent hierarchy */}
@@ -196,7 +176,7 @@ export const FeatureItem = ({
           </div>
         </div>
       </div>
-    </motion.button>
+    </button>
   );
 };
 

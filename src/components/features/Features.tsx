@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { features } from "./feature-data";
 import { FeatureHeader } from "./FeatureHeader";
-import { AnimatePresence } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { FeaturesGrid } from "./FeaturesGrid";
 import { MobileViewButton } from "./MobileViewButton";
@@ -22,7 +21,12 @@ export function FeaturesSectionWithHoverEffects() {
     : features;
   
   return (
-    <section className="relative py-14 sm:py-18 lg:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden" id="features">
+    <section 
+      className="relative py-14 sm:py-18 lg:py-24 px-4 sm:px-6 lg:px-8 overflow-visible" 
+      id="features"
+      // Add scroll margin to prevent skipping over section
+      style={{ scrollMarginTop: isMobile ? '80px' : '0' }}
+    >
       {/* Only show background on non-mobile devices */}
       {!isMobile && (
         <div className="absolute inset-0 bg-gradient-to-b from-indigo-50/50 to-white pointer-events-none"></div>
@@ -42,16 +46,14 @@ export function FeaturesSectionWithHoverEffects() {
           toggleShowAllCards={toggleShowAllCards}
         />
         
-        {/* Desktop view all services button (only when not mobile or when mobile and not showing all cards) */}
-        <AnimatePresence>
-          {!isMobile && (
-            <MobileViewButton
-              showAllCards={showAllCards}
-              toggleShowAllCards={toggleShowAllCards}
-              isMobile={isMobile}
-            />
-          )}
-        </AnimatePresence>
+        {/* Only show view all button on desktop or when on mobile and not showing all cards */}
+        {(!isMobile || !showAllCards) && (
+          <MobileViewButton
+            showAllCards={showAllCards}
+            toggleShowAllCards={toggleShowAllCards}
+            isMobile={isMobile}
+          />
+        )}
       </div>
     </section>
   );

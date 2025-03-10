@@ -1,5 +1,4 @@
 
-import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
 
@@ -15,12 +14,8 @@ export const MobilePartialOverlay = ({
   if (showAllCards) return null;
   
   return (
-    <motion.div 
+    <div 
       className="absolute left-0 right-0 bottom-0 bg-gradient-to-t from-white via-white/95 to-transparent z-20 h-40 flex flex-col items-center justify-end pb-4"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.3 }}
     >
       <Button 
         variant="outline" 
@@ -31,7 +26,7 @@ export const MobilePartialOverlay = ({
         View all services
         <ChevronDown className="ml-2 h-4 w-4 transition-transform" />
       </Button>
-    </motion.div>
+    </div>
   );
 };
 

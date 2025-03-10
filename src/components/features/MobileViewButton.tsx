@@ -1,5 +1,4 @@
 
-import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ChevronDown } from "lucide-react";
 
@@ -21,13 +20,8 @@ export const MobileViewButton = ({
   };
 
   return (
-    <motion.div 
+    <div 
       className={`${isMobile ? 'mt-6' : 'mt-12 sm:mt-14'} flex justify-center`}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.5, delay: 0.3 }}
-      key="view-all-button"
     >
       {showAllCards ? (
         <Button 
@@ -47,10 +41,10 @@ export const MobileViewButton = ({
           onClick={handleClick}
         >
           View all services
-          <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+          <ArrowRight className="ml-2 h-4 w-4 transition-transform" />
         </Button>
       )}
-    </motion.div>
+    </div>
   );
 }
 
