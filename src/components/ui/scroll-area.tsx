@@ -26,11 +26,7 @@ const ScrollArea = React.forwardRef<
         "h-full w-full", 
         preserveHorizontalScroll ? "scroll-container-horizontal" : "",
         className
-      )}
-      role="region"
-      aria-label="Scrollable content"
-      tabIndex={0}
-      >
+      )}>
         {children}
       </div>
     );
