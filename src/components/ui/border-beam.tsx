@@ -3,17 +3,6 @@
 
 import { cn } from "@/lib/utils";
 
-// Add CSS property definition for offsetDistance
-const style = document.createElement('style');
-style.textContent = `
-  @property --offset-distance {
-    syntax: '<percentage>';
-    initial-value: 0%;
-    inherits: false;
-  }
-`;
-document.head.appendChild(style);
-
 export interface BorderBeamProps {
   className?: string
   size?: number
@@ -39,19 +28,14 @@ export function BorderBeam({
     <div
       style={
         {
-          "--size": size,
-          "--duration": `${duration}s`,
-          "--anchor": anchor,
           "--border-width": borderWidth,
           "--color-from": colorFrom,
           "--color-to": colorTo,
-          "--delay": `-${delay}s`,
         } as React.CSSProperties
       }
       className={cn(
         "pointer-events-none absolute inset-0 rounded-[inherit] [border:calc(var(--border-width)*1px)_solid_transparent]",
         "![mask-clip:padding-box,border-box] ![mask-composite:intersect] [mask:linear-gradient(transparent,transparent),linear-gradient(white,white)]",
-        "after:absolute after:aspect-square after:w-[calc(var(--size)*1px)] after:animate-border-beam after:[animation-delay:var(--delay)] after:[background:linear-gradient(to_left,var(--color-from),var(--color-to),transparent)] after:[offset-anchor:calc(var(--anchor)*1%)_50%] after:[offset-path:rect(0_auto_auto_0_round_calc(var(--size)*1px))]",
         className,
       )}
     />

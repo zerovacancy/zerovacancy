@@ -1,7 +1,6 @@
 
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { OptimizedSpotlight } from './optimized-spotlight';
 
 interface GradientBlobBackgroundProps {
   className?: string;
@@ -38,19 +37,12 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
   blobOpacity = 0.15,
   blobSize = 'medium',
   baseColor = 'bg-white/80',
-  animationSpeed = 'medium'
 }) => {
   const [isMounted, setIsMounted] = useState(false);
-  const isReducedMotion = useRef(false);
   
-  // Check for reduced motion preference
   useEffect(() => {
     setIsMounted(true);
-    isReducedMotion.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   }, []);
-
-  // Don't render animations for users with reduced motion preference
-  const shouldAnimate = isMounted && !isReducedMotion.current;
   
   // Determine blob sizes based on the blobSize prop
   const getBlobSizeClass = (position: 'first' | 'second' | 'third') => {
@@ -75,20 +67,7 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
     return sizes[blobSize][position];
   };
 
-  // Animation duration based on speed or disabled for reduced motion
-  const getAnimationDuration = (base: number) => {
-    if (!shouldAnimate) return '0s';
-    
-    const multipliers = {
-      fast: 0.7,
-      medium: 1,
-      slow: 2.2
-    };
-    
-    return `${base * multipliers[animationSpeed]}s`;
-  };
-
-  // Only render the number of blobs needed based on screen size to reduce DOM elements
+  // Check for screen size to render optimal number of elements
   const [windowWidth, setWindowWidth] = useState(0);
   
   useEffect(() => {
@@ -127,24 +106,21 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
         </div>
       )}
       
-      {/* Render main blobs (always visible) */}
+      {/* Render main blobs (static, no animations) */}
       <div 
         className={cn(
           `absolute -top-10 -left-20 ${getBlobSizeClass('first')} ${blobColors.first} rounded-full mix-blend-multiply filter blur-3xl opacity-${blobOpacity * 100}`
         )}
-        style={shouldAnimate ? { animation: `blob ${getAnimationDuration(45)} infinite` } : {}}
       ></div>
       <div 
         className={cn(
           `absolute top-[40%] -right-20 ${getBlobSizeClass('second')} ${blobColors.second} rounded-full mix-blend-multiply filter blur-3xl opacity-${blobOpacity * 100}`
         )}
-        style={shouldAnimate ? { animation: `blob ${getAnimationDuration(50)} infinite`, animationDelay: `${getAnimationDuration(8)}` } : {}}
       ></div>
       <div 
         className={cn(
           `absolute -bottom-40 left-[20%] ${getBlobSizeClass('third')} ${blobColors.third} rounded-full mix-blend-multiply filter blur-3xl opacity-${blobOpacity * 100}`
         )}
-        style={shouldAnimate ? { animation: `blob ${getAnimationDuration(40)} infinite`, animationDelay: `${getAnimationDuration(15)}` } : {}}
       ></div>
       
       {/* Render additional blobs only for larger screens */}
@@ -154,20 +130,13 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
             className={cn(
               `absolute top-[15%] right-[25%] ${getBlobSizeClass('second')} ${blobColors.first} rounded-full mix-blend-multiply filter blur-3xl opacity-${blobOpacity * 100}`
             )}
-            style={shouldAnimate ? { animation: `blob ${getAnimationDuration(55)} infinite`, animationDelay: `${getAnimationDuration(12)}` } : {}}
           ></div>
           <div 
             className={cn(
               `absolute top-[70%] -left-40 ${getBlobSizeClass('first')} ${blobColors.third} rounded-full mix-blend-multiply filter blur-3xl opacity-${blobOpacity * 100}`
             )}
-            style={shouldAnimate ? { animation: `blob ${getAnimationDuration(48)} infinite`, animationDelay: `${getAnimationDuration(20)}` } : {}}
           ></div>
         </>
-      )}
-      
-      {/* Spotlight effect - only if withSpotlight is true */}
-      {withSpotlight && (
-        <OptimizedSpotlight className={spotlightClassName} size={spotlightSize} />
       )}
       
       {/* Content */}

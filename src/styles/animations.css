@@ -10,22 +10,6 @@
   backface-visibility: hidden;
 }
 
-/* Animation for scroll indicators */
-@keyframes pulse-subtle {
-  0%, 100% {
-    opacity: 0.8;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.05);
-  }
-}
-
-.animate-pulse-subtle {
-  animation: pulse-subtle 2s infinite;
-}
-
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
