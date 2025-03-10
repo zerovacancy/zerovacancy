@@ -1,78 +1,135 @@
-import { useState, useEffect } from "react";
-import { features } from "./feature-data";
-import { FeatureHeader } from "./FeatureHeader";
-import { BackgroundEffects } from "./BackgroundEffects";
-import { AnimatePresence } from "framer-motion";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { FeaturesGrid } from "./FeaturesGrid";
-import { MobileViewButton } from "./MobileViewButton";
+import { useState } from "react";
+  import { features } from "./feature-data";
+  import { FeatureHeader } from "./FeatureHeader";
+  import { BackgroundEffects } from "./BackgroundEffects";
+  import { AnimatePresence, motion } from "framer-motion";
+  import { useIsMobile } from "@/hooks/use-mobile";
+  import { FeaturesGrid } from "./FeaturesGrid";
+  import { Button } from "@/components/ui/button";
+  import { ArrowRight, ChevronDown } from "lucide-react";
 
-export function FeaturesSectionWithHoverEffects() {
-  const isMobile = useIsMobile();
-  // Always show all cards by default
-  const [showAllCards, setShowAllCards] = useState(true);
-  const [mounted, setMounted] = useState(false);
+  export function FeaturesSectionWithHoverEffects() {
+    const isMobile = useIsMobile();
+    const [showAllCards, setShowAllCards] = useState(false);
 
-  // Set mounted state on component mount to ensure hydration is complete
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+    // Function to toggle showing all cards
+    const toggleShowAllCards = () => {
+      setShowAllCards(prev => !prev);
+    };
 
-  // Function to toggle showing all cards (no longer needed but kept for interface compatibility)
-  const toggleShowAllCards = () => {
-    setShowAllCards(true); // Always keep it true
-  };
+    // On mobile, show only first 3 cards (including Video Production)
+    const visibleFeatures = isMobile && !showAllCards
+      ? features.slice(0, 3)
+      : features;
 
-  // Always show all features
-  const visibleFeatures = features;
-
-  return (
-    <BackgroundEffects
-      blobColors={{
-        first: "bg-indigo-100",
-        second: "bg-blue-100",
-        third: "bg-violet-100"
-      }}
-      blobOpacity={0.12}
-      withSpotlight={true}
-      spotlightClassName="from-indigo-500/5 via-blue-500/5 to-violet-500/5"
-      pattern="none"
-      baseColor="bg-white/80"
-      animationSpeed="slow"
-      className="py-14 sm:py-18 lg:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden"
-    >
-      <div className="max-w-6xl mx-auto relative z-10">
-        <FeatureHeader 
-          title="Professional Content Creation Services"
-          description="Everything you need to showcase your properties with stunning visuals and engaging content that attracts the right buyers."
-        />
-
-        <div className="flex flex-col">
-          <FeaturesGrid
-            features={features}
-            visibleFeatures={visibleFeatures}
-            isMobile={isMobile}
-            showAllCards={showAllCards}
-            toggleShowAllCards={toggleShowAllCards}
+    return (
+      <section className="relative py-14 sm:py-18 lg:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
+        <div className="max-w-6xl mx-auto relative z-10">
+          <FeatureHeader 
+            title="Professional Content Creation Services"
+            description="Everything you need to showcase your properties with stunning visuals and engaging 
+  content that attracts the right buyers."
           />
 
-          {/* MobileViewButton is kept but will always return null */}
-          {mounted && (
-            <div className="w-full">
-              <AnimatePresence>
-                <MobileViewButton
-                  showAllCards={showAllCards}
-                  toggleShowAllCards={toggleShowAllCards}
-                  isMobile={isMobile}
-                />
-              </AnimatePresence>
-            </div>
-          )}
-        </div>
-      </div>
-    </BackgroundEffects>
-  );
-}
+          <div className="w-full relative">
+            {/* Features grid */}
+            <FeaturesGrid
+              features={features}
+              visibleFeatures={visibleFeatures}
+              isMobile={isMobile}
+              showAllCards={showAllCards}
+              toggleShowAllCards={toggleShowAllCards}
+            />
 
-// Export both named and default export for backward compatibility
-export default FeaturesSectionWithHoverEffects;
+            {/* View all services button (only on mobile and when cards are collapsed) */}
+            {isMobile && (
+              <div className="w-full mt-8 flex justify-center">
+                <AnimatePresence>
+                  {!showAllCards ? (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ duration: 0.5 }}
+                      key="view-all-button"
+                    >
+                      <Button 
+                        variant="default"
+                        size="lg" 
+                        className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 
+  hover:to-purple-700 text-white font-medium px-6 shadow-md"
+                        onClick={toggleShowAllCards}
+                      >
+                        View all services
+                        <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                      </Button>
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ duration: 0.5 }}
+                      key="show-less-button"
+                    >
+                      <Button 
+                        variant="outline" 
+                        size="lg"
+                        className="group border-indigo-300 hover:border-indigo-500 hover:bg-indigo-50/70 
+  text-indigo-600 font-medium px-6"
+                        onClick={toggleShowAllCards}
+                      >
+                        Show less
+                        <ChevronDown className="ml-2 h-4 w-4 rotate-180 transition-transform" />
+                      </Button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            )}
+
+            {/* Desktop view all services button */}
+            {!isMobile && (
+              <div className="mt-12 flex justify-center">
+                <Button 
+                  variant="default"
+                  size="lg" 
+                  className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 
+  hover:to-purple-700 text-white font-medium px-6 shadow-md"
+                >
+                  View all services
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Button>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Export both named and default export for backward compatibility
+  export default FeaturesSectionWithHoverEffects;
+
+> this will only effect the mobile site, right?
+
+⏺ Yes, that's correct. This will only affect the mobile site because:
+
+  1. The collapsing behavior is controlled by this condition:
+  const visibleFeatures = isMobile && !showAllCards
+    ? features.slice(0, 3)
+    : features;
+
+  2. The mobile-specific CTA button only appears when isMobile is true:
+  {isMobile && (
+    <div className="w-full mt-8 flex justify-center">
+      {/* Mobile CTA button */}
+    </div>
+  )}
+
+  3. For desktop, all features are always shown, and it has its own separate button:
+  {!isMobile && (
+    <div className="mt-12 flex justify-center">
+      {/* Desktop button */}
+    </div>
+  )}
