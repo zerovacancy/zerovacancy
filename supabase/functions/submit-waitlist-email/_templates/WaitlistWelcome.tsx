@@ -3,7 +3,6 @@ import {
   Body,
   Button,
   Container,
-  Column,
   Head,
   Heading,
   Hr,
@@ -11,7 +10,6 @@ import {
   Img,
   Link,
   Preview,
-  Row,
   Section,
   Text,
 } from 'npm:@react-email/components@0.0.11'
@@ -24,18 +22,15 @@ interface WaitlistWelcomeEmailProps {
 export const WaitlistWelcomeEmail = ({
   userEmail = 'valued.subscriber@example.com',
 }: WaitlistWelcomeEmailProps) => {
-  // Use a fallback logo URL in case the baseUrl one doesn't work
   const baseUrl = 'https://www.zerovacancy.ai';
   const logoUrl = `${baseUrl}/logo.png`;
-  const fallbackLogoUrl = 'https://pozblfzhjqlsxkakhowp.supabase.co/storage/v1/object/public/public/logo.png';
   
   return (
     <Html>
       <Head />
-      <Preview>Welcome to the ZeroVacancy Waitlist!</Preview>
+      <Preview>Access Confirmed - Welcome to ZeroVacancy</Preview>
       <Body style={main}>
         <Container style={container}>
-          {/* Header with Logo - with error handling for image loading */}
           <Section style={logoContainer}>
             <Img
               src={logoUrl}
@@ -44,24 +39,24 @@ export const WaitlistWelcomeEmail = ({
               alt="ZeroVacancy"
               style={logo}
             />
+            <Text style={logoText}>zerovacancy</Text>
           </Section>
           
           <Hr style={divider} />
           
-          {/* Main Content */}
           <Section style={section}>
-            <Heading style={heading}>Thanks for joining our waitlist!</Heading>
+            <Heading style={heading}>Access Confirmed</Heading>
             
             <Text style={paragraph}>
-              Hi{userEmail ? ` ${userEmail.split('@')[0]}` : ''},
+              Hello{userEmail ? ` ${userEmail.split('@')[0]}` : ''},
             </Text>
             
             <Text style={paragraph}>
-              We're excited to have you on board. You're now on the waitlist for our cutting-edge real estate marketing platform.
+              Your place in ZeroVacancy is secured. We've added you to our priority access list for when we open our doors.
             </Text>
             
             <Text style={paragraph}>
-              ZeroVacancy connects property managers with expert creators for high-quality real estate marketing - from photography to 3D tours and more.
+              We're building something different—a select network connecting exceptional spaces with the visual creators who know how to capture their true potential.
             </Text>
             
             <Section style={ctaSection}>
@@ -71,38 +66,21 @@ export const WaitlistWelcomeEmail = ({
                 style={button}
                 href={baseUrl}
               >
-                Visit Our Website
+                Discover More
               </Button>
             </Section>
-          </Section>
-          
-          {/* Info Box */}
-          <Section style={infoBox}>
-            <Text style={infoText}>
-              We'll keep you updated on our progress and let you know when we're ready to launch. If you have any questions, feel free to reply to this email. We'd love to hear from you!
+
+            <Text style={paragraph}>
+              We're putting the finishing touches on our platform and will notify you when it's time to join. Your early interest gives you priority access to our curated talent pool.
             </Text>
-          </Section>
-          
-          {/* Footer */}
-          <Section style={footer}>
-            <Text style={footerText}>
-              © {new Date().getFullYear()} ZeroVacancy. All rights reserved.
+
+            <Text style={paragraph}>
+              If you have questions or thoughts in the meantime, reply directly to this email. We value your perspective.
             </Text>
-            
-            <Row style={socialLinks}>
-              <Column style={socialColumn}>
-                <Link style={socialLink} href="https://twitter.com">Twitter</Link>
-              </Column>
-              <Column style={socialColumn}>
-                <Link style={socialLink} href="https://instagram.com">Instagram</Link>
-              </Column>
-              <Column style={socialColumn}>
-                <Link style={socialLink} href="https://linkedin.com">LinkedIn</Link>
-              </Column>
-            </Row>
-            
-            <Text style={footerText}>
-              You're receiving this email because you signed up for the ZeroVacancy waitlist.
+
+            <Text style={paragraph}>
+              Regards,<br />
+              ZeroVacancy
             </Text>
           </Section>
         </Container>
@@ -126,12 +104,21 @@ const container = {
 }
 
 const logoContainer = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
   padding: '20px 0',
-  textAlign: 'center' as const,
 }
 
 const logo = {
-  margin: '0 auto',
+  margin: '0',
+}
+
+const logoText = {
+  marginLeft: '10px',
+  fontSize: '20px',
+  fontWeight: '600',
+  color: '#1d4ed8',
 }
 
 const divider = {
@@ -176,43 +163,3 @@ const button = {
   display: 'inline-block',
 }
 
-const infoBox = {
-  padding: '16px 24px',
-  backgroundColor: '#F3F4F6',
-  borderRadius: '6px',
-  margin: '0 24px 24px',
-}
-
-const infoText = {
-  fontSize: '14px',
-  lineHeight: '1.5',
-  color: '#4B5563',
-  margin: '0',
-}
-
-const footer = {
-  padding: '0 24px',
-  textAlign: 'center' as const,
-}
-
-const footerText = {
-  fontSize: '12px',
-  lineHeight: '1.5',
-  color: '#6B7280',
-  margin: '16px 0',
-}
-
-const socialLinks = {
-  marginBottom: '16px',
-}
-
-const socialColumn = {
-  padding: '0 8px',
-  textAlign: 'center' as const,
-}
-
-const socialLink = {
-  fontSize: '12px',
-  color: '#6B7280',
-  textDecoration: 'underline',
-}
