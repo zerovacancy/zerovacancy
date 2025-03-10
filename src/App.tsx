@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { ErrorBoundary } from 'react-error-boundary';
 import ErrorFallback from './components/ErrorFallback';
 import { Toaster } from '@/components/ui/toaster';
+import ResendTest from './components/ResendTest';
 
 // Lazy load all pages for improved performance
 const Index = lazy(() => import('./pages/index'));
@@ -59,6 +60,7 @@ function App() {
               <Route path="/connect/success" element={<ConnectSuccess />} />
               <Route path="/connect/refresh" element={<ConnectRefresh />} />
               <Route path="/connect/onboarding" element={<ConnectOnboarding />} />
+              <Route path="/resend-test" element={<ResendTest />} />
             </Routes>
           </Suspense>
         </div>
