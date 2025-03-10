@@ -5,9 +5,11 @@ import { WaitlistCTA } from "../ui/waitlist/waitlist-cta";
 import { TextRotate } from "../ui/text-rotate";
 import { GlowingEffect } from "../ui/glowing-effect";
 import { motion } from "framer-motion";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export function Hero() {
   const rotatingWords = ["CONVERTS", "ENGAGES", "CAPTIVATES", "DRIVES LEADS"];
+  const isMobile = useIsMobile();
   
   return <section className="flex flex-col items-center justify-center px-4 sm:px-6 py-12 sm:py-16 md:py-20 min-h-[40vh] relative z-10">
       <div className="max-w-5xl w-full mx-auto flex flex-col gap-8 sm:gap-10">
@@ -21,15 +23,17 @@ export function Hero() {
             transition={{ duration: 1, repeat: Infinity, repeatType: "reverse" }}
           >
             PROPERTY CONTENT THAT
-            <GlowingEffect
-              blur={10}
-              spread={15}
-              glow={true}
-              variant="default"
-              disabled={false}
-              movementDuration={2}
-              borderWidth={1}
-            />
+            {!isMobile && (
+              <GlowingEffect
+                blur={10}
+                spread={15}
+                glow={true}
+                variant="default"
+                disabled={false}
+                movementDuration={2}
+                borderWidth={1}
+              />
+            )}
           </motion.span>
           <TextRotate 
             texts={rotatingWords}

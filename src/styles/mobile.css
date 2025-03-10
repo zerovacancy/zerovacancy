@@ -64,7 +64,13 @@
   .animate-pulse,
   .blur-3xl,
   .blur-2xl,
-  .blur-xl {
+  .blur-xl,
+  .blur,
+  .backdrop-blur-xl,
+  .backdrop-blur-lg,
+  .backdrop-blur-md,
+  .backdrop-blur-sm,
+  .backdrop-blur {
     display: none !important;
   }
   
