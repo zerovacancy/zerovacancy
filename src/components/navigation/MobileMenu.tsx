@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { LogIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { MenuItem } from '@/types/navigation';
+import { cn } from '@/lib/utils';
 
 type MobileMenuProps = {
   menuItems: MenuItem[];
@@ -21,13 +22,22 @@ const MobileMenu = ({
   onClose 
 }: MobileMenuProps) => {
   return (
-    <div className="md:hidden">
-      <div className="pt-2 pb-4 space-y-1 sm:px-3">
+    <div className="md:hidden section-container">
+      <div className={cn(
+        "pt-2 pb-4 space-y-1",
+        "px-3 sm:px-3",
+        "border-b border-gray-200"
+      )}>
         {menuItems.map((item) => (
           <Link
             key={item.label}
             to={item.href}
-            className="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+            className={cn(
+              "block px-3 py-2.5",
+              "text-base font-medium text-gray-700",
+              "hover:bg-gray-100 hover:text-gray-900",
+              "rounded-md"
+            )}
             onClick={onClose}
           >
             {item.label}
@@ -50,20 +60,20 @@ const MobileMenu = ({
           <>
             <Link
               to="/account"
-              className="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+              className="block px-3 py-2.5 text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-md"
               onClick={onClose}
             >
               My Account
             </Link>
             <Link
               to="/connect/onboarding"
-              className="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+              className="block px-3 py-2.5 text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-md"
               onClick={onClose}
             >
               Connect Setup
             </Link>
             <button
-              className="block w-full text-left px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+              className="block w-full text-left px-3 py-2.5 text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-md"
               onClick={() => {
                 onSignOut();
                 onClose();

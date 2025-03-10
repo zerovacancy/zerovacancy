@@ -1,7 +1,8 @@
 
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ChevronDown } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface MobileViewButtonProps {
   showAllCards: boolean;
@@ -29,7 +30,11 @@ export const MobileViewButton = ({
 
   return (
     <motion.div 
-      className="absolute bottom-0 left-0 right-0 flex justify-center items-center py-4"
+      className={cn(
+        "absolute bottom-0 left-0 right-0",
+        "flex justify-center items-center py-4",
+        "mobile-content-padding"
+      )}
       {...motionProps}
       style={{
         contain: 'layout',
@@ -41,7 +46,12 @@ export const MobileViewButton = ({
       <Button 
         variant="default"
         size="lg" 
-        className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-medium px-6 shadow-md"
+        className={cn(
+          "bg-gradient-to-r from-indigo-600 to-purple-600", 
+          "hover:from-indigo-700 hover:to-purple-700",
+          "text-white font-medium px-6 shadow-md",
+          "mobile-button-size"
+        )}
         onClick={toggleShowAllCards}
       >
         View all services
