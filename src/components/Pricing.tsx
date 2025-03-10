@@ -6,14 +6,16 @@ import { BackgroundEffects } from "./pricing/BackgroundEffects";
 import { PricingContent } from "./pricing/PricingContent";
 import { CommonFeatures } from "./pricing/CommonFeatures";
 import { PricingFAQ } from "./pricing/PricingFAQ";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Pricing = () => {
   const { subscription, isLoading } = useSubscription();
+  const isMobile = useIsMobile();
 
   return (
     <div className="relative w-full py-16 sm:py-20 lg:py-24 overflow-hidden">
-      {/* Background decorative elements */}
-      <BackgroundEffects />
+      {/* Background decorative elements - only show on non-mobile devices */}
+      {!isMobile && <BackgroundEffects />}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Enhanced header with animation */}
