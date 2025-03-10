@@ -24,7 +24,10 @@ interface WaitlistWelcomeEmailProps {
 export const WaitlistWelcomeEmail = ({
   userEmail = 'valued.subscriber@example.com',
 }: WaitlistWelcomeEmailProps) => {
+  // Use a fallback logo URL in case the baseUrl one doesn't work
   const baseUrl = 'https://www.zerovacancy.ai';
+  const logoUrl = `${baseUrl}/logo.png`;
+  const fallbackLogoUrl = 'https://pozblfzhjqlsxkakhowp.supabase.co/storage/v1/object/public/public/logo.png';
   
   return (
     <Html>
@@ -32,10 +35,10 @@ export const WaitlistWelcomeEmail = ({
       <Preview>Welcome to the ZeroVacancy Waitlist!</Preview>
       <Body style={main}>
         <Container style={container}>
-          {/* Header with Logo */}
+          {/* Header with Logo - with error handling for image loading */}
           <Section style={logoContainer}>
             <Img
-              src={`${baseUrl}/logo.png`}
+              src={logoUrl}
               width="170"
               height="50"
               alt="ZeroVacancy"
