@@ -30,31 +30,27 @@
             description="Everything you need to showcase your properties with stunning visuals and engaging content that attracts the right buyers."
           />
 
-          <div className="relative">
-            {/* Features grid with proper spacing for button placement */}
-            <div className={`mb-${isMobile && !showAllCards ? '24' : '8'}`}>
-              <FeaturesGrid
-                features={features}
-                visibleFeatures={visibleFeatures}
-                isMobile={isMobile}
+          <FeaturesGrid
+            features={features}
+            visibleFeatures={visibleFeatures}
+            isMobile={isMobile}
+            showAllCards={showAllCards}
+            toggleShowAllCards={toggleShowAllCards}
+          />
+
+          {/* Add spacer for proper button placement below cards */}
+          {isMobile && !showAllCards && <div className="h-16"></div>}
+
+          {/* View all services button correctly positioned */}
+          <AnimatePresence>
+            {(!isMobile || (isMobile && !showAllCards)) && (
+              <MobileViewButton
                 showAllCards={showAllCards}
                 toggleShowAllCards={toggleShowAllCards}
+                isMobile={isMobile}
               />
-            </div>
-
-            {/* View all services button positioned below cards */}
-            <div className={`${isMobile && !showAllCards ? 'absolute bottom-0 left-0 right-0' : ''}`}>
-              <AnimatePresence>
-                {(!isMobile || (isMobile && !showAllCards)) && (
-                  <MobileViewButton
-                    showAllCards={showAllCards}
-                    toggleShowAllCards={toggleShowAllCards}
-                    isMobile={isMobile}
-                  />
-                )}
-              </AnimatePresence>
-            </div>
-          </div>
+            )}
+          </AnimatePresence>
         </div>
       </section>
     );
