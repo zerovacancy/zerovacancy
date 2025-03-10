@@ -94,28 +94,6 @@ body {
   scroll-snap-align: start;
 }
 
-/* Line clamping utilities */
-.line-clamp-2 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;  
-  overflow: hidden;
-}
-
-.line-clamp-3 {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;  
-  overflow: hidden;
-}
-
-.line-clamp-4 {
-  display: -webkit-box;
-  -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;  
-  overflow: hidden;
-}
-
 /* Mobile touch optimizations */
 @media (max-width: 768px) {
   /* Mobile optimization: Disable hover effects on mobile for better performance */
@@ -199,18 +177,4 @@ body {
 /* Gradual fade for scroll edges */
 .scroll-fade-edges {
   mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
-}
-
-/* Card shimmer animation */
-@keyframes shimmer-slide {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
-}
-
-.animate-shimmer-slide {
-  animation: shimmer-slide 2.5s infinite;
 }

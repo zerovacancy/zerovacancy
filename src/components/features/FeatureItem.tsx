@@ -42,7 +42,7 @@ export const FeatureItem = ({
   const borderColorBase = colorScheme.text.split('-')[1];
   
   // Set a consistent character limit for descriptions - ensure truncation at sentence breaks
-  const shortDescLimit = isMobile ? 100 : 120;
+  const shortDescLimit = isMobile ? 60 : 85;
   const isLongDesc = description.length > shortDescLimit;
   
   // Find the last period, comma, or space before the limit to truncate at a logical break
@@ -54,8 +54,8 @@ export const FeatureItem = ({
     const lastComma = substring.lastIndexOf(',');
     const lastSpace = substring.lastIndexOf(' ');
     
-    if (lastPeriod > limit - 20) return lastPeriod + 1;
-    if (lastComma > limit - 15) return lastComma + 1;
+    if (lastPeriod > limit - 15) return lastPeriod + 1;
+    if (lastComma > limit - 12) return lastComma + 1;
     if (lastSpace > limit - 10) return lastSpace;
     
     return limit;
@@ -66,15 +66,13 @@ export const FeatureItem = ({
   return (
     <motion.div
       className={cn(
-        "relative w-full text-left group",
+        "relative w-full text-left group h-full",
         "bg-white/95 backdrop-blur-sm overflow-hidden",
         "rounded-xl sm:rounded-xl",
-        // Fixed standard height
-        "min-h-[280px] sm:min-h-[300px]",
         // Consistent shadow
         "shadow-sm hover:shadow-md",
         // Consistent padding
-        "p-5 sm:p-6 lg:px-6 lg:py-8",
+        "focus:outline-none focus:ring-2 focus:ring-primary/20",
         // Enhanced hover transition
         isMobile ? "active:translate-y-0" : "hover:-translate-y-1.5",
         "transition-all duration-300",
@@ -83,7 +81,7 @@ export const FeatureItem = ({
         // Add subtle border
         `border border-${borderColorBase}-100 border-opacity-30`,
         // Add some top margin for popular tag
-        isPopular && "mt-5 sm:mt-7 pt-2 sm:pt-3"
+        isPopular && "mt-3 sm:mt-5" 
       )}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ 
@@ -103,24 +101,24 @@ export const FeatureItem = ({
       <button
         onClick={handleClick}
         aria-expanded={isExpanded}
-        className="w-full h-full flex flex-col z-10 relative text-left"
+        className="w-full h-full flex flex-col p-4 sm:p-5 lg:p-6 z-10 relative text-left"
       >
         {/* Popular Tag - Improved positioning to prevent cutoff */}
         {isPopular && (
-          <div className="absolute -top-7 sm:-top-8 inset-x-0 flex justify-center z-20 px-2">
-            <div className="py-1.5 px-3.5 flex items-center gap-1.5 rounded-full bg-gradient-to-r from-brand-purple-medium to-brand-purple text-white text-xs font-medium shadow-md">
-              <Sparkles className="h-3.5 w-3.5" />
+          <div className="absolute -top-4 sm:-top-5 inset-x-0 flex justify-center z-20 px-2">
+            <div className="py-1 px-2.5 flex items-center gap-1 rounded-full bg-gradient-to-r from-brand-purple-medium to-brand-purple text-white text-xs font-medium shadow-md">
+              <Sparkles className="h-3 w-3" />
               <span className="font-medium">Popular</span>
             </div>
           </div>
         )}
         
-        <div className="flex flex-col items-start gap-4 sm:gap-5 h-full">
-          {/* Icon container with consistent sizing */}
+        <div className="flex flex-col items-start gap-3 sm:gap-4 h-full">
+          {/* Icon container with consistent styling */}
           <motion.div 
             className={cn(
               "flex items-center justify-center",
-              "w-14 h-14 sm:w-16 sm:h-16",
+              "w-12 h-12 sm:w-14 sm:h-14",
               "rounded-xl",
               "transition-all duration-300",
               "bg-gradient-to-br",
@@ -133,7 +131,7 @@ export const FeatureItem = ({
             whileHover={{ scale: 1.05, rotate: 5 }}
           >
             <Icon className={cn(
-              "w-7 h-7 sm:w-8 sm:h-8",
+              "w-6 h-6 sm:w-7 sm:h-7",
               "text-white",
               "transition-all duration-300",
               "group-hover:scale-110",
@@ -141,44 +139,42 @@ export const FeatureItem = ({
             )} />
           </motion.div>
           
-          <div className="text-left w-full flex-grow flex flex-col justify-between">
-            <div>
-              {/* Standardized title style */}
-              <h3 className={cn(
-                "text-base sm:text-lg font-bold leading-tight font-space mb-2 sm:mb-3",
-                "text-gray-900",
-                "transition-colors duration-300"
-              )}>
-                {title}
-              </h3>
-              
-              <div className={cn(
-                "w-12 h-0.5 mb-3 sm:mb-4 bg-gradient-to-r",
-                colorScheme.gradient,
-                "rounded-full transition-all duration-300 transform origin-left",
-                "group-hover:w-16"
-              )} />
-              
-              {/* Improved description with proper truncation and line height */}
-              <p className="text-xs sm:text-sm text-gray-600 font-anek leading-relaxed line-clamp-4 sm:line-clamp-3 group-hover:text-gray-700">
-                {isExpanded || !isLongDesc ? 
-                  description : 
-                  (<>
-                    {`${description.substring(0, truncationPoint).trim()}`}
-                    <span className="text-indigo-500"> ...</span>
-                  </>)
-                }
-              </p>
-            </div>
+          <div className="text-left w-full flex-grow flex flex-col">
+            {/* Standardized title style - all black for consistent hierarchy */}
+            <h3 className={cn(
+              "text-base sm:text-lg font-bold leading-tight font-space mb-2",
+              "text-gray-900",
+              "transition-colors duration-300"
+            )}>
+              {title}
+            </h3>
             
-            {/* Action text link positioned at bottom */}
             <div className={cn(
-              "mt-4 pt-2 border-t border-gray-100 text-xs font-medium flex items-center gap-1.5", 
+              "w-10 h-0.5 mb-2 sm:mb-3 bg-gradient-to-r",
+              colorScheme.gradient,
+              "rounded-full transition-all duration-300 transform origin-left",
+              "group-hover:w-16"
+            )} />
+            
+            {/* Standardized description truncation */}
+            <p className="text-xs sm:text-sm text-gray-600 font-anek line-height-[1.6] group-hover:text-gray-700">
+              {isExpanded || !isLongDesc ? 
+                description : 
+                (<>
+                  {`${description.substring(0, truncationPoint).trim()}`}
+                  <span className="text-indigo-500"> ...</span>
+                </>)
+              }
+            </p>
+            
+            {/* Action text link - customized from feature data */}
+            <div className={cn(
+              "mt-2 sm:mt-3 text-xs font-medium flex items-center gap-1.5", 
               colorScheme.text,
               "transition-opacity duration-300"
             )}>
               {actionText || (isExpanded ? "Show less" : "Learn more")} <ChevronRight className={cn(
-                "w-3.5 h-3.5 transition-transform duration-300",
+                "w-3 h-3 transition-transform duration-300",
                 isExpanded ? "rotate-90" : ""
               )} />
             </div>

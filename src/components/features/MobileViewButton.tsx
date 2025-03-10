@@ -17,7 +17,7 @@ export const MobileViewButton = ({
 }: MobileViewButtonProps) => {
   return (
     <motion.div 
-      className={`${isMobile ? 'mt-8' : 'mt-12 sm:mt-14'} flex justify-center ${isMobile && !showAllCards ? 'md:hidden' : ''}`}
+      className={`${isMobile ? 'mt-6' : 'mt-12 sm:mt-14'} flex justify-center ${isMobile && !showAllCards ? 'md:hidden' : ''}`}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
@@ -40,17 +40,17 @@ export const MobileViewButton = ({
         </Button>
       ) : (
         isMobile ? (
-          // Mobile version with enhanced visibility
+          // Mobile version with enhanced shimmer effect
           <motion.button 
             className={cn(
-              "inline-flex items-center justify-center px-6 py-3.5",
+              "inline-flex items-center justify-center px-6 py-3",
               "rounded-lg",
-              "bg-gradient-to-r from-indigo-500 to-purple-500",
-              "text-white font-medium",
-              "border border-indigo-400/20",
-              "shadow-md",
-              "hover:shadow-lg hover:brightness-105 transition-all duration-200",
-              "text-sm w-[90%] mx-auto",
+              "bg-gradient-to-r from-gray-50 to-indigo-50/30",
+              "text-indigo-600/80 font-medium",
+              "border border-indigo-100/50",
+              "shadow-sm",
+              "hover:shadow-md hover:bg-indigo-50/50 transition-all duration-200",
+              "text-sm w-[85%] mx-auto",
               "relative overflow-hidden group",
               "focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             )}
@@ -79,8 +79,8 @@ export const MobileViewButton = ({
               <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
             </span>
             
-            {/* Subtle shimmer effect */}
-            <span className="absolute inset-0 z-0 animate-shimmer-slide bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+            {/* Subtle shimmer effect with enhanced border/glow */}
+            <span className="absolute inset-0 z-0 animate-shimmer-slide bg-gradient-to-r from-transparent via-indigo-100/20 to-transparent border border-indigo-200/30 shadow-[0_0_8px_rgba(129,140,248,0.15)]" />
           </motion.button>
         ) : (
           // Desktop version - keep the original button
