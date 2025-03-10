@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { features } from "./feature-data";
 import { FeatureHeader } from "./FeatureHeader";
 import { BackgroundEffects } from "./BackgroundEffects";
@@ -11,6 +11,12 @@ import { MobileViewButton } from "./MobileViewButton";
 export function FeaturesSectionWithHoverEffects() {
   const isMobile = useIsMobile();
   const [showAllCards, setShowAllCards] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  // Set mounted state on component mount to ensure hydration is complete
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Function to toggle showing all cards
   const toggleShowAllCards = () => {
@@ -18,7 +24,8 @@ export function FeaturesSectionWithHoverEffects() {
   };
 
   // On mobile, show only first 3 cards (including Video Production)
-  const visibleFeatures = isMobile && !showAllCards
+  // Only apply the mobile restriction if isMobile is definitely true (not during hydration)
+  const visibleFeatures = mounted && isMobile === true && showAllCards === false
     ? features.slice(0, 3)
     : features;
 
@@ -53,17 +60,17 @@ export function FeaturesSectionWithHoverEffects() {
           />
 
           {/* Only show mobile button when on mobile */}
-          <div className="w-full">
-            <AnimatePresence>
-              {isMobile && (
+          {mounted && (
+            <div className="w-full">
+              <AnimatePresence>
                 <MobileViewButton
                   showAllCards={showAllCards}
                   toggleShowAllCards={toggleShowAllCards}
                   isMobile={isMobile}
                 />
-              )}
-            </AnimatePresence>
-          </div>
+              </AnimatePresence>
+            </div>
+          )}
         </div>
       </div>
     </BackgroundEffects>

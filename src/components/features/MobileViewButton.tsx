@@ -1,7 +1,7 @@
 
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ChevronDown } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 interface MobileViewButtonProps {
   showAllCards: boolean;
@@ -15,7 +15,8 @@ export const MobileViewButton = ({
   isMobile 
 }: MobileViewButtonProps) => {
   // Only show on mobile when not showing all cards
-  if (!isMobile || showAllCards) {
+  // Strict check for isMobile === true to avoid showing during initial render
+  if (isMobile !== true || showAllCards === true) {
     return null;
   }
 
