@@ -172,21 +172,26 @@ serve(async (req) => {
         console.log(`Preparing to send confirmation email to ${email}`)
         const resend = new Resend(resendApiKey)
 
-        // Generate HTML email template directly
+        // Get username from email
         const userName = email.split('@')[0];
+        
+        // Generate both HTML and plain text email templates
         const emailHtml = generateEmailTemplate(userName);
-        console.log('Email template generated successfully')
+        const emailText = generatePlainTextEmailTemplate(userName);
+        
+        console.log('Email templates generated successfully')
 
         // Updated "from" address to use the verified domain
         const from = 'Team Zero <zero@zerovacancy.ai>'
         console.log(`Sending email from: ${from}`)
 
-        // Send email with enhanced tracking
+        // Send email with both HTML and plain text versions
         emailResult = await resend.emails.send({
           from,
           to: email,
           subject: 'Welcome to the ZeroVacancy Waitlist!',
           html: emailHtml,
+          text: emailText, // Add plain text version
           tags: [{ name: 'source', value: source }]
         })
 
@@ -395,4 +400,26 @@ function generateEmailTemplate(userName: string) {
       </body>
     </html>
   `;
+}
+
+// Function to generate plain text email template
+function generatePlainTextEmailTemplate(userName: string) {
+  return `
+ACCESS CONFIRMED
+
+Hello ${userName || ''},
+
+Your place in ZeroVacancy is secured. We've added you to our priority access list for when we open our doors.
+
+We're building something different—a select network connecting exceptional spaces with the visual creators who know how to capture their true potential.
+
+DISCOVER MORE: https://www.zerovacancy.ai
+
+We're putting the finishing touches on our platform and will notify you when it's time to join. Your early interest gives you priority access to our curated talent pool.
+
+If you have questions or thoughts in the meantime, reply directly to this email. We value your perspective.
+
+Regards,
+ZeroVacancy
+  `.trim();
 }
