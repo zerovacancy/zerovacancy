@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { features } from "./feature-data";
 import { FeatureHeader } from "./FeatureHeader";
-import { BackgroundEffects } from "./BackgroundEffects";
 import { AnimatePresence } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { FeaturesGrid } from "./FeaturesGrid";
@@ -38,9 +37,9 @@ export function FeaturesSectionWithHoverEffects() {
           toggleShowAllCards={toggleShowAllCards}
         />
         
-        {/* View all services button (desktop and mobile) - positioned differently on mobile */}
+        {/* Desktop view all services button (only when not mobile or when mobile and not showing all cards) */}
         <AnimatePresence>
-          {(!isMobile || (isMobile && !showAllCards)) && (
+          {!isMobile && (
             <MobileViewButton
               showAllCards={showAllCards}
               toggleShowAllCards={toggleShowAllCards}

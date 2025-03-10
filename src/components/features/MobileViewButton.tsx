@@ -22,14 +22,14 @@ export const MobileViewButton = ({
 
   return (
     <motion.div 
-      className={`${isMobile ? 'mt-6' : 'mt-12 sm:mt-14'} flex justify-center ${isMobile && !showAllCards ? 'md:hidden' : ''}`}
+      className={`${isMobile ? 'mt-6' : 'mt-12 sm:mt-14'} flex justify-center`}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.5, delay: 0.3 }}
       key="view-all-button"
     >
-      {isMobile && showAllCards ? (
+      {showAllCards ? (
         <Button 
           variant="outline" 
           size="lg"
