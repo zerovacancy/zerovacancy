@@ -104,13 +104,6 @@
       overscroll-behavior: contain;
       overflow-anchor: auto;
     }
-    
-    /* Consistent section container for mobile layouts */
-    .section-container {
-      max-width: 100%;
-      overflow-x: hidden;
-      padding-left: 0.75rem;
-      padding-right: 0.75rem;
-    }
   }
 }
+

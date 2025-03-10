@@ -1,135 +1,183 @@
 
-import React from 'react';
-  import { Button } from '@/components/ui/button';
-  import { useIsMobile } from '@/hooks/use-mobile';
-  import { cn } from '@/lib/utils';
-  import { Border } from '@/components/ui/border-trail';
-  import { AnimatedShinyText } from '@/components/ui/animated-shiny-text';
-  import { motion } from 'framer-motion';
+import React, { useRef, useEffect, useState } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
+import { WaitlistCTA } from "../ui/waitlist-cta";
+import { TextRotate } from "../ui/text-rotate";
 
-  export const Hero = () => {
-    const isMobile = useIsMobile();
+const TITLES = ["Converts", "Captivates", "Drives Leads"];
 
-    return (
-      <div className="relative overflow-hidden">
-        {/* Enhanced mobile spacing with more generous padding */}
-        <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24">
-          <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
-            {/* Text content section with improved spacing and sizing */}
-            <div className="flex-1 text-center lg:text-left">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-              >
-                {/* Larger headline text on mobile */}
-                <h1 className={cn(
-                  "font-bold leading-tight tracking-tight text-gray-900",
-                  isMobile ? "text-4xl mb-6" : "text-4xl sm:text-5xl lg:text-6xl mb-4"
-                )}>
-                  Find <span className="text-indigo-600">talented creators</span> for your real estate content
-                </h1>
-
-                {/* Enhanced subtitle with better spacing and size */}
-                <p className={cn(
-                  "text-gray-600 mx-auto lg:mx-0 max-w-2xl",
-                  isMobile ? "text-xl mb-8 leading-relaxed" : "text-lg sm:text-xl mb-6 leading-relaxed"
-                )}>
-                  Connect with photographers, videographers, and content creators who specialize in showcasing
-  properties at their best.
-                </p>
-
-                {/* Improved CTA section with larger buttons on mobile */}
-                <div className={cn(
-                  "flex gap-4",
-                  isMobile ? "flex-col mb-10" : "flex-row flex-wrap mb-6"
-                )}>
-                  <Button 
-                    size={isMobile ? "xl" : "lg"}
-                    className={cn(
-                      "bg-indigo-600 hover:bg-indigo-700 text-white font-medium",
-                      "shadow-lg hover:shadow-indigo-500/30 transition-all",
-                      isMobile ? "w-full py-6 text-lg" : "px-6"
+export function Hero() {
+  const isMobile = useIsMobile();
+  const sectionRef = useRef<HTMLElement>(null);
+  const [isInView, setIsInView] = useState(false);
+  
+  // Improved intersection observer implementation
+  useEffect(() => {
+    if (!sectionRef.current) return;
+    
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting) {
+          setIsInView(true);
+          // Disconnect after setting to true to avoid unnecessary recalculations
+          observer.disconnect();
+        }
+      },
+      { 
+        threshold: 0.15,
+        rootMargin: '100px' 
+      }
+    );
+    
+    observer.observe(sectionRef.current);
+    
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+  
+  return (
+    <section 
+      ref={sectionRef}
+      className={cn(
+        "flex items-center justify-center flex-col", 
+        "px-4 sm:px-6", 
+        isMobile ? "py-[24px]" : "py-[16px]",
+        isMobile ? "my-[16px]" : "my-[12px]",
+        "min-h-fit sm:min-h-[36vh]",
+        "relative z-10", 
+        isMobile ? "gap-3" : "gap-2",
+        "touch-manipulation will-change-transform",
+        "bg-gradient-to-b from-purple-50 via-indigo-50/60 to-blue-50/30",
+        isInView ? "animate-fade-in" : "opacity-0"
+      )} 
+    >
+      <div 
+        className={cn(
+          "flex flex-col max-w-6xl mx-auto w-full px-[3px]",
+          isMobile ? "gap-3" : "gap-2", 
+          isInView ? "animate-fade-in delay-100" : "opacity-0"
+        )}
+      >
+        <div className="relative">
+          <h1 className={cn(
+            "tracking-tight leading-[1.1] text-center font-bold font-jakarta",
+            isMobile ? "mb-3" : "mb-2"
+          )}>
+            {isMobile ? (
+              <span className="flex flex-col items-center">
+                <span 
+                  className={cn(
+                    "text-primary inline-block font-medium",
+                    "text-2xl sm:text-5xl lg:text-6xl",
+                    "tracking-[-0.02em]", 
+                    "text-brand-purple-dark mb-1"
+                  )}
+                >
+                  Property Content that
+                </span>
+                <span 
+                  className={cn(
+                    "text-3xl sm:text-5xl lg:text-7xl",
+                    "font-bold font-jakarta tracking-[-0.02em]",
+                    "bg-clip-text text-transparent", 
+                    "bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1]"
+                  )}
+                >
+                  Drives Leads
+                </span>
+              </span>
+            ) : (
+              <>
+                <span 
+                  className={cn(
+                    "text-primary inline font-medium",
+                    "text-3xl sm:text-5xl lg:text-6xl",
+                    "tracking-[-0.02em]", 
+                    "text-brand-purple-dark", 
+                    "block sm:inline-block mb-1 sm:mb-0 font-jakarta"
+                  )}
+                >
+                  Property Content that
+                </span>
+                
+                <div 
+                  role="text" 
+                  aria-label="Property Content animation"
+                  className="relative flex w-full justify-center h-[4.5em] sm:h-[3em] md:h-[2.5em] lg:h-[2.5em] overflow-visible mt-1 sm:mt-1"
+                >
+                  <TextRotate
+                    texts={TITLES}
+                    mainClassName="flex justify-center items-center overflow-visible"
+                    staggerFrom="last"
+                    initial={{ y: "100%", opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: "-100%", opacity: 0 }}
+                    staggerDuration={0.02}
+                    splitLevelClassName="overflow-visible"
+                    elementLevelClassName={cn(
+                      "text-4xl sm:text-5xl lg:text-7xl",
+                      "font-bold font-jakarta tracking-[-0.02em]",
+                      "bg-clip-text text-transparent", 
+                      "bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1]",
+                      "overflow-visible"
                     )}
-                  >
-                    Find Creators
-                  </Button>
-                  <Button 
-                    variant="outline"
-                    size={isMobile ? "xl" : "lg"}
-                    className={cn(
-                      "border-indigo-200 hover:border-indigo-300 text-indigo-700 font-medium",
-                      isMobile ? "w-full py-6 text-lg" : "px-6"
-                    )}
-                  >
-                    Learn More
-                  </Button>
+                    transition={{ 
+                      type: "spring", 
+                      damping: 28, 
+                      stiffness: 350
+                    }}
+                    rotationInterval={2200}
+                  />
                 </div>
+              </>
+            )}
+          </h1>
+          
+          {isMobile && (
+            <div className="absolute -inset-2 top-auto bg-gradient-to-b from-purple-50/30 to-transparent -z-10 rounded-xl blur-xl"></div>
+          )}
+        </div>
 
-                {/* Enhanced trust indicators with better spacing */}
-                <div className={cn(
-                  "flex flex-col gap-3",
-                  isMobile ? "mt-8" : "mt-6"
-                )}>
-                  <p className="text-sm font-medium text-gray-500">Trusted by real estate professionals across
-  the country</p>
-                  <div className="flex justify-center lg:justify-start items-center gap-6">
-                    {/* Logos would go here - made more prominent on mobile */}
-                    <div className="h-7 sm:h-8 opacity-70 hover:opacity-100 transition-opacity"></div>
-                  </div>
-                </div>
-              </motion.div>
-            </div>
-
-            {/* Enhanced image section */}
-            <div className={cn(
-              "flex-1 relative",
-              isMobile ? "w-full max-w-full mt-4" : "w-full max-w-xl"
-            )}>
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.7, delay: 0.2 }}
-                className="relative z-10"
-              >
-                {/* Larger image on mobile with enhanced border effect */}
-                <div className={cn(
-                  "rounded-2xl overflow-hidden shadow-2xl",
-                  isMobile ? "mx-auto" : ""
-                )}>
-                  <Border className="p-1 rounded-2xl">
-                    <img 
-                      src="/public/1-d2e3f802.jpg" 
-                      alt="Real estate photography" 
-                      className="w-full h-auto rounded-xl object-cover"
-                    />
-                  </Border>
-                </div>
-
-                {/* Enhanced decorative elements */}
-                <div className="absolute -z-10 -bottom-6 -right-6 w-24 h-24 bg-indigo-100 rounded-full blur-2xl 
-  opacity-80"></div>
-                <div className="absolute -z-10 -top-6 -left-6 w-24 h-24 bg-purple-100 rounded-full blur-2xl 
-  opacity-80"></div>
-              </motion.div>
-
-              {/* Mobile-optimized floating elements with better positioning */}
-              {!isMobile && (
-                <>
-                  <div className="absolute top-10 -right-8 bg-white p-3 rounded-lg shadow-lg">
-                    <AnimatedShinyText className="text-sm font-medium">Premium quality
-  content</AnimatedShinyText>
-                  </div>
-                  <div className="absolute -bottom-4 -left-8 bg-white p-3 rounded-lg shadow-lg">
-                    <AnimatedShinyText className="text-sm font-medium">Fast turnaround times</AnimatedShinyText>
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
+        <div 
+          className={cn(
+            isMobile ? "text-xs" : "text-base lg:text-lg", 
+            isMobile ? "leading-[1.4]" : "leading-[1.5]", 
+            "tracking-normal",
+            "text-brand-text-primary", 
+            "text-center", 
+            "max-w-[500px]",
+            "mx-auto", 
+            "px-2 sm:px-4", 
+            "[word-spacing:0.12em] sm:[word-spacing:0.16em]", 
+            "relative z-10", 
+            isMobile ? "mt-2" : "mt-3",
+            "mb-0", 
+            "font-inter"
+          )}
+        >
+          Connect with expert creators who deliver content that converts. Tailored to your needs and budget.
         </div>
       </div>
-    );
-  };
+      
+      <div 
+        className={cn(
+          "w-full", 
+          isMobile ? "mt-2" : "mt-3",
+          "px-3 sm:px-4",
+          isInView ? "animate-fade-in delay-200" : "opacity-0" 
+        )}
+      >
+        <WaitlistCTA className="mb-2 sm:mb-3" />
+      </div>
+      
+      <div className="absolute bottom-0 left-0 right-0 h-[150px] sm:h-[140px] pointer-events-none opacity-50 overflow-hidden">
+        <div className="absolute bottom-0 left-0 right-0 h-[100px] sm:h-[100px] bg-gradient-to-t from-indigo-100/60 via-purple-50/40 to-transparent" />
+      </div>
+    </section>
+  );
+}
 
-  export default Hero;
+export default Hero;
