@@ -41,14 +41,15 @@ export const PricingContainer = () => {
     }));
   };
   
-  // Helper to group features by category
-  const groupFeaturesByCategory = (features: string[]) => {
-    const result: {[key: string]: string[]} = {};
+  // Modified helper to group features by category, handling object features
+  const groupFeaturesByCategory = (features: Array<{text: string; primary: boolean}>) => {
+    const result: {[key: string]: Array<{text: string; primary: boolean}>} = {};
     let currentCategory = "Core Features";
     
     features.forEach(feature => {
-      if (feature.startsWith("**") && feature.endsWith("**")) {
-        currentCategory = feature.slice(2, -2);
+      // Check if the feature text indicates a category
+      if (feature.text.startsWith("**") && feature.text.endsWith("**")) {
+        currentCategory = feature.text.slice(2, -2);
         if (!result[currentCategory]) {
           result[currentCategory] = [];
         }
@@ -284,7 +285,7 @@ export const PricingContainer = () => {
                                       "h-4 w-4 mt-0.5 flex-shrink-0", 
                                       colorScheme.text
                                     )} />
-                                    <span className="text-sm text-slate-700">{feature}</span>
+                                    <span className="text-sm text-slate-700">{feature.text}</span>
                                   </div>
                                 ))}
                               </div>
@@ -470,7 +471,7 @@ export const PricingContainer = () => {
                                     colorScheme.text
                                   )} />
                                 </span>
-                                <span className="text-sm text-slate-700">{feature}</span>
+                                <span className="text-sm text-slate-700">{feature.text}</span>
                               </div>
                             ))}
                           </div>
