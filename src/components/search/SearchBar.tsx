@@ -19,7 +19,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ value = '', onLocationSele
 
   return (
     <div className="w-full space-y-2 sm:space-y-3">
-      <div className="flex flex-col gap-1.5 sm:gap-3">
+      <div className={cn("flex flex-col gap-1.5 sm:gap-3")}>
         <div className={cn(
           "relative flex flex-col sm:flex-row w-full rounded-lg sm:rounded-xl overflow-hidden",
           "sm:shadow-[0_3px_16px_rgba(0,0,0,0.08)]",
@@ -31,11 +31,6 @@ export const SearchBar: React.FC<SearchBarProps> = ({ value = '', onLocationSele
           {/* Content type select */}
           <ContentTypeSelect />
           
-          {/* Add a more visible divider on mobile */}
-          {isMobile && (
-            <div className="h-px w-full bg-gray-200"></div>
-          )}
-          
           {/* Location input */}
           <LocationInput value={value} onLocationSelect={onLocationSelect} />
           
@@ -46,7 +41,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ value = '', onLocationSele
         {/* Mobile Search Button */}
         <MobileSearchButton />
 
-        {/* Advanced filter section with reduced top spacing */}
+        {/* Advanced filter section */}
         <div className="pt-0 mt-0">
           <SearchFilters
             showMoreFilters={showMoreFilters}

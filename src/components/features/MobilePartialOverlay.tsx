@@ -8,7 +8,8 @@ interface MobilePartialOverlayProps {
 }
 
 export const MobilePartialOverlay = memo(({ 
-  showAllCards
+  showAllCards,
+  toggleShowAllCards
 }: MobilePartialOverlayProps) => {
   if (showAllCards) return null;
   
@@ -18,14 +19,10 @@ export const MobilePartialOverlay = memo(({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.2, ease: "easeOut" }} // Faster animations for mobile
+      transition={{ duration: 0.2 }}
+      onClick={toggleShowAllCards}
       style={{ 
-        pointerEvents: "none",
-        willChange: "opacity", // Hardware acceleration hint
-        transform: "translateZ(0)", // Force GPU rendering
-        backfaceVisibility: "hidden", // Prevent flickering
-        WebkitBackfaceVisibility: "hidden", // For Safari
-        WebkitFontSmoothing: "antialiased", // Smooth rendering
+        cursor: "pointer",
       }}
     />
   );

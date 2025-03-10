@@ -1,5 +1,5 @@
 
-import React, { useRef, useEffect, useState } from 'react';
+import React from 'react';
 import { GradientBlobBackground } from '@/components/ui/gradient-blob-background';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -37,80 +37,33 @@ export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({
   animationSpeed = 'slow',
   id
 }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(true);
   const isMobile = useIsMobile();
   
-  // Mobile optimization - reduce effects when not needed
-  const shouldUseEffects = !isMobile || isVisible;
+  // On mobile, use simpler effects
+  const shouldUseEffects = !isMobile;
   
-  // Optimized intersection observer for better performance
-  useEffect(() => {
-    if (!containerRef.current) return;
-    
-    // Skip heavy observation on mobile devices
-    if (isMobile && 'IntersectionObserver' in window) {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          const [entry] = entries;
-          if (entry.isIntersecting) {
-            setIsVisible(true);
-            // Only observe once for mobile to reduce CPU usage
-            observer.disconnect();
-          }
-        },
-        { 
-          threshold: 0.01, // Very low threshold for mobile
-          rootMargin: '100px' // Smaller margin for better performance
-        }
-      );
-      
-      observer.observe(containerRef.current);
-      
-      return () => {
-        observer.disconnect();
-      };
-    } else {
-      // Desktop devices can handle more effects
-      setIsVisible(true);
-    }
-  }, [isMobile]);
-
-  // Apply reduced animation complexity for mobile
-  const effectiveAnimationSpeed = isMobile ? 'slow' : animationSpeed;
-  const effectiveBlobOpacity = isMobile ? Math.min(blobOpacity, 0.1) : blobOpacity;
-  const effectiveWithSpotlight = isMobile ? false : withSpotlight;
+  if (shouldUseEffects) {
+    return (
+      <GradientBlobBackground 
+        className={cn("overflow-visible", className)}
+        blobColors={blobColors}
+        blobOpacity={blobOpacity}
+        withSpotlight={withSpotlight}
+        spotlightClassName={spotlightClassName}
+        pattern={pattern}
+        baseColor={baseColor}
+        animationSpeed={animationSpeed}
+        id={id}
+      >
+        {children}
+      </GradientBlobBackground>
+    );
+  }
   
+  // On mobile, just render the children with minimal styling
   return (
-    <div 
-      ref={containerRef} 
-      id={id} 
-      className={cn(
-        "relative w-full overflow-hidden",
-        isMobile ? "reduce-animation" : "",
-        className
-      )}
-    >
-      {shouldUseEffects ? (
-        <GradientBlobBackground 
-          className="overflow-visible"
-          blobColors={blobColors}
-          blobOpacity={effectiveBlobOpacity}
-          withSpotlight={effectiveWithSpotlight}
-          spotlightClassName={spotlightClassName}
-          pattern={pattern}
-          baseColor={baseColor}
-          blobSize={isMobile ? "medium" : "large"} // Smaller blobs on mobile
-          animationSpeed={effectiveAnimationSpeed}
-        >
-          {children}
-        </GradientBlobBackground>
-      ) : (
-        // Simplified background for mobile when effects are disabled
-        <div className={cn("relative w-full", baseColor)}>
-          {children}
-        </div>
-      )}
+    <div id={id} className={cn("relative", baseColor, className)}>
+      {children}
     </div>
   );
 };

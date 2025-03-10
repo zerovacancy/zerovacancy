@@ -37,8 +37,6 @@ const NavItem = memo(({ icon, label, to = '/' }: NavItemProps) => {
       style={{
         WebkitTapHighlightColor: "transparent", // Remove tap highlight on mobile
         touchAction: "manipulation", // Optimize for touch
-        willChange: "auto", // Only use will-change when actually changing
-        textRendering: "optimizeSpeed", // Optimize text rendering
       }}
     >
       <IconComponent className="w-5 h-5 sm:w-[22px] sm:h-[22px]" />
@@ -51,10 +49,6 @@ NavItem.displayName = "NavItem";
 
 // Memoized BottomNav component to prevent unnecessary re-renders
 export const BottomNav = memo(() => {
-  // Force return null to hide the bottom nav completely
-  return null; 
-  
-  // The below code is kept but won't execute due to the early return above
   const isMobile = useIsMobile();
   
   if (!isMobile) return null;
@@ -62,13 +56,6 @@ export const BottomNav = memo(() => {
   return (
     <nav 
       className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-lg"
-      style={{
-        willChange: "transform", // Optimize for animations
-        transform: "translateZ(0)", // Force GPU rendering
-        backfaceVisibility: "hidden", // Prevent flickering
-        WebkitBackfaceVisibility: "hidden", // For Safari
-        WebkitFontSmoothing: "antialiased", // Smooth rendering
-      }}
     >
       <div className="flex items-center justify-around w-full mx-auto h-14">
         <NavItem icon="home" label="Home" to="/" />
