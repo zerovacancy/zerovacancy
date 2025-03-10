@@ -3,9 +3,6 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.7.1'
 import { corsHeaders } from "../_shared/cors.ts"
 import { Resend } from "https://esm.sh/resend@1.1.0"
-import React from 'npm:react@18.2.0'
-import { renderAsync } from 'npm:@react-email/render@0.0.7'
-import { WaitlistWelcomeEmail } from "./_templates/WaitlistWelcome.tsx"
 
 serve(async (req) => {
   // Enhanced CORS handling
@@ -175,12 +172,10 @@ serve(async (req) => {
         console.log(`Preparing to send confirmation email to ${email}`)
         const resend = new Resend(resendApiKey)
 
-        // Render the React Email template to HTML
-        console.log('Rendering email template')
-        const emailHtml = await renderAsync(
-          React.createElement(WaitlistWelcomeEmail, { userEmail: email })
-        )
-        console.log('Email template rendered successfully')
+        // Generate HTML email template directly
+        const userName = email.split('@')[0];
+        const emailHtml = generateEmailTemplate(userName);
+        console.log('Email template generated successfully')
 
         // Updated "from" address to use the verified domain
         const from = 'Team Zero <zero@zerovacancy.ai>'
@@ -269,3 +264,135 @@ serve(async (req) => {
     )
   }
 })
+
+// Function to generate email HTML template
+function generateEmailTemplate(userName: string) {
+  return `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="color-scheme" content="light dark">
+        <meta name="supported-color-schemes" content="light dark">
+        <title>ZeroVacancy Waitlist Confirmation</title>
+        <style>
+          body {
+            background-color: #f5f5f5;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            word-spacing: normal;
+            margin: 0;
+            padding: 0;
+          }
+          .container {
+            margin: 0 auto;
+            padding: 20px 0 48px;
+            max-width: 600px;
+          }
+          .logo-container {
+            padding: 0;
+            text-align: center;
+          }
+          .img-style {
+            border: 0;
+            display: block;
+            outline: none;
+            text-decoration: none;
+            height: auto;
+            width: 100%;
+          }
+          .divider {
+            border-color: #E5E7EB;
+            margin: 20px 0;
+            border-top: 1px solid #E5E7EB;
+          }
+          .section {
+            padding: 0 24px;
+          }
+          .heading {
+            font-size: 24px;
+            font-weight: 600;
+            color: #111827;
+            letter-spacing: -0.025em;
+            line-height: 1.25;
+            padding: 0;
+            margin: 24px 0;
+          }
+          .paragraph {
+            font-size: 16px;
+            line-height: 1.5;
+            color: #4B5563;
+            margin: 16px 0;
+          }
+          .cta-section {
+            text-align: center;
+            margin: 32px 0;
+          }
+          .button {
+            background-color: #1d4ed8;
+            border-radius: 4px;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+            padding: 12px 20px;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="logo-container">
+            <img 
+              src="https://zerovacancy.ai/emaillogo.png" 
+              width="600" 
+              height="auto" 
+              alt="ZeroVacancy" 
+              class="img-style"
+            />
+          </div>
+          
+          <hr class="divider" />
+          
+          <div class="section">
+            <h1 class="heading">Access Confirmed</h1>
+            
+            <p class="paragraph">
+              Hello ${userName || ''},
+            </p>
+            
+            <p class="paragraph">
+              Your place in ZeroVacancy is secured. We've added you to our priority access list for when we open our doors.
+            </p>
+            
+            <p class="paragraph">
+              We're building something different—a select network connecting exceptional spaces with the visual creators who know how to capture their true potential.
+            </p>
+            
+            <div class="cta-section">
+              <a 
+                href="https://www.zerovacancy.ai" 
+                class="button"
+              >
+                Discover More
+              </a>
+            </div>
+
+            <p class="paragraph">
+              We're putting the finishing touches on our platform and will notify you when it's time to join. Your early interest gives you priority access to our curated talent pool.
+            </p>
+
+            <p class="paragraph">
+              If you have questions or thoughts in the meantime, reply directly to this email. We value your perspective.
+            </p>
+
+            <p class="paragraph">
+              Regards,<br />
+              ZeroVacancy
+            </p>
+          </div>
+        </div>
+      </body>
+    </html>
+  `;
+}
