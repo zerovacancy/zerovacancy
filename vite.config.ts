@@ -1,3 +1,4 @@
+
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
@@ -20,7 +21,9 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-      // Only keep essential aliases
+      // Force specific module resolution for react-email components
+      "@react-email/components": path.resolve(__dirname, "node_modules/@react-email/components"),
+      "@react-email/render": path.resolve(__dirname, "node_modules/@react-email/render"),
       "react": path.resolve(__dirname, "node_modules/react"),
       "react-dom": path.resolve(__dirname, "node_modules/react-dom")
     },
@@ -28,8 +31,8 @@ export default defineConfig(({ mode }) => ({
     dedupe: ['react', 'react-dom'],
   },
   optimizeDeps: {
-    include: ['react', 'react-dom'],
-    // Force consistent React version
+    include: ['react', 'react-dom', '@react-email/components', '@react-email/render'],
+    // Force React Email components to use the main project's React version
     force: true,
     esbuildOptions: {
       // Fix for nested dependencies that use different React versions
@@ -56,6 +59,9 @@ export default defineConfig(({ mode }) => ({
         manualChunks: (id) => {
           if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) {
             return 'react-vendor';
+          }
+          if (id.includes('node_modules/@react-email')) {
+            return 'react-email-vendor';
           }
         },
       },
