@@ -6,7 +6,7 @@ export interface LocationSuggestion {
   type: 'city' | 'zip';
 }
 
-// Expanded list of major US cities with improved zip code types
+// Expanded list of major US cities
 export const majorUSLocations: LocationSuggestion[] = [
   { city: "New York", state: "NY", zip: "10001", type: 'city' },
   { city: "Los Angeles", state: "CA", zip: "90001", type: 'city' },
@@ -22,13 +22,7 @@ export const majorUSLocations: LocationSuggestion[] = [
   { city: "Jacksonville", state: "FL", zip: "32201", type: 'city' },
   { city: "Fort Worth", state: "TX", zip: "76101", type: 'city' },
   { city: "Columbus", state: "OH", zip: "43201", type: 'city' },
-  { city: "San Francisco", state: "CA", zip: "94101", type: 'city' },
-  // Adding explicit zip code entries for better search
-  { city: "New York", state: "NY", zip: "10001", type: 'zip' },
-  { city: "Los Angeles", state: "CA", zip: "90001", type: 'zip' },
-  { city: "Chicago", state: "IL", zip: "60601", type: 'zip' },
-  { city: "Houston", state: "TX", zip: "77001", type: 'zip' },
-  { city: "Phoenix", state: "AZ", zip: "85001", type: 'zip' }
+  { city: "San Francisco", state: "CA", zip: "94101", type: 'city' }
 ];
 
 export interface GroupedSuggestions {
@@ -45,8 +39,9 @@ export const filterLocations = (query: string): GroupedSuggestions => {
   }
 
   const matchedLocations = majorUSLocations.filter(location => {
+    const cityState = `${location.city}, ${location.state}`.toLowerCase();
     const cityMatch = location.city.toLowerCase().includes(searchTerm);
-    const stateMatch = location.state.toLowerCase() === searchTerm;
+    const stateMatch = location.state.toLowerCase().includes(searchTerm);
     const zipMatch = location.zip.includes(searchTerm);
     
     return cityMatch || stateMatch || zipMatch;
@@ -61,7 +56,6 @@ export const filterLocations = (query: string): GroupedSuggestions => {
     .filter(loc => loc.type === 'zip' || loc.zip.includes(searchTerm))
     .slice(0, 3);
 
-  console.log('Filtered locations:', { cities, zipCodes });
-  
   return { cities, zipCodes };
 };
+

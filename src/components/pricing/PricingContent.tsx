@@ -1,109 +1,143 @@
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { motion } from "framer-motion";
-import { PricingToggle } from "./PricingToggle";
-import { PricingCard } from "./card/PricingCard";
 import { PricingInteraction } from "./PricingInteraction";
-import { PricingFeature } from "./types";
+import { PricingCardList } from "./PricingCardList";
+import { PricingToggle } from "./PricingToggle";
+import { ColorVariant } from "./PricingCardColors";
+import { PRICING, SAVINGS, FEATURES, VALUE_PROPOSITIONS, PLAN_DESCRIPTIONS, PLAN_CTAS } from "./pricingData";
 
-export interface PricingContentProps {
+interface PricingContentProps {
   subscription: any;
   isLoading: boolean;
 }
 
-export const PricingContent: React.FC<PricingContentProps> = ({
-  subscription,
-  isLoading
-}) => {
+export const PricingContent = ({ subscription, isLoading }: PricingContentProps) => {
+  const [isYearly, setIsYearly] = useState(true);
   const isMobile = useIsMobile();
-  
-  // Mock pricing plans data with correctly typed features
-  const plans = [
-    {
-      title: "Free",
-      features: [
-        { text: "**Core Features**", category: "header" },
-        { text: "Up to 3 properties" },
-        { text: "Basic listing details" },
-        { text: "Standard support" },
-      ] as PricingFeature[],
-      showPopular: false,
-    },
+
+  // Plans data for the interaction component
+  const pricingPlans = [
     {
       title: "Basic",
-      features: [
-        { text: "**Core Features**", category: "header" },
-        { text: "Up to 10 properties" },
-        { text: "Enhanced listing details" },
-        { text: "Priority support" },
-        { text: "**Marketing Tools**", category: "header" },
-        { text: "Social media sharing" },
-        { text: "Basic analytics dashboard" },
-      ] as PricingFeature[],
-      showPopular: true,
+      price: 0,
+      features: FEATURES.free
     },
     {
       title: "Professional",
-      features: [
-        { text: "**Core Features**", category: "header" },
-        { text: "Unlimited properties" },
-        { text: "Premium listing details" },
-        { text: "24/7 support" },
-        { text: "**Marketing Tools**", category: "header" },
-        { text: "Advanced analytics dashboard" },
-        { text: "SEO-Optimized descriptions", tooltip: "Content optimized to rank higher in search results for property listings" },
-        { text: "**Content Creation**", category: "header" },
-        { text: "plus: 3 monthly content pieces", primary: true },
-      ] as PricingFeature[],
-      showPopular: false,
+      price: isYearly ? PRICING.starterAnnual : PRICING.starterMonthly,
+      showPopular: true,
+      features: FEATURES.starter
     },
+    {
+      title: "Premium",
+      price: isYearly ? PRICING.proAnnual : PRICING.proMonthly,
+      features: FEATURES.pro
+    }
+  ];
+
+  // Pricing cards data with enhanced details for better conversion and categorized features
+  const pricingCards = [
+    {
+      title: "Basic",
+      price: 0,
+      interval: isYearly ? "mo" : "mo",
+      description: PLAN_DESCRIPTIONS.basic,
+      features: [
+        "**Access & Discovery**", 
+        "Browse & Discover Content Creators - Explore available photographers, videographers, and media professionals.",
+        "Limited Access to Creator Profiles - View portfolios to assess style and quality.",
+        "Preview Marketplace Features - Get familiar with the platform before upgrading."
+      ],
+      cta: "Start for Free",
+      color: "blue" as ColorVariant,
+      valueProposition: VALUE_PROPOSITIONS.basic,
+      footerText: PLAN_CTAS.basic
+    },
+    {
+      title: "Professional",
+      price: isYearly ? PRICING.starterAnnual : PRICING.starterMonthly,
+      interval: isYearly ? "mo" : "mo",
+      description: PLAN_DESCRIPTIONS.professional,
+      features: [
+        "**Submit Requests for Proposals (RFPs)**", 
+        "Connect directly with top-tier creators to get competitive offers.",
+        "Browse & Hire Premium Creators - Access vetted professionals for high-quality photography and video.",
+        "1 Revision Included Per Project - Ensure content meets your expectations.",
+        "**Content Optimization**",
+        "Social Media Optimized Content - Get media tailored for Instagram, Facebook, LinkedIn, and more.",
+        "SEO-Optimized Content - Improve your property's visibility in search results.",
+        "Geo-Targeted Content - Target potential renters/buyers in specific locations for better engagement."
+      ],
+      cta: "Choose Professional",
+      highlighted: true,
+      color: "purple" as ColorVariant,
+      showPopularTag: true,
+      valueProposition: VALUE_PROPOSITIONS.professional,
+      footerText: PLAN_CTAS.professional
+    },
+    {
+      title: "Premium",
+      price: isYearly ? PRICING.proAnnual : PRICING.proMonthly,
+      interval: isYearly ? "mo" : "mo",
+      description: PLAN_DESCRIPTIONS.premium,
+      features: [
+        "**Premium Requests & Access**",
+        "Submit Requests for Proposals (RFPs) Instantly - Connect with elite creators faster.",
+        "Browse & Hire Premium Creators - Work with top-rated professionals for stunning visuals.",
+        "3 Revisions Included Per Project - Get the perfect content without extra costs.",
+        "**Advanced Content Optimization**",
+        "Social Media Optimized Content - High-performing visuals and videos for social platforms.",
+        "SEO-Optimized Content - Rank higher in searches and attract more organic traffic.",
+        "Geo-Targeted Content - Precision targeting ensures your content reaches the right audience.",
+        "Marketing Channel Optimization - Content fine-tuned for maximum performance on email, listings, ads & more.",
+        "**Premium Benefits**",
+        "7-Day Money-Back Guarantee - Try risk-free, ensuring total satisfaction.",
+        "Performance Insights Dashboard - Track engagement and effectiveness of your marketing assets."
+      ],
+      cta: "Upgrade to Premium",
+      color: "emerald" as ColorVariant,
+      valueProposition: VALUE_PROPOSITIONS.premium,
+      footerText: PLAN_CTAS.premium
+    }
   ];
 
   return (
-    <div className="mt-12 lg:mt-16">
-      {/* Pricing cards container */}
-      {isMobile ? (
-        <PricingInteraction
-          starterMonth={49}
-          starterAnnual={490}
-          proMonth={99}
-          proAnnual={990}
-          plans={plans.slice(1, 3)}
-        />
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          {plans.map((plan, index) => (
-            <PricingCard
-              key={plan.title}
-              title={plan.title}
-              price={index === 0 ? 0 : index === 1 ? 49 : 99}
-              interval="month"
-              description="Great for getting started"
-              features={plan.features}
-              cta={index === 0 ? "Get Started Free" : "Choose Plan"}
-              highlighted={plan.showPopular}
-              showPopularTag={plan.showPopular}
-              valueProposition={
-                index === 0
-                  ? "Perfect for exploring"
-                  : index === 1
-                  ? "Ideal for growing teams"
-                  : "Best for established businesses"
-              }
-              footerText={
-                index === 2
-                  ? "7-day money-back guarantee"
-                  : undefined
-              }
-              subscription={subscription}
-              isLoading={isLoading}
-              isCurrentPlan={false}
-            />
-          ))}
+    <>
+      {/* Pricing Toggle - Desktop Only */}
+      {!isMobile && (
+        <div className="flex justify-center mt-10 mb-12">
+          <PricingToggle 
+            isYearly={isYearly} 
+            setIsYearly={setIsYearly}
+          />
         </div>
       )}
-    </div>
+      
+      {/* Pricing Cards with increased vertical spacing */}
+      <div className="mt-8 sm:mt-10">
+        {isMobile ? (
+          <div className="flex justify-center">
+            <PricingInteraction 
+              starterMonth={PRICING.starterMonthly}
+              starterAnnual={PRICING.starterAnnual}
+              proMonth={PRICING.proMonthly}
+              proAnnual={PRICING.proAnnual}
+              plans={pricingPlans}
+            />
+          </div>
+        ) : (
+          <PricingCardList 
+            cards={pricingCards.map(card => ({
+              ...card,
+              interval: isYearly ? "mo, billed annually" : "mo"
+            }))} 
+            subscription={subscription}
+            isLoading={isLoading}
+          />
+        )}
+      </div>
+    </>
   );
 };

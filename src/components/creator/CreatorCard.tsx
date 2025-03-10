@@ -13,7 +13,6 @@ import { CreatorInfo } from './CreatorInfo';
 import { CreatorMedia } from './CreatorMedia';
 import { CreatorTags, getDefaultTags } from './CreatorTags';
 import type { CreatorCardProps } from './types';
-import { GlowingEffect } from '../ui/glowing-effect';
 
 export const CreatorCard: React.FC<CreatorCardProps> = ({ 
   creator, 
@@ -23,52 +22,31 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
 }) => {
   const isMobile = useIsMobile();
   const [showEmailDialog, setShowEmailDialog] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
   
   const tags = creator.tags || getDefaultTags(creator.name, creator.services);
   
   return (
-    <article 
-      className="group select-text h-full"
-      onMouseEnter={() => !isMobile && setIsHovered(true)}
-      onMouseLeave={() => !isMobile && setIsHovered(false)}
-    >
+    <article className="group select-text h-full">
       <div className="relative h-full">
-        {!isMobile && (
-          <div className="absolute -inset-0.5 sm:-inset-0.5 rounded-xl bg-gradient-to-r from-purple-800/30 via-indigo-700/30 to-purple-900/30 opacity-60 sm:opacity-75 blur-[2px] sm:blur-sm group-hover:opacity-100 transition duration-500"></div>
-        )}
+        <div className="absolute -inset-0.5 sm:-inset-0.5 rounded-xl bg-gradient-to-r from-purple-800/30 via-indigo-700/30 to-purple-900/30 opacity-60 sm:opacity-75 blur-[2px] sm:blur-sm group-hover:opacity-100 transition duration-500"></div>
         <Card className={cn(
           "overflow-hidden h-full",
-          !isMobile && "will-change-transform transition-all duration-300",
-          !isMobile && "hover:translate-y-[-4px] hover:scale-[1.02]",
+          "will-change-transform transition-all duration-300",
+          "hover:translate-y-[-4px] hover:scale-[1.02]",
           "bg-white border border-gray-200/80",
           "shadow-[0_2px_8px_rgba(0,0,0,0.05)]",
-          !isMobile && "hover:shadow-[0_12px_24px_rgba(0,0,0,0.12)]",
+          "hover:shadow-[0_12px_24px_rgba(0,0,0,0.12)]",
           "rounded-xl relative"
         )}>
           {/* Card content - Border beam and glowing effect */}
-          {!isMobile && (
-            <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden rounded-xl">
-              <BorderBeam 
-                colorFrom="#9370DB" 
-                colorTo="#C19EF9" 
-                duration={isMobile ? 30 : 20}
-                borderWidth={isMobile ? 0.5 : 1}
-              />
-              <GlowingEffect 
-                variant="default" 
-                blur={isMobile ? 3 : 6} 
-                glow={isHovered}
-                spread={isMobile ? 10 : 18}
-                borderWidth={isMobile ? 0.5 : 1}
-                movementDuration={1.5}
-                className={cn(
-                  "transition-opacity duration-300",
-                  isHovered ? "opacity-100" : "opacity-0"
-                )}
-              />
-            </div>
-          )}
+          <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden rounded-xl">
+            <BorderBeam 
+              colorFrom="#9370DB" 
+              colorTo="#C19EF9" 
+              duration={isMobile ? 30 : 20}
+              borderWidth={isMobile ? 0.5 : 1}
+            />
+          </div>
 
           {/* Price tag - Fixed for mobile */}
           <div className="absolute top-3 sm:top-3.5 right-3 sm:right-3.5 z-20">
@@ -78,8 +56,8 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               "bg-white/90 shadow-md border border-white/40",
               "text-[#212121] rounded-full",
               "shadow-[0_3px_8px_rgba(0,0,0,0.12)]",
-              !isMobile && "transition-all duration-200",
-              !isMobile && "group-hover:scale-105 group-hover:shadow-[0_4px_10px_rgba(0,0,0,0.18)]"
+              "transition-all duration-200",
+              "group-hover:scale-105 group-hover:shadow-[0_4px_10px_rgba(0,0,0,0.18)]"
             )}>
               From ${creator.price}
             </span>
@@ -116,12 +94,14 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               
               {/* Rating section with more compact layout for mobile */}
               <div className="bg-gray-50/80 rounded-lg px-3 py-2 shadow-sm relative">
-                <CreatorRating 
-                  rating={creator.rating} 
-                  reviews={creator.reviews} 
-                  name={creator.name} 
-                  availabilityStatus={creator.availabilityStatus}
-                />
+                <div className="flex justify-between items-center">
+                  <CreatorRating 
+                    rating={creator.rating} 
+                    reviews={creator.reviews} 
+                    name={creator.name} 
+                    availabilityStatus={creator.availabilityStatus}
+                  />
+                </div>
               </div>
               
               {/* CTA button section with adjusted spacing for mobile */}
@@ -130,18 +110,14 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               )}>
                 <ShimmerButton 
                   onClick={() => setShowEmailDialog(true)}
-                  aria-label={`Join The Collective to work with ${creator.name}`}
+                  aria-label={`Join waitlist to work with ${creator.name}`}
                   className={cn(
-                    "w-full text-sm px-4",
-                    !isMobile && "hover:scale-[1.03] active:scale-[0.98] transition-transform duration-200 group-hover:animate-pulse-subtle",
+                    "w-full text-sm px-4 hover:scale-[1.03] active:scale-[0.98] transition-transform duration-200 group-hover:animate-pulse-subtle",
                     isMobile ? "h-10" : "h-10 sm:h-11", // Adjusted height for mobile
                   )}
                 >
-                  <span>Join The Collective</span>
-                  <ArrowRight className={cn(
-                    "w-4 h-4 ml-2", 
-                    !isMobile && "group-hover:translate-x-1 transition-transform duration-300"
-                  )} aria-hidden="true" />
+                  <span>Join Waitlist</span>
+                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform duration-300" aria-hidden="true" />
                 </ShimmerButton>
               </div>
             </div>

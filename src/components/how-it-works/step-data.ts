@@ -7,8 +7,8 @@ import React from 'react';
 export const steps: Step[] = [
   {
     icon: React.createElement(Search, { className: "w-5 h-5" }),
-    title: "DISCOVER",
-    description: "Explore our curated network of visionaries whose lenses and perspectives reshape how people experience spaces.",
+    title: "Search & Filter",
+    description: "Find your perfect creator match based on specific needs and requirements",
     number: "01",
     iconClass: "text-violet-600 bg-violet-50",
     numberClass: "bg-violet-600 text-white",
@@ -23,8 +23,8 @@ export const steps: Step[] = [
   },
   {
     icon: React.createElement(Users, { className: "w-5 h-5" }),
-    title: "CONNECT",
-    description: "Immerse yourself in creative portfolios that reveal each creator's unique perspective on architectural storytelling.",
+    title: "Review & Compare",
+    description: "Browse portfolios and reviews to find the perfect match for your project",
     number: "02",
     iconClass: "text-blue-600 bg-blue-50",
     numberClass: "bg-blue-600 text-white",
@@ -39,8 +39,8 @@ export const steps: Step[] = [
   },
   {
     icon: React.createElement(Calendar, { className: "w-5 h-5" }),
-    title: "COLLABORATE",
-    description: "Lock in your vision with transparent investment structures. Your creative capital remains in escrow until your vision materializes.",
+    title: "Book & Pay",
+    description: "Schedule securely with protected payments",
     number: "03",
     iconClass: "text-amber-600 bg-amber-50",
     numberClass: "bg-amber-600 text-white",
@@ -55,8 +55,8 @@ export const steps: Step[] = [
   },
   {
     icon: React.createElement(FileCheck, { className: "w-5 h-5" }),
-    title: "TRANSFORM",
-    description: "Receive visual assets that transcend traditional property marketing and create emotional connections with your ideal audience.",
+    title: "Get Content",
+    description: "Receive and approve deliverables through our streamlined process",
     number: "04",
     iconClass: "text-emerald-600 bg-emerald-50",
     numberClass: "bg-emerald-600 text-white",

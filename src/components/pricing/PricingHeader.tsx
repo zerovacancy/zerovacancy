@@ -1,3 +1,4 @@
+
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -29,30 +30,29 @@ const PricingHeader = ({
             <div className={cn(
               "inline-flex items-center px-4 py-1.5 rounded-full",
               "bg-gradient-to-r from-indigo-50 to-violet-50 border border-indigo-100/50",
-              "text-indigo-800 text-sm font-medium uppercase font-space",
-              "shadow-sm"
+              "text-indigo-800 text-sm font-medium shadow-sm"
             )}>
-              Premium Quality
+              Simple & Transparent
             </div>
           </div>
         </div>
         
         {/* Main title */}
         <h2 className={cn(
-          "heading-2",
-          "mb-4",
+          "font-bold text-slate-900 mb-4 tracking-tight",
+          isMobile ? "text-3xl" : "text-4xl",
           "bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-700"
         )}>
           {title}
         </h2>
         
         {/* Decorative element under the heading */}
-        <div className="section-title-decoration" />
+        <div className="w-20 h-1.5 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full mx-auto mb-6" />
         
         {/* Subtitle */}
         <p className={cn(
-          "paragraph-base",
-          isMobile ? "px-4" : ""
+          "mx-auto text-slate-600 leading-relaxed",
+          isMobile ? "text-sm px-4" : "text-lg"
         )}>
           {subtitle}
         </p>

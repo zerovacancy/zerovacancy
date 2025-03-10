@@ -1,4 +1,3 @@
-
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
@@ -37,7 +36,7 @@ const CardTitle = React.forwardRef<
   <h3
     ref={ref}
     className={cn(
-      "text-2xl font-semibold leading-none tracking-tight font-space",
+      "text-2xl font-semibold leading-none tracking-tight",
       className
     )}
     {...props}
@@ -51,7 +50,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("text-sm text-muted-foreground font-inter", className)}
+    className={cn("text-sm text-muted-foreground", className)}
     {...props}
   />
 ))

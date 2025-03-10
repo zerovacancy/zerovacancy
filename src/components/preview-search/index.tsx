@@ -4,13 +4,11 @@ import { cn } from '@/lib/utils';
 import { PreviewCard } from './PreviewCard';
 import { PreviewHeader } from './PreviewHeader';
 import { PreviewContent } from './PreviewContent';
-import type { AvailabilityStatus } from '../creator/types';
 
 const PreviewSearch = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
-  const [selectedLocation, setSelectedLocation] = useState<string>('');
   
   useEffect(() => {
     if (!containerRef.current) return;
@@ -44,11 +42,6 @@ const PreviewSearch = () => {
     setLoadedImages(prev => new Set([...prev, imagePath]));
   };
 
-  const handleLocationSelect = (location: string) => {
-    console.log('Location selected in PreviewSearch:', location);
-    setSelectedLocation(location);
-  };
-
   const creatorData = [
     {
       name: "Emily Johnson",
@@ -58,8 +51,7 @@ const PreviewSearch = () => {
       reviews: 127,
       location: "New York, NY",
       image: "/newemilyprofile.jpg",
-      workExamples: ["/1-d2e3f802.jpg"],
-      availabilityStatus: 'available-now' as AvailabilityStatus
+      workExamples: ["/1-d2e3f802.jpg"]
     }, 
     {
       name: "Jane Cooper",
@@ -69,8 +61,7 @@ const PreviewSearch = () => {
       reviews: 98,
       location: "Los Angeles, CA",
       image: "/janeprofile.png",
-      workExamples: ["/janesub.jpg", "/janesub2.png", "/janesub3.webp"],
-      availabilityStatus: 'available-tomorrow' as AvailabilityStatus
+      workExamples: ["/janesub.jpg", "/janesub2.png", "/janesub3.webp"]
     }, 
     {
       name: "Michael Brown",
@@ -80,8 +71,7 @@ const PreviewSearch = () => {
       reviews: 82,
       location: "Chicago, IL",
       image: "/emily profile.jpeg",
-      workExamples: ["/1-d2e3f802.jpg"],
-      availabilityStatus: 'premium-only' as AvailabilityStatus
+      workExamples: ["/1-d2e3f802.jpg"]
     }
   ];
 
@@ -100,16 +90,14 @@ const PreviewSearch = () => {
 
         <PreviewCard isVisible={isVisible}>
           <PreviewHeader 
-            title="FIND YOUR CREATIVE COLLABORATOR"
-            subtitle="Because extraordinary spaces deserve extraordinary storytellers"
+            title="Find Your Perfect Creator"
+            subtitle="Connect with professionals who showcase your property perfectly"
           />
           <PreviewContent 
             isVisible={isVisible}
             loadedImages={loadedImages}
             handleImageLoad={handleImageLoad}
             creatorData={creatorData}
-            locationValue={selectedLocation}
-            onLocationSelect={handleLocationSelect}
           />
         </PreviewCard>
       </div>

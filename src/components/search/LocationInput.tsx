@@ -1,3 +1,4 @@
+
 import React, { useState, ChangeEvent, useRef, useEffect } from 'react';
 import { MapPin, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -18,7 +19,6 @@ export const LocationInput: React.FC<LocationInputProps> = ({ value, onLocationS
   const [isLoading, setIsLoading] = useState(false);
   const suggestionsRef = useRef<HTMLDivElement>(null);
   const searchDebounceRef = useRef<NodeJS.Timeout>();
-  const inputRef = useRef<HTMLInputElement>(null);
   const isMobile = useIsMobile();
 
   useEffect(() => {
@@ -37,9 +37,7 @@ export const LocationInput: React.FC<LocationInputProps> = ({ value, onLocationS
 
     searchDebounceRef.current = setTimeout(() => {
       if (newValue.length >= 2) {
-        console.log('Filtering locations for:', newValue);
         const filtered = filterLocations(newValue);
-        console.log('Filtered results:', filtered);
         setSuggestions(filtered);
         setShowSuggestions(true);
       } else {
@@ -89,24 +87,11 @@ export const LocationInput: React.FC<LocationInputProps> = ({ value, onLocationS
     onLocationSelect('');
     setSuggestions({ cities: [], zipCodes: [] });
     setShowSuggestions(false);
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
-  };
-
-  // Handle focus to show suggestions if there's input text
-  const handleFocus = () => {
-    if (inputValue.length >= 2) {
-      const filtered = filterLocations(inputValue);
-      setSuggestions(filtered);
-      setShowSuggestions(true);
-    }
   };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (suggestionsRef.current && !suggestionsRef.current.contains(event.target as Node) && 
-          inputRef.current && !inputRef.current.contains(event.target as Node)) {
+      if (suggestionsRef.current && !suggestionsRef.current.contains(event.target as Node)) {
         setShowSuggestions(false);
       }
     };
@@ -131,13 +116,11 @@ export const LocationInput: React.FC<LocationInputProps> = ({ value, onLocationS
         "group-hover:text-indigo-500"
       )} />
       <input
-        ref={inputRef}
         type="text"
-        placeholder="[Property location]"
+        placeholder="Enter city or zip code"
         value={inputValue}
         onChange={handleLocationChange}
         onKeyDown={handleKeyDown}
-        onFocus={handleFocus}
         className={cn(
           "w-full h-12 sm:h-12 pl-11 pr-10", // Increased height and padding
           "bg-white text-sm text-gray-700",
@@ -167,7 +150,7 @@ export const LocationInput: React.FC<LocationInputProps> = ({ value, onLocationS
         </button>
       )}
 
-      {(showSuggestions && (suggestions.cities.length > 0 || suggestions.zipCodes.length > 0 || isLoading)) && (
+      {showSuggestions && (
         <LocationSuggestions
           suggestions={suggestions}
           searchTerm={inputValue}

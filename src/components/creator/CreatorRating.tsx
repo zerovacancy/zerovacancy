@@ -24,17 +24,17 @@ export const CreatorRating: React.FC<CreatorRatingProps> = ({
     'available-now': {
       text: 'Available Now',
       icon: <Calendar className="w-3 h-3 mr-1 text-emerald-500" />,
-      className: 'border-green-100/50 availability-indicator'
+      className: 'border-green-100/50'
     },
     'available-tomorrow': {
       text: 'Available Tomorrow',
       icon: <Clock className="w-3 h-3 mr-1 text-amber-500" />,
-      className: 'border-amber-100/50 tomorrow-status'
+      className: 'border-amber-100/50'
     },
     'premium-only': {
       text: 'Premium Only',
       icon: <Crown className="w-3 h-3 mr-1 text-purple-500" />,
-      className: 'border-purple-100/50 premium-status'
+      className: 'border-purple-100/50'
     }
   };
   
@@ -53,7 +53,7 @@ export const CreatorRating: React.FC<CreatorRatingProps> = ({
         
         {/* Rating text */}
         <span className={cn(
-          "font-medium text-gray-800 font-inter",
+          "font-medium text-gray-800",
           isMobile ? "text-xs" : "text-sm"
         )}>
           {rating.toFixed(1)}
@@ -62,7 +62,7 @@ export const CreatorRating: React.FC<CreatorRatingProps> = ({
         {/* Review count */}
         {reviews > 0 && (
           <span className={cn(
-            "text-gray-500 ml-1.5 font-inter",
+            "text-gray-500 ml-1.5",
             isMobile ? "text-xs" : "text-sm"
           )}>
             ({reviews})
@@ -71,7 +71,7 @@ export const CreatorRating: React.FC<CreatorRatingProps> = ({
       </div>
       
       {/* Availability Indicator */}
-      {availabilityStatus && (
+      {availabilityStatus && availabilityConfig[availabilityStatus] && (
         <div className={cn(
           "flex items-center justify-center",
           "bg-[rgba(245,247,250,0.85)] backdrop-blur-[4px]",
@@ -80,14 +80,11 @@ export const CreatorRating: React.FC<CreatorRatingProps> = ({
           "text-xs font-medium",
           "text-gray-600",
           "shadow-[0_1px_3px_rgba(0,0,0,0.08)]",
-          "flex-shrink-0", // Add this to prevent the badge from shrinking
-          "min-w-fit", // Ensure minimum width based on content
-          "z-10", // Ensure the badge stays on top
-          "font-space", // Use Space Grotesk font
-          availabilityConfig[availabilityStatus]?.className || ""
+          isMobile ? "" : "text-xs",
+          availabilityConfig[availabilityStatus].className
         )}>
-          {availabilityConfig[availabilityStatus]?.icon}
-          <span className="whitespace-nowrap">{availabilityConfig[availabilityStatus]?.text}</span>
+          {availabilityConfig[availabilityStatus].icon}
+          <span>{availabilityConfig[availabilityStatus].text}</span>
         </div>
       )}
     </div>

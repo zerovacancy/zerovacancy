@@ -8,14 +8,12 @@ interface FeaturesGridProps {
     description: string;
     icon: string;
     isPopular?: boolean;
-    actionText?: string;
   }>;
   visibleFeatures: Array<{
     title: string;
     description: string;
     icon: string;
     isPopular?: boolean;
-    actionText?: string;
   }>;
   isMobile: boolean;
   showAllCards: boolean;
@@ -30,7 +28,7 @@ export const FeaturesGrid = ({
   toggleShowAllCards
 }: FeaturesGridProps) => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-7 relative">
       {/* Regular Features */}
       {visibleFeatures.map((feature, index) => (
         <FeatureItem
@@ -40,8 +38,7 @@ export const FeaturesGrid = ({
           icon={feature.icon}
           index={index}
           isPopular={feature.isPopular}
-          isPartiallyVisible={false}
-          actionText={feature.actionText}
+          isPartiallyVisible={false} // Changed to show full video production card
         />
       ))}
       

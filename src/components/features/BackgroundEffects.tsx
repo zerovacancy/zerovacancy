@@ -1,5 +1,4 @@
-
-import React, { useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { GradientBlobBackground } from '@/components/ui/gradient-blob-background';
 import { cn } from '@/lib/utils';
 
@@ -17,7 +16,7 @@ interface BackgroundEffectsProps {
   pattern?: 'dots' | 'grid' | 'none';
   baseColor?: string;
   animationSpeed?: 'slow' | 'medium' | 'fast';
-  id?: string;
+  id?: string; // Added id prop for easier targeting
 }
 
 export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({ 
@@ -37,24 +36,47 @@ export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({
   id
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(true); // Default to visible to ensure content is shown
+
+  // Only render heavy effects when the component is in view
+  useEffect(() => {
+    if (!containerRef.current) return;
+    
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        } else {
+          // Only hide when scrolled far away (optimization)
+          if (Math.abs(entry.boundingClientRect.top) > window.innerHeight * 2) {
+            // Keep content visible but disable expensive effects
+            // setIsVisible(false); - Removed to ensure content is always visible
+          }
+        }
+      },
+      { 
+        threshold: 0.1,
+        rootMargin: '200px' 
+      }
+    );
+    
+    observer.observe(containerRef.current);
+    
+    // Safety timeout to ensure visibility
+    const safetyTimeout = setTimeout(() => {
+      setIsVisible(true);
+    }, 500);
+    
+    return () => {
+      observer.disconnect();
+      clearTimeout(safetyTimeout);
+    };
+  }, []);
 
   return (
-    <div 
-      ref={containerRef} 
-      id={id} 
-      className={cn(
-        "relative w-full overflow-hidden bg-white", 
-        "desktop-effects",
-        className
-      )}
-    >
-      {/* Content is always rendered without heavy effects on mobile */}
-      <div className="relative z-10 w-full mobile-content">
-        {children}
-      </div>
-
-      {/* Desktop-only background effects */}
-      <div className="desktop-only-effects">
+    <div ref={containerRef} id={id} className={cn("relative w-full overflow-hidden", className)}>
+      {isVisible ? (
         <GradientBlobBackground 
           className="overflow-visible"
           blobColors={blobColors}
@@ -66,9 +88,14 @@ export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({
           blobSize="large"
           animationSpeed={animationSpeed}
         >
-          {/* This is an empty container for desktop effects only */}
+          {children}
         </GradientBlobBackground>
-      </div>
+      ) : (
+        // Fallback to ensure content is visible even if effects are disabled
+        <div className={cn("relative w-full", baseColor)}>
+          {children}
+        </div>
+      )}
     </div>
   );
 };

@@ -18,7 +18,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ value = '', onLocationSele
   const isMobile = useIsMobile();
 
   return (
-    <div className="w-full space-y-2 sm:space-y-3 font-anek" role="search" aria-label="Creator search">
+    <div className="w-full space-y-2 sm:space-y-3">
       <div className="flex flex-col gap-1.5 sm:gap-3">
         <div className={cn(
           "relative flex flex-col sm:flex-row w-full rounded-lg sm:rounded-xl overflow-hidden",
@@ -33,7 +33,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ value = '', onLocationSele
           
           {/* Add a more visible divider on mobile */}
           {isMobile && (
-            <div className="h-px w-full bg-gray-200" aria-hidden="true"></div>
+            <div className="h-px w-full bg-gray-200"></div>
           )}
           
           {/* Location input */}
