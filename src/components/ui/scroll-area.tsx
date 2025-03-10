@@ -13,11 +13,12 @@ const ScrollArea = React.forwardRef<
   React.ElementRef<typeof ScrollAreaPrimitive.Root>,
   ScrollAreaProps
 >(({ className, children, disableOnMobile = true, preserveHorizontalScroll = false, ...props }, ref) => {
-  const isMobile = useIsMobile();
+  // Get mobile status once on mount and avoid re-renders
+  const [isMobileDevice] = React.useState(useIsMobile());
   
   // If on mobile and disableOnMobile is true, just render the children directly
   // This prevents scroll hijacking on mobile
-  if (isMobile && disableOnMobile) {
+  if (isMobileDevice && disableOnMobile) {
     return (
       <div className={cn(
         "h-full w-full", 

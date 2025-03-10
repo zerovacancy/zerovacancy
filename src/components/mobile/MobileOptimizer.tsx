@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 interface MobileOptimizerProps {
@@ -9,53 +9,48 @@ interface MobileOptimizerProps {
 /**
  * MobileOptimizer component that provides global mobile optimizations
  * for better touch and scroll behavior.
- * Simplified to resolve hook-related errors.
+ * Complete rewrite to prevent infinite rendering loops.
  */
 export const MobileOptimizer: React.FC<MobileOptimizerProps> = ({ children }) => {
-  // Create a ref to track if we've applied optimizations
-  const optimizationState = useRef({
-    applied: false,
-    cleanupFn: null as (() => void) | null
-  });
+  // Use state initialization instead of refs for tracking optimization state
+  const [optimizationsApplied, setOptimizationsApplied] = useState(false);
+  // Ref only for tracking if component is mounted
+  const isMounted = useRef(true);
   
-  // Determine if we're on mobile
+  // Get mobile status only once during initial render
   const isMobile = useIsMobile();
   
-  // Single effect to handle all optimizations
+  // Apply optimizations on mount only if mobile
   useEffect(() => {
-    // Only apply on mobile
-    if (!isMobile) return;
+    // Set mounted flag
+    isMounted.current = true;
     
-    // Skip if already applied
-    if (optimizationState.current.applied) return;
+    // Only apply optimizations if on mobile and not already applied
+    if (isMobile && !optimizationsApplied) {
+      // Apply basic optimizations without touching style properties directly
+      if (document.body) {
+        document.body.classList.add('mobile-optimized');
+      }
+      
+      // Mark as applied using state
+      if (isMounted.current) {
+        setOptimizationsApplied(true);
+      }
+    }
     
-    // Mark as applied
-    optimizationState.current.applied = true;
-    
-    // Apply mobile optimizations
-    document.body.classList.add('mobile-optimized');
-    document.documentElement.style.setProperty('overscroll-behavior-y', 'none');
-    document.documentElement.style.setProperty('scroll-snap-type', 'none');
-    
-    // Define cleanup function
-    const cleanup = () => {
-      // Only clean up if optimizations were applied
-      if (optimizationState.current.applied) {
+    // Clean up function
+    return () => {
+      // Mark component as unmounted to prevent state updates
+      isMounted.current = false;
+      
+      // Clean up optimizations
+      if (document.body) {
         document.body.classList.remove('mobile-optimized');
-        document.documentElement.style.removeProperty('overscroll-behavior-y');
-        document.documentElement.style.removeProperty('scroll-snap-type');
-        optimizationState.current.applied = false;
       }
     };
-    
-    // Store cleanup function
-    optimizationState.current.cleanupFn = cleanup;
-    
-    // Return cleanup function
-    return cleanup;
-  }, [isMobile]);
+  }, [isMobile, optimizationsApplied]);
   
-  // Simply render children
+  // Simply return children without any wrapper to minimize DOM changes
   return <>{children}</>;
 };
 
