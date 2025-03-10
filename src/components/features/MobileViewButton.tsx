@@ -15,22 +15,39 @@ export const MobileViewButton = memo(({
   toggleShowAllCards, 
   isMobile 
 }: MobileViewButtonProps) => {
-  // Improved click handler to prevent default behavior
+  // Improved click handler to prevent default behavior and propagation
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     toggleShowAllCards();
   };
 
+  // Don't render anything if not on mobile and cards are shown
+  if (!isMobile && showAllCards) return null;
+
+  // Animation settings optimized for mobile performance
+  const buttonAnimationSettings = {
+    initial: { opacity: 0, y: 10 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -10 },
+    transition: { 
+      duration: 0.3, 
+      ease: "easeOut",
+      // Reduced animation complexity for mobile
+      delay: 0.1
+    }
+  };
+
   return (
     <motion.div 
-      className={`${isMobile ? 'mt-6' : 'mt-12 sm:mt-14'} flex justify-center ${isMobile && !showAllCards ? 'md:hidden' : ''}`}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.5, delay: 0.3, ease: "easeOut" }}
-      key="view-all-button"
-      layout
+      className={`mt-8 flex justify-center ${isMobile && !showAllCards ? 'md:hidden' : ''}`}
+      {...buttonAnimationSettings}
+      key={`view-button-${showAllCards ? 'less' : 'more'}`}
+      layout="position"
+      style={{ 
+        willChange: "transform, opacity", 
+        transform: "translateZ(0)" // Force GPU rendering
+      }}
     >
       {isMobile && showAllCards ? (
         <Button 
