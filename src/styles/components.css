@@ -130,25 +130,6 @@
     animation: tomorrow-fade 3s infinite alternate;
   }
 
-  /* Fix for scroll behavior on mobile */
-  .scroll-margin-top-8 {
-    scroll-margin-top: 2rem;
-  }
-
-  /* Prevent content shifts */
-  .content-safe-area {
-    content-visibility: auto;
-    contain-intrinsic-size: auto 500px;
-  }
-
-  /* Reduce motion for mobile devices */
-  @media (prefers-reduced-motion) {
-    .reduce-motion {
-      animation: none !important;
-      transition: none !important;
-    }
-  }
-
   @keyframes availability-shimmer {
     0% { transform: rotate(45deg) translate(-100%, -100%); }
     100% { transform: rotate(45deg) translate(100%, 100%); }
