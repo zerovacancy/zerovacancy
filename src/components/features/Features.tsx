@@ -43,6 +43,7 @@
             description="Everything you need to showcase your properties with stunning visuals and engaging content that attracts the right buyers."
           />
 
+          {/* Added a container div to create proper spacing between grid and button */}
           <div className="flex flex-col">
             <FeaturesGrid
               features={features}
@@ -52,7 +53,8 @@
               toggleShowAllCards={toggleShowAllCards}
             />
 
-            <div className="w-full">
+            {/* Adjusted padding to ensure proper overlay positioning */}
+            <div className={`${isMobile && !showAllCards ? 'pt-10' : 'pt-6'} w-full`}>
               <AnimatePresence>
                 {(!isMobile || (isMobile && !showAllCards)) && (
                   <MobileViewButton

@@ -33,9 +33,7 @@ export const FeaturesGrid = ({
         contain: isMobile ? 'layout size' : 'none',
         willChange: isMobile ? 'height' : 'auto',
         minHeight: isMobile ? '450px' : 'auto',
-        transform: 'translateZ(0)',
-        // Add padding at the bottom on mobile to make space for the button
-        paddingBottom: isMobile && !showAllCards ? '70px' : '0px'
+        transform: 'translateZ(0)'
       }}
     >
       {visibleFeatures.map((feature, index) => (
