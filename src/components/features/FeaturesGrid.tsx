@@ -30,7 +30,7 @@ export const FeaturesGrid = ({
   toggleShowAllCards
 }: FeaturesGridProps) => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 lg:gap-7 relative">
       {/* Regular Features */}
       {visibleFeatures.map((feature, index) => (
         <FeatureItem
