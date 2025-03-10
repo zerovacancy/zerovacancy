@@ -19,7 +19,6 @@ export interface TextRotateProps {
   mainClassName?: string;
   splitLevelClassName?: string;
   elementLevelClassName?: string;
-  style?: React.CSSProperties; // Add style prop to accept CSS properties
 }
 
 export interface TextRotateRef {

@@ -1,54 +1,27 @@
 
 import * as React from "react"
 import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area"
-import { cn } from "@/lib/utils"
 
-interface ScrollAreaProps extends React.ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.Root> {
-  disableOnMobile?: boolean;
-  preserveHorizontalScroll?: boolean;
-}
+import { cn } from "@/lib/utils"
 
 const ScrollArea = React.forwardRef<
   React.ElementRef<typeof ScrollAreaPrimitive.Root>,
-  ScrollAreaProps
->(({ className, children, disableOnMobile = true, preserveHorizontalScroll = false, ...props }, ref) => {
-  // Use lazy initialization to detect mobile only once when component mounts
-  // This prevents re-renders from mobile status changes
-  const [isMobileDevice] = React.useState(() => {
-    if (typeof window === 'undefined') return false;
-    return window.innerWidth < 768;
-  });
-  
-  // If on mobile and disableOnMobile is true, render without ScrollArea
-  if (isMobileDevice && disableOnMobile) {
-    return (
-      <div className={cn(
-        "h-full w-full", 
-        preserveHorizontalScroll ? "scroll-container-horizontal" : "",
-        className
-      )}>
-        {children}
-      </div>
-    );
-  }
-  
-  // On desktop, use the Radix ScrollArea
-  return (
-    <ScrollAreaPrimitive.Root
-      ref={ref}
-      className={cn("relative overflow-hidden", className)}
-      {...props}
+  React.ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.Root>
+>(({ className, children, ...props }, ref) => (
+  <ScrollAreaPrimitive.Root
+    ref={ref}
+    className={cn("relative overflow-hidden", className)}
+    {...props}
+  >
+    <ScrollAreaPrimitive.Viewport 
+      className="h-full w-full rounded-[inherit]"
     >
-      <ScrollAreaPrimitive.Viewport 
-        className="h-full w-full rounded-[inherit]"
-      >
-        {children}
-      </ScrollAreaPrimitive.Viewport>
-      <ScrollBar />
-      <ScrollAreaPrimitive.Corner />
-    </ScrollAreaPrimitive.Root>
-  );
-})
+      {children}
+    </ScrollAreaPrimitive.Viewport>
+    <ScrollBar />
+    <ScrollAreaPrimitive.Corner />
+  </ScrollAreaPrimitive.Root>
+))
 ScrollArea.displayName = ScrollAreaPrimitive.Root.displayName
 
 const ScrollBar = React.forwardRef<

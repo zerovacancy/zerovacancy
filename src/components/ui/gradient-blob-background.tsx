@@ -2,7 +2,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { OptimizedSpotlight } from './optimized-spotlight';
-import { useIsMobile } from '@/hooks/use-mobile';
 
 interface GradientBlobBackgroundProps {
   className?: string;
@@ -43,7 +42,6 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
 }) => {
   const [isMounted, setIsMounted] = useState(false);
   const isReducedMotion = useRef(false);
-  const isMobile = useIsMobile();
   
   // Check for reduced motion preference
   useEffect(() => {
@@ -53,17 +51,6 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
 
   // Don't render animations for users with reduced motion preference
   const shouldAnimate = isMounted && !isReducedMotion.current;
-  
-  // If on mobile, return simplified background
-  if (isMobile) {
-    return (
-      <div className={cn(`relative w-full bg-white`, className)}>
-        <div className="relative z-10">
-          {children}
-        </div>
-      </div>
-    );
-  }
   
   // Determine blob sizes based on the blobSize prop
   const getBlobSizeClass = (position: 'first' | 'second' | 'third') => {

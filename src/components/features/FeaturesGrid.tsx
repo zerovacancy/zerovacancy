@@ -1,6 +1,6 @@
-
 import { FeatureItem } from "./FeatureItem";
 import { MobilePartialOverlay } from "./MobilePartialOverlay";
+import { cn } from "@/lib/utils";
 
 interface FeaturesGridProps {
   features: Array<{
@@ -30,7 +30,12 @@ export const FeaturesGrid = ({
   toggleShowAllCards
 }: FeaturesGridProps) => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+    <div className={cn(
+      "grid gap-6 relative",
+      isMobile 
+        ? "grid-cols-1"
+        : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
+    )}>
       {/* Regular Features */}
       {visibleFeatures.map((feature, index) => (
         <FeatureItem

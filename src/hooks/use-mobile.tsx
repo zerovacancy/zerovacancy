@@ -4,142 +4,92 @@ import * as React from "react"
 const MOBILE_BREAKPOINT = 768
 const TABLET_BREAKPOINT = 1024
 
-// Global state to track window size and device type
-const viewportState = {
-  width: typeof window !== 'undefined' ? window.innerWidth : 0,
-  height: typeof window !== 'undefined' ? window.innerHeight : 0,
-  isMobile: typeof window !== 'undefined' ? window.innerWidth < MOBILE_BREAKPOINT : false,
-  isTablet: typeof window !== 'undefined' ? (window.innerWidth >= MOBILE_BREAKPOINT && window.innerWidth < TABLET_BREAKPOINT) : false
-};
-
-// Stable reference to subscribers
-const subscribers = new Set<() => void>();
-
-// Throttled resize handler to prevent too many updates
-let resizeTimeout: number | null = null;
-
-// Setup one global listener that only runs in browser
-if (typeof window !== 'undefined') {
-  const updateViewportState = () => {
-    const prevMobile = viewportState.isMobile;
-    const prevTablet = viewportState.isTablet;
-    
-    viewportState.width = window.innerWidth;
-    viewportState.height = window.innerHeight;
-    viewportState.isMobile = window.innerWidth < MOBILE_BREAKPOINT;
-    viewportState.isTablet = window.innerWidth >= MOBILE_BREAKPOINT && window.innerWidth < TABLET_BREAKPOINT;
-    
-    // Only notify if there was an actual change in state
-    if (prevMobile !== viewportState.isMobile || prevTablet !== viewportState.isTablet) {
-      notifySubscribers();
-    }
-  };
-  
-  const notifySubscribers = () => {
-    subscribers.forEach(callback => callback());
-  };
-  
-  const handleResize = () => {
-    if (resizeTimeout) {
-      window.clearTimeout(resizeTimeout);
-    }
-    
-    // Significant throttle to prevent rapid updates
-    resizeTimeout = window.setTimeout(updateViewportState, 200);
-  };
-  
-  // Initial check
-  updateViewportState();
-  
-  // Passive listener for better performance
-  window.addEventListener('resize', handleResize, { passive: true });
-}
-
-/**
- * Hook that returns a boolean indicating if the device is mobile
- */
 export function useIsMobile() {
-  // Use state initialization from the global state
-  const [isMobile, setIsMobile] = React.useState(viewportState.isMobile);
-  
+  const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined)
+
   React.useEffect(() => {
-    // Update function that only calls setIsMobile if the value changed
-    const updateState = () => {
-      if (isMobile !== viewportState.isMobile) {
-        setIsMobile(viewportState.isMobile);
-      }
-    };
+    // Initial check
+    const checkMobile = () => {
+      const width = window.innerWidth
+      setIsMobile(width < MOBILE_BREAKPOINT)
+    }
     
-    // Add subscriber
-    subscribers.add(updateState);
+    // Check on mount
+    checkMobile()
+    
+    // Set up event listener using matchMedia for better performance
+    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`)
+    
+    // Use the appropriate event listener based on browser support
+    const onChange = () => checkMobile()
+    mql.addEventListener("change", onChange)
     
     // Cleanup
-    return () => {
-      subscribers.delete(updateState);
-    };
-  }, [isMobile]); // Only re-subscribe if isMobile changes
-  
-  return isMobile;
+    return () => mql.removeEventListener("change", onChange)
+  }, [])
+
+  // Return boolean value (use !! to ensure boolean)
+  return !!isMobile
 }
 
-/**
- * Hook that returns a boolean indicating if the device is a tablet
- */
 export function useIsTablet() {
-  const [isTablet, setIsTablet] = React.useState(viewportState.isTablet);
-  
+  const [isTablet, setIsTablet] = React.useState<boolean | undefined>(undefined)
+
   React.useEffect(() => {
-    const updateState = () => {
-      if (isTablet !== viewportState.isTablet) {
-        setIsTablet(viewportState.isTablet);
-      }
-    };
+    const checkTablet = () => {
+      const width = window.innerWidth
+      setIsTablet(width >= MOBILE_BREAKPOINT && width < TABLET_BREAKPOINT)
+    }
     
-    subscribers.add(updateState);
+    checkTablet()
     
-    return () => {
-      subscribers.delete(updateState);
-    };
-  }, [isTablet]);
-  
-  return isTablet;
+    const handleResize = () => {
+      checkTablet()
+    }
+    
+    window.addEventListener('resize', handleResize)
+    
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  return !!isTablet
 }
 
-/**
- * Hook that returns a boolean indicating if the device is mobile or tablet
- */
 export function useIsMobileOrTablet() {
-  const isMobile = useIsMobile();
-  const isTablet = useIsTablet();
+  const isMobile = useIsMobile()
+  const isTablet = useIsTablet()
   
-  return React.useMemo(() => isMobile || isTablet, [isMobile, isTablet]);
+  return isMobile || isTablet
 }
 
-/**
- * Hook that returns the current viewport size
- */
 export function useViewportSize() {
-  const [size, setSize] = React.useState({
-    width: viewportState.width,
-    height: viewportState.height
-  });
+  const [size, setSize] = React.useState<{ width: number; height: number }>({
+    width: typeof window !== 'undefined' ? window.innerWidth : 0,
+    height: typeof window !== 'undefined' ? window.innerHeight : 0
+  })
   
   React.useEffect(() => {
     const updateSize = () => {
-      if (size.width !== viewportState.width || size.height !== viewportState.height) {
-        setSize({
-          width: viewportState.width,
-          height: viewportState.height
-        });
-      }
-    };
+      setSize({
+        width: window.innerWidth,
+        height: window.innerHeight
+      })
+    }
     
-    subscribers.add(updateSize);
+    // Throttle the resize event to improve performance
+    let timeoutId: ReturnType<typeof setTimeout> | null = null
+    const throttledResize = () => {
+      if (timeoutId) clearTimeout(timeoutId)
+      timeoutId = setTimeout(updateSize, 100)
+    }
     
-    return () => {
-      subscribers.delete(updateSize);
-    };
-  }, [size.width, size.height]);
+    // Initialize on mount
+    updateSize()
+    
+    window.addEventListener('resize', throttledResize)
+    
+    return () => window.removeEventListener('resize', throttledResize)
+  }, [])
   
-  return size;
+  return size
 }

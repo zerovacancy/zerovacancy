@@ -1,12 +1,6 @@
-
 import React, { useRef, useEffect, useState } from 'react';
 import { GradientBlobBackground } from '@/components/ui/gradient-blob-background';
 import { cn } from '@/lib/utils';
-import { useIsMobile } from '@/hooks/use-mobile';
-
-// Define proper types for pattern and animation speed
-export type PatternType = 'dots' | 'grid' | 'none';
-export type AnimationSpeedType = 'slow' | 'medium' | 'fast';
 
 interface BackgroundEffectsProps {
   className?: string;
@@ -19,11 +13,10 @@ interface BackgroundEffectsProps {
   blobOpacity?: number;
   withSpotlight?: boolean;
   spotlightClassName?: string;
-  pattern?: PatternType;
+  pattern?: 'dots' | 'grid' | 'none';
   baseColor?: string;
-  animationSpeed?: AnimationSpeedType;
-  id?: string;
-  layoutClassName?: string;
+  animationSpeed?: 'slow' | 'medium' | 'fast';
+  id?: string; // Added id prop for easier targeting
 }
 
 export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({ 
@@ -40,34 +33,14 @@ export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({
   pattern = "none",
   baseColor = "bg-white/80",
   animationSpeed = 'slow',
-  id,
-  layoutClassName
+  id
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(true);
-  const isMobile = useIsMobile();
+  const [isVisible, setIsVisible] = useState(true); // Default to visible to ensure content is shown
 
-  // On mobile, return a simple white background without gradients or effects
-  if (isMobile) {
-    return (
-      <div 
-        ref={containerRef}
-        id={id}
-        className={cn(
-          "relative w-full overflow-visible bg-white", 
-          "flex-1 flex flex-col",
-          className,
-          layoutClassName
-        )}
-      >
-        {children}
-      </div>
-    );
-  }
-
-  // Only use Intersection Observer for desktop
+  // Only render heavy effects when the component is in view
   useEffect(() => {
-    if (!containerRef.current || isMobile) return;
+    if (!containerRef.current) return;
     
     const observer = new IntersectionObserver(
       (entries) => {
@@ -75,8 +48,10 @@ export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({
         if (entry.isIntersecting) {
           setIsVisible(true);
         } else {
+          // Only hide when scrolled far away (optimization)
           if (Math.abs(entry.boundingClientRect.top) > window.innerHeight * 2) {
-            setIsVisible(false);
+            // Keep content visible but disable expensive effects
+            // setIsVisible(false); - Removed to ensure content is always visible
           }
         }
       },
@@ -97,20 +72,13 @@ export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({
       observer.disconnect();
       clearTimeout(safetyTimeout);
     };
-  }, [isMobile]);
+  }, []);
 
   return (
-    <div 
-      ref={containerRef} 
-      id={id} 
-      className={cn(
-        "relative w-full overflow-visible", 
-        className
-      )}
-    >
+    <div ref={containerRef} id={id} className={cn("relative w-full overflow-hidden", className)}>
       {isVisible ? (
         <GradientBlobBackground 
-          className={cn("overflow-visible", layoutClassName)}
+          className="overflow-visible"
           blobColors={blobColors}
           blobOpacity={blobOpacity}
           withSpotlight={withSpotlight}
@@ -124,7 +92,7 @@ export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({
         </GradientBlobBackground>
       ) : (
         // Fallback to ensure content is visible even if effects are disabled
-        <div className={cn("relative w-full overflow-visible", baseColor, layoutClassName)}>
+        <div className={cn("relative w-full", baseColor)}>
           {children}
         </div>
       )}

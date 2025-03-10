@@ -1,8 +1,6 @@
-
 'use client';
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { cn } from '@/lib/utils';
-import { useIsMobile } from '@/hooks/use-mobile';
 
 type OptimizedSpotlightProps = {
   className?: string;
@@ -21,7 +19,6 @@ export function OptimizedSpotlight({
   const frameRef = useRef<number | null>(null);
   const positionRef = useRef({ x: 0, y: 0 });
   const observerRef = useRef<IntersectionObserver | null>(null);
-  const isMobile = useIsMobile();
 
   // Performance optimization: Only set up intersection observer once on mount
   useEffect(() => {
@@ -110,7 +107,7 @@ export function OptimizedSpotlight({
   }, [parentElement, isVisible, handleMouseMove]);
 
   // Improve performance by not rendering when not visible or on mobile
-  if (!isVisible || isMobile) return null;
+  if (!isVisible) return null;
 
   return (
     <div

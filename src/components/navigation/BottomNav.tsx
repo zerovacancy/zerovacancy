@@ -41,13 +41,17 @@ const NavItem = ({ icon, label, to = '/' }: NavItemProps) => {
 };
 
 export const BottomNav = () => {
+  // Force return null to hide the bottom nav completely
+  return null; 
+  
+  // The below code is kept but won't execute due to the early return above
   const isMobile = useIsMobile();
   
   if (!isMobile) return null;
   
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-lg bottom-navigation-fixed">
-      <div className="flex items-center justify-around w-full mx-auto h-14 px-1">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-lg">
+      <div className="flex items-center justify-around w-full mx-auto h-14">
         <NavItem icon="home" label="Home" to="/" />
         <NavItem icon="search" label="Discover" to="/search" />
         <NavItem icon="message" label="Messages" to="/messages" />
