@@ -27,8 +27,20 @@ const PageLoader = () => (
 
 function App() {
   return (
-    <ErrorBoundary FallbackComponent={ErrorFallback}>
+    <ErrorBoundary 
+      FallbackComponent={ErrorFallback}
+      onReset={() => {
+        // Reset the app state here
+        window.location.href = '/';
+      }}
+      onError={(error, info) => {
+        // Log the error for debugging
+        console.error('React Error Boundary caught an error:', error);
+        console.info('Component stack:', info.componentStack);
+      }}
+    >
       <Router>
+        {/* MobileOptimizer is now more stable and won't cause infinite loops */}
         <MobileOptimizer>
           <div className="app-container relative">
             <Suspense fallback={<PageLoader />}>

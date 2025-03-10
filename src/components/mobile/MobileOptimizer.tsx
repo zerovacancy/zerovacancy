@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 interface MobileOptimizerProps {
@@ -9,46 +9,47 @@ interface MobileOptimizerProps {
 /**
  * MobileOptimizer component that provides global mobile optimizations
  * for better touch and scroll behavior.
- * Complete rewrite to prevent infinite rendering loops.
+ * 
+ * Completely rewritten to prevent infinite rendering loops.
  */
 export const MobileOptimizer: React.FC<MobileOptimizerProps> = ({ children }) => {
-  // Use state initialization instead of refs for tracking optimization state
-  const [optimizationsApplied, setOptimizationsApplied] = useState(false);
-  // Ref only for tracking if component is mounted
-  const isMounted = useRef(true);
+  // Only detect mobile status once on mount with ref to avoid re-renders
+  const isMobileRef = useRef<boolean>();
+  const optimizationsAppliedRef = useRef(false);
   
-  // Get mobile status only once during initial render
-  const isMobile = useIsMobile();
-  
-  // Apply optimizations on mount only if mobile
+  // Run effect only once on mount
   useEffect(() => {
-    // Set mounted flag
-    isMounted.current = true;
+    // Get the mobile status once and store in ref
+    isMobileRef.current = useIsMobile();
     
     // Only apply optimizations if on mobile and not already applied
-    if (isMobile && !optimizationsApplied) {
-      // Apply basic optimizations without touching style properties directly
+    if (isMobileRef.current && !optimizationsAppliedRef.current) {
       if (document.body) {
+        // Add the mobile-optimized class to the body
         document.body.classList.add('mobile-optimized');
+        
+        // Set viewport meta tag for proper mobile scaling
+        let viewportMeta = document.querySelector('meta[name="viewport"]');
+        if (!viewportMeta) {
+          viewportMeta = document.createElement('meta');
+          viewportMeta.setAttribute('name', 'viewport');
+          document.head.appendChild(viewportMeta);
+        }
+        viewportMeta.setAttribute('content', 
+          'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover');
       }
       
-      // Mark as applied using state
-      if (isMounted.current) {
-        setOptimizationsApplied(true);
-      }
+      // Mark optimizations as applied using ref, not state
+      optimizationsAppliedRef.current = true;
     }
     
-    // Clean up function
+    // Clean up function that runs only on unmount
     return () => {
-      // Mark component as unmounted to prevent state updates
-      isMounted.current = false;
-      
-      // Clean up optimizations
       if (document.body) {
         document.body.classList.remove('mobile-optimized');
       }
     };
-  }, [isMobile, optimizationsApplied]);
+  }, []); // Empty deps array ensures this runs only once
   
   // Simply return children without any wrapper to minimize DOM changes
   return <>{children}</>;

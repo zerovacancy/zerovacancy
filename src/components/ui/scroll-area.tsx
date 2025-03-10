@@ -1,7 +1,6 @@
 
 import * as React from "react"
 import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area"
-import { useIsMobile } from "@/hooks/use-mobile"
 import { cn } from "@/lib/utils"
 
 interface ScrollAreaProps extends React.ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.Root> {
@@ -13,11 +12,14 @@ const ScrollArea = React.forwardRef<
   React.ElementRef<typeof ScrollAreaPrimitive.Root>,
   ScrollAreaProps
 >(({ className, children, disableOnMobile = true, preserveHorizontalScroll = false, ...props }, ref) => {
-  // Get mobile status once on mount and avoid re-renders
-  const [isMobileDevice] = React.useState(useIsMobile());
+  // Use lazy initialization to detect mobile only once when component mounts
+  // This prevents re-renders from mobile status changes
+  const [isMobileDevice] = React.useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.innerWidth < 768;
+  });
   
-  // If on mobile and disableOnMobile is true, just render the children directly
-  // This prevents scroll hijacking on mobile
+  // If on mobile and disableOnMobile is true, render without ScrollArea
   if (isMobileDevice && disableOnMobile) {
     return (
       <div className={cn(
