@@ -22,11 +22,11 @@ export const PreviewHeader: React.FC<PreviewHeaderProps> = ({ title, subtitle })
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
         className={cn(
-          "font-bold text-gray-900 mb-2 sm:mb-4 font-jakarta tracking-tight",
+          "font-bold text-gray-900 mb-2 sm:mb-4 font-inter tracking-tight uppercase",
           isMobile ? "text-xl" : "text-2xl sm:text-3xl md:text-4xl"
         )}
       >
-        {title}
+        {title.toUpperCase()}
       </motion.h2>
       
       {/* Animated underline */}

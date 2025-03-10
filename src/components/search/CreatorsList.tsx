@@ -1,7 +1,6 @@
-
 import React, { useRef, useState } from 'react';
 import { CreatorCard } from '../creator/CreatorCard';
-import { ChevronDown, Filter, ChevronUp } from 'lucide-react';
+import { ChevronDown, Filter, ChevronUp, ChevronRight, ChevronLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -26,14 +25,44 @@ export const CreatorsList: React.FC<CreatorsListProps> = ({
 }) => {
   const isMobile = useIsMobile();
   const filterTagsRef = useRef<HTMLDivElement>(null);
-  const [showAllCreators, setShowAllCreators] = useState(false);
-
-  // Determine which creators to show based on mobile state and expanded state
-  const visibleCreators = isMobile && !showAllCreators ? creators.slice(0, 1) : creators;
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [scrollPosition, setScrollPosition] = useState(0);
 
   // Filter tags with improved styling
   const filterTags = ["All Services", "Photography", "Video Tours", "Drone Footage", "3D Tours", "Floor Plans", "Virtual Staging"];
   
+  // Function to handle horizontal scroll on mobile
+  const scrollHorizontally = (direction: 'left' | 'right') => {
+    if (!scrollContainerRef.current) return;
+    
+    const container = scrollContainerRef.current;
+    const scrollAmount = container.clientWidth * 0.8;
+    
+    const newPosition = direction === 'left' 
+      ? Math.max(scrollPosition - scrollAmount, 0)
+      : Math.min(scrollPosition + scrollAmount, container.scrollWidth - container.clientWidth);
+    
+    container.scrollTo({
+      left: newPosition,
+      behavior: 'smooth'
+    });
+    
+    setScrollPosition(newPosition);
+  };
+  
+  // Check if scroll buttons should be visible
+  const canScrollLeft = scrollPosition > 0;
+  const canScrollRight = scrollContainerRef.current
+    ? scrollPosition < scrollContainerRef.current.scrollWidth - scrollContainerRef.current.clientWidth - 10
+    : false;
+  
+  // Update scroll position when container scrolls
+  const handleScroll = () => {
+    if (scrollContainerRef.current) {
+      setScrollPosition(scrollContainerRef.current.scrollLeft);
+    }
+  };
+
   return (
     <div className="relative">
       {/* Filters section with horizontal scrolling on mobile */}
@@ -67,91 +96,143 @@ export const CreatorsList: React.FC<CreatorsListProps> = ({
         </div>
       </div>
       
-      {/* Creators grid with single column on mobile, multi-column on larger screens */}
-      <div 
-        className={cn(
-          "grid gap-4 sm:gap-5 md:gap-6", 
-          isMobile ? "grid-cols-1" : "sm:grid-cols-2 lg:grid-cols-3"
-        )}
-        role="list"
-        aria-label="Creators list"
-      >
-        {visibleCreators.map((creator, index) => <motion.div 
-            key={creator.name} 
-            initial={{
-              opacity: 0,
-              y: 20
-            }} 
-            animate={{
-              opacity: 1,
-              y: 0
-            }} 
-            transition={{
-              duration: 0.5,
-              delay: isMobile ? 0.1 * index : 0.1 + index * 0.1,
-              ease: [0.22, 1, 0.36, 1]
-            }}
-            role="listitem"
+      {/* MOBILE: Horizontal scrolling creator cards */}
+      {isMobile ? (
+        <div className="relative">
+          {/* Navigation arrows for mobile */}
+          {creators.length > 1 && (
+            <>
+              <AnimatePresence>
+                {canScrollLeft && (
+                  <motion.button
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 0.9 }}
+                    exit={{ opacity: 0 }}
+                    className="absolute left-0 top-1/2 z-20 -translate-y-1/2 -ml-1 h-8 w-8 rounded-full bg-white/90 shadow-md flex items-center justify-center border border-gray-100 text-indigo-600"
+                    onClick={() => scrollHorizontally('left')}
+                    aria-label="Scroll left"
+                  >
+                    <ChevronLeft className="h-5 w-5" />
+                  </motion.button>
+                )}
+              </AnimatePresence>
+              
+              <AnimatePresence>
+                {canScrollRight && (
+                  <motion.button
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 0.9 }}
+                    exit={{ opacity: 0 }}
+                    className="absolute right-0 top-1/2 z-20 -translate-y-1/2 -mr-1 h-8 w-8 rounded-full bg-white/90 shadow-md flex items-center justify-center border border-gray-100 text-indigo-600"
+                    onClick={() => scrollHorizontally('right')}
+                    aria-label="Scroll right"
+                  >
+                    <ChevronRight className="h-5 w-5" />
+                  </motion.button>
+                )}
+              </AnimatePresence>
+            </>
+          )}
+          
+          {/* Horizontal scroll container for mobile */}
+          <div 
+            ref={scrollContainerRef}
+            className="flex overflow-x-auto gap-4 pb-4 pt-1 snap-x snap-mandatory touch-pan-x scroll-container-optimized [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']"
+            onScroll={handleScroll}
+            role="list"
+            aria-label="Creators list"
           >
-            <CreatorCard 
-              creator={creator} 
-              onImageLoad={onImageLoad} 
-              loadedImages={loadedImages} 
-              imageRef={imageRef} 
-            />
-          </motion.div>)}
-        
-        {creators.length === 0 && <div className="col-span-full text-center py-10">
-            <div className="text-gray-500">No creators found</div>
-            <p className="text-sm text-gray-400 mt-2">Try adjusting your filters</p>
-          </div>}
-      </div>
-      
-      {/* Mobile expand/collapse button - only visible if there are more than 1 creator */}
-      {isMobile && creators.length > 1 && (
-        <div className="mt-4 mb-6 text-center">
-          <motion.button 
-            className={cn(
-              "inline-flex items-center justify-center px-6 py-3",
-              "rounded-lg",
-              "bg-gradient-to-r from-gray-50 to-indigo-50/30",
-              "text-indigo-600/80 font-medium",
-              "border border-indigo-100/50",
-              "shadow-sm",
-              "hover:shadow-md hover:bg-indigo-50/50 transition-all duration-200",
-              "text-sm w-[85%] mx-auto",
-              "relative overflow-hidden group",
-              "focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            )}
-            onClick={() => setShowAllCreators(!showAllCreators)}
-            initial={{
-              opacity: 0,
-              y: 10
-            }}
-            animate={{
-              opacity: 1,
-              y: 0
-            }}
-            transition={{
-              duration: 0.3
-            }}
-            whileTap={{
-              scale: 0.98
-            }}
-            aria-expanded={showAllCreators}
-            aria-label={showAllCreators ? "Show less creators" : `Show ${creators.length - 1} more creators`}
-          >
-            <span className="relative z-10 flex items-center">
-              {showAllCreators ? "Show less creators" : `Show ${creators.length - 1} more creators`}
-              {showAllCreators 
-                ? <ChevronUp className="ml-1.5 w-3.5 h-3.5 text-indigo-500/70" aria-hidden="true" /> 
-                : <ChevronDown className="ml-1.5 w-3.5 h-3.5 text-indigo-500/70" aria-hidden="true" />
-              }
-            </span>
+            {creators.map((creator, index) => (
+              <div 
+                key={creator.name}
+                className="min-w-[85%] sm:min-w-[80%] snap-start"
+                role="listitem"
+              >
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{
+                    duration: 0.5,
+                    delay: 0.1 * index,
+                    ease: [0.22, 1, 0.36, 1]
+                  }}
+                >
+                  <CreatorCard 
+                    creator={creator} 
+                    onImageLoad={onImageLoad} 
+                    loadedImages={loadedImages} 
+                    imageRef={imageRef} 
+                  />
+                </motion.div>
+              </div>
+            ))}
             
-            {/* Subtle shimmer effect with enhanced border/glow */}
-            <span className="absolute inset-0 z-0 animate-shimmer-slide bg-gradient-to-r from-transparent via-indigo-100/20 to-transparent border border-indigo-200/30 shadow-[0_0_8px_rgba(129,140,248,0.15)]" aria-hidden="true" />
-          </motion.button>
+            {creators.length === 0 && (
+              <div className="w-full text-center py-10">
+                <div className="text-gray-500">No creators found</div>
+                <p className="text-sm text-gray-400 mt-2">Try adjusting your filters</p>
+              </div>
+            )}
+          </div>
+          
+          {/* Scrolling indicator dots */}
+          {creators.length > 1 && (
+            <div className="flex justify-center mt-3 gap-1.5">
+              {creators.map((_, index) => (
+                <button
+                  key={index}
+                  className={cn(
+                    "w-2 h-2 rounded-full transition-all duration-300",
+                    scrollPosition / (scrollContainerRef.current?.clientWidth || 1) === index
+                      ? "bg-indigo-600 scale-110"
+                      : "bg-gray-300 scale-100"
+                  )}
+                  onClick={() => {
+                    if (scrollContainerRef.current) {
+                      const newPosition = index * scrollContainerRef.current.clientWidth;
+                      scrollContainerRef.current.scrollTo({
+                        left: newPosition,
+                        behavior: 'smooth'
+                      });
+                      setScrollPosition(newPosition);
+                    }
+                  }}
+                  aria-label={`View creator ${index + 1}`}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      ) : (
+        // DESKTOP: Grid layout (unchanged)
+        <div 
+          className="grid gap-4 sm:gap-5 md:gap-6 sm:grid-cols-2 lg:grid-cols-3"
+          role="list"
+          aria-label="Creators list"
+        >
+          {creators.map((creator, index) => <motion.div 
+              key={creator.name} 
+              initial={{ opacity: 0, y: 20 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              transition={{
+                duration: 0.5,
+                delay: 0.1 + index * 0.1,
+                ease: [0.22, 1, 0.36, 1]
+              }}
+              role="listitem"
+            >
+              <CreatorCard 
+                creator={creator} 
+                onImageLoad={onImageLoad} 
+                loadedImages={loadedImages} 
+                imageRef={imageRef} 
+              />
+            </motion.div>)}
+          
+          {creators.length === 0 && <div className="col-span-full text-center py-10">
+              <div className="text-gray-500">No creators found</div>
+              <p className="text-sm text-gray-400 mt-2">Try adjusting your filters</p>
+            </div>}
         </div>
       )}
       

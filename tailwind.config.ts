@@ -20,8 +20,8 @@ const config: Config = {
     extend: {
       fontFamily: {
         'inter': ['Inter', 'sans-serif'],
-        'jakarta': ['Inter', 'sans-serif'], // Keeping the jakarta class for backward compatibility
-        'space': ['Space Grotesk', 'sans-serif'],
+        'jakarta': ['Inter', 'sans-serif'], // Keeping the jakarta class for backward compatibility but using Inter
+        'space': ['Inter', 'sans-serif'], // Changed to Inter for consistency
       },
       backgroundSize: {
         "shine-size": "200% 200%",
