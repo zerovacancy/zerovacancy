@@ -27,6 +27,41 @@ export const WavyBackground = ({
   waveOpacity?: number;
   [key: string]: any;
 }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Check if we should render the canvas effect
+  // We'll only render on desktop
+  useEffect(() => {
+    // First, set mounted state
+    setIsMounted(true);
+
+    // Use a media query to detect desktop
+    const mediaQuery = window.matchMedia('(min-width: 769px)');
+    
+    // Only initialize canvas if it's desktop
+    if (mediaQuery.matches) {
+      initializeCanvas();
+    }
+    
+    // Handle changes in the media query for responsive behavior
+    const handleMediaChange = (e: MediaQueryListEvent) => {
+      if (e.matches) {
+        initializeCanvas();
+      } else {
+        // Clean up canvas on mobile
+        cleanupCanvas();
+      }
+    };
+    
+    mediaQuery.addEventListener('change', handleMediaChange);
+    
+    return () => {
+      mediaQuery.removeEventListener('change', handleMediaChange);
+      cleanupCanvas();
+    };
+  }, []);
+
   const noise = createNoise3D();
   let w: number,
     h: number,
@@ -35,7 +70,8 @@ export const WavyBackground = ({
     x: number,
     ctx: any,
     canvas: any;
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  let animationId: number;
+
   const getSpeed = () => {
     switch (speed) {
       case "slow":
@@ -47,9 +83,13 @@ export const WavyBackground = ({
     }
   };
 
-  const init = () => {
+  const initializeCanvas = () => {
     canvas = canvasRef.current;
+    if (!canvas) return;
+    
     ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    
     w = ctx.canvas.width = window.innerWidth;
     h = ctx.canvas.height = window.innerHeight;
     ctx.filter = `blur(${blur}px)`;
@@ -62,6 +102,12 @@ export const WavyBackground = ({
     render();
   };
 
+  const cleanupCanvas = () => {
+    if (animationId) {
+      cancelAnimationFrame(animationId);
+    }
+  };
+
   const waveColors = colors ?? [
     "#38bdf8",
     "#818cf8",
@@ -69,6 +115,7 @@ export const WavyBackground = ({
     "#e879f9",
     "#22d3ee",
   ];
+  
   const drawWave = (n: number) => {
     nt += getSpeed();
     for (i = 0; i < n; i++) {
@@ -84,7 +131,6 @@ export const WavyBackground = ({
     }
   };
 
-  let animationId: number;
   const render = () => {
     ctx.fillStyle = backgroundFill || "black";
     ctx.globalAlpha = waveOpacity || 0.5;
@@ -93,13 +139,7 @@ export const WavyBackground = ({
     animationId = requestAnimationFrame(render);
   };
 
-  useEffect(() => {
-    init();
-    return () => {
-      cancelAnimationFrame(animationId);
-    };
-  }, []);
-
+  // Determine if we're on Safari for special handling
   const [isSafari, setIsSafari] = useState(false);
   useEffect(() => {
     setIsSafari(
@@ -117,7 +157,7 @@ export const WavyBackground = ({
       )}
     >
       <canvas
-        className="absolute inset-0 z-0"
+        className="absolute inset-0 z-0 desktop-only-canvas"
         ref={canvasRef}
         id="canvas"
         style={{

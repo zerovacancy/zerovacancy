@@ -1,7 +1,6 @@
 
 import { CSSProperties, FC, ReactNode } from "react";
 import { cn } from "@/lib/utils";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 interface AnimatedShinyTextProps {
   children: ReactNode;
@@ -14,26 +13,21 @@ const AnimatedShinyText: FC<AnimatedShinyTextProps> = ({
   className,
   shimmerWidth = 100,
 }) => {
-  const isMobile = useIsMobile();
-  
   return (
     <p
-      style={
-        isMobile ? {} as CSSProperties : {
-          "--shiny-width": `${shimmerWidth}px`,
-        } as CSSProperties
-      }
+      style={{
+        "--shiny-width": `${shimmerWidth}px`,
+      } as CSSProperties}
       className={cn(
         "text-neutral-600/70 dark:text-neutral-400/70",
-        isMobile ? "text-left" : "mx-auto",
-        // Shine effect - only on desktop
-        !isMobile && "animate-shiny-text bg-clip-text bg-no-repeat [background-position:0_0] [background-size:var(--shiny-width)_100%] [transition:background-position_1s_cubic-bezier(.6,.6,0,1)_infinite]",
-        // Shine gradient - only on desktop
-        !isMobile && "bg-gradient-to-r from-transparent via-black/80 via-50% to-transparent dark:via-white/80",
+        "text-left",
+        // For desktop only:
+        "desktop-only-animation desktop-only-bg-clip-text desktop-only-bg-no-repeat desktop-only-bg-pos-0 desktop-only-bg-size-shiny",
+        "desktop-only-bg-gradient-to-r desktop-only-from-transparent desktop-only-via-black/80 desktop-only-via-50% desktop-only-to-transparent dark:desktop-only-via-white/80",
         className,
       )}
     >
-      Get priority access to the creator marketplace!
+      {children}
     </p>
   );
 };

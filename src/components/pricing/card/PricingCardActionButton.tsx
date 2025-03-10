@@ -2,7 +2,6 @@
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { ColorVariant, colorVariants } from "../PricingCardColors";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 interface PricingCardActionButtonProps {
   cta: string;
@@ -18,38 +17,35 @@ export const PricingCardActionButton = ({
   onAction
 }: PricingCardActionButtonProps) => {
   const colorStyles = colorVariants[color];
-  const isMobile = useIsMobile();
   
-  return (
-    <motion.button
+  // Basic button without animations for mobile
+  const buttonContent = (
+    <button
       onClick={onAction}
       className={cn(
         "mt-2 w-full px-4 py-4 rounded-xl text-white font-medium font-inter",
-        "transition-all duration-300",
+        "desktop-transition",
         isCurrentPlan ? "bg-green-500 cursor-default" : `bg-gradient-to-r ${colorStyles.highlight}`,
-        !isCurrentPlan && !isMobile && "hover:shadow-[0_4px_12px_rgba(0,0,0,0.15)] active:translate-y-0 group"
+        "desktop-hover:shadow-[0_4px_12px_rgba(0,0,0,0.15)] active:opacity-90",
+        "group"
       )}
-      whileHover={!isMobile && !isCurrentPlan ? { scale: 1.02 } : {}}
-      whileTap={!isMobile && !isCurrentPlan ? { scale: 0.98 } : {}}
+      disabled={isCurrentPlan}
     >
       {isCurrentPlan ? "Current Plan" : (
         <span className="flex items-center justify-center">
           {cta}
-          {!isCurrentPlan && !isMobile && (
-            <motion.span
-              className="ml-1.5 inline-block"
-              initial={{ x: 0 }}
-              whileHover={{ x: 3 }}
-              transition={{ duration: 0.2 }}
-            >
-              →
-            </motion.span>
-          )}
-          {!isCurrentPlan && isMobile && (
-            <span className="ml-1.5 inline-block">→</span>
-          )}
+          <span className="ml-1.5 inline-block desktop-transition desktop-group-hover:translate-x-1">
+            →
+          </span>
         </span>
       )}
-    </motion.button>
+    </button>
+  );
+
+  // On mobile, return the basic button without motion
+  return (
+    <div className="mobile-button">
+      {buttonContent}
+    </div>
   );
 };
