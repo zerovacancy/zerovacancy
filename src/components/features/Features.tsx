@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { features } from "./feature-data";
 import { FeatureHeader } from "./FeatureHeader";
 import { BackgroundEffects } from "./BackgroundEffects";
@@ -11,11 +11,43 @@ import { MobileViewButton } from "./MobileViewButton";
 export function FeaturesSectionWithHoverEffects() {
   const isMobile = useIsMobile();
   const [showAllCards, setShowAllCards] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
   
-  // Function to toggle showing all cards
+  // Function to toggle showing all cards with scroll position preservation
   const toggleShowAllCards = () => {
-    setShowAllCards(prev => !prev);
+    if (isMobile) {
+      // Remember scroll position before change
+      const scrollPosition = window.scrollY;
+      
+      setShowAllCards(prev => !prev);
+      
+      // Restore scroll position after state update
+      setTimeout(() => {
+        window.scrollTo({
+          top: scrollPosition,
+          behavior: "auto" // Use auto instead of smooth to prevent additional animations
+        });
+      }, 10);
+    } else {
+      setShowAllCards(prev => !prev);
+    }
   };
+  
+  // Add scroll anchoring to prevent jumps
+  useEffect(() => {
+    if (isMobile && sectionRef.current) {
+      const section = sectionRef.current;
+      
+      // Set CSS scroll anchoring
+      section.style.cssText += "overflow-anchor: auto; scroll-snap-align: start;";
+      
+      return () => {
+        // Clean up styles
+        section.style.overflowAnchor = "";
+        section.style.scrollSnapAlign = "";
+      };
+    }
+  }, [isMobile]);
   
   // On mobile, show only first 3 cards (including Video Production)
   const visibleFeatures = isMobile && !showAllCards 
@@ -23,7 +55,14 @@ export function FeaturesSectionWithHoverEffects() {
     : features;
   
   return (
-    <section className="relative py-14 sm:py-18 lg:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
+    <section 
+      ref={sectionRef}
+      className="relative py-14 sm:py-18 lg:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden"
+      style={{ 
+        overscrollBehavior: "contain", // Prevent scroll chaining
+        ...(isMobile ? { willChange: "auto" } : {}) // Optimize for mobile
+      }}
+    >
       <div className="max-w-6xl mx-auto relative z-10">
         <FeatureHeader 
           title="Professional Content Creation Services"
@@ -39,7 +78,7 @@ export function FeaturesSectionWithHoverEffects() {
         />
         
         {/* View all services button (desktop and mobile) - positioned differently on mobile */}
-        <AnimatePresence>
+        <AnimatePresence mode="wait">
           {(!isMobile || (isMobile && !showAllCards)) && (
             <MobileViewButton
               showAllCards={showAllCards}

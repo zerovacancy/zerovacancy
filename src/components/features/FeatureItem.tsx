@@ -61,6 +61,28 @@ export const FeatureItem = ({
   
   const truncationPoint = findLogicalBreak(description, shortDescLimit);
   
+  // Scale back animations for mobile to prevent flickering
+  const motionProps = isMobile ? {
+    initial: { opacity: 0 },
+    animate: { opacity: 1, transition: { duration: 0.3 } },
+    whileHover: {}
+  } : {
+    initial: { opacity: 0, y: 20 },
+    whileInView: { 
+      opacity: 1, 
+      y: 0,
+      transition: {
+        duration: 0.4,
+        delay: index * 0.05 + 0.1
+      }
+    },
+    viewport: { once: true, margin: "-10%" },
+    whileHover: { 
+      scale: 1.01,
+      boxShadow: "0 8px 20px rgba(0,0,0,0.08)"
+    }
+  };
+  
   return (
     <motion.button
       className={cn(
@@ -82,24 +104,13 @@ export const FeatureItem = ({
         isMobile ? "active:translate-y-0" : "hover:-translate-y-1.5 hover:border-transparent",
         "transition-all duration-300",
         // For partially visible card
-        isPartiallyVisible && "opacity-80 shadow-none"
+        isPartiallyVisible && "opacity-80 shadow-none",
+        // Add mobile-optimize class from App.css
+        isMobile && "mobile-optimize"
       )}
       onClick={handleClick}
       aria-expanded={isExpanded}
-      whileHover={isMobile ? {} : { 
-        scale: 1.01,
-        boxShadow: "0 8px 20px rgba(0,0,0,0.08)"
-      }}
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ 
-        opacity: 1, 
-        y: 0,
-        transition: {
-          duration: 0.4,
-          delay: index * 0.05 + 0.1
-        }
-      }}
-      viewport={{ once: true, margin: "-50px" }}
+      {...motionProps}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
       style={{
         // Very subtle background tint matching the card's theme color
@@ -114,7 +125,8 @@ export const FeatureItem = ({
                                  '255, 255, 255'}, 0.97)`,
         // For partially visible card
         clipPath: isPartiallyVisible ? "polygon(0 0, 100% 0, 100% 65%, 0 65%)" : "none",
-        pointerEvents: isPartiallyVisible ? "none" : "auto"
+        pointerEvents: isPartiallyVisible ? "none" : "auto",
+        willChange: isMobile ? "auto" : "transform, opacity"
       }}
     >
       {/* Standardized Popular Tag - consistent positioning for all cards */}
@@ -142,14 +154,14 @@ export const FeatureItem = ({
             "border border-opacity-20",
             `border-${colorScheme.text.split('-')[1]}-100`,
           )}
-          whileHover={{ scale: 1.05, rotate: 5 }}
+          whileHover={isMobile ? {} : { scale: 1.05, rotate: 5 }}
         >
           <Icon className={cn(
             "w-6 h-6 sm:w-7 sm:h-7",
             "text-white",
             "transition-all duration-300",
             "group-hover:scale-110",
-            "group-hover:animate-subtle-bounce"
+            !isMobile && "group-hover:animate-subtle-bounce" 
           )} />
         </motion.div>
         

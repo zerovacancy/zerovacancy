@@ -14,13 +14,23 @@ export const MobileViewButton = ({
   toggleShowAllCards, 
   isMobile 
 }: MobileViewButtonProps) => {
+  // Simplified animations for better performance on mobile
+  const motionProps = isMobile ? {
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    exit: { opacity: 0 },
+    transition: { duration: 0.3 }
+  } : {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -20 },
+    transition: { duration: 0.5, delay: 0.3 }
+  };
+
   return (
     <motion.div 
-      className={`${isMobile ? 'mt-6' : 'mt-12 sm:mt-14'} flex justify-center ${isMobile && !showAllCards ? 'md:hidden' : ''}`}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.5, delay: 0.3 }}
+      className={`${isMobile ? 'mt-10 mb-4' : 'mt-12 sm:mt-14'} flex justify-center ${isMobile && !showAllCards ? 'md:hidden' : ''}`}
+      {...motionProps}
       key="view-all-button"
     >
       {isMobile && showAllCards ? (

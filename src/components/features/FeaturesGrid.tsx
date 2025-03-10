@@ -1,6 +1,6 @@
 
 import { FeatureItem } from "./FeatureItem";
-import { MobilePartialOverlay } from "./MobilePartialOverlay";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface FeaturesGridProps {
   features: Array<{
@@ -28,8 +28,12 @@ export const FeaturesGrid = ({
   toggleShowAllCards
 }: FeaturesGridProps) => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-7 relative">
-      {/* Regular Features */}
+    <div 
+      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-7 relative"
+      // Add CSS overscroll-behavior to prevent scroll jumping
+      style={{ overscrollBehavior: "contain" }}
+    >
+      {/* Regular Features - show all features to prevent jumps */}
       {visibleFeatures.map((feature, index) => (
         <FeatureItem
           key={index}
@@ -38,17 +42,11 @@ export const FeaturesGrid = ({
           icon={feature.icon}
           index={index}
           isPopular={feature.isPopular}
-          isPartiallyVisible={false} // Changed to show full video production card
+          isPartiallyVisible={false}
         />
       ))}
       
-      {/* Partial card overlay with View More button (mobile only) */}
-      {isMobile && !showAllCards && (
-        <MobilePartialOverlay 
-          showAllCards={showAllCards} 
-          toggleShowAllCards={toggleShowAllCards} 
-        />
-      )}
+      {/* Mobile Overlay removed to fix scroll jumping */}
     </div>
   );
 };
