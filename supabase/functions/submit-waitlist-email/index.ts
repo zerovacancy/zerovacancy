@@ -182,16 +182,47 @@ serve(async (req) => {
         )
         console.log('Email template rendered successfully')
 
+        // Updated "from" address to use the verified domain
+        const from = 'Team Zero <zero@zerovacancy.ai>'
+        console.log(`Sending email from: ${from}`)
+
         // Send email with enhanced tracking
         emailResult = await resend.emails.send({
-          from: 'ZeroVacancy <onboarding@resend.dev>',
+          from,
           to: email,
           subject: 'Welcome to the ZeroVacancy Waitlist!',
           html: emailHtml,
           tags: [{ name: 'source', value: source }]
         })
 
-        console.log('Email sent successfully:', JSON.stringify(emailResult))
+        // Log detailed response from Resend API
+        console.log('Email send response:', JSON.stringify(emailResult))
+
+        if (emailResult.error) {
+          console.error('Resend API returned an error:', emailResult.error)
+          
+          // Check for domain verification issues
+          if (emailResult.error.message?.includes('domain') || 
+              emailResult.error.message?.includes('verify')) {
+            console.error('Possible domain verification issue detected')
+          }
+          
+          // Continue with success response for waitlist subscription, but include email error
+          return new Response(
+            JSON.stringify({
+              status: 'success_with_email_error',
+              message: 'Added to waitlist, but email could not be sent',
+              data,
+              emailError: emailResult.error
+            }),
+            {
+              status: 200,
+              headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            }
+          )
+        }
+
+        console.log('Email sent successfully with ID:', emailResult.id)
       } catch (emailError) {
         console.error('Failed to send confirmation email:', emailError)
         // Continue with success response even if email sending fails
