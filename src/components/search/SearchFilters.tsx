@@ -2,6 +2,7 @@
 import React from 'react';
 import { DollarSign, Star, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface SearchFiltersProps {
   showMoreFilters: boolean;
@@ -12,27 +13,30 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
   showMoreFilters,
   onToggleFilters,
 }) => {
+  const isMobile = useIsMobile();
+  
   return (
-    <>
-      <div className="flex items-center justify-between px-0.5 py-0.5"> {/* Added small vertical padding */}
+    <div className="search-filters">
+      <div className="flex items-center justify-between px-0.5 py-1"> {/* Added vertical padding */}
         <button
           onClick={onToggleFilters}
-          className="
-            inline-flex items-center gap-1.5 
-            px-3 py-1.5 -ml-1
-            text-sm font-medium
-            text-gray-700 hover:text-gray-900 
-            hover:bg-gray-50 rounded-md
-            transition-colors duration-200
-            border border-transparent hover:border-gray-200/70
-            focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1
-          "
+          className={cn(
+            "inline-flex items-center gap-1.5",
+            "px-3 py-2", // Increased padding for better touch target
+            "text-sm font-medium",
+            "text-gray-700 hover:text-gray-900", 
+            "hover:bg-gray-50 rounded-md",
+            "transition-colors duration-200",
+            "border border-transparent hover:border-gray-200/70",
+            "focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1",
+            isMobile ? "min-h-[44px]" : "" // Minimum height on mobile
+          )}
           aria-expanded={showMoreFilters}
           aria-controls="advanced-filters"
         >
           Advanced Filters
           <ChevronDown className={cn(
-            "w-3.5 h-3.5 text-gray-500",
+            "w-4 h-4 text-gray-500", // Increased icon size
             showMoreFilters ? "rotate-180" : ""
           )} 
           aria-hidden="true" />
@@ -49,13 +53,13 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
       >
         {/* Budget Filter */}
         <div className="relative group">
-          <DollarSign className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" aria-hidden="true" />
-          <ChevronDown className="w-3.5 h-3.5 text-gray-300 absolute right-4 top-1/2 -translate-y-1/2" aria-hidden="true" />
+          <DollarSign className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" aria-hidden="true" />
+          <ChevronDown className="w-4 h-4 text-gray-300 absolute right-4 top-1/2 -translate-y-1/2" aria-hidden="true" />
           <select
             className={cn(
-              "w-full h-11 px-11 rounded-lg appearance-none", // Increased height
+              "w-full h-12 px-12 rounded-lg appearance-none", // Increased height and padding
               "border border-gray-200 bg-white",
-              "text-sm text-gray-700",
+              "text-base text-gray-700", // Increased font size
               "transition-colors duration-200",
               "focus:outline-none focus:ring-2 focus:ring-primary/10",
               "group-hover:bg-gray-50"
@@ -72,13 +76,13 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
 
         {/* Rating Filter */}
         <div className="relative group">
-          <Star className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" aria-hidden="true" />
-          <ChevronDown className="w-3.5 h-3.5 text-gray-300 absolute right-4 top-1/2 -translate-y-1/2" aria-hidden="true" />
+          <Star className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" aria-hidden="true" />
+          <ChevronDown className="w-4 h-4 text-gray-300 absolute right-4 top-1/2 -translate-y-1/2" aria-hidden="true" />
           <select
             className={cn(
-              "w-full h-11 px-11 rounded-lg appearance-none", // Increased height
+              "w-full h-12 px-12 rounded-lg appearance-none", // Increased height and padding
               "border border-gray-200 bg-white",
-              "text-sm text-gray-700",
+              "text-base text-gray-700", // Increased font size
               "transition-colors duration-200",
               "focus:outline-none focus:ring-2 focus:ring-primary/10",
               "group-hover:bg-gray-50"
@@ -93,6 +97,6 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
           </select>
         </div>
       </div>
-    </>
+    </div>
   );
 };

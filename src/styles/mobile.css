@@ -63,11 +63,13 @@
   select, 
   textarea,
   [role="button"] {
-    min-height: 40px;
+    min-height: 44px; /* Minimum 44px height for all touch targets */
+    min-width: 44px; /* Minimum width for touch targets */
+    font-size: 16px !important; /* Minimum text size on mobile */
     touch-action: manipulation;
   }
   
-  /* Horizontal scroll container with optimized scrolling */
+  /* Creator search specific fixes */
   .scroll-container-horizontal {
     -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
@@ -82,6 +84,39 @@
     transform: translateZ(0); /* Promote to GPU layer */
   }
   
+  /* Filter buttons specific fixes */
+  [role="tablist"] button {
+    min-height: 44px !important;
+    padding: 10px 16px !important;
+    font-size: 16px !important;
+    margin-bottom: 0.25rem;
+    margin-top: 0.25rem;
+  }
+  
+  /* Price tag sizing for touch */
+  .creator-card-container .absolute.top-3 span {
+    padding: 8px 16px !important;
+    font-size: 16px !important;
+    min-height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  
+  /* Fix for non-focusable interactive elements */
+  button:not([tabindex="-1"]),
+  a:not([tabindex="-1"]),
+  [role="button"]:not([tabindex="-1"]) {
+    cursor: pointer;
+    outline: none;
+  }
+  button:focus-visible,
+  a:focus-visible,
+  [role="button"]:focus-visible {
+    outline: 2px solid #4f46e5;
+    outline-offset: 2px;
+  }
+
   /* Modal and dialog optimization */
   [role="dialog"],
   [aria-modal="true"] {
@@ -104,12 +139,62 @@
     transform: translateZ(0); /* Hardware acceleration */
   }
   
+  /* Replace mix-blend-multiply with simpler effects on mobile */
+  .mix-blend-multiply {
+    mix-blend-mode: normal !important;
+    opacity: 0.5 !important;
+  }
+  
+  /* Simplify gradient backgrounds on mobile */
+  [class*="bg-gradient-to"] {
+    background: none !important;
+    background-color: inherit !important;
+  }
+  
+  /* Replace complex blur effects with simpler alternatives */
+  [class*="blur-"] {
+    backdrop-filter: none !important;
+    filter: none !important;
+  }
+  
+  /* Fix problematic absolute positioning */
+  .creator-info-mobile {
+    position: relative !important;
+    padding: 0.75rem !important;
+    margin-top: 0.5rem !important;
+    background-color: rgba(248, 250, 252, 0.95) !important;
+    border-radius: 0.5rem !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+  }
+  
+  /* Accessible font sizes on mobile */
+  .text-xs { 
+    font-size: 16px !important; 
+  }
+  .text-sm { 
+    font-size: 16px !important; 
+  }
+  
   /* Mobile section base styles */
   .mobile-section {
     background-color: white;
     position: relative;
     padding-left: 1rem;
     padding-right: 1rem;
+  }
+  
+  /* Fix location input on mobile */
+  .location-input {
+    min-height: 44px !important;
+    font-size: 16px !important;
+  }
+  
+  /* Search filters mobile optimization */
+  .search-filters button,
+  .search-filters select {
+    min-height: 44px !important;
+    padding: 10px 16px !important;
+    font-size: 16px !important;
   }
 }
 
@@ -124,4 +209,52 @@
 .content-visible {
   content-visibility: auto;
   contain-intrinsic-size: auto 500px;
+}
+
+/* Mobile-specific creator card styling */
+@media (max-width: 768px) {
+  .creator-card-mobile {
+    display: flex;
+    flex-direction: column;
+    height: auto !important;
+    width: 100% !important;
+    position: relative !important;
+  }
+  
+  .creator-card-mobile-media {
+    aspect-ratio: 16/9;
+    position: relative !important;
+    overflow: hidden;
+    border-radius: 0.75rem 0.75rem 0 0;
+  }
+  
+  .creator-card-mobile-info {
+    position: relative !important;
+    padding: 1rem !important;
+    background-color: white !important;
+    border-radius: 0 0 0.75rem 0.75rem;
+  }
+  
+  /* Eliminate problematic fixed positioning */
+  [class*="top-[40%]"],
+  [class*="-right-20"],
+  [class*="-inset-"] {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    transform: none !important;
+  }
+  
+  /* Fix scrolling indicators and buttons for improved touch */
+  .scroll-indicator-button {
+    min-height: 44px !important;
+    min-width: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
 }

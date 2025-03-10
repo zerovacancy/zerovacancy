@@ -1,4 +1,3 @@
-
 import React, { useRef, useState, useEffect } from 'react';
 import { CreatorCard } from '../creator/CreatorCard';
 import { ChevronDown, Filter, ChevronUp, ChevronRight, ChevronLeft } from 'lucide-react';
@@ -30,7 +29,7 @@ export const CreatorsList: React.FC<CreatorsListProps> = ({
   const [scrollPosition, setScrollPosition] = useState(0);
   const [showScrollButtons, setShowScrollButtons] = useState(false);
 
-  // Filter tags with improved styling
+  // Filter tags with improved styling and large touch targets
   const filterTags = ["All Services", "Photography", "Video Tours", "Drone Footage", "3D Tours", "Floor Plans", "Virtual Staging"];
   
   // Update scroll indicators when content changes
@@ -96,7 +95,7 @@ export const CreatorsList: React.FC<CreatorsListProps> = ({
               <div className="absolute right-0 top-0 h-full w-6 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
             </>}
           
-          <div className="flex space-x-2 pb-1 min-w-max px-2" role="tablist">
+          <div className="flex space-x-2 py-2 px-2" role="tablist">
             {filterTags.map((tag, index) => (
               <button 
                 key={index} 
@@ -104,14 +103,14 @@ export const CreatorsList: React.FC<CreatorsListProps> = ({
                   "transition-all whitespace-nowrap rounded-full border border-gray-200", 
                   "font-medium shadow-sm hover:bg-indigo-50 hover:border-indigo-200 hover:text-indigo-800", 
                   index === 0 ? "bg-indigo-50 text-indigo-700 border-indigo-200" : "bg-white text-gray-700", 
-                  isMobile ? "text-xs px-3 py-1.5 min-h-[32px]" : "text-sm px-3 py-1.5",
+                  isMobile ? "text-base px-4 py-2 min-h-[44px]" : "text-sm px-3 py-1.5",
                   "focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1"
                 )}
                 role="tab"
                 aria-selected={index === 0}
                 aria-label={`Filter by ${tag}`}
               >
-                {index === 0 && <Filter className={cn("inline-block mr-1.5", isMobile ? "w-2.5 h-2.5" : "w-3 h-3")} aria-hidden="true" />}
+                {index === 0 && <Filter className={cn("inline-block mr-1.5", isMobile ? "w-4 h-4" : "w-3 h-3")} aria-hidden="true" />}
                 {tag}
               </button>
             ))}
@@ -122,7 +121,7 @@ export const CreatorsList: React.FC<CreatorsListProps> = ({
       {/* MOBILE: Horizontal scrolling creator cards */}
       {isMobile ? (
         <div className="relative">
-          {/* Navigation arrows for mobile */}
+          {/* Navigation arrows for mobile - improved touch targets */}
           {creators.length > 1 && showScrollButtons && (
             <>
               <AnimatePresence>
@@ -131,11 +130,11 @@ export const CreatorsList: React.FC<CreatorsListProps> = ({
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 0.9 }}
                     exit={{ opacity: 0 }}
-                    className="absolute left-0 top-1/2 z-20 -translate-y-1/2 -ml-1 h-8 w-8 rounded-full bg-white/90 shadow-md flex items-center justify-center border border-gray-100 text-indigo-600"
+                    className="scroll-indicator-button absolute left-0 top-1/2 z-20 -translate-y-1/2 -ml-1 h-12 w-12 rounded-full bg-white/90 shadow-md flex items-center justify-center border border-gray-100 text-indigo-600"
                     onClick={() => scrollHorizontally('left')}
                     aria-label="Scroll left"
                   >
-                    <ChevronLeft className="h-5 w-5" />
+                    <ChevronLeft className="h-6 w-6" />
                   </motion.button>
                 )}
               </AnimatePresence>
@@ -146,11 +145,11 @@ export const CreatorsList: React.FC<CreatorsListProps> = ({
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 0.9 }}
                     exit={{ opacity: 0 }}
-                    className="absolute right-0 top-1/2 z-20 -translate-y-1/2 -mr-1 h-8 w-8 rounded-full bg-white/90 shadow-md flex items-center justify-center border border-gray-100 text-indigo-600"
+                    className="scroll-indicator-button absolute right-0 top-1/2 z-20 -translate-y-1/2 -mr-1 h-12 w-12 rounded-full bg-white/90 shadow-md flex items-center justify-center border border-gray-100 text-indigo-600"
                     onClick={() => scrollHorizontally('right')}
                     aria-label="Scroll right"
                   >
-                    <ChevronRight className="h-5 w-5" />
+                    <ChevronRight className="h-6 w-6" />
                   </motion.button>
                 )}
               </AnimatePresence>
@@ -160,7 +159,7 @@ export const CreatorsList: React.FC<CreatorsListProps> = ({
           {/* Horizontal scroll container for mobile */}
           <div 
             ref={scrollContainerRef}
-            className="flex overflow-x-auto gap-4 pb-4 pt-1 snap-x snap-mandatory scroll-container-horizontal scrollbar-hide"
+            className="flex overflow-x-auto gap-4 pb-6 pt-2 snap-x snap-mandatory scroll-container-horizontal scrollbar-hide"
             onScroll={handleScroll}
             role="list"
             aria-label="Creators list"
@@ -190,22 +189,23 @@ export const CreatorsList: React.FC<CreatorsListProps> = ({
               </div>
             ))}
             
+            {/* No creators message */}
             {creators.length === 0 && (
               <div className="w-full text-center py-10">
-                <div className="text-gray-500">No creators found</div>
-                <p className="text-sm text-gray-400 mt-2">Try adjusting your filters</p>
+                <div className="text-gray-500 text-base">No creators found</div>
+                <p className="text-base text-gray-400 mt-2">Try adjusting your filters</p>
               </div>
             )}
           </div>
           
-          {/* Scrolling indicator dots */}
+          {/* Scrolling indicator dots - improved for touch */}
           {creators.length > 1 && (
-            <div className="flex justify-center mt-3 gap-1.5">
+            <div className="flex justify-center mt-4 gap-2">
               {creators.map((_, index) => (
                 <button
                   key={index}
                   className={cn(
-                    "w-2 h-2 rounded-full transition-all duration-300",
+                    "w-3 h-3 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-400",
                     // Use approximate scroll position to determine active index
                     Math.round(scrollPosition / (scrollContainerRef.current?.clientWidth || 1)) === index
                       ? "bg-indigo-600 scale-110"
@@ -228,7 +228,8 @@ export const CreatorsList: React.FC<CreatorsListProps> = ({
           )}
         </div>
       ) : (
-        // DESKTOP: Grid layout
+        // DESKTOP: Grid layout (unchanged)
+        
         <div 
           className="grid gap-4 sm:gap-5 md:gap-6 sm:grid-cols-2 lg:grid-cols-3"
           role="list"
