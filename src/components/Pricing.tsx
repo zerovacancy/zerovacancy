@@ -30,7 +30,7 @@
   export function Pricing({
     className,
     plan,
-    features,
+    features = [], // Provide a default empty array
     isHighlighted = false,
     showPopularTag = false,
     annualBilling = false,
@@ -53,7 +53,8 @@
 
     const isMobile = useIsMobile();
 
-    const allFeatures = [...features, ...includedFeatures];
+    // Ensure allFeatures only spreads arrays
+    const allFeatures = [...(Array.isArray(features) ? features : []), ...(Array.isArray(includedFeatures) ? includedFeatures : [])];
 
     return (
       <motion.div
