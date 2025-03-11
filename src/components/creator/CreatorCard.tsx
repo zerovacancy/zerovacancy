@@ -100,7 +100,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
             </div>
           </Card>
         ) : (
-          // Desktop version with more visual effects
+          // Desktop version with more visual effects but static button
           <>
             <div className="absolute -inset-0.5 sm:-inset-0.5 rounded-xl bg-gradient-to-r from-purple-800/30 via-indigo-700/30 to-purple-900/30 opacity-60 sm:opacity-75 blur-[2px] sm:blur-sm group-hover:opacity-100 transition duration-500"></div>
             <Card className={cn(
@@ -167,30 +167,29 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 {/* Spacer to push button to bottom */}
                 <div className="flex-grow"></div>
 
-                {/* Enhanced CTA Button at the bottom */}
+                {/* Static CTA Button (removed animations) */}
                 <div>
-                  <ShimmerButton 
+                  <button 
                     onClick={handleCTAClick}
                     aria-label={`Book with ${creator.name}`}
                     className={cn(
-                      "w-full text-sm px-4 py-2.5 hover:scale-[1.03] active:scale-[0.98]",
-                      "transition-all duration-300",
-                      "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500",
-                      "border border-indigo-400/30 shadow-lg shadow-indigo-500/20",
-                      "group-hover:shadow-indigo-500/30 group-hover:border-indigo-400/50"
+                      "w-full text-sm px-4 py-2.5",
+                      "bg-gradient-to-r from-indigo-600 to-purple-600",
+                      "text-white font-medium rounded-lg",
+                      "border border-indigo-400/30 shadow-lg shadow-indigo-500/20"
                     )}
                   >
                     {stage === 'initial' ? (
                       <>
                         <span>Book with {firstName}</span>
-                        <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1.5 transition-transform duration-300" aria-hidden="true" />
+                        <ArrowRight className="w-4 h-4 ml-2" aria-hidden="true" />
                       </>
                     ) : stage === 'input' ? (
                       <span>Secure Your Spot</span>
                     ) : (
                       <span>Access Confirmed - Launching Soon!</span>
                     )}
-                  </ShimmerButton>
+                  </button>
                 </div>
               </div>
             </Card>
