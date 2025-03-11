@@ -1,8 +1,6 @@
-
 import React, { useRef, useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { OptimizedSpotlight } from './optimized-spotlight';
-
 interface GradientBlobBackgroundProps {
   className?: string;
   children?: React.ReactNode;
@@ -21,7 +19,6 @@ interface GradientBlobBackgroundProps {
   baseColor?: string;
   animationSpeed?: 'slow' | 'medium' | 'fast';
 }
-
 export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
   className = '',
   children,
@@ -43,19 +40,16 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
   const [isMounted, setIsMounted] = useState(false);
   const isReducedMotion = useRef(false);
   const [isMobile, setIsMobile] = useState(false);
-  
+
   // Check if mobile and for reduced motion preference
   useEffect(() => {
     setIsMounted(true);
     isReducedMotion.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
-    
     checkMobile();
     window.addEventListener('resize', checkMobile);
-    
     return () => {
       window.removeEventListener('resize', checkMobile);
     };
@@ -66,8 +60,7 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
 
   // For mobile, render simplified background without animations
   if (isMobile) {
-    return (
-      <div className={cn(`relative w-full overflow-hidden ${baseColor}`, className)}>
+    return <div className={cn(`relative w-full overflow-hidden ${baseColor}`, className)}>
         {/* Simple gradient background for mobile */}
         <div className="absolute inset-0 bg-gradient-to-b from-white/80 to-gray-100/80"></div>
         
@@ -75,10 +68,9 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
         <div className="relative z-10">
           {children}
         </div>
-      </div>
-    );
+      </div>;
   }
-  
+
   // Desktop version with full effects
   // Determine blob sizes based on the blobSize prop
   const getBlobSizeClass = (position: 'first' | 'second' | 'third') => {
@@ -99,32 +91,24 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
         third: 'w-[48rem] h-[48rem]'
       }
     };
-    
     return sizes[blobSize][position];
   };
 
   // Animation duration based on speed or disabled for reduced motion
   const getAnimationDuration = (base: number) => {
     if (!shouldAnimate) return '0s';
-    
     const multipliers = {
       fast: 0.7,
       medium: 1,
       slow: 2.2
     };
-    
     return `${base * multipliers[animationSpeed]}s`;
   };
-
-  return (
-    <div className={cn(`relative w-full overflow-hidden ${baseColor}`, className)}>
+  return <div className={cn(`relative w-full overflow-hidden ${baseColor}`, className)}>
       {/* Pattern background - only if pattern is not 'none' */}
-      {pattern === 'dots' && (
-        <div className={`absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:20px_20px] opacity-${dotOpacity * 100}`}></div>
-      )}
+      {pattern === 'dots' && <div className={`absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:20px_20px] opacity-${dotOpacity * 100}`}></div>}
       
-      {pattern === 'grid' && (
-        <div className={`absolute inset-0 opacity-${dotOpacity * 10}`}>
+      {pattern === 'grid' && <div className={`absolute inset-0 opacity-${dotOpacity * 10}`}>
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <pattern id="smallGrid" width="20" height="20" patternUnits="userSpaceOnUse">
@@ -133,38 +117,27 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
             </defs>
             <rect width="100%" height="100%" fill="url(#smallGrid)" />
           </svg>
-        </div>
-      )}
+        </div>}
       
       {/* Render main blobs (always visible) */}
-      <div 
-        className={cn(
-          `absolute -top-10 -left-20 ${getBlobSizeClass('first')} ${blobColors.first} rounded-full mix-blend-multiply filter blur-3xl opacity-${blobOpacity * 100}`
-        )}
-        style={shouldAnimate ? { animation: `blob ${getAnimationDuration(45)} infinite` } : {}}
-      ></div>
-      <div 
-        className={cn(
-          `absolute top-[40%] -right-20 ${getBlobSizeClass('second')} ${blobColors.second} rounded-full mix-blend-multiply filter blur-3xl opacity-${blobOpacity * 100}`
-        )}
-        style={shouldAnimate ? { animation: `blob ${getAnimationDuration(50)} infinite`, animationDelay: `${getAnimationDuration(8)}` } : {}}
-      ></div>
-      <div 
-        className={cn(
-          `absolute -bottom-40 left-[20%] ${getBlobSizeClass('third')} ${blobColors.third} rounded-full mix-blend-multiply filter blur-3xl opacity-${blobOpacity * 100}`
-        )}
-        style={shouldAnimate ? { animation: `blob ${getAnimationDuration(40)} infinite`, animationDelay: `${getAnimationDuration(15)}` } : {}}
-      ></div>
+      <div className={cn(`absolute -top-10 -left-20 ${getBlobSizeClass('first')} ${blobColors.first} rounded-full mix-blend-multiply filter blur-3xl opacity-${blobOpacity * 100}`)} style={shouldAnimate ? {
+      animation: `blob ${getAnimationDuration(45)} infinite`
+    } : {}}></div>
+      <div className={cn(`absolute top-[40%] -right-20 ${getBlobSizeClass('second')} ${blobColors.second} rounded-full mix-blend-multiply filter blur-3xl opacity-${blobOpacity * 100}`)} style={shouldAnimate ? {
+      animation: `blob ${getAnimationDuration(50)} infinite`,
+      animationDelay: `${getAnimationDuration(8)}`
+    } : {}}></div>
+      <div className={cn(`absolute -bottom-40 left-[20%] ${getBlobSizeClass('third')} ${blobColors.third} rounded-full mix-blend-multiply filter blur-3xl opacity-${blobOpacity * 100}`)} style={shouldAnimate ? {
+      animation: `blob ${getAnimationDuration(40)} infinite`,
+      animationDelay: `${getAnimationDuration(15)}`
+    } : {}}></div>
       
       {/* Spotlight effect - only if withSpotlight is true */}
-      {withSpotlight && (
-        <OptimizedSpotlight className={spotlightClassName} size={spotlightSize} />
-      )}
+      {withSpotlight && <OptimizedSpotlight className={spotlightClassName} size={spotlightSize} />}
       
       {/* Content */}
-      <div className="relative z-10">
+      <div className="relative z-10 bg-neutral-50">
         {children}
       </div>
-    </div>
-  );
+    </div>;
 };
