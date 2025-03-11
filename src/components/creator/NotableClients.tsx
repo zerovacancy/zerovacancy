@@ -1,6 +1,11 @@
- import React from 'react';
+import React from 'react';
   import { cn } from '@/lib/utils';
-  import { Tooltip } from '../ui/tooltip';
+  import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger
+  } from '../ui/tooltip';
   import { useIsMobile } from '@/hooks/use-mobile';
   import type { NotableClient } from './types';
 
@@ -22,39 +27,41 @@
 
         <div className="flex space-x-2">
           {clients.map((client, index) => (
-            <Tooltip 
-              key={index}
-              content={
-                <span className="text-xs">
-                  {client.projectType && `${client.projectType} for `}
-                  {client.name}
-                  {client.year && ` (${client.year})`}
-                </span>
-              }
-            >
-              <div 
-                className={cn(
-                  "rounded-md overflow-hidden",
-                  "border border-gray-100",
-                  "bg-white shadow-sm",
-                  "flex items-center justify-center",
-                  "hover:scale-105 transition-transform duration-200",
-                  isMobile ? "h-5 w-10" : "h-6 w-12"
-                )}
-              >
-                {/* Use placeholder SVG if image fails to load */}
-                <img 
-                  src={client.logo}
-                  alt={`${client.name} logo`}
-                  className="max-h-full max-w-full object-contain p-0.5"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.onerror = null; // Prevent infinite loop
-                    target.src = '/placeholder.svg'; // Fallback to placeholder
-                  }}
-                />
-              </div>
-            </Tooltip>
+            <TooltipProvider key={index}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div 
+                    className={cn(
+                      "rounded-md overflow-hidden",
+                      "border border-gray-100",
+                      "bg-white shadow-sm",
+                      "flex items-center justify-center",
+                      "hover:scale-105 transition-transform duration-200",
+                      isMobile ? "h-5 w-10" : "h-6 w-12"
+                    )}
+                  >
+                    {/* Use placeholder SVG if image fails to load */}
+                    <img 
+                      src={client.logo}
+                      alt={`${client.name} logo`}
+                      className="max-h-full max-w-full object-contain p-0.5"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.onerror = null; // Prevent infinite loop
+                        target.src = '/placeholder.svg'; // Fallback to placeholder
+                      }}
+                    />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <span className="text-xs">
+                    {client.projectType && `${client.projectType} for `}
+                    {client.name}
+                    {client.year && ` (${client.year})`}
+                  </span>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           ))}
         </div>
       </div>
