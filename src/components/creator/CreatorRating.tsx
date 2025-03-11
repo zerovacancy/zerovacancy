@@ -34,14 +34,12 @@ import React, { useEffect, useState } from 'react';
       },
       'available-tomorrow': {
         text: 'Available Tomorrow',
-        icon: <Clock className={cn("mr-1 text-amber-500", isNarrowScreen ? "w-2.5 h-2.5" : "w-3 
-  h-3")} />,
+        icon: <Clock className="mr-1 text-amber-500 w-3 h-3" />,
         className: 'border-amber-100/50 text-amber-700 tomorrow-status'
       },
       'premium-only': {
         text: 'Premium Only',
-        icon: <Crown className={cn("mr-1 text-purple-500", isNarrowScreen ? "w-2.5 h-2.5" : "w-3
-   h-3")} />,
+        icon: <Crown className="mr-1 text-purple-500 w-3 h-3" />,
         className: 'border-purple-100/50 text-purple-700 premium-status'
       }
     };
