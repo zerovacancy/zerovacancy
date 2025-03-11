@@ -2,7 +2,7 @@
 import React from 'react';
 import { MobileStepItem } from './MobileStepItem';
 import { MobileStepsNavigation } from './MobileStepsNavigation';
-import SwipeInstruction from './SwipeInstruction';
+import { SwipeInstruction } from './SwipeInstruction';
 import { useSwipeGesture } from '@/hooks/use-swipe-gesture';
 import { Step } from './stepsUtils';
 

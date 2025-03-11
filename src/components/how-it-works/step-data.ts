@@ -1,10 +1,12 @@
 
 import { Search, Users, FileCheck, Calendar } from 'lucide-react';
 import { Step } from './types';
+import React from 'react';
 
+// Define step data to avoid repetition
 export const steps: Step[] = [
   {
-    icon: Search,
+    icon: React.createElement(Search, { className: "w-5 h-5" }),
     title: "DISCOVER",
     description: "Explore our curated network of visionaries whose lenses and perspectives reshape how people experience spaces.",
     number: "01",
@@ -20,7 +22,7 @@ export const steps: Step[] = [
     }
   },
   {
-    icon: Users,
+    icon: React.createElement(Users, { className: "w-5 h-5" }),
     title: "CONNECT",
     description: "Immerse yourself in creative portfolios that reveal each creator's unique perspective on architectural storytelling.",
     number: "02",
@@ -36,7 +38,7 @@ export const steps: Step[] = [
     }
   },
   {
-    icon: Calendar,
+    icon: React.createElement(Calendar, { className: "w-5 h-5" }),
     title: "COLLABORATE",
     description: "Lock in your vision with transparent investment structures. Your creative capital remains in escrow until your vision materializes.",
     number: "03",
@@ -52,7 +54,7 @@ export const steps: Step[] = [
     }
   },
   {
-    icon: FileCheck,
+    icon: React.createElement(FileCheck, { className: "w-5 h-5" }),
     title: "TRANSFORM",
     description: "Receive visual assets that transcend traditional property marketing and create emotional connections with your ideal audience.",
     number: "04",
