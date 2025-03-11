@@ -1,5 +1,5 @@
 
-  export interface Creator {
+ export interface Creator {
     name: string;
     services: string[];
     price: number;
