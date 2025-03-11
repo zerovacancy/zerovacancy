@@ -40,6 +40,7 @@ export const CreatorMedia: React.FC<CreatorMediaProps> = ({
   const [imageError, setImageError] = useState(false);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [videoError, setVideoError] = useState(false);
   const mediaRef = useRef<HTMLDivElement>(null);
   
   const media = getMedia(creator);
@@ -66,6 +67,13 @@ export const CreatorMedia: React.FC<CreatorMediaProps> = ({
     };
   }, []);
   
+  useEffect(() => {
+    // Reset states when creator changes
+    setImageError(false);
+    setVideoError(false);
+    setIsVideoLoaded(false);
+  }, [creator.name]);
+
   const handleImageLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
     if (onImageLoad) {
       onImageLoad(creator.image);
@@ -73,10 +81,16 @@ export const CreatorMedia: React.FC<CreatorMediaProps> = ({
   };
 
   const handleVideoLoad = () => {
+    console.log("Video loaded successfully:", media.src);
     setIsVideoLoaded(true);
     if (onVideoLoad) {
       onVideoLoad();
     }
+  };
+
+  const handleVideoError = (e: React.SyntheticEvent<HTMLVideoElement>) => {
+    console.error("Video error:", e);
+    setVideoError(true);
   };
 
   const handleImageError = () => {
@@ -111,9 +125,9 @@ export const CreatorMedia: React.FC<CreatorMediaProps> = ({
       )} 
       ref={mediaRef}
     >
-      {isVisible && ((media.type === 'image') || (media.type === 'video' && imageError)) ? (
+      {isVisible && media.type === 'image' ? (
         <img 
-          src={media.type === 'image' ? media.src : (media as any).fallback}
+          src={media.src}
           alt={`${creator.name} profile`}
           className="w-full h-full object-cover object-center transform-gpu"
           onLoad={handleImageLoad}
@@ -121,20 +135,19 @@ export const CreatorMedia: React.FC<CreatorMediaProps> = ({
           loading="lazy"
           decoding="async"
           fetchPriority="auto"
-          srcSet={generateSrcSet(media.type === 'image' ? media.src : (media as any).fallback)}
+          srcSet={generateSrcSet(media.src)}
           sizes="(max-width: 768px) 95vw, (max-width: 1024px) 50vw, 33vw"
           style={{
             contentVisibility: 'auto',
             containIntrinsicSize: 'auto 300px',
           }}
         />
-      ) : isVisible && media.type === 'video' ? (
+      ) : isVisible && media.type === 'video' && !videoError ? (
         <>
-          {/* Video element with reduced quality on mobile to save data */}
           <video
             src={media.src}
             className="w-full h-full object-cover object-center transform-gpu"
-            onError={() => setImageError(true)}
+            onError={handleVideoError}
             onLoadedData={handleVideoLoad}
             autoPlay
             muted
@@ -151,6 +164,20 @@ export const CreatorMedia: React.FC<CreatorMediaProps> = ({
             <div className="absolute inset-0 bg-gray-200 animate-pulse"></div>
           )}
         </>
+      ) : isVisible && ((media.type === 'video' && videoError) || imageError) ? (
+        // Fallback image for video or image errors
+        <img 
+          src={(media.type === 'video' && (media as any).fallback) || '/placeholder.svg'}
+          alt={`${creator.name} profile fallback`}
+          className="w-full h-full object-cover object-center transform-gpu"
+          onLoad={handleImageLoad}
+          loading="lazy"
+          decoding="async"
+          style={{
+            contentVisibility: 'auto',
+            containIntrinsicSize: 'auto 300px',
+          }}
+        />
       ) : (
         // Placeholder when not yet visible
         <div className="w-full h-full bg-gray-100"></div>
