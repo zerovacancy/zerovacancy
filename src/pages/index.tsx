@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef, lazy, Suspense, useCallback } from 'react';
 import Header from '../components/Header';
 import { Hero } from '../components/hero/Hero';
@@ -25,6 +26,18 @@ const SectionLoader = () => (
     <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
   </div>
 );
+
+// Section divider component for mobile
+const SectionDivider = ({ color = "indigo" }: { color?: string }) => {
+  const isMobile = useIsMobile();
+  if (!isMobile) return null;
+  
+  return (
+    <div className="w-full flex justify-center py-2">
+      <div className={`w-1/3 h-px border-t border-${color}-200/70 opacity-70`}></div>
+    </div>
+  );
+};
 
 /**
  * Main landing page component with performance optimizations
@@ -169,11 +182,16 @@ const Index = () => {
           </section>
         </BackgroundEffects>
         
-        {/* How It Works Section - with own background */}
+        {isMobile && <SectionDivider color="purple" />}
+        
+        {/* How It Works Section - with enhanced mobile background */}
         <section 
           ref={addSectionRef(1)} 
           id="how-it-works" 
-          className="relative w-full"
+          className={cn(
+            "relative w-full",
+            isMobile && "relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-6 after:bg-gradient-to-t after:from-blue-50/30 after:to-transparent"
+          )}
         >
           <BackgroundEffects 
             blobColors={{
@@ -181,10 +199,13 @@ const Index = () => {
               second: "bg-indigo-100",
               third: "bg-violet-100"
             }}
-            blobOpacity={0.1}
+            blobOpacity={isMobile ? 0.15 : 0.1}
             className="py-0"
           >
-            <div className="relative z-10">
+            <div className={cn(
+              "relative z-10",
+              isMobile && "before:content-[''] before:block before:w-10 before:h-1 before:bg-blue-400 before:mb-3 before:rounded-full before:mx-auto before:mt-4"
+            )}>
               <Suspense fallback={<SectionLoader />}>
                 <OptimizedHowItWorks />
               </Suspense>
@@ -192,11 +213,16 @@ const Index = () => {
           </BackgroundEffects>
         </section>
         
-        {/* Search Section - with own background */}
+        {isMobile && <SectionDivider color="blue" />}
+        
+        {/* Search Section - with enhanced mobile background */}
         <section 
           ref={addSectionRef(2)} 
           id="find-creators" 
-          className="relative w-full"
+          className={cn(
+            "relative w-full",
+            isMobile && "bg-gradient-to-b from-indigo-50/30 via-transparent to-transparent"
+          )}
         >
           <BackgroundEffects 
             blobColors={{
@@ -207,7 +233,10 @@ const Index = () => {
             blobOpacity={0.08}
             className="py-0"
           >
-            <div className="max-w-7xl mx-auto relative z-10 py-10 sm:py-16 lg:py-20">
+            <div className={cn(
+              "max-w-7xl mx-auto relative z-10 py-10 sm:py-16 lg:py-20",
+              isMobile && "before:content-[''] before:block before:w-10 before:h-1 before:bg-indigo-400 before:mb-3 before:rounded-full before:mx-auto before:mt-2"
+            )}>
               <Suspense fallback={<SectionLoader />}>
                 <PreviewSearch />
               </Suspense>
@@ -215,30 +244,46 @@ const Index = () => {
           </BackgroundEffects>
         </section>
         
-        {/* Professional Content Creation Services - now has its own background in the component */}
+        {isMobile && <SectionDivider color="violet" />}
+        
+        {/* Professional Content Creation Services - enhanced for mobile */}
         <section 
           ref={addSectionRef(3)} 
-          className="w-full"
+          className={cn(
+            "w-full",
+            isMobile && "bg-gradient-to-b from-violet-50/30 via-transparent to-transparent relative",
+            isMobile && "after:absolute after:bottom-0 after:left-0 after:w-full after:h-8 after:bg-gradient-to-t after:from-indigo-50/30 after:to-transparent"
+          )}
         >
           <Suspense fallback={<SectionLoader />}>
             <FeaturesSectionWithHoverEffects />
           </Suspense>
         </section>
 
+        {isMobile && <SectionDivider color="indigo" />}
+
         {/* Pricing Section - already has its own background */}
         <section 
           ref={addSectionRef(4)} 
-          className="w-full"
+          className={cn(
+            "w-full",
+            isMobile && "relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-8 after:bg-gradient-to-t after:from-purple-50/30 after:to-transparent"
+          )}
         >
           <Suspense fallback={<SectionLoader />}>
             <Pricing />
           </Suspense>
         </section>
 
+        {isMobile && <SectionDivider color="purple" />}
+
         {/* Final CTA Section - with own background */}
         <div 
           ref={addSectionRef(5)} 
-          className="relative w-full"
+          className={cn(
+            "relative w-full",
+            isMobile && "bg-gradient-to-b from-purple-50/30 via-transparent to-transparent"
+          )}
         >
           <BackgroundEffects 
             blobColors={{
@@ -249,7 +294,10 @@ const Index = () => {
             blobOpacity={0.12}
             className="py-0"
           >
-            <div className="relative z-10 max-w-7xl mx-auto py-14 sm:py-20 lg:py-24">
+            <div className={cn(
+              "relative z-10 max-w-7xl mx-auto py-14 sm:py-20 lg:py-24",
+              isMobile && "before:content-[''] before:block before:w-10 before:h-1 before:bg-purple-400 before:mb-3 before:rounded-full before:mx-auto"
+            )}>
               <CallToActionSection />
             </div>
           </BackgroundEffects>
