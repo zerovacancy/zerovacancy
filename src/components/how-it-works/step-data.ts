@@ -7,7 +7,7 @@ export const steps: Step[] = [
   {
     icon: Search,
     title: "DISCOVER",
-    description: "Explore our curated network of visionaries whose lenses and perspectives reshape how people experience spaces.",
+    description: "Find top content creators who showcase spaces with unique visual styles.",
     number: "01",
     iconClass: "text-violet-600 bg-violet-50",
     numberClass: "bg-violet-600 text-white",
@@ -23,7 +23,7 @@ export const steps: Step[] = [
   {
     icon: Users,
     title: "CONNECT",
-    description: "Immerse yourself in creative portfolios that reveal each creator's unique perspective on architectural storytelling.",
+    description: "Browse portfolios to match your project with the right creative approach.",
     number: "02",
     iconClass: "text-blue-600 bg-blue-50",
     numberClass: "bg-blue-600 text-white",
@@ -39,7 +39,7 @@ export const steps: Step[] = [
   {
     icon: Calendar,
     title: "COLLABORATE",
-    description: "Lock in your vision with transparent investment structures. Your creative capital remains in escrow until your vision materializes.",
+    description: "Your payment stays in escrow until your vision is delivered.",
     number: "03",
     iconClass: "text-amber-600 bg-amber-50",
     numberClass: "bg-amber-600 text-white",
@@ -55,7 +55,7 @@ export const steps: Step[] = [
   {
     icon: FileCheck,
     title: "TRANSFORM",
-    description: "Receive visual assets that transcend traditional property marketing and create emotional connections with your ideal audience.",
+    description: "Receive compelling visuals that engage your target audience.",
     number: "04",
     iconClass: "text-emerald-600 bg-emerald-50",
     numberClass: "bg-emerald-600 text-white",
