@@ -1,9 +1,10 @@
 
 import React, { useEffect, useState } from 'react';
-import { Star, Calendar, Clock, Crown } from 'lucide-react';
+import { Calendar, Clock, Crown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useIsMobile, useViewportSize } from '@/hooks/use-mobile';
 import type { AvailabilityStatus } from './types';
+import { PillRating } from '@/components/ui/pill-rating';
 
 interface CreatorRatingProps {
   rating: number;
@@ -57,35 +58,13 @@ export const CreatorRating: React.FC<CreatorRatingProps> = ({
       "flex items-center",
       isNarrowScreen ? "flex-col items-start gap-2" : "justify-between w-full"
     )}>
-      <div className="flex items-center">
-        {/* Single star rating with enhanced visibility */}
-        <div className="flex mr-1.5">
-          <Star
-            className={cn(
-              isNarrowScreen ? "w-3 h-3" : "w-4 h-4",
-              "text-yellow-400 fill-yellow-400"
-            )}
-          />
-        </div>
-
-        {/* Rating text with increased contrast */}
-        <span className={cn(
-          "font-semibold text-gray-800", // Changed from medium to semibold for better emphasis
-          isMobile ? "text-sm" : "text-sm" // Increased size on mobile from xs to sm
-        )}>
-          {rating.toFixed(1)}
-        </span>
-
-        {/* Review count */}
-        {reviews > 0 && (
-          <span className={cn(
-            "text-gray-500 ml-1.5",
-            isMobile ? "text-xs" : "text-sm"
-          )}>
-            ({reviews})
-          </span>
-        )}
-      </div>
+      {/* Use our new PillRating component */}
+      <PillRating 
+        rating={rating} 
+        reviews={reviews} 
+        size={isNarrowScreen ? "sm" : "md"}
+        showReviews={true}
+      />
 
       {/* Availability Indicator with larger touch target */}
       {availabilityStatus && availabilityConfig[availabilityStatus] && (
