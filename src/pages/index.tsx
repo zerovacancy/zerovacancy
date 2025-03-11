@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef, lazy, Suspense, useCallback } from 'react';
 import Header from '../components/Header';
 import { Hero } from '../components/hero/Hero';
@@ -19,6 +18,7 @@ const OptimizedHowItWorks = lazy(() => import('../components/how-it-works/Optimi
 const FeaturesSectionWithHoverEffects = lazy(() => import('@/components/features/Features'));
 const Pricing = lazy(() => import('@/components/Pricing'));
 const PreviewSearch = lazy(() => import('../components/preview-search'));
+const HowItWorks = lazy(() => import('../components/how-it-works/HowItWorks'));
 
 // Simple loading fallback
 const SectionLoader = () => (
@@ -194,7 +194,7 @@ const Index = () => {
           )}
         >
           <Suspense fallback={<SectionLoader />}>
-            <OptimizedHowItWorks />
+            <HowItWorks />
           </Suspense>
         </section>
         
