@@ -41,7 +41,9 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
                 "relative rounded-md overflow-hidden cursor-pointer",
                 "border border-gray-100",
                 "shadow-sm hover:shadow-md transition-shadow duration-200",
-                isMobile ? "h-16 w-[calc(33.333%-4px)]" : "h-18 w-[calc(33.333%-4px)]",
+                isMobile 
+                  ? "h-[120px] w-[120px]" // Fixed square dimensions for mobile
+                  : "h-[160px] w-[160px]", // Fixed square dimensions for desktop
                 "bg-gray-50"
               )}
               onClick={() => setSelectedImage(example)}
@@ -50,6 +52,9 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
                 src={example}
                 alt={`${creatorName}'s work example ${index + 1}`}
                 className="object-cover w-full h-full hover:scale-105 transition-transform duration-300"
+                style={{
+                  aspectRatio: '1 / 1', // Force square aspect ratio
+                }}
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
                   target.onerror = null;
@@ -90,3 +95,4 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
     </>
   );
 };
+
