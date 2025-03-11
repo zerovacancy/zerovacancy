@@ -89,28 +89,28 @@ const PreviewSearch = () => {
       )} 
       ref={containerRef}
     >
-      <div className="mx-auto relative group max-w-7xl">
-        {/* Main heading section completely outside the card */}
-        <div className="text-center mb-6">
-          <motion.h2 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 10 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight mb-2"
-          >
-            FIND YOUR CREATIVE COLLABORATOR
-          </motion.h2>
-          
-          <motion.p 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: isVisible ? 1 : 0 }}
-            transition={{ duration: 0.5, delay: 0.5 }}
-            className="text-sm sm:text-base text-gray-600 max-w-md mx-auto mb-6"
-          >
-            Because extraordinary spaces deserve extraordinary storytellers
-          </motion.p>
-        </div>
+      {/* Title section outside of card and gradient background */}
+      <div className="text-center mb-6 relative z-20">
+        <motion.h2 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 10 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight mb-2"
+        >
+          FIND YOUR CREATIVE COLLABORATOR
+        </motion.h2>
+        
+        <motion.p 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: isVisible ? 1 : 0 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+          className="text-sm sm:text-base text-gray-600 max-w-md mx-auto mb-6"
+        >
+          Because extraordinary spaces deserve extraordinary storytellers
+        </motion.p>
+      </div>
 
+      <div className="mx-auto relative group max-w-7xl">
         {/* Enhanced gradient background with more vibrant effects on mobile */}
         <div className={cn(
           "absolute -inset-0.5 sm:-inset-1 rounded-xl sm:rounded-2xl bg-gradient-to-r from-purple-800/25 via-indigo-700/30 to-purple-900/25 blur-[2px] sm:blur-sm transition-all duration-500",
