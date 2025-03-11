@@ -7,7 +7,6 @@ import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { CreatorRating } from './CreatorRating';
 import { GlowDialog } from '../ui/glow-dialog';
-import { ShimmerButton } from '../ui/shimmer-button';
 import { BorderBeam } from '../ui/border-beam';
 import { CreatorMedia } from './CreatorMedia';
 import { PortfolioPreview } from './PortfolioPreview';
@@ -167,22 +166,23 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 {/* Spacer to push button to bottom */}
                 <div className="flex-grow"></div>
 
-                {/* Static CTA Button (removed animations) */}
+                {/* Static CTA Button - fixed alignment and sizing */}
                 <div>
                   <button 
                     onClick={handleCTAClick}
                     aria-label={`Book with ${creator.name}`}
                     className={cn(
-                      "w-full text-sm px-4 py-2.5",
+                      "w-full h-10 text-sm px-4 py-2.5",
                       "bg-gradient-to-r from-indigo-600 to-purple-600",
                       "text-white font-medium rounded-lg",
-                      "border border-indigo-400/30 shadow-lg shadow-indigo-500/20"
+                      "border border-indigo-400/30 shadow-lg shadow-indigo-500/20",
+                      "flex items-center justify-center"
                     )}
                   >
                     {stage === 'initial' ? (
                       <>
                         <span>Book with {firstName}</span>
-                        <ArrowRight className="w-4 h-4 ml-2" aria-hidden="true" />
+                        <ArrowRight className="w-4 h-4 ml-2 inline-flex" aria-hidden="true" />
                       </>
                     ) : stage === 'input' ? (
                       <span>Secure Your Spot</span>
