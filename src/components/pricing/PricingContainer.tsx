@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -229,19 +230,22 @@ export const PricingContainer = () => {
                   </Button>
                 </div>
                 
-                {/* Accordion-style feature sections */}
+                {/* Accordion-style feature sections - improved button */}
                 <div className="px-4 pb-4">
                   <button
                     onClick={() => toggleFeatures(index)}
                     className={cn(
-                      "mt-3 flex items-center justify-between w-full py-2 text-sm font-medium text-brand-text-primary border-t border-slate-100",
+                      "mt-3 flex items-center justify-center w-auto mx-auto px-4 py-1.5",
+                      "text-xs font-medium text-brand-text-primary rounded-full",
+                      "border border-slate-200 bg-slate-50 hover:bg-slate-100",
+                      "transition-colors duration-200"
                     )}
                   >
                     <span className="font-inter">
-                      {isExpanded ? "What's included" : "Show features"}
+                      {isExpanded ? "Hide features" : "Show features"}
                     </span>
                     <ChevronDown className={cn(
-                      "h-4 w-4 text-brand-text-light transition-transform",
+                      "h-3.5 w-3.5 ml-1.5 text-brand-text-light transition-transform",
                       isExpanded && "rotate-180"
                     )} />
                   </button>
