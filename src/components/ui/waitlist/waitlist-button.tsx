@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { toast } from "sonner";
 import { EmailInput } from "./email-input";
 import { SocialProof } from "./social-proof";
@@ -23,6 +23,7 @@ export function WaitlistButton({
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
   const isMobile = useIsMobile();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -100,8 +101,10 @@ export function WaitlistButton({
             <EmailInput
               setEmail={setEmail}
               email={email}
+              isLoading={loading}
               disabled={loading}
               className="flex-grow"
+              inputRef={inputRef}
             />
             <Button 
               type="submit" 

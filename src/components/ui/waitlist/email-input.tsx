@@ -10,12 +10,14 @@ import { useIsMobile } from "@/hooks/use-mobile";
 interface EmailInputProps {
   email: string;
   setEmail: (email: string) => void;
-  isLoading: boolean;
-  inputRef: React.RefObject<HTMLInputElement>;
+  isLoading?: boolean;
+  disabled?: boolean;
+  inputRef?: React.RefObject<HTMLInputElement>;
+  className?: string;
 }
 
 export const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
-  ({ email, setEmail, isLoading, inputRef }, ref) => {
+  ({ email, setEmail, isLoading, disabled, inputRef, className }, ref) => {
     const [isFocused, setIsFocused] = useState(false);
     const [isValid, setIsValid] = useState(false);
     const isMobile = useIsMobile();
@@ -30,7 +32,8 @@ export const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
       <div className={cn(
         "relative transition-all duration-300", 
         isMobile ? "w-full" : "w-[380px]",
-        isFocused && "scale-[1.02] transform"
+        isFocused && "scale-[1.02] transform",
+        className
       )}>
         {/* Input field with mail icon */}
         <div className={cn(
@@ -51,7 +54,7 @@ export const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
         )}
         
         <Input 
-          ref={inputRef} 
+          ref={inputRef || ref} 
           type="email" 
           placeholder="Enter your email" 
           className={cn(
@@ -86,7 +89,7 @@ export const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
           onBlur={() => setIsFocused(false)}
           aria-label="Email address" 
           required 
-          disabled={isLoading} 
+          disabled={isLoading || disabled} 
         />
       </div>
     );

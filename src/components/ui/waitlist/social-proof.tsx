@@ -5,11 +5,15 @@ import { cn } from "@/lib/utils";
 import { Users } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-export function SocialProof() {
+interface SocialProofProps {
+  className?: string;
+}
+
+export function SocialProof({ className }: SocialProofProps) {
   const isMobile = useIsMobile();
   
   return (
-    <div className="flex items-center justify-center mt-2 sm:mt-3"> {/* Reduced from mt-4 sm:mt-6 */}
+    <div className={cn("flex items-center justify-center mt-2 sm:mt-3", className)}> {/* Reduced from mt-4 sm:mt-6 */}
       {/* Social proof pill */}
       <div className={cn(
         "flex items-center gap-2 sm:gap-3 px-4 py-2",
