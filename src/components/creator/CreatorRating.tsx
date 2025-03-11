@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
   import { Star, Calendar, Clock, Crown } from 'lucide-react';
   import { cn } from '@/lib/utils';
@@ -116,18 +115,3 @@ import React, { useEffect, useState } from 'react';
       </div>
     );
   };
-
-  And here's the updated part you should modify in CreatorCard.tsx, specifically the container
-  div that holds the CreatorRating component:
-
-  {/* Rating section with improved container */}
-  <div className="bg-white rounded-lg px-3 py-2 shadow-sm relative">
-    <div className="flex justify-between items-center">
-      <CreatorRating 
-        rating={creator.rating} 
-        reviews={creator.reviews} 
-        name={creator.name} 
-        availabilityStatus={creator.availabilityStatus}
-      />
-    </div>
-  </div>
