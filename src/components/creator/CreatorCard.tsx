@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card } from '../ui/card';
 import { ArrowRight } from 'lucide-react';
@@ -10,7 +9,6 @@ import { GlowDialog } from '../ui/glow-dialog';
 import { ShimmerButton } from '../ui/shimmer-button';
 import { BorderBeam } from '../ui/border-beam';
 import { CreatorMedia } from './CreatorMedia';
-import { CreatorTags, getDefaultTags } from './CreatorTags';
 import { PortfolioPreview } from './PortfolioPreview';
 import type { CreatorCardProps } from './types';
 
@@ -24,7 +22,6 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
   const [showEmailDialog, setShowEmailDialog] = useState(false);
   const [stage, setStage] = useState<'initial' | 'input' | 'confirmed'>('initial');
 
-  const tags = creator.tags || getDefaultTags(creator.name, creator.services);
   const firstName = creator.name.split(' ')[0];
 
   const handleCTAClick = () => {
@@ -112,10 +109,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               />
             </div>
 
-            {/* Tags section with consistent height */}
-            <div className="mb-4 min-h-[60px]">
-              <CreatorTags tags={tags} />
-            </div>
+            {/* Hashtags section completely removed */}
 
             {/* Spacer to push button to bottom */}
             <div className="flex-grow"></div>
