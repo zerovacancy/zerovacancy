@@ -85,8 +85,17 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
         </div>
       )}
     
+      {/* Visual search results connector */}
+      <div className="relative py-4">
+        <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-full p-1 shadow-sm border border-gray-100">
+          <div className="bg-indigo-100 text-indigo-700 text-xs font-medium px-3 py-1 rounded-full">
+            Search Results
+          </div>
+        </div>
+      </div>
+
       {/* Carousel container with fixed padding */}
-      <div className="w-full overflow-hidden pb-14 embla-container" ref={emblaRef}>
+      <div className="w-full overflow-hidden pb-8 embla-container" ref={emblaRef}>
         <div className="flex embla-slide-container">
           {creators.map((creator, index) => (
             <div 
@@ -131,24 +140,6 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
       >
         <ChevronRight className="w-6 h-6" />
       </button>
-
-      {/* Larger Dots Indicator with improved spacing */}
-      <div className="flex justify-center gap-3 absolute bottom-3 left-0 right-0">
-        {creators.map((_, index) => (
-          <button 
-            key={index} 
-            className={cn(
-              "transition-all duration-200 touch-manipulation rounded-full", 
-              "min-h-[24px] min-w-[24px] flex items-center justify-center p-1", // Ensure adequate touch size
-              index === selectedIndex 
-                ? "bg-indigo-600 w-8 h-8" // Enlarged active dot (8px)
-                : "bg-gray-300 hover:bg-gray-400 w-6 h-6" // Enlarged inactive dot (6px)
-            )} 
-            onClick={() => emblaApi?.scrollTo(index)} 
-            aria-label={`Go to creator ${index + 1}`} 
-          />
-        ))}
-      </div>
     </div>
   );
 };
