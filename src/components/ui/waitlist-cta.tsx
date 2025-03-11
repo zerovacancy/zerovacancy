@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { ShimmerButton } from './shimmer-button';
 import { WaitlistButton } from './waitlist/waitlist-button';
+import { SocialProof } from './waitlist/social-proof';
 
 interface WaitlistCTAProps {
   className?: string;
@@ -37,6 +38,9 @@ export const WaitlistCTA: React.FC<WaitlistCTAProps> = ({
           {buttonText}
         </ShimmerButton>
       </WaitlistButton>
+      
+      {/* Show social proof regardless of CTA state */}
+      <SocialProof className="mt-3" />
     </div>
   );
 };

@@ -127,9 +127,9 @@ export function WaitlistButton({
               )}
             </Button>
           </div>
-          <SocialProof className="mt-3" />
+          {/* Social proof is now moved to the main component */}
         </form>
       )}
     </div>
   );
-}
+};

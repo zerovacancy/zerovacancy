@@ -84,14 +84,14 @@ export function WaitlistCTA({
           inputRef={inputRef}
         />
         
-        {/* Remove the isLoading prop since WaitlistButton doesn't accept it */}
+        {/* Fixed: Removed the isLoading prop */}
         <WaitlistButton 
           source={source}
           buttonText="JOIN WAITLIST"
         />
       </form>
       
-      {/* Enhanced Social Proof Section */}
+      {/* Social Proof Section - Always visible */}
       <SocialProof />
     </div>
   );
