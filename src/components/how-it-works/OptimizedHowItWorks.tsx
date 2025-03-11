@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import SectionHeaderSimple from './SectionHeaderSimple';
@@ -51,24 +50,24 @@ const OptimizedHowItWorks: React.FC = () => {
   return (
     <BeamsBackground 
       id="how-it-works-section"
-      className="py-8 sm:py-16 lg:py-20"
+      className="py-10 sm:py-16 lg:py-20"
       intensity="subtle"
     >
       <div className={`max-w-6xl mx-auto relative px-4 sm:px-6 lg:px-10 transition-all duration-700 ${isVisible ? 'opacity-100' : 'opacity-0 translate-y-10'}`}>
-        <div className="text-center mb-6 sm:mb-12 lg:mb-16">
+        <div className="text-center mb-8 sm:mb-12 lg:mb-16">
           <SectionHeaderSimple 
             title="THE EXPERIENCE" 
             subtitle="From concept to captivation in four moments:"
           />
         </div>
-        
-        {/* Mobile 2x2 Grid Layout */}
+
+        {/* Mobile carousel layout */}
         <MobileStepsGridSimple 
           completedSteps={completedSteps} 
           activeStep={activeStep}
           onStepInteraction={handleStepInteraction}
         />
-        
+
         {/* Desktop grid layout */}
         <DesktopStepsGridSimple 
           completedSteps={completedSteps} 
