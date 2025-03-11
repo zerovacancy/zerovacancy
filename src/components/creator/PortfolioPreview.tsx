@@ -1,4 +1,4 @@
- import React from 'react';
+import React from 'react';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ArrowRight } from 'lucide-react';
@@ -23,7 +23,7 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
   ];
 
   return (
-    <div className="mt-1 mb-3">
+    <div>
       <div className="flex items-center mb-1.5">
         <div className="w-0.5 h-3 bg-gradient-to-b from-indigo-500 to-purple-500 rounded-full mr-1.5"></div>
         <span className="text-xs text-gray-500 font-medium">RECENT WORK</span>
@@ -56,8 +56,7 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
       </div>
 
       <div className="flex justify-end mt-1">
-        <button className="flex items-center text-xs text-indigo-600 hover:text-indigo-800 transition-colors 
-duration-200 font-medium">
+        <button className="flex items-center text-xs text-indigo-600 hover:text-indigo-800 transition-colors duration-200 font-medium">
           <span>View Portfolio</span>
           <ArrowRight className="w-3 h-3 ml-1" />
         </button>
