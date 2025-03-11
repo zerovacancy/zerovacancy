@@ -14,7 +14,6 @@ import { cn } from '@/lib/utils';
 import { BackgroundEffects } from '@/components/features/BackgroundEffects';
 
 // Lazy-loaded components
-const OptimizedHowItWorks = lazy(() => import('../components/how-it-works/OptimizedHowItWorks'));
 const FeaturesSectionWithHoverEffects = lazy(() => import('@/components/features/Features'));
 const Pricing = lazy(() => import('@/components/Pricing'));
 const PreviewSearch = lazy(() => import('../components/preview-search'));
