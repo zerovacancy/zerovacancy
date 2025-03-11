@@ -4,11 +4,13 @@ import { cn } from '@/lib/utils';
 import { PreviewCard } from './PreviewCard';
 import { PreviewHeader } from './PreviewHeader';
 import { PreviewContent } from './PreviewContent';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const PreviewSearch = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
+  const isMobile = useIsMobile();
   
   useEffect(() => {
     if (!containerRef.current) return;
@@ -77,15 +79,19 @@ const PreviewSearch = () => {
 
   return (
     <div 
-      className="w-full px-2 sm:px-4 md:px-6 lg:px-8 xl:px-10 content-visibility-auto py-3 sm:py-6 md:py-8" 
+      className={cn(
+        "w-full px-2 sm:px-4 md:px-6 lg:px-8 xl:px-10 content-visibility-auto py-6 sm:py-6 md:py-8",
+        isMobile && "bg-indigo-50/20" // Subtle tinted background only on mobile
+      )} 
       ref={containerRef}
     >
       <div className="mx-auto relative group max-w-7xl">
-        {/* Enhanced gradient background with more subtle effects */}
+        {/* Enhanced gradient background with more vibrant effects on mobile */}
         <div className={cn(
           "absolute -inset-0.5 sm:-inset-1 rounded-xl sm:rounded-2xl bg-gradient-to-r from-purple-800/25 via-indigo-700/30 to-purple-900/25 blur-[2px] sm:blur-sm transition-all duration-500",
           isVisible ? "opacity-70 sm:opacity-80" : "opacity-0",
-          "group-hover:opacity-90 group-hover:blur-md"
+          "group-hover:opacity-90 group-hover:blur-md",
+          isMobile && "opacity-90" // More visible gradient on mobile
         )}></div>
 
         <PreviewCard isVisible={isVisible}>

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { MapPin, Image, BadgeCheck } from 'lucide-react';
@@ -17,12 +18,12 @@ export const CreatorInfo: React.FC<CreatorInfoProps> = ({ creator }) => {
   const isMobile = useIsMobile();
   
   return (
-    <div className="absolute inset-0 flex flex-col justify-end p-3.5 sm:p-4.5 text-white select-text z-10">
+    <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-4.5 text-white select-text z-10">
       {/* Enhanced darker semi-transparent gradient overlay for better text visibility on mobile */}
       <div className={cn(
         "absolute inset-0 pointer-events-none",
         isMobile 
-          ? "bg-gradient-to-t from-black/95 via-black/75 to-transparent" // Darker gradient for mobile
+          ? "bg-gradient-to-t from-black/95 via-black/80 to-transparent" // Darker gradient for mobile
           : "bg-gradient-to-t from-black/90 via-black/60 to-transparent"
       )}></div>
       
@@ -30,21 +31,21 @@ export const CreatorInfo: React.FC<CreatorInfoProps> = ({ creator }) => {
         "relative z-10",
         isMobile ? "pl-1" : "" // Extra left padding on mobile for better alignment
       )}>
-        <div className="flex items-center gap-2 sm:gap-2.5">
+        <div className="flex items-center gap-2.5">
           <h3 className={cn(
             "font-bold text-white",
-            isMobile ? "text-base" : "text-lg sm:text-xl" // Smaller text size on mobile
+            isMobile ? "text-lg" : "text-lg sm:text-xl" // Larger text size on mobile
           )}>
             {creator.name}
           </h3>
-          {/* Smaller verification badge on mobile */}
+          {/* Larger verification badge on mobile */}
           <BadgeCheck 
             className={cn(
-              isMobile ? "w-4 h-4" : "w-4.5 h-4.5 sm:w-5 sm:h-5",
+              isMobile ? "w-5 h-5" : "w-4.5 h-4.5 sm:w-5 sm:h-5",
               "text-white/90",
               "transition-all duration-300",
               isMobile 
-                ? "bg-indigo-500/30 rounded-full p-0.5" // More subtle on mobile
+                ? "bg-indigo-500/40 rounded-full p-0.5" // More visible on mobile
                 : "bg-indigo-500/30 rounded-full p-0.5",
               "group-hover:bg-indigo-500/50" // Subtle hover effect
             )}
@@ -54,12 +55,12 @@ export const CreatorInfo: React.FC<CreatorInfoProps> = ({ creator }) => {
         
         {/* Combined location and services for mobile */}
         {isMobile ? (
-          <div className="flex items-center gap-2 mt-1.5">
+          <div className="flex items-center gap-2 mt-2">
             <MapPin 
-              className="w-3 h-3 text-white/90 flex-shrink-0" 
+              className="w-3.5 h-3.5 text-white/90 flex-shrink-0" 
               aria-hidden="true"
             />
-            <span className="text-xs text-white/90 truncate max-w-[calc(100%-20px)]">
+            <span className="text-sm text-white/90 truncate max-w-[calc(100%-20px)]">
               {creator.location} • {creator.services.join(", ")}
             </span>
           </div>

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Tag } from 'lucide-react';
@@ -57,22 +58,22 @@ export const CreatorTags: React.FC<CreatorTagsProps> = ({ tags }) => {
       role="list"
       aria-label="Creator specialties"
     >
-      <div className="flex flex-nowrap gap-1.5 sm:gap-2.5">
+      <div className="flex flex-nowrap gap-2">
         {tags.map((tag, index) => (
           <span
             key={index}
             className={cn(
-              isMobile ? "text-[10px] px-2 py-1" : "text-[10px] sm:text-xs px-2.5 py-1.5", // Smaller tags on mobile
+              isMobile ? "text-xs px-3 py-1.5" : "text-[10px] sm:text-xs px-2.5 py-1.5", // Larger tags on mobile
               "rounded-full",
               "transition-all duration-200 whitespace-nowrap",
               "hover:scale-105 cursor-pointer shadow-sm hover:shadow-md",
-              "flex items-center gap-1",
+              "flex items-center gap-1.5",
               getTagStyle(tag)
             )}
             role="listitem"
           >
             {shouldHaveIcon(tag) && isMobile && (
-              <Tag className="w-2 h-2" aria-hidden="true" />
+              <Tag className="w-3 h-3" aria-hidden="true" />
             )}
             {shouldHaveIcon(tag) && !isMobile && (
               <Tag className="w-2.5 h-2.5" aria-hidden="true" />

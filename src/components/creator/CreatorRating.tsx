@@ -23,17 +23,17 @@ export const CreatorRating: React.FC<CreatorRatingProps> = ({
   const availabilityConfig = {
     'available-now': {
       text: 'Available Now',
-      icon: <Calendar className="w-3 h-3 mr-1 text-emerald-500" />,
+      icon: <Calendar className="w-3.5 h-3.5 mr-1 text-emerald-500" />,
       className: 'border-green-100/50'
     },
     'available-tomorrow': {
       text: 'Available Tomorrow',
-      icon: <Clock className="w-3 h-3 mr-1 text-amber-500" />,
+      icon: <Clock className="w-3.5 h-3.5 mr-1 text-amber-500" />,
       className: 'border-amber-100/50'
     },
     'premium-only': {
       text: 'Premium Only',
-      icon: <Crown className="w-3 h-3 mr-1 text-purple-500" />,
+      icon: <Crown className="w-3.5 h-3.5 mr-1 text-purple-500" />,
       className: 'border-purple-100/50'
     }
   };
@@ -41,46 +41,45 @@ export const CreatorRating: React.FC<CreatorRatingProps> = ({
   return (
     <div className="flex justify-between items-center w-full">
       <div className="flex items-center">
-        {/* Single star rating */}
-        <div className="flex mr-1.5">
+        {/* Single star rating - larger on mobile */}
+        <div className="flex mr-2">
           <Star
             className={cn(
-              "w-4 h-4",
+              isMobile ? "w-5 h-5" : "w-4 h-4",
               "text-yellow-400 fill-yellow-400"
             )}
           />
         </div>
         
-        {/* Rating text */}
+        {/* Rating text - larger on mobile */}
         <span className={cn(
           "font-medium text-gray-800",
-          isMobile ? "text-xs" : "text-sm"
+          isMobile ? "text-sm" : "text-sm"
         )}>
           {rating.toFixed(1)}
         </span>
         
-        {/* Review count */}
+        {/* Review count - larger on mobile */}
         {reviews > 0 && (
           <span className={cn(
             "text-gray-500 ml-1.5",
-            isMobile ? "text-xs" : "text-sm"
+            isMobile ? "text-sm" : "text-sm"
           )}>
             ({reviews})
           </span>
         )}
       </div>
       
-      {/* Availability Indicator */}
+      {/* Availability Indicator - more visible on mobile */}
       {availabilityStatus && availabilityConfig[availabilityStatus] && (
         <div className={cn(
           "flex items-center justify-center",
-          "bg-[rgba(245,247,250,0.85)] backdrop-blur-[4px]",
-          "px-2.5 py-1",
+          "bg-[rgba(245,247,250,0.95)] backdrop-blur-[4px]",
+          "px-3 py-1.5",
           "rounded-full",
-          "text-xs font-medium",
+          isMobile ? "text-sm font-medium" : "text-xs font-medium",
           "text-gray-600",
-          "shadow-[0_1px_3px_rgba(0,0,0,0.08)]",
-          isMobile ? "" : "text-xs",
+          "shadow-[0_2px_4px_rgba(0,0,0,0.1)]",
           availabilityConfig[availabilityStatus].className
         )}>
           {availabilityConfig[availabilityStatus].icon}
