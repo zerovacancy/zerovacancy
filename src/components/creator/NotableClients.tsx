@@ -42,10 +42,16 @@
                   isMobile ? "h-5 w-10" : "h-6 w-12"
                 )}
               >
+                {/* Use placeholder SVG if image fails to load */}
                 <img 
-                  src={client.logo} 
+                  src={client.logo}
                   alt={`${client.name} logo`}
                   className="max-h-full max-w-full object-contain p-0.5"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.onerror = null; // Prevent infinite loop
+                    target.src = '/placeholder.svg'; // Fallback to placeholder
+                  }}
                 />
               </div>
             </Tooltip>
