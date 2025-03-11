@@ -24,7 +24,7 @@ export const NotableClients: React.FC<NotableClientsProps> = ({ clients }) => {
       name: 'Client',
       logo: '/placeholder.svg',
       projectType: 'Creative work',
-      year: ''  // Add year property to fix TypeScript error
+      year: ''  // Added year property to fix TypeScript error
     }))
   ];
 
