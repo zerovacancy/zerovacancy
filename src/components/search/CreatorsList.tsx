@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { CreatorCard } from '../creator/CreatorCard';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -8,7 +7,6 @@ import { MobileCreatorCarousel } from './MobileCreatorCarousel';
 export const CreatorsList: React.FC = () => {
   const isMobile = useIsMobile();
   
-  // Sample creators data - this would be fetched from API or props in production
   const creators: Creator[] = [
     {
       name: "Emily Johnson",
@@ -57,14 +55,12 @@ export const CreatorsList: React.FC = () => {
     }
   ];
 
-  // Create empty sets and refs for the required props
   const loadedImages = new Set<string>();
   const handleImageLoad = (imageSrc: string) => {};
   const imageRef = (el: HTMLImageElement | null) => {};
 
   return (
     <div className="relative">
-      {/* Desktop creator grid */}
       {!isMobile && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {creators.map((creator) => (
@@ -79,7 +75,6 @@ export const CreatorsList: React.FC = () => {
         </div>
       )}
 
-      {/* Mobile creator carousel */}
       {isMobile && (
         <MobileCreatorCarousel
           creators={creators}
