@@ -1,3 +1,4 @@
+
 import React, { useCallback, useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight, Grip } from 'lucide-react';
 import useEmblaCarousel from 'embla-carousel-react';
@@ -65,7 +66,7 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
       setTimeout(() => {
         setIsFirstVisit(false);
       }, 5000);
-    }, 500); // Increased delay for more reliable initialization
+    }, 500);
 
     return () => {
       clearTimeout(timer);
@@ -76,30 +77,30 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
 
   return (
     <div className="w-full relative">
-      {/* Enhanced swipe instruction with better visibility */}
+      {/* Simplified swipe instruction with better visibility */}
       {isFirstVisit && (
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 bg-black/80 text-white px-4 py-3 rounded-full text-sm flex items-center gap-2.5 backdrop-blur-sm animate-pulse-subtle shadow-lg">
-          <Grip className="w-4.5 h-4.5" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 bg-black/70 text-white px-4 py-2 rounded-full text-sm flex items-center gap-2 shadow-md">
+          <Grip className="w-4 h-4" />
           <span className="font-medium">Swipe to explore</span>
         </div>
       )}
 
-      {/* Enhanced visual search results connector */}
+      {/* Simplified visual search results connector */}
       <div className="relative py-4">
-        <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-indigo-100 via-white to-indigo-100 rounded-full p-1.5 shadow-md border border-indigo-200/70">
-          <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-xs font-medium px-4 py-1.5 rounded-full">
+        <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-full p-1 shadow-md border border-indigo-200/50">
+          <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-xs font-medium px-3 py-1 rounded-full">
             Search Results
           </div>
         </div>
       </div>
 
-      {/* Enhanced carousel container with visual distinction */}
+      {/* Simplified carousel container for better performance */}
       <div className="w-full overflow-hidden pb-8 embla-container relative" ref={emblaRef}>
-        {/* Background pattern for container */}
-        <div className="absolute inset-0 bg-gradient-to-b from-indigo-50/50 to-purple-50/50 rounded-xl border-2 border-indigo-100/40 opacity-80"></div>
+        {/* Simplified background for container */}
+        <div className="absolute inset-0 bg-indigo-50/30 rounded-xl border border-indigo-100/30"></div>
 
         <div className="flex embla-slide-container relative z-10 py-2">
-          {creators.map((creator, index) => (
+          {creators.map((creator) => (
             <div 
               key={creator.name} 
               style={{ touchAction: 'pan-y' }} 
@@ -116,37 +117,37 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
         </div>
       </div>
 
-      {/* Enhanced Navigation Arrows - Significantly enlarged touch targets */}
+      {/* Simplified Navigation Arrows - Large touch targets with reduced visual complexity */}
       <button 
         onClick={scrollPrev} 
         className={cn(
-          "absolute left-1 top-[45%] -translate-y-1/2 z-10 rounded-full p-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white backdrop-blur-sm transition-all", 
-          "hover:bg-black/70 active:scale-95 duration-200 touch-manipulation", 
-          "shadow-[0_4px_10px_rgba(79,70,229,0.3)]",
+          "absolute left-1 top-[45%] -translate-y-1/2 z-10 rounded-full p-3 bg-indigo-600 text-white", 
+          "active:scale-95 duration-200 touch-manipulation", 
+          "shadow-md",
           !prevBtnEnabled && "opacity-0 pointer-events-none",
-          "min-h-[48px] min-w-[48px] flex items-center justify-center" // Ensure adequate touch size
+          "min-h-[44px] min-w-[44px] flex items-center justify-center" // Adequate touch size
         )} 
         aria-label="Previous creator"
       >
-        <ChevronLeft className="w-6 h-6" />
+        <ChevronLeft className="w-5 h-5" />
       </button>
 
       <button 
         onClick={scrollNext} 
         className={cn(
-          "absolute right-1 top-[45%] -translate-y-1/2 z-10 rounded-full p-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white backdrop-blur-sm transition-all", 
-          "hover:bg-black/70 active:scale-95 duration-200 touch-manipulation", 
-          "shadow-[0_4px_10px_rgba(79,70,229,0.3)]",
+          "absolute right-1 top-[45%] -translate-y-1/2 z-10 rounded-full p-3 bg-indigo-600 text-white", 
+          "active:scale-95 duration-200 touch-manipulation", 
+          "shadow-md",
           !nextBtnEnabled && "opacity-0 pointer-events-none",
-          "min-h-[48px] min-w-[48px] flex items-center justify-center" // Ensure adequate touch size
+          "min-h-[44px] min-w-[44px] flex items-center justify-center" // Adequate touch size
         )} 
         aria-label="Next creator"
       >
-        <ChevronRight className="w-6 h-6" />
+        <ChevronRight className="w-5 h-5" />
       </button>
 
-      {/* Dots indicator for carousel position */}
-      <div className="flex justify-center gap-1.5 mt-2">
+      {/* Simplified Dots indicator */}
+      <div className="flex justify-center gap-1 mt-2">
         {creators.map((_, idx) => (
           <button
             key={idx}
@@ -154,8 +155,8 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
             className={cn(
               "w-2 h-2 rounded-full transition-all",
               idx === selectedIndex
-                ? "bg-indigo-600 w-4" // Active dot is wider
-                : "bg-gray-300 hover:bg-gray-400"
+                ? "bg-indigo-600 w-3" // Active dot is wider
+                : "bg-gray-300"
             )}
             aria-label={`Go to slide ${idx + 1}`}
           />

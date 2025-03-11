@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card } from '../ui/card';
 import { ArrowRight } from 'lucide-react';
@@ -29,6 +30,103 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
     setShowEmailDialog(true);
   };
 
+  // Mobile-optimized card design with fewer layers and effects
+  if (isMobile) {
+    return (
+      <article className="group select-text h-full">
+        <div className="relative h-full">
+          {/* Simplified outer glow effect - just one layer */}
+          <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-r from-purple-600/30 to-indigo-500/30 opacity-75 blur-[2px]"></div>
+
+          <Card className={cn(
+            "overflow-hidden h-full flex flex-col",
+            "bg-white border-2 border-purple-200/60",
+            "shadow-md rounded-xl relative"
+          )}>
+            {/* Simplified accent bar */}
+            <div className="absolute top-0 left-0 right-0 h-1 bg-purple-500 z-10"></div>
+
+            {/* Simplified price tag */}
+            <div className="absolute top-3 right-3 z-20">
+              <span className="px-2.5 py-1.5 text-xs font-semibold bg-white text-purple-900 rounded-full border border-purple-200/60 shadow-sm">
+                From ${creator.price}
+              </span>
+            </div>
+
+            {/* Media container - simplified */}
+            <div className="aspect-[16/9] relative w-full overflow-hidden flex-shrink-0 border-b border-purple-100">
+              <CreatorMedia 
+                creator={creator}
+                onImageLoad={onImageLoad}
+                onVideoLoad={() => onImageLoad?.(creator.image)}
+              />
+            </div>
+
+            {/* Content section - simplified */}
+            <div className="px-3.5 py-3.5 flex flex-col flex-grow bg-white">
+              {/* Creator info */}
+              <div className="mb-3">
+                <h3 className="font-semibold text-gray-900 text-base">{creator.name}</h3>
+                <p className="text-sm text-gray-600">{creator.location}</p>
+                <p className="text-xs text-gray-500 mt-1">{creator.services.join(" • ")}</p>
+              </div>
+
+              {/* Rating and availability row */}
+              <div className="flex justify-between items-center mb-3">
+                <CreatorRating 
+                  rating={creator.rating} 
+                  reviews={creator.reviews} 
+                  name={creator.name} 
+                  availabilityStatus={creator.availabilityStatus}
+                />
+              </div>
+
+              {/* Portfolio preview - simplified */}
+              <div className="mb-3.5 p-1 bg-gray-50 rounded-lg border border-gray-100">
+                <PortfolioPreview 
+                  workExamples={creator.workExamples}
+                  creatorName={creator.name}
+                />
+              </div>
+
+              {/* Spacer to push button to bottom */}
+              <div className="flex-grow"></div>
+
+              {/* Simplified CTA Button */}
+              <div>
+                <ShimmerButton 
+                  onClick={handleCTAClick}
+                  aria-label={`Book with ${creator.name}`}
+                  className="w-full text-sm px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white border border-indigo-400/40 shadow-md"
+                  disableOnMobile={true}
+                >
+                  {stage === 'initial' ? (
+                    <>
+                      <span>Book with {firstName}</span>
+                      <ArrowRight className="w-4 h-4 ml-2" aria-hidden="true" />
+                    </>
+                  ) : stage === 'input' ? (
+                    <span>Secure Your Spot</span>
+                  ) : (
+                    <span>Access Confirmed - Launching Soon!</span>
+                  )}
+                </ShimmerButton>
+              </div>
+            </div>
+          </Card>
+        </div>
+        <GlowDialog 
+          open={showEmailDialog} 
+          onOpenChange={(open) => {
+            setShowEmailDialog(open);
+            if (!open) setStage('initial');
+          }}
+        />
+      </article>
+    );
+  }
+
+  // Desktop version with full effects
   return (
     <article className="group select-text h-full">
       <div className="relative h-full">
@@ -53,18 +151,18 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
             <BorderBeam 
               colorFrom="#A370F7" // More vibrant color
               colorTo="#D19EFF" // More vibrant color
-              duration={isMobile ? 25 : 20} // Slightly faster on mobile
-              borderWidth={isMobile ? 1 : 1.5} // Thicker border
+              duration={20} // Slightly faster on mobile
+              borderWidth={1.5} // Thicker border
             />
 
             {/* Subtle pattern overlay */}
             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LncgLy8yMDAwL3N2ZyI+PGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjODg4IiBzdHJva2Utb3BhY2l0eT0iMC4wMiI+PHBhdGggZD0gTTAgMjBMMjAgMCIvPjxwYXRoIGQ9Ik0xMCAyMEwyMCAxMCIvPjxwYXRoIGQ9Ik0wIDEwTDEwIDAiLz48L2c+PC9zdmc+')] opacity-30"></div>
           </div>
 
-          {/* Price tag - Enhanced for mobile */}
-          <div className="absolute top-3 sm:top-3.5 right-3 sm:right-3.5 z-20">
+          {/* Price tag */}
+          <div className="absolute top-3.5 right-3.5 z-20">
             <span className={cn(
-              isMobile ? "px-2.5 py-1.5 text-xs" : "px-2.5 sm:px-3 py-1.5 text-xs sm:text-sm",
+              "px-3 py-1.5 text-sm",
               "font-semibold",
               "bg-white/95 shadow-md border border-purple-200/60", // Enhanced border
               "text-purple-900 rounded-full", // Darker text
@@ -76,9 +174,9 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
             </span>
           </div>
 
-          {/* Media container - Enhanced for mobile */}
+          {/* Media container */}
           <div className={cn(
-            isMobile ? "aspect-[16/9]" : "aspect-[4/3]",
+            "aspect-[4/3]",
             "relative w-full overflow-hidden flex-shrink-0",
             "border-b border-purple-100" // Subtle divider
           )}>
@@ -92,15 +190,15 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
             <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white/40 to-transparent"></div>
           </div>
 
-          {/* Redesigned content section - Enhanced for mobile */}
+          {/* Content section with gradient background */}
           <div className={cn(
-            isMobile ? "px-3.5 py-3.5" : "px-4 sm:px-5 pt-4 sm:pt-5 pb-4 sm:pb-5",
+            "px-5 pt-5 pb-5",
             "flex flex-col flex-grow",
             "bg-gradient-to-b from-white/40 to-white/95" // Subtle gradient background
           )}>
-            {/* Creator info moved below the image (no overlay) */}
+            {/* Creator info */}
             <div className="mb-3">
-              <h3 className="font-semibold text-gray-900 text-base sm:text-lg">{creator.name}</h3>
+              <h3 className="font-semibold text-gray-900 text-lg">{creator.name}</h3>
               <p className="text-sm text-gray-600">{creator.location}</p>
               <p className="text-xs text-gray-500 mt-1">{creator.services.join(" • ")}</p>
             </div>
@@ -115,7 +213,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               />
             </div>
 
-            {/* Portfolio preview - Enhanced for mobile */}
+            {/* Portfolio preview */}
             <div className="mb-3.5 p-1 bg-gray-50/80 rounded-lg border border-gray-100/80">
               <PortfolioPreview 
                 workExamples={creator.workExamples}
