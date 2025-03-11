@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef, lazy, Suspense, useCallback } from 'react';
 import Header from '../components/Header';
 import { Hero } from '../components/hero/Hero';
@@ -18,7 +17,7 @@ import { BackgroundEffects } from '@/components/features/BackgroundEffects';
 const OptimizedHowItWorks = lazy(() => import('../components/how-it-works/OptimizedHowItWorks'));
 const FeaturesSectionWithHoverEffects = lazy(() => import('@/components/features/Features'));
 const Pricing = lazy(() => import('@/components/Pricing'));
-const PreviewSearch = lazy(() => import('@/components/preview-search'));
+const PreviewSearch = lazy(() => import('../components/preview-search'));
 
 // Simple loading fallback
 const SectionLoader = () => (
@@ -28,16 +27,16 @@ const SectionLoader = () => (
 );
 
 // Section divider component for mobile
-const SectionDivider = ({ color = "indigo" }: { color?: string }) => {
-  const isMobile = useIsMobile();
-  if (!isMobile) return null;
+// const SectionDivider = ({ color = "indigo" }: { color?: string }) => {
+//   const isMobile = useIsMobile();
+//   if (!isMobile) return null;
   
-  return (
-    <div className="w-full flex justify-center py-2">
-      <div className={`w-1/3 h-px border-t border-${color}-200/70 opacity-70`}></div>
-    </div>
-  );
-};
+//   return (
+//     <div className="w-full flex justify-center py-2">
+//       <div className={`w-1/3 h-px border-t border-${color}-200/70 opacity-70`}></div>
+//     </div>
+//   );
+// };
 
 /**
  * Main landing page component with performance optimizations
@@ -182,8 +181,6 @@ const Index = () => {
           </section>
         </BackgroundEffects>
         
-        {isMobile && <SectionDivider color="purple" />}
-        
         {/* How It Works Section - with enhanced mobile background */}
         <section 
           ref={addSectionRef(1)} 
@@ -212,8 +209,6 @@ const Index = () => {
             </div>
           </BackgroundEffects>
         </section>
-        
-        {isMobile && <SectionDivider color="blue" />}
         
         {/* Search Section - with enhanced mobile background */}
         <section 
@@ -244,8 +239,6 @@ const Index = () => {
           </BackgroundEffects>
         </section>
         
-        {isMobile && <SectionDivider color="violet" />}
-        
         {/* Professional Content Creation Services - enhanced for mobile */}
         <section 
           ref={addSectionRef(3)} 
@@ -259,8 +252,6 @@ const Index = () => {
           </Suspense>
         </section>
 
-        {isMobile && <SectionDivider color="indigo" />}
-
         {/* Pricing Section - already has its own background */}
         <section 
           ref={addSectionRef(4)} 
@@ -273,8 +264,6 @@ const Index = () => {
             <Pricing />
           </Suspense>
         </section>
-
-        {isMobile && <SectionDivider color="purple" />}
 
         {/* Final CTA Section - with own background */}
         <div 
