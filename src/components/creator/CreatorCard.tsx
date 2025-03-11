@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
   import { Card } from '../ui/card';
   import { ArrowRight } from 'lucide-react';
@@ -8,11 +9,10 @@ import React, { useState } from 'react';
   import { GlowDialog } from '../ui/glow-dialog';
   import { ShimmerButton } from '../ui/shimmer-button';
   import { BorderBeam } from '../ui/border-beam';
-  import { CreatorInfo } from './CreatorInfo';
   import { CreatorMedia } from './CreatorMedia';
   import { CreatorTags, getDefaultTags } from './CreatorTags';
   import { PortfolioPreview } from './PortfolioPreview';
-  import type { CreatorCardProps, NotableClient } from './types';
+  import type { CreatorCardProps } from './types';
 
   export const CreatorCard: React.FC<CreatorCardProps> = ({ 
     creator, 
@@ -149,7 +149,7 @@ import React, { useState } from 'react';
                       "border border-indigo-400/30 shadow-lg 
   shadow-indigo-500/20",
                       "group-hover:shadow-indigo-500/30 
-  group-hover:border-indigo-400/50",
+  group-hover:border-indigo-400/50"
                     )}
                   >
                     {stage === 'initial' ? (
