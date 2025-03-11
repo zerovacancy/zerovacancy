@@ -1,5 +1,5 @@
 
-"use client";
+  "use client";
 
   import React from "react";
   import { cn } from "@/lib/utils";
@@ -7,11 +7,12 @@
   import { CheckIcon } from "lucide-react";
   import { useIsMobile } from "@/hooks/use-mobile";
 
-  // Import components from the pricing directory
-  import { PricingCardHeader } from "./pricing/PricingCardHeader";
-  import { PricingFeaturesList } from "./pricing/PricingFeaturesList";
-  import { PricingActionButton } from "./pricing/PricingActionButton";
-  import { PricingType } from "./pricing/types";
+  // Fix import paths to point to the correct location
+  // If these components are in src/components/pricing/ folder:
+  import { PricingCardHeader } from "@/components/pricing/PricingCardHeader";
+  import { PricingFeaturesList } from "@/components/pricing/PricingFeaturesList";
+  import { PricingActionButton } from "@/components/pricing/PricingActionButton";
+  import { PricingType } from "@/components/pricing/types";
 
   interface PricingCardProps {
     className?: string;
