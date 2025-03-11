@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { CreatorCard } from '../creator/CreatorCard';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -23,7 +22,7 @@ export const CreatorsList: React.FC = () => {
     }, 
     {
       name: "Jane Cooper",
-      services: ["Video Tours", "Drone Footage"],
+      services: ["Professional Photography", "Interior Design", "Staging"],
       price: 200,
       rating: 4.8,
       reviews: 98,
