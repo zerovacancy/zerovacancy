@@ -22,7 +22,10 @@ export const FeatureHeader = ({
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
         viewport={{ once: true, margin: "-100px" }}
-        className="inline-block mb-3"
+        className={cn(
+          "inline-block mb-3",
+          isMobile && "relative before:content-[''] before:block before:w-10 before:h-1 before:bg-indigo-400 before:mb-3 before:rounded-full before:mx-auto"
+        )}
       >
         <div className="flex items-center justify-center gap-1 mb-2">
           <Star className="h-4 w-4 text-indigo-400 fill-indigo-100" />

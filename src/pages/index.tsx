@@ -190,7 +190,7 @@ const Index = () => {
           id="how-it-works" 
           className={cn(
             "relative w-full",
-            isMobile && "relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-6 after:bg-gradient-to-t after:from-blue-50/30 after:to-transparent"
+            isMobile && "bg-gradient-to-b from-blue-50/30 via-transparent to-transparent relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-8 after:bg-gradient-to-t after:from-blue-50/30 after:to-transparent"
           )}
         >
           <BackgroundEffects 
@@ -221,7 +221,7 @@ const Index = () => {
           id="find-creators" 
           className={cn(
             "relative w-full",
-            isMobile && "bg-gradient-to-b from-indigo-50/30 via-transparent to-transparent"
+            isMobile && "bg-gradient-to-b from-indigo-50/30 via-transparent to-transparent relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-8 after:bg-gradient-to-t after:from-indigo-50/30 after:to-transparent"
           )}
         >
           <BackgroundEffects 
@@ -251,8 +251,7 @@ const Index = () => {
           ref={addSectionRef(3)} 
           className={cn(
             "w-full",
-            isMobile && "bg-gradient-to-b from-violet-50/30 via-transparent to-transparent relative",
-            isMobile && "after:absolute after:bottom-0 after:left-0 after:w-full after:h-8 after:bg-gradient-to-t after:from-indigo-50/30 after:to-transparent"
+            isMobile && "bg-gradient-to-b from-violet-50/30 via-transparent to-transparent relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-8 after:bg-gradient-to-t after:from-indigo-50/30 after:to-transparent"
           )}
         >
           <Suspense fallback={<SectionLoader />}>
@@ -267,7 +266,7 @@ const Index = () => {
           ref={addSectionRef(4)} 
           className={cn(
             "w-full",
-            isMobile && "relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-8 after:bg-gradient-to-t after:from-purple-50/30 after:to-transparent"
+            isMobile && "bg-gradient-to-b from-purple-50/30 via-transparent to-transparent relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-8 after:bg-gradient-to-t after:from-purple-50/30 after:to-transparent"
           )}
         >
           <Suspense fallback={<SectionLoader />}>
