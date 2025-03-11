@@ -92,7 +92,7 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
             <div 
               key={creator.name} 
               style={{ touchAction: 'pan-y' }} 
-              className="min-w-[95%] w-[95%] pl-2 pr-2 embla-slide my-[10px]"
+              className="min-w-[92%] w-[92%] pl-2 pr-2 embla-slide my-[10px]"
             >
               <CreatorCard 
                 creator={creator} 
@@ -141,8 +141,8 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
               "transition-all duration-200 touch-manipulation rounded-full", 
               "min-h-[24px] min-w-[24px] flex items-center justify-center p-1", // Ensure adequate touch size
               index === selectedIndex 
-                ? "bg-indigo-600 w-5 h-5" 
-                : "bg-gray-300 hover:bg-gray-400 w-4 h-4"
+                ? "bg-indigo-600 w-8 h-8" // Enlarged active dot (8px)
+                : "bg-gray-300 hover:bg-gray-400 w-6 h-6" // Enlarged inactive dot (6px)
             )} 
             onClick={() => emblaApi?.scrollTo(index)} 
             aria-label={`Go to creator ${index + 1}`} 

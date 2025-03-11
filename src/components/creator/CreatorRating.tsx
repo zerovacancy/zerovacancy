@@ -26,24 +26,26 @@ export const CreatorRating: React.FC<CreatorRatingProps> = ({
     setIsNarrowScreen(viewportSize.width < 350);
   }, [viewportSize.width]);
 
+  // Standardized color-coding system for availability status
   const availabilityConfig = {
     'available-now': {
       text: 'Available Now',
       icon: <Calendar className={cn("mr-1 text-emerald-500", isNarrowScreen ? "w-2.5 h-2.5" : "w-3 h-3")} />,
-      className: 'border-green-100/50 text-emerald-700 availability-indicator'
+      className: 'border-green-100/50 text-emerald-700 bg-emerald-50/80 availability-indicator'
     },
     'available-tomorrow': {
       text: 'Available Tomorrow',
       icon: <Clock className={cn("mr-1 text-amber-500", isNarrowScreen ? "w-2.5 h-2.5" : "w-3 h-3")} />,
-      className: 'border-amber-100/50 text-amber-700 tomorrow-status'
+      className: 'border-amber-100/50 text-amber-700 bg-amber-50/80 tomorrow-status'
     },
     'premium-only': {
       text: 'Premium Only',
       icon: <Crown className={cn("mr-1 text-purple-500", isNarrowScreen ? "w-2.5 h-2.5" : "w-3 h-3")} />,
-      className: 'border-purple-100/50 text-purple-700 premium-status'
+      className: 'border-purple-100/50 text-purple-700 bg-purple-50/80 premium-status'
     }
   };
 
+  // Shorter text for mobile to prevent overflow
   const mobileText = {
     'available-now': 'Available',
     'available-tomorrow': 'Tomorrow',
@@ -56,7 +58,7 @@ export const CreatorRating: React.FC<CreatorRatingProps> = ({
       isNarrowScreen ? "flex-col items-start gap-2" : "justify-between w-full"
     )}>
       <div className="flex items-center">
-        {/* Single star rating */}
+        {/* Single star rating with enhanced visibility */}
         <div className="flex mr-1.5">
           <Star
             className={cn(
@@ -66,10 +68,10 @@ export const CreatorRating: React.FC<CreatorRatingProps> = ({
           />
         </div>
 
-        {/* Rating text */}
+        {/* Rating text with increased contrast */}
         <span className={cn(
-          "font-medium text-gray-800",
-          isMobile ? "text-xs" : "text-sm"
+          "font-semibold text-gray-800", // Changed from medium to semibold for better emphasis
+          isMobile ? "text-sm" : "text-sm" // Increased size on mobile from xs to sm
         )}>
           {rating.toFixed(1)}
         </span>
@@ -85,15 +87,16 @@ export const CreatorRating: React.FC<CreatorRatingProps> = ({
         )}
       </div>
 
-      {/* Availability Indicator */}
+      {/* Availability Indicator with larger touch target */}
       {availabilityStatus && availabilityConfig[availabilityStatus] && (
         <div className={cn(
           "flex items-center justify-center",
           "bg-white backdrop-blur-[4px]",
-          isNarrowScreen ? "px-1.5 py-0.5" : "px-2.5 py-1",
+          // Increased touch target size while maintaining visual style
+          isNarrowScreen ? "px-2 py-1 min-h-[28px]" : "px-3 py-1.5 min-h-[32px]",
           !isNarrowScreen && "ml-1",
           "rounded-full whitespace-nowrap",
-          isNarrowScreen ? "text-[10px]" : "text-xs",
+          isNarrowScreen ? "text-[11px]" : "text-xs", // Slightly larger text on narrow screens
           "font-medium",
           "border",
           "shadow-[0_1px_3px_rgba(0,0,0,0.08)]",

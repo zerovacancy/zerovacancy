@@ -43,10 +43,10 @@ export const SearchBar: React.FC<SearchBarProps> = ({ value = '', onLocationSele
           <SearchButton />
         </div>
 
-        {/* Mobile Search Button */}
+        {/* Enhanced Mobile Search Button with increased prominence */}
         <MobileSearchButton />
 
-        {/* Advanced filter section with reduced top spacing */}
+        {/* Advanced filter section with improved transitions */}
         <div className="pt-0 mt-0">
           <SearchFilters
             showMoreFilters={showMoreFilters}

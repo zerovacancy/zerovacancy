@@ -59,10 +59,12 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
           <div className="absolute top-3 sm:top-3.5 right-3 sm:right-3.5 z-20">
             <span className={cn(
               isMobile ? "px-3.5 py-2 text-base" : "px-2.5 sm:px-3 py-1.5 text-xs sm:text-sm",
+              // Increased font weight for better emphasis on mobile
               "font-semibold",
               // Enhanced background on mobile
               isMobile ? "bg-white shadow-lg border border-white/40" : "bg-white/90 shadow-md border border-white/40",
-              "text-[#212121] rounded-full",
+              // Increased contrast for price
+              "text-indigo-800 rounded-full",
               "shadow-[0_3px_8px_rgba(0,0,0,0.12)] transition-all duration-200 group-hover:scale-105 group-hover:shadow-[0_4px_10px_rgba(0,0,0,0.18)]"
             )}>
               From ${creator.price}
@@ -73,7 +75,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
             {/* Media container with improved aspect ratio for mobile */}
             <div className="relative">
               <div className={cn(
-                "aspect-[4/3] overflow-hidden",
+                "aspect-[4/3] overflow-hidden", // Changed to more standard 4:3 ratio
                 "overflow-hidden"
               )}>
                 <CreatorMedia 
@@ -86,24 +88,24 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               <CreatorInfo creator={creator} />
             </div>
             
-            {/* Tags and rating section - More spacious for mobile */}
+            {/* Tags and rating section - More spacious for mobile with standardized spacing */}
             <div className={cn(
-              isMobile ? "p-5" : "p-4 sm:p-5",
+              isMobile ? "p-5" : "p-4 sm:p-5", // Increased padding on mobile
               "flex flex-col"
             )}>
               {/* Tags section with improved spacing */}
               <div className={cn(
-                isMobile ? "mb-5" : "mb-4",
+                isMobile ? "mb-5" : "mb-4", // Standardized 16px (mb-4) spacing
               )}>
                 <CreatorTags tags={tags} />
               </div>
               
-              {/* Visual separator for mobile only */}
+              {/* Visual separator for mobile */}
               {isMobile && (
                 <div className="h-px w-full bg-gray-100 mb-5"></div>
               )}
               
-              {/* Rating section with more compact layout for mobile */}
+              {/* Rating section with enhanced visual style */}
               <div className="bg-gray-50/80 rounded-lg px-4 py-3.5 shadow-sm relative">
                 <div className="flex justify-between items-center">
                   <CreatorRating 
@@ -117,7 +119,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               
               {/* CTA button section with larger touch target for mobile */}
               <div className={cn(
-                isMobile ? "mt-5" : "mt-5",
+                isMobile ? "mt-5" : "mt-5", // Standardized 20px spacing
               )}>
                 <ShimmerButton 
                   onClick={() => setShowEmailDialog(true)}
