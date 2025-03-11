@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { usePricing } from "./PricingContext";
 import PricingHeader from "./PricingHeader";
 import { PLAN_DESCRIPTIONS, VALUE_PROPOSITIONS, PLAN_CTAS, FEATURES } from "./pricingData";
-import { ChevronDown, Check, Info, Sparkles, X } from "lucide-react";
+import { ChevronDown, Check, Info, X } from "lucide-react";
 import { PricingFeature } from "./types";
 
 export const PricingContainer = () => {
@@ -184,15 +184,7 @@ export const PricingContainer = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
-                {/* Popular tag - Fixed positioning */}
-                {tier.popularPlan && (
-                  <div className="absolute -top-5 inset-x-0 flex justify-center z-10">
-                    <div className="px-4 py-1 bg-brand-purple text-white rounded-full text-sm font-medium shadow-md flex items-center gap-1.5">
-                      <Sparkles className="h-3.5 w-3.5" />
-                      Most Popular
-                    </div>
-                  </div>
-                )}
+                {/* Popular tag removed */}
                 
                 {/* Plan header */}
                 <div className={cn(
@@ -394,15 +386,7 @@ export const PricingContainer = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
-                {/* Popular tag - Fixed positioning for desktop */}
-                {tier.popularPlan && (
-                  <div className="absolute -top-5 inset-x-0 flex justify-center z-10">
-                    <div className="px-4 py-1 bg-brand-purple text-white rounded-full text-sm font-medium shadow-md flex items-center gap-1.5">
-                      <Sparkles className="h-3.5 w-3.5" />
-                      Most Popular
-                    </div>
-                  </div>
-                )}
+                {/* Popular tag removed */}
                 
                 <div className="p-6">
                   {/* Header */}
