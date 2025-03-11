@@ -67,9 +67,9 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
             </span>
           </div>
 
-          {/* Media container with fixed aspect ratio */}
+          {/* Media container - shorter on mobile */}
           <div className={cn(
-            isMobile ? "aspect-[5/4]" : "aspect-[4/3]",
+            isMobile ? "aspect-[16/9]" : "aspect-[4/3]",
             "relative w-full overflow-hidden flex-shrink-0"
           )}>
             <CreatorMedia 
@@ -79,9 +79,9 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
             />
           </div>
 
-          {/* Redesigned content section - with flex-grow to fill available space */}
+          {/* Redesigned content section - more compact on mobile */}
           <div className={cn(
-            isMobile ? "px-4 pt-4 pb-4" : "px-4 sm:px-5 pt-4 sm:pt-5 pb-4 sm:pb-5",
+            isMobile ? "px-3 py-3" : "px-4 sm:px-5 pt-4 sm:pt-5 pb-4 sm:pb-5",
             "flex flex-col flex-grow"
           )}>
             {/* Creator info moved below the image (no overlay) */}
@@ -101,15 +101,13 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               />
             </div>
 
-            {/* Portfolio preview with fixed height */}
+            {/* Portfolio preview - more compact on mobile */}
             <div className="mb-3">
               <PortfolioPreview 
                 workExamples={creator.workExamples}
                 creatorName={creator.name}
               />
             </div>
-
-            {/* Hashtags section completely removed */}
 
             {/* Spacer to push button to bottom */}
             <div className="flex-grow"></div>
