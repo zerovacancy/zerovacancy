@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -29,9 +30,9 @@ const MobileStepItemSimple: React.FC<MobileStepItemSimpleProps> = ({
     <div 
       onClick={onClick}
       className={cn(
-        "relative p-5 transition-all duration-300 cursor-pointer",
+        "relative p-4 transition-all duration-300 cursor-pointer", // Reduced padding from p-5 to p-4
         "bg-white rounded-2xl",
-        "flex flex-col h-full min-h-[170px]",
+        "flex flex-col h-full min-h-[150px]", // Reduced min-height from 170px to 150px
         "border-2",
         "transform hover:translate-y-[-2px]",
         "active:scale-[0.99]",
@@ -49,11 +50,11 @@ const MobileStepItemSimple: React.FC<MobileStepItemSimpleProps> = ({
       }}
     >
       {/* Enhanced header with larger, more prominent icon */}
-      <div className="flex items-start gap-4 mb-4">
+      <div className="flex items-start gap-3 mb-3"> {/* Reduced gap and margin */}
         {/* Enhanced number badge */}
         <div 
           className={cn(
-            "w-10 h-10 rounded-full flex items-center justify-center",
+            "w-9 h-9 rounded-full flex items-center justify-center", // Reduced size
             "text-base font-bold shadow-md text-white",
             "shrink-0 relative"
           )}
@@ -84,20 +85,20 @@ const MobileStepItemSimple: React.FC<MobileStepItemSimpleProps> = ({
         {/* Larger, more prominent icon */}
         <div 
           className={cn(
-            "rounded-xl p-2.5 shadow-md shrink-0",
+            "rounded-xl p-2 shadow-md shrink-0", // Reduced padding
             "border border-white/40"
           )}
           style={getAccentColor()}
         >
-          {React.cloneElement(step.icon as React.ReactElement, {
-            className: "w-5 h-5 text-white"
+          {React.createElement(step.icon as any, {
+            className: "w-4 h-4 text-white"  // Reduced icon size
           })}
         </div>
       </div>
 
       {/* New feature: Helpful tip section */}
       {step.tips && (
-        <div className="mt-auto pt-3 border-t border-gray-100">
+        <div className="mt-auto pt-2 border-t border-gray-100"> {/* Reduced padding */}
           <p className="text-xs italic text-gray-500">
             <span className="font-medium">Pro tip:</span> {step.tips}
           </p>
@@ -106,7 +107,7 @@ const MobileStepItemSimple: React.FC<MobileStepItemSimpleProps> = ({
 
       {/* Enhanced active indicator */}
       {isActive && (
-        <div className="absolute bottom-3 right-3 flex items-center gap-1.5">
+        <div className="absolute bottom-2 right-2 flex items-center gap-1.5"> {/* Adjusted position */}
           <div className="w-1.5 h-1.5 rounded-full animate-pulse delay-100"
             style={getAccentColor()}>
           </div>

@@ -1,9 +1,11 @@
+
 import React, { useEffect, useRef, useState } from 'react';
 import MobileStepItemSimple from './MobileStepItemSimple';
 import { steps } from './step-data';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useSwipeGesture } from '@/hooks/use-swipe-gesture';
+import SwipeInstruction from './SwipeInstruction';
 
 interface MobileStepsGridSimpleProps {
   completedSteps: number[];
@@ -55,23 +57,12 @@ const MobileStepsGridSimple: React.FC<MobileStepsGridSimpleProps> = ({
       {...handlers}
     >
       {/* Enhanced container with depth */}
-      <div className="relative rounded-2xl bg-white/80 backdrop-blur-sm p-5 shadow-lg border border-indigo-100/60">
+      <div className="relative rounded-2xl bg-white/80 backdrop-blur-sm p-4 shadow-lg border border-indigo-100/60">
         {/* Show swipe instruction on first load */}
-        {showSwipeHint && (
-          <div className="absolute inset-0 flex items-center justify-center z-10 bg-black/50 backdrop-blur-sm rounded-2xl">
-            <div className="bg-white px-6 py-5 rounded-xl shadow-xl text-center max-w-[250px]">
-              <div className="flex justify-center gap-6 mb-4">
-                <ChevronLeft className="w-6 h-6 text-indigo-600 animate-pulse" />
-                <ChevronRight className="w-6 h-6 text-indigo-600 animate-pulse" />
-              </div>
-              <p className="text-gray-800 font-medium">Swipe left or right to navigate between steps</p>
-              <p className="text-gray-500 text-sm mt-1">Tap anywhere to dismiss</p>
-            </div>
-          </div>
-        )}
+        <SwipeInstruction visible={showSwipeHint} />
 
         {/* Enhanced navigation controls */}
-        <div className="flex justify-between items-center mb-5">
+        <div className="flex justify-between items-center mb-4">
           <button 
             onClick={handlePrevStep}
             disabled={activeStep === 0}
@@ -135,7 +126,7 @@ const MobileStepsGridSimple: React.FC<MobileStepsGridSimpleProps> = ({
         </div>
 
         {/* Enhanced progress indicators */}
-        <div className="mt-6">
+        <div className="mt-5">
           {/* Progress bar */}
           <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
             <div 

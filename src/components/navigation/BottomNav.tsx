@@ -41,13 +41,12 @@ const NavItem = ({ icon, label, to = '/' }: NavItemProps) => {
 };
 
 export const BottomNav = () => {
-  // Force return null to hide the bottom nav completely
-  return null; 
-  
-  // The below code is kept but won't execute due to the early return above
   const isMobile = useIsMobile();
   
-  if (!isMobile) return null;
+  // Never early return before calling hooks
+  if (!isMobile) {
+    return null;
+  }
   
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-lg">
