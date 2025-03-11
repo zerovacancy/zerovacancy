@@ -1,61 +1,57 @@
 
-import React, { useRef } from 'react';
+import React from 'react';
 import { CreatorCard } from '../creator/CreatorCard';
-import { Filter } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Creator } from '../creator/types';
 import { MobileCreatorCarousel } from './MobileCreatorCarousel';
 
-interface CreatorsListProps {
-  creators: Creator[];
-  sortBy: string;
-  onSort: (value: string) => void;
-  onImageLoad: (imageSrc: string) => void;
-  loadedImages: Set<string>;
-  imageRef: (el: HTMLImageElement | null) => void;
-}
-
-export const CreatorsList: React.FC<CreatorsListProps> = ({
-  creators,
-  sortBy,
-  onSort,
-  onImageLoad,
-  loadedImages,
-  imageRef
-}) => {
+export const CreatorsList: React.FC = () => {
   const isMobile = useIsMobile();
-  const filterTagsRef = useRef<HTMLDivElement>(null);
+  
+  // Sample creators data - this would be fetched from API or props in production
+  const creators: Creator[] = [
+    {
+      name: "Emily Johnson",
+      services: ["Photography", "Virtual Staging"],
+      price: 150,
+      rating: 4.9,
+      reviews: 127,
+      location: "New York, NY",
+      image: "/newemilyprofile.jpg",
+      workExamples: ["/1-d2e3f802.jpg"],
+      availabilityStatus: "available-now"
+    }, 
+    {
+      name: "Jane Cooper",
+      services: ["Video Tours", "Drone Footage"],
+      price: 200,
+      rating: 4.8,
+      reviews: 98,
+      location: "Los Angeles, CA",
+      image: "/janeprofile.png",
+      workExamples: ["/janesub.jpg", "/janesub2.png", "/janesub3.webp"],
+      availabilityStatus: "available-tomorrow"
+    }, 
+    {
+      name: "Michael Brown",
+      services: ["3D Tours", "Floor Plans"],
+      price: 175,
+      rating: 4.7,
+      reviews: 82,
+      location: "Chicago, IL",
+      image: "/emily profile.jpeg",
+      workExamples: ["/1-d2e3f802.jpg"],
+      availabilityStatus: "premium-only"
+    }
+  ];
 
-  // Filter tags with improved styling
-  const filterTags = ["All Services", "Photography", "Video Tours", "Drone Footage", "3D Tours", "Floor Plans", "Virtual Staging"];
+  // Create empty sets and refs for the required props
+  const loadedImages = new Set<string>();
+  const handleImageLoad = (imageSrc: string) => {};
+  const imageRef = (el: HTMLImageElement | null) => {};
 
   return (
     <div className="relative">
-      {/* Filters section with horizontal scrolling - only visible on desktop */}
-      {!isMobile && (
-        <div className="mb-4 sm:mb-6">
-          {/* Horizontally scrollable filter tags */}
-          <div className="overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none'] relative" ref={filterTagsRef}>
-            <div className="flex space-x-2 pb-1 min-w-max">
-              {filterTags.map((tag, index) => (
-                <button 
-                  key={index} 
-                  className={cn(
-                    "transition-all whitespace-nowrap rounded-full border border-gray-200",
-                    "font-medium shadow-sm hover:bg-indigo-50 hover:border-indigo-200 hover:text-indigo-800",
-                    index === 0 ? "bg-indigo-50 text-indigo-700 border-indigo-200" : "bg-white text-gray-700",
-                    "text-sm px-3 py-1.5"
-                  )}
-                >
-                  {tag}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Desktop creator grid */}
       {!isMobile && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -63,7 +59,7 @@ export const CreatorsList: React.FC<CreatorsListProps> = ({
             <CreatorCard 
               key={creator.name} 
               creator={creator} 
-              onImageLoad={onImageLoad} 
+              onImageLoad={handleImageLoad} 
               loadedImages={loadedImages} 
               imageRef={imageRef} 
             />
@@ -75,7 +71,7 @@ export const CreatorsList: React.FC<CreatorsListProps> = ({
       {isMobile && (
         <MobileCreatorCarousel
           creators={creators}
-          onImageLoad={onImageLoad}
+          onImageLoad={handleImageLoad}
           loadedImages={loadedImages}
           imageRef={imageRef}
         />
@@ -83,5 +79,3 @@ export const CreatorsList: React.FC<CreatorsListProps> = ({
     </div>
   );
 };
-
-export default CreatorsList;
