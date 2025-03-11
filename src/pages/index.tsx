@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef, lazy, Suspense, useCallback } from 'react';
 import Header from '../components/Header';
 import { Hero } from '../components/hero/Hero';
@@ -190,24 +191,29 @@ const Index = () => {
             isMobile && "bg-gradient-to-b from-blue-50/30 via-transparent to-transparent relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-8 after:bg-gradient-to-t after:from-blue-50/30 after:to-transparent"
           )}
         >
-          <BackgroundEffects 
-            blobColors={{
-              first: "bg-blue-100",
-              second: "bg-indigo-100",
-              third: "bg-violet-100"
-            }}
-            blobOpacity={isMobile ? 0.15 : 0.1}
-            className="py-0"
-          >
-            <div className={cn(
-              "relative z-10",
-              isMobile && "before:content-[''] before:block before:w-10 before:h-1 before:bg-blue-400 before:mb-3 before:rounded-full before:mx-auto before:mt-4"
-            )}>
+          {!isMobile ? (
+            <BackgroundEffects 
+              blobColors={{
+                first: "bg-blue-100",
+                second: "bg-indigo-100",
+                third: "bg-violet-100"
+              }}
+              blobOpacity={0.1}
+              className="py-0"
+            >
+              <div className="relative z-10">
+                <Suspense fallback={<SectionLoader />}>
+                  <OptimizedHowItWorks />
+                </Suspense>
+              </div>
+            </BackgroundEffects>
+          ) : (
+            <div className="relative z-10 before:content-[''] before:block before:w-10 before:h-1 before:bg-blue-400 before:mb-3 before:rounded-full before:mx-auto before:mt-4">
               <Suspense fallback={<SectionLoader />}>
                 <OptimizedHowItWorks />
               </Suspense>
             </div>
-          </BackgroundEffects>
+          )}
         </section>
         
         {/* Search Section - with enhanced mobile background */}
@@ -219,24 +225,29 @@ const Index = () => {
             isMobile && "bg-gradient-to-b from-indigo-50/30 via-transparent to-transparent relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-8 after:bg-gradient-to-t after:from-indigo-50/30 after:to-transparent"
           )}
         >
-          <BackgroundEffects 
-            blobColors={{
-              first: "bg-indigo-100",
-              second: "bg-blue-100",
-              third: "bg-indigo-100"
-            }}
-            blobOpacity={0.08}
-            className="py-0"
-          >
-            <div className={cn(
-              "max-w-7xl mx-auto relative z-10 py-10 sm:py-16 lg:py-20",
-              isMobile && "before:content-[''] before:block before:w-10 before:h-1 before:bg-indigo-400 before:mb-3 before:rounded-full before:mx-auto before:mt-2"
-            )}>
+          {!isMobile ? (
+            <BackgroundEffects 
+              blobColors={{
+                first: "bg-indigo-100",
+                second: "bg-blue-100",
+                third: "bg-indigo-100"
+              }}
+              blobOpacity={0.08}
+              className="py-0"
+            >
+              <div className="max-w-7xl mx-auto relative z-10 py-10 sm:py-16 lg:py-20">
+                <Suspense fallback={<SectionLoader />}>
+                  <PreviewSearch />
+                </Suspense>
+              </div>
+            </BackgroundEffects>
+          ) : (
+            <div className="max-w-7xl mx-auto relative z-10 py-10 before:content-[''] before:block before:w-10 before:h-1 before:bg-indigo-400 before:mb-3 before:rounded-full before:mx-auto before:mt-2">
               <Suspense fallback={<SectionLoader />}>
                 <PreviewSearch />
               </Suspense>
             </div>
-          </BackgroundEffects>
+          )}
         </section>
         
         {/* Professional Content Creation Services - enhanced for mobile */}
@@ -273,22 +284,25 @@ const Index = () => {
             isMobile && "bg-gradient-to-b from-purple-50/30 via-transparent to-transparent"
           )}
         >
-          <BackgroundEffects 
-            blobColors={{
-              first: "bg-indigo-100",
-              second: "bg-violet-100",
-              third: "bg-blue-100"
-            }}
-            blobOpacity={0.12}
-            className="py-0"
-          >
-            <div className={cn(
-              "relative z-10 max-w-7xl mx-auto py-14 sm:py-20 lg:py-24",
-              isMobile && "before:content-[''] before:block before:w-10 before:h-1 before:bg-purple-400 before:mb-3 before:rounded-full before:mx-auto"
-            )}>
+          {!isMobile ? (
+            <BackgroundEffects 
+              blobColors={{
+                first: "bg-indigo-100",
+                second: "bg-violet-100",
+                third: "bg-blue-100"
+              }}
+              blobOpacity={0.12}
+              className="py-0"
+            >
+              <div className="relative z-10 max-w-7xl mx-auto py-14 sm:py-20 lg:py-24">
+                <CallToActionSection />
+              </div>
+            </BackgroundEffects>
+          ) : (
+            <div className="relative z-10 max-w-7xl mx-auto py-14 before:content-[''] before:block before:w-10 before:h-1 before:bg-purple-400 before:mb-3 before:rounded-full before:mx-auto">
               <CallToActionSection />
             </div>
-          </BackgroundEffects>
+          )}
         </div>
         
         <Footer />
