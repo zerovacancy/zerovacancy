@@ -1,5 +1,4 @@
-
- import React from 'react';
+import React from 'react';
   import { Star, Calendar, Clock, Crown } from 'lucide-react';
   import { cn } from '@/lib/utils';
   import { useIsMobile } from '@/hooks/use-mobile';
