@@ -7,6 +7,7 @@ import { CommonFeatures } from "./pricing/CommonFeatures";
 import { PricingFAQ } from "./pricing/PricingFAQ";
 import { PricingProvider } from "./pricing/PricingContext";
 import { PricingContainer } from "./pricing/PricingContainer";
+import { WaitlistCTA } from "./ui/waitlist-cta";
 
 const Pricing = () => {
   const { subscription, isLoading } = useSubscription();
@@ -32,6 +33,13 @@ const Pricing = () => {
           {/* Enhanced notes section */}
           <div className="mt-10 lg:mt-16">
             <CommonFeatures />
+          </div>
+
+          {/* Waitlist CTA */}
+          <div className="mt-12 text-center">
+            <h3 className="text-xl font-semibold mb-3 text-slate-800">Not ready to commit?</h3>
+            <p className="text-slate-600 mb-6 max-w-xl mx-auto">Join our waitlist to get notified about special offers and early access opportunities.</p>
+            <WaitlistCTA source="pricing_page" />
           </div>
 
           {/* FAQ section */}
