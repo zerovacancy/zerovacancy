@@ -20,10 +20,16 @@ export const mobileOptimizationClasses = {
   showOnMobile: "sm:hidden block",
   // Disable hover effects on mobile
   noHoverEffectsMobile: "sm:hover:scale-105 sm:hover:shadow-lg sm:transition-all",
-  // Simplified shadows for mobile
-  simpleShadowMobile: "shadow-sm sm:shadow-md",
-  // Static background for mobile, gradient for desktop
-  staticBgMobile: "bg-white sm:bg-gradient-to-r",
+  // Improved shadows for mobile
+  improvedShadowMobile: "shadow-md sm:shadow-lg",
+  // Gradient background for mobile (subtle purple tint)
+  gradientBgMobile: "bg-gradient-to-br from-white to-purple-50 sm:bg-white",
+  // Colored background for mobile, white for desktop
+  coloredBgMobile: "bg-purple-50 sm:bg-white",
+  // Card background for mobile with subtle gradient
+  cardBgMobile: "bg-gradient-to-tr from-white via-white to-purple-50 sm:bg-white",
   // Reduced opacity on mobile
-  reducedOpacityMobile: "opacity-50 sm:opacity-100",
+  reducedOpacityMobile: "opacity-70 sm:opacity-100",
+  // Border with color for mobile
+  coloredBorderMobile: "border border-purple-100 sm:border-gray-200",
 };

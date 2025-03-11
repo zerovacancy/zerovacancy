@@ -5,6 +5,7 @@ import useEmblaCarousel from 'embla-carousel-react';
 import { cn } from '@/lib/utils';
 import { CreatorCard } from '../creator/CreatorCard';
 import type { Creator } from '../creator/types';
+import { mobileOptimizationClasses } from '@/utils/mobile-optimization';
 
 interface MobileCreatorCarouselProps {
   creators: Creator[];
@@ -75,28 +76,35 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
     };
   }, [emblaApi, onSelect]);
   
+  const { 
+    gradientBgMobile, 
+    improvedShadowMobile, 
+    coloredBorderMobile, 
+    cardBgMobile 
+  } = mobileOptimizationClasses;
+
   return (
-    <div className="w-full relative">
-      {/* Simplified swipe instruction with better visibility */}
+    <div className={`w-full relative ${gradientBgMobile} p-3 rounded-xl`}>
+      {/* Improved swipe instruction with better visibility */}
       {isFirstVisit && (
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 bg-black/70 text-white px-4 py-2 rounded-full text-sm flex items-center gap-2 shadow-md">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-4 py-2 rounded-full text-sm flex items-center gap-2 shadow-md">
           <Grip className="w-4 h-4" />
           <span>Swipe to explore</span>
         </div>
       )}
     
-      {/* Visual search results connector - simplified */}
+      {/* Visual search results connector - enhanced */}
       <div className="relative py-4">
-        <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-full py-1 px-2 shadow-sm border border-gray-100">
-          <div className="bg-indigo-100 text-indigo-700 text-xs font-medium px-2 py-0.5 rounded-full">
+        <div className={`absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 ${cardBgMobile} rounded-full py-1 px-2 ${improvedShadowMobile} ${coloredBorderMobile}`}>
+          <div className="bg-purple-100 text-purple-700 text-xs font-medium px-3 py-1 rounded-full">
             Search Results
           </div>
         </div>
       </div>
 
-      {/* Carousel container with simplified styling */}
-      <div className="w-full overflow-hidden pb-8" ref={emblaRef}>
-        <div className="flex">
+      {/* Carousel container with enhanced styling */}
+      <div className={`w-full overflow-hidden pb-8 ${coloredBorderMobile} rounded-xl ${improvedShadowMobile}`} ref={emblaRef}>
+        <div className="flex pt-2">
           {creators.map((creator) => (
             <div 
               key={creator.name} 
@@ -114,12 +122,12 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
         </div>
       </div>
 
-      {/* Navigation Arrows - Simplified */}
+      {/* Navigation Arrows - Enhanced */}
       <button 
         onClick={scrollPrev} 
         className={cn(
-          "absolute left-1 top-[45%] -translate-y-1/2 z-10 rounded-full p-3 bg-black/50 text-white", 
-          "touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center", 
+          "absolute left-1 top-[45%] -translate-y-1/2 z-10 rounded-full p-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white", 
+          "touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center shadow-md", 
           !prevBtnEnabled && "opacity-0 pointer-events-none"
         )} 
         aria-label="Previous creator"
@@ -130,8 +138,8 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
       <button 
         onClick={scrollNext} 
         className={cn(
-          "absolute right-1 top-[45%] -translate-y-1/2 z-10 rounded-full p-3 bg-black/50 text-white", 
-          "touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center", 
+          "absolute right-1 top-[45%] -translate-y-1/2 z-10 rounded-full p-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white", 
+          "touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center shadow-md", 
           !nextBtnEnabled && "opacity-0 pointer-events-none"
         )} 
         aria-label="Next creator"

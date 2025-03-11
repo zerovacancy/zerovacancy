@@ -64,39 +64,50 @@
   
   /* Mobile optimization classes */
   @media (max-width: 767px) {
-    /* Disable all animations on mobile for better performance */
-    .disable-animations-mobile * {
-      animation: none !important;
-      transition: none !important;
-      transform: none !important;
+    /* Keep some animations but optimize for mobile */
+    .optimize-animations-mobile * {
+      animation-duration: 0.5s !important;
+      transition-duration: 0.3s !important;
+      will-change: auto !important;
     }
 
-    /* Disable blurs on mobile */
-    .disable-blur-mobile {
-      backdrop-filter: none !important;
-      filter: none !important;
+    /* Selective blur on mobile - apply where needed */
+    .selective-blur-mobile {
+      backdrop-filter: blur(8px) !important;
     }
 
-    /* Simplify gradients on mobile (modified to preserve them) */
-    .simplify-gradient-mobile {
-      /* Change from forcing white background to just reducing opacity */
-      background-opacity: 0.7 !important;
-      /* Don't remove background images completely */
-    }
-
-    /* Reduce motion for all transition effects */
-    .reduce-motion-mobile * {
-      transition-duration: 0.1s !important;
-    }
-
-    /* Remove box shadows on mobile */
-    .remove-shadows-mobile * {
-      box-shadow: none !important;
+    /* Enhance gradients on mobile */
+    .enhance-gradient-mobile {
+      background-image: linear-gradient(to bottom right, #ffffff, #f5f3ff, #ede9fe) !important;
     }
     
-    /* Hide purely decorative elements on mobile */
-    .hide-decorative-mobile {
-      display: none !important;
+    /* Add subtle color to white backgrounds */
+    .color-white-bg-mobile {
+      background-color: #f5f3ff !important; /* Very light purple */
+    }
+    
+    /* Add colored borders to cards/elements */
+    .colored-border-mobile {
+      border: 1px solid #ddd6fe !important; /* Light purple border */
+      border-radius: 0.75rem !important;
+    }
+
+    /* Add subtle shadows on mobile */
+    .add-shadows-mobile {
+      box-shadow: 0 4px 14px rgba(111, 93, 165, 0.1) !important;
+    }
+    
+    /* Apply special styling to cards */
+    .card-style-mobile {
+      background-image: linear-gradient(to bottom right, #ffffff, #f9fafb, #f5f3ff) !important;
+      border: 1px solid #ddd6fe !important;
+      border-radius: 0.75rem !important;
+      box-shadow: 0 4px 14px rgba(111, 93, 165, 0.1) !important;
+    }
+    
+    /* Add colored accent to navigation elements */
+    .nav-accent-mobile {
+      border-left: 3px solid #8B5CF6 !important;
     }
 
     /* Optimize touch targets for mobile */
@@ -105,18 +116,23 @@
       min-width: 44px;
     }
     
-    /* Optimize rendering for mobile */
-    .mobile-optimize {
-      will-change: auto !important;
-      transform: none !important;
-      animation-duration: 0.3s !important;
-      transition-duration: 0.2s !important;
-    }
-    
     /* Prevent scroll chaining */
     .scroll-container {
       overscroll-behavior: contain;
       overflow-anchor: auto;
+    }
+    
+    /* Style form elements on mobile */
+    input, select, textarea {
+      background-color: #f9fafb !important;
+      border: 1px solid #e5e7eb !important;
+      border-radius: 0.5rem !important;
+    }
+    
+    /* Enhance button styling on mobile */
+    button:not([class*="bg-"]) {
+      background-image: linear-gradient(to right, #8B5CF6, #6E59A5) !important;
+      color: white !important;
     }
   }
 }

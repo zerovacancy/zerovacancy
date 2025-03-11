@@ -4,6 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Home, Search, MessageSquare, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { mobileOptimizationClasses } from '@/utils/mobile-optimization';
 
 interface NavItemProps {
   icon: 'home' | 'search' | 'message' | 'user';
@@ -26,32 +27,32 @@ const NavItem = ({ icon, label, to = '/' }: NavItemProps) => {
     <Link
       to={to}
       className={cn(
-        "flex flex-col items-center gap-0.5 py-1.5 px-2 sm:px-4",
+        "flex flex-col items-center gap-1 py-2 px-3",
         "touch-manipulation select-none active:scale-95",
-        "transition-all duration-200",
+        "transition-all duration-200 rounded-lg",
         isActive 
-          ? "text-primary" 
-          : "text-muted-foreground hover:text-foreground"
+          ? "text-white bg-gradient-to-r from-brand-purple to-brand-purple-medium" 
+          : "text-brand-purple-dark hover:bg-purple-50"
       )}
     >
-      <IconComponent className="w-5 h-5 sm:w-[22px] sm:h-[22px]" />
-      <span className="text-[10px] sm:text-xs font-medium">{label}</span>
+      <IconComponent className={cn(
+        "w-5 h-5",
+        isActive ? "text-white" : "text-brand-purple"
+      )} />
+      <span className="text-[10px] font-medium">{label}</span>
     </Link>
   );
 };
 
 export const BottomNav = () => {
-  // Force return null to hide the bottom nav completely
-  return null; 
-  
-  // The below code is kept but won't execute due to the early return above
   const isMobile = useIsMobile();
+  const { gradientBgMobile, improvedShadowMobile } = mobileOptimizationClasses;
   
   if (!isMobile) return null;
   
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-lg">
-      <div className="flex items-center justify-around w-full mx-auto h-14">
+    <nav className={`fixed bottom-0 left-0 right-0 z-50 border-t border-purple-100 ${improvedShadowMobile} ${gradientBgMobile} rounded-t-xl`}>
+      <div className="flex items-center justify-around w-full mx-auto h-16 px-2">
         <NavItem icon="home" label="Home" to="/" />
         <NavItem icon="search" label="Discover" to="/search" />
         <NavItem icon="message" label="Messages" to="/messages" />
