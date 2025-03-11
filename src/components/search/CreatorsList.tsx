@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { CreatorCard } from '../creator/CreatorCard';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -14,7 +15,7 @@ export const CreatorsList: React.FC = () => {
       price: 150,
       rating: 4.9,
       reviews: 127,
-      location: "New York, NY",
+      location: "Chicago, IL",
       image: "/newemilyprofile.jpg",
       workExamples: [
         "/creatorcontent/emily-johnson/work-1.webp",
@@ -44,7 +45,7 @@ export const CreatorsList: React.FC = () => {
       price: 175,
       rating: 4.7,
       reviews: 82,
-      location: "Chicago, IL",
+      location: "New York, NY",
       image: "/emily profile.jpeg",
       workExamples: [
         "/creatorcontent/michael-brown/work-1.jpg",
