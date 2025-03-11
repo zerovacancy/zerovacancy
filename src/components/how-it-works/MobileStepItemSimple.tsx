@@ -26,6 +26,8 @@ const MobileStepItemSimple: React.FC<MobileStepItemSimpleProps> = ({
     };
   };
 
+  const IconComponent = step.icon;
+
   return (
     <div 
       onClick={onClick}
@@ -90,9 +92,7 @@ const MobileStepItemSimple: React.FC<MobileStepItemSimpleProps> = ({
           )}
           style={getAccentColor()}
         >
-          {React.createElement(step.icon as any, {
-            className: "w-4 h-4 text-white"  // Reduced icon size
-          })}
+          <IconComponent className="w-4 h-4 text-white" />
         </div>
       </div>
 

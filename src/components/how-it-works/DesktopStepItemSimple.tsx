@@ -45,6 +45,8 @@ const DesktopStepItemSimple: React.FC<DesktopStepItemSimpleProps> = ({
     };
   };
   
+  const IconComponent = step.icon;
+  
   return (
     <div
       className={cardBaseClasses}
@@ -92,9 +94,7 @@ const DesktopStepItemSimple: React.FC<DesktopStepItemSimpleProps> = ({
           )}
           style={getAccentColor()}
         >
-          {React.createElement(step.icon as any, {
-            className: "w-5 h-5 text-white"
-          })}
+          <IconComponent className="w-5 h-5 text-white" />
         </div>
       </div>
       
