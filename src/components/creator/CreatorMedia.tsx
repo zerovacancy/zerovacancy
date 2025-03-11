@@ -24,7 +24,7 @@ export const getMedia = (creator: Creator) => {
   if (creator.name === 'Michael Brown') {
     return { 
       type: 'video', 
-      src: '/michaelprofile.mov',
+      src: '/creatorcontent/michael-brown/michaelprofile.webm',
       fallback: 'https://images.unsplash.com/photo-1581092795360-fd1ca04f0952'
     };
   }
