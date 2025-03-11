@@ -69,74 +69,51 @@ export function Hero() {
             // Increased bottom margin
             "mb-6 sm:mb-6"
           )}>
-            {isMobile ? (
-              <span className="flex flex-col items-center">
-                <span 
-                  className={cn(
-                    "text-primary inline-block font-medium",
-                    "text-2xl sm:text-5xl lg:text-6xl",
-                    "tracking-[-0.02em]", 
-                    "text-brand-purple-dark mb-2"
-                  )}
-                >
-                  THE VISION COLLECTIVE
-                </span>
-                <span 
-                  className={cn(
-                    "text-3xl sm:text-5xl lg:text-7xl",
-                    "font-bold font-jakarta tracking-[-0.02em]",
-                    "bg-clip-text text-transparent", 
-                    "bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1]"
-                  )}
-                >
-                  VISIONARIES
-                </span>
-              </span>
-            ) : (
-              <>
-                <span 
-                  className={cn(
-                    "text-primary inline font-medium",
-                    "text-3xl sm:text-5xl lg:text-6xl",
-                    "tracking-[-0.02em]", 
-                    "text-brand-purple-dark", 
-                    "block sm:inline-block mb-1 sm:mb-0 font-jakarta"
-                  )}
-                >
-                  THE VISION COLLECTIVE
-                </span>
-                
-                <div 
-                  role="text" 
-                  aria-label="Property Content animation"
-                  className="relative flex w-full justify-center h-[4.5em] sm:h-[3em] md:h-[2.5em] lg:h-[2.5em] overflow-visible mt-1 sm:mt-1"
-                >
-                  <TextRotate
-                    texts={TITLES}
-                    mainClassName="flex justify-center items-center overflow-visible"
-                    staggerFrom="last"
-                    initial={{ y: "100%", opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: "-100%", opacity: 0 }}
-                    staggerDuration={0.02}
-                    splitLevelClassName="overflow-visible"
-                    elementLevelClassName={cn(
-                      "text-4xl sm:text-5xl lg:text-7xl",
-                      "font-bold font-jakarta tracking-[-0.02em]",
-                      "bg-clip-text text-transparent", 
-                      "bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1]",
-                      "overflow-visible"
-                    )}
-                    transition={{ 
-                      type: "spring", 
-                      damping: 28, 
-                      stiffness: 350
-                    }}
-                    rotationInterval={2200}
-                  />
-                </div>
-              </>
-            )}
+            <span 
+              className={cn(
+                "text-primary inline-block font-medium",
+                isMobile ? "text-2xl" : "text-3xl sm:text-5xl lg:text-6xl",
+                "tracking-[-0.02em]", 
+                "text-brand-purple-dark",
+                isMobile ? "mb-2" : "block sm:inline-block mb-1 sm:mb-0 font-jakarta"
+              )}
+            >
+              THE VISION COLLECTIVE
+            </span>
+            
+            <div 
+              role="text" 
+              aria-label="Property Content animation"
+              className={cn(
+                "relative flex w-full justify-center",
+                isMobile ? "h-[3.5em]" : "h-[4.5em] sm:h-[3em] md:h-[2.5em] lg:h-[2.5em]",
+                "overflow-visible mt-1 sm:mt-1"
+              )}
+            >
+              <TextRotate
+                texts={TITLES}
+                mainClassName="flex justify-center items-center overflow-visible"
+                staggerFrom="last"
+                initial={{ y: "100%", opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: "-100%", opacity: 0 }}
+                staggerDuration={0.02}
+                splitLevelClassName="overflow-visible"
+                elementLevelClassName={cn(
+                  isMobile ? "text-3xl" : "text-4xl sm:text-5xl lg:text-7xl",
+                  "font-bold font-jakarta tracking-[-0.02em]",
+                  "bg-clip-text text-transparent", 
+                  "bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1]",
+                  "overflow-visible"
+                )}
+                transition={{ 
+                  type: "spring", 
+                  damping: 28, 
+                  stiffness: 350
+                }}
+                rotationInterval={2200}
+              />
+            </div>
           </h1>
         </div>
 
