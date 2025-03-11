@@ -15,6 +15,9 @@
     const isMobile = useIsMobile();
     const displayExamples = workExamples.slice(0, 3);
 
+    // Return null if no work examples
+    if (!workExamples || workExamples.length === 0) return null;
+
     return (
       <div className="mt-1 mb-3">
         <div className="flex items-center mb-1.5">
@@ -38,6 +41,11 @@
                 src={example} 
                 alt={`${creatorName}'s work example ${index + 1}`}
                 className="object-cover w-full h-full hover:scale-105 transition-transform duration-300"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.onerror = null; // Prevent infinite loop
+                  target.src = '/placeholder.svg'; // Fallback to placeholder
+                }}
               />
             </div>
           ))}
