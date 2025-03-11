@@ -18,7 +18,8 @@ export const steps: Step[] = [
     gradientDirection: "135deg",
     gradientStyle: {
       background: "linear-gradient(135deg, #8B5CF6, #6D28D9)",
-    }
+    },
+    tips: "Filter creators by specialty, style, and location to find your perfect match."
   },
   {
     icon: Users2,
@@ -34,7 +35,8 @@ export const steps: Step[] = [
     gradientDirection: "135deg",
     gradientStyle: {
       background: "linear-gradient(135deg, #2563EB, #4F46E5)",
-    }
+    },
+    tips: "Schedule a consultation directly through our platform to discuss your vision."
   },
   {
     icon: CalendarDays,
@@ -50,7 +52,8 @@ export const steps: Step[] = [
     gradientDirection: "135deg",
     gradientStyle: {
       background: "linear-gradient(135deg, #F59E0B, #EA580C)",
-    }
+    },
+    tips: "Our secure platform handles payments and project milestones for peace of mind."
   },
   {
     icon: FileCheck2,
@@ -66,6 +69,7 @@ export const steps: Step[] = [
     gradientDirection: "135deg",
     gradientStyle: {
       background: "linear-gradient(135deg, #10B981, #059669)",
-    }
+    },
+    tips: "Download and use your premium assets across all your marketing channels."
   }
 ];

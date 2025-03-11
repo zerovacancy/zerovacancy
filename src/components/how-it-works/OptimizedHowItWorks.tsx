@@ -1,8 +1,9 @@
+
 import React, { useState, useEffect } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import SectionHeaderSimple from './SectionHeaderSimple';
-import MobileStepsGridSimple from './MobileStepsGridSimple';
 import DesktopStepsGridSimple from './DesktopStepsGridSimple';
+import MobileVerticalTimeline from './MobileVerticalTimeline';
 import { cn } from '@/lib/utils';
 
 const OptimizedHowItWorks: React.FC = () => {
@@ -70,21 +71,19 @@ const OptimizedHowItWorks: React.FC = () => {
           />
         </div>
 
-        {/* Mobile carousel layout with enhanced styling */}
-        <div className="relative">
-          <MobileStepsGridSimple 
-            completedSteps={completedSteps} 
-            activeStep={activeStep}
-            onStepInteraction={handleStepInteraction}
-          />
+        {/* New Mobile Vertical Timeline */}
+        <MobileVerticalTimeline 
+          completedSteps={completedSteps} 
+          activeStep={activeStep}
+          onStepInteraction={handleStepInteraction}
+        />
 
-          {/* Desktop grid layout */}
-          <DesktopStepsGridSimple 
-            completedSteps={completedSteps} 
-            activeStep={activeStep}
-            onStepInteraction={handleStepInteraction}
-          />
-        </div>
+        {/* Desktop grid layout */}
+        <DesktopStepsGridSimple 
+          completedSteps={completedSteps} 
+          activeStep={activeStep}
+          onStepInteraction={handleStepInteraction}
+        />
       </div>
     </div>
   );
