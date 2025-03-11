@@ -84,27 +84,18 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
   } = mobileOptimizationClasses;
 
   return (
-    <div className={`w-full relative ${gradientBgMobile} p-3 rounded-xl`}>
-      {/* Improved swipe instruction with better visibility */}
+    <div className="w-full relative">
+      {/* Swipe instruction */}
       {isFirstVisit && (
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-4 py-2 rounded-full text-sm flex items-center gap-2 shadow-md">
           <Grip className="w-4 h-4" />
           <span>Swipe to explore</span>
         </div>
       )}
-    
-      {/* Visual search results connector - enhanced */}
-      <div className="relative py-4">
-        <div className={`absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 ${cardBgMobile} rounded-full py-1 px-2 ${improvedShadowMobile} ${coloredBorderMobile}`}>
-          <div className="bg-purple-100 text-purple-700 text-xs font-medium px-3 py-1 rounded-full">
-            Search Results
-          </div>
-        </div>
-      </div>
 
-      {/* Carousel container with enhanced styling */}
-      <div className={`w-full overflow-hidden pb-8 ${coloredBorderMobile} rounded-xl ${improvedShadowMobile}`} ref={emblaRef}>
-        <div className="flex pt-2">
+      {/* Simplified carousel container */}
+      <div className="w-full overflow-hidden" ref={emblaRef}>
+        <div className="flex">
           {creators.map((creator) => (
             <div 
               key={creator.name} 
@@ -122,7 +113,7 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
         </div>
       </div>
 
-      {/* Navigation Arrows - Enhanced */}
+      {/* Navigation Arrows */}
       <button 
         onClick={scrollPrev} 
         className={cn(

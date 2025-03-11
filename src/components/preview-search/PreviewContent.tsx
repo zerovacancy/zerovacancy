@@ -19,25 +19,22 @@ export const PreviewContent: React.FC = () => {
 
   return (
     <div className="w-full">
-      {/* Search container with updated styling and reduced bottom padding for mobile */}
+      {/* Simplified structure for mobile */}
       <div className={cn(
-        "bg-gray-50/60 border border-gray-100 rounded-lg overflow-hidden shadow-sm",
-        isMobile ? "p-4 pb-1" : "p-6"
+        isMobile ? "bg-transparent" : "bg-gray-50/60 border border-gray-100 rounded-lg overflow-hidden shadow-sm p-6"
       )}>
         {/* Search bar component */}
-        <div className="mb-4">
+        <div className={isMobile ? "mb-3" : "mb-4"}>
           <SearchBar 
             value={location}
             onLocationSelect={handleLocationSelect}
           />
         </div>
 
-        {/* Creator cards list */}
-        <div className="pt-3">
-          <CreatorsList />
-        </div>
+        {/* Creator cards list - direct embedding */}
+        <CreatorsList />
 
-        {/* Pagination indicator for mobile with reduced bottom spacing */}
+        {/* Pagination indicator for mobile */}
         {isMobile && (
           <div className="flex justify-center items-center pt-1 pb-0 mt-1">
             <div className="flex space-x-1.5">

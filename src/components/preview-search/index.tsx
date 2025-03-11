@@ -111,13 +111,14 @@ const PreviewSearch = () => {
       </div>
 
       <div className="mx-auto relative group max-w-7xl">
-        {/* Enhanced gradient background with more vibrant effects on mobile */}
-        <div className={cn(
-          "absolute -inset-0.5 sm:-inset-1 rounded-xl sm:rounded-2xl bg-gradient-to-r from-purple-800/25 via-indigo-700/30 to-purple-900/25 blur-[2px] sm:blur-sm transition-all duration-500",
-          isVisible ? "opacity-70 sm:opacity-80" : "opacity-0",
-          "group-hover:opacity-90 group-hover:blur-md",
-          isMobile && "opacity-90"
-        )}></div>
+        {/* Enhanced gradient background only on desktop */}
+        {!isMobile && (
+          <div className={cn(
+            "absolute -inset-0.5 sm:-inset-1 rounded-xl sm:rounded-2xl bg-gradient-to-r from-purple-800/25 via-indigo-700/30 to-purple-900/25 blur-[2px] sm:blur-sm transition-all duration-500",
+            isVisible ? "opacity-70 sm:opacity-80" : "opacity-0",
+            "group-hover:opacity-90 group-hover:blur-md"
+          )}></div>
+        )}
 
         <PreviewCard isVisible={isVisible}>
           <PreviewContent />

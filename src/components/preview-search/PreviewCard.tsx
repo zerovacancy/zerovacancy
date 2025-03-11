@@ -28,7 +28,9 @@ export const PreviewCard: React.FC<PreviewCardProps> = ({ isVisible, children })
         }
       }}
       viewport={{ once: true, margin: "-50px" }}
-      className="relative rounded-lg sm:rounded-xl overflow-hidden shadow-lg sm:shadow-xl border border-zinc-200/70 bg-white/95 will-change-transform backdrop-blur-sm"
+      className={cn(
+        isMobile ? "relative" : "relative rounded-lg sm:rounded-xl overflow-hidden shadow-lg sm:shadow-xl border border-zinc-200/70 bg-white/95 will-change-transform backdrop-blur-sm"
+      )}
     >
       {/* Only render effects on desktop */}
       {!isMobile && (
@@ -52,11 +54,9 @@ export const PreviewCard: React.FC<PreviewCardProps> = ({ isVisible, children })
         </div>
       )}
 
-      {/* Simple background on mobile, gradient blob on desktop */}
+      {/* Simple transparent background on mobile, gradient blob on desktop */}
       {isMobile ? (
-        <div className="w-full h-full bg-white">
-          {children}
-        </div>
+        <>{children}</>
       ) : (
         <GradientBlobBackground 
           className="min-h-0 w-full" 
