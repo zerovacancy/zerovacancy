@@ -33,44 +33,64 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
           <span className="text-xs text-gray-500 font-medium">{isMobile ? 'WORK' : 'RECENT WORK'}</span>
         </div>
 
-        <div className="flex space-x-1.5">
-          {ensuredExamples.map((example, index) => (
-            <div 
-              key={index}
-              className={cn(
-                "relative rounded-md overflow-hidden cursor-pointer",
-                "border border-gray-100",
-                "shadow-sm hover:shadow-md transition-shadow duration-200",
-                isMobile 
-                  ? "h-[75px] w-[75px]" // Smaller square dimensions for mobile
-                  : "h-[160px] w-[160px]", // Fixed square dimensions for desktop
-                "bg-gray-50"
-              )}
-              onClick={() => setSelectedImage(example)}
-            >
-              <img 
-                src={example}
-                alt={`${creatorName}'s work example ${index + 1}`}
-                className="object-cover w-full h-full hover:scale-105 transition-transform duration-300"
-                style={{
-                  aspectRatio: '1 / 1', // Force square aspect ratio
-                }}
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.onerror = null;
-                  target.src = '/placeholder.svg';
-                }}
-              />
-            </div>
-          ))}
-        </div>
+        {isMobile ? (
+          <div className="grid grid-cols-3 gap-1.5 mt-1.5">
+            {ensuredExamples.map((example, index) => (
+              <div 
+                key={index}
+                className={cn(
+                  "relative rounded-md overflow-hidden cursor-pointer",
+                  "border border-gray-100",
+                  "shadow-sm aspect-square",
+                  "bg-gray-50"
+                )}
+                onClick={() => setSelectedImage(example)}
+              >
+                <img 
+                  src={example}
+                  alt={`${creatorName}'s work example ${index + 1}`}
+                  className="object-cover w-full h-full"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.onerror = null;
+                    target.src = '/placeholder.svg';
+                  }}
+                />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="flex space-x-1.5">
+            {ensuredExamples.map((example, index) => (
+              <div 
+                key={index}
+                className={cn(
+                  "relative rounded-md overflow-hidden cursor-pointer",
+                  "border border-gray-100",
+                  "shadow-sm hover:shadow-md transition-shadow duration-200",
+                  "h-[160px] w-[160px]", 
+                  "bg-gray-50"
+                )}
+                onClick={() => setSelectedImage(example)}
+              >
+                <img 
+                  src={example}
+                  alt={`${creatorName}'s work example ${index + 1}`}
+                  className="object-cover w-full h-full hover:scale-105 transition-transform duration-300"
+                  style={{
+                    aspectRatio: '1 / 1', // Force square aspect ratio
+                  }}
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.onerror = null;
+                    target.src = '/placeholder.svg';
+                  }}
+                />
+              </div>
+            ))}
+          </div>
+        )}
 
-        <div className="flex justify-end mt-1">
-          <button className="flex items-center text-xs text-indigo-600 hover:text-indigo-800 transition-colors duration-200 font-medium">
-            <span>{isMobile ? 'View All' : 'View Portfolio'}</span>
-            <ArrowRight className="w-3 h-3 ml-1" />
-          </button>
-        </div>
       </div>
 
       <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>

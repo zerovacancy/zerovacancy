@@ -2,6 +2,7 @@
 import React from 'react';
 import { DollarSign, Star, ChevronDown, Users, Palette, Map, Compass } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface SearchFiltersProps {
   showMoreFilters: boolean;
@@ -12,25 +13,46 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
   showMoreFilters,
   onToggleFilters,
 }) => {
+  const isMobile = useIsMobile();
   return (
     <>
-      <div className="flex items-center justify-between px-0.5 py-1"> {/* Added vertical padding */}
+      <div className={cn(
+        isMobile 
+          ? "flex items-center justify-center px-0.5 py-2 mt-1" 
+          : "flex items-center justify-between px-0.5 py-1"
+      )}>
         <button
           onClick={onToggleFilters}
           className={cn(
             "inline-flex items-center gap-1.5", 
-            "px-3 py-2 -ml-1", // Increased touch target padding
-            "text-sm font-medium",
-            "text-gray-700 hover:text-gray-900", 
-            "hover:bg-gray-50 rounded-md",
-            "transition-colors duration-200",
-            "border border-transparent hover:border-gray-200/70",
+            isMobile ? (
+              cn(
+                "justify-center px-5 py-2",
+                "text-sm font-medium",
+                "text-white", 
+                "bg-gradient-to-r from-purple-600 to-indigo-600 rounded-md",
+                "transition-all duration-200",
+                "border border-purple-300/20",
+                "shadow-sm",
+                "hover:shadow-md active:scale-[0.98]"
+              )
+            ) : (
+              cn(
+                "px-3 py-2 -ml-1",
+                "text-sm font-medium",
+                "text-gray-700 hover:text-gray-900", 
+                "hover:bg-gray-50 rounded-md",
+                "transition-colors duration-200",
+                "border border-transparent hover:border-gray-200/70"
+              )
+            ),
             "min-h-[40px]" // Minimum touch target height
           )}
         >
           Advanced Filters
           <ChevronDown className={cn(
-            "w-4 h-4 text-gray-500",
+            "w-4 h-4",
+            isMobile ? "text-white/90" : "text-gray-500",
             "transition-transform duration-300", // Smoother transition
             showMoreFilters ? "rotate-180" : ""
           )} />

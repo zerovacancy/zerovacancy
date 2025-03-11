@@ -153,20 +153,39 @@ export const PricingCard = ({
       
       {/* Features section with improved styling and categories */}
       <div className="mt-8 space-y-5 flex-grow">
-        <div className="flex justify-between items-center border-b border-slate-100 pb-2">
-          <h4 className="text-sm font-semibold text-slate-700 font-inter">
+        <div className={cn(
+          "border-b border-slate-100 pb-2",
+          isMobile ? "flex flex-col items-center" : "flex justify-between items-center"
+        )}>
+          <h4 className={cn(
+            "text-sm font-semibold text-slate-700 font-inter",
+            isMobile && "mb-1"
+          )}>
             {isExpanded ? "What's included:" : "Top features:"}
           </h4>
-          <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="text-xs text-slate-500 flex items-center focus:outline-none font-inter hover:text-brand-purple transition-colors touch-manipulation"
-          >
-            {isExpanded ? "Less" : "See all"}
-            <ChevronDown className={cn(
-              "ml-1 h-3 w-3 transition-transform",
-              isExpanded && "rotate-180"
-            )} />
-          </button>
+          {isMobile ? (
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="text-xs text-slate-500 flex items-center focus:outline-none font-inter hover:text-brand-purple transition-colors touch-manipulation bg-transparent mx-auto"
+            >
+              {isExpanded ? "Less" : "See all"}
+              <ChevronDown className={cn(
+                "ml-1 h-3 w-3 transition-transform",
+                isExpanded && "rotate-180"
+              )} />
+            </button>
+          ) : (
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="text-xs text-slate-500 flex items-center focus:outline-none font-inter hover:text-brand-purple transition-colors touch-manipulation"
+            >
+              {isExpanded ? "Less" : "See all"}
+              <ChevronDown className={cn(
+                "ml-1 h-3 w-3 transition-transform",
+                isExpanded && "rotate-180"
+              )} />
+            </button>
+          )}
         </div>
         
         <div className="space-y-4">
