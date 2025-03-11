@@ -57,8 +57,8 @@ const OptimizedHowItWorks: React.FC = () => {
       <div className={`max-w-6xl mx-auto relative px-4 sm:px-6 lg:px-10 transition-all duration-700 ${isVisible ? 'opacity-100' : 'opacity-0 translate-y-10'}`}>
         <div className="text-center mb-8 sm:mb-12 lg:mb-16">
           <SectionHeaderSimple 
-            title="THE EXPERIENCE" 
-            subtitle="From concept to captivation in four moments:"
+            title="SIMPLE BY DESIGN" 
+            subtitle="From booking to delivery in four straightforward steps:"
           />
         </div>
 

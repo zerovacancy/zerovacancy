@@ -28,7 +28,7 @@ const Footer = () => {
               ZeroVacancy
             </h3>
             <p className="text-brand-text-primary text-sm leading-relaxed font-inter">
-              Connecting properties with professional content creators for marketing that converts
+              ZeroVacancy: Connecting property professionals with vetted visual content creators
             </p>
             
             {/* Social media icons */}
@@ -42,11 +42,11 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Column 2: Discover */}
+          {/* Column 2: Property Managers */}
           <div>
             <h4 className="font-semibold mb-4 text-brand-purple-medium flex items-center text-base font-jakarta">
               <Search size={18} className="mr-2 text-brand-purple" />
-              Discover
+              Property Managers
             </h4>
             <ul className="space-y-3">
               <li>
@@ -64,7 +64,13 @@ const Footer = () => {
               <li>
                 <Link to="/pricing" className="text-brand-text-secondary hover:text-brand-purple-medium text-sm transition-colors flex items-center group font-inter">
                   <span className="h-0.5 w-0 bg-brand-purple-medium transition-all duration-300 mr-0 group-hover:w-2 group-hover:mr-2"></span>
-                  Pricing Plans
+                  Pricing
+                </Link>
+              </li>
+              <li>
+                <Link to="/success-stories" className="text-brand-text-secondary hover:text-brand-purple-medium text-sm transition-colors flex items-center group font-inter">
+                  <span className="h-0.5 w-0 bg-brand-purple-medium transition-all duration-300 mr-0 group-hover:w-2 group-hover:mr-2"></span>
+                  Success Stories
                 </Link>
               </li>
             </ul>
@@ -80,19 +86,25 @@ const Footer = () => {
               <li>
                 <Link to="/join-as-creator" className="text-brand-text-secondary hover:text-brand-purple-medium text-sm transition-colors flex items-center group font-inter">
                   <span className="h-0.5 w-0 bg-brand-purple-medium transition-all duration-300 mr-0 group-hover:w-2 group-hover:mr-2"></span>
-                  Join as Creator
+                  Apply to Join
                 </Link>
               </li>
               <li>
-                <Link to="/showcase" className="text-brand-text-secondary hover:text-brand-purple-medium text-sm transition-colors flex items-center group font-inter">
+                <Link to="/creator-guidelines" className="text-brand-text-secondary hover:text-brand-purple-medium text-sm transition-colors flex items-center group font-inter">
                   <span className="h-0.5 w-0 bg-brand-purple-medium transition-all duration-300 mr-0 group-hover:w-2 group-hover:mr-2"></span>
-                  Showcase Work
+                  Creator Guidelines
+                </Link>
+              </li>
+              <li>
+                <Link to="/commission-structure" className="text-brand-text-secondary hover:text-brand-purple-medium text-sm transition-colors flex items-center group font-inter">
+                  <span className="h-0.5 w-0 bg-brand-purple-medium transition-all duration-300 mr-0 group-hover:w-2 group-hover:mr-2"></span>
+                  Commission Structure
                 </Link>
               </li>
               <li>
                 <Link to="/resources" className="text-brand-text-secondary hover:text-brand-purple-medium text-sm transition-colors flex items-center group font-inter">
                   <span className="h-0.5 w-0 bg-brand-purple-medium transition-all duration-300 mr-0 group-hover:w-2 group-hover:mr-2"></span>
-                  Creator Resources
+                  Resources
                 </Link>
               </li>
             </ul>
@@ -125,6 +137,15 @@ const Footer = () => {
                 >
                   <MapPin className="w-4 h-4 mr-2 text-brand-purple-medium/70" />
                   Contact Us
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="/faq" 
+                  className="text-brand-text-secondary hover:text-brand-purple-medium text-sm transition-colors flex items-center mt-2 font-inter"
+                >
+                  <HelpCircle className="w-4 h-4 mr-2 text-brand-purple-medium/70" />
+                  FAQ
                 </a>
               </li>
             </ul>

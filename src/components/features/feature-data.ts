@@ -1,37 +1,37 @@
 
 export const features = [{
-  title: "VISUAL NARRATIVES",
-  description: "Photography that breaks convention, revealing the true character and potential of your spaces through compositional mastery.",
+  title: "PROFESSIONAL PHOTOGRAPHY",
+  description: "Strategic compositions that highlight your property's best features and create emotional connection with potential tenants and buyers.",
   icon: "Camera",
   isPopular: true
 }, {
-  title: "ELEVATED PERSPECTIVES",
-  description: "Aerial cinematography that contextualizes your property within its environment, creating desire through spatial storytelling.",
+  title: "AERIAL CINEMATOGRAPHY",
+  description: "Contextual drone footage that showcases your property's location advantages and architectural distinctions from perspectives that matter.",
   icon: "Image"
 }, {
-  title: "CINEMATIC IDENTITY",
-  description: "Moving imagery that captures the emotional experience of inhabiting your spaces, not just walking through them.",
+  title: "IMMERSIVE VIDEO TOURS",
+  description: "Professional walkthrough videos that give prospects the confidence to make decisions before physical visits, accelerating your leasing cycle.",
   icon: "Video",
   isPopular: true
 }, {
-  title: "SOCIAL CURRENCY",
-  description: "Platform-native content engineered to stop thumbs and start conversations about your property's unique offering.",
+  title: "SOCIAL MEDIA CONTENT",
+  description: "Platform-optimized visuals and clips designed specifically for social channels, increasing engagement and inquiry rates.",
   icon: "Instagram"
 }, {
-  title: "VETTED VISIONARIES",
-  description: "Our collective includes only creators whose portfolios demonstrate mastery of spatial storytelling and visual intrigue.",
+  title: "VETTED PROFESSIONALS",
+  description: "Work exclusively with creators who meet our rigorous standards for real estate visualization and professional reliability.",
   icon: "UserCheck"
 }, {
-  title: "FRICTIONLESS COLLABORATION",
-  description: "Streamlined booking process that prioritizes creative alignment while eliminating administrative hassles.",
+  title: "STREAMLINED BOOKING",
+  description: "Book your preferred creator in minutes with transparent pricing, clear deliverables, and guaranteed timelines.",
   icon: "Clock"
 }, {
-  title: "TRANSPARENT INVESTMENT",
-  description: "Clear creative investment structure with no hidden costs. What you see is what you invest.",
+  title: "NO HIDDEN COSTS",
+  description: "See exactly what you're investing in with upfront pricing that includes all deliverables and usage rights.",
   icon: "CreditCard"
 }, {
-  title: "VISION GUARANTEE",
-  description: "If the delivered visuals don't align with your collaborative vision, we'll make it right or return your creative investment.",
+  title: "SATISFACTION GUARANTEE",
+  description: "If the delivered content doesn't meet your expectations, we'll arrange revisions or provide a complete refund.",
   icon: "Award",
   isPopular: true
 }];

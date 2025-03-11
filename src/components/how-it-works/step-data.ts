@@ -7,7 +7,7 @@ export const steps: Step[] = [
   {
     icon: Search,
     title: "DISCOVER",
-    description: "Find top content creators who showcase spaces with unique visual styles.",
+    description: "Browse profiles of top-rated content creators specializing in real estate in your area.",
     number: "01",
     iconClass: "text-violet-600 bg-violet-50",
     numberClass: "bg-violet-600 text-white",
@@ -22,8 +22,8 @@ export const steps: Step[] = [
   },
   {
     icon: Users,
-    title: "CONNECT",
-    description: "Browse portfolios to match your project with the right creative approach.",
+    title: "SELECT",
+    description: "Review portfolios, compare styles, and choose the professional whose aesthetic matches your property's positioning.",
     number: "02",
     iconClass: "text-blue-600 bg-blue-50",
     numberClass: "bg-blue-600 text-white",
@@ -38,8 +38,8 @@ export const steps: Step[] = [
   },
   {
     icon: Calendar,
-    title: "COLLABORATE",
-    description: "Your payment stays in escrow until your vision is delivered.",
+    title: "SECURE",
+    description: "Book with confidence knowing your payment is held in escrow until you approve the final deliverables.",
     number: "03",
     iconClass: "text-amber-600 bg-amber-50",
     numberClass: "bg-amber-600 text-white",
@@ -54,8 +54,8 @@ export const steps: Step[] = [
   },
   {
     icon: FileCheck,
-    title: "TRANSFORM",
-    description: "Receive compelling visuals that engage your target audience.",
+    title: "SHOWCASE",
+    description: "Receive professionally edited content ready to deploy across your marketing channels.",
     number: "04",
     iconClass: "text-emerald-600 bg-emerald-50",
     numberClass: "bg-emerald-600 text-white",

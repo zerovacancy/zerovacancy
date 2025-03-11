@@ -23,42 +23,48 @@ export const FEATURES = {
     { text: "Preview Marketplace Features", primary: true }
   ],
   starter: [
-    { text: "Essential visual narrative", primary: true },
-    { text: "Curated property moments", primary: true },
-    { text: "Core spatial storytelling", primary: true },
-    { text: "Foundational amenity presence", primary: true },
-    { text: "48-hour creative delivery", primary: true }
+    { text: "Professional photography (25+ images)", primary: true },
+    { text: "Property highlights edit", primary: true },
+    { text: "Basic floor plan", primary: true },
+    { text: "Social media optimized images", primary: true },
+    { text: "48-hour delivery", primary: true }
   ],
   pro: [
-    { text: "Expanded visual storytelling", primary: true },
-    { text: "Cinematic property sequence", primary: true },
-    { text: "Elevated aerial perspective", primary: true },
-    { text: "Environmental context", primary: true },
-    { text: "Lifestyle integration", primary: true },
-    { text: "24-hour creative delivery", primary: true },
-    { text: "Comprehensive visual identity", primary: true },
-    { text: "Feature-length property film", primary: true },
-    { text: "Signature aerial sequences", primary: true }
+    { text: "All Essential features", primary: true },
+    { text: "Twilight/golden hour shots", primary: true },
+    { text: "Professional video walkthrough", primary: true },
+    { text: "Standard drone footage", primary: true },
+    { text: "3D virtual tour", primary: true },
+    { text: "24-hour delivery", primary: true }
+  ],
+  premium: [
+    { text: "All Professional features", primary: true },
+    { text: "Lifestyle photography", primary: true },
+    { text: "Cinematic property film", primary: true },
+    { text: "Advanced aerial cinematography", primary: true },
+    { text: "Virtual staging options", primary: true },
+    { text: "Priority scheduling", primary: true },
+    { text: "Same-day editing available", primary: true }
   ]
 };
 
 // Value propositions for each plan
 export const VALUE_PROPOSITIONS = {
-  basic: "Perfect for property owners who want their spaces presented with clarity and purpose.",
-  professional: "Designed for real estate professionals who understand the power of visual storytelling.",
-  premium: "For visionaries who demand a complete visual transformation that creates emotional connection."
+  basic: "Core visual assets for effectively marketing residential and small commercial properties.",
+  professional: "Comprehensive visual package for properties that need to stand out in competitive markets.",
+  premium: "Complete visual marketing suite for luxury properties and developments requiring exceptional presentation."
 };
 
 // Plan descriptions
 export const PLAN_DESCRIPTIONS = {
-  basic: "THE FOUNDATION",
-  professional: "THE NARRATIVE",
-  premium: "THE MASTERPIECE"
+  basic: "ESSENTIAL",
+  professional: "PROFESSIONAL",
+  premium: "PREMIUM"
 };
 
 // Plan CTAs
 export const PLAN_CTAS = {
-  basic: "BEGIN TRANSFORMATION",
-  professional: "CRAFT YOUR NARRATIVE",
-  premium: "CREATE YOUR MASTERPIECE"
+  basic: "SELECT ESSENTIAL",
+  professional: "SELECT PROFESSIONAL",
+  premium: "SELECT PREMIUM"
 };

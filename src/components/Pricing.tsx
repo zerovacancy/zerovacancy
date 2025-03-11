@@ -23,8 +23,8 @@ const Pricing = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Enhanced header with toggle now integrated */}
           <PricingHeader 
-            title="INVESTMENT TIERS" 
-            subtitle="Visual storytelling that transforms vacancies into waiting lists"
+            title="PRICING TIERS" 
+            subtitle="Select the package that fits your property's marketing needs"
           />
           
           {/* Unified pricing container that handles both mobile and desktop layouts */}
