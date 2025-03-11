@@ -66,7 +66,7 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
       setTimeout(() => {
         setIsFirstVisit(false);
       }, 5000);
-    }, 500); // Increased delay for more reliable initialization
+    }, 500);
 
     return () => {
       clearTimeout(timer);
@@ -77,31 +77,31 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
   
   return (
     <div className="w-full relative">
-      {/* Enhanced swipe instruction with better visibility */}
+      {/* Simplified swipe instruction with better visibility */}
       {isFirstVisit && (
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 bg-black/80 text-white px-4 py-3 rounded-full text-sm flex items-center gap-2.5 backdrop-blur-sm animate-pulse-subtle shadow-lg">
-          <Grip className="w-4.5 h-4.5" />
-          <span className="font-medium">Swipe to explore</span>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 bg-black/70 text-white px-4 py-2 rounded-full text-sm flex items-center gap-2 shadow-md">
+          <Grip className="w-4 h-4" />
+          <span>Swipe to explore</span>
         </div>
       )}
     
-      {/* Visual search results connector */}
+      {/* Visual search results connector - simplified */}
       <div className="relative py-4">
-        <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-full p-1 shadow-sm border border-gray-100">
-          <div className="bg-indigo-100 text-indigo-700 text-xs font-medium px-3 py-1 rounded-full">
+        <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-full py-1 px-2 shadow-sm border border-gray-100">
+          <div className="bg-indigo-100 text-indigo-700 text-xs font-medium px-2 py-0.5 rounded-full">
             Search Results
           </div>
         </div>
       </div>
 
-      {/* Carousel container with fixed padding */}
-      <div className="w-full overflow-hidden pb-8 embla-container" ref={emblaRef}>
-        <div className="flex embla-slide-container">
-          {creators.map((creator, index) => (
+      {/* Carousel container with simplified styling */}
+      <div className="w-full overflow-hidden pb-8" ref={emblaRef}>
+        <div className="flex">
+          {creators.map((creator) => (
             <div 
               key={creator.name} 
               style={{ touchAction: 'pan-y' }} 
-              className="min-w-[92%] w-[92%] pl-2 pr-2 embla-slide my-[10px]"
+              className="min-w-[92%] w-[92%] pl-2 pr-2 my-[10px]"
             >
               <CreatorCard 
                 creator={creator} 
@@ -114,31 +114,29 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
         </div>
       </div>
 
-      {/* Navigation Arrows - Significantly enlarged touch targets */}
+      {/* Navigation Arrows - Simplified */}
       <button 
         onClick={scrollPrev} 
         className={cn(
-          "absolute left-1 top-[45%] -translate-y-1/2 z-10 rounded-full p-4 bg-black/60 text-white backdrop-blur-sm transition-all", 
-          "hover:bg-black/70 active:scale-95 duration-200 touch-manipulation", 
-          !prevBtnEnabled && "opacity-0 pointer-events-none",
-          "min-h-[48px] min-w-[48px] flex items-center justify-center" // Ensure adequate touch size
+          "absolute left-1 top-[45%] -translate-y-1/2 z-10 rounded-full p-3 bg-black/50 text-white", 
+          "touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center", 
+          !prevBtnEnabled && "opacity-0 pointer-events-none"
         )} 
         aria-label="Previous creator"
       >
-        <ChevronLeft className="w-6 h-6" />
+        <ChevronLeft className="w-5 h-5" />
       </button>
       
       <button 
         onClick={scrollNext} 
         className={cn(
-          "absolute right-1 top-[45%] -translate-y-1/2 z-10 rounded-full p-4 bg-black/60 text-white backdrop-blur-sm transition-all", 
-          "hover:bg-black/70 active:scale-95 duration-200 touch-manipulation", 
-          !nextBtnEnabled && "opacity-0 pointer-events-none",
-          "min-h-[48px] min-w-[48px] flex items-center justify-center" // Ensure adequate touch size
+          "absolute right-1 top-[45%] -translate-y-1/2 z-10 rounded-full p-3 bg-black/50 text-white", 
+          "touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center", 
+          !nextBtnEnabled && "opacity-0 pointer-events-none"
         )} 
         aria-label="Next creator"
       >
-        <ChevronRight className="w-6 h-6" />
+        <ChevronRight className="w-5 h-5" />
       </button>
     </div>
   );
