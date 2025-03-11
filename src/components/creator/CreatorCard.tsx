@@ -13,53 +13,7 @@ import { CreatorInfo } from './CreatorInfo';
 import { CreatorMedia } from './CreatorMedia';
 import { CreatorTags, getDefaultTags } from './CreatorTags';
 import { PortfolioPreview } from './PortfolioPreview';
-import { NotableClients } from './NotableClients';
 import type { CreatorCardProps, NotableClient } from './types';
-
-// Demo data for notable clients - using placeholder images until real logos are uploaded
-const getDemoNotableClients = (name: string): NotableClient[] => {
-  if (name === 'John Smith') {
-    return [
-      {
-        name: 'Apple',
-        logo: '/placeholder.svg',
-        projectType: 'Brand photography'
-      },
-      {
-        name: 'SpaceX',
-        logo: '/placeholder.svg',
-        projectType: 'Product launch'
-      }
-    ];
-  }
-  if (name === 'Jane Cooper') {
-    return [
-      {
-        name: 'OpenAI',
-        logo: '/placeholder.svg',
-        projectType: 'Office design'
-      },
-      {
-        name: 'Tesla',
-        logo: '/placeholder.svg',
-        projectType: 'Showroom staging'
-      }
-    ];
-  }
-  // Default clients for everyone to ensure consistency
-  return [
-    {
-      name: 'Google',
-      logo: '/placeholder.svg',
-      projectType: 'Creative services'
-    },
-    {
-      name: 'Microsoft',
-      logo: '/placeholder.svg',
-      projectType: 'Brand assets'
-    }
-  ];
-};
 
 export const CreatorCard: React.FC<CreatorCardProps> = ({ 
   creator, 
@@ -72,7 +26,6 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
   const [stage, setStage] = useState<'initial' | 'input' | 'confirmed'>('initial');
 
   const tags = creator.tags || getDefaultTags(creator.name, creator.services);
-  const notableClients = creator.notableClients || getDemoNotableClients(creator.name);
   const firstName = creator.name.split(' ')[0];
 
   const handleCTAClick = () => {
@@ -83,9 +36,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
   return (
     <article className="group select-text h-full">
       <div className="relative h-full">
-        <div className="absolute -inset-0.5 sm:-inset-0.5 rounded-xl bg-gradient-to-r from-purple-800/30 
-via-indigo-700/30 to-purple-900/30 opacity-60 sm:opacity-75 blur-[2px] sm:blur-sm group-hover:opacity-100 transition 
-duration-500"></div>
+        <div className="absolute -inset-0.5 sm:-inset-0.5 rounded-xl bg-gradient-to-r from-purple-800/30 via-indigo-700/30 to-purple-900/30 opacity-60 sm:opacity-75 blur-[2px] sm:blur-sm group-hover:opacity-100 transition duration-500"></div>
         <Card className={cn(
           "overflow-hidden h-full",
           "will-change-transform transition-all duration-300",
@@ -152,21 +103,16 @@ duration-500"></div>
                 />
               </div>
 
-              {/* Notable Clients Section - with fixed height */}
-              <div className="mb-3 min-h-[32px]">
-                <NotableClients clients={notableClients} />
-              </div>
-
-              {/* Portfolio preview - with fixed height */}
-              <div className="min-h-[80px]">
+              {/* Portfolio preview - right after ratings */}
+              <div className="min-h-[80px] mb-3">
                 <PortfolioPreview 
                   workExamples={creator.workExamples}
                   creatorName={creator.name}
                 />
               </div>
 
-              {/* Card within card design for tags - with fixed height */}
-              <div className="bg-gray-50/80 rounded-lg p-3 mb-4 shadow-sm border border-gray-100/80 min-h-[80px]">
+              {/* Tags section - no background/border, just the label and pills */}
+              <div className="mb-4 min-h-[60px]">
                 <div className="flex items-center mb-2">
                   <div className="w-0.5 h-3 bg-gradient-to-b from-blue-500 to-indigo-600 rounded-full mr-1.5"></div>
                   <span className="text-xs text-gray-500 font-medium">SPECIALTIES</span>
@@ -174,7 +120,7 @@ duration-500"></div>
                 <CreatorTags tags={tags} />
               </div>
 
-              {/* Enhanced CTA Button with fixed height container */}
+              {/* Enhanced CTA Button with fixed height to ensure alignment */}
               <div className="h-[46px]">
                 <ShimmerButton 
                   onClick={handleCTAClick}
@@ -190,8 +136,7 @@ duration-500"></div>
                   {stage === 'initial' ? (
                     <>
                       <span>Book with {firstName}</span>
-                      <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1.5 transition-transform 
-duration-300" aria-hidden="true" />
+                      <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1.5 transition-transform duration-300" aria-hidden="true" />
                     </>
                   ) : stage === 'input' ? (
                     <span>Secure Your Spot</span>
