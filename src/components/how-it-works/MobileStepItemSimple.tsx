@@ -2,7 +2,6 @@ import React from 'react';
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Step } from './types';
-import { Card } from "@/components/ui/card";
 
 interface MobileStepItemSimpleProps {
   step: Step;
@@ -19,38 +18,73 @@ const MobileStepItemSimple: React.FC<MobileStepItemSimpleProps> = ({
   isActive,
   onClick
 }) => {
+  // Simplified gradient accent
+  const getAccentColor = () => {
+    return {
+      background: `linear-gradient(${step.gradientDirection || '45deg'}, ${step.gradientFrom || '#8B5CF6'}, ${step.gradientTo || '#6366F1'})`
+    };
+  };
+
   return (
-    <Card 
+    <div 
       onClick={onClick}
       className={cn(
-        "rounded-2xl p-6 flex flex-col gap-2 border shadow-none",
-        "transition-all duration-200",
-        isActive ? "border-l-4" : "",
+        "relative p-5 transition-all duration-200 cursor-pointer",
+        "bg-white border border-gray-100 rounded-xl shadow-sm",
+        "flex flex-col h-full min-h-[140px] mb-4",
+        isActive ? "shadow-md border-l-4" : "",
+        "active:scale-[0.99]"
       )}
-      style={{ 
-        borderLeftColor: isActive ? step.gradientFrom : undefined 
+      style={{
+        borderLeftColor: isActive ? step.gradientFrom : '',
       }}
     >
-      <div className="items-center gap-2 flex">
-        {React.cloneElement(step.icon as React.ReactElement, {
-          className: "h-5 w-5"
-        })}
-        <h3 className="font-heading font-semibold">{step.title}</h3>
-
-        {isCompleted && (
-          <span className="ml-auto bg-green-50 p-1 rounded-full">
-            <Check className="w-3.5 h-3.5 text-green-500" />
-          </span>
+      {/* Header with number and title */}
+      <div className="flex items-center gap-3 mb-3">
+        {/* Circle Number Badge */}
+        <div className={cn(
+          "w-7 h-7 rounded-full flex items-center justify-center",
+          "text-sm font-semibold shadow-sm text-white",
         )}
+        style={getAccentColor()}>
+          {index + 1}
+
+          {/* Completed checkmark */}
+          {isCompleted && (
+            <div className="absolute -right-1 -top-1 bg-white rounded-full p-0.5 shadow-sm">
+              <Check className="w-3 h-3 text-green-500" />
+            </div>
+          )}
+        </div>
+
+        {/* Title */}
+        <h4 className="text-base font-bold text-gray-900 flex-grow">
+          {step.title}
+        </h4>
+
+        {/* Icon */}
+        <div className={cn(
+          "rounded-full p-2 flex-shrink-0",
+        )}
+        style={getAccentColor()}>
+          {React.cloneElement(step.icon as React.ReactElement, {
+            className: "w-4 h-4 text-white"
+          })}
+        </div>
       </div>
 
-      <p className="text-muted-foreground text-sm">{step.description}</p>
+      {/* Description */}
+      <p className="text-sm leading-relaxed text-gray-600">
+        {step.description}
+      </p>
 
-      <div className="flex justify-between items-center mt-1 text-xs text-muted-foreground">
-        <span>Step {index + 1} of 4</span>
-        {isActive && <span className="text-primary font-medium">Active</span>}
-      </div>
-    </Card>
+      {/* Active indicator dot */}
+      {isActive && (
+        <div className="absolute bottom-3 right-3 w-2 h-2 rounded-full animate-pulse"
+          style={getAccentColor()}>
+        </div>
+      )}
+    </div>
   );
 };
 
