@@ -1,5 +1,4 @@
-
-import { Search, Users, FileCheck, Calendar } from 'lucide-react';
+import { Search, Users2, CalendarDays, FileCheck2 } from 'lucide-react';
 import { Step } from './types';
 
 // Define step data to avoid repetition
@@ -21,7 +20,7 @@ export const steps: Step[] = [
     }
   },
   {
-    icon: Users,
+    icon: Users2,
     title: "CONNECT",
     description: "Immerse yourself in creative portfolios that reveal each creator's unique perspective on architectural storytelling.",
     number: "02",
@@ -37,7 +36,7 @@ export const steps: Step[] = [
     }
   },
   {
-    icon: Calendar,
+    icon: CalendarDays,
     title: "COLLABORATE",
     description: "Lock in your vision with transparent investment structures. Your creative capital remains in escrow until your vision materializes.",
     number: "03",
@@ -53,7 +52,7 @@ export const steps: Step[] = [
     }
   },
   {
-    icon: FileCheck,
+    icon: FileCheck2,
     title: "TRANSFORM",
     description: "Receive visual assets that transcend traditional property marketing and create emotional connections with your ideal audience.",
     number: "04",
