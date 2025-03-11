@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import SectionHeaderSimple from './SectionHeaderSimple';
@@ -61,7 +62,7 @@ const OptimizedHowItWorks: React.FC = () => {
           />
         </div>
 
-        {/* Mobile carousel layout */}
+        {/* Mobile grid layout */}
         <MobileStepsGridSimple 
           completedSteps={completedSteps} 
           activeStep={activeStep}
