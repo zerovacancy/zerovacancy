@@ -41,12 +41,15 @@ export function Hero() {
       ref={sectionRef}
       className={cn(
         "flex items-center justify-center flex-col", 
+        // Standardized horizontal padding
         "px-4 sm:px-6", 
+        // Increased vertical spacing
         "py-8 sm:py-12 lg:py-16",
         "my-4 sm:my-6 lg:my-8",
         "min-h-fit sm:min-h-[36vh]",
         "relative z-10", 
-        "gap-4 sm:gap-6",
+        // Increased vertical gap
+        "gap-6 sm:gap-6",
         "touch-manipulation",
         "bg-gradient-to-b from-purple-50 via-indigo-50/60 to-blue-50/30",
         isInView ? "animate-fade-in" : "opacity-0"
@@ -55,14 +58,16 @@ export function Hero() {
       <div 
         className={cn(
           "flex flex-col max-w-6xl mx-auto w-full",
-          "gap-4 sm:gap-6", 
+          // Increased gap between content blocks
+          "gap-6 sm:gap-6", 
           isInView ? "animate-fade-in delay-100" : "opacity-0"
         )}
       >
         <div className="relative">
           <h1 className={cn(
             "tracking-tight leading-[1.1] text-center font-bold font-jakarta",
-            "mb-4 sm:mb-6"
+            // Increased bottom margin
+            "mb-6 sm:mb-6"
           )}>
             {isMobile ? (
               <span className="flex flex-col items-center">
@@ -71,7 +76,7 @@ export function Hero() {
                     "text-primary inline-block font-medium",
                     "text-2xl sm:text-5xl lg:text-6xl",
                     "tracking-[-0.02em]", 
-                    "text-brand-purple-dark mb-1"
+                    "text-brand-purple-dark mb-2"
                   )}
                 >
                   Property Content that
@@ -153,12 +158,14 @@ export function Hero() {
       <div 
         className={cn(
           "w-full", 
-          "mt-4 sm:mt-6",
-          "px-3 sm:px-4",
+          // Increased top margin
+          "mt-6 sm:mt-6",
+          // Consistent padding
+          "px-4 sm:px-4",
           isInView ? "animate-fade-in delay-200" : "opacity-0" 
         )}
       >
-        <WaitlistCTA className="mb-4 sm:mb-6" />
+        <WaitlistCTA className="mb-6 sm:mb-6" />
       </div>
     </section>
   );

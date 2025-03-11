@@ -75,8 +75,8 @@ export function WaitlistCTA({
   };
   
   return (
-    <div className={cn("w-full max-w-xl mx-auto px-5 sm:px-0", className)}>
-      <form onSubmit={handleSubmit} className={cn("flex w-full", isMobile ? "flex-col space-y-3" : "flex-row items-center justify-center gap-4")}>
+    <div className={cn("w-full max-w-xl mx-auto px-4 sm:px-0", className)}>
+      <form onSubmit={handleSubmit} className={cn("flex w-full", isMobile ? "flex-col space-y-4" : "flex-row items-center justify-center gap-4")}>
         <EmailInput 
           email={email}
           setEmail={setEmail}
