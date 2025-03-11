@@ -29,31 +29,31 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
     dragFree: true,
     skipSnaps: false
   });
-
+  
   const [prevBtnEnabled, setPrevBtnEnabled] = useState(false);
   const [nextBtnEnabled, setNextBtnEnabled] = useState(true);
   const [selectedIndex, setSelectedIndex] = useState(0);
-
+  
   const scrollPrev = useCallback(() => {
     if (!emblaApi) return;
     emblaApi.scrollPrev();
   }, [emblaApi]);
-
+  
   const scrollNext = useCallback(() => {
     if (!emblaApi) return;
     emblaApi.scrollNext();
   }, [emblaApi]);
-
+  
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
     setPrevBtnEnabled(emblaApi.canScrollPrev());
     setNextBtnEnabled(emblaApi.canScrollNext());
     setSelectedIndex(emblaApi.selectedScrollSnap());
   }, [emblaApi]);
-
+  
   useEffect(() => {
     if (!emblaApi) return;
-
+    
     onSelect();
     emblaApi.on('select', onSelect);
     emblaApi.on('reInit', onSelect);
@@ -66,7 +66,7 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
       setTimeout(() => {
         setIsFirstVisit(false);
       }, 5000);
-    }, 500);
+    }, 500); // Increased delay for more reliable initialization
 
     return () => {
       clearTimeout(timer);
@@ -74,33 +74,30 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
       emblaApi.off('reInit', onSelect);
     };
   }, [emblaApi, onSelect]);
-
+  
   return (
     <div className="w-full relative">
-      {/* Simplified swipe instruction with better visibility */}
+      {/* Enhanced swipe instruction with better visibility */}
       {isFirstVisit && (
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 bg-black/70 text-white px-4 py-2 rounded-full text-sm flex items-center gap-2 shadow-md">
-          <Grip className="w-4 h-4" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 bg-black/80 text-white px-4 py-3 rounded-full text-sm flex items-center gap-2.5 backdrop-blur-sm animate-pulse-subtle shadow-lg">
+          <Grip className="w-4.5 h-4.5" />
           <span className="font-medium">Swipe to explore</span>
         </div>
       )}
-
-      {/* Simplified visual search results connector */}
+    
+      {/* Visual search results connector */}
       <div className="relative py-4">
-        <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-full p-1 shadow-md border border-indigo-200/50">
-          <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-xs font-medium px-3 py-1 rounded-full">
+        <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-full p-1 shadow-sm border border-gray-100">
+          <div className="bg-indigo-100 text-indigo-700 text-xs font-medium px-3 py-1 rounded-full">
             Search Results
           </div>
         </div>
       </div>
 
-      {/* Simplified carousel container for better performance */}
-      <div className="w-full overflow-hidden pb-8 embla-container relative" ref={emblaRef}>
-        {/* Simplified background for container */}
-        <div className="absolute inset-0 bg-indigo-50/30 rounded-xl border border-indigo-100/30"></div>
-
-        <div className="flex embla-slide-container relative z-10 py-2">
-          {creators.map((creator) => (
+      {/* Carousel container with fixed padding */}
+      <div className="w-full overflow-hidden pb-8 embla-container" ref={emblaRef}>
+        <div className="flex embla-slide-container">
+          {creators.map((creator, index) => (
             <div 
               key={creator.name} 
               style={{ touchAction: 'pan-y' }} 
@@ -117,51 +114,32 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
         </div>
       </div>
 
-      {/* Simplified Navigation Arrows - Large touch targets with reduced visual complexity */}
+      {/* Navigation Arrows - Significantly enlarged touch targets */}
       <button 
         onClick={scrollPrev} 
         className={cn(
-          "absolute left-1 top-[45%] -translate-y-1/2 z-10 rounded-full p-3 bg-indigo-600 text-white", 
-          "active:scale-95 duration-200 touch-manipulation", 
-          "shadow-md",
+          "absolute left-1 top-[45%] -translate-y-1/2 z-10 rounded-full p-4 bg-black/60 text-white backdrop-blur-sm transition-all", 
+          "hover:bg-black/70 active:scale-95 duration-200 touch-manipulation", 
           !prevBtnEnabled && "opacity-0 pointer-events-none",
-          "min-h-[44px] min-w-[44px] flex items-center justify-center" // Adequate touch size
+          "min-h-[48px] min-w-[48px] flex items-center justify-center" // Ensure adequate touch size
         )} 
         aria-label="Previous creator"
       >
-        <ChevronLeft className="w-5 h-5" />
+        <ChevronLeft className="w-6 h-6" />
       </button>
-
+      
       <button 
         onClick={scrollNext} 
         className={cn(
-          "absolute right-1 top-[45%] -translate-y-1/2 z-10 rounded-full p-3 bg-indigo-600 text-white", 
-          "active:scale-95 duration-200 touch-manipulation", 
-          "shadow-md",
+          "absolute right-1 top-[45%] -translate-y-1/2 z-10 rounded-full p-4 bg-black/60 text-white backdrop-blur-sm transition-all", 
+          "hover:bg-black/70 active:scale-95 duration-200 touch-manipulation", 
           !nextBtnEnabled && "opacity-0 pointer-events-none",
-          "min-h-[44px] min-w-[44px] flex items-center justify-center" // Adequate touch size
+          "min-h-[48px] min-w-[48px] flex items-center justify-center" // Ensure adequate touch size
         )} 
         aria-label="Next creator"
       >
-        <ChevronRight className="w-5 h-5" />
+        <ChevronRight className="w-6 h-6" />
       </button>
-
-      {/* Simplified Dots indicator */}
-      <div className="flex justify-center gap-1 mt-2">
-        {creators.map((_, idx) => (
-          <button
-            key={idx}
-            onClick={() => emblaApi?.scrollTo(idx)}
-            className={cn(
-              "w-2 h-2 rounded-full transition-all",
-              idx === selectedIndex
-                ? "bg-indigo-600 w-3" // Active dot is wider
-                : "bg-gray-300"
-            )}
-            aria-label={`Go to slide ${idx + 1}`}
-          />
-        ))}
-      </div>
     </div>
   );
 };
