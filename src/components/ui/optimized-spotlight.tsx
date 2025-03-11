@@ -1,6 +1,7 @@
+
 'use client';
 import React, { useRef, useState, useEffect, useCallback } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils";
 
 type OptimizedSpotlightProps = {
   className?: string;
@@ -30,23 +31,25 @@ export function OptimizedSpotlight({
         setParentElement(parent);
         
         // Use IntersectionObserver with high threshold for performance
-        observerRef.current = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              setIsVisible(entry.isIntersecting);
-              // Disconnect observer when element becomes visible to reduce CPU load
-              if (entry.isIntersecting && observerRef.current) {
-                // Keep observer for when element leaves viewport again
-              }
-            });
-          },
-          { 
-            threshold: 0.1,
-            rootMargin: '200px' // Larger preload area for smoother transitions
-          }
-        );
-        
-        observerRef.current.observe(parent);
+        try {
+          observerRef.current = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                setIsVisible(entry.isIntersecting);
+              });
+            },
+            { 
+              threshold: 0.1,
+              rootMargin: '200px' // Larger preload area for smoother transitions
+            }
+          );
+          
+          observerRef.current.observe(parent);
+        } catch (e) {
+          console.error("Error setting up IntersectionObserver:", e);
+          // Fallback: just show the component
+          setIsVisible(true);
+        }
         
         return () => {
           if (observerRef.current) {
@@ -58,6 +61,8 @@ export function OptimizedSpotlight({
         };
       }
     }
+    // Fallback if no ref
+    return () => {};
   }, []);
 
   // Optimized mouse movement handler with debounced RAF
@@ -72,11 +77,15 @@ export function OptimizedSpotlight({
     if (!frameRef.current && parentElement) {
       frameRef.current = requestAnimationFrame(() => {
         if (parentElement) {
-          const { left, top } = parentElement.getBoundingClientRect();
-          setPosition({
-            x: positionRef.current.x - left - size / 2,
-            y: positionRef.current.y - top - size / 2
-          });
+          try {
+            const { left, top } = parentElement.getBoundingClientRect();
+            setPosition({
+              x: positionRef.current.x - left - size / 2,
+              y: positionRef.current.y - top - size / 2
+            });
+          } catch (err) {
+            console.error("Error in animation frame:", err);
+          }
         }
         frameRef.current = null;
       });
@@ -91,14 +100,23 @@ export function OptimizedSpotlight({
     const handleLeave = () => setIsHovered(false);
 
     // Use passive event listeners for better performance
-    parentElement.addEventListener('mousemove', handleMouseMove, { passive: true });
-    parentElement.addEventListener('mouseenter', handleEnter, { passive: true });
-    parentElement.addEventListener('mouseleave', handleLeave, { passive: true });
+    try {
+      parentElement.addEventListener('mousemove', handleMouseMove, { passive: true });
+      parentElement.addEventListener('mouseenter', handleEnter, { passive: true });
+      parentElement.addEventListener('mouseleave', handleLeave, { passive: true });
+    } catch (err) {
+      console.error("Error adding event listeners:", err);
+    }
 
     return () => {
-      parentElement.removeEventListener('mousemove', handleMouseMove);
-      parentElement.removeEventListener('mouseenter', handleEnter);
-      parentElement.removeEventListener('mouseleave', handleLeave);
+      try {
+        parentElement.removeEventListener('mousemove', handleMouseMove);
+        parentElement.removeEventListener('mouseenter', handleEnter);
+        parentElement.removeEventListener('mouseleave', handleLeave);
+      } catch (err) {
+        console.error("Error removing event listeners:", err);
+      }
+      
       if (frameRef.current) {
         cancelAnimationFrame(frameRef.current);
         frameRef.current = null;

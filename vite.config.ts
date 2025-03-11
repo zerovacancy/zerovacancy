@@ -21,7 +21,19 @@ export default defineConfig(({ mode }) => ({
   },
   build: {
     sourcemap: true,
-    minify: 'esbuild', // Changed from 'terser' to 'esbuild'
-    // Removed terserOptions since they're not applicable to esbuild
+    minify: 'esbuild',
+    chunkSizeWarningLimit: 1000, // Increase chunk size limit
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'ui-vendor': ['framer-motion', '@radix-ui/react-dialog', '@radix-ui/react-toast'],
+        },
+      },
+    },
+  },
+  // Improve file system case sensitivity handling
+  optimizeDeps: {
+    force: true, // Re-bundle dependencies to ensure case sensitivity is correct
   },
 }));

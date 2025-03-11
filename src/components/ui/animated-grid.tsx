@@ -1,3 +1,4 @@
+
 "use client";
 
 import { memo, useCallback, useEffect, useRef, useState } from "react";
@@ -128,16 +129,19 @@ export const AnimatedGrid = memo(({
         let targetAngle =
           (180 * Math.atan2(mouseY - center[1], mouseX - center[0])) / Math.PI + 90;
 
+        // Ensure angles are properly normalized to avoid NaN%
+        targetAngle = isNaN(targetAngle) ? 0 : targetAngle;
+        
         const angleDiff = ((targetAngle - currentAngle + 180) % 360) - 180;
-        const newAngle = currentAngle + angleDiff;
+        const newAngle = currentAngle + (isNaN(angleDiff) ? 0 : angleDiff);
 
-        // Only animate if the angle change is significant
-        if (Math.abs(angleDiff) > 1) {
+        // Only animate if the angle change is significant and values are valid
+        if (Math.abs(angleDiff) > 1 && !isNaN(newAngle)) {
           animate(currentAngle, newAngle, {
             duration: 1,
             ease: [0.16, 1, 0.3, 1],
             onUpdate: (value) => {
-              if (element) {
+              if (element && !isNaN(value)) {
                 element.style.setProperty("--start", String(value));
                 currentAngleRef.current = value;
               }

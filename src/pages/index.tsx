@@ -27,18 +27,6 @@ const SectionLoader = () => (
   </div>
 );
 
-// Section divider component for mobile
-// const SectionDivider = ({ color = "indigo" }: { color?: string }) => {
-//   const isMobile = useIsMobile();
-//   if (!isMobile) return null;
-  
-//   return (
-//     <div className="w-full flex justify-center py-2">
-//       <div className={`w-1/3 h-px border-t border-${color}-200/70 opacity-70`}></div>
-//     </div>
-//   );
-// };
-
 /**
  * Main landing page component with performance optimizations
  */
@@ -77,20 +65,38 @@ const Index = () => {
   }, []);
   
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      observerCallback,
-      { threshold: 0.1, rootMargin: '200px' }
-    );
-    
-    sectionsRef.current.forEach((section, index) => {
-      if (!section) return;
+    try {
+      const observer = new IntersectionObserver(
+        observerCallback,
+        { threshold: 0.1, rootMargin: '200px' }
+      );
       
-      section.setAttribute('data-section-index', index.toString());
-      observer.observe(section);
-    });
+      sectionsRef.current.forEach((section, index) => {
+        if (!section) return;
+        
+        section.setAttribute('data-section-index', index.toString());
+        observer.observe(section);
+      });
 
-    // Safety timeout to make all sections visible if they aren't already
-    const safetyTimeout = setTimeout(() => {
+      // Safety timeout to make all sections visible if they aren't already
+      const safetyTimeout = setTimeout(() => {
+        setVisibleSections({
+          0: true,
+          1: true,
+          2: true,
+          3: true,
+          4: true,
+          5: true
+        });
+      }, 1000);
+      
+      return () => {
+        observer.disconnect();
+        clearTimeout(safetyTimeout);
+      };
+    } catch (error) {
+      console.error("Error in intersection observer:", error);
+      // If observer fails, set all sections to visible
       setVisibleSections({
         0: true,
         1: true,
@@ -99,12 +105,8 @@ const Index = () => {
         4: true,
         5: true
       });
-    }, 1000);
-    
-    return () => {
-      observer.disconnect();
-      clearTimeout(safetyTimeout);
-    };
+      return () => {};
+    }
   }, [observerCallback]);
   
   const handleTryNowClick = () => {
@@ -182,7 +184,7 @@ const Index = () => {
           </section>
         </BackgroundEffects>
         
-        {/* How It Works Section - with enhanced mobile background */}
+        {/* How It Works Section */}
         <section 
           ref={addSectionRef(1)} 
           id="how-it-works" 
@@ -191,32 +193,12 @@ const Index = () => {
             isMobile && "bg-gradient-to-b from-blue-50/30 via-transparent to-transparent relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-8 after:bg-gradient-to-t after:from-blue-50/30 after:to-transparent"
           )}
         >
-          {!isMobile ? (
-            <BackgroundEffects 
-              blobColors={{
-                first: "bg-blue-100",
-                second: "bg-indigo-100",
-                third: "bg-violet-100"
-              }}
-              blobOpacity={0.1}
-              className="py-0"
-            >
-              <div className="relative z-10">
-                <Suspense fallback={<SectionLoader />}>
-                  <OptimizedHowItWorks />
-                </Suspense>
-              </div>
-            </BackgroundEffects>
-          ) : (
-            <div className="relative z-10 before:content-[''] before:block before:w-10 before:h-1 before:bg-blue-400 before:mb-3 before:rounded-full before:mx-auto before:mt-4">
-              <Suspense fallback={<SectionLoader />}>
-                <OptimizedHowItWorks />
-              </Suspense>
-            </div>
-          )}
+          <Suspense fallback={<SectionLoader />}>
+            <OptimizedHowItWorks />
+          </Suspense>
         </section>
         
-        {/* Search Section - with enhanced mobile background */}
+        {/* Search Section */}
         <section 
           ref={addSectionRef(2)} 
           id="find-creators" 
@@ -225,32 +207,14 @@ const Index = () => {
             isMobile && "bg-gradient-to-b from-indigo-50/30 via-transparent to-transparent relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-8 after:bg-gradient-to-t after:from-indigo-50/30 after:to-transparent"
           )}
         >
-          {!isMobile ? (
-            <BackgroundEffects 
-              blobColors={{
-                first: "bg-indigo-100",
-                second: "bg-blue-100",
-                third: "bg-indigo-100"
-              }}
-              blobOpacity={0.08}
-              className="py-0"
-            >
-              <div className="max-w-7xl mx-auto relative z-10 py-10 sm:py-16 lg:py-20">
-                <Suspense fallback={<SectionLoader />}>
-                  <PreviewSearch />
-                </Suspense>
-              </div>
-            </BackgroundEffects>
-          ) : (
-            <div className="max-w-7xl mx-auto relative z-10 py-10 before:content-[''] before:block before:w-10 before:h-1 before:bg-indigo-400 before:mb-3 before:rounded-full before:mx-auto before:mt-2">
-              <Suspense fallback={<SectionLoader />}>
-                <PreviewSearch />
-              </Suspense>
-            </div>
-          )}
+          <div className="max-w-7xl mx-auto relative z-10 py-10 sm:py-16 lg:py-20">
+            <Suspense fallback={<SectionLoader />}>
+              <PreviewSearch />
+            </Suspense>
+          </div>
         </section>
         
-        {/* Professional Content Creation Services - enhanced for mobile */}
+        {/* Professional Content Creation Services */}
         <section 
           ref={addSectionRef(3)} 
           className={cn(
@@ -263,7 +227,7 @@ const Index = () => {
           </Suspense>
         </section>
 
-        {/* Pricing Section - already has its own background */}
+        {/* Pricing Section */}
         <section 
           ref={addSectionRef(4)} 
           className={cn(
@@ -276,7 +240,7 @@ const Index = () => {
           </Suspense>
         </section>
 
-        {/* Final CTA Section - with own background */}
+        {/* Final CTA Section */}
         <div 
           ref={addSectionRef(5)} 
           className={cn(
@@ -284,25 +248,9 @@ const Index = () => {
             isMobile && "bg-gradient-to-b from-purple-50/30 via-transparent to-transparent"
           )}
         >
-          {!isMobile ? (
-            <BackgroundEffects 
-              blobColors={{
-                first: "bg-indigo-100",
-                second: "bg-violet-100",
-                third: "bg-blue-100"
-              }}
-              blobOpacity={0.12}
-              className="py-0"
-            >
-              <div className="relative z-10 max-w-7xl mx-auto py-14 sm:py-20 lg:py-24">
-                <CallToActionSection />
-              </div>
-            </BackgroundEffects>
-          ) : (
-            <div className="relative z-10 max-w-7xl mx-auto py-14 before:content-[''] before:block before:w-10 before:h-1 before:bg-purple-400 before:mb-3 before:rounded-full before:mx-auto">
-              <CallToActionSection />
-            </div>
-          )}
+          <div className="relative z-10 max-w-7xl mx-auto py-14 sm:py-20 lg:py-24">
+            <CallToActionSection />
+          </div>
         </div>
         
         <Footer />

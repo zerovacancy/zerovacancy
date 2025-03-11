@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect, useState } from 'react';
 import { GradientBlobBackground } from '@/components/ui/gradient-blob-background';
 import { cn } from '@/lib/utils';
@@ -37,42 +38,53 @@ export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(true); // Default to visible to ensure content is shown
+  const [hasError, setHasError] = useState(false);
 
   // Only render heavy effects when the component is in view
   useEffect(() => {
     if (!containerRef.current) return;
     
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const [entry] = entries;
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        } else {
-          // Only hide when scrolled far away (optimization)
-          if (Math.abs(entry.boundingClientRect.top) > window.innerHeight * 2) {
-            // Keep content visible but disable expensive effects
-            // setIsVisible(false); - Removed to ensure content is always visible
+    try {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          const [entry] = entries;
+          if (entry.isIntersecting) {
+            setIsVisible(true);
           }
+        },
+        { 
+          threshold: 0.1,
+          rootMargin: '200px' 
         }
-      },
-      { 
-        threshold: 0.1,
-        rootMargin: '200px' 
-      }
-    );
-    
-    observer.observe(containerRef.current);
-    
-    // Safety timeout to ensure visibility
-    const safetyTimeout = setTimeout(() => {
-      setIsVisible(true);
-    }, 500);
-    
-    return () => {
-      observer.disconnect();
-      clearTimeout(safetyTimeout);
-    };
+      );
+      
+      observer.observe(containerRef.current);
+      
+      // Safety timeout to ensure visibility
+      const safetyTimeout = setTimeout(() => {
+        setIsVisible(true);
+      }, 500);
+      
+      return () => {
+        observer.disconnect();
+        clearTimeout(safetyTimeout);
+      };
+    } catch (error) {
+      console.error("Error in BackgroundEffects observer:", error);
+      setHasError(true);
+      setIsVisible(true); // Ensure content is visible even with error
+      return () => {};
+    }
   }, []);
+
+  // If there was an error setting up the observer, use a simple fallback
+  if (hasError) {
+    return (
+      <div id={id} className={cn("relative w-full overflow-hidden", baseColor, className)}>
+        {children}
+      </div>
+    );
+  }
 
   return (
     <div ref={containerRef} id={id} className={cn("relative w-full overflow-hidden", className)}>

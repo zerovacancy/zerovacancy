@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { OptimizedSpotlight } from './optimized-spotlight';
@@ -44,15 +45,20 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
   // Check if mobile and for reduced motion preference
   useEffect(() => {
     setIsMounted(true);
-    isReducedMotion.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => {
-      window.removeEventListener('resize', checkMobile);
-    };
+    try {
+      isReducedMotion.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const checkMobile = () => {
+        setIsMobile(window.innerWidth < 768);
+      };
+      checkMobile();
+      window.addEventListener('resize', checkMobile);
+      return () => {
+        window.removeEventListener('resize', checkMobile);
+      };
+    } catch (err) {
+      console.error("Error setting up motion preferences:", err);
+      return () => {}; // Empty cleanup if error
+    }
   }, []);
 
   // Don't render animations for users with reduced motion preference or mobile
@@ -71,7 +77,6 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
       </div>;
   }
 
-  // Desktop version with full effects
   // Determine blob sizes based on the blobSize prop
   const getBlobSizeClass = (position: 'first' | 'second' | 'third') => {
     const sizes = {
@@ -104,30 +109,42 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
     };
     return `${base * multipliers[animationSpeed]}s`;
   };
+  
+  // Only render dot/grid patterns if specified
+  const renderPattern = () => {
+    if (pattern === 'dots') {
+      return <div className={`absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:20px_20px] opacity-${Math.round(dotOpacity * 100)}`}></div>;
+    }
+    
+    if (pattern === 'grid') {
+      return <div className={`absolute inset-0 opacity-${Math.round(dotOpacity * 10)}`}>
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="smallGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="currentColor" strokeWidth="0.5" className="text-gray-300" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#smallGrid)" />
+        </svg>
+      </div>;
+    }
+    
+    return null;
+  };
+  
   return <div className={cn(`relative w-full overflow-hidden ${baseColor}`, className)}>
       {/* Pattern background - only if pattern is not 'none' */}
-      {pattern === 'dots' && <div className={`absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:20px_20px] opacity-${dotOpacity * 100}`}></div>}
-      
-      {pattern === 'grid' && <div className={`absolute inset-0 opacity-${dotOpacity * 10}`}>
-          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern id="smallGrid" width="20" height="20" patternUnits="userSpaceOnUse">
-                <path d="M 20 0 L 0 0 0 20" fill="none" stroke="currentColor" strokeWidth="0.5" className="text-gray-300" />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#smallGrid)" />
-          </svg>
-        </div>}
+      {renderPattern()}
       
       {/* Render main blobs (always visible) */}
-      <div className={cn(`absolute -top-10 -left-20 ${getBlobSizeClass('first')} ${blobColors.first} rounded-full mix-blend-multiply filter blur-3xl opacity-${blobOpacity * 100}`)} style={shouldAnimate ? {
+      <div className={cn(`absolute -top-10 -left-20 ${getBlobSizeClass('first')} ${blobColors.first} rounded-full mix-blend-multiply filter blur-3xl opacity-${Math.round(blobOpacity * 100)}`)} style={shouldAnimate ? {
       animation: `blob ${getAnimationDuration(45)} infinite`
     } : {}}></div>
-      <div className={cn(`absolute top-[40%] -right-20 ${getBlobSizeClass('second')} ${blobColors.second} rounded-full mix-blend-multiply filter blur-3xl opacity-${blobOpacity * 100}`)} style={shouldAnimate ? {
+      <div className={cn(`absolute top-[40%] -right-20 ${getBlobSizeClass('second')} ${blobColors.second} rounded-full mix-blend-multiply filter blur-3xl opacity-${Math.round(blobOpacity * 100)}`)} style={shouldAnimate ? {
       animation: `blob ${getAnimationDuration(50)} infinite`,
       animationDelay: `${getAnimationDuration(8)}`
     } : {}}></div>
-      <div className={cn(`absolute -bottom-40 left-[20%] ${getBlobSizeClass('third')} ${blobColors.third} rounded-full mix-blend-multiply filter blur-3xl opacity-${blobOpacity * 100}`)} style={shouldAnimate ? {
+      <div className={cn(`absolute -bottom-40 left-[20%] ${getBlobSizeClass('third')} ${blobColors.third} rounded-full mix-blend-multiply filter blur-3xl opacity-${Math.round(blobOpacity * 100)}`)} style={shouldAnimate ? {
       animation: `blob ${getAnimationDuration(40)} infinite`,
       animationDelay: `${getAnimationDuration(15)}`
     } : {}}></div>
