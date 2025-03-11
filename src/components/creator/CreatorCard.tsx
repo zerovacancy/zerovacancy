@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+ import React, { useState } from 'react';
   import { Card } from '../ui/card';
   import { ArrowRight } from 'lucide-react';
   import { Dialog } from "../ui/dialog";
@@ -20,18 +20,30 @@ import React, { useState } from 'react';
   const getDemoNotableClients = (name: string): NotableClient[] => {
     if (name === 'John Smith') {
       return [
-        { name: 'Apple', logo: '/public/lovable-uploads/6c9418ff-01db-4164-a2d9-da5e7e61acd8.png', projectType: 'Brand 
-  photography' },
-        { name: 'SpaceX', logo: '/public/lovable-uploads/cc1f0e59-3763-4a1c-995f-203876ca6d44.png', projectType: 'Product
-   launch' }
+        {
+          name: 'Apple',
+          logo: '/public/lovable-uploads/6c9418ff-01db-4164-a2d9-da5e7e61acd8.png',
+          projectType: 'Brand photography'
+        },
+        {
+          name: 'SpaceX',
+          logo: '/public/lovable-uploads/cc1f0e59-3763-4a1c-995f-203876ca6d44.png',
+          projectType: 'Product launch'
+        }
       ];
     }
     if (name === 'Jane Cooper') {
       return [
-        { name: 'OpenAI', logo: '/public/lovable-uploads/cc1f0e59-3763-4a1c-995f-203876ca6d44.png', projectType: 'Office 
-  design' },
-        { name: 'Tesla', logo: '/public/lovable-uploads/6c9418ff-01db-4164-a2d9-da5e7e61acd8.png', projectType: 'Showroom
-   staging' }
+        {
+          name: 'OpenAI',
+          logo: '/public/lovable-uploads/cc1f0e59-3763-4a1c-995f-203876ca6d44.png',
+          projectType: 'Office design'
+        },
+        {
+          name: 'Tesla',
+          logo: '/public/lovable-uploads/6c9418ff-01db-4164-a2d9-da5e7e61acd8.png',
+          projectType: 'Showroom staging'
+        }
       ];
     }
     return [];
