@@ -1,9 +1,8 @@
 
 import { ReactNode, CSSProperties } from 'react';
-import { LucideIcon } from 'lucide-react';
 
 export interface Step {
-  icon: LucideIcon;
+  icon: ReactNode;
   title: string;
   description: string;
   number: string;
@@ -15,5 +14,4 @@ export interface Step {
   gradientTo?: string;
   gradientDirection?: string;
   gradientStyle?: CSSProperties;
-  tips?: string;
 }
