@@ -3,7 +3,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import SectionHeaderSimple from './SectionHeaderSimple';
 import MobileStepsGridSimple from './MobileStepsGridSimple';
 import DesktopStepsGridSimple from './DesktopStepsGridSimple';
-import BeamsBackground from '@/components/ui/beams-background';
+import { cn } from '@/lib/utils';
 
 const OptimizedHowItWorks: React.FC = () => {
   const isMobile = useIsMobile();
@@ -48,34 +48,45 @@ const OptimizedHowItWorks: React.FC = () => {
   };
 
   return (
-    <BeamsBackground 
+    <div 
       id="how-it-works-section"
-      className="py-10 sm:py-16 lg:py-20"
-      intensity="subtle"
+      className={cn(
+        "py-12 sm:py-16 lg:py-20 relative overflow-hidden",
+        "bg-gradient-to-b from-indigo-50/60 via-purple-50/30 to-white"
+      )}
     >
-      <div className={`max-w-6xl mx-auto relative px-4 sm:px-6 lg:px-10 transition-all duration-700 ${isVisible ? 'opacity-100' : 'opacity-0 translate-y-10'}`}>
-        <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+      {/* Enhanced background pattern */}
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNmE3OGYxIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1vcGFjaXR5PSIwLjA1Ij48cGF0aCBkPSJNMzAgMEMxMy40IDAgMCAxMy40IDAgMzBzMTMuNCAzMCAzMCAzMCAzMC0xMy40IDMwLTMwUzQ2LjYgMCAzMCAweiIvPjwvZz48L3N2Zz4=')] opacity-70"></div>
+
+      <div className={cn(
+        "max-w-6xl mx-auto relative px-4 sm:px-6 lg:px-10 transition-all duration-700",
+        isVisible ? 'opacity-100' : 'opacity-0 translate-y-10'
+      )}>
+        {/* Enhanced section header with better visibility */}
+        <div className="text-center mb-10 sm:mb-12 lg:mb-16">
           <SectionHeaderSimple 
             title="THE EXPERIENCE" 
             subtitle="From concept to captivation in four moments:"
           />
         </div>
 
-        {/* Mobile carousel layout */}
-        <MobileStepsGridSimple 
-          completedSteps={completedSteps} 
-          activeStep={activeStep}
-          onStepInteraction={handleStepInteraction}
-        />
+        {/* Mobile carousel layout with enhanced styling */}
+        <div className="relative">
+          <MobileStepsGridSimple 
+            completedSteps={completedSteps} 
+            activeStep={activeStep}
+            onStepInteraction={handleStepInteraction}
+          />
 
-        {/* Desktop grid layout */}
-        <DesktopStepsGridSimple 
-          completedSteps={completedSteps} 
-          activeStep={activeStep}
-          onStepInteraction={handleStepInteraction}
-        />
+          {/* Desktop grid layout */}
+          <DesktopStepsGridSimple 
+            completedSteps={completedSteps} 
+            activeStep={activeStep}
+            onStepInteraction={handleStepInteraction}
+          />
+        </div>
       </div>
-    </BeamsBackground>
+    </div>
   );
 };
 
