@@ -52,34 +52,35 @@ export const CreatorTags: React.FC<CreatorTagsProps> = ({ tags }) => {
     <div 
       className={cn(
         "overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']",
-        // Add horizontal scrolling hint for mobile
-        isMobile ? "after:content-[''] after:absolute after:right-0 after:top-0 after:h-full after:w-6 after:bg-gradient-to-l after:from-white after:to-transparent after:pointer-events-none" : ""
+        // Enhanced horizontal scrolling hint for mobile
+        isMobile ? "after:content-[''] after:absolute after:right-0 after:top-0 after:h-full after:w-8 after:bg-gradient-to-l after:from-white after:to-transparent after:pointer-events-none" : ""
       )}
       role="list"
       aria-label="Creator specialties"
     >
-      <div className="flex flex-nowrap gap-2">
+      <div className="flex flex-nowrap gap-2.5">
         {tags.map((tag, index) => (
-          <span
+          <button
             key={index}
             className={cn(
-              isMobile ? "text-xs px-3 py-1.5" : "text-[10px] sm:text-xs px-2.5 py-1.5", // Larger tags on mobile
+              isMobile ? "text-sm px-3.5 py-2" : "text-[10px] sm:text-xs px-2.5 py-1.5", // Larger tags on mobile
               "rounded-full",
               "transition-all duration-200 whitespace-nowrap",
-              "hover:scale-105 cursor-pointer shadow-sm hover:shadow-md",
+              "hover:scale-105 active:scale-95 cursor-pointer shadow-sm hover:shadow-md",
               "flex items-center gap-1.5",
+              "touch-manipulation", // Better touch behavior
               getTagStyle(tag)
             )}
             role="listitem"
           >
             {shouldHaveIcon(tag) && isMobile && (
-              <Tag className="w-3 h-3" aria-hidden="true" />
+              <Tag className="w-3.5 h-3.5" aria-hidden="true" />
             )}
             {shouldHaveIcon(tag) && !isMobile && (
               <Tag className="w-2.5 h-2.5" aria-hidden="true" />
             )}
             {tag}
-          </span>
+          </button>
         ))}
       </div>
     </div>

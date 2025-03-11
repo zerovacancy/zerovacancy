@@ -39,8 +39,8 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
           "sm:will-change-transform sm:transition-all sm:duration-300",
           "sm:hover:translate-y-[-4px] sm:hover:scale-[1.02]",
           "bg-white border border-gray-200/80",
-          // Enhanced shadow for mobile
-          isMobile ? "shadow-md" : "shadow-[0_2px_8px_rgba(0,0,0,0.05)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.12)]",
+          // Enhanced shadow for mobile with subtle color tint
+          isMobile ? "shadow-md shadow-indigo-100/20" : "shadow-[0_2px_8px_rgba(0,0,0,0.05)] hover:shadow-[0_12px_24px_rgba(0,0,0,0.12)]",
           "rounded-xl relative"
         )}>
           {/* Card content - Border beam effect only on desktop */}
@@ -58,10 +58,10 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
           {/* Price tag - Enhanced for mobile */}
           <div className="absolute top-3 sm:top-3.5 right-3 sm:right-3.5 z-20">
             <span className={cn(
-              isMobile ? "px-3 py-1.5 text-sm" : "px-2.5 sm:px-3 py-1.5 text-xs sm:text-sm",
+              isMobile ? "px-3.5 py-2 text-base" : "px-2.5 sm:px-3 py-1.5 text-xs sm:text-sm",
               "font-semibold",
               // Enhanced background on mobile
-              isMobile ? "bg-white shadow-md border border-white/40" : "bg-white/90 shadow-md border border-white/40",
+              isMobile ? "bg-white shadow-lg border border-white/40" : "bg-white/90 shadow-md border border-white/40",
               "text-[#212121] rounded-full",
               "shadow-[0_3px_8px_rgba(0,0,0,0.12)] transition-all duration-200 group-hover:scale-105 group-hover:shadow-[0_4px_10px_rgba(0,0,0,0.18)]"
             )}>
@@ -73,7 +73,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
             {/* Media container with improved aspect ratio for mobile */}
             <div className="relative">
               <div className={cn(
-                isMobile ? "aspect-[4/3] overflow-hidden" : "aspect-[4/3]",
+                "aspect-[4/3] overflow-hidden",
                 "overflow-hidden"
               )}>
                 <CreatorMedia 
@@ -91,15 +91,20 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               isMobile ? "p-5" : "p-4 sm:p-5",
               "flex flex-col"
             )}>
-              {/* Tags section - Reduced margin for mobile */}
+              {/* Tags section with improved spacing */}
               <div className={cn(
-                isMobile ? "mb-4" : "mb-4",
+                isMobile ? "mb-5" : "mb-4",
               )}>
                 <CreatorTags tags={tags} />
               </div>
               
+              {/* Visual separator for mobile only */}
+              {isMobile && (
+                <div className="h-px w-full bg-gray-100 mb-5"></div>
+              )}
+              
               {/* Rating section with more compact layout for mobile */}
-              <div className="bg-gray-50/80 rounded-lg px-4 py-3 shadow-sm relative">
+              <div className="bg-gray-50/80 rounded-lg px-4 py-3.5 shadow-sm relative">
                 <div className="flex justify-between items-center">
                   <CreatorRating 
                     rating={creator.rating} 
@@ -119,7 +124,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   aria-label={`Join waitlist to work with ${creator.name}`}
                   className={cn(
                     "w-full text-base px-4 hover:scale-[1.03] active:scale-[0.98] transition-transform duration-200",
-                    isMobile ? "h-12" : "h-10 sm:h-11", // Larger height on mobile
+                    isMobile ? "h-14 text-lg" : "h-10 sm:h-11", // Larger height and text on mobile
                     // Disable pulse animation on mobile
                     !isMobile && "group-hover:animate-pulse-subtle"
                   )}

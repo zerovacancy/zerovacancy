@@ -53,7 +53,8 @@ const PreviewSearch = () => {
       reviews: 127,
       location: "New York, NY",
       image: "/newemilyprofile.jpg",
-      workExamples: ["/1-d2e3f802.jpg"]
+      workExamples: ["/1-d2e3f802.jpg"],
+      availabilityStatus: "available-now" as const
     }, 
     {
       name: "Jane Cooper",
@@ -63,7 +64,8 @@ const PreviewSearch = () => {
       reviews: 98,
       location: "Los Angeles, CA",
       image: "/janeprofile.png",
-      workExamples: ["/janesub.jpg", "/janesub2.png", "/janesub3.webp"]
+      workExamples: ["/janesub.jpg", "/janesub2.png", "/janesub3.webp"],
+      availabilityStatus: "available-tomorrow" as const
     }, 
     {
       name: "Michael Brown",
@@ -73,7 +75,8 @@ const PreviewSearch = () => {
       reviews: 82,
       location: "Chicago, IL",
       image: "/emily profile.jpeg",
-      workExamples: ["/1-d2e3f802.jpg"]
+      workExamples: ["/1-d2e3f802.jpg"],
+      availabilityStatus: "premium-only" as const
     }
   ];
 
@@ -81,7 +84,7 @@ const PreviewSearch = () => {
     <div 
       className={cn(
         "w-full px-2 sm:px-4 md:px-6 lg:px-8 xl:px-10 content-visibility-auto py-6 sm:py-6 md:py-8",
-        isMobile && "bg-indigo-50/20" // Subtle tinted background only on mobile
+        isMobile && "bg-indigo-50/30 relative mobile-section-gradient" // Enhanced background with gradient edges
       )} 
       ref={containerRef}
     >
@@ -107,6 +110,11 @@ const PreviewSearch = () => {
           />
         </PreviewCard>
       </div>
+      
+      {/* Mobile section divider */}
+      {isMobile && (
+        <div className="mobile-section-divider mt-6"></div>
+      )}
     </div>
   );
 };

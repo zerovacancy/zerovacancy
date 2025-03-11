@@ -19,7 +19,7 @@ export const CreatorInfo: React.FC<CreatorInfoProps> = ({ creator }) => {
   
   return (
     <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-4.5 text-white select-text z-10">
-      {/* Enhanced darker semi-transparent gradient overlay for better text visibility on mobile */}
+      {/* Enhanced darker semi-transparent gradient overlay for better text visibility */}
       <div className={cn(
         "absolute inset-0 pointer-events-none",
         isMobile 
@@ -29,19 +29,19 @@ export const CreatorInfo: React.FC<CreatorInfoProps> = ({ creator }) => {
       
       <div className={cn(
         "relative z-10",
-        isMobile ? "pl-1" : "" // Extra left padding on mobile for better alignment
+        isMobile ? "pl-1.5" : "" // Extra left padding on mobile for better alignment
       )}>
         <div className="flex items-center gap-2.5">
           <h3 className={cn(
             "font-bold text-white",
-            isMobile ? "text-lg" : "text-lg sm:text-xl" // Larger text size on mobile
+            isMobile ? "text-xl" : "text-lg sm:text-xl" // Larger text size on mobile
           )}>
             {creator.name}
           </h3>
           {/* Larger verification badge on mobile */}
           <BadgeCheck 
             className={cn(
-              isMobile ? "w-5 h-5" : "w-4.5 h-4.5 sm:w-5 sm:h-5",
+              isMobile ? "w-6 h-6" : "w-4.5 h-4.5 sm:w-5 sm:h-5",
               "text-white/90",
               "transition-all duration-300",
               isMobile 
@@ -53,14 +53,14 @@ export const CreatorInfo: React.FC<CreatorInfoProps> = ({ creator }) => {
           />
         </div>
         
-        {/* Combined location and services for mobile */}
+        {/* Combined location and services for mobile with larger text */}
         {isMobile ? (
-          <div className="flex items-center gap-2 mt-2">
+          <div className="flex items-center gap-2 mt-2.5">
             <MapPin 
-              className="w-3.5 h-3.5 text-white/90 flex-shrink-0" 
+              className="w-4 h-4 text-white/90 flex-shrink-0" 
               aria-hidden="true"
             />
-            <span className="text-sm text-white/90 truncate max-w-[calc(100%-20px)]">
+            <span className="text-base text-white/90 truncate max-w-[calc(100%-20px)]">
               {creator.location} • {creator.services.join(", ")}
             </span>
           </div>

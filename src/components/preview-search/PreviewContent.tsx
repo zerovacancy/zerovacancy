@@ -27,7 +27,7 @@ export const PreviewContent: React.FC<PreviewContentProps> = ({
       {/* SearchBar container */}
       <div className={cn(
         "w-full px-3 sm:px-6 md:px-8 lg:px-10",
-        isMobile ? "py-1.5" : "py-3 sm:py-4 md:py-6"
+        isMobile ? "py-2.5" : "py-3 sm:py-4 md:py-6"
       )}>
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -38,16 +38,21 @@ export const PreviewContent: React.FC<PreviewContentProps> = ({
         </motion.div>
       </div>
       
-      {/* Subtle separator - Hidden on mobile */}
-      {!isMobile && (
-        <div className="h-px w-full bg-gradient-to-r from-transparent via-purple-200/50 to-transparent mx-auto max-w-[90%]"></div>
-      )}
+      {/* Enhanced separator - visible on mobile */}
+      <div className={cn(
+        "h-px w-full mx-auto",
+        isMobile 
+          ? "bg-indigo-200/30 max-w-[95%]" 
+          : "bg-gradient-to-r from-transparent via-purple-200/50 to-transparent max-w-[90%]"
+      )}></div>
     
-      {/* CreatorsList container */}
+      {/* CreatorsList container with enhanced background */}
       <div className={cn(
         "w-full px-3 sm:px-6 md:px-8 lg:px-10",
-        "bg-gradient-to-b from-transparent via-purple-50/20 to-purple-50/40",
-        isMobile ? "pb-4 pt-2" : "pb-6 sm:pb-8 md:pb-10 pt-4 sm:pt-6 md:pt-8"
+        "bg-gradient-to-b from-transparent",
+        isMobile 
+          ? "via-purple-50/30 to-purple-50/50 pb-5 pt-3" 
+          : "via-purple-50/20 to-purple-50/40 pb-6 sm:pb-8 md:pb-10 pt-4 sm:pt-6 md:pt-8"
       )}>
         <AnimatePresence>
           {isVisible && (

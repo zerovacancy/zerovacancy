@@ -21,10 +21,10 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
 }) => {
   const [isFirstVisit, setIsFirstVisit] = useState(true);
 
-  // Optimized carousel settings for mobile
+  // Optimized carousel settings for mobile with better snap alignment
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: 'start',
-    containScroll: 'keepSnaps',
+    containScroll: 'trimSnaps',
     loop: false,
     dragFree: true,
     skipSnaps: false
@@ -77,22 +77,22 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
   
   return (
     <div className="w-full relative">
-      {/* Swipe instruction for first-time users */}
+      {/* Enhanced swipe instruction with better visibility */}
       {isFirstVisit && (
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 bg-black/70 text-white px-4 py-2.5 rounded-full text-sm flex items-center gap-2 backdrop-blur-sm animate-pulse-subtle">
-          <Grip className="w-4 h-4" />
-          <span>Swipe to explore</span>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 bg-black/80 text-white px-4 py-3 rounded-full text-sm flex items-center gap-2.5 backdrop-blur-sm animate-pulse-subtle shadow-lg">
+          <Grip className="w-4.5 h-4.5" />
+          <span className="font-medium">Swipe to explore</span>
         </div>
       )}
     
       {/* Carousel container with fixed padding */}
-      <div className="w-full overflow-hidden pb-12 embla-container" ref={emblaRef}>
+      <div className="w-full overflow-hidden pb-14 embla-container" ref={emblaRef}>
         <div className="flex embla-slide-container">
           {creators.map((creator, index) => (
             <div 
               key={creator.name} 
               style={{ touchAction: 'pan-y' }} 
-              className="min-w-[95%] w-[95%] pl-2 pr-2 embla-slide my-[8px]"
+              className="min-w-[95%] w-[95%] pl-2 pr-2 embla-slide my-[10px]"
             >
               <CreatorCard 
                 creator={creator} 
@@ -105,13 +105,14 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
         </div>
       </div>
 
-      {/* Navigation Arrows - Enlarged touch targets */}
+      {/* Navigation Arrows - Significantly enlarged touch targets */}
       <button 
         onClick={scrollPrev} 
         className={cn(
-          "absolute left-1 top-[45%] -translate-y-1/2 z-10 rounded-full p-3.5 bg-black/50 text-white backdrop-blur-sm transition-all", 
+          "absolute left-1 top-[45%] -translate-y-1/2 z-10 rounded-full p-4 bg-black/60 text-white backdrop-blur-sm transition-all", 
           "hover:bg-black/70 active:scale-95 duration-200 touch-manipulation", 
-          !prevBtnEnabled && "opacity-0 pointer-events-none"
+          !prevBtnEnabled && "opacity-0 pointer-events-none",
+          "min-h-[48px] min-w-[48px] flex items-center justify-center" // Ensure adequate touch size
         )} 
         aria-label="Previous creator"
       >
@@ -121,23 +122,27 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
       <button 
         onClick={scrollNext} 
         className={cn(
-          "absolute right-1 top-[45%] -translate-y-1/2 z-10 rounded-full p-3.5 bg-black/50 text-white backdrop-blur-sm transition-all", 
+          "absolute right-1 top-[45%] -translate-y-1/2 z-10 rounded-full p-4 bg-black/60 text-white backdrop-blur-sm transition-all", 
           "hover:bg-black/70 active:scale-95 duration-200 touch-manipulation", 
-          !nextBtnEnabled && "opacity-0 pointer-events-none"
+          !nextBtnEnabled && "opacity-0 pointer-events-none",
+          "min-h-[48px] min-w-[48px] flex items-center justify-center" // Ensure adequate touch size
         )} 
         aria-label="Next creator"
       >
         <ChevronRight className="w-6 h-6" />
       </button>
 
-      {/* Larger Dots Indicator */}
-      <div className="flex justify-center gap-2 absolute bottom-2 left-0 right-0">
+      {/* Larger Dots Indicator with improved spacing */}
+      <div className="flex justify-center gap-3 absolute bottom-3 left-0 right-0">
         {creators.map((_, index) => (
           <button 
             key={index} 
             className={cn(
               "transition-all duration-200 touch-manipulation rounded-full", 
-              index === selectedIndex ? "bg-indigo-600 w-4 h-4" : "bg-gray-300 hover:bg-gray-400 w-3 h-3"
+              "min-h-[24px] min-w-[24px] flex items-center justify-center p-1", // Ensure adequate touch size
+              index === selectedIndex 
+                ? "bg-indigo-600 w-5 h-5" 
+                : "bg-gray-300 hover:bg-gray-400 w-4 h-4"
             )} 
             onClick={() => emblaApi?.scrollTo(index)} 
             aria-label={`Go to creator ${index + 1}`} 
