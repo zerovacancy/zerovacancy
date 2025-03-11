@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { CreatorCard } from '../creator/CreatorCard';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -33,7 +34,7 @@ export const CreatorsList: React.FC = () => {
     }, 
     {
       name: "Michael Brown",
-      services: ["3D Tours", "Floor Plans"],
+      services: ["Drone Pilot", "Virtual Tours", "Videography"],
       price: 175,
       rating: 4.7,
       reviews: 82,
