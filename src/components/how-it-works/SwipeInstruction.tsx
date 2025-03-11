@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Swipe } from 'lucide-react';
+import { ArrowLeftRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface SwipeInstructionProps {
@@ -17,7 +17,7 @@ const SwipeInstruction: React.FC<SwipeInstructionProps> = ({ visible = true }) =
       "animate-in fade-in duration-500"
     )}>
       <div className="bg-white p-4 rounded-lg shadow-lg flex items-center gap-3">
-        <Swipe className="w-6 h-6 text-blue-500" />
+        <ArrowLeftRight className="w-6 h-6 text-blue-500" />
         <span className="text-sm font-medium">Swipe to explore steps</span>
       </div>
     </div>

@@ -33,6 +33,8 @@ const DesktopStepItemSimple: React.FC<DesktopStepItemSimpleProps> = ({
     return color + (isActive ? '12' : '08'); // 7% opacity for active, 3% for inactive
   };
 
+  const Icon = step.icon;
+
   return (
     <div 
       onClick={onClick}
@@ -104,9 +106,7 @@ const DesktopStepItemSimple: React.FC<DesktopStepItemSimpleProps> = ({
         )}
         style={step.gradientStyle}
       >
-        {React.cloneElement(step.icon as React.ReactElement, {
-          className: "w-7 h-7"
-        })}
+        <Icon className="w-7 h-7" />
       </div>
       
       {/* Title */}

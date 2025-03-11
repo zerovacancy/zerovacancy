@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -24,6 +25,8 @@ const MobileStepItemSimple: React.FC<MobileStepItemSimpleProps> = ({
       background: `linear-gradient(${step.gradientDirection || '45deg'}, ${step.gradientFrom || '#8B5CF6'}, ${step.gradientTo || '#6366F1'})`
     };
   };
+
+  const Icon = step.icon;
 
   return (
     <div 
@@ -89,9 +92,7 @@ const MobileStepItemSimple: React.FC<MobileStepItemSimpleProps> = ({
           )}
           style={getAccentColor()}
         >
-          {React.cloneElement(step.icon as React.ReactElement, {
-            className: "w-5 h-5 text-white"
-          })}
+          <Icon className="w-5 h-5 text-white" />
         </div>
       </div>
 
