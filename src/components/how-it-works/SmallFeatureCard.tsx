@@ -1,10 +1,9 @@
 
 import React from 'react';
-import { Step } from './types';
 import { LucideIcon } from 'lucide-react';
 
 interface SmallFeatureCardProps {
-  icon: React.ElementType;
+  icon: LucideIcon;
   title: string;
   description: string;
   gradientStyle?: React.CSSProperties;

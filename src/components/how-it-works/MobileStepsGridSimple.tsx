@@ -17,7 +17,7 @@ const MobileStepsGridSimple: React.FC<MobileStepsGridSimpleProps> = () => {
         {steps.map((step, index) => (
           <SmallFeatureCard
             key={index}
-            icon={step.icon as React.ElementType}
+            icon={step.icon}
             title={step.title}
             description={step.description}
             gradientStyle={step.gradientStyle}
