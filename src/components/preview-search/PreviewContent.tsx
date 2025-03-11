@@ -24,12 +24,32 @@ export const PreviewContent: React.FC<PreviewContentProps> = ({
   
   return (
     <div className="flex flex-col w-full relative z-10 scroll-container-optimized">
+      {/* Heading section moved outside the search container */}
+      <div className="text-center mb-6">
+        <motion.h2 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight mb-2"
+        >
+          FIND YOUR CREATIVE COLLABORATOR
+        </motion.h2>
+        
+        <motion.p 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+          className="text-sm sm:text-base text-gray-600 max-w-md mx-auto"
+        >
+          Because extraordinary spaces deserve extraordinary storytellers
+        </motion.p>
+      </div>
+      
       {/* SearchBar container with enhanced styling */}
       <div className={cn(
-        "w-full px-3 sm:px-6 md:px-8 lg:px-10",
-        isMobile ? "py-3.5" : "py-3 sm:py-4 md:py-6", // Increased padding on mobile
-        // Adding subtle background tint for section differentiation
-        "bg-white/90"
+        "bg-gray-50/60 border border-gray-100 rounded-lg overflow-hidden shadow-sm",
+        "sticky top-0 z-20",
+        isMobile ? "p-4" : "p-6"
       )}>
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -39,22 +59,23 @@ export const PreviewContent: React.FC<PreviewContentProps> = ({
           <SearchBar onLocationSelect={() => {}} />
         </motion.div>
       </div>
-      
-      {/* Enhanced separator - more visible on mobile */}
-      <div className={cn(
-        "h-px w-full mx-auto",
-        isMobile 
-          ? "bg-indigo-200/50 max-w-[95%]" // More visible on mobile
-          : "bg-gradient-to-r from-transparent via-purple-200/50 to-transparent max-w-[90%]"
-      )}></div>
+    
+      {/* Visual results connector */}
+      <div className="relative py-4">
+        <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-full p-1 shadow-sm border border-gray-100">
+          <div className="bg-indigo-100 text-indigo-700 text-xs font-medium px-3 py-1 rounded-full">
+            Results
+          </div>
+        </div>
+      </div>
     
       {/* CreatorsList container with enhanced background gradient */}
       <div className={cn(
-        "w-full px-3 sm:px-6 md:px-8 lg:px-10",
+        isMobile ? "px-4" : "px-6",
         "bg-gradient-to-b from-transparent",
         isMobile 
-          ? "via-purple-50/40 to-purple-50/60 pb-6 pt-4" // More pronounced gradient on mobile
-          : "via-purple-50/20 to-purple-50/40 pb-6 sm:pb-8 md:pb-10 pt-4 sm:pt-6 md:pt-8"
+          ? "via-purple-50/40 to-purple-50/60 pb-6 pt-2" 
+          : "via-purple-50/20 to-purple-50/40 pb-8 pt-2"
       )}>
         <AnimatePresence>
           {isVisible && (
