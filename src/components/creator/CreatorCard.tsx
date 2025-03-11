@@ -16,18 +16,18 @@
   import { NotableClients } from './NotableClients';
   import type { CreatorCardProps, NotableClient } from './types';
 
-  // Demo data for notable clients - replace with real data later
+  // Demo data for notable clients - using placeholder images until real logos are uploaded
   const getDemoNotableClients = (name: string): NotableClient[] => {
     if (name === 'John Smith') {
       return [
         {
           name: 'Apple',
-          logo: '/public/lovable-uploads/6c9418ff-01db-4164-a2d9-da5e7e61acd8.png',
+          logo: '/placeholder.svg',
           projectType: 'Brand photography'
         },
         {
           name: 'SpaceX',
-          logo: '/public/lovable-uploads/cc1f0e59-3763-4a1c-995f-203876ca6d44.png',
+          logo: '/placeholder.svg',
           projectType: 'Product launch'
         }
       ];
@@ -36,12 +36,12 @@
       return [
         {
           name: 'OpenAI',
-          logo: '/public/lovable-uploads/cc1f0e59-3763-4a1c-995f-203876ca6d44.png',
+          logo: '/placeholder.svg',
           projectType: 'Office design'
         },
         {
           name: 'Tesla',
-          logo: '/public/lovable-uploads/6c9418ff-01db-4164-a2d9-da5e7e61acd8.png',
+          logo: '/placeholder.svg',
           projectType: 'Showroom staging'
         }
       ];
