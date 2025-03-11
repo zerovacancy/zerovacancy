@@ -1,97 +1,90 @@
 
-import React, { useEffect, useState } from 'react';
-import { Calendar, Clock, Crown } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { useIsMobile, useViewportSize } from '@/hooks/use-mobile';
-import type { AvailabilityStatus } from './types';
-import { PillRating } from '@/components/ui/pill-rating';
+ import React from 'react';
+  import { Star, Calendar, Clock, Crown } from 'lucide-react';
+  import { cn } from '@/lib/utils';
+  import { useIsMobile } from '@/hooks/use-mobile';
+  import type { AvailabilityStatus } from './types';
 
-interface CreatorRatingProps {
-  rating: number;
-  reviews?: number;
-  name: string;
-  availabilityStatus?: AvailabilityStatus;
-}
+  interface CreatorRatingProps {
+    rating: number;
+    reviews?: number;
+    name: string;
+    availabilityStatus?: AvailabilityStatus;
+  }
 
-export const CreatorRating: React.FC<CreatorRatingProps> = ({ 
-  rating, 
-  reviews = 0,
-  name,
-  availabilityStatus
-}) => {
-  const isMobile = useIsMobile();
-  const viewportSize = useViewportSize();
-  const [isNarrowScreen, setIsNarrowScreen] = useState(false);
+  export const CreatorRating: React.FC<CreatorRatingProps> = ({ 
+    rating, 
+    reviews = 0,
+    name,
+    availabilityStatus
+  }) => {
+    const isMobile = useIsMobile();
 
-  useEffect(() => {
-    setIsNarrowScreen(viewportSize.width < 350);
-  }, [viewportSize.width]);
+    const availabilityConfig = {
+      'available-now': {
+        text: 'Available',
+        icon: <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 animate-pulse"></div>,
+        className: 'border-emerald-200 text-emerald-700'
+      },
+      'available-tomorrow': {
+        text: 'Tomorrow',
+        icon: <Clock className="w-3 h-3 mr-1 text-amber-500" />,
+        className: 'border-amber-200 text-amber-700'
+      },
+      'premium-only': {
+        text: 'Premium',
+        icon: <Crown className="w-3 h-3 mr-1 text-purple-500" />,
+        className: 'border-purple-200 text-purple-700'
+      }
+    };
 
-  // Standardized color-coding system for availability status
-  const availabilityConfig = {
-    'available-now': {
-      text: 'Available Now',
-      icon: <Calendar className={cn("mr-1 text-emerald-500", isNarrowScreen ? "w-2.5 h-2.5" : "w-3 h-3")} />,
-      className: 'border-green-100/50 text-emerald-700 bg-emerald-50/80 availability-indicator'
-    },
-    'available-tomorrow': {
-      text: 'Available Tomorrow',
-      icon: <Clock className={cn("mr-1 text-amber-500", isNarrowScreen ? "w-2.5 h-2.5" : "w-3 h-3")} />,
-      className: 'border-amber-100/50 text-amber-700 bg-amber-50/80 tomorrow-status'
-    },
-    'premium-only': {
-      text: 'Premium Only',
-      icon: <Crown className={cn("mr-1 text-purple-500", isNarrowScreen ? "w-2.5 h-2.5" : "w-3 h-3")} />,
-      className: 'border-purple-100/50 text-purple-700 bg-purple-50/80 premium-status'
-    }
-  };
+    return (
+      <div className="flex justify-between items-center w-full">
+        <div className="flex items-center">
+          {/* Single star rating */}
+          <div className="flex mr-1.5">
+            <Star
+              className={cn(
+                "w-4 h-4",
+                "text-yellow-400 fill-yellow-400"
+              )}
+            />
+          </div>
 
-  // Shorter text for mobile to prevent overflow
-  const mobileText = {
-    'available-now': 'Available',
-    'available-tomorrow': 'Tomorrow',
-    'premium-only': 'Premium'
-  };
-
-  return (
-    <div className={cn(
-      "flex items-center",
-      isNarrowScreen ? "flex-col items-start gap-2" : "justify-between w-full"
-    )}>
-      {/* Use our new PillRating component */}
-      <PillRating 
-        rating={rating} 
-        reviews={reviews} 
-        size={isNarrowScreen ? "sm" : "md"}
-        showReviews={true}
-      />
-
-      {/* Availability Indicator with larger touch target */}
-      {availabilityStatus && availabilityConfig[availabilityStatus] && (
-        <div className={cn(
-          "flex items-center justify-center",
-          "bg-white backdrop-blur-[4px]",
-          // Increased touch target size while maintaining visual style
-          isNarrowScreen ? "px-2 py-1 min-h-[28px]" : "px-3 py-1.5 min-h-[32px]",
-          !isNarrowScreen && "ml-1",
-          "rounded-full whitespace-nowrap",
-          isNarrowScreen ? "text-[11px]" : "text-xs", // Slightly larger text on narrow screens
-          "font-medium",
-          "border",
-          "shadow-[0_1px_3px_rgba(0,0,0,0.08)]",
-          availabilityConfig[availabilityStatus].className
-        )}>
-          {availabilityConfig[availabilityStatus].icon}
+          {/* Rating text */}
           <span className={cn(
-            "truncate",
-            isNarrowScreen ? "max-w-[60px]" : "max-w-[90px]"
+            "font-medium text-gray-800",
+            isMobile ? "text-xs" : "text-sm"
           )}>
-            {isNarrowScreen
-              ? mobileText[availabilityStatus]
-              : availabilityConfig[availabilityStatus].text}
+            {rating.toFixed(1)}
           </span>
+
+          {/* Review count */}
+          {reviews > 0 && (
+            <span className={cn(
+              "text-gray-500 ml-1.5",
+              isMobile ? "text-xs" : "text-sm"
+            )}>
+              ({reviews})
+            </span>
+          )}
         </div>
-      )}
-    </div>
-  );
-};
+
+        {/* Availability Indicator - Redesigned to be more compact */}
+        {availabilityStatus && availabilityConfig[availabilityStatus] && (
+          <div className={cn(
+            "flex items-center justify-center",
+            "bg-white border",
+            "px-2 py-0.5",
+            "rounded-full",
+            "text-xs font-medium",
+            "shadow-sm",
+            availabilityConfig[availabilityStatus].className
+          )}>
+            {availabilityConfig[availabilityStatus].icon}
+            <span>{availabilityConfig[availabilityStatus].text}</span>
+          </div>
+        )}
+      </div>
+    );
+  };
