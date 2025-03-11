@@ -120,12 +120,7 @@ const PreviewSearch = () => {
         )}></div>
 
         <PreviewCard isVisible={isVisible}>
-          <PreviewContent 
-            isVisible={isVisible}
-            loadedImages={loadedImages}
-            handleImageLoad={handleImageLoad}
-            creatorData={creatorData}
-          />
+          <PreviewContent />
         </PreviewCard>
       </div>
       

@@ -13,7 +13,10 @@ interface SearchBarProps {
   onLocationSelect: (location: string) => void;
 }
 
-export const SearchBar: React.FC<SearchBarProps> = ({ value = '', onLocationSelect }) => {
+export const SearchBar: React.FC<SearchBarProps> = ({ 
+  value = '', 
+  onLocationSelect 
+}) => {
   const [showMoreFilters, setShowMoreFilters] = useState(false);
   const isMobile = useIsMobile();
 

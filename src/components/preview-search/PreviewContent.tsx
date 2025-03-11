@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { SearchBar } from '../search/SearchBar';
@@ -7,8 +7,18 @@ import { ContentTypeSelect } from '../search/ContentTypeSelect';
 import { CreatorsList } from '../search/CreatorsList';
 import { SearchFilters } from '../search/SearchFilters';
 
+// Define the component's props interface - it doesn't accept any props now
 export const PreviewContent: React.FC = () => {
   const isMobile = useIsMobile();
+  
+  // State for SearchBar and SearchFilters
+  const [location, setLocation] = useState('');
+  const [showMoreFilters, setShowMoreFilters] = useState(false);
+
+  // Handle location selection
+  const handleLocationSelect = (selectedLocation: string) => {
+    setLocation(selectedLocation);
+  };
 
   // Sample creators count - in production, this would come from search results
   const creatorsCount = 3;
@@ -32,7 +42,10 @@ export const PreviewContent: React.FC = () => {
       )}>
         {/* Search bar component */}
         <div className="mb-4">
-          <SearchBar />
+          <SearchBar 
+            value={location}
+            onLocationSelect={handleLocationSelect}
+          />
         </div>
 
         {/* Show filters only on desktop */}
@@ -40,7 +53,10 @@ export const PreviewContent: React.FC = () => {
           <div className="mb-4">
             <div className="flex flex-wrap gap-2">
               <ContentTypeSelect />
-              <SearchFilters />
+              <SearchFilters 
+                showMoreFilters={showMoreFilters}
+                onToggleFilters={() => setShowMoreFilters(!showMoreFilters)}
+              />
             </div>
           </div>
         )}
