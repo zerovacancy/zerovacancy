@@ -1,3 +1,4 @@
+
 import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -31,7 +32,7 @@ function createBeam(width: number, height: number): Beam {
     length: height * 2.5,
     angle: angle,
     speed: 0.6 + Math.random() * 1.2,
-    opacity: 0.12 + Math.random() * 0.16,
+    opacity: 0.18 + Math.random() * 0.22, // Increased opacity range
     hue: 190 + Math.random() * 70,
     pulse: Math.random() * Math.PI * 2,
     pulseSpeed: 0.02 + Math.random() * 0.03
@@ -49,21 +50,19 @@ export function BeamsBackground({
   const animationFrameRef = useRef<number>(0);
   const MINIMUM_BEAMS = 20;
   const opacityMap = {
-    subtle: 0.7,
-    medium: 0.85,
-    strong: 1
+    subtle: 0.8, // Increased from 0.7
+    medium: 0.95, // Increased from 0.85
+    strong: 1.0
   };
   
-  // Only run beam animations on non-mobile devices
+  // Run basic beams on mobile too, just fewer of them
   useEffect(() => {
-    // Check if mobile device - don't run animations if on mobile
-    const isMobile = window.innerWidth < 768;
-    if (isMobile) return;
-    
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
+    
+    const isMobile = window.innerWidth < 768;
     
     const updateCanvasSize = () => {
       const dpr = window.devicePixelRatio || 1;
@@ -72,9 +71,10 @@ export function BeamsBackground({
       canvas.style.width = `${window.innerWidth}px`;
       canvas.style.height = `${window.innerHeight}px`;
       ctx.scale(dpr, dpr);
-      const totalBeams = MINIMUM_BEAMS * 1.5;
+      
+      const totalBeams = isMobile ? MINIMUM_BEAMS * 0.75 : MINIMUM_BEAMS * 1.5;
       beamsRef.current = Array.from({
-        length: totalBeams
+        length: Math.floor(totalBeams)
       }, () => createBeam(canvas.width, canvas.height));
     };
     updateCanvasSize();
@@ -89,7 +89,7 @@ export function BeamsBackground({
       beam.width = 100 + Math.random() * 100;
       beam.speed = 0.5 + Math.random() * 0.4;
       beam.hue = 190 + index * 70 / totalBeams;
-      beam.opacity = 0.2 + Math.random() * 0.1;
+      beam.opacity = 0.25 + Math.random() * 0.15; // Increased opacity
       return beam;
     }
     
@@ -98,17 +98,17 @@ export function BeamsBackground({
       ctx.translate(beam.x, beam.y);
       ctx.rotate(beam.angle * Math.PI / 180);
 
-      // Calculate pulsing opacity
-      const pulsingOpacity = beam.opacity * (0.8 + Math.sin(beam.pulse) * 0.2) * opacityMap[intensity];
+      // Calculate pulsing opacity - increased base opacity
+      const pulsingOpacity = beam.opacity * (0.9 + Math.sin(beam.pulse) * 0.2) * opacityMap[intensity];
       const gradient = ctx.createLinearGradient(0, 0, 0, beam.length);
 
-      // Enhanced gradient with multiple color stops
-      gradient.addColorStop(0, `hsla(${beam.hue}, 85%, 65%, 0)`);
-      gradient.addColorStop(0.1, `hsla(${beam.hue}, 85%, 65%, ${pulsingOpacity * 0.5})`);
-      gradient.addColorStop(0.4, `hsla(${beam.hue}, 85%, 65%, ${pulsingOpacity})`);
-      gradient.addColorStop(0.6, `hsla(${beam.hue}, 85%, 65%, ${pulsingOpacity})`);
-      gradient.addColorStop(0.9, `hsla(${beam.hue}, 85%, 65%, ${pulsingOpacity * 0.5})`);
-      gradient.addColorStop(1, `hsla(${beam.hue}, 85%, 65%, 0)`);
+      // Enhanced gradient with multiple color stops - increased opacity values
+      gradient.addColorStop(0, `hsla(${beam.hue}, 85%, 65%, 0.1)`); // Start with some opacity
+      gradient.addColorStop(0.1, `hsla(${beam.hue}, 85%, 65%, ${pulsingOpacity * 0.6})`);
+      gradient.addColorStop(0.4, `hsla(${beam.hue}, 85%, 65%, ${pulsingOpacity * 1.2})`); // Enhanced midpoint
+      gradient.addColorStop(0.6, `hsla(${beam.hue}, 85%, 65%, ${pulsingOpacity * 1.2})`); // Enhanced midpoint
+      gradient.addColorStop(0.9, `hsla(${beam.hue}, 85%, 65%, ${pulsingOpacity * 0.6})`);
+      gradient.addColorStop(1, `hsla(${beam.hue}, 85%, 65%, 0.1)`);
       ctx.fillStyle = gradient;
       ctx.fillRect(-beam.width / 2, 0, beam.width, beam.length);
       ctx.restore();
@@ -117,7 +117,10 @@ export function BeamsBackground({
     function animate() {
       if (!canvas || !ctx) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.filter = "blur(35px)";
+      
+      // Reduced blur on mobile for better performance but still visible
+      ctx.filter = isMobile ? "blur(25px)" : "blur(35px)";
+      
       const totalBeams = beamsRef.current.length;
       beamsRef.current.forEach((beam, index) => {
         beam.y -= beam.speed;
@@ -145,15 +148,15 @@ export function BeamsBackground({
   return (
     <div id={id}
       className={cn("relative overflow-hidden bg-white", className)}>
-      {/* Only show canvas on larger screens */}
-      <canvas ref={canvasRef} className="absolute inset-0 hidden sm:block" style={{
+      {/* Show canvas on both mobile and desktop */}
+      <canvas ref={canvasRef} className="absolute inset-0" style={{
         filter: "blur(15px)"
       }} />
 
-      {/* Disable blur and animation on mobile */}
+      {/* Add motion div with increased opacity */}
       <motion.div
         animate={{
-          opacity: [0.8, 0.9, 0.8]
+          opacity: [0.85, 0.95, 0.85] // Increased from [0.8, 0.9, 0.8]
         }}
         transition={{
           duration: 10,
@@ -161,9 +164,9 @@ export function BeamsBackground({
           repeat: Number.POSITIVE_INFINITY
         }}
         style={{
-          backdropFilter: window.innerWidth >= 768 ? "blur(50px)" : "none"
+          backdropFilter: "blur(15px)"
         }}
-        className="absolute inset-0 bg-[#e6e3ff]/15 hidden sm:block" />
+        className="absolute inset-0 bg-[#e6e3ff]/25" /> {/* Increased from /15 */}
 
       <div className="relative z-10 w-full">
         {children}

@@ -1,126 +1,108 @@
 
-import React, { forwardRef, useImperativeHandle } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { cn } from "@/lib/utils";
-import { TextRotateProps, TextRotateRef, WordObject } from "./types";
+import React, { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useTextRotate } from "./use-text-rotate";
+import { TextRotateProps } from "./types";
+import { splitText } from "./utils";
 
-const TextRotate = forwardRef<TextRotateRef, TextRotateProps>(
-  (
-    {
-      texts,
-      transition = { type: "spring", damping: 25, stiffness: 300 },
-      initial = { y: "100%", opacity: 0 },
-      animate = { y: 0, opacity: 1 },
-      exit = { y: "-100%", opacity: 0 },
-      animatePresenceMode = "wait",
-      animatePresenceInitial = false,
-      rotationInterval = 2000,
-      staggerDuration = 0,
-      staggerFrom = "first",
-      loop = true,
-      auto = true,
-      splitBy = "characters",
-      onNext,
-      mainClassName,
-      splitLevelClassName,
-      elementLevelClassName,
-      ...props
-    },
-    ref
-  ) => {
-    const {
-      currentTextIndex,
-      elements,
-      next,
-      previous,
-      jumpTo,
-      reset,
-      calculateStaggerDelay
-    } = useTextRotate(
-      texts || [""], // Provide default empty array to prevent undefined
-      splitBy,
-      loop,
-      auto,
-      rotationInterval,
-      staggerFrom,
-      staggerDuration,
-      onNext
-    );
+export const TextRotate: React.FC<TextRotateProps> = ({
+  texts = [],
+  elementLevelClassName = "",
+  letterLevelClassName = "",
+  splitLevelClassName = "",
+  mainClassName = "",
+  transition,
+  rotationInterval = 3000,
+  initial = { y: "100%", opacity: 0 },
+  animate = { y: 0, opacity: 1 },
+  exit = { y: "-100%", opacity: 0 },
+  staggerChildren = 0.04,
+  staggerDirection = 1,
+  delayChildren = 0,
+  staggerFrom = "first",
+  staggerDuration = 0.05,
+}) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { active, setTexts } = useTextRotate({ texts, rotationInterval });
+  const [containerWidth, setContainerWidth] = useState(0);
+  const [containerHeight, setContainerHeight] = useState(0);
+  const [fallbackActive, setFallbackActive] = useState(0);
 
-    // Always create the ref functions
-    useImperativeHandle(ref, () => ({
-      next,
-      previous,
-      jumpTo,
-      reset,
-    }), [next, previous, jumpTo, reset]);
+  // Fix for NaN animation value issues - ensure fixed initial/exit values
+  const safeInitial = {
+    ...initial,
+    y: typeof initial.y === 'string' && initial.y.includes('NaN') ? '100%' : initial.y
+  };
+  
+  const safeExit = {
+    ...exit,
+    y: typeof exit.y === 'string' && exit.y.includes('NaN') ? '-100%' : exit.y
+  };
 
-    // Early return if no texts provided
-    if (!texts?.length) {
-      return null;
+  useEffect(() => {
+    setTexts(texts);
+  }, [texts, setTexts]);
+
+  // Measure container dimensions once text changes
+  useEffect(() => {
+    if (containerRef.current) {
+      const { width, height } = containerRef.current.getBoundingClientRect();
+      setContainerWidth(width);
+      setContainerHeight(height);
     }
+  }, [active, texts]);
 
-    return (
-      <motion.span
-        className={cn("flex flex-wrap whitespace-pre-wrap", mainClassName)}
-        {...props}
-        layout
-        transition={transition}
-      >
-        <span className="sr-only">{texts[currentTextIndex]}</span>
+  // Fallback if active is outside array bounds
+  useEffect(() => {
+    if (active >= 0 && active < texts.length) {
+      setFallbackActive(active);
+    } else {
+      // Safety fallback
+      console.warn(`TextRotate: active index ${active} out of bounds [0-${texts.length-1}]`);
+      setFallbackActive(0);
+    }
+  }, [active, texts]);
 
-        <AnimatePresence
-          mode={animatePresenceMode}
-          initial={animatePresenceInitial}
+  // Use the safe active index
+  const safeActive = fallbackActive;
+  
+  // Make sure we have valid text to display
+  if (!texts.length) return null;
+  if (safeActive >= texts.length) return null;
+
+  const currentText = texts[safeActive];
+  const splitTextArray = currentText ? splitText(currentText) : [];
+
+  return (
+    <div ref={containerRef} className={mainClassName} style={{ position: "relative", overflow: "hidden" }}>
+      <AnimatePresence>
+        <motion.div
+          key={safeActive}
+          className={splitLevelClassName}
+          initial={safeInitial}
+          animate={animate}
+          exit={safeExit}
+          transition={{
+            ...transition,
+            staggerChildren,
+            staggerDirection,
+            delayChildren,
+          }}
+          style={{ 
+            position: "absolute", 
+            left: "50%", 
+            transform: "translateX(-50%)",
+            width: "100%",
+            display: "flex",
+            justifyContent: "center"
+          }}
         >
-          <motion.div
-            key={currentTextIndex}
-            className={cn(
-              "flex flex-wrap",
-              splitBy === "lines" && "flex-col w-full"
-            )}
-            layout
-            aria-hidden="true"
-          >
-            {(splitBy === "characters"
-              ? (elements as WordObject[])
-              : (elements as string[]).map((el, i) => ({
-                  characters: [el],
-                  needsSpace: i !== elements.length - 1,
-                }))
-            ).map((wordObj, wordIndex, array) => (
-              <span
-                key={wordIndex}
-                className={cn("inline-flex overflow-visible", splitLevelClassName)}
-              >
-                {wordObj.characters.map((char, charIndex) => (
-                  <motion.span
-                    initial={initial}
-                    animate={animate}
-                    exit={exit}
-                    key={charIndex}
-                    transition={{
-                      ...transition,
-                      delay: calculateStaggerDelay(wordIndex, charIndex, array),
-                    }}
-                    className={cn("inline-block overflow-visible", elementLevelClassName)}
-                  >
-                    {char}
-                  </motion.span>
-                ))}
-                {wordObj.needsSpace && (
-                  <span className="whitespace-pre"> </span>
-                )}
-              </span>
-            ))}
-          </motion.div>
-        </AnimatePresence>
-      </motion.span>
-    );
-  }
-);
-
-TextRotate.displayName = "TextRotate";
-
-export { TextRotate };
+          {/* Use containerWidth to determine wrapping */}
+          <div className={elementLevelClassName} style={{ width: "100%", textAlign: "center" }}>
+            {currentText}
+          </div>
+        </motion.div>
+      </AnimatePresence>
+    </div>
+  );
+};

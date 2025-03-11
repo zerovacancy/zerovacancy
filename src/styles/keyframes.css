@@ -109,10 +109,11 @@
   }
   
   @keyframes blob {
-    0%, 100% { transform: translate(0, 0) scale(1); }
+    0% { transform: translate(0, 0) scale(1); }
     25% { transform: translate(20px, -30px) scale(1.05); }
     50% { transform: translate(-20px, 20px) scale(0.95); }
     75% { transform: translate(-25px, -25px) scale(1.05); }
+    100% { transform: translate(0, 0) scale(1); }
   }
   
   @keyframes shiny-text {
@@ -120,7 +121,7 @@
     to { background-position: 0 0; }
   }
   
-  /* Disable animations on mobile */
+  /* Mobile optimizations - modified to allow some animations on mobile */
   @media (max-width: 767px) {
     .mobile-no-animate {
       animation: none !important;
@@ -137,14 +138,15 @@
       box-shadow: inherit !important;
     }
     
+    /* Allow some blur effects on mobile */
     .mobile-no-blur {
-      filter: none !important;
-      backdrop-filter: none !important;
+      filter: blur(3px) !important; /* Reduced blur instead of none */
+      backdrop-filter: blur(3px) !important; /* Reduced blur instead of none */
     }
     
+    /* Allow simpler background on mobile */
     .mobile-static-bg {
-      background: white !important;
-      background-image: none !important;
+      background: linear-gradient(135deg, #ffffff, #f5f5ff) !important;
     }
     
     .mobile-optimize {

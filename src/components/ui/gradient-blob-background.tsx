@@ -23,19 +23,19 @@ interface GradientBlobBackgroundProps {
 export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
   className = '',
   children,
-  dotOpacity = 0.4,
+  dotOpacity = 0.6, // Increased from 0.4
   pattern = 'dots',
   withSpotlight = false,
-  spotlightClassName = 'from-blue-500/20 via-cyan-500/20 to-teal-500/20',
+  spotlightClassName = 'from-blue-500/30 via-cyan-500/30 to-teal-500/30', // Increased opacity
   spotlightSize = 350,
   blobColors = {
     first: 'bg-purple-100',
     second: 'bg-indigo-100',
     third: 'bg-blue-100'
   },
-  blobOpacity = 0.15,
+  blobOpacity = 0.3, // Increased from 0.15
   blobSize = 'medium',
-  baseColor = 'bg-white/80',
+  baseColor = 'bg-white/90', // Increased from bg-white/80
   animationSpeed = 'medium'
 }) => {
   const [isMounted, setIsMounted] = useState(false);
@@ -61,20 +61,27 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
     }
   }, []);
 
-  // Don't render animations for users with reduced motion preference or mobile
-  const shouldAnimate = isMounted && !isReducedMotion.current && !isMobile;
+  // Don't render animations for users with reduced motion preference
+  const shouldAnimate = isMounted && !isReducedMotion.current;
 
-  // For mobile, render simplified background without animations
+  // For mobile, render simplified but still visible background
   if (isMobile) {
-    return <div className={cn(`relative w-full overflow-hidden ${baseColor}`, className)}>
-        {/* Simple gradient background for mobile */}
-        <div className="absolute inset-0 bg-gradient-to-b from-white/80 to-gray-100/80"></div>
+    return (
+      <div className={cn(`relative w-full overflow-hidden ${baseColor}`, className)}>
+        {/* Simple gradient background for mobile - more visible now */}
+        <div className="absolute inset-0 z-0 bg-gradient-to-b from-purple-50/40 via-white/90 to-indigo-50/30"></div>
+        
+        {/* Add a subtle pattern for mobile */}
+        {pattern === 'dots' && (
+          <div className="absolute inset-0 z-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] opacity-30"></div>
+        )}
         
         {/* Content */}
         <div className="relative z-10">
           {children}
         </div>
-      </div>;
+      </div>
+    );
   }
 
   // Determine blob sizes based on the blobSize prop
@@ -113,11 +120,11 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
   // Only render dot/grid patterns if specified
   const renderPattern = () => {
     if (pattern === 'dots') {
-      return <div className={`absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:20px_20px] opacity-${Math.round(dotOpacity * 100)}`}></div>;
+      return <div className="absolute inset-0 z-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:20px_20px] opacity-60"></div>;
     }
     
     if (pattern === 'grid') {
-      return <div className={`absolute inset-0 opacity-${Math.round(dotOpacity * 10)}`}>
+      return <div className="absolute inset-0 z-0 opacity-40">
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <pattern id="smallGrid" width="20" height="20" patternUnits="userSpaceOnUse">
@@ -132,29 +139,43 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
     return null;
   };
   
-  return <div className={cn(`relative w-full overflow-hidden ${baseColor}`, className)}>
+  return (
+    <div className={cn(`relative w-full overflow-hidden ${baseColor}`, className)}>
       {/* Pattern background - only if pattern is not 'none' */}
       {renderPattern()}
       
-      {/* Render main blobs (always visible) */}
-      <div className={cn(`absolute -top-10 -left-20 ${getBlobSizeClass('first')} ${blobColors.first} rounded-full mix-blend-multiply filter blur-3xl opacity-${Math.round(blobOpacity * 100)}`)} style={shouldAnimate ? {
-      animation: `blob ${getAnimationDuration(45)} infinite`
-    } : {}}></div>
-      <div className={cn(`absolute top-[40%] -right-20 ${getBlobSizeClass('second')} ${blobColors.second} rounded-full mix-blend-multiply filter blur-3xl opacity-${Math.round(blobOpacity * 100)}`)} style={shouldAnimate ? {
-      animation: `blob ${getAnimationDuration(50)} infinite`,
-      animationDelay: `${getAnimationDuration(8)}`
-    } : {}}></div>
-      <div className={cn(`absolute -bottom-40 left-[20%] ${getBlobSizeClass('third')} ${blobColors.third} rounded-full mix-blend-multiply filter blur-3xl opacity-${Math.round(blobOpacity * 100)}`)} style={shouldAnimate ? {
-      animation: `blob ${getAnimationDuration(40)} infinite`,
-      animationDelay: `${getAnimationDuration(15)}`
-    } : {}}></div>
+      {/* Render main blobs (always visible) with fixed animation values */}
+      <div 
+        className={cn(`absolute -top-10 -left-20 ${getBlobSizeClass('first')} ${blobColors.first} rounded-full mix-blend-multiply filter blur-3xl opacity-70`)} 
+        style={shouldAnimate ? {
+          animation: `blob ${getAnimationDuration(45)} infinite`,
+          animationDelay: "0s"
+        } : {}}
+      ></div>
+      
+      <div 
+        className={cn(`absolute top-[40%] -right-20 ${getBlobSizeClass('second')} ${blobColors.second} rounded-full mix-blend-multiply filter blur-3xl opacity-70`)} 
+        style={shouldAnimate ? {
+          animation: `blob ${getAnimationDuration(50)} infinite`,
+          animationDelay: `${getAnimationDuration(8)}`
+        } : {}}
+      ></div>
+      
+      <div 
+        className={cn(`absolute -bottom-40 left-[20%] ${getBlobSizeClass('third')} ${blobColors.third} rounded-full mix-blend-multiply filter blur-3xl opacity-70`)} 
+        style={shouldAnimate ? {
+          animation: `blob ${getAnimationDuration(40)} infinite`,
+          animationDelay: `${getAnimationDuration(15)}`
+        } : {}}
+      ></div>
       
       {/* Spotlight effect - only if withSpotlight is true */}
       {withSpotlight && <OptimizedSpotlight className={spotlightClassName} size={spotlightSize} />}
       
       {/* Content */}
-      <div className="relative z-10 bg-neutral-50">
+      <div className="relative z-10">
         {children}
       </div>
-    </div>;
+    </div>
+  );
 };
