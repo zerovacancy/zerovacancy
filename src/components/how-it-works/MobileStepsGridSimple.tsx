@@ -4,9 +4,9 @@ import SmallFeatureCard from './SmallFeatureCard';
 import { steps } from './step-data';
 
 interface MobileStepsGridSimpleProps {
-  completedSteps: number[];
-  activeStep: number;
-  onStepInteraction: (index: number) => void;
+  completedSteps?: number[];
+  activeStep?: number;
+  onStepInteraction?: (index: number) => void;
 }
 
 const MobileStepsGridSimple: React.FC<MobileStepsGridSimpleProps> = () => {
