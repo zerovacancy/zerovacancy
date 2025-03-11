@@ -3,10 +3,10 @@
 
 // Monthly and annual pricing values
 export const PRICING = {
-  starterMonthly: 99,
-  starterAnnual: 99,
-  proMonthly: 399,
-  proAnnual: 399
+  starterMonthly: 299,
+  starterAnnual: 299,
+  proMonthly: 499,
+  proAnnual: 499
 };
 
 // Calculate savings
@@ -23,43 +23,42 @@ export const FEATURES = {
     { text: "Preview Marketplace Features", primary: true }
   ],
   starter: [
-    { text: "Submit Requests for Proposals (RFPs)", primary: true },
-    { text: "Browse & Hire Premium Creators", primary: true },
-    { text: "1 Revision Included Per Project", primary: true },
-    { text: "Social Media Optimized Content", primary: true },
-    { text: "SEO-Optimized Content", primary: true },
-    { text: "Geo-Targeted Content", primary: true }
+    { text: "Essential visual narrative", primary: true },
+    { text: "Curated property moments", primary: true },
+    { text: "Core spatial storytelling", primary: true },
+    { text: "Foundational amenity presence", primary: true },
+    { text: "48-hour creative delivery", primary: true }
   ],
   pro: [
-    { text: "Submit Requests for Proposals (RFPs) Instantly", primary: true },
-    { text: "Browse & Hire Premium Creators", primary: true },
-    { text: "3 Revisions Included Per Project", primary: true },
-    { text: "Social Media Optimized Content", primary: true },
-    { text: "SEO-Optimized Content", primary: true },
-    { text: "Geo-Targeted Content", primary: true },
-    { text: "Marketing Channel Optimization", primary: true },
-    { text: "7-Day Money-Back Guarantee", primary: true },
-    { text: "Performance Insights Dashboard", primary: true }
+    { text: "Expanded visual storytelling", primary: true },
+    { text: "Cinematic property sequence", primary: true },
+    { text: "Elevated aerial perspective", primary: true },
+    { text: "Environmental context", primary: true },
+    { text: "Lifestyle integration", primary: true },
+    { text: "24-hour creative delivery", primary: true },
+    { text: "Comprehensive visual identity", primary: true },
+    { text: "Feature-length property film", primary: true },
+    { text: "Signature aerial sequences", primary: true }
   ]
 };
 
 // Value propositions for each plan
 export const VALUE_PROPOSITIONS = {
-  basic: "Perfect for property owners/managers who want to browse content creators before committing.",
-  professional: "Designed for real estate professionals who need high-quality visuals and content that performs.",
-  premium: "For luxury property managers and high-volume real estate professionals who demand the best."
+  basic: "Perfect for property owners who want their spaces presented with clarity and purpose.",
+  professional: "Designed for real estate professionals who understand the power of visual storytelling.",
+  premium: "For visionaries who demand a complete visual transformation that creates emotional connection."
 };
 
 // Plan descriptions
 export const PLAN_DESCRIPTIONS = {
-  basic: "Explore the Marketplace & Get Started",
-  professional: "Elevate Your Marketing with Optimized Content",
-  premium: "The Ultimate Content Solution for Maximum Visibility & Conversions"
+  basic: "THE FOUNDATION",
+  professional: "THE NARRATIVE",
+  premium: "THE MASTERPIECE"
 };
 
 // Plan CTAs
 export const PLAN_CTAS = {
-  basic: "Upgrade to unlock project requests and premium content!",
-  professional: "Upgrade to Premium for more revisions, deeper insights, and content that works across all marketing channels.",
-  premium: "Dominate your market with cutting-edge content and data-driven insights!"
+  basic: "BEGIN TRANSFORMATION",
+  professional: "CRAFT YOUR NARRATIVE",
+  premium: "CREATE YOUR MASTERPIECE"
 };

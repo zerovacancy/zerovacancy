@@ -1,3 +1,4 @@
+
 import * as React from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -138,10 +139,10 @@ export function GlowDialog({
           </MovingBorder>
           <div className="relative z-10">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-4 md:mb-6 text-white leading-tight">
-              The Future of Real Estate Marketing is Here
+              JOIN THE VISION COLLECTIVE
             </h2>
             <p className="text-center text-gray-300 mb-8 max-w-2xl mx-auto text-sm sm:text-base md:text-lg">
-              Our cutting-edge content marketplace connects property managers with expert creators for high-quality real estate marketing. From photography to 3D tours—get the content you need, when you need it.
+              Be among the first to connect with our curated network of property visionaries.
             </p>
             <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 justify-center items-stretch max-w-md mx-auto">
               <input
@@ -165,7 +166,7 @@ export function GlowDialog({
                     Joining...
                   </>
                 ) : (
-                  'Join Waitlist'
+                  'RESERVE YOUR SPOT'
                 )}
               </HoverBorderGradient>
             </form>

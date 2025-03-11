@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { WaitlistCTA } from "../ui/waitlist-cta";
 import { TextRotate } from "../ui/text-rotate";
 
-const TITLES = ["Converts", "Captivates", "Drives Leads"];
+const TITLES = ["INTRIGUE", "INSPIRE", "CONVERT"];
 
 export function Hero() {
   const isMobile = useIsMobile();
@@ -79,7 +79,7 @@ export function Hero() {
                     "text-brand-purple-dark mb-2"
                   )}
                 >
-                  Property Content that
+                  THE VISION COLLECTIVE
                 </span>
                 <span 
                   className={cn(
@@ -89,7 +89,7 @@ export function Hero() {
                     "bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1]"
                   )}
                 >
-                  Drives Leads
+                  VISIONARIES
                 </span>
               </span>
             ) : (
@@ -103,7 +103,7 @@ export function Hero() {
                     "block sm:inline-block mb-1 sm:mb-0 font-jakarta"
                   )}
                 >
-                  Property Content that
+                  THE VISION COLLECTIVE
                 </span>
                 
                 <div 
@@ -151,7 +151,7 @@ export function Hero() {
             "font-inter"
           )}
         >
-          Connect with expert creators who deliver content that converts. Tailored to your needs and budget.
+          Property spaces deserve visionaries, not vendors. Connect with creators who see beyond square footage to capture the soul of your spaces. Our curated network transforms properties into visual narratives that intrigue, inspire, and ultimately convert.
         </div>
       </div>
       
@@ -165,7 +165,7 @@ export function Hero() {
           isInView ? "animate-fade-in delay-200" : "opacity-0" 
         )}
       >
-        <WaitlistCTA className="mb-6 sm:mb-6" />
+        <WaitlistCTA className="mb-6 sm:mb-6" buttonText="RESERVE YOUR SPOT" />
       </div>
     </section>
   );

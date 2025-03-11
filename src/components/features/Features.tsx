@@ -27,8 +27,8 @@ export function FeaturesSectionWithHoverEffects() {
     <section className="relative py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
       <div className="max-w-6xl mx-auto relative z-10">
         <FeatureHeader 
-          title="Professional Content Creation Services"
-          description="Everything you need to showcase your properties with stunning visuals and engaging content that attracts the right buyers."
+          title="THE CREATIVE ARSENAL"
+          description="Visual weaponry to transform perception and drive desire"
         />
 
         {/* Features grid */}
@@ -71,7 +71,7 @@ export function FeaturesSectionWithHoverEffects() {
                     )}
                     onClick={toggleShowAllCards}
                   >
-                    View all services
+                    View complete arsenal
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </motion.div>

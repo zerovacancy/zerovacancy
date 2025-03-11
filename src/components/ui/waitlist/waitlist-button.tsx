@@ -1,67 +1,132 @@
 
-"use client";
-
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { ArrowRight, Loader2 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
+import { Loader2 } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+import { EmailInput } from "./email-input";
+import { SocialProof } from "./social-proof";
+import { supabase } from "@/integrations/supabase/client";
 
-interface WaitlistButtonProps {
-  isLoading: boolean;
-}
-
-export function WaitlistButton({ isLoading }: WaitlistButtonProps) {
+export function WaitlistButton({
+  source = "unknown",
+  className,
+  children,
+  buttonText = "JOIN WAITLIST"
+}: {
+  source?: string;
+  className?: string;
+  children?: React.ReactNode;
+  buttonText?: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
   const isMobile = useIsMobile();
-  
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!email) {
+      toast.error("Please enter your email");
+      return;
+    }
+
+    setLoading(true);
+    
+    try {
+      // Collect metadata
+      const metadata = {
+        referrer: document.referrer,
+        url: window.location.href,
+        userAgent: navigator.userAgent,
+        source,
+        timestamp: new Date().toISOString(),
+      };
+      
+      // Call our Supabase Edge Function
+      const { error, data } = await supabase.functions.invoke('submit-waitlist-email', {
+        body: { 
+          email, 
+          source, 
+          marketingConsent: true,
+          metadata
+        }
+      });
+      
+      if (error) {
+        console.error("Error submitting email:", error);
+        toast.error("Failed to join the waitlist. Please try again later.");
+        return;
+      }
+      
+      // Handle already subscribed message
+      if (data?.status === 'already_subscribed') {
+        toast.info(data.message || "You're already on our waitlist!");
+      } else {
+        toast.success("You've been added to the waitlist!");
+      }
+      
+      setEmail("");
+      setOpen(false);
+    } catch (error) {
+      console.error("Error submitting email:", error);
+      toast.error("Failed to join the waitlist. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <Button 
-      type="submit" 
-      className={cn(
-        "flex items-center justify-center",
-        "whitespace-nowrap",
-        "shadow-lg hover:shadow-xl",
-        "transition-all duration-300",
-        "relative overflow-hidden",
-        "group",
-        isMobile 
-          ? [
-              "w-full",
-              "rounded-xl",
-              "h-[50px]",
-              "bg-gradient-to-r from-[#6A3DE8] to-[#4361EE]",
-              "hover:from-[#5A2DD8] hover:to-[#3351DE]", 
-              "hover:scale-[1.02]",
-              "text-white",
-              "font-medium",
-              "px-4"
-            ] 
-          : [
-              "h-[52px]",
-              "rounded-xl w-[210px] px-5",
-              "bg-gradient-to-r from-[#6A3DE8] to-[#4361EE]",
-              "hover:from-[#5A2DD8] hover:to-[#3351DE]",
-              "hover:scale-[1.05]",
-              "text-white font-medium",
-              "after:absolute after:inset-0 after:bg-gradient-to-r after:from-purple-500/20 after:to-blue-500/20 after:opacity-0 after:animate-pulse after:pointer-events-none group-hover:after:opacity-100"
-            ]
-      )} 
-      style={{
-        gap: '6px'
-      }}
-      disabled={isLoading}
-    >
-      {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : (
-        <>
-          <span className={cn(
-            "flex-shrink-0",
-            "leading-none",
-            isMobile ? "text-sm" : "text-sm"
-          )}>
-            Join Waitlist Now
-          </span>
-          <ArrowRight className="h-4 w-4 flex-shrink-0 inline-block transition-transform group-hover:translate-x-1" />
-        </>
+    <div className={cn("flex flex-col gap-2", className)}>
+      {!open ? (
+        <div className="w-full" onClick={() => setOpen(true)}>
+          {children || (
+            <Button 
+              className={cn(
+                "w-full py-6 text-base font-medium font-jakarta",
+                "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700",
+                isMobile ? "text-sm" : "text-base"
+              )}
+            >
+              {buttonText}
+            </Button>
+          )}
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="w-full">
+          <div className="flex flex-col sm:flex-row gap-2 w-full">
+            <EmailInput
+              setEmail={setEmail}
+              email={email}
+              disabled={loading}
+              className="flex-grow"
+            />
+            <Button 
+              type="submit" 
+              disabled={loading} 
+              className={cn(
+                "h-12 sm:min-w-[130px] font-medium text-white",
+                "bg-gradient-to-r from-indigo-600 to-purple-600",
+                "hover:from-indigo-700 hover:to-purple-700",
+                "transition-all duration-200 ease-in-out",
+                isMobile && "min-h-[48px]"
+              )}
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Joining...
+                </>
+              ) : (
+                buttonText
+              )}
+            </Button>
+          </div>
+          <SocialProof className="mt-3" />
+        </form>
       )}
-    </Button>
+    </div>
   );
 }

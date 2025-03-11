@@ -45,7 +45,7 @@ const PricingHeader = ({
                   "bg-gradient-to-r from-indigo-50 to-violet-50 border border-indigo-100/50",
                   "text-indigo-800 text-sm font-medium shadow-sm font-space"
                 )}>
-                  Simple & Transparent
+                  Transform Your Spaces
                 </div>
               </div>
             </div>

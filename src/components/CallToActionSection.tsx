@@ -18,12 +18,12 @@ const CallToActionSection = () => {
         {isMobile ? (
           // Mobile version: single coherent headline with all text in one line
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 font-jakarta tracking-tight">
-            Elevate Your Real Estate Marketing <span className="bg-gradient-to-r from-brand-purple-dark to-brand-purple bg-clip-text text-transparent font-extrabold">Today</span>
+            CREATIVE <span className="bg-gradient-to-r from-brand-purple-dark to-brand-purple bg-clip-text text-transparent font-extrabold">SATISFACTION</span>
           </h2>
         ) : (
           // Desktop version: original inline-flex layout
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 font-jakarta tracking-tight inline-flex items-center">
-            Elevate Your Real Estate Marketing <span className="bg-gradient-to-r from-brand-purple-dark to-brand-purple ml-2 bg-clip-text text-transparent font-extrabold">Today</span>
+            CREATIVE <span className="bg-gradient-to-r from-brand-purple-dark to-brand-purple ml-2 bg-clip-text text-transparent font-extrabold">SATISFACTION</span>
           </h2>
         )}
       </div>
@@ -32,21 +32,21 @@ const CallToActionSection = () => {
       <div className="w-20 h-1.5 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full mx-auto mb-6 animate-pulse-subtle" />
       
       <p className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg text-gray-600 font-inter mb-8 sm:mb-9 leading-relaxed">
-        Join thousands of property managers and content creators who trust Luxe Content Connect for their marketing needs
+        We believe in the power of collaborative vision. If you're not captivated by the final creation, we'll refine until you are. If we cannot align our visions, your investment returns to you in full.
       </p>
       
       <div className="flex flex-col sm:flex-row gap-6 sm:gap-5 justify-center items-center mt-2">
         <ShimmerButton 
           className="w-full sm:w-auto min-w-[200px] touch-manipulation h-[52px] text-base font-semibold transition-all duration-300 hover:scale-105"
         >
-          <span>Join Waitlist</span>
+          <span>ACCESS THE COLLECTIVE</span>
           <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 text-white/90" />
         </ShimmerButton>
         
         <ShimmerButton 
           className="w-full sm:w-auto min-w-[180px] touch-manipulation h-[52px] text-base font-semibold bg-gray-50 text-gray-800 border border-gray-200 hover:bg-gray-100 transition-all duration-300"
         >
-          <span>Learn More</span>
+          <span>LEARN MORE</span>
         </ShimmerButton>
       </div>
       

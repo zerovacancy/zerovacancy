@@ -23,8 +23,8 @@ const Pricing = () => {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Enhanced header with toggle now integrated */}
           <PricingHeader 
-            title="Simple, Transparent Pricing" 
-            subtitle="Choose the perfect plan for your real estate photography needs. No hidden fees."
+            title="INVESTMENT TIERS" 
+            subtitle="Visual storytelling that transforms vacancies into waiting lists"
           />
           
           {/* Unified pricing container that handles both mobile and desktop layouts */}
@@ -39,9 +39,9 @@ const Pricing = () => {
 
           {/* Waitlist CTA */}
           <div className="mt-10 sm:mt-12 text-center mb-4 sm:mb-6 lg:mb-8">
-            <h3 className="text-xl font-semibold mb-3 text-brand-purple-dark font-jakarta">Not ready to commit?</h3>
-            <p className="text-brand-text-primary font-inter mb-6 max-w-xl mx-auto">Join our waitlist to get notified about special offers and early access opportunities.</p>
-            <WaitlistCTA source="pricing_page" />
+            <h3 className="text-xl font-semibold mb-3 text-brand-purple-dark font-jakarta">JOIN THE MOVEMENT</h3>
+            <p className="text-brand-text-primary font-inter mb-6 max-w-xl mx-auto">The visionaries changing how we experience space are already here. The most compelling properties don't just show—they tell. They don't just appear—they resonate.</p>
+            <WaitlistCTA source="pricing_page" buttonText="ACCESS THE COLLECTIVE" />
           </div>
 
           {/* FAQ section */}

@@ -99,8 +99,8 @@ const PreviewSearch = () => {
 
         <PreviewCard isVisible={isVisible}>
           <PreviewHeader 
-            title="Find Your Perfect Creator"
-            subtitle="Connect with professionals who showcase your property perfectly"
+            title="FIND YOUR CREATIVE COLLABORATOR"
+            subtitle="Because extraordinary spaces deserve extraordinary storytellers"
           />
           <PreviewContent 
             isVisible={isVisible}

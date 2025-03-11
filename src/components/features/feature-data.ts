@@ -1,37 +1,37 @@
 
 export const features = [{
-  title: "Professional Photography",
-  description: "High-quality, professionally edited real estate photography that showcases properties in their best light.",
+  title: "VISUAL NARRATIVES",
+  description: "Photography that breaks convention, revealing the true character and potential of your spaces through compositional mastery.",
   icon: "Camera",
   isPopular: true
 }, {
-  title: "Drone Aerial Coverage",
-  description: "FAA-certified drone operators capturing stunning aerial views to highlight property surroundings.",
+  title: "ELEVATED PERSPECTIVES",
+  description: "Aerial cinematography that contextualizes your property within its environment, creating desire through spatial storytelling.",
   icon: "Image"
 }, {
-  title: "Video Production",
-  description: "Cinematic property tours and promotional videos that tell your property's unique story.",
+  title: "CINEMATIC IDENTITY",
+  description: "Moving imagery that captures the emotional experience of inhabiting your spaces, not just walking through them.",
   icon: "Video",
   isPopular: true
 }, {
-  title: "Social Media Content",
-  description: "Engaging content optimized for all major social platforms to maximize your property's reach.",
+  title: "SOCIAL CURRENCY",
+  description: "Platform-native content engineered to stop thumbs and start conversations about your property's unique offering.",
   icon: "Instagram"
 }, {
-  title: "Verified Creators",
-  description: "Every creator is thoroughly vetted and verified to ensure consistent quality and professionalism.",
+  title: "VETTED VISIONARIES",
+  description: "Our collective includes only creators whose portfolios demonstrate mastery of spatial storytelling and visual intrigue.",
   icon: "UserCheck"
 }, {
-  title: "24/7 Availability",
-  description: "Book creators anytime with flexible scheduling options to meet your urgent deadlines.",
+  title: "FRICTIONLESS COLLABORATION",
+  description: "Streamlined booking process that prioritizes creative alignment while eliminating administrative hassles.",
   icon: "Clock"
 }, {
-  title: "Transparent Pricing",
-  description: "Clear, upfront pricing with no hidden fees. Pay only for the services you need.",
+  title: "TRANSPARENT INVESTMENT",
+  description: "Clear creative investment structure with no hidden costs. What you see is what you invest.",
   icon: "CreditCard"
 }, {
-  title: "Quality Guaranteed",
-  description: "100% satisfaction guarantee on all content. We stand behind the quality of our creators' work.",
+  title: "VISION GUARANTEE",
+  description: "If the delivered visuals don't align with your collaborative vision, we'll make it right or return your creative investment.",
   icon: "Award",
   isPopular: true
 }];

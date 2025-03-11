@@ -33,7 +33,7 @@ const AnimatedShinyText: FC<AnimatedShinyTextProps> = ({
         className,
       )}
     >
-      Get priority access to the creator marketplace!
+      Join the visionaries changing how we experience space
     </p>
   );
 };

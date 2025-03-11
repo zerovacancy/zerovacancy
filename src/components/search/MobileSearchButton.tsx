@@ -23,7 +23,7 @@ export const MobileSearchButton: React.FC = () => {
       >
         <div className="flex items-center justify-center w-full">
           <Search className="w-5 h-5 mr-2.5 flex-shrink-0" />
-          <span className="text-base">Search Creators</span>
+          <span className="text-base">DISCOVER</span>
         </div>
       </Button>
     </div>
