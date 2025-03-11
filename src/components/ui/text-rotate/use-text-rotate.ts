@@ -14,9 +14,15 @@ export function useTextRotate(
   onNext?: (index: number) => void
 ) {
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
+  
+  // Validate texts array
+  const safeTexts = useMemo(() => {
+    return Array.isArray(texts) && texts.length > 0 ? texts : [""];
+  }, [texts]);
 
+  // Memoize elements generation
   const elements = useMemo(() => {
-    const currentText = texts[currentTextIndex];
+    const currentText = safeTexts[currentTextIndex];
     if (splitBy === "characters") {
       const text = currentText.split(" ");
       return text.map((word, i) => ({
@@ -29,7 +35,7 @@ export function useTextRotate(
       : splitBy === "lines"
         ? currentText.split("\n")
         : currentText.split(splitBy);
-  }, [texts, currentTextIndex, splitBy]);
+  }, [safeTexts, currentTextIndex, splitBy]);
 
   // Helper function to handle index changes and trigger callback
   const handleIndexChange = useCallback((newIndex: number) => {
@@ -38,31 +44,31 @@ export function useTextRotate(
   }, [onNext]);
 
   const next = useCallback(() => {
-    const nextIndex = currentTextIndex === texts.length - 1
+    const nextIndex = currentTextIndex === safeTexts.length - 1
       ? (loop ? 0 : currentTextIndex)
       : currentTextIndex + 1;
     
     if (nextIndex !== currentTextIndex) {
       handleIndexChange(nextIndex);
     }
-  }, [currentTextIndex, texts.length, loop, handleIndexChange]);
+  }, [currentTextIndex, safeTexts.length, loop, handleIndexChange]);
 
   const previous = useCallback(() => {
     const prevIndex = currentTextIndex === 0
-      ? (loop ? texts.length - 1 : currentTextIndex)
+      ? (loop ? safeTexts.length - 1 : currentTextIndex)
       : currentTextIndex - 1;
     
     if (prevIndex !== currentTextIndex) {
       handleIndexChange(prevIndex);
     }
-  }, [currentTextIndex, texts.length, loop, handleIndexChange]);
+  }, [currentTextIndex, safeTexts.length, loop, handleIndexChange]);
 
   const jumpTo = useCallback((index: number) => {
-    const validIndex = Math.max(0, Math.min(index, texts.length - 1));
+    const validIndex = Math.max(0, Math.min(index, safeTexts.length - 1));
     if (validIndex !== currentTextIndex) {
       handleIndexChange(validIndex);
     }
-  }, [texts.length, currentTextIndex, handleIndexChange]);
+  }, [safeTexts.length, currentTextIndex, handleIndexChange]);
 
   const reset = useCallback(() => {
     if (currentTextIndex !== 0) {

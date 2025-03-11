@@ -38,7 +38,7 @@ const TextRotate = forwardRef<TextRotateRef, TextRotateProps>(
       reset,
       calculateStaggerDelay
     } = useTextRotate(
-      texts,
+      texts || [""], // Provide default empty array to prevent undefined
       splitBy,
       loop,
       auto,
@@ -48,13 +48,18 @@ const TextRotate = forwardRef<TextRotateRef, TextRotateProps>(
       onNext
     );
 
-    // Expose navigation functions via ref
+    // Always create the ref functions
     useImperativeHandle(ref, () => ({
       next,
       previous,
       jumpTo,
       reset,
     }), [next, previous, jumpTo, reset]);
+
+    // Early return if no texts provided
+    if (!texts?.length) {
+      return null;
+    }
 
     return (
       <motion.span
