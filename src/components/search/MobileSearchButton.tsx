@@ -6,15 +6,17 @@ import { cn } from '@/lib/utils';
 
 export const MobileSearchButton: React.FC = () => {
   return (
-    <div className="sm:hidden mt-1 mb-1">
+    <div className="sm:hidden mt-2 mb-4">
       <Button 
         className={cn(
-          "w-full h-12",
-          // Replace gradient with solid color on mobile
-          "bg-indigo-600 sm:bg-gradient-to-r sm:from-indigo-600 sm:to-purple-600 hover:bg-indigo-700 sm:hover:from-indigo-700 sm:hover:to-purple-700 text-white",
-          // Simplify shadow on mobile
-          "shadow-sm sm:hover:shadow-md transition-all duration-200",
-          "text-sm rounded-lg font-medium"
+          "w-full h-12 min-h-[48px]", // Larger touch target
+          // Brand colors
+          "bg-brand-purple hover:bg-brand-purple/90 text-white",
+          // Simplified styling for mobile
+          "shadow-sm transition-all duration-200",
+          "text-sm rounded-lg font-medium font-inter",
+          // Touch optimization
+          "touch-manipulation"
         )}
       >
         <div className="flex items-center justify-center w-full">

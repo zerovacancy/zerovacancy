@@ -10,6 +10,7 @@ import MobileMenu from '@/components/navigation/MobileMenu';
 import UserMenu from '@/components/navigation/UserMenu';
 import AuthButtons from '@/components/navigation/AuthButtons';
 import { useAuthState } from '@/hooks/use-auth-state';
+import { cn } from '@/lib/utils';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -21,23 +22,28 @@ const Header = () => {
   
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/95 backdrop-blur-sm">
-      <div className="mx-auto flex h-[70px] max-w-7xl items-center justify-between px-5 sm:px-7 lg:px-8"> {/* Increased height and padding */}
+      <div className="mx-auto flex h-16 md:h-[70px] max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <div className="flex items-center">
           <Link to="/" className="flex items-center">
-            <img src="/logo.png" alt="Logo" className="h-9 w-auto" /> {/* Increased logo size */}
+            <img src="/logo.png" alt="Logo" className="h-8 md:h-9 w-auto" />
           </Link>
         </div>
 
         <DesktopNavigation menuItems={menuItems} />
 
-        <div className="flex items-center space-x-4"> {/* Increased spacing */}
+        <div className="flex items-center space-x-3 md:space-x-4">
           {user ? <UserMenu onSignOut={handleSignOut} /> : null}
           
           <AuthButtons user={user} onSignInClick={() => setShowSignInModal(true)} />
 
-          {/* Mobile menu button - centered vertically */}
+          {/* Mobile menu button - improved touch target */}
           <button 
-            className="inline-flex items-center justify-center p-2.5 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100 md:hidden"
+            className={cn(
+              "inline-flex items-center justify-center rounded-md md:hidden",
+              "min-h-[44px] min-w-[44px] p-2",  // Increased touch target
+              "text-gray-500 hover:text-gray-700 hover:bg-gray-100",
+              "touch-manipulation" // Better handling for touch events
+            )}
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             <span className="sr-only">Open main menu</span>

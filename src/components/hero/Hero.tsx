@@ -12,7 +12,6 @@ export function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const [isInView, setIsInView] = useState(false);
   
-  // Improved intersection observer implementation
   useEffect(() => {
     if (!sectionRef.current) return;
     
@@ -21,7 +20,6 @@ export function Hero() {
         const [entry] = entries;
         if (entry.isIntersecting) {
           setIsInView(true);
-          // Disconnect after setting to true to avoid unnecessary recalculations
           observer.disconnect();
         }
       },
@@ -44,27 +42,27 @@ export function Hero() {
       className={cn(
         "flex items-center justify-center flex-col", 
         "px-4 sm:px-6", 
-        isMobile ? "py-[24px]" : "py-[16px]",
-        isMobile ? "my-[16px]" : "my-[12px]",
+        "py-8 sm:py-12 lg:py-16",
+        "my-4 sm:my-6 lg:my-8",
         "min-h-fit sm:min-h-[36vh]",
         "relative z-10", 
-        isMobile ? "gap-3" : "gap-2",
-        "touch-manipulation will-change-transform",
+        "gap-4 sm:gap-6",
+        "touch-manipulation",
         "bg-gradient-to-b from-purple-50 via-indigo-50/60 to-blue-50/30",
         isInView ? "animate-fade-in" : "opacity-0"
       )} 
     >
       <div 
         className={cn(
-          "flex flex-col max-w-6xl mx-auto w-full px-[3px]",
-          isMobile ? "gap-3" : "gap-2", 
+          "flex flex-col max-w-6xl mx-auto w-full",
+          "gap-4 sm:gap-6", 
           isInView ? "animate-fade-in delay-100" : "opacity-0"
         )}
       >
         <div className="relative">
           <h1 className={cn(
             "tracking-tight leading-[1.1] text-center font-bold font-jakarta",
-            isMobile ? "mb-3" : "mb-2"
+            "mb-4 sm:mb-6"
           )}>
             {isMobile ? (
               <span className="flex flex-col items-center">
@@ -135,26 +133,16 @@ export function Hero() {
               </>
             )}
           </h1>
-          
-          {isMobile && (
-            <div className="absolute -inset-2 top-auto bg-gradient-to-b from-purple-50/30 to-transparent -z-10 rounded-xl blur-xl"></div>
-          )}
         </div>
 
         <div 
           className={cn(
-            isMobile ? "text-xs" : "text-base lg:text-lg", 
-            isMobile ? "leading-[1.4]" : "leading-[1.5]", 
-            "tracking-normal",
+            isMobile ? "text-sm" : "text-base lg:text-lg", 
+            "leading-relaxed", 
             "text-brand-text-primary", 
             "text-center", 
             "max-w-[500px]",
             "mx-auto", 
-            "px-2 sm:px-4", 
-            "[word-spacing:0.12em] sm:[word-spacing:0.16em]", 
-            "relative z-10", 
-            isMobile ? "mt-2" : "mt-3",
-            "mb-0", 
             "font-inter"
           )}
         >
@@ -165,16 +153,12 @@ export function Hero() {
       <div 
         className={cn(
           "w-full", 
-          isMobile ? "mt-2" : "mt-3",
+          "mt-4 sm:mt-6",
           "px-3 sm:px-4",
           isInView ? "animate-fade-in delay-200" : "opacity-0" 
         )}
       >
-        <WaitlistCTA className="mb-2 sm:mb-3" />
-      </div>
-      
-      <div className="absolute bottom-0 left-0 right-0 h-[150px] sm:h-[140px] pointer-events-none opacity-50 overflow-hidden">
-        <div className="absolute bottom-0 left-0 right-0 h-[100px] sm:h-[100px] bg-gradient-to-t from-indigo-100/60 via-purple-50/40 to-transparent" />
+        <WaitlistCTA className="mb-4 sm:mb-6" />
       </div>
     </section>
   );

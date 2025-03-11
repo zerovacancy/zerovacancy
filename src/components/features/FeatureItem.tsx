@@ -39,7 +39,7 @@ export const FeatureItem = ({
   // Extract the main color for border from the text color class
   const borderColorBase = colorScheme.text.split('-')[1];
   
-  // Set a consistent character limit for descriptions - ensure truncation at sentence breaks
+  // Set a consistent character limit for descriptions
   const shortDescLimit = isMobile ? 60 : 85;
   const isLongDesc = description.length > shortDescLimit;
   
@@ -91,16 +91,14 @@ export const FeatureItem = ({
         "bg-white hover:bg-white/95",
         // Enhanced border - more visible with color matching the icon theme
         `border border-${borderColorBase}-200/40`,
-        // Consistent border radius
-        "rounded-xl sm:rounded-xl",
         // Consistent shadow
         "shadow-sm hover:shadow-md",
         // Left border accent
         `before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:rounded-l-xl before:bg-gradient-to-b ${colorScheme.gradient} before:opacity-0 group-hover:before:opacity-100 before:transition-opacity`,
         // Consistent padding
-        "p-4 sm:p-5 lg:p-6",
+        "p-4 sm:p-5",
         "focus:outline-none focus:ring-2 focus:ring-primary/20",
-        // Enhanced hover transition - less pronounced on mobile for better performance
+        // Less pronounced hover on mobile for better performance
         isMobile ? "active:translate-y-0" : "hover:-translate-y-1.5 hover:border-transparent",
         "transition-all duration-300",
         // For partially visible card
@@ -112,36 +110,20 @@ export const FeatureItem = ({
       aria-expanded={isExpanded}
       {...motionProps}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
-      style={{
-        // Very subtle background tint matching the card's theme color
-        backgroundColor: `rgba(${borderColorBase === 'indigo' ? '237, 242, 255' : 
-                                 borderColorBase === 'blue' ? '235, 245, 255' : 
-                                 borderColorBase === 'violet' ? '243, 240, 255' : 
-                                 borderColorBase === 'pink' ? '253, 242, 248' : 
-                                 borderColorBase === 'emerald' ? '236, 253, 245' : 
-                                 borderColorBase === 'amber' ? '255, 251, 235' : 
-                                 borderColorBase === 'cyan' ? '236, 254, 255' : 
-                                 borderColorBase === 'rose' ? '255, 241, 242' : 
-                                 '255, 255, 255'}, 0.97)`,
-        // For partially visible card
-        clipPath: isPartiallyVisible ? "polygon(0 0, 100% 0, 100% 65%, 0 65%)" : "none",
-        pointerEvents: isPartiallyVisible ? "none" : "auto",
-        willChange: isMobile ? "auto" : "transform, opacity"
-      }}
     >
-      {/* Standardized Popular Tag - consistent positioning for all cards */}
+      {/* Popular Tag */}
       {isPopular && (
         <div className="absolute -top-3 inset-x-0 flex justify-center z-10">
-          <div className="py-1 px-2.5 flex items-center gap-1 rounded-full bg-gradient-to-r from-brand-purple-medium to-brand-purple text-white text-xs font-medium shadow-md">
+          <div className="py-1 px-3 flex items-center gap-1 rounded-full bg-gradient-to-r from-brand-purple-medium to-brand-purple text-white text-xs font-medium shadow-md">
             <Sparkles className="h-3 w-3" />
             <span className="font-medium">Popular</span>
           </div>
         </div>
       )}
       
-      <div className="flex flex-col items-start gap-3 sm:gap-4 h-full">
-        {/* Icon container with consistent styling */}
-        <motion.div 
+      <div className="flex flex-col items-start gap-4 h-full">
+        {/* Icon container */}
+        <div 
           className={cn(
             "flex items-center justify-center",
             "w-12 h-12 sm:w-14 sm:h-14",
@@ -154,7 +136,6 @@ export const FeatureItem = ({
             "border border-opacity-20",
             `border-${colorScheme.text.split('-')[1]}-100`,
           )}
-          whileHover={isMobile ? {} : { scale: 1.05, rotate: 5 }}
         >
           <Icon className={cn(
             "w-6 h-6 sm:w-7 sm:h-7",
@@ -163,10 +144,10 @@ export const FeatureItem = ({
             "group-hover:scale-110",
             !isMobile && "group-hover:animate-subtle-bounce" 
           )} />
-        </motion.div>
+        </div>
         
         <div className="text-left w-full flex-grow flex flex-col">
-          {/* Standardized title style - all black for consistent hierarchy */}
+          {/* Title */}
           <h3 className={cn(
             "text-base sm:text-lg font-bold leading-tight font-space mb-2",
             "text-gray-900",
@@ -182,8 +163,8 @@ export const FeatureItem = ({
             "group-hover:w-16"
           )} />
           
-          {/* Standardized description truncation */}
-          <p className="text-xs sm:text-sm text-gray-600 font-anek line-height-[1.6] group-hover:text-gray-700">
+          {/* Description with truncation */}
+          <p className="text-xs sm:text-sm text-gray-600 font-inter leading-relaxed group-hover:text-gray-700">
             {isExpanded || !isLongDesc ? 
               description : 
               (<>
@@ -193,9 +174,9 @@ export const FeatureItem = ({
             }
           </p>
           
-          {/* Learn more link - consistently visible for all cards */}
+          {/* Learn more link */}
           <div className={cn(
-            "mt-2 sm:mt-3 text-xs font-medium flex items-center gap-1.5", 
+            "mt-3 text-xs font-medium flex items-center gap-1.5", 
             colorScheme.text,
             "transition-opacity duration-300"
           )}>
