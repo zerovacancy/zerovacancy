@@ -7,6 +7,7 @@ import PricingHeader from "./PricingHeader";
 import { PLAN_DESCRIPTIONS, VALUE_PROPOSITIONS, PLAN_CTAS, FEATURES } from "./pricingData";
 import { ChevronDown, Check, Info, X } from "lucide-react";
 import { PricingFeature } from "./types";
+import { Button } from "../ui/button";
 
 export const PricingContainer = () => {
   const isMobile = useIsMobile();
@@ -112,7 +113,7 @@ export const PricingContainer = () => {
           border: "border-blue-200",
           text: "text-blue-700",
           accent: "bg-blue-500",
-          button: "bg-blue-500 hover:bg-blue-600",
+          button: "bg-gradient-to-r from-blue-500 to-blue-600 hover:bg-blue-600",
           highlight: "bg-blue-50"
         };
       case "purple":
@@ -121,7 +122,7 @@ export const PricingContainer = () => {
           border: "border-brand-purple/30",
           text: "text-brand-purple-dark",
           accent: "bg-brand-purple",
-          button: "bg-gradient-to-r from-brand-purple-medium to-brand-purple hover:from-brand-purple hover:to-brand-purple-dark",
+          button: "bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-600 hover:from-purple-700 hover:via-blue-700 hover:to-cyan-700",
           highlight: "bg-purple-50"
         };
       case "emerald":
@@ -167,7 +168,7 @@ export const PricingContainer = () => {
       
       {/* Mobile vertical stack layout */}
       {isMobile ? (
-        <div className="flex flex-col gap-6 px-4">
+        <div className="flex flex-col gap-2 sm:gap-3 lg:gap-4 px-4">
           {pricingTiers.map((tier, index) => {
             const colorScheme = getColorScheme(tier.color);
             const isExpanded = !!expandedFeatures[index];
@@ -176,7 +177,7 @@ export const PricingContainer = () => {
               <motion.div
                 key={tier.title}
                 className={cn(
-                  "rounded-xl overflow-hidden border-2 transition-all mt-6",
+                  "rounded-lg overflow-hidden border-2 transition-all mt-6",
                   tier.popularPlan ? "border-brand-purple shadow-lg" : "border-slate-200",
                   tier.popularPlan && "relative"
                 )}
@@ -193,23 +194,23 @@ export const PricingContainer = () => {
                 )}>
                   <div>
                     <h3 className={cn(
-                      "text-lg font-bold",
+                      "text-lg font-bold font-jakarta",
                       colorScheme.text
                     )}>
                       {tier.title}
                     </h3>
-                    <p className="text-xs text-slate-600 mt-1">{tier.valueProposition}</p>
+                    <p className="text-xs text-brand-text-secondary font-inter mt-1">{tier.valueProposition}</p>
                   </div>
                   
                   <div className="text-right">
                     <div className="flex items-baseline gap-1">
-                      <span className="text-2xl font-bold text-slate-900">${tier.price}</span>
-                      <span className="text-sm text-slate-500">/{isYearly ? "mo, billed yearly" : "mo"}</span>
+                      <span className="text-2xl font-bold text-brand-purple-dark font-space">${tier.price}</span>
+                      <span className="text-sm text-brand-text-light font-space">/{isYearly ? "mo, billed yearly" : "mo"}</span>
                     </div>
                     
                     {/* Annual savings badge */}
                     {isYearly && tier.savings && (
-                      <div className="mt-1 inline-block bg-green-50 text-green-600 px-2 py-0.5 rounded text-xs font-medium">
+                      <div className="mt-1 inline-block bg-green-50 text-green-600 px-2 py-0.5 rounded text-xs font-medium font-space">
                         Save ${tier.savings}/year
                       </div>
                     )}
@@ -218,14 +219,14 @@ export const PricingContainer = () => {
                 
                 {/* Main CTA */}
                 <div className="px-4 pb-2 pt-3">
-                  <button 
+                  <Button 
                     className={cn(
-                      "w-full py-3 rounded-lg text-white font-medium text-sm transition-all",
+                      "w-full py-3 rounded-lg font-medium text-sm transition-all h-11",
                       colorScheme.button
                     )}
                   >
                     {tier.cta}
-                  </button>
+                  </Button>
                 </div>
                 
                 {/* Accordion-style feature sections */}
@@ -233,14 +234,14 @@ export const PricingContainer = () => {
                   <button
                     onClick={() => toggleFeatures(index)}
                     className={cn(
-                      "mt-3 flex items-center justify-between w-full py-2 text-sm font-medium text-slate-700 border-t border-slate-100",
+                      "mt-3 flex items-center justify-between w-full py-2 text-sm font-medium text-brand-text-primary border-t border-slate-100",
                     )}
                   >
-                    <span>
+                    <span className="font-inter">
                       {isExpanded ? "What's included" : "Show features"}
                     </span>
                     <ChevronDown className={cn(
-                      "h-4 w-4 text-slate-400 transition-transform",
+                      "h-4 w-4 text-brand-text-light transition-transform",
                       isExpanded && "rotate-180"
                     )} />
                   </button>
@@ -260,7 +261,7 @@ export const PricingContainer = () => {
                             <div key={`${tier.title}-${category}`} className="space-y-2">
                               {category !== "Core Features" && (
                                 <h4 className={cn(
-                                  "text-xs font-medium px-2 py-1 rounded inline-block",
+                                  "text-xs font-medium font-jakarta px-2 py-1 rounded inline-block",
                                   colorScheme.bg
                                 )}>
                                   {category}
@@ -277,7 +278,7 @@ export const PricingContainer = () => {
                                       "h-4 w-4 mt-0.5 flex-shrink-0", 
                                       colorScheme.text
                                     )} />
-                                    <span className="text-sm text-slate-700">{feature.text}</span>
+                                    <span className="text-sm text-brand-text-primary font-inter">{feature.text}</span>
                                   </div>
                                 ))}
                               </div>
@@ -296,7 +297,7 @@ export const PricingContainer = () => {
           <div className="mt-4 pt-2 border-t border-slate-200">
             <button
               onClick={() => setExpandedComparisonTable(!expandedComparisonTable)}
-              className="w-full flex items-center justify-between py-3 text-sm font-medium text-slate-700"
+              className="w-full flex items-center justify-between py-3 text-sm font-medium text-brand-text-primary font-inter"
             >
               <span className="flex items-center">
                 <span className="p-1 mr-2 bg-indigo-50 rounded">
@@ -305,7 +306,7 @@ export const PricingContainer = () => {
                 Compare all features
               </span>
               <ChevronDown className={cn(
-                "h-4 w-4 text-slate-400 transition-transform",
+                "h-4 w-4 text-brand-text-light transition-transform",
                 expandedComparisonTable && "rotate-180"
               )} />
             </button>
@@ -321,40 +322,40 @@ export const PricingContainer = () => {
                 >
                   <div className="py-4 px-2 bg-slate-50 rounded-lg">
                     <div className="flex border-b border-slate-200 pb-2 mb-3">
-                      <div className="w-1/2 text-sm font-medium text-slate-700">Feature</div>
-                      <div className="w-1/6 text-center text-xs font-medium text-blue-600">Basic</div>
-                      <div className="w-1/6 text-center text-xs font-medium text-brand-purple">Pro</div>
-                      <div className="w-1/6 text-center text-xs font-medium text-emerald-600">Premium</div>
+                      <div className="w-1/2 text-sm font-medium text-brand-text-primary font-inter">Feature</div>
+                      <div className="w-1/6 text-center text-xs font-medium text-blue-600 font-space">Basic</div>
+                      <div className="w-1/6 text-center text-xs font-medium text-brand-purple font-space">Pro</div>
+                      <div className="w-1/6 text-center text-xs font-medium text-emerald-600 font-space">Premium</div>
                     </div>
                     
-                    {/* Sample comparison items - These would be dynamically generated from feature data */}
+                    {/* Sample comparison items */}
                     <div className="space-y-3">
                       <div className="flex items-center">
-                        <div className="w-1/2 text-xs text-slate-600">Browse Creators</div>
+                        <div className="w-1/2 text-xs text-brand-text-secondary font-inter">Browse Creators</div>
                         <div className="w-1/6 text-center"><Check className="h-4 w-4 mx-auto text-blue-500" /></div>
                         <div className="w-1/6 text-center"><Check className="h-4 w-4 mx-auto text-brand-purple" /></div>
                         <div className="w-1/6 text-center"><Check className="h-4 w-4 mx-auto text-emerald-500" /></div>
                       </div>
                       <div className="flex items-center">
-                        <div className="w-1/2 text-xs text-slate-600">Submit RFPs</div>
+                        <div className="w-1/2 text-xs text-brand-text-secondary font-inter">Submit RFPs</div>
                         <div className="w-1/6 text-center"><X className="h-4 w-4 mx-auto text-slate-300" /></div>
                         <div className="w-1/6 text-center"><Check className="h-4 w-4 mx-auto text-brand-purple" /></div>
                         <div className="w-1/6 text-center"><Check className="h-4 w-4 mx-auto text-emerald-500" /></div>
                       </div>
                       <div className="flex items-center">
-                        <div className="w-1/2 text-xs text-slate-600">Revisions Included</div>
-                        <div className="w-1/6 text-center text-xs">0</div>
-                        <div className="w-1/6 text-center text-xs">1</div>
-                        <div className="w-1/6 text-center text-xs">3</div>
+                        <div className="w-1/2 text-xs text-brand-text-secondary font-inter">Revisions Included</div>
+                        <div className="w-1/6 text-center text-xs font-space">0</div>
+                        <div className="w-1/6 text-center text-xs font-space">1</div>
+                        <div className="w-1/6 text-center text-xs font-space">3</div>
                       </div>
                       <div className="flex items-center">
-                        <div className="w-1/2 text-xs text-slate-600">SEO Optimization</div>
+                        <div className="w-1/2 text-xs text-brand-text-secondary font-inter">SEO Optimization</div>
                         <div className="w-1/6 text-center"><X className="h-4 w-4 mx-auto text-slate-300" /></div>
                         <div className="w-1/6 text-center"><Check className="h-4 w-4 mx-auto text-brand-purple" /></div>
                         <div className="w-1/6 text-center"><Check className="h-4 w-4 mx-auto text-emerald-500" /></div>
                       </div>
                       <div className="flex items-center">
-                        <div className="w-1/2 text-xs text-slate-600">Marketing Dashboard</div>
+                        <div className="w-1/2 text-xs text-brand-text-secondary font-inter">Marketing Dashboard</div>
                         <div className="w-1/6 text-center"><X className="h-4 w-4 mx-auto text-slate-300" /></div>
                         <div className="w-1/6 text-center"><X className="h-4 w-4 mx-auto text-slate-300" /></div>
                         <div className="w-1/6 text-center"><Check className="h-4 w-4 mx-auto text-emerald-500" /></div>
@@ -367,8 +368,8 @@ export const PricingContainer = () => {
           </div>
         </div>
       ) : (
-        // Desktop card grid layout - simplified from existing implementation
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-10">
+        // Desktop card grid layout
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 sm:gap-3 lg:gap-4">
           {pricingTiers.map((tier, index) => {
             const colorScheme = getColorScheme(tier.color);
             
@@ -376,7 +377,7 @@ export const PricingContainer = () => {
               <motion.div
                 key={tier.title}
                 className={cn(
-                  "rounded-2xl border-2 overflow-hidden transition-all mt-6",
+                  "rounded-lg border-2 overflow-hidden transition-all mt-6",
                   tier.popularPlan 
                     ? `border-brand-purple shadow-xl ${colorScheme.border} scale-105 z-10` 
                     : "border-slate-200",
@@ -388,52 +389,52 @@ export const PricingContainer = () => {
               >
                 {/* Popular tag removed */}
                 
-                <div className="p-6">
+                <div className="p-4 sm:p-6">
                   {/* Header */}
                   <div className="mb-4">
                     <h3 className={cn(
-                      "text-xl font-bold",
+                      "text-xl font-bold font-jakarta",
                       colorScheme.text
                     )}>
                       {tier.title}
                     </h3>
-                    <p className="text-sm text-slate-600 mt-1">{tier.valueProposition}</p>
+                    <p className="text-sm text-brand-text-secondary font-inter mt-1">{tier.valueProposition}</p>
                   </div>
                   
                   {/* Pricing */}
                   <div className="mb-6">
                     <div className="flex items-baseline">
-                      <span className="text-4xl font-bold text-slate-900">${tier.price}</span>
-                      <span className="ml-2 text-sm text-slate-500">/{isYearly ? "mo, billed yearly" : "mo"}</span>
+                      <span className="text-4xl font-bold text-brand-purple-dark font-space">${tier.price}</span>
+                      <span className="ml-2 text-sm text-brand-text-light font-space">/{isYearly ? "mo, billed yearly" : "mo"}</span>
                     </div>
                     
                     {isYearly && tier.savings && (
-                      <div className="mt-2 inline-block bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium">
+                      <div className="mt-2 inline-block bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium font-space">
                         Save ${tier.savings}/year
                       </div>
                     )}
                   </div>
                   
                   {/* CTA Button */}
-                  <button 
+                  <Button 
                     className={cn(
-                      "w-full py-3.5 rounded-xl text-white font-medium transition-all",
+                      "w-full py-3 px-5 rounded-lg text-white font-medium transition-all h-11",
                       colorScheme.button
                     )}
                   >
                     {tier.cta}
-                  </button>
+                  </Button>
                   
                   {/* Features */}
                   <div className="mt-8 border-t border-slate-100 pt-4">
-                    <h4 className="text-sm font-semibold text-slate-800 mb-4">What's included:</h4>
+                    <h4 className="text-sm font-semibold text-brand-text-primary font-jakarta mb-4">What's included:</h4>
                     
                     <div className="space-y-5">
                       {Object.entries(tier.features).map(([category, features], catIndex) => (
                         <div key={`${tier.title}-${category}`} className="space-y-2">
                           {category !== "Core Features" && (
                             <h5 className={cn(
-                              "text-sm font-medium",
+                              "text-sm font-medium font-jakarta",
                               colorScheme.text
                             )}>
                               {category}
@@ -455,7 +456,7 @@ export const PricingContainer = () => {
                                     colorScheme.text
                                   )} />
                                 </span>
-                                <span className="text-sm text-slate-700">{feature.text}</span>
+                                <span className="text-sm text-brand-text-primary font-inter">{feature.text}</span>
                               </div>
                             ))}
                           </div>
@@ -466,7 +467,7 @@ export const PricingContainer = () => {
                   
                   {/* Footer note */}
                   {tier.footerText && (
-                    <div className="mt-6 pt-4 border-t border-slate-100 text-xs text-slate-500">
+                    <div className="mt-6 pt-4 border-t border-slate-100 text-xs text-brand-text-light font-space">
                       {tier.footerText}
                     </div>
                   )}

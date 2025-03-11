@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { usePricing } from "./PricingContext";
-import { useEffect, useState } from "react";
 
 interface PricingHeaderProps {
   title: string;
@@ -44,7 +43,7 @@ const PricingHeader = ({
                 <div className={cn(
                   "inline-flex items-center px-4 py-1.5 rounded-full",
                   "bg-gradient-to-r from-indigo-50 to-violet-50 border border-indigo-100/50",
-                  "text-indigo-800 text-sm font-medium shadow-sm"
+                  "text-indigo-800 text-sm font-medium shadow-sm font-space"
                 )}>
                   Simple & Transparent
                 </div>
@@ -53,20 +52,19 @@ const PricingHeader = ({
             
             {/* Main title */}
             <h2 className={cn(
-              "font-bold text-slate-900 mb-2 tracking-tight",
-              isMobile ? "text-2xl" : "text-4xl",
-              "bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-700"
+              "font-bold text-brand-purple-dark mb-2 tracking-tight font-jakarta",
+              isMobile ? "text-2xl" : "text-3xl sm:text-4xl"
             )}>
               {title}
             </h2>
             
             {/* Decorative element under the heading */}
-            <div className="w-20 h-1.5 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full mx-auto mb-3" />
+            <div className="w-20 h-1.5 bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1] rounded-full mx-auto mb-3" />
             
             {/* Subtitle */}
             <p className={cn(
-              "mx-auto text-slate-600 leading-relaxed mb-6",
-              isMobile ? "text-sm px-4" : "text-lg"
+              "mx-auto text-brand-text-secondary leading-relaxed mb-6 font-inter",
+              isMobile ? "text-sm px-4" : "text-base"
             )}>
               {subtitle}
             </p>
@@ -81,10 +79,10 @@ const PricingHeader = ({
           <button
             onClick={() => setIsYearly(false)}
             className={cn(
-              "px-4 py-2 rounded-md text-sm font-medium transition-all duration-200",
+              "px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 font-space",
               !isYearly 
                 ? "bg-white text-brand-purple shadow-sm" 
-                : "text-slate-600 hover:text-slate-900 hover:bg-white/50"
+                : "text-brand-text-secondary hover:text-brand-text-primary hover:bg-white/50"
             )}
             aria-pressed={!isYearly}
           >
@@ -94,10 +92,10 @@ const PricingHeader = ({
           <button
             onClick={() => setIsYearly(true)}
             className={cn(
-              "px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 flex items-center gap-2",
+              "px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 flex items-center gap-2 font-space",
               isYearly 
                 ? "bg-white text-brand-purple shadow-sm" 
-                : "text-slate-600 hover:text-slate-900 hover:bg-white/50"
+                : "text-brand-text-secondary hover:text-brand-text-primary hover:bg-white/50"
             )}
             aria-pressed={isYearly}
           >

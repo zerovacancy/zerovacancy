@@ -14,11 +14,11 @@ const Pricing = () => {
 
   return (
     <PricingProvider>
-      <div className="relative w-full py-16 sm:py-20 lg:py-24 overflow-hidden">
+      <div className="relative w-full py-6 sm:py-12 lg:py-20 overflow-hidden">
         {/* Background decorative elements */}
         <BackgroundEffects />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Enhanced header with toggle now integrated */}
           <PricingHeader 
             title="Simple, Transparent Pricing" 
@@ -26,19 +26,19 @@ const Pricing = () => {
           />
           
           {/* Unified pricing container that handles both mobile and desktop layouts */}
-          <div className="mt-8 sm:mt-12">
+          <div className="mt-8 sm:mt-12 mb-4 sm:mb-6 lg:mb-8">
             <PricingContainer />
           </div>
           
           {/* Enhanced notes section */}
-          <div className="mt-10 lg:mt-16">
+          <div className="mt-10 lg:mt-16 mb-4 sm:mb-6 lg:mb-8">
             <CommonFeatures />
           </div>
 
           {/* Waitlist CTA */}
-          <div className="mt-12 text-center">
-            <h3 className="text-xl font-semibold mb-3 text-slate-800">Not ready to commit?</h3>
-            <p className="text-slate-600 mb-6 max-w-xl mx-auto">Join our waitlist to get notified about special offers and early access opportunities.</p>
+          <div className="mt-12 text-center mb-4 sm:mb-6 lg:mb-8">
+            <h3 className="text-xl font-semibold mb-3 text-brand-purple-dark font-jakarta">Not ready to commit?</h3>
+            <p className="text-brand-text-primary font-inter mb-6 max-w-xl mx-auto">Join our waitlist to get notified about special offers and early access opportunities.</p>
             <WaitlistCTA source="pricing_page" />
           </div>
 
