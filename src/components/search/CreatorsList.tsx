@@ -18,7 +18,11 @@ export const CreatorsList: React.FC = () => {
       reviews: 127,
       location: "New York, NY",
       image: "/newemilyprofile.jpg",
-      workExamples: ["/1-d2e3f802.jpg"],
+      workExamples: [
+        "/creatorcontent/emily-johnson/work-1.webp",
+        "/creatorcontent/emily-johnson/work-2.jpg",
+        "/creatorcontent/emily-johnson/work-3.jpg"
+      ],
       availabilityStatus: "available-now"
     }, 
     {
@@ -29,7 +33,11 @@ export const CreatorsList: React.FC = () => {
       reviews: 98,
       location: "Los Angeles, CA",
       image: "/janeprofile.png",
-      workExamples: ["/janesub.jpg", "/janesub2.png", "/janesub3.webp"],
+      workExamples: [
+        "/creatorcontent/jane-cooper/work-1.jpg",
+        "/creatorcontent/jane-cooper/work-2.jpg",
+        "/creatorcontent/jane-cooper/work-3.jpg"
+      ],
       availabilityStatus: "available-tomorrow"
     }, 
     {
@@ -40,7 +48,11 @@ export const CreatorsList: React.FC = () => {
       reviews: 82,
       location: "Chicago, IL",
       image: "/emily profile.jpeg",
-      workExamples: ["/1-d2e3f802.jpg"],
+      workExamples: [
+        "/creatorcontent/michael-brown/work-1.jpg",
+        "/creatorcontent/michael-brown/work-2.jpg",
+        "/creatorcontent/michael-brown/work-3.jpg"
+      ],
       availabilityStatus: "premium-only"
     }
   ];
