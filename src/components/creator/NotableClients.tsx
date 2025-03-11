@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { cn } from '@/lib/utils';
 import {
@@ -17,7 +16,15 @@ interface NotableClientsProps {
 export const NotableClients: React.FC<NotableClientsProps> = ({ clients }) => {
   const isMobile = useIsMobile();
 
-  if (!clients || clients.length === 0) return null;
+  // Ensure we always have at least 2 clients for consistency
+  const displayClients = clients.length >= 2 ? clients : [
+    ...clients,
+    ...Array(2 - clients.length).fill({}).map(() => ({
+      name: 'Client',
+      logo: '/placeholder.svg',
+      projectType: 'Creative work'
+    }))
+  ];
 
   return (
     <div className="mb-3">
@@ -27,7 +34,7 @@ export const NotableClients: React.FC<NotableClientsProps> = ({ clients }) => {
       </div>
 
       <div className="flex space-x-2">
-        {clients.map((client, index) => (
+        {displayClients.map((client, index) => (
           <TooltipProvider key={index}>
             <Tooltip>
               <TooltipTrigger asChild>
