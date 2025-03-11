@@ -9,6 +9,9 @@ export interface TextRotateProps {
   exit?: any;
   animatePresenceMode?: "sync" | "wait" | "popLayout";
   animatePresenceInitial?: boolean;
+  staggerChildren?: number;
+  staggerDirection?: number;
+  delayChildren?: number;
   staggerDuration?: number;
   staggerFrom?: "first" | "last" | "center" | number | "random";
   transition?: any;
@@ -19,6 +22,7 @@ export interface TextRotateProps {
   mainClassName?: string;
   splitLevelClassName?: string;
   elementLevelClassName?: string;
+  letterLevelClassName?: string;
 }
 
 export interface TextRotateRef {
@@ -31,4 +35,17 @@ export interface TextRotateRef {
 export interface WordObject {
   characters: string[];
   needsSpace: boolean;
+}
+
+// Interface for the useTextRotate hook return value
+export interface UseTextRotateReturn {
+  currentTextIndex: number;
+  elements: string[] | WordObject[];
+  next: () => void;
+  previous: () => void;
+  jumpTo: (index: number) => void;
+  reset: () => void;
+  calculateStaggerDelay: (wordIndex: number, charIndex: number, wordArray: WordObject[]) => number;
+  active: number;
+  setTexts: (texts: string[]) => void;
 }

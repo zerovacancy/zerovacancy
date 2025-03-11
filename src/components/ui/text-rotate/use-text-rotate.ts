@@ -1,67 +1,59 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { WordObject } from "./types";
+import { WordObject, UseTextRotateReturn } from "./types";
 import { getStaggerDelay, splitIntoCharacters } from "./utils";
 
-export function useTextRotate(
-  texts: string[],
-  splitBy: "words" | "characters" | "lines" | string = "characters",
-  loop: boolean = true,
-  auto: boolean = true,
-  rotationInterval: number = 2000,
-  staggerFrom: "first" | "last" | "center" | number | "random" = "first",
-  staggerDuration: number = 0,
-  onNext?: (index: number) => void
-) {
+export function useTextRotate({
+  texts = [],
+  rotationInterval = 2000
+}: {
+  texts: string[];
+  rotationInterval?: number;
+}): UseTextRotateReturn {
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
+  const [textsArray, setTextsArray] = useState<string[]>(texts);
   
   // Validate texts array
   const safeTexts = useMemo(() => {
-    return Array.isArray(texts) && texts.length > 0 ? texts : [""];
-  }, [texts]);
+    return Array.isArray(textsArray) && textsArray.length > 0 ? textsArray : [""];
+  }, [textsArray]);
 
   // Memoize elements generation
   const elements = useMemo(() => {
     const currentText = safeTexts[currentTextIndex];
-    if (splitBy === "characters") {
-      const text = currentText.split(" ");
-      return text.map((word, i) => ({
-        characters: splitIntoCharacters(word),
-        needsSpace: i !== text.length - 1,
-      }));
-    }
-    return splitBy === "words"
-      ? currentText.split(" ")
-      : splitBy === "lines"
-        ? currentText.split("\n")
-        : currentText.split(splitBy);
-  }, [safeTexts, currentTextIndex, splitBy]);
+    if (!currentText) return [];
+    
+    const text = currentText.split(" ");
+    return text.map((word, i) => ({
+      characters: splitIntoCharacters(word),
+      needsSpace: i !== text.length - 1,
+    }));
+  }, [safeTexts, currentTextIndex]);
 
   // Helper function to handle index changes and trigger callback
   const handleIndexChange = useCallback((newIndex: number) => {
     setCurrentTextIndex(newIndex);
-    onNext?.(newIndex);
-  }, [onNext]);
+  }, []);
 
   const next = useCallback(() => {
     const nextIndex = currentTextIndex === safeTexts.length - 1
-      ? (loop ? 0 : currentTextIndex)
+      ? 0
       : currentTextIndex + 1;
     
     if (nextIndex !== currentTextIndex) {
       handleIndexChange(nextIndex);
     }
-  }, [currentTextIndex, safeTexts.length, loop, handleIndexChange]);
+  }, [currentTextIndex, safeTexts.length, handleIndexChange]);
 
   const previous = useCallback(() => {
     const prevIndex = currentTextIndex === 0
-      ? (loop ? safeTexts.length - 1 : currentTextIndex)
+      ? safeTexts.length - 1
       : currentTextIndex - 1;
     
     if (prevIndex !== currentTextIndex) {
       handleIndexChange(prevIndex);
     }
-  }, [currentTextIndex, safeTexts.length, loop, handleIndexChange]);
+  }, [currentTextIndex, safeTexts.length, handleIndexChange]);
 
   const jumpTo = useCallback((index: number) => {
     const validIndex = Math.max(0, Math.min(index, safeTexts.length - 1));
@@ -78,10 +70,9 @@ export function useTextRotate(
 
   // Auto-rotation effect
   useEffect(() => {
-    if (!auto) return;
     const intervalId = setInterval(next, rotationInterval);
     return () => clearInterval(intervalId);
-  }, [next, rotationInterval, auto]);
+  }, [next, rotationInterval]);
 
   const calculateStaggerDelay = useCallback((wordIndex: number, charIndex: number, wordArray: WordObject[]) => {
     const previousCharsCount = wordArray
@@ -95,10 +86,14 @@ export function useTextRotate(
     return getStaggerDelay(
       previousCharsCount + charIndex,
       totalChars,
-      staggerFrom,
-      staggerDuration
+      "first",
+      0.05
     );
-  }, [staggerFrom, staggerDuration]);
+  }, []);
+
+  const setTexts = useCallback((newTexts: string[]) => {
+    setTextsArray(newTexts);
+  }, []);
 
   return {
     currentTextIndex,
@@ -107,6 +102,8 @@ export function useTextRotate(
     previous,
     jumpTo,
     reset,
-    calculateStaggerDelay
+    calculateStaggerDelay,
+    active: currentTextIndex,
+    setTexts
   };
 }
