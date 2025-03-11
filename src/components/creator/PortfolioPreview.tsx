@@ -30,7 +30,7 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
       <div>
         <div className="flex items-center mb-1.5">
           <div className="w-0.5 h-3 bg-gradient-to-b from-indigo-500 to-purple-500 rounded-full mr-1.5"></div>
-          <span className="text-xs text-gray-500 font-medium">RECENT WORK</span>
+          <span className="text-xs text-gray-500 font-medium">{isMobile ? 'WORK' : 'RECENT WORK'}</span>
         </div>
 
         <div className="flex space-x-1.5">
@@ -42,7 +42,7 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
                 "border border-gray-100",
                 "shadow-sm hover:shadow-md transition-shadow duration-200",
                 isMobile 
-                  ? "h-[120px] w-[120px]" // Fixed square dimensions for mobile
+                  ? "h-[75px] w-[75px]" // Smaller square dimensions for mobile
                   : "h-[160px] w-[160px]", // Fixed square dimensions for desktop
                 "bg-gray-50"
               )}
@@ -67,7 +67,7 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
 
         <div className="flex justify-end mt-1">
           <button className="flex items-center text-xs text-indigo-600 hover:text-indigo-800 transition-colors duration-200 font-medium">
-            <span>View Portfolio</span>
+            <span>{isMobile ? 'View All' : 'View Portfolio'}</span>
             <ArrowRight className="w-3 h-3 ml-1" />
           </button>
         </div>

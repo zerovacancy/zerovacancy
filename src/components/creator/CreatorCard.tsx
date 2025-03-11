@@ -61,24 +61,14 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
 
             {/* Content section - Simplified styling */}
             <div className="px-3 py-3 flex flex-col flex-grow">
-              <div className="mb-3">
+              <div className="mb-3.5">
                 <h3 className="font-semibold text-gray-900 text-base">{creator.name}</h3>
                 <p className="text-sm text-gray-600">{creator.location}</p>
                 <p className="text-xs text-gray-500 mt-1">{creator.services.join(" • ")}</p>
               </div>
 
-              {/* Rating and availability row */}
-              <div className="flex justify-between items-center mb-3">
-                <CreatorRating 
-                  rating={creator.rating} 
-                  reviews={creator.reviews} 
-                  name={creator.name} 
-                  availabilityStatus={creator.availabilityStatus}
-                />
-              </div>
-
               {/* Portfolio preview - Simplified for mobile */}
-              <div className="mb-3">
+              <div className="mb-4">
                 <PortfolioPreview 
                   workExamples={creator.workExamples}
                   creatorName={creator.name}
@@ -93,17 +83,17 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 <button 
                   onClick={handleCTAClick}
                   aria-label={`Book with ${creator.name}`}
-                  className="w-full flex items-center justify-center text-sm px-4 py-2.5 bg-indigo-600 text-white rounded-lg font-medium"
+                  className="w-full flex items-center justify-center text-sm px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium"
                 >
                   {stage === 'initial' ? (
                     <>
-                      <span>Book with {firstName}</span>
+                      <span>Book Now</span>
                       <ArrowRight className="w-4 h-4 ml-2" aria-hidden="true" />
                     </>
                   ) : stage === 'input' ? (
-                    <span>Secure Your Spot</span>
+                    <span>Secure Spot</span>
                   ) : (
-                    <span>Access Confirmed - Launching Soon!</span>
+                    <span>Confirmed!</span>
                   )}
                 </button>
               </div>
