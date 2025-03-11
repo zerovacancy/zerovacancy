@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { cn } from '@/lib/utils';
 import {
@@ -22,7 +23,8 @@ export const NotableClients: React.FC<NotableClientsProps> = ({ clients }) => {
     ...Array(2 - clients.length).fill({}).map(() => ({
       name: 'Client',
       logo: '/placeholder.svg',
-      projectType: 'Creative work'
+      projectType: 'Creative work',
+      year: ''  // Add year property to fix TypeScript error
     }))
   ];
 
