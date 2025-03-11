@@ -25,16 +25,6 @@ export const PreviewContent: React.FC = () => {
 
   return (
     <div className="w-full">
-      {/* Heading and description moved outside the search container */}
-      <div className="text-center mb-6">
-        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight mb-2">
-          Find your creative collaborator
-        </h2>
-        <p className="text-sm sm:text-base text-gray-600 max-w-md mx-auto">
-          Browse our curated network of professional content creators, photographers, and videographers.
-        </p>
-      </div>
-
       {/* Search container with updated styling */}
       <div className={cn(
         "bg-gray-50/60 border border-gray-100 rounded-lg overflow-hidden shadow-sm",
