@@ -17,8 +17,8 @@ const Pricing = () => {
   return (
     <PricingProvider>
       <div className="relative w-full py-8 sm:py-12 lg:py-20 overflow-hidden">
-        {/* Background decorative elements - conditionally rendered for mobile */}
-        {!isMobile && <BackgroundEffects />}
+        {/* Background decorative elements - now showing on both mobile and desktop */}
+        <BackgroundEffects />
         
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Enhanced header with toggle now integrated */}

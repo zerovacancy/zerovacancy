@@ -89,11 +89,18 @@ const config: Config = {
             backgroundPosition: "center",
           },
         },
+        // Add bounce-subtle animation
+        "bounce-subtle": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-5px)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         shine: "shine var(--duration) ease-in-out infinite alternate",
+        // Add bounce-subtle animation
+        "bounce-subtle": "bounce-subtle 2s ease-in-out infinite",
       },
     },
   },

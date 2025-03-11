@@ -19,6 +19,10 @@ export interface TextRotateProps {
   mainClassName?: string;
   splitLevelClassName?: string;
   elementLevelClassName?: string;
+  letterLevelClassName?: string;
+  staggerChildren?: number;
+  staggerDirection?: number;
+  delayChildren?: number;
 }
 
 export interface TextRotateRef {
@@ -31,4 +35,16 @@ export interface TextRotateRef {
 export interface WordObject {
   characters: string[];
   needsSpace: boolean;
+}
+
+export interface UseTextRotateReturn {
+  currentTextIndex: number;
+  elements: string[] | WordObject[];
+  next: () => void;
+  previous: () => void;
+  jumpTo: (index: number) => void;
+  reset: () => void;
+  calculateStaggerDelay: (wordIndex: number, charIndex: number, wordArray: WordObject[]) => number;
+  active: boolean;
+  setTexts: (texts: string[]) => void;
 }

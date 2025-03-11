@@ -8,6 +8,22 @@ export const splitIntoCharacters = (text: string): string[] => {
 };
 
 /**
+ * Function to split text into words or characters based on the splitBy parameter
+ */
+export const splitText = (text: string, splitBy: "words" | "characters" | "lines" | string = "characters"): string[] => {
+  if (splitBy === "characters") {
+    return splitIntoCharacters(text);
+  } else if (splitBy === "words") {
+    return text.split(/\s+/).filter(Boolean);
+  } else if (splitBy === "lines") {
+    return text.split(/\n/).filter(Boolean);
+  } else {
+    // Custom split pattern
+    return text.split(splitBy).filter(Boolean);
+  }
+};
+
+/**
  * Calculate stagger delay based on the stagger strategy
  */
 export const getStaggerDelay = (
