@@ -1,16 +1,24 @@
-import React from 'react';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
 
-const SwipeInstruction: React.FC = () => {
+import React from 'react';
+import { Swipe } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
+interface SwipeInstructionProps {
+  visible?: boolean;
+}
+
+const SwipeInstruction: React.FC<SwipeInstructionProps> = ({ visible = true }) => {
+  if (!visible) return null;
+
   return (
-    <div className="absolute inset-0 flex items-center justify-center z-10 bg-black/50 backdrop-blur-sm rounded-2xl">
-      <div className="bg-white px-6 py-5 rounded-xl shadow-xl text-center max-w-[250px] animate-fade-in">
-        <div className="flex justify-center gap-6 mb-4">
-          <ArrowLeft className="w-6 h-6 text-indigo-600 animate-bounce-x-reverse" />
-          <ArrowRight className="w-6 h-6 text-indigo-600 animate-bounce-x" />
-        </div>
-        <p className="text-gray-800 font-medium">Swipe left or right to navigate between steps</p>
-        <p className="text-gray-500 text-sm mt-1">Tap anywhere to dismiss</p>
+    <div className={cn(
+      "absolute inset-0 z-50 flex items-center justify-center",
+      "bg-black/20 backdrop-blur-sm rounded-xl",
+      "animate-in fade-in duration-500"
+    )}>
+      <div className="bg-white p-4 rounded-lg shadow-lg flex items-center gap-3">
+        <Swipe className="w-6 h-6 text-blue-500" />
+        <span className="text-sm font-medium">Swipe to explore steps</span>
       </div>
     </div>
   );
