@@ -12,7 +12,7 @@ export const CreatorsList: React.FC = () => {
   const creators: Creator[] = [
     {
       name: "Emily Johnson",
-      services: ["Photography", "Virtual Staging"],
+      services: ["TikTok", "POV", "#TourWithMe"],
       price: 150,
       rating: 4.9,
       reviews: 127,
