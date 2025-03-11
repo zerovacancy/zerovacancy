@@ -19,10 +19,10 @@ export const PreviewContent: React.FC = () => {
 
   return (
     <div className="w-full">
-      {/* Search container with updated styling */}
+      {/* Search container with updated styling and reduced bottom padding for mobile */}
       <div className={cn(
         "bg-gray-50/60 border border-gray-100 rounded-lg overflow-hidden shadow-sm",
-        isMobile ? "p-4" : "p-6"
+        isMobile ? "p-4 pb-1" : "p-6"
       )}>
         {/* Search bar component */}
         <div className="mb-4">
@@ -37,9 +37,9 @@ export const PreviewContent: React.FC = () => {
           <CreatorsList />
         </div>
 
-        {/* Pagination indicator for mobile */}
+        {/* Pagination indicator for mobile with reduced bottom spacing */}
         {isMobile && (
-          <div className="flex justify-center items-center pt-2 pb-1 mt-2">
+          <div className="flex justify-center items-center pt-1 pb-0 mt-1">
             <div className="flex space-x-1.5">
               <div className="w-2 h-2 rounded-full bg-indigo-600"></div>
               <div className="w-2 h-2 rounded-full bg-gray-300"></div>
