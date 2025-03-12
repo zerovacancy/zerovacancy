@@ -25,10 +25,10 @@ const Pricing = () => {
           {/* Enhanced header with toggle now integrated */}
           <PricingHeader title="PRICING TIERS" subtitle="Select the package that fits your property's marketing needs" />
           
-          {/* Removed the border from mobile container */}
+          {/* Removed wrapping div around PricingContainer for mobile */}
           <div className={cn(
             "mt-6 sm:mt-10 lg:mt-12 mb-6 sm:mb-8 lg:mb-10",
-            isMobile && "mx-auto rounded-xl shadow-sm max-w-[95%] py-8 px-4"
+            !isMobile && "mx-auto rounded-xl shadow-sm max-w-[95%] py-8 px-4" // Only apply container div on desktop
           )}>
             <PricingContainer />
           </div>
@@ -39,10 +39,6 @@ const Pricing = () => {
               All plans include: High-resolution images, dedicated support, property website, mobile-optimized, digital downloads, no watermarks. Custom plans available for agencies and teams. 
             </p>
           </div>
-
-          {/* Removed Waitlist CTA section as requested */}
-          
-          {/* Removed FAQ section as requested */}
         </div>
       </div>
     </PricingProvider>;

@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -177,7 +178,6 @@ export const PricingContainer = () => {
       {/* Mobile vertical stack layout */}
       {isMobile ? (
         <div className="px-4">
-        
           {pricingTiers.map((tier, index) => {
             const colorScheme = getColorScheme(tier.color);
             const isExpanded = !!expandedFeatures[index];
