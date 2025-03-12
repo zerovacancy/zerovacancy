@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { usePricing } from "./PricingContext";
+import { Calendar, CalendarDays } from "lucide-react";
 
 interface PricingHeaderProps {
   title: string;
@@ -65,21 +66,25 @@ const PricingHeader = ({
           </>
         )}
         
-        {/* Toggle container with simplified UI */}
+        {/* Enhanced toggle container with improved mobile styling */}
         <div className={cn(
-          "flex items-center space-x-2 bg-slate-100 p-1 rounded-lg transition-all duration-300",
+          "flex items-center space-x-2 p-1 rounded-lg transition-all duration-300",
+          isMobile ? 
+            "bg-[#F5F0FF] border border-[#E0E0E0] shadow-[0_2px_8px_rgba(0,0,0,0.06)] scale-110" : 
+            "bg-slate-100",
           isSticky ? "scale-90" : ""
         )}>
           <button
             onClick={() => setIsYearly(false)}
             className={cn(
-              "px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 font-space",
+              "px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 font-space flex items-center gap-2",
               !isYearly 
                 ? "bg-white text-brand-purple shadow-sm" 
                 : "text-brand-text-secondary hover:text-brand-text-primary hover:bg-white/50"
             )}
             aria-pressed={!isYearly}
           >
+            {isMobile && <Calendar size={16} className="text-gray-600" />}
             Monthly
           </button>
           
@@ -88,11 +93,12 @@ const PricingHeader = ({
             className={cn(
               "px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 flex items-center gap-2 font-space",
               isYearly 
-                ? "bg-white text-brand-purple shadow-sm" 
+                ? isMobile ? "bg-white text-[#7B3DFF] shadow-sm" : "bg-white text-brand-purple shadow-sm"
                 : "text-brand-text-secondary hover:text-brand-text-primary hover:bg-white/50"
             )}
             aria-pressed={isYearly}
           >
+            {isMobile && <CalendarDays size={16} className="text-gray-600" />}
             Annual
             {isYearly && (
               <span className={cn(
