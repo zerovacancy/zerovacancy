@@ -51,8 +51,8 @@ export const MobileSteps: React.FC<MobileStepsProps> = ({
         onNext={handleNext}
       />
       
-      {/* Connecting gradient line */}
-      <div className="absolute left-[8px] top-0 bottom-0 w-[3px] bg-gradient-to-b from-violet-500 via-blue-500 via-amber-500 to-emerald-500 opacity-60"></div>
+      {/* Enhanced connecting gradient line with glow effect */}
+      <div className="absolute left-[8px] top-0 bottom-0 w-[3px] bg-gradient-to-b from-violet-600 via-blue-500 via-amber-500 to-emerald-500 opacity-80 shadow-[0_0_6px_rgba(124,58,237,0.6)]"></div>
       
       {steps.map((step, index) => (
         <MobileStepItem

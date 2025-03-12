@@ -57,14 +57,20 @@ export const PricingCard = ({
       transition={{ duration: 0.5, delay: title === "Professional" ? 0 : title === "Basic" ? 0.1 : 0.2 }}
       className={cn(
         "relative rounded-2xl flex flex-col h-full",
-        "border bg-white/90 backdrop-blur-sm",
+        // Apply consistent gradient backgrounds for all cards
+        "border backdrop-blur-sm",
         highlighted ? "border-2 shadow-xl" : "border border-slate-200/70",
         highlighted ? colorStyles.border : "border-slate-200/70",
         isMobile ? "p-5" : "p-6",
         "transition-all duration-300 hover:shadow-lg",
         "shadow-[0_4px_20px_rgba(0,0,0,0.06)]",
         highlighted && "hover:-translate-y-1",
-        highlighted && !isMobile && "bg-gradient-to-b from-white to-slate-50/80"
+        // Apply appropriate gradient backgrounds based on card type
+        title === "Basic" 
+          ? "bg-gradient-to-b from-white to-blue-50/30" 
+          : title === "Professional" 
+            ? "bg-gradient-to-b from-white to-violet-50/30" 
+            : "bg-gradient-to-b from-white to-emerald-50/30"
       )}
     >
       {/* Popular tag with animated effect and improved positioning */}

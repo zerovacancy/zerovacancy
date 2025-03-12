@@ -83,9 +83,11 @@ export const FeatureItem = ({
     }
   };
   
-  // Add alternating backgrounds for mobile cards (odd/even)
+  // Enhanced gradient backgrounds for mobile cards (odd/even)
   const cardBackground = isMobile 
-    ? index % 2 === 0 ? "bg-white hover:bg-white/95" : "bg-indigo-50/20 hover:bg-indigo-50/30" 
+    ? index % 2 === 0 
+      ? "bg-gradient-to-br from-white via-white to-purple-50/30 hover:to-purple-50/50" 
+      : "bg-gradient-to-tr from-indigo-50/30 via-white to-purple-50/20 hover:to-purple-50/40" 
     : "bg-white hover:bg-white/95";
   
   return (
@@ -95,11 +97,11 @@ export const FeatureItem = ({
         "rounded-xl sm:rounded-2xl transition-all duration-300",
         cardBackground,
         // Enhanced border - more visible with color matching the icon theme
-        `border border-${borderColorBase}-200/40`,
-        // Consistent shadow
-        "shadow-sm hover:shadow-md",
-        // Left border accent
-        `before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:rounded-l-xl before:bg-gradient-to-b ${colorScheme.gradient} before:opacity-0 group-hover:before:opacity-100 before:transition-opacity`,
+        isMobile ? `border-2 border-${borderColorBase}-200/50` : `border border-${borderColorBase}-200/40`,
+        // Enhanced shadow for mobile
+        isMobile ? "shadow-md hover:shadow-lg" : "shadow-sm hover:shadow-md",
+        // Left border accent - visible by default on mobile
+        `before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:rounded-l-xl before:bg-gradient-to-b ${colorScheme.gradient} ${isMobile ? 'before:opacity-60' : 'before:opacity-0 group-hover:before:opacity-100'} before:transition-opacity`,
         // Consistent padding
         "p-4 sm:p-5",
         "focus:outline-none focus:ring-2 focus:ring-primary/20",
