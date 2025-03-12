@@ -122,29 +122,18 @@ const Index = () => {
                 variant="secondary" 
                 size="sm" 
                 className={cn(
-                  "flex text-xs sm:text-sm items-center justify-center gap-1.5 whitespace-nowrap", 
+                  "flex text-xs sm:text-sm items-center whitespace-nowrap", 
                   "px-3 py-2 sm:px-5 sm:py-2.5 min-w-[8rem] sm:min-w-[9rem] min-h-[2.25rem] sm:min-h-[2.5rem]", 
-                  "bg-gradient-to-r from-[#8A4FFF] via-[#B24BF3] to-[#00C2A8] text-white font-bold", 
-                  "border border-white/10 backdrop-blur-sm", 
-                  "transition-all duration-300", 
+                  "bg-black text-white font-medium", 
+                  "border border-white/20", 
+                  "transition-all duration-200", 
                   "touch-manipulation", 
-                  "shadow-[0_2px_10px_rgba(0,0,0,0.15)] hover:shadow-[0_4px_20px_rgba(138,79,255,0.3)]",
-                  "hover:scale-105 active:scale-95",
-                  "relative overflow-hidden isolate",
-                  "after:absolute after:inset-0 after:bg-gradient-to-r after:from-white/0 after:via-white/20 after:to-white/0",
-                  "after:translate-x-[-100%] hover:after:translate-x-[100%]",
-                  "after:transition-transform after:duration-500 after:ease-in-out after:z-[-1]"
+                  "shadow-sm hover:shadow-md",
+                  "hover:bg-gray-900"
                 )} 
                 onClick={handleTryNowClick}
               >
-                <Sparkle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white/80 animate-pulse" />
-                <span className="relative">
-                  Get Early Access
-                  <span className="absolute -top-1.5 -right-1.5 flex h-3 w-3">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-3 w-3 bg-white/90"></span>
-                  </span>
-                </span>
+                Get Early Access
               </Button>
             } 
             layout="complex" 
