@@ -36,13 +36,13 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
         {isMobile ? (
           <Card className={cn(
             "overflow-hidden h-full flex flex-col",
-            "bg-gradient-to-b from-[#f9f8fe] to-[#f5f3ff] border border-purple-200",
-            "shadow-[0_4px_12px_rgba(138,79,255,0.12)]",
+            "bg-white border border-purple-200",
+            "shadow-[0_4px_12px_rgba(138,79,255,0.15)]",
             "rounded-xl relative"
           )}>
             {/* Mobile-optimized pattern and border effect */}
             <div className="absolute inset-0 opacity-[0.02] bg-[radial-gradient(#8A4FFF_1px,transparent_1px)] bg-[length:16px_16px] z-0 pointer-events-none"></div>
-            <div className="absolute inset-0 rounded-xl border border-purple-300/70"></div>
+            <div className="absolute inset-0 rounded-xl border-2 border-purple-200"></div>
             
             {/* Price tag - Simplified for mobile */}
             <div className="absolute top-3 right-3 z-20">

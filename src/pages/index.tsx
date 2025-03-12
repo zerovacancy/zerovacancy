@@ -200,7 +200,7 @@ const Index = () => {
           className={cn(
             "relative w-full",
             !isMobile && "bg-[#F5F0FF]/60 py-10",
-            isMobile && "bg-gradient-to-b from-indigo-50/30 via-transparent to-transparent relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-8 after:bg-gradient-to-t after:from-indigo-50/30 after:to-transparent"
+            isMobile && "bg-[#F6F3FF] relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-8 after:bg-gradient-to-t after:from-[#F6F3FF] after:to-transparent"
           )}
         >
           <div className="max-w-7xl mx-auto relative z-10 py-10 sm:py-16 lg:py-20">
