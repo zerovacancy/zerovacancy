@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Card } from '../ui/card';
-import { ArrowRight, Instagram, Linkedin, Share2 } from 'lucide-react';
+import { ArrowRight, Instagram, Linkedin, Share2, Globe, ExternalLink } from 'lucide-react';
 import { Dialog } from "../ui/dialog";
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -66,10 +66,45 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     <h3 className="font-semibold text-gray-900 text-[15px] leading-tight">{creator.name}</h3>
                     <p className="text-sm text-gray-500 font-light mt-0.5">{creator.location}</p>
                   </div>
-                  <div className="flex space-x-1.5">
-                    <Instagram className="w-4 h-4 text-gray-500" />
-                    <Linkedin className="w-4 h-4 text-gray-500" />
-                    <Share2 className="w-4 h-4 text-gray-500" />
+                  <div className="flex items-center space-x-2">
+                    {creator.socialLinks?.instagram && (
+                      <a 
+                        href={creator.socialLinks.instagram} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        aria-label={`${creator.name}'s Instagram`}
+                        className="rounded-full p-1 hover:bg-purple-50 transition-colors"
+                      >
+                        <Instagram className="w-3.5 h-3.5 text-gray-600" />
+                      </a>
+                    )}
+                    {creator.socialLinks?.linkedin && (
+                      <a 
+                        href={creator.socialLinks.linkedin} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        aria-label={`${creator.name}'s LinkedIn`}
+                        className="rounded-full p-1 hover:bg-purple-50 transition-colors"
+                      >
+                        <Linkedin className="w-3.5 h-3.5 text-gray-600" />
+                      </a>
+                    )}
+                    {creator.socialLinks?.website && (
+                      <a 
+                        href={creator.socialLinks.website} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        aria-label={`${creator.name}'s Website`}
+                        className="rounded-full p-1 hover:bg-purple-50 transition-colors"
+                      >
+                        <Globe className="w-3.5 h-3.5 text-gray-600" />
+                      </a>
+                    )}
+                    {!creator.socialLinks?.instagram && !creator.socialLinks?.linkedin && !creator.socialLinks?.website && (
+                      <div className="flex items-center">
+                        <span className="text-[10px] text-gray-400 italic">Social soon</span>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <p className="text-xs text-gray-600 mt-1.5">{creator.services.join(" • ")}</p>
@@ -154,10 +189,45 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                       <h3 className="font-semibold text-gray-900 text-lg leading-tight">{creator.name}</h3>
                       <p className="text-sm text-gray-500 font-light mt-0.5">{creator.location}</p>
                     </div>
-                    <div className="flex space-x-2">
-                      <Instagram size={16} className="text-gray-600 hover:text-[#E1306C] transition-colors cursor-pointer" />
-                      <Linkedin size={16} className="text-gray-600 hover:text-[#0A66C2] transition-colors cursor-pointer" />
-                      <Share2 size={16} className="text-gray-600 hover:text-[#000000] transition-colors cursor-pointer" />
+                    <div className="flex items-center space-x-2">
+                      {creator.socialLinks?.instagram && (
+                        <a 
+                          href={creator.socialLinks.instagram} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          aria-label={`${creator.name}'s Instagram`}
+                          className="rounded-full p-1.5 hover:bg-purple-50 transition-colors duration-200"
+                        >
+                          <Instagram size={16} className="text-gray-600 hover:text-[#E1306C] transition-colors" />
+                        </a>
+                      )}
+                      {creator.socialLinks?.linkedin && (
+                        <a 
+                          href={creator.socialLinks.linkedin} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          aria-label={`${creator.name}'s LinkedIn`}
+                          className="rounded-full p-1.5 hover:bg-purple-50 transition-colors duration-200"
+                        >
+                          <Linkedin size={16} className="text-gray-600 hover:text-[#0A66C2] transition-colors" />
+                        </a>
+                      )}
+                      {creator.socialLinks?.website && (
+                        <a 
+                          href={creator.socialLinks.website} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          aria-label={`${creator.name}'s Website`}
+                          className="rounded-full p-1.5 hover:bg-purple-50 transition-colors duration-200"
+                        >
+                          <Globe size={16} className="text-gray-600 hover:text-gray-900 transition-colors" />
+                        </a>
+                      )}
+                      {!creator.socialLinks?.instagram && !creator.socialLinks?.linkedin && !creator.socialLinks?.website && (
+                        <div className="flex items-center space-x-2">
+                          <span className="text-xs text-gray-400 italic">Social links coming soon</span>
+                        </div>
+                      )}
                     </div>
                   </div>
                   <p className="text-xs text-gray-600 mt-1.5 tracking-wide">{creator.services.join(" • ")}</p>

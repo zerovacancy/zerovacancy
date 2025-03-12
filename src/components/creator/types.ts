@@ -10,6 +10,12 @@ export interface Creator {
   tags?: string[];
   availabilityStatus?: AvailabilityStatus;
   notableClients?: NotableClient[];
+  socialLinks?: {
+    instagram?: string;
+    linkedin?: string;
+    tiktok?: string;
+    website?: string;
+  };
 }
 
 export interface NotableClient {

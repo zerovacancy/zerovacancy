@@ -55,7 +55,12 @@ const PreviewSearch = () => {
       location: "New York, NY",
       image: "/newemilyprofile.jpg",
       workExamples: ["/1-d2e3f802.jpg"],
-      availabilityStatus: "available-now" as const
+      availabilityStatus: "available-now" as const,
+      socialLinks: {
+        instagram: "https://instagram.com/emilyjohnson",
+        linkedin: "https://linkedin.com/in/emilyjohnson",
+        website: "https://emilyjohnson-photo.com"
+      }
     }, 
     {
       name: "Jane Cooper",
@@ -66,7 +71,11 @@ const PreviewSearch = () => {
       location: "Los Angeles, CA",
       image: "/janeprofile.png",
       workExamples: ["/janesub.jpg", "/janesub2.png", "/janesub3.webp"],
-      availabilityStatus: "available-tomorrow" as const
+      availabilityStatus: "available-tomorrow" as const,
+      socialLinks: {
+        instagram: "https://instagram.com/janecoopermedia",
+        website: "https://janecooper.media"
+      }
     }, 
     {
       name: "Michael Brown",
@@ -77,7 +86,11 @@ const PreviewSearch = () => {
       location: "Chicago, IL",
       image: "/emily profile.jpeg",
       workExamples: ["/1-d2e3f802.jpg"],
-      availabilityStatus: "premium-only" as const
+      availabilityStatus: "premium-only" as const,
+      socialLinks: {
+        linkedin: "https://linkedin.com/in/michaelbrown3d",
+        website: "https://michaelbrown3d.com"
+      }
     }
   ];
 
