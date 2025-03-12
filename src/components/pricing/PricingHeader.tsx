@@ -40,13 +40,7 @@ const PricingHeader = ({
               <div className="relative">
                 <div className="absolute -top-6 -right-6 w-12 h-12 bg-purple-100 rounded-full blur-xl opacity-70" />
                 <div className="absolute -bottom-6 -left-6 w-12 h-12 bg-blue-100 rounded-full blur-xl opacity-70" />
-                <div className={cn(
-                  "inline-flex items-center px-4 py-1.5 rounded-full",
-                  "bg-gradient-to-r from-indigo-50 to-violet-50 border border-indigo-100/50",
-                  "text-indigo-800 text-sm font-medium shadow-sm font-space"
-                )}>
-                  Transform Your Spaces
-                </div>
+                {/* Removed the "Transform Your Spaces" text here */}
               </div>
             </div>
             
