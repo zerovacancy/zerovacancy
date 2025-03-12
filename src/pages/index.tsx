@@ -4,7 +4,7 @@ import { Hero } from '../components/hero/Hero';
 import Footer from '../components/Footer';
 import { Banner } from '@/components/ui/banner';
 import { Button } from '@/components/ui/button';
-import { Star, Sparkle } from 'lucide-react';
+import { Star } from 'lucide-react';
 import { GlowDialog } from '@/components/ui/glow-dialog';
 import { AnimatedShinyText } from '@/components/ui/animated-shiny-text';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -124,12 +124,12 @@ const Index = () => {
                 className={cn(
                   "flex text-xs sm:text-sm items-center whitespace-nowrap", 
                   "px-3 py-2 sm:px-5 sm:py-2.5 min-w-[8rem] sm:min-w-[9rem] min-h-[2.25rem] sm:min-h-[2.5rem]", 
-                  "bg-black text-white font-medium", 
-                  "border border-white/20", 
+                  "bg-gradient-to-r from-[#8A4FFF] to-[#00C2A8] text-white font-bold", 
+                  "border-none", 
                   "transition-all duration-200", 
                   "touch-manipulation", 
-                  "shadow-sm hover:shadow-md",
-                  "hover:bg-gray-900"
+                  "shadow-[0_2px_10px_rgba(0,0,0,0.15)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.2)]",
+                  "hover:opacity-90"
                 )} 
                 onClick={handleTryNowClick}
               >
