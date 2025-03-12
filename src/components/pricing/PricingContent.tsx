@@ -25,14 +25,14 @@ export const PricingContent = ({ subscription, isLoading }: PricingContentProps)
       features: FEATURES.free
     },
     {
-      title: "Professional",
-      price: isYearly ? PRICING.proAnnual : PRICING.proMonthly,
+      title: "Professional ($99/mo)",
+      price: 99, // Fixed price
       showPopular: true,
       features: FEATURES.pro
     },
     {
-      title: "Premium",
-      price: isYearly ? PRICING.premiumAnnual : PRICING.premiumMonthly,
+      title: "Premium ($399/mo)",
+      price: 399, // Fixed price
       features: FEATURES.premium
     }
   ];
@@ -42,7 +42,7 @@ export const PricingContent = ({ subscription, isLoading }: PricingContentProps)
     {
       title: "Basic (Free)",
       price: 0,
-      interval: isYearly ? "mo" : "mo",
+      interval: "mo",
       description: PLAN_DESCRIPTIONS.starter,
       features: [
         "**Access & Discovery**", 
@@ -56,9 +56,9 @@ export const PricingContent = ({ subscription, isLoading }: PricingContentProps)
       footerText: "🚀 Upgrade to unlock project requests and premium content!"
     },
     {
-      title: "Professional",
-      price: isYearly ? PRICING.proAnnual : PRICING.proMonthly,
-      interval: isYearly ? "mo" : "mo",
+      title: "Professional ($99/mo)",
+      price: 99, // Fixed price regardless of yearly/monthly toggle
+      interval: "month",
       description: PLAN_DESCRIPTIONS.pro,
       features: [
         "**Submit Requests for Proposals (RFPs)**", 
@@ -78,9 +78,9 @@ export const PricingContent = ({ subscription, isLoading }: PricingContentProps)
       footerText: "🚀 Upgrade to Premium for more revisions, deeper insights, and content that works across all marketing channels."
     },
     {
-      title: "Premium",
-      price: isYearly ? PRICING.premiumAnnual : PRICING.premiumMonthly,
-      interval: isYearly ? "mo" : "mo",
+      title: "Premium ($399/mo)",
+      price: 399, // Fixed price regardless of yearly/monthly toggle
+      interval: "month",
       description: PLAN_DESCRIPTIONS.premium,
       features: [
         "**Premium Requests & Access**",
@@ -105,15 +105,7 @@ export const PricingContent = ({ subscription, isLoading }: PricingContentProps)
 
   return (
     <>
-      {/* Pricing Toggle - Desktop Only */}
-      {!isMobile && (
-        <div className="flex justify-center mt-10 mb-12">
-          <PricingToggle 
-            isYearly={isYearly} 
-            setIsYearly={setIsYearly}
-          />
-        </div>
-      )}
+      {/* Pricing Toggle removed - using fixed pricing */}
       
       {/* Pricing Cards with increased vertical spacing */}
       <div className="mt-8 sm:mt-10">

@@ -80,6 +80,7 @@ export const PricingContainer = () => {
     {
       title: "Basic (Free)",
       price: 0,
+      interval: "mo",
       description: PLAN_DESCRIPTIONS.starter,
       valueProposition: VALUE_PROPOSITIONS.starter,
       features: groupFeaturesByCategory(FEATURES.free),
@@ -89,27 +90,29 @@ export const PricingContainer = () => {
       footerText: "🚀 Upgrade to unlock project requests and premium content!"
     },
     {
-      title: "Professional",
-      price: currentPrices.pro,
+      title: "Professional ($99/mo)",
+      price: 99, // Fixed price
+      interval: "month",
       description: PLAN_DESCRIPTIONS.pro,
       valueProposition: VALUE_PROPOSITIONS.pro,
       features: groupFeaturesByCategory(FEATURES.pro),
       cta: "Choose Professional",
       color: "purple",
       popularPlan: true,
-      savings: getSavings('pro'),
+      savings: null, // No savings display
       footerText: "🚀 Upgrade to Premium for more revisions, deeper insights, and content that works across all marketing channels."
     },
     {
-      title: "Premium",
-      price: currentPrices.premium,
+      title: "Premium ($399/mo)",
+      price: 399, // Fixed price
+      interval: "month",
       description: PLAN_DESCRIPTIONS.premium,
       valueProposition: VALUE_PROPOSITIONS.premium,
       features: groupFeaturesByCategory(FEATURES.premium),
       cta: "Upgrade to Premium",
       color: "emerald",
       popularPlan: false,
-      savings: getSavings('premium'),
+      savings: null, // No savings display
       footerText: PLAN_CTAS.premium
     }
   ];
