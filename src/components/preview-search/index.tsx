@@ -85,7 +85,7 @@ const PreviewSearch = () => {
     <div 
       className={cn(
         "w-full px-2 sm:px-4 md:px-6 lg:px-8 xl:px-10 content-visibility-auto py-6 sm:py-6 md:py-8",
-        isMobile && "bg-indigo-50/30 relative mobile-section-gradient"
+        isMobile && "relative mobile-section-gradient"
       )} 
       ref={containerRef}
     >
