@@ -153,23 +153,27 @@ export function EnhancedHero() {
               aria-label="Property Content animation"
               className={cn(
                 "relative flex w-full justify-center",
-                isMobile ? "h-[4em] mt-1" : "h-[4em] sm:h-[3.5em] md:h-[3em] lg:h-[3em] mt-2",
-                "overflow-visible min-h-[60px]"
+                isMobile 
+                  ? "h-[2.8em] mt-1" 
+                  : "h-[3em] sm:h-[2.8em] md:h-[2.5em] lg:h-[2.5em] mt-2",
+                "overflow-visible"
               )}
             >
-              {/* Simplified rotated text with fixed content */}
-              <div className="relative w-full flex justify-center items-center">
-                <div className={cn(
+              <TextRotateCss
+                texts={TITLES}
+                mainClassName="flex justify-center items-center overflow-visible"
+                rotationInterval={3500}
+                elementLevelClassName={cn(
                   "text-4xl sm:text-5xl lg:text-7xl",
                   "font-black font-jakarta tracking-tight",
-                  "bg-clip-text text-transparent",
+                  "bg-clip-text text-transparent", 
                   "bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1]",
-                  "px-4 py-1 text-center",
-                  "overflow-visible animate-pulse-subtle"
-                )}>
-                  PROPERTY CONTENT
-                </div>
-              </div>
+                  "px-4 py-1",
+                  "shadow-inner",
+                  "overflow-visible"
+                )}
+                auto={true}
+              />
             </div>
           </h1>
         </div>
