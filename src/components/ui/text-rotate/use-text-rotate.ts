@@ -76,14 +76,32 @@ export function useTextRotate(
     }
   }, [currentTextIndex, handleIndexChange]);
 
-  // Auto-rotation effect
+  // Auto-rotation effect with optimized debouncing for mobile
   useEffect(() => {
     if (!auto) return;
-    const intervalId = setInterval(next, rotationInterval);
-    return () => clearInterval(intervalId);
+    
+    // Check if we're potentially on a mobile device by window width
+    const isMobileView = typeof window !== 'undefined' && window.innerWidth < 768;
+    
+    // Use a more efficient approach for mobile
+    const intervalId = setTimeout(() => {
+      // Use requestAnimationFrame for smoother animations, especially on mobile
+      if (isMobileView) {
+        requestAnimationFrame(() => {
+          next();
+        });
+      } else {
+        next();
+      }
+    }, rotationInterval);
+    
+    return () => clearTimeout(intervalId);
   }, [next, rotationInterval, auto]);
 
   const calculateStaggerDelay = useCallback((wordIndex: number, charIndex: number, wordArray: WordObject[]) => {
+    // Skip stagger calculation if staggerDuration is 0
+    if (staggerDuration === 0) return 0;
+    
     const previousCharsCount = wordArray
       .slice(0, wordIndex)
       .reduce((sum, word) => sum + word.characters.length, 0);

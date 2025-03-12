@@ -1,6 +1,6 @@
 
 import React, { lazy, Suspense, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { ErrorBoundary } from 'react-error-boundary';
 import ErrorFallback from './components/ErrorFallback';
 import { Toaster } from '@/components/ui/toaster';
@@ -30,6 +30,19 @@ const PageLoader = () => {
       </div>
     </div>
   );
+};
+
+// Component to conditionally render the bottom nav
+const ConditionalBottomNav = () => {
+  const location = useLocation();
+  const isMobile = useIsMobile();
+  
+  // Hide the bottom nav on the home page
+  if (location.pathname === "/" || !isMobile) {
+    return null;
+  }
+  
+  return <BottomNav />;
 };
 
 function App() {
@@ -83,7 +96,7 @@ function App() {
               <Route path="/connect/onboarding" element={<ConnectOnboarding />} />
             </Routes>
           </Suspense>
-          {isMobile && <BottomNav />}
+          <ConditionalBottomNav />
         </div>
         <Toaster />
       </Router>
