@@ -187,10 +187,15 @@ export const PricingContainer = () => {
               <motion.div
                 key={tier.title}
                 className={cn(
-                  "rounded-lg overflow-hidden border-2 transition-all mt-4",
+                  "rounded-xl overflow-hidden border transition-all mt-4 relative group",
                   tier.popularPlan ? "border-brand-purple shadow-lg" : "border-slate-200",
                   tier.popularPlan && "relative",
-                  colorScheme.cardBg // Using consistent background for the whole card
+                  colorScheme.cardBg, // Using consistent background for the whole card
+                  mobileOptimizationClasses.cleanBorderMobile,
+                  "shadow-sm hover:shadow-md",
+                  isMobile && "mobile-optimize",
+                  "before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:rounded-l-xl",
+                  `before:bg-gradient-to-b ${colorScheme.gradient.split(' ')[0]} ${colorScheme.gradient.split(' ')[1]} before:opacity-0 group-hover:before:opacity-100 before:transition-opacity`
                 )}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -308,7 +313,14 @@ export const PricingContainer = () => {
           <div className="mt-4 pt-2">
             <button
               onClick={() => setExpandedComparisonTable(!expandedComparisonTable)}
-              className="w-full mx-auto flex items-center justify-between py-3 px-5 text-sm font-medium text-white font-inter rounded-lg bg-gradient-to-r from-brand-purple to-brand-purple-dark shadow-sm border border-brand-purple/10 hover:shadow-md transition-all duration-200"
+              className={cn(
+                "w-full mx-auto flex items-center justify-between py-3 px-5 text-sm font-medium text-white font-inter",
+                "rounded-xl bg-gradient-to-r from-brand-purple to-brand-purple-dark",
+                "shadow-sm border border-brand-purple/10 hover:shadow-md",
+                "transition-all duration-200 relative group",
+                "before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:rounded-l-xl", 
+                "before:bg-gradient-to-b from-purple-400 to-indigo-600 before:opacity-0 group-hover:before:opacity-100 before:transition-opacity"
+              )}
             >
               <span className="flex-1 text-center">
                 Compare all features
@@ -328,7 +340,14 @@ export const PricingContainer = () => {
                   transition={{ duration: 0.3 }}
                   className="overflow-hidden"
                 >
-                  <div className="py-4 px-2 mt-2 bg-gradient-to-br from-white to-slate-50/80 rounded-lg shadow-sm border border-slate-100">
+                  <div className={cn(
+                    "py-4 px-2 mt-2 rounded-xl shadow-sm relative group",
+                    "border border-slate-200",
+                    mobileOptimizationClasses.cleanBorderMobile,
+                    mobileOptimizationClasses.subtleGradientIndigo,
+                    "before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:rounded-l-xl", 
+                    "before:bg-gradient-to-b from-indigo-500 to-purple-600 before:opacity-0 group-hover:before:opacity-100 before:transition-opacity"
+                  )}>
                     <div className="flex border-b border-slate-200 pb-2 mb-3">
                       <div className="w-1/2 text-sm font-medium text-brand-text-primary font-inter">Feature</div>
                       <div className="w-1/6 text-center text-xs font-medium text-blue-600 font-space">Basic</div>
@@ -385,12 +404,17 @@ export const PricingContainer = () => {
               <motion.div
                 key={tier.title}
                 className={cn(
-                  "rounded-lg border-2 overflow-hidden transition-all mt-6",
+                  "rounded-xl border overflow-hidden transition-all mt-6 relative group",
                   tier.popularPlan 
                     ? `border-brand-purple shadow-xl ${colorScheme.border} scale-105 z-10` 
                     : "border-slate-200",
                   tier.popularPlan && "relative",
-                  colorScheme.cardBg // Using consistent background for the whole card
+                  colorScheme.cardBg, // Using consistent background for the whole card
+                  "shadow-sm hover:shadow-md",
+                  mobileOptimizationClasses.cleanBorderMobile,
+                  isMobile && "mobile-optimize",
+                  "before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:rounded-l-xl",
+                  `before:bg-gradient-to-b ${colorScheme.gradient.split(' ')[0]} ${colorScheme.gradient.split(' ')[1]} before:opacity-0 group-hover:before:opacity-100 before:transition-opacity`
                 )}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
