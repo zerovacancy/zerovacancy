@@ -21,15 +21,26 @@ export const mobileOptimizationClasses = {
   // Disable hover effects on mobile
   noHoverEffectsMobile: "sm:hover:scale-105 sm:hover:shadow-lg sm:transition-all",
   // Improved shadows for mobile
-  improvedShadowMobile: "shadow-md sm:shadow-lg",
-  // Gradient background for mobile (subtle purple tint)
-  gradientBgMobile: "bg-gradient-to-br from-white to-purple-50 sm:bg-white",
-  // Colored background for mobile, white for desktop
-  coloredBgMobile: "bg-purple-50 sm:bg-white",
-  // Card background for mobile with subtle gradient
-  cardBgMobile: "bg-gradient-to-tr from-white via-white to-purple-50 sm:bg-white",
+  improvedShadowMobile: "shadow-sm sm:shadow-md",
+  // Subtle gradient backgrounds for feature items
+  subtleGradientPurple: "bg-gradient-to-br from-white to-purple-50/30",
+  subtleGradientBlue: "bg-gradient-to-tr from-white via-white to-blue-50/20",
+  subtleGradientIndigo: "bg-gradient-to-br from-white to-indigo-50/30",
+  subtleGradientCyan: "bg-gradient-to-tr from-white via-white to-cyan-50/20",
   // Reduced opacity on mobile
-  reducedOpacityMobile: "opacity-70 sm:opacity-100",
-  // Border with color for mobile
-  coloredBorderMobile: "border border-purple-100 sm:border-gray-200",
+  reducedOpacityMobile: "opacity-90 sm:opacity-100",
+  // Clean border for mobile
+  cleanBorderMobile: "border border-gray-100/80",
+};
+
+// Generate dynamic gradient based on base color
+export const getSubtleGradient = (baseColor: string, index: number) => {
+  const gradients = [
+    `bg-gradient-to-br from-white to-${baseColor}-50/30`,
+    `bg-gradient-to-tr from-${baseColor}-50/20 via-white to-${baseColor}-50/10`,
+    `bg-gradient-to-bl from-white to-${baseColor}-50/20`,
+    `bg-gradient-to-tl from-${baseColor}-50/10 via-white to-white`,
+  ];
+  
+  return gradients[index % gradients.length];
 };
