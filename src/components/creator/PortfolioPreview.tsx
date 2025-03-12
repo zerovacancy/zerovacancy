@@ -49,7 +49,7 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
               >
                 <img 
                   src={example}
-                  alt={`${creatorName}'s work example ${index + 1}`}
+                  alt={`${creatorName}'s property photography - portfolio example ${index + 1}${index === 0 ? ' featuring real estate interior' : index === 1 ? ' showcasing property exterior' : ' highlighting architectural details'}`}
                   className="object-cover w-full h-full"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
@@ -80,7 +80,7 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
               >
                 <img 
                   src={example}
-                  alt={`${creatorName}'s work example ${index + 1}`}
+                  alt={`${creatorName}'s property photography - portfolio example ${index + 1}${index === 0 ? ' featuring real estate interior' : index === 1 ? ' showcasing property exterior' : ' highlighting architectural details'}`}
                   className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
@@ -113,7 +113,7 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
           {selectedImage && (
             <img
               src={selectedImage}
-              alt="Preview"
+              alt={`${creatorName}'s property photography - enlarged portfolio view showing detailed real estate photography`}
               className="w-full h-full object-contain rounded-lg"
               style={{ maxHeight: '80vh' }}
             />

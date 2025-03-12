@@ -123,6 +123,8 @@ export const CreatorMedia: React.FC<CreatorMediaProps> = ({
           fetchPriority="auto"
           srcSet={generateSrcSet(media.type === 'image' ? media.src : (media as any).fallback)}
           sizes="(max-width: 768px) 95vw, (max-width: 1024px) 50vw, 33vw"
+          width="400"
+          height="300" 
           style={{
             contentVisibility: 'auto',
             containIntrinsicSize: 'auto 300px',
