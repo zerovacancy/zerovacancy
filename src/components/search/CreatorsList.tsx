@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { CreatorCard } from '../creator/CreatorCard';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -61,10 +60,10 @@ export const CreatorsList: React.FC = () => {
   const handleImageLoad = (imageSrc: string) => {};
   const imageRef = (el: HTMLImageElement | null) => {};
 
-  const { gradientBgMobile, improvedShadowMobile, coloredBorderMobile } = mobileOptimizationClasses;
+  const { improvedShadowMobile, coloredBorderMobile } = mobileOptimizationClasses;
 
   return (
-    <div className={isMobile ? `${gradientBgMobile} ${improvedShadowMobile} ${coloredBorderMobile} rounded-xl p-3` : ""}>
+    <div className={isMobile ? `bg-[#F0EBFA] ${improvedShadowMobile} ${coloredBorderMobile} rounded-xl p-3` : ""}>
       {!isMobile && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-6">
           {creators.map((creator) => (
