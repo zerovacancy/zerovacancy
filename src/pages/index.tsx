@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef, lazy, Suspense, useCallback } from 'react';
 import Header from '../components/Header';
 import { Hero } from '../components/hero/Hero';
@@ -125,11 +124,12 @@ const Index = () => {
                 className={cn(
                   "flex text-xs sm:text-sm items-center whitespace-nowrap", 
                   "px-3 py-2 sm:px-5 sm:py-2.5 min-w-[8rem] sm:min-w-[9rem] min-h-[2.25rem] sm:min-h-[2.5rem]", 
-                  "bg-amber-400 hover:bg-amber-300 text-gray-900 font-bold", 
-                  "border-2 border-amber-300", 
+                  "bg-gradient-to-r from-[#8A4FFF] to-[#00C2A8] text-white font-bold", 
+                  "border-none", 
                   "transition-all duration-200", 
                   "touch-manipulation", 
-                  "shadow-[0_2px_10px_rgba(0,0,0,0.15)]"
+                  "shadow-[0_2px_10px_rgba(0,0,0,0.15)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.2)]",
+                  "hover:opacity-90"
                 )} 
                 onClick={handleTryNowClick}
               >
