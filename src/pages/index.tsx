@@ -10,7 +10,6 @@ import { AnimatedShinyText } from '@/components/ui/animated-shiny-text';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import { BackgroundEffects } from '@/components/features/BackgroundEffects';
-import { BorderBeam } from '@/components/ui/border-beam';
 
 const OptimizedHowItWorks = lazy(() => import('../components/how-it-works/OptimizedHowItWorks'));
 const FeaturesSectionWithHoverEffects = lazy(() => import('@/components/features/Features'));
@@ -129,13 +128,6 @@ const Index = () => {
                 >
                   Get Early Access
                 </Button>
-                <BorderBeam 
-                  colorFrom="#ffaa40" 
-                  colorTo="#9c40ff"
-                  duration={8}
-                  size={200}
-                  borderWidth={2}
-                />
               </div>
             } 
             layout="complex" 
