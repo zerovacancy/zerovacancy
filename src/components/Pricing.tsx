@@ -1,18 +1,20 @@
+
 import { cn } from "@/lib/utils";
 import { useSubscription } from "@/hooks/use-subscription";
 import PricingHeader from "./pricing/PricingHeader";
 import { BackgroundEffects } from "./pricing/BackgroundEffects";
-import { PricingFAQ } from "./pricing/PricingFAQ";
 import { PricingProvider } from "./pricing/PricingContext";
 import { PricingContainer } from "./pricing/PricingContainer";
 import { WaitlistCTA } from "./ui/waitlist-cta";
 import { useIsMobile } from "@/hooks/use-mobile";
+
 const Pricing = () => {
   const {
     subscription,
     isLoading
   } = useSubscription();
   const isMobile = useIsMobile();
+  
   return <PricingProvider>
       <div className="relative w-full py-8 sm:py-12 lg:py-20 overflow-hidden">
         {/* Background decorative elements - now showing on both mobile and desktop */}
@@ -34,19 +36,12 @@ const Pricing = () => {
             </p>
           </div>
 
-          {/* Waitlist CTA */}
-          <div className="mt-10 sm:mt-12 text-center mb-4 sm:mb-6 lg:mb-8">
-            <h3 className="text-xl font-semibold mb-3 text-brand-purple-dark font-jakarta">JOIN THE MOVEMENT</h3>
-            <p className="text-brand-text-primary font-inter mb-6 max-w-xl mx-auto">The visionaries changing how we experience space are already here. The most compelling properties don't just show—they tell. They don't just appear—they resonate.</p>
-            <WaitlistCTA source="pricing_page" buttonText="ACCESS THE COLLECTIVE" />
-          </div>
-
-          {/* FAQ section */}
-          <div className="mt-10 sm:mt-12 lg:mt-16">
-            <PricingFAQ />
-          </div>
+          {/* Removed Waitlist CTA section as requested */}
+          
+          {/* Removed FAQ section as requested */}
         </div>
       </div>
     </PricingProvider>;
 };
+
 export default Pricing;

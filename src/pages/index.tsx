@@ -2,9 +2,7 @@
 import React, { useState, useEffect, useRef, lazy, Suspense, useCallback } from 'react';
 import Header from '../components/Header';
 import { Hero } from '../components/hero/Hero';
-import CallToActionSection from '../components/CallToActionSection';
 import Footer from '../components/Footer';
-import { BottomNav } from '../components/navigation/BottomNav';
 import { Banner } from '@/components/ui/banner';
 import { Button } from '@/components/ui/button';
 import { Star } from 'lucide-react';
@@ -40,8 +38,7 @@ const Index = () => {
     1: true, 
     2: true,
     3: true,
-    4: true,
-    5: true
+    4: true
   });
   
   useEffect(() => {
@@ -85,8 +82,7 @@ const Index = () => {
           1: true,
           2: true,
           3: true,
-          4: true,
-          5: true
+          4: true
         });
       }, 1000);
       
@@ -102,8 +98,7 @@ const Index = () => {
         1: true,
         2: true,
         3: true,
-        4: true,
-        5: true
+        4: true
       });
       return () => {};
     }
@@ -240,22 +235,11 @@ const Index = () => {
           </Suspense>
         </section>
 
-        {/* Final CTA Section */}
-        <div 
-          ref={addSectionRef(5)} 
-          className={cn(
-            "relative w-full",
-            isMobile && "bg-gradient-to-b from-purple-50/30 via-transparent to-transparent"
-          )}
-        >
-          <div className="relative z-10 max-w-7xl mx-auto py-14 sm:py-20 lg:py-24">
-            <CallToActionSection />
-          </div>
-        </div>
+        {/* Removed Final CTA Section (Our Guarantee) as requested */}
         
         <Footer />
       </main>
-      <BottomNav />
+      {/* Bottom nav now handled by the BottomNav component itself */}
       <GlowDialog open={showGlowDialog} onOpenChange={setShowGlowDialog} />
     </div>
   );

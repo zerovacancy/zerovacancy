@@ -42,10 +42,10 @@ export function Hero() {
       className={cn(
         "flex items-center justify-center flex-col", 
         "px-5 sm:px-6", 
-        isMobile ? "py-4 my-0" : "py-6 sm:py-12 lg:py-16 my-2 sm:my-6 lg:my-8", // Reduced padding and margin on mobile
+        isMobile ? "py-3 my-0" : "py-6 sm:py-12 lg:py-16 my-2 sm:my-6 lg:my-8", // Further reduced padding on mobile
         "min-h-fit sm:min-h-[36vh]",
         "relative z-10", 
-        "gap-3 sm:gap-6", // Reduced gap on mobile
+        "gap-2 sm:gap-6", // Further reduced gap on mobile
         "touch-manipulation",
         "bg-gradient-to-b from-purple-50/80 via-indigo-50/60 to-blue-50/30",
         isInView ? "animate-fade-in" : "opacity-0"
@@ -56,7 +56,7 @@ export function Hero() {
       <div 
         className={cn(
           "flex flex-col max-w-6xl mx-auto w-full",
-          "gap-2 sm:gap-6", // Reduced gap on mobile
+          "gap-1 sm:gap-6", // Further reduced gap on mobile
           isInView ? "animate-fade-in delay-100" : "opacity-0"
         )}
       >
@@ -71,7 +71,7 @@ export function Hero() {
                 "text-3xl sm:text-5xl lg:text-6xl",
                 "tracking-[-0.02em]", 
                 "text-brand-purple-dark",
-                "block sm:inline-block mb-0 sm:mb-0 font-jakarta"
+                "block sm:inline-block mb-[-0.2em] sm:mb-0 font-jakarta" // Added negative margin to reduce space
               )}
             >
               PROPERTY MARKETING
@@ -83,7 +83,7 @@ export function Hero() {
               className={cn(
                 "relative flex w-full justify-center",
                 isMobile 
-                  ? "h-[3.2em] mt-0" // Further reduced height on mobile
+                  ? "h-[2.8em] mt-0" // Further reduced height on mobile
                   : "h-[4.5em] sm:h-[3em] md:h-[2.5em] lg:h-[2.5em] mt-1 sm:mt-1",
                 "overflow-visible"
               )}
@@ -95,7 +95,8 @@ export function Hero() {
                 initial={{ y: "100%", opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: "-100%", opacity: 0 }}
-                staggerDuration={isMobile ? 0 : 0.02} // No stagger on mobile to prevent flashing
+                staggerDuration={0} // Removed stagger completely to avoid flashing
+                rotationInterval={3500} // Increased interval to reduce flashing
                 splitLevelClassName="overflow-visible"
                 elementLevelClassName={cn(
                   "text-4xl sm:text-5xl lg:text-7xl",
@@ -105,11 +106,11 @@ export function Hero() {
                   "overflow-visible"
                 )}
                 transition={{ 
-                  type: "spring", 
-                  damping: isMobile ? 35 : 28, // Higher damping on mobile for more control
-                  stiffness: isMobile ? 400 : 350 // Higher stiffness on mobile
+                  type: "tween", // Changed to tween for smoother animation on mobile
+                  duration: 0.5, // Fixed duration for more control
+                  ease: "easeInOut" // Added easing for smoother animations
                 }}
-                rotationInterval={3000} // Slower interval to reduce flashing
+                auto={true}
               />
             </div>
           </h1>
@@ -123,7 +124,7 @@ export function Hero() {
             "max-w-[90%] sm:max-w-[500px]",
             "mx-auto", 
             "font-inter",
-            isMobile ? "-mt-2" : "" // Negative margin on mobile to pull it up
+            isMobile ? "-mt-3" : "" // Increased negative margin on mobile to pull it up more
           )}
         >
           Connect with elite content creators who transform your spaces into compelling visual stories. Our curated network of real estate
@@ -134,31 +135,15 @@ export function Hero() {
       <div 
         className={cn(
           "w-full", 
-          isMobile ? "mt-2" : "mt-5 sm:mt-6", // Further reduced top margin on mobile
+          isMobile ? "mt-1" : "mt-5 sm:mt-6", // Further reduced top margin on mobile
           "px-4 sm:px-4",
           isInView ? "animate-fade-in delay-200" : "opacity-0" 
         )}
       >
-        <WaitlistCTA className={cn(isMobile ? "mb-0" : "mb-4 sm:mb-6")} buttonText="RESERVE EARLY ACCESS" showSocialProof={true} />
+        <WaitlistCTA className={cn(isMobile ? "mb-0" : "mb-4 sm:mb-6")} buttonText="RESERVE EARLY ACCESS" showSocialProof={false} />
       </div>
 
-      {isMobile && isInView && (
-        <div className="w-full flex justify-center animate-bounce-subtle">
-          <svg 
-            width="20" 
-            height="20" 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
-            strokeWidth="2" 
-            strokeLinecap="round" 
-            strokeLinejoin="round" 
-            className="text-gray-400"
-          >
-            <path d="M12 5v14M5 12l7 7 7-7"/>
-          </svg>
-        </div>
-      )}
+      {/* Removed bounce arrow */}
     </section>
   );
 }

@@ -1,5 +1,5 @@
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import { WordObject } from "./types";
 import { getStaggerDelay, splitIntoCharacters } from "./utils";
 
@@ -14,6 +14,8 @@ export function useTextRotate(
   onNext?: (index: number) => void
 ) {
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
+  const animationFrameRef = useRef<number | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   
   // Validate texts array
   const safeTexts = useMemo(() => {
@@ -83,19 +85,22 @@ export function useTextRotate(
     // Check if we're potentially on a mobile device by window width
     const isMobileView = typeof window !== 'undefined' && window.innerWidth < 768;
     
-    // Use a more efficient approach for mobile
-    const intervalId = setTimeout(() => {
-      // Use requestAnimationFrame for smoother animations, especially on mobile
-      if (isMobileView) {
-        requestAnimationFrame(() => {
-          next();
-        });
-      } else {
-        next();
-      }
-    }, rotationInterval);
+    // Clear any existing timers and animation frames
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
     
-    return () => clearTimeout(intervalId);
+    // Use a more efficient approach for mobile
+    timeoutRef.current = setTimeout(() => {
+      // Use requestAnimationFrame for smoother animations
+      animationFrameRef.current = requestAnimationFrame(() => {
+        next();
+      });
+    }, rotationInterval + (isMobileView ? 500 : 0)); // Add extra time on mobile for better performance
+    
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
+    };
   }, [next, rotationInterval, auto]);
 
   const calculateStaggerDelay = useCallback((wordIndex: number, charIndex: number, wordArray: WordObject[]) => {
