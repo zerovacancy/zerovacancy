@@ -17,8 +17,7 @@ const Pricing = () => {
   
   return <PricingProvider>
       <div className={cn(
-        "relative w-full py-8 sm:py-12 lg:py-20 overflow-hidden",
-        isMobile && "mx-auto my-4 rounded-xl border border-gray-200 shadow-sm max-w-[95%]" // Fixed mobile styling with better centering
+        "relative w-full py-8 sm:py-12 lg:py-20 overflow-hidden"
       )}>
         {/* Background decorative elements - now showing on both mobile and desktop */}
         <BackgroundEffects />
@@ -27,8 +26,11 @@ const Pricing = () => {
           {/* Enhanced header with toggle now integrated */}
           <PricingHeader title="PRICING TIERS" subtitle="Select the package that fits your property's marketing needs" />
           
-          {/* Unified pricing container that handles both mobile and desktop layouts */}
-          <div className="mt-6 sm:mt-10 lg:mt-12 mb-6 sm:mb-8 lg:mb-10">
+          {/* On mobile, apply border to this container instead of the parent */}
+          <div className={cn(
+            "mt-6 sm:mt-10 lg:mt-12 mb-6 sm:mb-8 lg:mb-10",
+            isMobile && "mx-auto rounded-xl border border-gray-200 shadow-sm max-w-[95%] py-8 px-4"
+          )}>
             <PricingContainer />
           </div>
           
