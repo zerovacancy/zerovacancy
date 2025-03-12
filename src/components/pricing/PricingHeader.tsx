@@ -2,22 +2,26 @@
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { usePricing } from "./PricingContext";
 import { Calendar, CalendarDays } from "lucide-react";
 
 interface PricingHeaderProps {
   title: string;
   subtitle: string;
   isSticky?: boolean;
+  isYearly?: boolean;
+  setIsYearly?: (isYearly: boolean) => void;
+  animateChange?: boolean;
 }
 
 const PricingHeader = ({
   title,
   subtitle,
-  isSticky = false
+  isSticky = false,
+  isYearly = true,
+  setIsYearly = () => {},
+  animateChange = false
 }: PricingHeaderProps) => {
   const isMobile = useIsMobile();
-  const { isYearly, setIsYearly, animateChange } = usePricing();
 
   return (
     <div className={cn(

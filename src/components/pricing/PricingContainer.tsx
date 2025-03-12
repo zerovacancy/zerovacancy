@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -13,7 +12,7 @@ import { mobileOptimizationClasses } from "@/utils/mobile-optimization";
 
 export const PricingContainer = () => {
   const isMobile = useIsMobile();
-  const { isYearly, currentPrices, getSavings } = usePricing();
+  const { isYearly, currentPrices, getSavings, setIsYearly, animateChange } = usePricing();
   const [expandedFeatures, setExpandedFeatures] = useState<{[key: number]: boolean}>({});
   const [expandedDescriptions, setExpandedDescriptions] = useState<{[key: number]: boolean}>({});
   const [expandedComparisonTable, setExpandedComparisonTable] = useState(false);
@@ -126,7 +125,7 @@ export const PricingContainer = () => {
           button: "bg-gradient-to-r from-blue-500 to-blue-600 hover:bg-blue-600",
           highlight: "bg-blue-50",
           gradient: mobileOptimizationClasses.pricingGradientBasic,
-          cardBg: "bg-gradient-to-b from-blue-50/50 to-white" // Added consistent card background
+          cardBg: "bg-gradient-to-b from-blue-50/50 to-white"
         };
       case "purple":
         return {
@@ -137,7 +136,7 @@ export const PricingContainer = () => {
           button: "bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-600 hover:from-purple-700 hover:via-blue-700 hover:to-cyan-700",
           highlight: "bg-purple-50",
           gradient: mobileOptimizationClasses.pricingGradientPro,
-          cardBg: "bg-gradient-to-b from-purple-50/50 to-white" // Added consistent card background
+          cardBg: "bg-gradient-to-b from-purple-50/50 to-white"
         };
       case "emerald":
         return {
@@ -148,7 +147,7 @@ export const PricingContainer = () => {
           button: "bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700",
           highlight: "bg-emerald-50",
           gradient: mobileOptimizationClasses.pricingGradientPremium,
-          cardBg: "bg-gradient-to-b from-emerald-50/50 to-white" // Added consistent card background
+          cardBg: "bg-gradient-to-b from-emerald-50/50 to-white"
         };
       default:
         return {
@@ -159,7 +158,7 @@ export const PricingContainer = () => {
           button: "bg-gray-500 hover:bg-gray-600",
           highlight: "bg-gray-50",
           gradient: "",
-          cardBg: "bg-gradient-to-b from-gray-50/50 to-white" // Added consistent card background
+          cardBg: "bg-gradient-to-b from-gray-50/50 to-white"
         };
     }
   };
@@ -179,6 +178,9 @@ export const PricingContainer = () => {
               title="Pricing" 
               subtitle=""
               isSticky={true}
+              isYearly={isYearly}
+              setIsYearly={setIsYearly}
+              animateChange={animateChange}
             />
           </motion.div>
         )}
@@ -199,7 +201,7 @@ export const PricingContainer = () => {
                   "rounded-xl overflow-hidden transition-all mt-4 relative group mx-auto max-w-md w-full",
                   tier.popularPlan ? (isMobile ? "shadow-lg" : "border-brand-purple shadow-lg") : (isMobile ? "" : "border-slate-200"),
                   tier.popularPlan && "relative",
-                  colorScheme.cardBg, // Using consistent background for the whole card
+                  colorScheme.cardBg,
                   "shadow-sm hover:shadow-md",
                   isMobile && "mobile-optimize",
                   "before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:rounded-l-xl",
@@ -454,7 +456,7 @@ export const PricingContainer = () => {
                     ? `border-brand-purple shadow-xl ${colorScheme.border} scale-105 z-10` 
                     : "border-slate-200",
                   tier.popularPlan && "relative",
-                  colorScheme.cardBg, // Using consistent background for the whole card
+                  colorScheme.cardBg,
                   "shadow-sm hover:shadow-md",
                   isMobile && "mobile-optimize",
                   "before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:rounded-l-xl",
