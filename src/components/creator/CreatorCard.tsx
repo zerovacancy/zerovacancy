@@ -36,10 +36,12 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
         {isMobile ? (
           <Card className={cn(
             "overflow-hidden h-full flex flex-col",
-            "bg-white border-2 border-purple-200 shadow-md",
+            "bg-gradient-to-b from-[#f9f8fe] to-[#f5f3ff] border border-purple-200",
+            "shadow-[0_4px_12px_rgba(138,79,255,0.12)]",
             "rounded-xl relative"
           )}>
-            {/* Mobile-optimized gradient border effect */}
+            {/* Mobile-optimized pattern and border effect */}
+            <div className="absolute inset-0 opacity-[0.02] bg-[radial-gradient(#8A4FFF_1px,transparent_1px)] bg-[length:16px_16px] z-0 pointer-events-none"></div>
             <div className="absolute inset-0 rounded-xl border border-purple-300/70"></div>
             
             {/* Price tag - Simplified for mobile */}
@@ -59,7 +61,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
             </div>
 
             {/* Enhanced content section with improved typography and spacing */}
-            <div className="px-3.5 py-4 flex flex-col flex-grow">
+            <div className="px-3.5 py-4 flex flex-col flex-grow relative z-10">
               <div className="mb-4">
                 <h3 className="font-semibold text-gray-900 text-[15px] leading-tight">{creator.name}</h3>
                 <p className="text-sm text-gray-500 font-light mt-0.5">{creator.location}</p>
@@ -106,18 +108,21 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               "overflow-hidden h-full flex flex-col",
               "will-change-transform transition-all duration-300",
               "hover:translate-y-[-2px]",
-              "bg-white border border-gray-200/80",
-              "shadow-[0_2px_8px_rgba(0,0,0,0.05)]",
-              "hover:shadow-[0_12px_24px_rgba(0,0,0,0.12)]",
+              "bg-gradient-to-b from-[#f9f8fe] to-[#f5f3ff] border border-purple-200/80",
+              "shadow-[0_6px_16px_rgba(138,79,255,0.08)]",
+              "hover:shadow-[0_16px_32px_rgba(138,79,255,0.15)]",
               "rounded-xl relative"
             )}>
+              {/* Subtle pattern overlay */}
+              <div className="absolute inset-0 opacity-[0.03] bg-[radial-gradient(#8A4FFF_1px,transparent_1px)] bg-[length:20px_20px] z-0 pointer-events-none"></div>
+              
               {/* Card content - Border beam and glowing effect */}
               <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden rounded-xl">
                 <BorderBeam 
                   colorFrom="#9370DB" 
                   colorTo="#C19EF9" 
                   duration={20}
-                  borderWidth={1}
+                  borderWidth={1.5}
                 />
               </div>
 
@@ -138,9 +143,9 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               </div>
 
               {/* Enhanced content section with improved typography and spacing */}
-              <div className="px-5 pt-5 pb-6 flex flex-col flex-grow">
+              <div className="px-5 pt-5 pb-6 flex flex-col flex-grow relative z-10">
                 <div className="mb-3.5">
-                  <h3 className="font-semibold text-gray-900 text-lg leading-tight">{creator.name}</h3>
+                  <h3 className="font-semibold text-gray-800 text-lg leading-tight">{creator.name}</h3>
                   <p className="text-sm text-gray-500 font-light mt-0.5">{creator.location}</p>
                   <p className="text-xs text-gray-600 mt-1.5 tracking-wide">{creator.services.join(" • ")}</p>
                 </div>
