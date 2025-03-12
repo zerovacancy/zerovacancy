@@ -43,7 +43,7 @@ export const PricingContent = ({ subscription, isLoading }: PricingContentProps)
       title: "Basic",
       price: 0,
       interval: isYearly ? "mo" : "mo",
-      description: PLAN_DESCRIPTIONS.basic,
+      description: PLAN_DESCRIPTIONS.starter,
       features: [
         "**Access & Discovery**", 
         "Browse & Discover Content Creators - Explore available photographers, videographers, and media professionals.",
@@ -52,14 +52,14 @@ export const PricingContent = ({ subscription, isLoading }: PricingContentProps)
       ],
       cta: "Start for Free",
       color: "blue" as ColorVariant,
-      valueProposition: VALUE_PROPOSITIONS.basic,
-      footerText: PLAN_CTAS.basic
+      valueProposition: VALUE_PROPOSITIONS.starter,
+      footerText: PLAN_CTAS.starter
     },
     {
       title: "Professional",
       price: isYearly ? PRICING.starterAnnual : PRICING.starterMonthly,
       interval: isYearly ? "mo" : "mo",
-      description: PLAN_DESCRIPTIONS.professional,
+      description: PLAN_DESCRIPTIONS.pro,
       features: [
         "**Submit Requests for Proposals (RFPs)**", 
         "Connect directly with top-tier creators to get competitive offers.",
@@ -74,8 +74,8 @@ export const PricingContent = ({ subscription, isLoading }: PricingContentProps)
       highlighted: true,
       color: "purple" as ColorVariant,
       showPopularTag: true,
-      valueProposition: VALUE_PROPOSITIONS.professional,
-      footerText: PLAN_CTAS.professional
+      valueProposition: VALUE_PROPOSITIONS.pro,
+      footerText: PLAN_CTAS.pro
     },
     {
       title: "Premium",
