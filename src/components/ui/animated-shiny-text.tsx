@@ -26,7 +26,7 @@ const AnimatedShinyText: FC<AnimatedShinyTextProps> = ({
           className
         )}
       >
-        {children}
+        Early access now available - Reserve your spot on the waitlist
       </p>
     );
   }
@@ -48,7 +48,7 @@ const AnimatedShinyText: FC<AnimatedShinyTextProps> = ({
         className,
       )}
     >
-      {children}
+      Early access now available - Reserve your spot on the waitlist
     </p>
   );
 };
