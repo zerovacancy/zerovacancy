@@ -186,7 +186,7 @@ export const PricingContainer = () => {
                 key={tier.title}
                 className={cn(
                   "rounded-xl overflow-hidden transition-all mt-4 relative group",
-                  tier.popularPlan ? "border-brand-purple shadow-lg" : "border-slate-200",
+                  tier.popularPlan ? (isMobile ? "shadow-lg" : "border-brand-purple shadow-lg") : (isMobile ? "" : "border-slate-200"),
                   tier.popularPlan && "relative",
                   colorScheme.cardBg, // Using consistent background for the whole card
                   "shadow-sm hover:shadow-md",
@@ -343,9 +343,7 @@ export const PricingContainer = () => {
                 >
                   <div className={cn(
                     "py-4 px-2 mt-2 rounded-xl shadow-sm relative group",
-                    "border border-slate-200",
                     "w-full max-w-md mx-auto",
-                    mobileOptimizationClasses.cleanBorderMobile,
                     mobileOptimizationClasses.subtleGradientIndigo,
                     "before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:rounded-l-xl", 
                     "before:bg-gradient-to-b from-indigo-500 to-purple-600 before:opacity-0 group-hover:before:opacity-100 before:transition-opacity"
