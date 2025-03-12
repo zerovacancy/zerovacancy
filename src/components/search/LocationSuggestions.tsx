@@ -67,7 +67,7 @@ export const LocationSuggestions: React.FC<LocationSuggestionsProps> = ({
     <div
       ref={suggestionsRef}
       className={cn(
-        "absolute left-0 right-0 top-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-[100]",
+        "absolute left-0 right-0 top-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-[1000]",
         "transition-all duration-200 ease-in-out",
         "animate-in fade-in-0 zoom-in-95"
       )}

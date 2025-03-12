@@ -18,6 +18,7 @@ export const LocationInput: React.FC<LocationInputProps> = ({ value, onLocationS
   const [inputValue, setInputValue] = useState(value);
   const [isLoading, setIsLoading] = useState(false);
   const suggestionsRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const searchDebounceRef = useRef<NodeJS.Timeout>();
   const isMobile = useIsMobile();
 
@@ -45,7 +46,7 @@ export const LocationInput: React.FC<LocationInputProps> = ({ value, onLocationS
         setShowSuggestions(false);
       }
       setIsLoading(false);
-    }, 300);
+    }, 200); // Reduced debounce time for faster response
   };
 
   const handleSuggestionClick = (suggestion: { city: string; state: string }) => {
@@ -91,6 +92,12 @@ export const LocationInput: React.FC<LocationInputProps> = ({ value, onLocationS
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      // Don't hide suggestions if clicking within the input field itself
+      const inputElement = document.querySelector('input[aria-label="Location search"]');
+      if (inputElement && inputElement.contains(event.target as Node)) {
+        return;
+      }
+      
       if (suggestionsRef.current && !suggestionsRef.current.contains(event.target as Node)) {
         setShowSuggestions(false);
       }
@@ -109,18 +116,32 @@ export const LocationInput: React.FC<LocationInputProps> = ({ value, onLocationS
   }, []);
 
   return (
-    <div className="w-full sm:w-[40%] relative group">
+    <div className="w-full sm:w-[40%] relative group" style={{ position: 'relative', zIndex: 50 }}>
       <MapPin className={cn(
         "w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2",
         "transition-all duration-200",
         "group-hover:text-indigo-500"
       )} />
       <input
+        ref={inputRef}
         type="text"
         placeholder="Enter city or zip code"
         value={inputValue}
         onChange={handleLocationChange}
         onKeyDown={handleKeyDown}
+        onClick={() => {
+          if (inputValue.length >= 2) {
+            setShowSuggestions(true);
+          }
+        }}
+        onFocus={() => {
+          if (inputValue.length >= 2) {
+            // Show suggestions when input is focused if text is already entered
+            const filtered = filterLocations(inputValue);
+            setSuggestions(filtered);
+            setShowSuggestions(true);
+          }
+        }}
         className={cn(
           "w-full h-12 sm:h-12 pl-11 pr-10", // Increased height and padding
           "bg-white text-sm text-gray-700",
