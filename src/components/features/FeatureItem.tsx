@@ -161,7 +161,7 @@ export const FeatureItem = ({
         <div className="text-left w-full flex-grow flex flex-col">
           {/* Title */}
           <h3 className={cn(
-            "text-base sm:text-lg font-bold leading-tight font-space mb-2",
+            "text-base sm:text-lg font-bold leading-tight font-jakarta mb-2",
             "text-gray-900",
             "transition-colors duration-300"
           )}>
