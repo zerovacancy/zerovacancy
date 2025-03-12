@@ -3,16 +3,19 @@
 
 // Monthly and annual pricing values
 export const PRICING = {
-  starterMonthly: 299,
-  starterAnnual: 249,  // Discounted annual rate
-  proMonthly: 499,
-  proAnnual: 399       // Discounted annual rate
+  starterMonthly: 0,
+  starterAnnual: 0,    // Free tier
+  proMonthly: 99,
+  proAnnual: 89,       // Discounted annual rate
+  premiumMonthly: 399,
+  premiumAnnual: 359   // Discounted annual rate
 };
 
 // Calculate savings
 export const SAVINGS = {
-  starter: Math.round(PRICING.starterMonthly * 12 - PRICING.starterAnnual * 12),
-  pro: Math.round(PRICING.proMonthly * 12 - PRICING.proAnnual * 12)
+  starter: 0, // No savings for free tier
+  pro: Math.round(PRICING.proMonthly * 12 - PRICING.proAnnual * 12),
+  premium: Math.round(PRICING.premiumMonthly * 12 - PRICING.premiumAnnual * 12)
 };
 
 // Features for each plan with improved organization and wording
@@ -22,49 +25,44 @@ export const FEATURES = {
     { text: "Limited Access to Creator Profiles", primary: true },
     { text: "Preview Marketplace Features", primary: true }
   ],
-  starter: [
-    { text: "Professional photography (25+ images)", primary: true },
-    { text: "Property highlights edit", primary: true },
-    { text: "Basic floor plan", primary: true },
-    { text: "Social media optimized images", primary: true },
-    { text: "48-hour delivery", primary: true }
-  ],
   pro: [
-    { text: "All Essential features", primary: true },
-    { text: "Twilight/golden hour shots", primary: true },
-    { text: "Professional video walkthrough", primary: true },
-    { text: "Standard drone footage", primary: true },
-    { text: "3D virtual tour", primary: true },
-    { text: "24-hour delivery", primary: true }
+    { text: "Submit Requests for Proposals (RFPs)", primary: true },
+    { text: "Browse & Hire Premium Creators", primary: true },
+    { text: "1 Revision Included Per Project", primary: true },
+    { text: "Social Media Optimized Content", primary: true },
+    { text: "SEO-Optimized Content", primary: true },
+    { text: "Geo-Targeted Content", primary: true }
   ],
   premium: [
-    { text: "All Professional features", primary: true },
-    { text: "Lifestyle photography", primary: true },
-    { text: "Cinematic property film", primary: true },
-    { text: "Advanced aerial cinematography", primary: true },
-    { text: "Virtual staging options", primary: true },
-    { text: "Priority scheduling", primary: true },
-    { text: "Same-day editing available", primary: true }
+    { text: "Submit Requests for Proposals (RFPs) Instantly", primary: true },
+    { text: "Browse & Hire Premium Creators", primary: true },
+    { text: "3 Revisions Included Per Project", primary: true },
+    { text: "Social Media Optimized Content", primary: true },
+    { text: "SEO-Optimized Content", primary: true },
+    { text: "Geo-Targeted Content", primary: true },
+    { text: "Marketing Channel Optimization", primary: true },
+    { text: "7-Day Money-Back Guarantee", primary: true },
+    { text: "Performance Insights Dashboard", primary: true }
   ]
 };
 
 // Value propositions for each plan
 export const VALUE_PROPOSITIONS = {
-  starter: "Core visual assets for effectively marketing residential and small commercial properties.",
-  pro: "Comprehensive visual package for properties that need to stand out in competitive markets.",
-  premium: "Complete visual marketing suite for luxury properties and developments requiring exceptional presentation."
+  starter: "Perfect for property owners/managers who want to browse content creators before committing.",
+  pro: "Designed for real estate professionals who need high-quality visuals and content that performs.",
+  premium: "For luxury property managers and high-volume real estate professionals who demand the best."
 };
 
 // Plan descriptions
 export const PLAN_DESCRIPTIONS = {
-  starter: "ESSENTIAL",
+  starter: "BASIC",
   pro: "PROFESSIONAL",
   premium: "PREMIUM"
 };
 
 // Plan CTAs
 export const PLAN_CTAS = {
-  starter: "SELECT ESSENTIAL",
-  pro: "SELECT PROFESSIONAL",
-  premium: "SELECT PREMIUM"
+  starter: "START FOR FREE",
+  pro: "CHOOSE PROFESSIONAL",
+  premium: "GET PREMIUM"
 };

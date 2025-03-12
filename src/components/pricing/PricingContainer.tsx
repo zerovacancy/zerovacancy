@@ -78,34 +78,34 @@ export const PricingContainer = () => {
   // Define pricing tiers with all necessary data
   const pricingTiers = [
     {
-      title: "Basic",
-      price: currentPrices.starter,
+      title: "Basic (Free)",
+      price: 0,
       description: PLAN_DESCRIPTIONS.starter,
       valueProposition: VALUE_PROPOSITIONS.starter,
       features: groupFeaturesByCategory(FEATURES.free),
       cta: "Start for Free",
       color: "blue",
       popularPlan: false,
-      footerText: PLAN_CTAS.starter
+      footerText: "🚀 Upgrade to unlock project requests and premium content!"
     },
     {
       title: "Professional",
       price: currentPrices.pro,
       description: PLAN_DESCRIPTIONS.pro,
       valueProposition: VALUE_PROPOSITIONS.pro,
-      features: groupFeaturesByCategory(FEATURES.starter),
+      features: groupFeaturesByCategory(FEATURES.pro),
       cta: "Choose Professional",
       color: "purple",
       popularPlan: true,
       savings: getSavings('pro'),
-      footerText: PLAN_CTAS.pro
+      footerText: "🚀 Upgrade to Premium for more revisions, deeper insights, and content that works across all marketing channels."
     },
     {
       title: "Premium",
       price: currentPrices.premium,
       description: PLAN_DESCRIPTIONS.premium,
       valueProposition: VALUE_PROPOSITIONS.premium,
-      features: groupFeaturesByCategory(FEATURES.pro),
+      features: groupFeaturesByCategory(FEATURES.premium),
       cta: "Upgrade to Premium",
       color: "emerald",
       popularPlan: false,
