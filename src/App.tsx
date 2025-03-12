@@ -11,10 +11,12 @@ import { Analytics } from '@vercel/analytics/react';
 const Index = lazy(() => import('./pages/index'));
 const PaymentConfirmation = lazy(() => import('./pages/PaymentConfirmation'));
 const Terms = lazy(() => import('./pages/Terms'));
+const Privacy = lazy(() => import('./pages/Privacy'));
 const Account = lazy(() => import('./pages/Account'));
 const ConnectSuccess = lazy(() => import('./pages/ConnectSuccess'));
 const ConnectRefresh = lazy(() => import('./pages/ConnectRefresh'));
 const ConnectOnboarding = lazy(() => import('./pages/ConnectOnboarding'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 const PageLoader = () => {
   const { gradientBgMobile } = mobileOptimizationClasses;
@@ -108,10 +110,12 @@ function App() {
               <Route path="/" element={<Index />} />
               <Route path="/payment-confirmation" element={<PaymentConfirmation />} />
               <Route path="/terms" element={<Terms />} />
+              <Route path="/privacy" element={<Privacy />} />
               <Route path="/account" element={<Account />} />
               <Route path="/connect/success" element={<ConnectSuccess />} />
               <Route path="/connect/refresh" element={<ConnectRefresh />} />
               <Route path="/connect/onboarding" element={<ConnectOnboarding />} />
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
           <ConditionalBottomNav />

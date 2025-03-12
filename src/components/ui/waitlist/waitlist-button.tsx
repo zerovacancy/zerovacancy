@@ -82,7 +82,19 @@ export function WaitlistButton({
   return (
     <div className={cn("flex flex-col gap-2", className)}>
       {!open ? (
-        <div className="w-full" onClick={() => setOpen(true)}>
+        <div 
+          className="w-full" 
+          onClick={() => setOpen(true)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              setOpen(true);
+            }
+          }}
+          aria-label="Open waitlist signup form"
+        >
           {children || (
             <Button 
               className={cn(
@@ -90,13 +102,14 @@ export function WaitlistButton({
                 "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700",
                 isMobile ? "text-sm" : "text-base"
               )}
+              aria-label="Join waitlist"
             >
               {buttonText}
             </Button>
           )}
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="w-full">
+        <form onSubmit={handleSubmit} className="w-full" aria-label="Waitlist signup form">
           <div className="flex flex-col sm:flex-row gap-2 w-full">
             <EmailInput
               setEmail={setEmail}
@@ -105,6 +118,7 @@ export function WaitlistButton({
               disabled={loading}
               className="flex-grow"
               inputRef={inputRef}
+              aria-label="Email address for waitlist"
             />
             <Button 
               type="submit" 
@@ -116,18 +130,22 @@ export function WaitlistButton({
                 "transition-all duration-200 ease-in-out",
                 isMobile && "min-h-[48px]"
               )}
+              aria-label={loading ? "Submitting your email" : "Submit your email to join waitlist"}
             >
               {loading ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Joining...
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+                  <span>Joining...</span>
                 </>
               ) : (
-                buttonText
+                <span>{buttonText}</span>
               )}
             </Button>
           </div>
-          {/* Social proof is now moved to the main component */}
+          {/* Descriptive text for screen readers */}
+          <p className="sr-only">
+            Join our waitlist to get early access to ZeroVacancy, the premier marketplace for real estate content creators.
+          </p>
         </form>
       )}
     </div>
