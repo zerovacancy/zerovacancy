@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useRef, useState } from "react";
+import React, { forwardRef, useEffect, useRef, useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { TextRotateProps, TextRotateRef } from "./types";
 
@@ -9,7 +9,7 @@ import { TextRotateProps, TextRotateRef } from "./types";
 const TextRotateCss = forwardRef<TextRotateRef, TextRotateProps>(
   (
     {
-      texts,
+      texts = [],
       rotationInterval = 3500,
       auto = true,
       loop = true,
@@ -23,62 +23,62 @@ const TextRotateCss = forwardRef<TextRotateRef, TextRotateProps>(
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isChanging, setIsChanging] = useState(false);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
-
-    // Create controlled text rotation
-    const next = () => {
-      if (texts && texts.length > 1) {
-        setIsChanging(true);
+    
+    // Memoized functions with useCallback to prevent recreating on each render
+    const next = useCallback(() => {
+      if (!texts || texts.length <= 1) return;
+      
+      setIsChanging(true);
+      
+      // Small delay to allow exit animation to complete
+      setTimeout(() => {
+        setCurrentIndex((prev) => {
+          const nextIndex = prev + 1 >= texts.length ? 0 : prev + 1;
+          if (onNext) onNext(nextIndex);
+          return nextIndex;
+        });
         
-        // Small delay to allow exit animation to complete
+        // Reset the changing state after animation completes
         setTimeout(() => {
-          setCurrentIndex((prev) => {
-            const nextIndex = prev + 1 >= texts.length ? 0 : prev + 1;
-            if (onNext) onNext(nextIndex);
-            return nextIndex;
-          });
-          
-          // Reset the changing state after animation completes
-          setTimeout(() => {
-            setIsChanging(false);
-          }, 300);
+          setIsChanging(false);
         }, 300);
-      }
-    };
+      }, 300);
+    }, [texts, onNext]);
 
-    const previous = () => {
-      if (texts && texts.length > 1) {
-        setIsChanging(true);
-        
-        setTimeout(() => {
-          setCurrentIndex((prev) => {
-            const nextIndex = prev - 1 < 0 ? texts.length - 1 : prev - 1;
-            if (onNext) onNext(nextIndex);
-            return nextIndex;
-          });
-          
-          setTimeout(() => {
-            setIsChanging(false);
-          }, 300);
-        }, 300);
-      }
-    };
-
-    const jumpTo = (index: number) => {
-      if (texts && index >= 0 && index < texts.length) {
-        setIsChanging(true);
+    const previous = useCallback(() => {
+      if (!texts || texts.length <= 1) return;
+      
+      setIsChanging(true);
+      
+      setTimeout(() => {
+        setCurrentIndex((prev) => {
+          const nextIndex = prev - 1 < 0 ? texts.length - 1 : prev - 1;
+          if (onNext) onNext(nextIndex);
+          return nextIndex;
+        });
         
         setTimeout(() => {
-          setCurrentIndex(index);
-          if (onNext) onNext(index);
-          
-          setTimeout(() => {
-            setIsChanging(false);
-          }, 300);
+          setIsChanging(false);
         }, 300);
-      }
-    };
+      }, 300);
+    }, [texts, onNext]);
 
-    const reset = () => {
+    const jumpTo = useCallback((index: number) => {
+      if (!texts || index < 0 || index >= texts.length) return;
+      
+      setIsChanging(true);
+      
+      setTimeout(() => {
+        setCurrentIndex(index);
+        if (onNext) onNext(index);
+        
+        setTimeout(() => {
+          setIsChanging(false);
+        }, 300);
+      }, 300);
+    }, [texts, onNext]);
+
+    const reset = useCallback(() => {
       setIsChanging(true);
       
       setTimeout(() => {
@@ -89,7 +89,7 @@ const TextRotateCss = forwardRef<TextRotateRef, TextRotateProps>(
           setIsChanging(false);
         }, 300);
       }, 300);
-    };
+    }, [onNext]);
 
     // Expose methods via ref
     React.useImperativeHandle(ref, () => ({
@@ -97,40 +97,44 @@ const TextRotateCss = forwardRef<TextRotateRef, TextRotateProps>(
       previous,
       jumpTo,
       reset,
-    }));
+    }), [next, previous, jumpTo, reset]);
 
-    // Auto-rotation effect
+    // Auto-rotation effect with memoized functions
     useEffect(() => {
-      if (auto && texts && texts.length > 1) {
-        intervalRef.current = setInterval(() => {
-          next();
-        }, rotationInterval);
-      }
-
+      if (!auto || !texts || texts.length <= 1) return;
+      
+      intervalRef.current = setInterval(next, rotationInterval);
+      
       return () => {
         if (intervalRef.current) {
           clearInterval(intervalRef.current);
+          intervalRef.current = null;
         }
       };
-    }, [auto, texts, rotationInterval]);
+    }, [auto, texts, rotationInterval, next]);
 
-    // Early return if no texts provided
-    if (!texts?.length) {
-      return null;
+    // For safety and simplicity on mobile, provide a fallback
+    const textsArray = texts || [];
+    
+    // Guard against invalid arrays or empty texts
+    if (!textsArray.length) {
+      return <div className={mainClassName} {...props}>No content</div>;
     }
-
-    const currentText = texts[currentIndex];
+    
+    // Make sure currentIndex is valid
+    const safeIndex = Math.min(Math.max(0, currentIndex), textsArray.length - 1);
+    const currentText = textsArray[safeIndex];
 
     return (
       <div className={cn("relative w-full h-full flex items-center justify-center", mainClassName)} {...props}>
         {/* Screen reader text */}
         <span className="sr-only">{currentText}</span>
         
-        {/* Visible animated text */}
+        {/* Visible animated text with improved transition */}
         <div 
           className={cn(
             "relative w-full h-full overflow-hidden flex items-center justify-center",
-            "transition-opacity duration-300",
+            "transition-all duration-300 ease-in-out",
             isChanging ? "opacity-0" : "opacity-100"
           )}
           aria-hidden="true"
