@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
@@ -8,37 +9,6 @@ import { TextRotateCss } from "../ui/text-rotate";
 const TITLES = ["REIMAGINED", "ELEVATED", "TRANSFORMED"];
 
 // Sub-components with enhanced styling
-const HeroHeadline = ({ isMobile }: { isMobile: boolean }) => (
-  <div 
-    className={cn(
-      "relative z-10",
-      "inline-block",
-      "bg-clip-text text-transparent",
-      "bg-gradient-to-r from-indigo-700 via-purple-700 to-violet-800",
-      "text-3xl sm:text-5xl lg:text-6xl",
-      "leading-tight tracking-tight",
-      "font-black font-jakarta",
-      "px-1",
-      isMobile ? "mb-1 mt-2" : "mb-2 mt-4"
-    )}
-  >
-    <span 
-      className={cn(
-        "relative",
-        "after:content-[''] after:absolute after:-bottom-1 after:left-0",
-        "after:w-full after:h-[4px]",
-        "after:bg-gradient-to-r after:from-indigo-500 after:to-purple-600",
-        "tracking-wide",
-        "text-shadow-sm",
-        "hover:scale-[1.01] transition-transform duration-300",
-        "will-change-transform"
-      )}
-    >
-      PROPERTY CONTENT
-    </span>
-  </div>
-);
-
 const HeroDescription = ({ isMobile }: { isMobile: boolean }) => (
   <div 
     className={cn(
@@ -149,7 +119,14 @@ export function EnhancedHero() {
               "flex flex-col items-center justify-center"
             )}
           >
-            <HeroHeadline isMobile={isMobile} />
+            {/* Decorative line above the main title */}
+            <div 
+              className={cn(
+                "w-16 h-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full",
+                "mb-4 sm:mb-6"
+              )}
+              aria-hidden="true"
+            ></div>
 
             <div 
               role="text" 
@@ -158,7 +135,7 @@ export function EnhancedHero() {
                 "relative flex w-full justify-center",
                 isMobile 
                   ? "h-[2.8em] mt-1" 
-                  : "h-[3em] sm:h-[2.8em] md:h-[2.5em] lg:h-[2.5em] mt-2",
+                  : "h-[3em] sm:h-[2.8em] md:h-[2.5em] lg:h-[2.5em]",
                 "overflow-visible"
               )}
             >
@@ -167,13 +144,14 @@ export function EnhancedHero() {
                 mainClassName="flex justify-center items-center overflow-visible"
                 rotationInterval={3500}
                 elementLevelClassName={cn(
-                  "text-4xl sm:text-5xl lg:text-7xl",
+                  "text-5xl sm:text-6xl lg:text-7xl",
                   "font-black font-jakarta tracking-tight",
                   "bg-clip-text text-transparent", 
                   "bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1]",
                   "px-4 py-1",
                   "shadow-inner",
-                  "overflow-visible"
+                  "overflow-visible",
+                  "hover:scale-[1.01] transition-transform duration-300"
                 )}
                 auto={true}
               />
