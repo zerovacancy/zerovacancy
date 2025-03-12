@@ -84,28 +84,29 @@ export const FeatureItem = ({
     }
   };
   
-  // Choose gradient based on index for mobile cards (alternating)
-  const gradientClasses = [
-    mobileOptimizationClasses.subtleGradientPurple,
-    mobileOptimizationClasses.subtleGradientBlue,
-    mobileOptimizationClasses.subtleGradientIndigo,
-    mobileOptimizationClasses.subtleGradientCyan
+  // Choose backgrounds based on index to match the How It Works card styles
+  // We'll use the same colors as defined in step-data.ts
+  const howItWorksGradients = [
+    { bg: "bg-violet-50/70", from: "from-violet-500", to: "to-purple-600" },
+    { bg: "bg-blue-50/70", from: "from-blue-500", to: "to-indigo-600" },
+    { bg: "bg-amber-50/70", from: "from-amber-500", to: "to-orange-600" },
+    { bg: "bg-emerald-50/70", from: "from-emerald-500", to: "to-green-600" }
   ];
   
-  const subtleGradient = gradientClasses[index % 4];
+  const cardColorScheme = howItWorksGradients[index % 4];
   
   return (
     <motion.button
       className={cn(
         "relative w-full text-left group h-full flex flex-col",
         "rounded-xl sm:rounded-2xl transition-all duration-300",
-        isMobile ? subtleGradient : "bg-white hover:bg-white/95",
+        isMobile ? `${cardColorScheme.bg} hover:bg-opacity-100` : "bg-white hover:bg-white/95",
         // Enhanced border - more visible with color matching the icon theme
         `border border-${borderColorBase}-200/40`,
         // Consistent shadow
         "shadow-sm hover:shadow-md",
         // Left border accent
-        `before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:rounded-l-xl before:bg-gradient-to-b ${colorScheme.gradient} before:opacity-0 group-hover:before:opacity-100 before:transition-opacity`,
+        `before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:rounded-l-xl before:bg-gradient-to-b ${cardColorScheme.from} ${cardColorScheme.to} before:opacity-0 group-hover:before:opacity-100 before:transition-opacity`,
         // Consistent padding
         "p-4 sm:p-5",
         "focus:outline-none focus:ring-2 focus:ring-primary/20",
@@ -141,11 +142,11 @@ export const FeatureItem = ({
             "rounded-xl",
             "transition-all duration-300",
             "bg-gradient-to-br",
-            colorScheme.gradient,
+            `${cardColorScheme.from} ${cardColorScheme.to}`,
             "opacity-95",
             "group-hover:shadow-md",
             "border border-opacity-20",
-            `border-${colorScheme.text.split('-')[1]}-100`,
+            `border-${borderColorBase}-100`,
           )}
         >
           <Icon className={cn(
@@ -169,7 +170,7 @@ export const FeatureItem = ({
           
           <div className={cn(
             "w-10 h-0.5 mb-2 sm:mb-3 bg-gradient-to-r",
-            colorScheme.gradient,
+            `${cardColorScheme.from} ${cardColorScheme.to}`,
             "rounded-full transition-all duration-300 transform origin-left",
             "group-hover:w-16"
           )} />
@@ -188,7 +189,7 @@ export const FeatureItem = ({
           {/* Learn more link */}
           <div className={cn(
             "mt-3 text-xs font-medium flex items-center gap-1.5", 
-            colorScheme.text,
+            `text-${borderColorBase}-600`,
             "transition-opacity duration-300"
           )}>
             {isExpanded ? "Show less" : "Learn more"} <ChevronRight className={cn(
