@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
@@ -41,28 +40,22 @@ export function Hero() {
       ref={sectionRef}
       className={cn(
         "flex items-center justify-center flex-col", 
-        // Optimized padding for mobile
         "px-5 sm:px-6", 
-        // Reduced vertical spacing on mobile
         "py-6 sm:py-12 lg:py-16",
         "my-2 sm:my-6 lg:my-8",
         "min-h-fit sm:min-h-[36vh]",
         "relative z-10", 
-        // Optimized vertical gap
         "gap-4 sm:gap-6",
         "touch-manipulation",
-        // Enhanced gradient background
         "bg-gradient-to-b from-purple-50/80 via-indigo-50/60 to-blue-50/30",
         isInView ? "animate-fade-in" : "opacity-0"
       )} 
     >
-      {/* Background pattern for visual interest - fixed SVG format */}
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOGE2NGZmIiBzdHJva2Utd2lkdGg9IjAuNSIgc3Ryb2tlLW9wYWNpdHk9IjAuMDYiPjxwYXRoIGQ9Ik0wIDBMNDAgNDAiLz48cGF0aCBkPSJNNDAgMEwwIDQwIi8+PC9nPjwvc3ZnPg==')] opacity-50"></div>
 
       <div 
         className={cn(
           "flex flex-col max-w-6xl mx-auto w-full",
-          // Improved spacing
           "gap-4 sm:gap-6", 
           isInView ? "animate-fade-in delay-100" : "opacity-0"
         )}
@@ -70,7 +63,6 @@ export function Hero() {
         <div className="relative">
           <h1 className={cn(
             "tracking-tight leading-[1.15] text-center font-bold font-jakarta",
-            // Improved spacing
             "mb-4 sm:mb-6"
           )}>
             {isMobile ? (
@@ -78,7 +70,6 @@ export function Hero() {
                 <span 
                   className={cn(
                     "text-primary inline-block font-medium",
-                    // Increased font size
                     "text-3xl sm:text-5xl lg:text-6xl",
                     "tracking-[-0.01em]", 
                     "text-brand-purple-dark mb-2"
@@ -137,11 +128,9 @@ export function Hero() {
 
         <div 
           className={cn(
-            // Improved text size and line height
-            isMobile ? "text-base leading-relaxed" : "text-base lg:text-lg", 
+            "text-base leading-relaxed",
             "text-brand-text-primary", 
             "text-center", 
-            // Improved max width for mobile readability
             "max-w-[90%] sm:max-w-[500px]",
             "mx-auto", 
             "font-inter"
@@ -155,17 +144,14 @@ export function Hero() {
       <div 
         className={cn(
           "w-full", 
-          // Improved spacing
           "mt-5 sm:mt-6",
           "px-4 sm:px-4",
           isInView ? "animate-fade-in delay-200" : "opacity-0" 
         )}
       >
-        {/* Enhanced WaitlistCTA */}
-        <WaitlistCTA className="mb-4 sm:mb-6" buttonText="RESERVE EARLY ACCESS" />
+        <WaitlistCTA className="mb-4 sm:mb-6" buttonText="RESERVE EARLY ACCESS" showSocialProof={true} />
       </div>
 
-      {/* Mobile-only animated hint */}
       {isMobile && isInView && (
         <div className="w-full flex justify-center mt-2 animate-bounce-subtle">
           <svg 

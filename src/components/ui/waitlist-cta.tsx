@@ -9,12 +9,14 @@ interface WaitlistCTAProps {
   className?: string;
   source?: string;
   buttonText?: string;
+  showSocialProof?: boolean;
 }
 
 export const WaitlistCTA: React.FC<WaitlistCTAProps> = ({ 
   className,
   source = "landing_page", 
-  buttonText = "JOIN WAITLIST"
+  buttonText = "JOIN WAITLIST",
+  showSocialProof = false
 }) => {
   return (
     <div className={cn(
@@ -39,8 +41,8 @@ export const WaitlistCTA: React.FC<WaitlistCTAProps> = ({
         </ShimmerButton>
       </WaitlistButton>
       
-      {/* Show social proof regardless of CTA state */}
-      <SocialProof className="mt-3" />
+      {/* Only show social proof when explicitly requested */}
+      {showSocialProof && <SocialProof className="mt-3" />}
     </div>
   );
 };
