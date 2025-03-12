@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
@@ -42,7 +41,7 @@ export function Hero() {
       className={cn(
         "flex items-center justify-center flex-col", 
         "px-5 sm:px-6", 
-        isMobile ? "py-3 my-0 pt-8" : "py-6 sm:py-12 lg:py-16 my-2 sm:my-6 lg:my-8", // Added pt-8 for more top padding on mobile
+        isMobile ? "py-3 my-0 pt-8" : "py-6 sm:py-12 lg:py-16 my-2 sm:my-6 lg:my-8",
         "min-h-fit sm:min-h-[36vh]",
         "relative z-10", 
         "gap-2 sm:gap-6", 
@@ -63,7 +62,7 @@ export function Hero() {
         <div className="relative">
           <h1 className={cn(
             "tracking-tight leading-[1.15] text-center font-bold font-jakarta",
-            isMobile ? "mb-0 mt-4" : "mb-2 sm:mb-6" // Added mt-4 to increase top margin on mobile
+            isMobile ? "mb-0 mt-4" : "mb-2 sm:mb-6"
           )}>
             <span 
               className={cn(
@@ -143,7 +142,7 @@ export function Hero() {
           isInView ? "animate-fade-in delay-200" : "opacity-0" 
         )}
       >
-        <WaitlistCTA className={cn(isMobile ? "mb-0" : "mb-4 sm:mb-6")} buttonText="RESERVE EARLY ACCESS" showSocialProof={false} />
+        <WaitlistCTA className={cn(isMobile ? "mb-0" : "mb-4 sm:mb-6")} buttonText="RESERVE EARLY ACCESS" showSocialProof={true} />
       </div>
     </section>
   );
