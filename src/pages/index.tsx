@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef, lazy, Suspense, useCallback } from 'react';
 import Header from '../components/Header';
 import { Hero } from '../components/hero/Hero';
@@ -11,14 +10,13 @@ import { AnimatedShinyText } from '@/components/ui/animated-shiny-text';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import { BackgroundEffects } from '@/components/features/BackgroundEffects';
+import { BorderBeam } from '@/components/ui/border-beam';
 
-// Lazy-loaded components
 const OptimizedHowItWorks = lazy(() => import('../components/how-it-works/OptimizedHowItWorks'));
 const FeaturesSectionWithHoverEffects = lazy(() => import('@/components/features/Features'));
 const Pricing = lazy(() => import('@/components/Pricing'));
 const PreviewSearch = lazy(() => import('../components/preview-search'));
 
-// Simple loading fallback
 const SectionLoader = () => (
   <div className="w-full py-16 flex items-center justify-center">
     <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
@@ -75,7 +73,6 @@ const Index = () => {
         observer.observe(section);
       });
 
-      // Safety timeout to make all sections visible if they aren't already
       const safetyTimeout = setTimeout(() => {
         setVisibleSections({
           0: true,
@@ -92,7 +89,6 @@ const Index = () => {
       };
     } catch (error) {
       console.error("Error in intersection observer:", error);
-      // If observer fails, set all sections to visible
       setVisibleSections({
         0: true,
         1: true,
@@ -108,7 +104,6 @@ const Index = () => {
     setShowGlowDialog(true);
   };
   
-  // Helper function to add section refs
   const addSectionRef = (index: number) => (el: HTMLElement | null) => {
     sectionsRef.current[index] = el;
   };
@@ -119,25 +114,34 @@ const Index = () => {
       {showBanner && !isMobile && (
         <div className="relative">
           <Banner variant="purple" size="lg" action={
-              <Button 
-                variant="secondary" 
-                size="sm" 
-                className={cn(
-                  "flex text-xs sm:text-sm items-center whitespace-nowrap", 
-                  "px-3 py-2 sm:px-5 sm:py-2.5 min-w-[8rem] sm:min-w-[9rem] min-h-[2.25rem] sm:min-h-[2.5rem]", 
-                  "bg-gradient-to-r from-[#9C6FFF] to-[#00C2A8] text-white font-bold", 
-                  "border border-white/20", 
-                  "backdrop-blur-sm",
-                  "transition-all duration-200", 
-                  "touch-manipulation", 
-                  "shadow-[0_2px_10px_rgba(0,194,168,0.2)] hover:shadow-[0_4px_20px_rgba(0,194,168,0.3)]",
-                  "hover:opacity-90",
-                  "before:hidden" // Hide the white animation effect
-                )} 
-                onClick={handleTryNowClick}
-              >
-                Get Early Access
-              </Button>
+              <div className="relative">
+                <Button 
+                  variant="secondary" 
+                  size="sm" 
+                  className={cn(
+                    "flex text-xs sm:text-sm items-center whitespace-nowrap", 
+                    "px-3 py-2 sm:px-5 sm:py-2.5 min-w-[8rem] sm:min-w-[9rem] min-h-[2.25rem] sm:min-h-[2.5rem]", 
+                    "bg-gradient-to-r from-[#9C6FFF] to-[#00C2A8] text-white font-bold", 
+                    "border border-white/20", 
+                    "backdrop-blur-sm",
+                    "transition-all duration-200", 
+                    "touch-manipulation", 
+                    "shadow-[0_2px_10px_rgba(0,194,168,0.2)] hover:shadow-[0_4px_20px_rgba(0,194,168,0.3)]",
+                    "hover:opacity-90 relative z-10",
+                    "before:hidden" // Hide the white animation effect
+                  )} 
+                  onClick={handleTryNowClick}
+                >
+                  Get Early Access
+                </Button>
+                <BorderBeam 
+                  colorFrom="#ffaa40" 
+                  colorTo="#9c40ff"
+                  duration={8}
+                  size={200}
+                  borderWidth={2}
+                />
+              </div>
             } 
             layout="complex" 
             isClosable 
@@ -162,7 +166,6 @@ const Index = () => {
       )}
 
       <main className="flex-1 pb-16 sm:pb-0 w-full">
-        {/* Hero Section with its own background */}
         <BackgroundEffects 
           blobColors={{
             first: "bg-purple-100",
@@ -182,7 +185,6 @@ const Index = () => {
           </section>
         </BackgroundEffects>
         
-        {/* How It Works Section */}
         <section 
           ref={addSectionRef(1)} 
           id="how-it-works" 
@@ -196,7 +198,6 @@ const Index = () => {
           </Suspense>
         </section>
         
-        {/* Search Section */}
         <section 
           ref={addSectionRef(2)} 
           id="find-creators" 
@@ -213,7 +214,6 @@ const Index = () => {
           </div>
         </section>
         
-        {/* Professional Content Creation Services */}
         <section 
           ref={addSectionRef(3)}
           id="features" 
@@ -227,7 +227,6 @@ const Index = () => {
           </Suspense>
         </section>
 
-        {/* Pricing Section */}
         <section 
           ref={addSectionRef(4)}
           id="pricing" 
@@ -241,11 +240,8 @@ const Index = () => {
           </Suspense>
         </section>
 
-        {/* Removed Final CTA Section (Our Guarantee) as requested */}
-        
         <Footer />
       </main>
-      {/* Bottom nav now handled by the BottomNav component itself */}
       <GlowDialog open={showGlowDialog} onOpenChange={setShowGlowDialog} />
     </div>
   );
