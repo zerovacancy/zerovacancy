@@ -95,7 +95,10 @@ export const PricingCard = ({
       )}
       
       {/* Header section with improved typography */}
-      <div className="mb-6">
+      <div className={cn(
+        "mb-6",
+        !isMobile && "min-h-[160px]"  // Add minimum height for desktop to ensure consistent spacing
+      )}>
         <h3 className={cn(
           "text-xl font-bold font-jakarta",
           colorStyles.accent
@@ -114,7 +117,10 @@ export const PricingCard = ({
         </div>
         
         {valueProposition && (
-          <div className="mt-3">
+          <div className={cn(
+            "mt-3",
+            !isMobile && "min-h-[60px]"  // Fixed height for description area on desktop
+          )}>
             <p className={cn(
               "text-sm font-medium font-inter relative",
               colorStyles.accent,
@@ -147,7 +153,10 @@ export const PricingCard = ({
         )}
         
         {description && !valueProposition && (
-          <div className="mt-3">
+          <div className={cn(
+            "mt-3", 
+            !isMobile && "min-h-[60px]"  // Fixed height for description area on desktop
+          )}>
             <p className={cn(
               "text-sm font-medium font-inter relative",
               colorStyles.accent,
@@ -184,7 +193,7 @@ export const PricingCard = ({
       <motion.button
         onClick={handleAction}
         className={cn(
-          "mt-2 w-full px-4 py-4 rounded-xl text-white font-medium font-inter",
+          "w-full px-4 py-4 rounded-xl text-white font-medium font-inter",
           "transition-all duration-300",
           isCurrentPlan ? "bg-green-500 cursor-default" : `bg-gradient-to-r ${colorStyles.highlight}`,
           !isCurrentPlan && "hover:shadow-[0_4px_12px_rgba(0,0,0,0.15)] active:translate-y-0 group"
@@ -314,21 +323,35 @@ export const PricingCard = ({
         )}
       </div>
       
+      {/* Spacer that pushes footer to bottom */}
+      <div className="flex-grow"></div>
+
       {/* Footer text with enhanced styling */}
       {footerText && (
-        <div className="mt-6 pt-4 border-t border-slate-100 text-xs text-slate-500 font-inter">
+        <div className={cn(
+          "mt-6 pt-4 border-t border-slate-100 text-xs text-slate-500 font-inter",
+          !isMobile && "min-h-[48px]" // Fixed height for footer on desktop
+        )}>
           {footerText}
         </div>
       )}
       
       {/* Guarantee badge with improved design - Only for Premium plan */}
       {title === "Premium" && (
-        <div className="mt-6 pt-4 border-t border-slate-100 text-xs text-slate-500 flex items-center font-inter">
+        <div className={cn(
+          "mt-6 pt-4 border-t border-slate-100 text-xs text-slate-500 flex items-center font-inter",
+          !isMobile && "min-h-[48px]" // Match height with other footers
+        )}>
           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5 text-emerald-500" viewBox="0 0 20 20" fill="currentColor">
             <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
           </svg>
           <span className="font-medium text-emerald-600">7-day money-back guarantee</span>
         </div>
+      )}
+
+      {/* Add empty div for cards without footer text or guarantee badge */}
+      {!footerText && title !== "Premium" && !isMobile && (
+        <div className="mt-6 pt-4 min-h-[48px]"></div>
       )}
     </motion.div>
   );
