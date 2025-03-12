@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef, lazy, Suspense, useCallback } from 'react';
 import Header from '../components/Header';
 import { Hero } from '../components/hero/Hero';
@@ -129,7 +130,8 @@ const Index = () => {
                   "transition-all duration-200", 
                   "touch-manipulation", 
                   "shadow-[0_2px_10px_rgba(0,0,0,0.15)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.2)]",
-                  "hover:opacity-90"
+                  "hover:opacity-90",
+                  "before:hidden" // Hide the white animation effect
                 )} 
                 onClick={handleTryNowClick}
               >
