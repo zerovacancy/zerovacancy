@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Card } from '../ui/card';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Star } from 'lucide-react';
 import { Dialog } from "../ui/dialog";
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -32,7 +32,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
   return (
     <article className="group select-text h-full">
       <div className="relative h-full">
-        {/* Mobile-optimized card with simpler styling */}
+        {/* Mobile-optimized card with enhanced styling */}
         {isMobile ? (
           <Card className={cn(
             "overflow-hidden h-full flex flex-col",
@@ -58,15 +58,15 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               />
             </div>
 
-            {/* Content section - Simplified styling */}
-            <div className="px-3 py-3 flex flex-col flex-grow">
-              <div className="mb-3.5">
-                <h3 className="font-semibold text-gray-900 text-base">{creator.name}</h3>
-                <p className="text-sm text-gray-600">{creator.location}</p>
-                <p className="text-xs text-gray-500 mt-1">{creator.services.join(" • ")}</p>
+            {/* Enhanced content section with improved typography and spacing */}
+            <div className="px-3.5 py-4 flex flex-col flex-grow">
+              <div className="mb-4">
+                <h3 className="font-semibold text-gray-900 text-[15px] leading-tight">{creator.name}</h3>
+                <p className="text-sm text-gray-500 font-light mt-0.5">{creator.location}</p>
+                <p className="text-xs text-gray-600 mt-1.5">{creator.services.join(" • ")}</p>
               </div>
 
-              {/* Portfolio preview - Simplified for mobile */}
+              {/* Portfolio preview - Enhanced spacing for mobile */}
               <div className="mb-4">
                 <PortfolioPreview 
                   workExamples={creator.workExamples}
@@ -77,12 +77,12 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               {/* Spacer to push button to bottom */}
               <div className="flex-grow"></div>
 
-              {/* Simplified CTA Button */}
-              <div>
+              {/* Enhanced CTA Button with better contrast */}
+              <div className="mt-1">
                 <button 
                   onClick={handleCTAClick}
                   aria-label={`Book with ${creator.name}`}
-                  className="w-full flex items-center justify-center text-sm px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium"
+                  className="w-full flex items-center justify-center text-sm px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-medium shadow-md hover:shadow-lg transition-all duration-200"
                 >
                   {stage === 'initial' ? (
                     <>
@@ -99,13 +99,12 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
             </div>
           </Card>
         ) : (
-          // Desktop version with more visual effects but static button
+          // Enhanced desktop version with improved visual hierarchy
           <>
             <div className="absolute -inset-0.5 sm:-inset-0.5 rounded-xl bg-gradient-to-r from-purple-800/30 via-indigo-700/30 to-purple-900/30 opacity-60 sm:opacity-75 blur-[2px] sm:blur-sm group-hover:opacity-100 transition duration-500"></div>
             <Card className={cn(
               "overflow-hidden h-full flex flex-col",
               "will-change-transform transition-all duration-300",
-              // Remove scale effect that causes alignment issues
               "hover:translate-y-[-2px]",
               "bg-white border border-gray-200/80",
               "shadow-[0_2px_8px_rgba(0,0,0,0.05)]",
@@ -122,7 +121,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 />
               </div>
 
-              {/* Price tag */}
+              {/* Price tag with enhanced styling */}
               <div className="absolute top-3.5 right-3.5 z-20">
                 <span className="px-3 py-1.5 text-sm font-semibold bg-white/90 shadow-md border border-white/40 text-[#212121] rounded-full shadow-[0_3px_8px_rgba(0,0,0,0.12)] transition-all duration-200 group-hover:scale-105 group-hover:shadow-[0_4px_10px_rgba(0,0,0,0.18)]">
                   From ${creator.price}
@@ -138,16 +137,16 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 />
               </div>
 
-              {/* Content section */}
-              <div className="px-5 pt-5 pb-5 flex flex-col flex-grow">
-                <div className="mb-3">
-                  <h3 className="font-semibold text-gray-900 text-lg">{creator.name}</h3>
-                  <p className="text-sm text-gray-600">{creator.location}</p>
-                  <p className="text-xs text-gray-500 mt-1">{creator.services.join(" • ")}</p>
+              {/* Enhanced content section with improved typography and spacing */}
+              <div className="px-5 pt-5 pb-6 flex flex-col flex-grow">
+                <div className="mb-3.5">
+                  <h3 className="font-semibold text-gray-900 text-lg leading-tight">{creator.name}</h3>
+                  <p className="text-sm text-gray-500 font-light mt-0.5">{creator.location}</p>
+                  <p className="text-xs text-gray-600 mt-1.5 tracking-wide">{creator.services.join(" • ")}</p>
                 </div>
 
-                {/* Rating and availability row */}
-                <div className="flex justify-between items-center mb-3">
+                {/* Rating and availability row with enhanced styling */}
+                <div className="flex justify-between items-center mb-4">
                   <CreatorRating 
                     rating={creator.rating} 
                     reviews={creator.reviews} 
@@ -156,8 +155,8 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   />
                 </div>
 
-                {/* Portfolio preview */}
-                <div className="mb-3">
+                {/* Enhanced portfolio preview with better spacing */}
+                <div className="mb-4">
                   <PortfolioPreview 
                     workExamples={creator.workExamples}
                     creatorName={creator.name}
@@ -167,17 +166,18 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 {/* Spacer to push button to bottom */}
                 <div className="flex-grow"></div>
 
-                {/* Static CTA Button - fixed alignment and sizing */}
-                <div>
+                {/* Enhanced CTA Button with gradient and shadow */}
+                <div className="mt-1">
                   <button 
                     onClick={handleCTAClick}
                     aria-label={`Book with ${creator.name}`}
                     className={cn(
-                      "w-full h-10 text-sm px-4 py-2.5",
+                      "w-full h-11 text-sm px-5 py-3",
                       "bg-gradient-to-r from-indigo-600 to-purple-600",
                       "text-white font-medium rounded-lg",
                       "border border-indigo-400/30 shadow-lg shadow-indigo-500/20",
-                      "flex items-center justify-center"
+                      "flex items-center justify-center transition-all duration-200",
+                      "hover:shadow-xl hover:shadow-indigo-500/30"
                     )}
                   >
                     {stage === 'initial' ? (

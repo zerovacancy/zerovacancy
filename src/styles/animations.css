@@ -93,6 +93,11 @@
   .shadow-glow {
     box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
   }
+  
+  /* New animation for badge pulsing */
+  .animate-badge-pulse {
+    animation: badgePulse 2s ease-in-out infinite;
+  }
 
   /* Optimized appear/disappear animations */
   .content-hidden {

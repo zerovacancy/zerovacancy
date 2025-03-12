@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { ArrowRight, X } from 'lucide-react';
+import { ArrowRight, X, ExternalLink } from 'lucide-react';
 import { Dialog, DialogContent } from '../ui/dialog';
 
 interface PortfolioPreviewProps {
@@ -28,18 +28,19 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
   return (
     <>
       <div>
-        <div className="flex items-center mb-1.5">
-          <div className="w-0.5 h-3 bg-gradient-to-b from-indigo-500 to-purple-500 rounded-full mr-1.5"></div>
-          <span className="text-xs text-gray-500 font-medium">{isMobile ? 'WORK' : 'RECENT WORK'}</span>
+        {/* Enhanced section header with gradient accent */}
+        <div className="flex items-center mb-2">
+          <div className="w-0.5 h-3.5 bg-gradient-to-b from-indigo-500 to-purple-500 rounded-full mr-1.5"></div>
+          <span className="text-xs text-gray-600 font-medium tracking-wide">{isMobile ? 'RECENT WORK' : 'RECENT WORK'}</span>
         </div>
 
         {isMobile ? (
-          <div className="grid grid-cols-3 gap-1.5 mt-1.5">
+          <div className="grid grid-cols-3 gap-2 mt-2">
             {ensuredExamples.map((example, index) => (
               <div 
                 key={index}
                 className={cn(
-                  "relative rounded-md overflow-hidden cursor-pointer",
+                  "relative rounded-md overflow-hidden cursor-pointer group",
                   "border border-gray-100",
                   "shadow-sm aspect-square",
                   "bg-gray-50"
@@ -56,19 +57,23 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
                     target.src = '/placeholder.svg';
                   }}
                 />
+                {/* Hover overlay for work examples */}
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+                  <ExternalLink className="w-4 h-4 text-white" />
+                </div>
               </div>
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-3 gap-2.5 mt-2">
             {ensuredExamples.map((example, index) => (
               <div 
                 key={index}
                 className={cn(
-                  "relative rounded-md overflow-hidden cursor-pointer",
+                  "relative rounded-md overflow-hidden cursor-pointer group",
                   "border border-gray-100",
                   "shadow-sm hover:shadow-md transition-shadow duration-200",
-                  "aspect-square", // Use aspect ratio instead of fixed dimensions
+                  "aspect-square", 
                   "bg-gray-50"
                 )}
                 onClick={() => setSelectedImage(example)}
@@ -76,20 +81,26 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
                 <img 
                   src={example}
                   alt={`${creatorName}'s work example ${index + 1}`}
-                  className="object-cover w-full h-full hover:scale-105 transition-transform duration-300"
+                  className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.onerror = null;
                     target.src = '/placeholder.svg';
                   }}
                 />
+                {/* Enhanced hover overlay with view icon */}
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+                  <div className="p-1.5 bg-white/20 rounded-full backdrop-blur-sm">
+                    <ExternalLink className="w-3.5 h-3.5 text-white" />
+                  </div>
+                </div>
               </div>
             ))}
           </div>
         )}
-
       </div>
 
+      {/* Enhanced dialog for image preview */}
       <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
         <DialogContent className="sm:max-w-[80vw] p-0 bg-transparent border-0">
           <button
@@ -112,4 +123,3 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
     </>
   );
 };
-
