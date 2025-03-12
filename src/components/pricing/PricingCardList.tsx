@@ -194,7 +194,7 @@ export const PricingCardList = ({
                 ? "min-w-full flex-shrink-0 snap-center px-4"
                 : "",
               !isMobile && card.highlighted 
-                ? "md:transform md:scale-105 md:z-10 md:shadow-xl"
+                ? "md:z-10 md:shadow-xl" // Remove the scale transformation
                 : ""
             )}
           >

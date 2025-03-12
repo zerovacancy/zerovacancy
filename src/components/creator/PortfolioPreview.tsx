@@ -60,7 +60,7 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
             ))}
           </div>
         ) : (
-          <div className="flex space-x-1.5">
+          <div className="grid grid-cols-3 gap-2">
             {ensuredExamples.map((example, index) => (
               <div 
                 key={index}
@@ -68,7 +68,7 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
                   "relative rounded-md overflow-hidden cursor-pointer",
                   "border border-gray-100",
                   "shadow-sm hover:shadow-md transition-shadow duration-200",
-                  "h-[160px] w-[160px]", 
+                  "aspect-square", // Use aspect ratio instead of fixed dimensions
                   "bg-gray-50"
                 )}
                 onClick={() => setSelectedImage(example)}
@@ -77,9 +77,6 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
                   src={example}
                   alt={`${creatorName}'s work example ${index + 1}`}
                   className="object-cover w-full h-full hover:scale-105 transition-transform duration-300"
-                  style={{
-                    aspectRatio: '1 / 1', // Force square aspect ratio
-                  }}
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.onerror = null;

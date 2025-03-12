@@ -105,7 +105,8 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
             <Card className={cn(
               "overflow-hidden h-full flex flex-col",
               "will-change-transform transition-all duration-300",
-              "hover:translate-y-[-4px] hover:scale-[1.02]",
+              // Remove scale effect that causes alignment issues
+              "hover:translate-y-[-2px]",
               "bg-white border border-gray-200/80",
               "shadow-[0_2px_8px_rgba(0,0,0,0.05)]",
               "hover:shadow-[0_12px_24px_rgba(0,0,0,0.12)]",
