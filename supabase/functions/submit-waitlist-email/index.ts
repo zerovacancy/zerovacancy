@@ -1,8 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.7.1'
 import { corsHeaders } from "../_shared/cors.ts"
-import { validateCsrf, handleCsrfResponse } from "../_shared/csrf.ts"
-import { checkRateLimit, handleRateLimitResponse } from "../_shared/rate-limit.ts"
 import { Resend } from "https://esm.sh/resend@1.1.0"
 
 serve(async (req) => {
@@ -15,23 +13,6 @@ serve(async (req) => {
       },
       status: 204
     })
-  }
-  
-  // CSRF validation
-  const csrfValidation = validateCsrf(req);
-  const csrfResponse = handleCsrfResponse(csrfValidation, corsHeaders);
-  if (csrfResponse) {
-    return csrfResponse;
-  }
-  
-  // Rate limiting - more restrictive for public endpoints
-  const rateLimitCheck = checkRateLimit(req, {
-    maxRequests: 20,        // 20 requests per minute
-    windowMs: 60 * 1000     // 1 minute window
-  });
-  const rateLimitResponse = handleRateLimitResponse(rateLimitCheck, corsHeaders);
-  if (rateLimitResponse) {
-    return rateLimitResponse;
   }
 
   // Log incoming request details for debugging

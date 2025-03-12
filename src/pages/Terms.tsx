@@ -33,69 +33,6 @@ const Terms = () => {
               <li>Platform fees are calculated as a percentage of the total transaction value and will be clearly displayed before checkout.</li>
             </ul>
 
-            <h3 className="text-lg font-medium mt-4 mb-2">1.2 Refund Policy</h3>
-            <ul className="list-disc pl-6 text-muted-foreground space-y-2">
-              <li>Refunds may be issued if a Creator fails to deliver the agreed-upon content within the specified timeframe.</li>
-              <li>If the delivered content does not meet the agreed-upon specifications, clients may request revisions or a refund.</li>
-              <li>Refund requests must be submitted within 14 days of content delivery.</li>
-              <li>Subscription fees are non-refundable after the first 7 days of service.</li>
-            </ul>
-
-            <h2 className="text-xl font-semibold mt-6 mb-3">2. User Accounts</h2>
-            <h3 className="text-lg font-medium mt-4 mb-2">2.1 Account Creation and Maintenance</h3>
-            <ul className="list-disc pl-6 text-muted-foreground space-y-2">
-              <li>Users must provide accurate and complete information when creating an account.</li>
-              <li>Users are responsible for maintaining the confidentiality of their account credentials.</li>
-              <li>Users must promptly update their account information if it changes.</li>
-              <li>ZeroVacancy reserves the right to suspend or terminate accounts that violate our terms or engage in fraudulent activity.</li>
-            </ul>
-
-            <h3 className="text-lg font-medium mt-4 mb-2">2.2 Creator Accounts</h3>
-            <ul className="list-disc pl-6 text-muted-foreground space-y-2">
-              <li>Creators must verify their identity and qualifications before offering services on the platform.</li>
-              <li>Portfolio content must accurately represent the Creator's own work.</li>
-              <li>Creators are responsible for accurately describing their services, qualifications, and pricing.</li>
-              <li>Creators must maintain a professional standard of communication and service delivery.</li>
-            </ul>
-
-            <h2 className="text-xl font-semibold mt-6 mb-3">3. Content Ownership and Rights</h2>
-            <h3 className="text-lg font-medium mt-4 mb-2">3.1 Intellectual Property</h3>
-            <ul className="list-disc pl-6 text-muted-foreground space-y-2">
-              <li>Upon full payment, Clients typically receive full commercial usage rights to the commissioned content unless otherwise specified in a custom agreement.</li>
-              <li>Creators may retain the right to display the work in their portfolios unless otherwise agreed upon.</li>
-              <li>Clients are responsible for ensuring they have the rights to use any materials provided to Creators.</li>
-              <li>ZeroVacancy does not claim ownership of any content created through the platform.</li>
-            </ul>
-
-            <h2 className="text-xl font-semibold mt-6 mb-3">4. Platform Usage</h2>
-            <h3 className="text-lg font-medium mt-4 mb-2">4.1 Prohibited Activities</h3>
-            <ul className="list-disc pl-6 text-muted-foreground space-y-2">
-              <li>Users may not circumvent the platform to avoid fees.</li>
-              <li>Users may not post content that is illegal, harmful, or infringing on third-party rights.</li>
-              <li>Users may not manipulate ratings or reviews.</li>
-              <li>Harassment, discrimination, or abusive behavior toward other users is prohibited.</li>
-            </ul>
-
-            <h2 className="text-xl font-semibold mt-6 mb-3">5. Dispute Resolution</h2>
-            <p className="text-muted-foreground mb-4">
-              All disputes between users shall first attempt to be resolved through our platform's dispute resolution process. If this is unsuccessful, disputes will be resolved through binding arbitration in accordance with the rules of the American Arbitration Association.
-            </p>
-
-            <h2 className="text-xl font-semibold mt-6 mb-3">6. Privacy Policy</h2>
-            <p className="text-muted-foreground mb-4">
-              Our Privacy Policy, available at <a href="/privacy" className="text-brand-purple hover:underline">zerovacancy.ai/privacy</a>, is incorporated into these Terms and Conditions and explains how we collect, use, and protect your personal information.
-            </p>
-
-            <h2 className="text-xl font-semibold mt-6 mb-3">7. Modifications to Terms</h2>
-            <p className="text-muted-foreground mb-4">
-              ZeroVacancy reserves the right to modify these Terms and Conditions at any time. Users will be notified of significant changes, and continued use of the platform constitutes acceptance of the modified terms.
-            </p>
-
-            <h2 className="text-xl font-semibold mt-6 mb-3">8. Limitation of Liability</h2>
-            <p className="text-muted-foreground mb-4">
-              ZeroVacancy is not liable for disputes between users, content quality issues, or indirect, consequential, or incidental damages arising from platform use. Our liability is limited to the amount paid by the user for the specific service in question.
-            </p>
-
             <h2 className="text-xl font-semibold mt-6 mb-3">9. Contact Information</h2>
             <p className="text-muted-foreground mb-4">
               For questions about these Terms and Conditions, please contact us at:

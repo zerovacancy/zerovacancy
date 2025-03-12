@@ -165,11 +165,18 @@ const Footer = () => {
               "flex items-center",
               isMobile ? "flex-col space-y-3 mt-3" : "gap-6"
             )}>
+              <button
+                onClick={() => setShowTerms(true)}
+                className="text-brand-text-light hover:text-brand-purple-medium text-sm transition-colors flex items-center font-inter"
+              >
+                <span>Terms & Conditions</span>
+                <ExternalLink className="ml-1 w-3 h-3 text-gray-400" />
+              </button>
               <Link
                 to="/terms"
                 className="text-brand-text-light hover:text-brand-purple-medium text-sm transition-colors font-inter"
               >
-                Terms & Conditions
+                Terms & Conditions (Page)
               </Link>
               <Link
                 to="/privacy"
