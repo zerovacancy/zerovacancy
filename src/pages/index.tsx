@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef, lazy, Suspense, useCallback } from 'react';
 import Header from '../components/Header';
 import { Hero } from '../components/hero/Hero';
@@ -10,7 +11,6 @@ import { AnimatedShinyText } from '@/components/ui/animated-shiny-text';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import { BackgroundEffects } from '@/components/features/BackgroundEffects';
-import { StarBorder } from '@/components/ui/star-border';
 
 // Lazy-loaded components
 const OptimizedHowItWorks = lazy(() => import('../components/how-it-works/OptimizedHowItWorks'));
@@ -119,30 +119,24 @@ const Index = () => {
       {showBanner && !isMobile && (
         <div className="relative">
           <Banner variant="purple" size="lg" action={
-              <StarBorder 
-                color="#8A4FFF" 
-                speed="4s"
-                className="overflow-visible"
+              <Button 
+                variant="secondary" 
+                size="sm" 
+                className={cn(
+                  "flex text-xs sm:text-sm items-center whitespace-nowrap", 
+                  "px-3 py-2 sm:px-5 sm:py-2.5 min-w-[8rem] sm:min-w-[9rem] min-h-[2.25rem] sm:min-h-[2.5rem]", 
+                  "bg-gradient-to-r from-[#8A4FFF] to-[#00C2A8] text-white font-bold", 
+                  "border-none", 
+                  "transition-all duration-200", 
+                  "touch-manipulation", 
+                  "shadow-[0_2px_10px_rgba(0,0,0,0.15)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.2)]",
+                  "hover:opacity-90",
+                  "before:hidden" // Hide the white animation effect
+                )} 
+                onClick={handleTryNowClick}
               >
-                <Button 
-                  variant="secondary" 
-                  size="sm" 
-                  className={cn(
-                    "flex text-xs sm:text-sm items-center whitespace-nowrap", 
-                    "px-3 py-2 sm:px-5 sm:py-2.5 min-w-[8rem] sm:min-w-[9rem] min-h-[2.25rem] sm:min-h-[2.5rem]", 
-                    "bg-gradient-to-r from-[#8A4FFF] to-[#00C2A8] text-white font-bold", 
-                    "border-none", 
-                    "transition-all duration-200", 
-                    "touch-manipulation", 
-                    "shadow-[0_2px_10px_rgba(0,0,0,0.15)] hover:shadow-[0_4px_20px_rgba(0,0,0,0.2)]",
-                    "hover:opacity-90",
-                    "before:hidden" // Hide the white animation effect
-                  )} 
-                  onClick={handleTryNowClick}
-                >
-                  Get Early Access
-                </Button>
-              </StarBorder>
+                Get Early Access
+              </Button>
             } 
             layout="complex" 
             isClosable 
