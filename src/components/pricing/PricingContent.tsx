@@ -42,7 +42,7 @@ export const PricingContent = ({ subscription, isLoading }: PricingContentProps)
     {
       title: "Basic (Free)",
       price: 0,
-      interval: "mo",
+      interval: isYearly ? "mo" : "mo",
       description: PLAN_DESCRIPTIONS.starter,
       features: [
         "**Access & Discovery**", 
@@ -58,7 +58,7 @@ export const PricingContent = ({ subscription, isLoading }: PricingContentProps)
     {
       title: "Professional",
       price: isYearly ? PRICING.proAnnual : PRICING.proMonthly,
-      interval: isYearly ? "mo, billed annually" : "mo",
+      interval: isYearly ? "mo" : "mo",
       description: PLAN_DESCRIPTIONS.pro,
       features: [
         "**Submit Requests for Proposals (RFPs)**", 
@@ -80,7 +80,7 @@ export const PricingContent = ({ subscription, isLoading }: PricingContentProps)
     {
       title: "Premium",
       price: isYearly ? PRICING.premiumAnnual : PRICING.premiumMonthly,
-      interval: isYearly ? "mo, billed annually" : "mo",
+      interval: isYearly ? "mo" : "mo",
       description: PLAN_DESCRIPTIONS.premium,
       features: [
         "**Premium Requests & Access**",

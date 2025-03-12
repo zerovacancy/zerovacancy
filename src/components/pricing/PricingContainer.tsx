@@ -80,7 +80,6 @@ export const PricingContainer = () => {
     {
       title: "Basic (Free)",
       price: 0,
-      interval: "mo",
       description: PLAN_DESCRIPTIONS.starter,
       valueProposition: VALUE_PROPOSITIONS.starter,
       features: groupFeaturesByCategory(FEATURES.free),
@@ -91,28 +90,26 @@ export const PricingContainer = () => {
     },
     {
       title: "Professional",
-      price: isYearly ? currentPrices.pro : 99,
-      interval: isYearly ? "mo, billed annually" : "mo",
+      price: currentPrices.pro,
       description: PLAN_DESCRIPTIONS.pro,
       valueProposition: VALUE_PROPOSITIONS.pro,
       features: groupFeaturesByCategory(FEATURES.pro),
       cta: "Choose Professional",
       color: "purple",
       popularPlan: true,
-      savings: isYearly ? getSavings('pro') : null,
+      savings: getSavings('pro'),
       footerText: "🚀 Upgrade to Premium for more revisions, deeper insights, and content that works across all marketing channels."
     },
     {
       title: "Premium",
-      price: isYearly ? currentPrices.premium : 399,
-      interval: isYearly ? "mo, billed annually" : "mo",
+      price: currentPrices.premium,
       description: PLAN_DESCRIPTIONS.premium,
       valueProposition: VALUE_PROPOSITIONS.premium,
       features: groupFeaturesByCategory(FEATURES.premium),
       cta: "Upgrade to Premium",
       color: "emerald",
       popularPlan: false,
-      savings: isYearly ? getSavings('premium') : null,
+      savings: getSavings('premium'),
       footerText: PLAN_CTAS.premium
     }
   ];
@@ -266,11 +263,9 @@ export const PricingContainer = () => {
                     </div>
                     
                     {/* Annual savings badge */}
-                    {isYearly && tier.price > 0 && (
+                    {isYearly && tier.savings && (
                       <div className="mt-1.5 inline-block bg-green-50 text-green-600 px-2 py-0.5 rounded-full text-[10px] font-medium font-space whitespace-nowrap">
-                        {tier.title === "Professional" ? 
-                          "Save $240/year" : 
-                          "Save $840/year"}
+                        Save ${tier.savings}/year
                       </div>
                     )}
                   </div>
@@ -488,11 +483,9 @@ export const PricingContainer = () => {
                       <span className="ml-2 text-sm text-brand-text-light font-space">/{isYearly ? "mo, billed yearly" : "mo"}</span>
                     </div>
                     
-                    {isYearly && tier.price > 0 && (
+                    {isYearly && tier.savings && (
                       <div className="mt-2 inline-block bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium font-space">
-                        {tier.title === "Professional" ? 
-                          "Save $240/year" : 
-                          "Save $840/year"}
+                        Save ${tier.savings}/year
                       </div>
                     )}
                   </div>
