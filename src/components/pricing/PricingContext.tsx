@@ -6,11 +6,11 @@ interface PricingContextType {
   isYearly: boolean;
   setIsYearly: (isYearly: boolean) => void;
   currentPrices: {
-    basic: number;
-    professional: number;
+    starter: number;
+    pro: number;
     premium: number;
   };
-  getSavings: (planType: 'professional' | 'premium') => number;
+  getSavings: (planType: 'pro' | 'premium') => number;
   animateChange: boolean;
 }
 
@@ -22,17 +22,17 @@ export function PricingProvider({ children }: { children: ReactNode }) {
   
   // Update prices based on billing period
   const currentPrices = {
-    basic: 0,
-    professional: isYearly ? PRICING.starterAnnual : PRICING.starterMonthly,
+    starter: 0,
+    pro: isYearly ? PRICING.starterAnnual : PRICING.starterMonthly,
     premium: isYearly ? PRICING.proAnnual : PRICING.proMonthly
   };
   
   // Calculate savings for each plan
-  const getSavings = (planType: 'professional' | 'premium') => {
+  const getSavings = (planType: 'pro' | 'premium') => {
     if (!isYearly) return 0;
     
-    const monthlyCost = planType === 'professional' ? PRICING.starterMonthly : PRICING.proMonthly;
-    const annualCost = planType === 'professional' ? PRICING.starterAnnual : PRICING.proAnnual;
+    const monthlyCost = planType === 'pro' ? PRICING.starterMonthly : PRICING.proMonthly;
+    const annualCost = planType === 'pro' ? PRICING.starterAnnual : PRICING.proAnnual;
     
     return Math.round(12 * (monthlyCost - annualCost));
   };

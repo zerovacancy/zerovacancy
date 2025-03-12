@@ -71,26 +71,26 @@ export const PricingContainer = () => {
   const pricingTiers = [
     {
       title: "Basic",
-      price: currentPrices.basic,
-      description: PLAN_DESCRIPTIONS.basic,
-      valueProposition: VALUE_PROPOSITIONS.basic,
+      price: currentPrices.starter,
+      description: PLAN_DESCRIPTIONS.starter,
+      valueProposition: VALUE_PROPOSITIONS.starter,
       features: groupFeaturesByCategory(FEATURES.free),
       cta: "Start for Free",
       color: "blue",
       popularPlan: false,
-      footerText: PLAN_CTAS.basic
+      footerText: PLAN_CTAS.starter
     },
     {
       title: "Professional",
-      price: currentPrices.professional,
-      description: PLAN_DESCRIPTIONS.professional,
-      valueProposition: VALUE_PROPOSITIONS.professional,
+      price: currentPrices.pro,
+      description: PLAN_DESCRIPTIONS.pro,
+      valueProposition: VALUE_PROPOSITIONS.pro,
       features: groupFeaturesByCategory(FEATURES.starter),
       cta: "Choose Professional",
       color: "purple",
       popularPlan: true,
-      savings: getSavings('professional'),
-      footerText: PLAN_CTAS.professional
+      savings: getSavings('pro'),
+      footerText: PLAN_CTAS.pro
     },
     {
       title: "Premium",
