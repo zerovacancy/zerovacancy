@@ -57,6 +57,8 @@ export const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
           ref={inputRef || ref} 
           type="email" 
           placeholder="Enter your email" 
+          inputMode="email"
+          autoComplete="email"
           className={cn(
             "border transition-all duration-300",
             "focus:scale-100", // Prevent default scale to use our custom one
@@ -66,7 +68,7 @@ export const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
                   "bg-white", 
                   isFocused ? "border-indigo-400 ring-2 ring-indigo-200" : "border-gray-100",
                   "pl-10 pr-3 py-2",
-                  "text-sm",
+                  "text-base",
                   "placeholder:text-gray-400", 
                   "rounded-xl",
                   "shadow-[inset_0_1px_2px_rgba(0,0,0,0.08)]"

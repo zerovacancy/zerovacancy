@@ -12,6 +12,17 @@ export const prefersReducedMotion = () => {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 };
 
+// Prevent zoom on mobile devices
+export const preventMobileZoom = () => {
+  if (typeof window === "undefined") return;
+  // Find existing viewport meta tag
+  const viewport = document.querySelector('meta[name="viewport"]');
+  if (viewport) {
+    // Update viewport settings to prevent zoom
+    viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+  }
+};
+
 // Helper classes to conditionally apply to components
 export const mobileOptimizationClasses = {
   // Hide elements completely on mobile
