@@ -128,7 +128,7 @@ export function Hero() {
           )}
         >
           {isMobile ? (
-            "Connect with elite content creators who transform your spaces into compelling visual stories. Don't just show your property—it showcases its potential."
+            "Connect with elite content creators who transform your spaces into compelling visual stories."
           ) : (
             "Connect with elite content creators who transform your spaces into compelling visual stories. Our curated network of real estate specialists delivers photography, video, and 3D content that doesn't just show your property—it showcases its potential."
           )}
