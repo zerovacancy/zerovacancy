@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -18,6 +19,7 @@ export const PricingContainer = () => {
   const [showStickyHeader, setShowStickyHeader] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   
+  // Handle scrolling for sticky header
   useEffect(() => {
     if (!isMobile) return;
     
@@ -34,6 +36,7 @@ export const PricingContainer = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [isMobile]);
   
+  // Toggle expanded features for a specific plan
   const toggleFeatures = (index: number) => {
     setExpandedFeatures(prev => ({
       ...prev,
@@ -41,11 +44,13 @@ export const PricingContainer = () => {
     }));
   };
   
+  // Helper to group features by category
   const groupFeaturesByCategory = (features: PricingFeature[]) => {
     const result: {[key: string]: PricingFeature[]} = {};
     let currentCategory = "Core Features";
     
     features.forEach(feature => {
+      // Check if the feature text indicates a category
       if (typeof feature.text === 'string' && feature.text.startsWith("**") && feature.text.endsWith("**")) {
         currentCategory = feature.text.slice(2, -2);
         if (!result[currentCategory]) {
@@ -62,29 +67,30 @@ export const PricingContainer = () => {
     return result;
   };
 
+  // Define pricing tiers with all necessary data
   const pricingTiers = [
     {
-      title: "Starter",
-      price: currentPrices.starter,
-      description: PLAN_DESCRIPTIONS.starter,
-      valueProposition: VALUE_PROPOSITIONS.starter,
+      title: "Basic",
+      price: currentPrices.basic,
+      description: PLAN_DESCRIPTIONS.basic,
+      valueProposition: VALUE_PROPOSITIONS.basic,
       features: groupFeaturesByCategory(FEATURES.free),
       cta: "Start for Free",
       color: "blue",
       popularPlan: false,
-      footerText: PLAN_CTAS.starter
+      footerText: PLAN_CTAS.basic
     },
     {
-      title: "Pro",
-      price: currentPrices.pro,
-      description: PLAN_DESCRIPTIONS.pro,
-      valueProposition: VALUE_PROPOSITIONS.pro,
+      title: "Professional",
+      price: currentPrices.professional,
+      description: PLAN_DESCRIPTIONS.professional,
+      valueProposition: VALUE_PROPOSITIONS.professional,
       features: groupFeaturesByCategory(FEATURES.starter),
-      cta: "Choose Pro",
+      cta: "Choose Professional",
       color: "purple",
       popularPlan: true,
-      savings: getSavings('pro'),
-      footerText: PLAN_CTAS.pro
+      savings: getSavings('professional'),
+      footerText: PLAN_CTAS.professional
     },
     {
       title: "Premium",
@@ -100,6 +106,7 @@ export const PricingContainer = () => {
     }
   ];
   
+  // Get color scheme based on plan type
   const getColorScheme = (color: string) => {
     switch (color) {
       case "blue":
@@ -111,7 +118,7 @@ export const PricingContainer = () => {
           button: "bg-gradient-to-r from-blue-500 to-blue-600 hover:bg-blue-600",
           highlight: "bg-blue-50",
           gradient: mobileOptimizationClasses.pricingGradientBasic,
-          cardBg: "bg-gradient-to-b from-blue-50/50 to-white"
+          cardBg: "bg-gradient-to-b from-blue-50/50 to-white" // Added consistent card background
         };
       case "purple":
         return {
@@ -122,7 +129,7 @@ export const PricingContainer = () => {
           button: "bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-600 hover:from-purple-700 hover:via-blue-700 hover:to-cyan-700",
           highlight: "bg-purple-50",
           gradient: mobileOptimizationClasses.pricingGradientPro,
-          cardBg: "bg-gradient-to-b from-purple-50/50 to-white"
+          cardBg: "bg-gradient-to-b from-purple-50/50 to-white" // Added consistent card background
         };
       case "emerald":
         return {
@@ -133,7 +140,7 @@ export const PricingContainer = () => {
           button: "bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700",
           highlight: "bg-emerald-50",
           gradient: mobileOptimizationClasses.pricingGradientPremium,
-          cardBg: "bg-gradient-to-b from-emerald-50/50 to-white"
+          cardBg: "bg-gradient-to-b from-emerald-50/50 to-white" // Added consistent card background
         };
       default:
         return {
@@ -144,13 +151,14 @@ export const PricingContainer = () => {
           button: "bg-gray-500 hover:bg-gray-600",
           highlight: "bg-gray-50",
           gradient: "",
-          cardBg: "bg-gradient-to-b from-gray-50/50 to-white"
+          cardBg: "bg-gradient-to-b from-gray-50/50 to-white" // Added consistent card background
         };
     }
   };
   
   return (
     <div className="w-full pb-10" ref={containerRef}>
+      {/* Sticky header for mobile */}
       <AnimatePresence>
         {isMobile && showStickyHeader && (
           <motion.div
@@ -168,6 +176,7 @@ export const PricingContainer = () => {
         )}
       </AnimatePresence>
       
+      {/* Mobile vertical stack layout */}
       {isMobile ? (
         <div className="flex flex-col gap-2 sm:gap-3 lg:gap-4 px-4">
           {pricingTiers.map((tier, index) => {
@@ -181,12 +190,13 @@ export const PricingContainer = () => {
                   "rounded-lg overflow-hidden border-2 transition-all mt-4",
                   tier.popularPlan ? "border-brand-purple shadow-lg" : "border-slate-200",
                   tier.popularPlan && "relative",
-                  colorScheme.cardBg
+                  colorScheme.cardBg // Using consistent background for the whole card
                 )}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
+                {/* Plan header */}
                 <div className={cn(
                   "p-4 flex justify-between items-start"
                 )}>
@@ -206,6 +216,7 @@ export const PricingContainer = () => {
                       <span className="text-sm text-brand-text-light font-space">/{isYearly ? "mo, billed yearly" : "mo"}</span>
                     </div>
                     
+                    {/* Annual savings badge */}
                     {isYearly && tier.savings && (
                       <div className="mt-1 inline-block bg-green-50 text-green-600 px-2 py-0.5 rounded text-xs font-medium font-space">
                         Save ${tier.savings}/year
@@ -214,6 +225,7 @@ export const PricingContainer = () => {
                   </div>
                 </div>
                 
+                {/* Main CTA */}
                 <div className="px-4 pb-2 pt-3">
                   <Button 
                     className={cn(
@@ -225,6 +237,7 @@ export const PricingContainer = () => {
                   </Button>
                 </div>
                 
+                {/* Accordion-style feature sections - improved button */}
                 <div className="px-4 pb-4">
                   <button
                     onClick={() => toggleFeatures(index)}
@@ -244,6 +257,7 @@ export const PricingContainer = () => {
                     )} />
                   </button>
                   
+                  {/* Expandable features */}
                   <AnimatePresence>
                     {isExpanded && (
                       <motion.div
@@ -290,6 +304,7 @@ export const PricingContainer = () => {
             );
           })}
           
+          {/* Compact feature comparison table for mobile - removed border-t and changed button styling */}
           <div className="mt-4 pt-2">
             <button
               onClick={() => setExpandedComparisonTable(!expandedComparisonTable)}
@@ -321,6 +336,7 @@ export const PricingContainer = () => {
                       <div className="w-1/6 text-center text-xs font-medium text-emerald-600 font-space">Premium</div>
                     </div>
                     
+                    {/* Sample comparison items */}
                     <div className="space-y-3">
                       <div className="flex items-center">
                         <div className="w-1/2 text-xs text-brand-text-secondary font-inter">Browse Creators</div>
@@ -360,6 +376,7 @@ export const PricingContainer = () => {
           </div>
         </div>
       ) : (
+        // Desktop card grid layout
         <div className="grid grid-cols-1 md:grid-cols-3 gap-2 sm:gap-3 lg:gap-4">
           {pricingTiers.map((tier, index) => {
             const colorScheme = getColorScheme(tier.color);
@@ -373,13 +390,14 @@ export const PricingContainer = () => {
                     ? `border-brand-purple shadow-xl ${colorScheme.border} scale-105 z-10` 
                     : "border-slate-200",
                   tier.popularPlan && "relative",
-                  colorScheme.cardBg
+                  colorScheme.cardBg // Using consistent background for the whole card
                 )}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
                 <div className="p-4 sm:p-6">
+                  {/* Header */}
                   <div className="mb-4">
                     <h3 className={cn(
                       "text-xl font-bold font-jakarta",
@@ -390,6 +408,7 @@ export const PricingContainer = () => {
                     <p className="text-sm text-brand-text-secondary font-inter mt-1">{tier.valueProposition}</p>
                   </div>
                   
+                  {/* Pricing */}
                   <div className="mb-6">
                     <div className="flex items-baseline">
                       <span className="text-4xl font-bold text-brand-purple-dark font-space">${tier.price}</span>
@@ -403,6 +422,7 @@ export const PricingContainer = () => {
                     )}
                   </div>
                   
+                  {/* CTA Button */}
                   <Button 
                     className={cn(
                       "w-full py-3 px-5 rounded-lg text-white font-medium transition-all h-11",
@@ -412,6 +432,7 @@ export const PricingContainer = () => {
                     {tier.cta}
                   </Button>
                   
+                  {/* Features */}
                   <div className="mt-8 border-t border-slate-100 pt-4">
                     <h4 className="text-sm font-semibold text-brand-text-primary font-jakarta mb-4">What's included:</h4>
                     
@@ -451,5 +472,18 @@ export const PricingContainer = () => {
                     </div>
                   </div>
                   
-                  {
-
+                  {/* Footer note */}
+                  {tier.footerText && (
+                    <div className="mt-6 pt-4 border-t border-slate-100 text-xs text-brand-text-light font-space">
+                      {tier.footerText}
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+};
