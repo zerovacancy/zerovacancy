@@ -119,16 +119,11 @@ const Index = () => {
                   variant="secondary" 
                   size="sm" 
                   className={cn(
-                    "flex text-xs sm:text-sm items-center whitespace-nowrap", 
-                    "px-3 py-2 sm:px-5 sm:py-2.5 min-w-[8rem] sm:min-w-[9rem] min-h-[2.25rem] sm:min-h-[2.5rem]", 
-                    "bg-gradient-to-r from-[#9C6FFF] to-[#00C2A8] text-white font-bold", 
+                    "bg-gradient-to-r from-[#9C6FFF] to-[#00C2A8] text-white font-bold",
                     "border border-white/20", 
                     "backdrop-blur-sm",
-                    "transition-all duration-200", 
-                    "touch-manipulation", 
                     "shadow-[0_2px_10px_rgba(0,194,168,0.2)] hover:shadow-[0_4px_20px_rgba(0,194,168,0.3)]",
-                    "hover:opacity-90 relative z-10",
-                    "before:hidden" // Hide the white animation effect
+                    "hover:opacity-90"
                   )} 
                   onClick={handleTryNowClick}
                 >
