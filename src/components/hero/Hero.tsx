@@ -64,7 +64,7 @@ export function Hero() {
         <div className="relative">
           <h1 className={cn(
             "tracking-tight leading-[1.15] text-center font-bold font-jakarta",
-            "mb-4 sm:mb-6"
+            "mb-2 sm:mb-6" // Reduced bottom margin on mobile from mb-4 to mb-2
           )}>
             <span 
               className={cn(
@@ -72,7 +72,7 @@ export function Hero() {
                 "text-3xl sm:text-5xl lg:text-6xl",
                 "tracking-[-0.02em]", 
                 "text-brand-purple-dark",
-                "block sm:inline-block mb-1 sm:mb-0 font-jakarta"
+                "block sm:inline-block mb-0 sm:mb-0 font-jakarta" // Changed mb-1 to mb-0 on mobile
               )}
             >
               PROPERTY MARKETING
@@ -83,8 +83,10 @@ export function Hero() {
               aria-label="Property Content animation"
               className={cn(
                 "relative flex w-full justify-center",
-                "h-[4.5em] sm:h-[3em] md:h-[2.5em] lg:h-[2.5em]",
-                "overflow-visible mt-1 sm:mt-1"
+                isMobile 
+                  ? "h-[3.5em] mt-0" // Reduced height and top margin on mobile
+                  : "h-[4.5em] sm:h-[3em] md:h-[2.5em] lg:h-[2.5em] mt-1 sm:mt-1",
+                "overflow-visible"
               )}
             >
               <TextRotate
@@ -121,7 +123,8 @@ export function Hero() {
             "text-center", 
             "max-w-[90%] sm:max-w-[500px]",
             "mx-auto", 
-            "font-inter"
+            "font-inter",
+            isMobile ? "mt-0" : "" // Remove top margin on mobile
           )}
         >
           Connect with elite content creators who transform your spaces into compelling visual stories. Our curated network of real estate
@@ -132,16 +135,16 @@ export function Hero() {
       <div 
         className={cn(
           "w-full", 
-          "mt-5 sm:mt-6",
+          isMobile ? "mt-3" : "mt-5 sm:mt-6", // Reduced top margin on mobile from mt-5 to mt-3
           "px-4 sm:px-4",
           isInView ? "animate-fade-in delay-200" : "opacity-0" 
         )}
       >
-        <WaitlistCTA className="mb-4 sm:mb-6" buttonText="RESERVE EARLY ACCESS" showSocialProof={true} />
+        <WaitlistCTA className={cn(isMobile ? "mb-2" : "mb-4 sm:mb-6")} buttonText="RESERVE EARLY ACCESS" showSocialProof={true} />
       </div>
 
       {isMobile && isInView && (
-        <div className="w-full flex justify-center mt-2 animate-bounce-subtle">
+        <div className="w-full flex justify-center mt-1 animate-bounce-subtle"> {/* Reduced top margin from mt-2 to mt-1 */}
           <svg 
             width="20" 
             height="20" 
