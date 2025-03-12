@@ -61,5 +61,5 @@ export const mobileOptimizationClasses = {
   // Social media icon classes
   socialIconInstagram: "text-gray-600 hover:text-[#E1306C] transition-colors cursor-pointer",
   socialIconLinkedin: "text-gray-600 hover:text-[#0A66C2] transition-colors cursor-pointer",
-  socialIconTiktok: "text-gray-600 hover:text-[#000000] transition-colors cursor-pointer",
+  socialIconShare: "text-gray-600 hover:text-[#000000] transition-colors cursor-pointer",
 };

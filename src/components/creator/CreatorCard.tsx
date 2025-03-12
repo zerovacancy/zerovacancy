@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Card } from '../ui/card';
-import { ArrowRight, Star, Instagram, Linkedin, TikTok } from 'lucide-react';
+import { ArrowRight, Instagram, Linkedin, Share2 } from 'lucide-react';
 import { Dialog } from "../ui/dialog";
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -69,7 +69,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   <div className="flex space-x-1.5">
                     <Instagram className="w-4 h-4 text-gray-500" />
                     <Linkedin className="w-4 h-4 text-gray-500" />
-                    <TikTok className="w-4 h-4 text-gray-500" />
+                    <Share2 className="w-4 h-4 text-gray-500" />
                   </div>
                 </div>
                 <p className="text-xs text-gray-600 mt-1.5">{creator.services.join(" • ")}</p>
@@ -155,9 +155,9 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                       <p className="text-sm text-gray-500 font-light mt-0.5">{creator.location}</p>
                     </div>
                     <div className="flex space-x-2">
-                      <Instagram size={16} className="text-gray-600 hover:text-[#E1306C] transition-colors" />
-                      <Linkedin size={16} className="text-gray-600 hover:text-[#0A66C2] transition-colors" />
-                      <TikTok size={16} className="text-gray-600 hover:text-[#000000] transition-colors" />
+                      <Instagram size={16} className="text-gray-600 hover:text-[#E1306C] transition-colors cursor-pointer" />
+                      <Linkedin size={16} className="text-gray-600 hover:text-[#0A66C2] transition-colors cursor-pointer" />
+                      <Share2 size={16} className="text-gray-600 hover:text-[#000000] transition-colors cursor-pointer" />
                     </div>
                   </div>
                   <p className="text-xs text-gray-600 mt-1.5 tracking-wide">{creator.services.join(" • ")}</p>
