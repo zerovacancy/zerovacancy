@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
@@ -89,6 +90,18 @@ export function Hero() {
                 isMobile && "mobile-optimize"
               )}
             >
+              {/* Adding a background highlight for the text rotation */}
+              <div 
+                className={cn(
+                  "absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2",
+                  "bg-[#F5F0FF]/40 rounded-lg z-[-1]",
+                  isMobile 
+                    ? "w-[105%] h-[85%] px-3" 
+                    : "w-[110%] h-[80%] px-6 sm:px-8 lg:px-10"
+                )}
+                aria-hidden="true"
+              ></div>
+              
               <TextRotate
                 texts={TITLES}
                 mainClassName="flex justify-center items-center overflow-visible"
