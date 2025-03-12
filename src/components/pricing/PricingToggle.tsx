@@ -93,6 +93,22 @@ export const PricingToggle = ({
           </span>
         </motion.div>
       )}
+      
+      {/* Monthly/Annual toggle descriptions */}
+      <div className="mt-2 flex justify-center space-x-10 text-xs text-slate-500">
+        <div className={cn(
+          "transition-colors duration-200",
+          !isYearly ? "text-brand-purple-dark font-medium" : ""
+        )}>
+          Pay monthly
+        </div>
+        <div className={cn(
+          "transition-colors duration-200",
+          isYearly ? "text-brand-purple-dark font-medium" : ""
+        )}>
+          Pay annually
+        </div>
+      </div>
     </div>
   );
 };

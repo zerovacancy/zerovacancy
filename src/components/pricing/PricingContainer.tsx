@@ -266,9 +266,11 @@ export const PricingContainer = () => {
                     </div>
                     
                     {/* Annual savings badge */}
-                    {isYearly && tier.savings && (
+                    {isYearly && tier.price > 0 && (
                       <div className="mt-1.5 inline-block bg-green-50 text-green-600 px-2 py-0.5 rounded-full text-[10px] font-medium font-space whitespace-nowrap">
-                        Save ${tier.savings}/year
+                        {tier.title === "Professional" ? 
+                          "Save $240/year" : 
+                          "Save $840/year"}
                       </div>
                     )}
                   </div>
@@ -486,9 +488,11 @@ export const PricingContainer = () => {
                       <span className="ml-2 text-sm text-brand-text-light font-space">/{isYearly ? "mo, billed yearly" : "mo"}</span>
                     </div>
                     
-                    {isYearly && tier.savings && (
+                    {isYearly && tier.price > 0 && (
                       <div className="mt-2 inline-block bg-green-50 text-green-600 px-2 py-1 rounded text-xs font-medium font-space">
-                        Save ${tier.savings}/year
+                        {tier.title === "Professional" ? 
+                          "Save $240/year" : 
+                          "Save $840/year"}
                       </div>
                     )}
                   </div>
