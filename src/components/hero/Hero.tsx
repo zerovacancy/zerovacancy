@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
@@ -106,8 +105,11 @@ export function Hero() {
                   "overflow-visible"
                 )}
                 transition={{ 
-                  type: "tween",
-                  duration: 0.5,
+                  type: "spring",
+                  damping: 30,
+                  stiffness: 200,
+                  mass: 1,
+                  duration: isMobile ? 0.7 : 0.5,
                   ease: "easeInOut"
                 }}
                 auto={true}
