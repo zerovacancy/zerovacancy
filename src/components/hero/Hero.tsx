@@ -90,23 +90,21 @@ export function Hero() {
                 isMobile && "mobile-optimize"
               )}
             >
-              {/* Background highlight for the rotating text */}
+              {/* Adding a background highlight for the text rotation */}
               <div 
                 className={cn(
                   "absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2",
-                  "bg-[#F5F0FF]/50 rounded-xl", 
-                  "z-0", // Ensure it's behind the text but still visible
+                  "bg-[#F5F0FF]/40 rounded-lg z-[-1]",
                   isMobile 
-                    ? "w-[calc(100%+20px)] h-[90%] -mt-0.5" 
-                    : "w-[calc(100%+60px)] h-[88%] -mt-1", 
-                  "pointer-events-none"
+                    ? "w-[105%] h-[85%] px-3" 
+                    : "w-[110%] h-[80%] px-6 sm:px-8 lg:px-10"
                 )}
                 aria-hidden="true"
               ></div>
               
               <TextRotate
                 texts={TITLES}
-                mainClassName="flex justify-center items-center overflow-visible z-10 relative" // Added z-10 and relative
+                mainClassName="flex justify-center items-center overflow-visible"
                 staggerFrom="last"
                 initial={{ y: "100%", opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
