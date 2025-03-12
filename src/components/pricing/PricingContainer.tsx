@@ -176,7 +176,7 @@ export const PricingContainer = () => {
       
       {/* Mobile vertical stack layout */}
       {isMobile ? (
-        <div className="px-4">
+        <div className="px-2">
         
           {pricingTiers.map((tier, index) => {
             const colorScheme = getColorScheme(tier.color);
@@ -186,7 +186,7 @@ export const PricingContainer = () => {
               <motion.div
                 key={tier.title}
                 className={cn(
-                  "rounded-xl overflow-hidden transition-all mt-4 relative group mx-auto max-w-md w-full",
+                  "rounded-xl overflow-hidden transition-all mt-4 relative group mx-auto max-w-[calc(100%-8px)] w-full",
                   tier.popularPlan ? (isMobile ? "shadow-lg" : "border-brand-purple shadow-lg") : (isMobile ? "" : "border-slate-200"),
                   tier.popularPlan && "relative",
                   colorScheme.cardBg, // Using consistent background for the whole card
@@ -201,7 +201,7 @@ export const PricingContainer = () => {
               >
                 {/* Plan header */}
                 <div className={cn(
-                  "p-4 flex justify-between items-start"
+                  "px-3 py-4 flex justify-between items-start w-full"
                 )}>
                   <div>
                     <h3 className={cn(
@@ -232,7 +232,7 @@ export const PricingContainer = () => {
                 </div>
                 
                 {/* Main CTA */}
-                <div className="px-4 pb-2 pt-3">
+                <div className="px-3 pb-2 pt-3">
                   <Button 
                     className={cn(
                       "w-full py-2 rounded-xl font-medium text-sm transition-all h-auto min-h-10",
@@ -245,7 +245,7 @@ export const PricingContainer = () => {
                 </div>
                 
                 {/* Accordion-style feature sections - improved button */}
-                <div className="px-4 pb-4">
+                <div className="px-3 pb-4">
                   <button
                     onClick={() => toggleFeatures(index)}
                     className={cn(
@@ -312,7 +312,7 @@ export const PricingContainer = () => {
           })}
           
           {/* Compact feature comparison table for mobile - removed border-t and changed button styling */}
-          <div className="mt-4 pt-2 mx-auto max-w-md w-full">
+          <div className="mt-4 pt-2 mx-auto max-w-[calc(100%-8px)] w-full">
             <button
               onClick={() => setExpandedComparisonTable(!expandedComparisonTable)}
               className={cn(
@@ -344,7 +344,7 @@ export const PricingContainer = () => {
                 >
                   <div className={cn(
                     "py-4 px-2 mt-2 rounded-xl shadow-sm relative group",
-                    "w-full max-w-md mx-auto",
+                    "w-full max-w-[calc(100%-8px)] mx-auto",
                     mobileOptimizationClasses.subtleGradientIndigo,
                     "before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:rounded-l-xl", 
                     "before:bg-gradient-to-b from-indigo-500 to-purple-600 before:opacity-0 group-hover:before:opacity-100 before:transition-opacity"
