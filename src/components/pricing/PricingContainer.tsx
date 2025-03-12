@@ -176,7 +176,8 @@ export const PricingContainer = () => {
       
       {/* Mobile vertical stack layout */}
       {isMobile ? (
-        <div className="flex flex-col gap-2 sm:gap-3 lg:gap-4 px-4 max-w-md mx-auto w-full">
+        <div className="px-4">
+        
           {pricingTiers.map((tier, index) => {
             const colorScheme = getColorScheme(tier.color);
             const isExpanded = !!expandedFeatures[index];
@@ -185,7 +186,7 @@ export const PricingContainer = () => {
               <motion.div
                 key={tier.title}
                 className={cn(
-                  "rounded-xl overflow-hidden transition-all mt-4 relative group",
+                  "rounded-xl overflow-hidden transition-all mt-4 relative group mx-auto max-w-md w-full",
                   tier.popularPlan ? (isMobile ? "shadow-lg" : "border-brand-purple shadow-lg") : (isMobile ? "" : "border-slate-200"),
                   tier.popularPlan && "relative",
                   colorScheme.cardBg, // Using consistent background for the whole card
@@ -311,7 +312,7 @@ export const PricingContainer = () => {
           })}
           
           {/* Compact feature comparison table for mobile - removed border-t and changed button styling */}
-          <div className="mt-4 pt-2 max-w-md mx-auto w-full">
+          <div className="mt-4 pt-2 mx-auto max-w-md w-full">
             <button
               onClick={() => setExpandedComparisonTable(!expandedComparisonTable)}
               className={cn(
