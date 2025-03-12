@@ -12,7 +12,7 @@ interface MobileStepsGridSimpleProps {
 const MobileStepsGridSimple: React.FC<MobileStepsGridSimpleProps> = () => {
   return (
     <div className="md:hidden w-full mb-4">
-      {/* Simple grid layout for mobile */}
+      {/* Simple grid layout for mobile with subtle gradient backgrounds */}
       <div className="grid grid-cols-1 gap-4">
         {steps.map((step, index) => (
           <SmallFeatureCard
@@ -21,6 +21,7 @@ const MobileStepsGridSimple: React.FC<MobileStepsGridSimpleProps> = () => {
             title={step.title}
             description={step.description}
             gradientStyle={step.gradientStyle}
+            index={index}
           />
         ))}
       </div>

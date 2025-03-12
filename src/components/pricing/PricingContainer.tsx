@@ -9,6 +9,7 @@ import { PLAN_DESCRIPTIONS, VALUE_PROPOSITIONS, PLAN_CTAS, FEATURES } from "./pr
 import { ChevronDown, Check, Info, X } from "lucide-react";
 import { PricingFeature } from "./types";
 import { Button } from "../ui/button";
+import { mobileOptimizationClasses } from "@/utils/mobile-optimization";
 
 export const PricingContainer = () => {
   const isMobile = useIsMobile();
@@ -115,7 +116,8 @@ export const PricingContainer = () => {
           text: "text-blue-700",
           accent: "bg-blue-500",
           button: "bg-gradient-to-r from-blue-500 to-blue-600 hover:bg-blue-600",
-          highlight: "bg-blue-50"
+          highlight: "bg-blue-50",
+          gradient: mobileOptimizationClasses.pricingGradientBasic
         };
       case "purple":
         return {
@@ -124,7 +126,8 @@ export const PricingContainer = () => {
           text: "text-brand-purple-dark",
           accent: "bg-brand-purple",
           button: "bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-600 hover:from-purple-700 hover:via-blue-700 hover:to-cyan-700",
-          highlight: "bg-purple-50"
+          highlight: "bg-purple-50",
+          gradient: mobileOptimizationClasses.pricingGradientPro
         };
       case "emerald":
         return {
@@ -133,7 +136,8 @@ export const PricingContainer = () => {
           text: "text-emerald-700",
           accent: "bg-emerald-500",
           button: "bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700",
-          highlight: "bg-emerald-50"
+          highlight: "bg-emerald-50",
+          gradient: mobileOptimizationClasses.pricingGradientPremium
         };
       default:
         return {
@@ -142,7 +146,8 @@ export const PricingContainer = () => {
           text: "text-gray-700",
           accent: "bg-gray-500",
           button: "bg-gray-500 hover:bg-gray-600",
-          highlight: "bg-gray-50"
+          highlight: "bg-gray-50",
+          gradient: ""
         };
     }
   };
@@ -178,7 +183,7 @@ export const PricingContainer = () => {
               <motion.div
                 key={tier.title}
                 className={cn(
-                  "rounded-lg overflow-hidden border-2 transition-all mt-6",
+                  "rounded-lg overflow-hidden border-2 transition-all mt-4",
                   tier.popularPlan ? "border-brand-purple shadow-lg" : "border-slate-200",
                   tier.popularPlan && "relative"
                 )}
@@ -186,12 +191,10 @@ export const PricingContainer = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
-                {/* Popular tag removed */}
-                
                 {/* Plan header */}
                 <div className={cn(
                   "p-4 flex justify-between items-start",
-                  tier.popularPlan ? "bg-gradient-to-br from-purple-50 to-indigo-50" : "bg-white"
+                  colorScheme.gradient
                 )}>
                   <div>
                     <h3 className={cn(
@@ -222,7 +225,7 @@ export const PricingContainer = () => {
                 <div className="px-4 pb-2 pt-3">
                   <Button 
                     className={cn(
-                      "w-full py-3 rounded-lg font-medium text-sm transition-all h-11",
+                      "w-full py-3 rounded-lg font-medium text-sm transition-all h-10",
                       colorScheme.button
                     )}
                   >
@@ -297,11 +300,11 @@ export const PricingContainer = () => {
             );
           })}
           
-          {/* Compact feature comparison table for mobile */}
+          {/* Compact feature comparison table for mobile - with gradient background */}
           <div className="mt-4 pt-2 border-t border-slate-200">
             <button
               onClick={() => setExpandedComparisonTable(!expandedComparisonTable)}
-              className="w-full flex items-center justify-between py-3 text-sm font-medium text-brand-text-primary font-inter"
+              className="w-auto mx-auto flex items-center justify-between py-2 px-4 text-sm font-medium text-brand-text-primary font-inter rounded-lg bg-gradient-to-br from-white to-slate-50 shadow-sm border border-slate-100"
             >
               <span className="flex items-center">
                 <span className="p-1 mr-2 bg-indigo-50 rounded">
@@ -324,7 +327,7 @@ export const PricingContainer = () => {
                   transition={{ duration: 0.3 }}
                   className="overflow-hidden"
                 >
-                  <div className="py-4 px-2 bg-slate-50 rounded-lg">
+                  <div className="py-4 px-2 mt-2 bg-gradient-to-br from-white to-slate-50/80 rounded-lg shadow-sm border border-slate-100">
                     <div className="flex border-b border-slate-200 pb-2 mb-3">
                       <div className="w-1/2 text-sm font-medium text-brand-text-primary font-inter">Feature</div>
                       <div className="w-1/6 text-center text-xs font-medium text-blue-600 font-space">Basic</div>
@@ -385,14 +388,13 @@ export const PricingContainer = () => {
                   tier.popularPlan 
                     ? `border-brand-purple shadow-xl ${colorScheme.border} scale-105 z-10` 
                     : "border-slate-200",
-                  tier.popularPlan && "relative"
+                  tier.popularPlan && "relative",
+                  colorScheme.gradient
                 )}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
-                {/* Popular tag removed */}
-                
                 <div className="p-4 sm:p-6">
                   {/* Header */}
                   <div className="mb-4">

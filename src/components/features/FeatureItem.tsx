@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { iconColors, featureIcons } from "./feature-colors";
 import { ChevronRight, Sparkles } from "lucide-react";
+import { mobileOptimizationClasses } from "@/utils/mobile-optimization";
 
 interface FeatureItemProps {
   title: string;
@@ -83,17 +84,22 @@ export const FeatureItem = ({
     }
   };
   
-  // Add alternating backgrounds for mobile cards (odd/even)
-  const cardBackground = isMobile 
-    ? index % 2 === 0 ? "bg-white hover:bg-white/95" : "bg-indigo-50/20 hover:bg-indigo-50/30" 
-    : "bg-white hover:bg-white/95";
+  // Choose gradient based on index for mobile cards (alternating)
+  const gradientClasses = [
+    mobileOptimizationClasses.subtleGradientPurple,
+    mobileOptimizationClasses.subtleGradientBlue,
+    mobileOptimizationClasses.subtleGradientIndigo,
+    mobileOptimizationClasses.subtleGradientCyan
+  ];
+  
+  const subtleGradient = gradientClasses[index % 4];
   
   return (
     <motion.button
       className={cn(
         "relative w-full text-left group h-full flex flex-col",
         "rounded-xl sm:rounded-2xl transition-all duration-300",
-        cardBackground,
+        isMobile ? subtleGradient : "bg-white hover:bg-white/95",
         // Enhanced border - more visible with color matching the icon theme
         `border border-${borderColorBase}-200/40`,
         // Consistent shadow

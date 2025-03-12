@@ -1,22 +1,39 @@
 
 import React from 'react';
 import { LucideIcon } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { mobileOptimizationClasses } from '@/utils/mobile-optimization';
 
 interface SmallFeatureCardProps {
   icon: LucideIcon;
   title: string;
   description: string;
   gradientStyle?: React.CSSProperties;
+  index?: number;
 }
 
 const SmallFeatureCard: React.FC<SmallFeatureCardProps> = ({
   icon: Icon,
   title,
   description,
-  gradientStyle
+  gradientStyle,
+  index = 0
 }) => {
+  // Choose different subtle gradient based on index
+  const gradientClass = [
+    mobileOptimizationClasses.subtleGradientPurple,
+    mobileOptimizationClasses.subtleGradientBlue,
+    mobileOptimizationClasses.subtleGradientIndigo,
+    mobileOptimizationClasses.subtleGradientCyan
+  ][index % 4];
+
   return (
-    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 relative overflow-hidden">
+    <div className={cn(
+      "rounded-xl p-4 shadow-sm transition-all duration-300 hover:shadow-md",
+      "border border-gray-100",
+      gradientClass,
+      "relative overflow-hidden"
+    )}>
       <div className="flex items-start gap-4">
         {/* Icon container with gradient background */}
         <div 

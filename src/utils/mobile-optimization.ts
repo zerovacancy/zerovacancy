@@ -32,4 +32,18 @@ export const mobileOptimizationClasses = {
   reducedOpacityMobile: "opacity-70 sm:opacity-100",
   // Border with color for mobile
   coloredBorderMobile: "border border-purple-100 sm:border-gray-200",
+  
+  // New subtle gradients for different components
+  subtleGradientPurple: "bg-gradient-to-br from-white to-purple-50/70 hover:from-white hover:to-purple-50/90",
+  subtleGradientBlue: "bg-gradient-to-br from-white to-blue-50/70 hover:from-white hover:to-blue-50/90",
+  subtleGradientIndigo: "bg-gradient-to-br from-white to-indigo-50/70 hover:from-white hover:to-indigo-50/90",
+  subtleGradientCyan: "bg-gradient-to-br from-white to-cyan-50/70 hover:from-white hover:to-cyan-50/90",
+  
+  // Brighter gradients for pricing cards
+  pricingGradientBasic: "bg-gradient-to-br from-white to-blue-50/80 hover:to-blue-50",
+  pricingGradientPro: "bg-gradient-to-br from-white to-purple-50/80 hover:to-purple-50",
+  pricingGradientPremium: "bg-gradient-to-br from-white to-emerald-50/80 hover:to-emerald-50",
+  
+  // Clean border with subtle color
+  cleanBorderMobile: "border border-gray-100 sm:border-gray-200",
 };
