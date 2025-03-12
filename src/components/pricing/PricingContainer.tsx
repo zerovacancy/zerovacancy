@@ -90,29 +90,29 @@ export const PricingContainer = () => {
       footerText: "🚀 Upgrade to unlock project requests and premium content!"
     },
     {
-      title: "Professional ($99/mo)",
-      price: 99, // Fixed price
-      interval: "month",
+      title: "Professional",
+      price: isYearly ? currentPrices.pro : 99,
+      interval: isYearly ? "mo, billed annually" : "mo",
       description: PLAN_DESCRIPTIONS.pro,
       valueProposition: VALUE_PROPOSITIONS.pro,
       features: groupFeaturesByCategory(FEATURES.pro),
       cta: "Choose Professional",
       color: "purple",
       popularPlan: true,
-      savings: null, // No savings display
+      savings: isYearly ? getSavings('pro') : null,
       footerText: "🚀 Upgrade to Premium for more revisions, deeper insights, and content that works across all marketing channels."
     },
     {
-      title: "Premium ($399/mo)",
-      price: 399, // Fixed price
-      interval: "month",
+      title: "Premium",
+      price: isYearly ? currentPrices.premium : 399,
+      interval: isYearly ? "mo, billed annually" : "mo",
       description: PLAN_DESCRIPTIONS.premium,
       valueProposition: VALUE_PROPOSITIONS.premium,
       features: groupFeaturesByCategory(FEATURES.premium),
       cta: "Upgrade to Premium",
       color: "emerald",
       popularPlan: false,
-      savings: null, // No savings display
+      savings: isYearly ? getSavings('premium') : null,
       footerText: PLAN_CTAS.premium
     }
   ];

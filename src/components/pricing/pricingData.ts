@@ -6,9 +6,9 @@ export const PRICING = {
   starterMonthly: 0,
   starterAnnual: 0,    // Free tier
   proMonthly: 99,
-  proAnnual: 89,       // Discounted annual rate
+  proAnnual: 79,       // Discounted annual rate (save $240/year)
   premiumMonthly: 399,
-  premiumAnnual: 359   // Discounted annual rate
+  premiumAnnual: 349   // Discounted annual rate (save $600/year)
 };
 
 // Calculate savings
