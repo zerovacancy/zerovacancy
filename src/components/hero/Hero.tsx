@@ -89,9 +89,21 @@ export function Hero() {
                 isMobile && "mobile-optimize"
               )}
             >
+              {/* Spotlight background container with absolute positioning */}
+              <div className={cn(
+                "absolute",
+                "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
+                "bg-[#F5F0FF]/40",
+                "rounded-xl",
+                isMobile 
+                  ? "w-[calc(100%+1rem)] h-[calc(100%+0.5rem)] px-3" 
+                  : "w-[calc(100%+3rem)] h-[calc(100%+1.5rem)] px-6",
+                "z-0"
+              )} />
+              
               <TextRotate
                 texts={TITLES}
-                mainClassName="flex justify-center items-center overflow-visible"
+                mainClassName="flex justify-center items-center overflow-visible z-10 relative"
                 staggerFrom="last"
                 initial={{ y: "100%", opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
