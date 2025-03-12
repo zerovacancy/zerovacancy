@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useRef, lazy, Suspense, useCallback } from 'react';
 import Header from '../components/Header';
-import { OptimizedHero } from '../components/hero/OptimizedHero';
+import { EnhancedHero } from '../components/hero/EnhancedHero';
 import Footer from '../components/Footer';
 import { Banner } from '@/components/ui/banner';
 import { Button } from '@/components/ui/button';
@@ -175,7 +175,7 @@ const Index = () => {
           animationSpeed="slow"
         >
           <section ref={addSectionRef(0)} className="w-full">
-            <OptimizedHero />
+            <EnhancedHero />
           </section>
         </BackgroundEffects>
         
