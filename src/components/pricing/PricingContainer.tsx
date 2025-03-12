@@ -201,30 +201,32 @@ export const PricingContainer = () => {
               >
                 {/* Plan header */}
                 <div className={cn(
-                  "p-4 flex justify-between items-start"
+                  "p-4 flex justify-between items-start gap-2"
                 )}>
-                  <div>
+                  <div className="flex-1 min-w-0">
                     <h3 className={cn(
-                      "text-lg font-bold font-jakarta",
+                      "text-lg font-bold font-jakarta truncate",
                       colorScheme.text
                     )}>
                       {tier.title}
                     </h3>
-                    <p className="text-xs text-brand-text-secondary font-inter mt-1">{tier.valueProposition}</p>
+                    <p className="text-xs text-brand-text-secondary font-inter mt-1 line-clamp-2 leading-snug">{tier.valueProposition}</p>
                   </div>
                   
                   <div className="text-right">
-                    <div className="flex items-baseline gap-1 flex-wrap justify-end">
-                      <span className="text-2xl font-bold text-brand-purple-dark font-space">${tier.price}</span>
-                      <span className="text-xs text-brand-text-light font-space">/{isYearly ? "mo" : "mo"}</span>
-                    </div>
-                    <div className="text-xs text-brand-text-light font-space -mt-1">
-                      {isYearly && "billed yearly"}
+                    <div className="flex flex-col items-end">
+                      <div className="flex items-baseline gap-1">
+                        <span className="text-2xl font-bold text-brand-purple-dark font-space">${tier.price}</span>
+                        <span className="text-xs text-brand-text-light font-space">/mo</span>
+                      </div>
+                      <div className="text-xs text-brand-text-light font-space leading-tight">
+                        {isYearly && "billed annually"}
+                      </div>
                     </div>
                     
                     {/* Annual savings badge */}
                     {isYearly && tier.savings && (
-                      <div className="mt-1 inline-block bg-green-50 text-green-600 px-2 py-0.5 rounded text-xs font-medium font-space">
+                      <div className="mt-1.5 inline-block bg-green-50 text-green-600 px-2 py-0.5 rounded-full text-[10px] font-medium font-space whitespace-nowrap">
                         Save ${tier.savings}/year
                       </div>
                     )}
@@ -249,17 +251,17 @@ export const PricingContainer = () => {
                   <button
                     onClick={() => toggleFeatures(index)}
                     className={cn(
-                      "mt-4 flex items-center justify-center w-auto mx-auto px-4 py-1.5",
-                      "text-xs font-medium text-brand-text-primary rounded-full",
+                      "mt-3 flex items-center justify-center w-auto mx-auto px-3 py-1",
+                      "text-[10px] font-medium text-brand-text-primary rounded-full",
                       "border border-slate-200 bg-slate-50 hover:bg-slate-100",
                       "transition-colors duration-200"
                     )}
                   >
-                    <span className="font-inter">
+                    <span className="font-inter whitespace-nowrap">
                       {isExpanded ? "Hide features" : "Show features"}
                     </span>
                     <ChevronDown className={cn(
-                      "h-3.5 w-3.5 ml-1.5 text-brand-text-light transition-transform",
+                      "h-3 w-3 ml-1 text-brand-text-light transition-transform",
                       isExpanded && "rotate-180"
                     )} />
                   </button>
@@ -296,7 +298,7 @@ export const PricingContainer = () => {
                                       "h-4 w-4 mt-0.5 flex-shrink-0", 
                                       colorScheme.text
                                     )} />
-                                    <span className="text-sm text-brand-text-primary font-inter">{feature.text}</span>
+                                    <span className="text-xs leading-snug text-brand-text-primary font-inter">{feature.text}</span>
                                   </div>
                                 ))}
                               </div>
