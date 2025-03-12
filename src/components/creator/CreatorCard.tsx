@@ -81,18 +81,18 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               <div className="mt-1">
                 <button 
                   onClick={handleCTAClick}
-                  aria-label={`Book with ${creator.name}`}
+                  aria-label={`Join waitlist for ${creator.name}`}
                   className="w-full flex items-center justify-center text-sm px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-medium shadow-md hover:shadow-lg transition-all duration-200"
                 >
                   {stage === 'initial' ? (
                     <>
-                      <span>Book Now</span>
+                      <span>Join Waitlist</span>
                       <ArrowRight className="w-4 h-4 ml-2" aria-hidden="true" />
                     </>
                   ) : stage === 'input' ? (
-                    <span>Secure Spot</span>
+                    <span>Get Early Access</span>
                   ) : (
-                    <span>Confirmed!</span>
+                    <span>Waitlist Joined!</span>
                   )}
                 </button>
               </div>
@@ -170,7 +170,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 <div className="mt-1">
                   <button 
                     onClick={handleCTAClick}
-                    aria-label={`Book with ${creator.name}`}
+                    aria-label={`Get priority access to ${creator.name}`}
                     className={cn(
                       "w-full h-11 text-sm px-5 py-3",
                       "bg-gradient-to-r from-indigo-600 to-purple-600",
@@ -182,13 +182,13 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   >
                     {stage === 'initial' ? (
                       <>
-                        <span>Book with {firstName}</span>
+                        <span>Get Priority Access</span>
                         <ArrowRight className="w-4 h-4 ml-2 inline-flex" aria-hidden="true" />
                       </>
                     ) : stage === 'input' ? (
-                      <span>Secure Your Spot</span>
+                      <span>Join Creator Waitlist</span>
                     ) : (
-                      <span>Access Confirmed - Launching Soon!</span>
+                      <span>Reserved for Launch!</span>
                     )}
                   </button>
                 </div>
