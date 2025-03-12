@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { usePricing } from "./PricingContext";
 import PricingHeader from "./PricingHeader";
 import { PLAN_DESCRIPTIONS, VALUE_PROPOSITIONS, PLAN_CTAS, FEATURES } from "./pricingData";
-import { ChevronDown, Check, X } from "lucide-react";
+import { ChevronDown, Check, X, ChevronRight } from "lucide-react";
 import { PricingFeature } from "./types";
 import { Button } from "../ui/button";
 import { mobileOptimizationClasses } from "@/utils/mobile-optimization";
@@ -15,6 +15,7 @@ export const PricingContainer = () => {
   const isMobile = useIsMobile();
   const { isYearly, currentPrices, getSavings } = usePricing();
   const [expandedFeatures, setExpandedFeatures] = useState<{[key: number]: boolean}>({});
+  const [expandedDescriptions, setExpandedDescriptions] = useState<{[key: number]: boolean}>({});
   const [expandedComparisonTable, setExpandedComparisonTable] = useState(false);
   const [showStickyHeader, setShowStickyHeader] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -39,6 +40,14 @@ export const PricingContainer = () => {
   // Toggle expanded features for a specific plan
   const toggleFeatures = (index: number) => {
     setExpandedFeatures(prev => ({
+      ...prev,
+      [index]: !prev[index]
+    }));
+  };
+  
+  // Toggle expanded description for a specific plan
+  const toggleDescription = (index: number) => {
+    setExpandedDescriptions(prev => ({
       ...prev,
       [index]: !prev[index]
     }));
@@ -181,6 +190,7 @@ export const PricingContainer = () => {
           {pricingTiers.map((tier, index) => {
             const colorScheme = getColorScheme(tier.color);
             const isExpanded = !!expandedFeatures[index];
+            const isDescriptionExpanded = !!expandedDescriptions[index];
             
             return (
               <motion.div
@@ -210,10 +220,35 @@ export const PricingContainer = () => {
                     )}>
                       {tier.title}
                     </h3>
-                    <p className={cn(
-                      "text-xs text-brand-text-secondary font-inter mt-1 line-clamp-2 leading-snug",
-                      isMobile && "pl-0.5"
-                    )}>{tier.valueProposition}</p>
+                    <div className="mt-1">
+                      <p className={cn(
+                        "text-xs text-brand-text-secondary font-inter leading-relaxed relative",
+                        isMobile && "pl-0.5",
+                        !isDescriptionExpanded && "line-clamp-3"
+                      )}>
+                        {tier.valueProposition}
+                        {!isDescriptionExpanded && tier.valueProposition.length > 120 && (
+                          <span className="inline-block text-brand-purple-medium"> ...</span>
+                        )}
+                      </p>
+                      {tier.valueProposition.length > 120 && (
+                        <button 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleDescription(index);
+                          }}
+                          className="mt-1 text-[10px] font-medium text-brand-purple flex items-center gap-1 focus:outline-none"
+                        >
+                          {isDescriptionExpanded ? "Read less" : "Read more"}
+                          <ChevronDown 
+                            className={cn(
+                              "h-3 w-3 transition-transform", 
+                              isDescriptionExpanded && "rotate-180"
+                            )} 
+                          />
+                        </button>
+                      )}
+                    </div>
                   </div>
                   
                   <div className="text-right">
