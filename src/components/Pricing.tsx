@@ -3,7 +3,6 @@ import { cn } from "@/lib/utils";
 import { useSubscription } from "@/hooks/use-subscription";
 import PricingHeader from "./pricing/PricingHeader";
 import { BackgroundEffects } from "./pricing/BackgroundEffects";
-import { CommonFeatures } from "./pricing/CommonFeatures";
 import { PricingFAQ } from "./pricing/PricingFAQ";
 import { PricingProvider } from "./pricing/PricingContext";
 import { PricingContainer } from "./pricing/PricingContainer";
@@ -32,9 +31,11 @@ const Pricing = () => {
             <PricingContainer />
           </div>
           
-          {/* Enhanced notes section */}
-          <div className="mt-10 lg:mt-14 mb-4 sm:mb-6 lg:mb-8">
-            <CommonFeatures />
+          {/* Small copy text replacing the CommonFeatures component */}
+          <div className="text-center text-sm text-slate-500 max-w-2xl mx-auto mt-4 mb-10">
+            <p>
+              All plans include: High-resolution images, dedicated support, property website, mobile-optimized, digital downloads, no watermarks. Custom plans available for agencies and teams. <button className="text-violet-600 hover:text-violet-700 font-medium transition-colors">Contact us</button>
+            </p>
           </div>
 
           {/* Waitlist CTA */}
