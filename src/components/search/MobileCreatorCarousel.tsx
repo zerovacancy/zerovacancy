@@ -100,7 +100,7 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
             <div 
               key={creator.name} 
               style={{ touchAction: 'pan-y' }} 
-              className="min-w-[92%] w-[92%] pl-2 pr-2 my-[10px]"
+              className="min-w-[96%] w-[96%] pl-1 pr-1 my-[6px]"
             >
               <CreatorCard 
                 creator={creator} 
