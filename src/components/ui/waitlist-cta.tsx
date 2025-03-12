@@ -20,7 +20,7 @@ export const WaitlistCTA: React.FC<WaitlistCTAProps> = ({
 }) => {
   return (
     <div className={cn(
-      "w-full max-w-md mx-auto flex flex-col items-center", 
+      "w-full max-w-md mx-auto", 
       className
     )}>
       <WaitlistButton 
@@ -41,12 +41,8 @@ export const WaitlistCTA: React.FC<WaitlistCTAProps> = ({
         </ShimmerButton>
       </WaitlistButton>
       
-      {/* Centered social proof with appropriate spacing */}
-      {showSocialProof && (
-        <div className="flex justify-center w-auto mt-3">
-          <SocialProof />
-        </div>
-      )}
+      {/* Only show social proof when explicitly requested */}
+      {showSocialProof && <SocialProof className="mt-3" />}
     </div>
   );
 };

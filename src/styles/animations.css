@@ -86,19 +86,6 @@
     animation: shine var(--duration, 14s) ease-in-out infinite;
   }
   
-  .animate-blob {
-    animation: blob 7s infinite;
-    will-change: transform;
-  }
-  
-  .animation-delay-2000 {
-    animation-delay: 2s;
-  }
-  
-  .animation-delay-4000 {
-    animation-delay: 4s;
-  }
-  
   .bg-shine-size {
     background-size: 300% 300%;
   }
