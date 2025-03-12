@@ -1,4 +1,3 @@
-
 import React, { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, useNavigationType } from 'react-router-dom';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -7,8 +6,8 @@ import { Toaster } from '@/components/ui/toaster';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { mobileOptimizationClasses, optimizeMobileViewport } from '@/utils/mobile-optimization';
 import { BottomNav } from '@/components/navigation/BottomNav';
+import { Analytics } from '@vercel/analytics/react';
 
-// Lazy load all pages for improved performance
 const Index = lazy(() => import('./pages/index'));
 const PaymentConfirmation = lazy(() => import('./pages/PaymentConfirmation'));
 const Terms = lazy(() => import('./pages/Terms'));
@@ -17,7 +16,6 @@ const ConnectSuccess = lazy(() => import('./pages/ConnectSuccess'));
 const ConnectRefresh = lazy(() => import('./pages/ConnectRefresh'));
 const ConnectOnboarding = lazy(() => import('./pages/ConnectOnboarding'));
 
-// Enhanced loading component with gradient styling
 const PageLoader = () => {
   const { gradientBgMobile } = mobileOptimizationClasses;
   const isMobile = useIsMobile();
@@ -32,15 +30,12 @@ const PageLoader = () => {
   );
 };
 
-// ScrollToTop component for handling navigation
 const ScrollToTop = () => {
   const location = useLocation();
   const navigationType = useNavigationType();
   
   useEffect(() => {
-    // Only handle hash links when navigating to the same page
     if (location.hash && (navigationType === 'PUSH' || navigationType === 'REPLACE')) {
-      // Small delay to ensure DOM is ready
       setTimeout(() => {
         const id = location.hash.replace('#', '');
         const element = document.getElementById(id);
@@ -49,7 +44,6 @@ const ScrollToTop = () => {
         }
       }, 0);
     } else if (!location.hash && navigationType === 'PUSH') {
-      // Scroll to top when navigating to a new page without hash
       window.scrollTo(0, 0);
     }
   }, [location, navigationType]);
@@ -57,12 +51,10 @@ const ScrollToTop = () => {
   return null;
 };
 
-// Component to conditionally render the bottom nav
 const ConditionalBottomNav = () => {
   const location = useLocation();
   const isMobile = useIsMobile();
   
-  // Hide the bottom nav on the home page
   if (location.pathname === "/" || !isMobile) {
     return null;
   }
@@ -74,25 +66,20 @@ function App() {
   const isMobile = useIsMobile();
   const { coloredBgMobile } = mobileOptimizationClasses;
   
-  // Preload critical resources
   useEffect(() => {
-    // Apply mobile optimizations while maintaining accessibility
     if (isMobile) {
       optimizeMobileViewport();
     }
     
-    // Preload the Index component after initial render
     const timer = setTimeout(() => {
       import('./pages/index');
     }, 200);
     
-    // Add passive event listeners to improve scrolling performance
     const passiveOption = { passive: true };
     document.addEventListener('touchstart', () => {}, passiveOption);
     document.addEventListener('touchmove', () => {}, passiveOption);
     document.addEventListener('wheel', () => {}, passiveOption);
     
-    // Apply mobile-specific classes to the body when on mobile
     if (isMobile) {
       document.body.classList.add('color-white-bg-mobile');
       document.body.classList.add('optimize-animations-mobile');
@@ -130,6 +117,7 @@ function App() {
           <ConditionalBottomNav />
         </div>
         <Toaster />
+        <Analytics />
       </Router>
     </ErrorBoundary>
   );
