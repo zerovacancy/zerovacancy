@@ -62,10 +62,20 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
 
             {/* Enhanced content section with improved typography and spacing */}
             <div className="px-3.5 py-4 flex flex-col flex-grow relative z-10">
-              <div className="mb-4">
+              <div className="mb-3">
                 <h3 className="font-semibold text-gray-900 text-[15px] leading-tight">{creator.name}</h3>
                 <p className="text-sm text-gray-500 font-light mt-0.5">{creator.location}</p>
                 <p className="text-xs text-gray-600 mt-1.5">{creator.services.join(" • ")}</p>
+              </div>
+              
+              {/* Added Rating and availability for mobile view */}
+              <div className="mb-3">
+                <CreatorRating 
+                  rating={creator.rating} 
+                  reviews={creator.reviews} 
+                  name={creator.name} 
+                  availabilityStatus={creator.availabilityStatus}
+                />
               </div>
 
               {/* Portfolio preview - Enhanced spacing for mobile */}
