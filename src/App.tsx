@@ -5,7 +5,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import ErrorFallback from './components/ErrorFallback';
 import { Toaster } from '@/components/ui/toaster';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { mobileOptimizationClasses, preventMobileZoom } from '@/utils/mobile-optimization';
+import { mobileOptimizationClasses, optimizeMobileViewport } from '@/utils/mobile-optimization';
 import { BottomNav } from '@/components/navigation/BottomNav';
 
 // Lazy load all pages for improved performance
@@ -51,9 +51,9 @@ function App() {
   
   // Preload critical resources
   useEffect(() => {
-    // Prevent zoom on mobile devices
+    // Apply mobile optimizations while maintaining accessibility
     if (isMobile) {
-      preventMobileZoom();
+      optimizeMobileViewport();
     }
     
     // Preload the Index component after initial render

@@ -4,9 +4,9 @@
 // Monthly and annual pricing values
 export const PRICING = {
   starterMonthly: 299,
-  starterAnnual: 299,
+  starterAnnual: 249,  // Discounted annual rate
   proMonthly: 499,
-  proAnnual: 499
+  proAnnual: 399       // Discounted annual rate
 };
 
 // Calculate savings
@@ -50,21 +50,21 @@ export const FEATURES = {
 
 // Value propositions for each plan
 export const VALUE_PROPOSITIONS = {
-  basic: "Core visual assets for effectively marketing residential and small commercial properties.",
-  professional: "Comprehensive visual package for properties that need to stand out in competitive markets.",
+  starter: "Core visual assets for effectively marketing residential and small commercial properties.",
+  pro: "Comprehensive visual package for properties that need to stand out in competitive markets.",
   premium: "Complete visual marketing suite for luxury properties and developments requiring exceptional presentation."
 };
 
 // Plan descriptions
 export const PLAN_DESCRIPTIONS = {
-  basic: "ESSENTIAL",
-  professional: "PROFESSIONAL",
+  starter: "ESSENTIAL",
+  pro: "PROFESSIONAL",
   premium: "PREMIUM"
 };
 
 // Plan CTAs
 export const PLAN_CTAS = {
-  basic: "SELECT ESSENTIAL",
-  professional: "SELECT PROFESSIONAL",
+  starter: "SELECT ESSENTIAL",
+  pro: "SELECT PROFESSIONAL",
   premium: "SELECT PREMIUM"
 };

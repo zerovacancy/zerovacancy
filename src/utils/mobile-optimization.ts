@@ -12,14 +12,14 @@ export const prefersReducedMotion = () => {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 };
 
-// Prevent zoom on mobile devices
-export const preventMobileZoom = () => {
+// Optimized mobile viewport settings that maintain accessibility
+export const optimizeMobileViewport = () => {
   if (typeof window === "undefined") return;
   // Find existing viewport meta tag
   const viewport = document.querySelector('meta[name="viewport"]');
   if (viewport) {
-    // Update viewport settings to prevent zoom
-    viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+    // Update viewport settings with accessible values
+    viewport.setAttribute('content', 'width=device-width, initial-scale=1.0');
   }
 };
 

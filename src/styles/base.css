@@ -130,8 +130,8 @@
       background-color: #f9fafb !important;
       border: 1px solid #e5e7eb !important;
       border-radius: 0.5rem !important;
-      font-size: 16px !important; /* Prevent iOS zoom */
-      touch-action: manipulation !important; /* Prevent double-tap zoom */
+      font-size: 16px !important; /* Use 16px to maintain readability */
+      /* Removed manipulation that prevents zooming for accessibility */
     }
     
     /* Enhance button styling on mobile */
