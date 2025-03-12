@@ -21,7 +21,7 @@ export const PreviewContent: React.FC = () => {
     <div className="w-full">
       {/* Simplified structure for mobile */}
       <div className={cn(
-        isMobile ? "bg-transparent" : "bg-gray-50/60 border border-gray-100 rounded-lg overflow-hidden shadow-sm p-6"
+        isMobile ? "bg-transparent" : "bg-gray-50/60 border border-gray-100 rounded-lg overflow-hidden shadow-sm p-6 px-6"
       )}>
         {/* Search bar component */}
         <div className={isMobile ? "mb-3" : "mb-4"}>

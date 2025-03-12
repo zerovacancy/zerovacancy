@@ -5,15 +5,14 @@ import { cn } from '@/lib/utils';
 
 export const SearchButton: React.FC = () => {
   return (
-    <div className="relative hidden sm:flex pr-3">
+    <div className="relative hidden sm:flex">
       <button
         className={cn(
           "flex items-center justify-center",
           "bg-gradient-to-r from-indigo-600 to-brand-purple",
           "text-white font-medium",
-          "px-4 py-2 rounded-lg",
-          "h-full min-h-[42px] min-w-[100px]",
-          "mr-2 ml-4",
+          "px-5 py-2 rounded-r-lg",
+          "h-full min-h-[48px] min-w-[120px]",
           "hover:from-indigo-700 hover:to-brand-purple/90",
           "transition-all duration-300"
         )}

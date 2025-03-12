@@ -29,7 +29,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           "border border-gray-300 sm:border-gray-200",
           "bg-white divide-y sm:divide-y-0 sm:divide-x divide-gray-200",
           "transition-all duration-300",
-          "hover:shadow-[0_5px_20px_rgba(0,0,0,0.1)]"
+          "hover:shadow-[0_5px_20px_rgba(0,0,0,0.1)]",
+          "sm:pr-0"
         )}>
           {/* Content type select */}
           <ContentTypeSelect />
