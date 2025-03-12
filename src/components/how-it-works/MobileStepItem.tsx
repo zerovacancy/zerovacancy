@@ -59,23 +59,17 @@ export const MobileStepItem: React.FC<MobileStepItemProps> = ({
       }} 
       onClick={onClick}
       className={cn(
-        // Apply gradients instead of white background
-        "relative",
-        index % 2 === 0 
-          ? "bg-gradient-to-r from-purple-50 to-indigo-50/50" 
-          : "bg-gradient-to-r from-indigo-50/50 to-purple-50/30",
+        "relative bg-white", 
         "w-full max-w-[327px] min-h-[100px]",
         "p-4",
         "rounded-lg", 
-        "shadow-md", 
-        "border border-purple-100/60", 
+        "shadow-[0_2px_4px_rgba(0,0,0,0.05),0_2px_2px_rgba(0,0,0,0.05)]", 
+        "border border-gray-100", 
         (step.iconText ? "" : "border-l-[3px]"),
         "touch-manipulation", 
         "mx-auto", 
-        "transition-all duration-200", 
-        isActive 
-          ? "border-violet-500 bg-gradient-to-br from-violet-100/70 to-indigo-100/70 shadow-lg" 
-          : "",
+        "transition-transform duration-200", 
+        isActive ? "border-violet-500 bg-violet-50/20" : "",
         "cursor-pointer"
       )}
     >

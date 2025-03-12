@@ -301,16 +301,16 @@ export const PricingContainer = () => {
           <div className="mt-4 pt-2 border-t border-slate-200">
             <button
               onClick={() => setExpandedComparisonTable(!expandedComparisonTable)}
-              className="w-full flex items-center justify-between py-3 px-4 mt-2 text-sm font-semibold text-white font-inter bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg shadow-md"
+              className="w-full flex items-center justify-between py-3 text-sm font-medium text-brand-text-primary font-inter"
             >
               <span className="flex items-center">
-                <span className="p-1 mr-2 bg-white/20 rounded-full">
-                  <Info className="h-4 w-4 text-white" />
+                <span className="p-1 mr-2 bg-indigo-50 rounded">
+                  <Info className="h-4 w-4 text-indigo-500" />
                 </span>
                 Compare all features
               </span>
               <ChevronDown className={cn(
-                "h-4 w-4 text-white/90 transition-transform",
+                "h-4 w-4 text-brand-text-light transition-transform",
                 expandedComparisonTable && "rotate-180"
               )} />
             </button>
@@ -324,7 +324,7 @@ export const PricingContainer = () => {
                   transition={{ duration: 0.3 }}
                   className="overflow-hidden"
                 >
-                  <div className="py-4 px-2 bg-gradient-to-br from-slate-50 to-purple-50/30 rounded-lg shadow-inner border border-purple-100/30">
+                  <div className="py-4 px-2 bg-slate-50 rounded-lg">
                     <div className="flex border-b border-slate-200 pb-2 mb-3">
                       <div className="w-1/2 text-sm font-medium text-brand-text-primary font-inter">Feature</div>
                       <div className="w-1/6 text-center text-xs font-medium text-blue-600 font-space">Basic</div>
