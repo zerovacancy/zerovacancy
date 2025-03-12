@@ -13,7 +13,8 @@ const HeroHeadline = ({ isMobile }: { isMobile: boolean }) => (
     className={cn(
       "relative z-10",
       "inline-block",
-      "text-purple-800", // Direct color instead of gradient
+      "bg-clip-text text-transparent",
+      "bg-gradient-to-r from-indigo-700 via-purple-700 to-violet-800",
       "text-3xl sm:text-5xl lg:text-6xl",
       "leading-tight tracking-tight",
       "font-black font-jakarta",
@@ -24,7 +25,9 @@ const HeroHeadline = ({ isMobile }: { isMobile: boolean }) => (
     <span 
       className={cn(
         "relative",
-        "border-b-4 border-purple-500" // Direct border instead of after element
+        "after:content-[''] after:absolute after:-bottom-1 after:left-0",
+        "after:w-full after:h-[4px]",
+        "after:bg-gradient-to-r after:from-indigo-500 after:to-purple-600"
       )}
     >
       PROPERTY MARKETING
@@ -152,15 +155,15 @@ export function EnhancedHero() {
                 "overflow-visible min-h-[60px]"
               )}
             >
-              {/* Direct text rendering without bg-clip */}
+              {/* Simplified rotated text with fixed content */}
               <div className="relative w-full flex justify-center items-center">
                 <div className={cn(
                   "text-4xl sm:text-5xl lg:text-7xl",
                   "font-black font-jakarta tracking-tight",
-                  "text-indigo-700", // Direct color instead of gradient
+                  "bg-clip-text text-transparent",
+                  "bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1]",
                   "px-4 py-1 text-center",
-                  "overflow-visible",
-                  "border-b-4 border-indigo-500"
+                  "overflow-visible animate-pulse-subtle"
                 )}>
                   PROPERTY CONTENT
                 </div>
