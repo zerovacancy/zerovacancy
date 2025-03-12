@@ -31,6 +31,11 @@ export const mobileOptimizationClasses = {
   reducedOpacityMobile: "opacity-90 sm:opacity-100",
   // Clean border for mobile
   cleanBorderMobile: "border border-gray-100/80",
+  // Additional mobile optimization classes
+  gradientBgMobile: "bg-gradient-to-br from-white to-purple-50/30",
+  coloredBgMobile: "bg-white",
+  coloredBorderMobile: "border border-purple-100/50",
+  cardBgMobile: "bg-white",
 };
 
 // Generate dynamic gradient based on base color
