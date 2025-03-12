@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { WaitlistCTA } from "../ui/waitlist-cta";
 import { TextRotate } from "../ui/text-rotate";
 
-const TITLES = ["REIMAGINED", "ELEVATED", "TRANSFORMED"];
+const TITLES = ["CONVERTS", "CAPTIVATES", "CLOSES"];
 
 export function Hero() {
   const isMobile = useIsMobile();
@@ -73,7 +73,7 @@ export function Hero() {
                 "block sm:inline-block mb-[-0.2em] sm:mb-0 font-jakarta" 
               )}
             >
-              PROPERTY MARKETING
+              PROPERTY CONTENT THAT
             </span>
 
             <div 
