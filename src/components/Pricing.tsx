@@ -16,7 +16,10 @@ const Pricing = () => {
   const isMobile = useIsMobile();
   
   return <PricingProvider>
-      <div className="relative w-full py-8 sm:py-12 lg:py-20 overflow-hidden">
+      <div className={cn(
+        "relative w-full py-8 sm:py-12 lg:py-20 overflow-hidden",
+        isMobile && "mx-4 my-4 rounded-xl border border-gray-200 shadow-sm" // Added border styling for mobile only
+      )}>
         {/* Background decorative elements - now showing on both mobile and desktop */}
         <BackgroundEffects />
         
