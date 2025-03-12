@@ -210,7 +210,10 @@ export const PricingContainer = () => {
                     )}>
                       {tier.title}
                     </h3>
-                    <p className="text-xs text-brand-text-secondary font-inter mt-1 line-clamp-2 leading-snug">{tier.valueProposition}</p>
+                    <p className={cn(
+                      "text-xs text-brand-text-secondary font-inter mt-1 line-clamp-2 leading-snug",
+                      isMobile && "pl-0.5"
+                    )}>{tier.valueProposition}</p>
                   </div>
                   
                   <div className="text-right">
@@ -276,12 +279,16 @@ export const PricingContainer = () => {
                         transition={{ duration: 0.3 }}
                         className="overflow-hidden"
                       >
-                        <div className="pt-4 pb-2 space-y-4">
+                        <div className={cn(
+                          "pt-4 pb-2 space-y-4",
+                          isMobile && "px-0.5"
+                        )}>
                           {Object.entries(tier.features).map(([category, features], catIndex) => (
                             <div key={`${tier.title}-${category}`} className="space-y-2">
                               {category !== "Core Features" && (
                                 <h4 className={cn(
                                   "text-xs font-medium font-jakarta px-2 py-1 rounded inline-block",
+                                  isMobile && "ml-0.5",
                                   colorScheme.bg
                                 )}>
                                   {category}
@@ -295,7 +302,7 @@ export const PricingContainer = () => {
                                     className="flex items-start gap-2"
                                   >
                                     <Check className={cn(
-                                      "h-4 w-4 mt-0.5 flex-shrink-0", 
+                                      isMobile ? "h-3.5 w-3.5 mt-0.5 ml-0.5 flex-shrink-0" : "h-4 w-4 mt-0.5 flex-shrink-0", 
                                       colorScheme.text
                                     )} />
                                     <span className="text-xs leading-snug text-brand-text-primary font-inter">{feature.text}</span>
