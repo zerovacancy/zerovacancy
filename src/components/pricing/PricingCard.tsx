@@ -193,9 +193,13 @@ export const PricingCard = ({
       <motion.button
         onClick={handleAction}
         className={cn(
-          "w-full px-4 py-4 rounded-xl text-white font-medium font-inter",
+          "w-full px-4 py-4 rounded-xl font-medium font-inter",
           "transition-all duration-300",
-          isCurrentPlan ? "bg-green-500 cursor-default" : `bg-gradient-to-r ${colorStyles.highlight}`,
+          price === 0 ? 
+            "text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200" : // Free tier button style
+            "text-white bg-gradient-to-r", // Paid tier button base styles
+          price > 0 && !isCurrentPlan && colorStyles.highlight, // Add gradient only for paid tiers
+          isCurrentPlan ? "bg-green-500 text-white cursor-default" : "",
           !isCurrentPlan && "hover:shadow-[0_4px_12px_rgba(0,0,0,0.15)] active:translate-y-0 group"
         )}
         whileHover={{ scale: !isCurrentPlan ? 1.02 : 1 }}
