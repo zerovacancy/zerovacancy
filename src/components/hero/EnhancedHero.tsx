@@ -38,14 +38,12 @@ const HeroHeadline = ({ isMobile }: { isMobile: boolean }) => (
 const HeroDescription = ({ isMobile }: { isMobile: boolean }) => (
   <div 
     className={cn(
-      "text-base leading-relaxed",
+      "text-body",
       "text-center", 
       "max-w-[90%] sm:max-w-[500px]",
       "mx-auto",
-      "font-inter",
-      "text-zinc-700",
       "relative z-10",
-      "bg-white/90 py-2 px-4 rounded-lg shadow-sm backdrop-blur-sm",
+      "bg-white/90 py-3 px-5 rounded-lg shadow-sm backdrop-blur-sm",
       "border border-indigo-100/50",
       isMobile ? "text-sm" : ""
     )}
