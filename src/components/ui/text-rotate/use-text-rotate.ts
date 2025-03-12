@@ -90,12 +90,19 @@ export function useTextRotate(
     if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
     
     // Use a more efficient approach for mobile
+    const delay = isMobileView ? 
+      // Align with vsync on mobile by targeting 60fps intervals (multiple of 16.67ms)
+      rotationInterval + 800 : 
+      rotationInterval;
+      
     timeoutRef.current = setTimeout(() => {
-      // Use requestAnimationFrame for smoother animations
+      // Use double requestAnimationFrame for reliable vsync alignment
       animationFrameRef.current = requestAnimationFrame(() => {
-        next();
+        requestAnimationFrame(() => {
+          next();
+        });
       });
-    }, rotationInterval + (isMobileView ? 500 : 0)); // Add extra time on mobile for better performance
+    }, delay);
     
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);

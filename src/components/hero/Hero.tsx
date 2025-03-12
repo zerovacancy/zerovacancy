@@ -84,7 +84,9 @@ export function Hero() {
                 isMobile 
                   ? "h-[2.8em] mt-0" 
                   : "h-[4.5em] sm:h-[3em] md:h-[2.5em] lg:h-[2.5em] mt-1 sm:mt-1",
-                "overflow-visible"
+                "overflow-visible",
+                "gpu-accelerated",
+                isMobile && "mobile-optimize"
               )}
             >
               <TextRotate
@@ -105,12 +107,12 @@ export function Hero() {
                   "overflow-visible"
                 )}
                 transition={{ 
-                  type: "spring",
-                  damping: 30,
-                  stiffness: 200,
-                  mass: 1,
-                  duration: isMobile ? 0.7 : 0.5,
-                  ease: "easeInOut"
+                  type: isMobile ? "tween" : "spring",
+                  damping: isMobile ? 18 : 30,
+                  stiffness: isMobile ? 120 : 200,
+                  mass: isMobile ? 0.8 : 1,
+                  duration: isMobile ? 0.5 : 0.4,
+                  ease: "easeOut"
                 }}
                 auto={true}
               />

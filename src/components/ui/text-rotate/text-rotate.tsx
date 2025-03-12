@@ -63,7 +63,11 @@ const TextRotate = forwardRef<TextRotateRef, TextRotateProps>(
 
     return (
       <motion.span
-        className={cn("flex flex-wrap whitespace-pre-wrap", mainClassName)}
+        className={cn(
+          "flex flex-wrap whitespace-pre-wrap", 
+          "gpu-accelerated", // Add GPU acceleration
+          mainClassName
+        )}
         {...props}
         layout
         transition={transition}
@@ -78,6 +82,7 @@ const TextRotate = forwardRef<TextRotateRef, TextRotateProps>(
             key={currentTextIndex}
             className={cn(
               "flex flex-wrap",
+              "gpu-accelerated", // Add GPU acceleration
               splitBy === "lines" && "flex-col w-full"
             )}
             layout
@@ -104,7 +109,11 @@ const TextRotate = forwardRef<TextRotateRef, TextRotateProps>(
                       ...transition,
                       delay: calculateStaggerDelay(wordIndex, charIndex, array),
                     }}
-                    className={cn("inline-block overflow-visible", elementLevelClassName)}
+                    className={cn(
+                      "inline-block overflow-visible", 
+                      "gpu-accelerated", // Add GPU acceleration
+                      elementLevelClassName
+                    )}
                   >
                     {char}
                   </motion.span>
