@@ -68,9 +68,9 @@ const PricingHeader = ({
         
         {/* Enhanced toggle container with improved mobile styling */}
         <div className={cn(
-          "flex items-center space-x-2 p-1 rounded-lg transition-all duration-300",
+          "flex items-center space-x-2 p-1 rounded-lg transition-all duration-300 w-full max-w-md mx-auto",
           isMobile ? 
-            "bg-[#F5F0FF] border border-[#E0E0E0] shadow-[0_2px_8px_rgba(0,0,0,0.06)] scale-110" : 
+            "bg-[#F5F0FF] border border-[#E0E0E0] shadow-[0_2px_8px_rgba(0,0,0,0.06)]" : 
             "bg-slate-100",
           isSticky ? "scale-90" : ""
         )}>

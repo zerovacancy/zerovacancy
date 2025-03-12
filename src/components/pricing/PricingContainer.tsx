@@ -176,7 +176,7 @@ export const PricingContainer = () => {
       
       {/* Mobile vertical stack layout */}
       {isMobile ? (
-        <div className="flex flex-col gap-2 sm:gap-3 lg:gap-4 px-4">
+        <div className="flex flex-col gap-2 sm:gap-3 lg:gap-4 px-4 max-w-md mx-auto w-full">
           {pricingTiers.map((tier, index) => {
             const colorScheme = getColorScheme(tier.color);
             const isExpanded = !!expandedFeatures[index];
@@ -213,9 +213,12 @@ export const PricingContainer = () => {
                   </div>
                   
                   <div className="text-right">
-                    <div className="flex items-baseline gap-1">
+                    <div className="flex items-baseline gap-1 flex-wrap justify-end">
                       <span className="text-2xl font-bold text-brand-purple-dark font-space">${tier.price}</span>
-                      <span className="text-sm text-brand-text-light font-space">/{isYearly ? "mo, billed yearly" : "mo"}</span>
+                      <span className="text-xs text-brand-text-light font-space">/{isYearly ? "mo" : "mo"}</span>
+                    </div>
+                    <div className="text-xs text-brand-text-light font-space -mt-1">
+                      {isYearly && "billed yearly"}
                     </div>
                     
                     {/* Annual savings badge */}
@@ -231,7 +234,8 @@ export const PricingContainer = () => {
                 <div className="px-4 pb-2 pt-3">
                   <Button 
                     className={cn(
-                      "w-full py-3 rounded-lg font-medium text-sm transition-all h-10",
+                      "w-full py-2 rounded-xl font-medium text-sm transition-all h-auto min-h-10",
+                      "px-4",
                       colorScheme.button
                     )}
                   >
@@ -244,7 +248,7 @@ export const PricingContainer = () => {
                   <button
                     onClick={() => toggleFeatures(index)}
                     className={cn(
-                      "mt-3 flex items-center justify-center w-auto mx-auto px-4 py-1.5",
+                      "mt-4 flex items-center justify-center w-auto mx-auto px-4 py-1.5",
                       "text-xs font-medium text-brand-text-primary rounded-full",
                       "border border-slate-200 bg-slate-50 hover:bg-slate-100",
                       "transition-colors duration-200"
@@ -269,7 +273,7 @@ export const PricingContainer = () => {
                         transition={{ duration: 0.3 }}
                         className="overflow-hidden"
                       >
-                        <div className="pt-2 pb-1 space-y-4">
+                        <div className="pt-4 pb-2 space-y-4">
                           {Object.entries(tier.features).map(([category, features], catIndex) => (
                             <div key={`${tier.title}-${category}`} className="space-y-2">
                               {category !== "Core Features" && (
@@ -307,7 +311,7 @@ export const PricingContainer = () => {
           })}
           
           {/* Compact feature comparison table for mobile - removed border-t and changed button styling */}
-          <div className="mt-4 pt-2">
+          <div className="mt-4 pt-2 max-w-md mx-auto w-full">
             <button
               onClick={() => setExpandedComparisonTable(!expandedComparisonTable)}
               className={cn(
@@ -340,6 +344,7 @@ export const PricingContainer = () => {
                   <div className={cn(
                     "py-4 px-2 mt-2 rounded-xl shadow-sm relative group",
                     "border border-slate-200",
+                    "w-full max-w-md mx-auto",
                     mobileOptimizationClasses.cleanBorderMobile,
                     mobileOptimizationClasses.subtleGradientIndigo,
                     "before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:rounded-l-xl", 
