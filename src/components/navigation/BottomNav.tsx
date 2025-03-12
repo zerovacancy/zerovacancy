@@ -49,8 +49,8 @@ export const BottomNav = () => {
   const location = useLocation();
   const { gradientBgMobile, improvedShadowMobile } = mobileOptimizationClasses;
   
-  // Hide the bottom nav on the index page
-  if (!isMobile || location.pathname === "/") return null;
+  // Explicitly hide on index route
+  if (!isMobile || location.pathname === "/" || location.pathname === "") return null;
   
   return (
     <nav className={`fixed bottom-0 left-0 right-0 z-50 border-t border-purple-100 ${improvedShadowMobile} ${gradientBgMobile} rounded-t-xl`}>
