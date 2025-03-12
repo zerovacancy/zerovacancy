@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { DollarSign, Star, ChevronDown, Users, Palette, Map, Compass } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -49,6 +50,12 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
           )}
         >
           Advanced Filters
+          <ChevronDown className={cn(
+            "w-4 h-4",
+            isMobile ? "text-white/90" : "text-gray-500",
+            "transition-transform duration-300", // Smoother transition
+            showMoreFilters ? "rotate-180" : ""
+          )} />
         </button>
       </div>
 
