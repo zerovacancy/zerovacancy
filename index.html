@@ -30,7 +30,7 @@
     <meta property="twitter:description" content="Connect with top-tier photographers, videographers, and content creators for property marketing. Streamlined booking, secure payments, and quality real estate content that converts.">
     <meta property="twitter:image" content="https://www.zerovacancy.ai/og-image.png">
     
-    <!-- Meta Pixel Code -->
+    <!-- Meta Pixel Code - Script portion only -->
     <script>
     !function(f,b,e,v,n,t,s)
     {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -43,12 +43,13 @@
     fbq('init', '501407459688981');
     fbq('track', 'PageView');
     </script>
+  </head>
+  <body>
+    <!-- Meta Pixel Code - Noscript portion moved to body -->
     <noscript><img height="1" width="1" style="display:none"
     src="https://www.facebook.com/tr?id=501407459688981&ev=PageView&noscript=1"
     /></noscript>
-    <!-- End Meta Pixel Code -->
-  </head>
-  <body>
+    
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
