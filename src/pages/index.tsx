@@ -211,7 +211,8 @@ const Index = () => {
         
         {/* Professional Content Creation Services */}
         <section 
-          ref={addSectionRef(3)} 
+          ref={addSectionRef(3)}
+          id="features" 
           className={cn(
             "w-full",
             isMobile && "bg-gradient-to-b from-violet-50/30 via-transparent to-transparent relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-8 after:bg-gradient-to-t after:from-indigo-50/30 after:to-transparent"
@@ -224,7 +225,8 @@ const Index = () => {
 
         {/* Pricing Section */}
         <section 
-          ref={addSectionRef(4)} 
+          ref={addSectionRef(4)}
+          id="pricing" 
           className={cn(
             "w-full",
             isMobile && "bg-gradient-to-b from-purple-50/30 via-transparent to-transparent relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-8 after:bg-gradient-to-t after:from-purple-50/30 after:to-transparent"

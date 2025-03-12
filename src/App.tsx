@@ -1,6 +1,6 @@
 
 import React, { lazy, Suspense, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, useNavigationType } from 'react-router-dom';
 import { ErrorBoundary } from 'react-error-boundary';
 import ErrorFallback from './components/ErrorFallback';
 import { Toaster } from '@/components/ui/toaster';
@@ -30,6 +30,31 @@ const PageLoader = () => {
       </div>
     </div>
   );
+};
+
+// ScrollToTop component for handling navigation
+const ScrollToTop = () => {
+  const location = useLocation();
+  const navigationType = useNavigationType();
+  
+  useEffect(() => {
+    // Only handle hash links when navigating to the same page
+    if (location.hash && (navigationType === 'PUSH' || navigationType === 'REPLACE')) {
+      // Small delay to ensure DOM is ready
+      setTimeout(() => {
+        const id = location.hash.replace('#', '');
+        const element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 0);
+    } else if (!location.hash && navigationType === 'PUSH') {
+      // Scroll to top when navigating to a new page without hash
+      window.scrollTo(0, 0);
+    }
+  }, [location, navigationType]);
+  
+  return null;
 };
 
 // Component to conditionally render the bottom nav
@@ -89,6 +114,7 @@ function App() {
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <Router>
+        <ScrollToTop />
         <div className={`relative ${isMobile ? coloredBgMobile : ''}`}>
           <Suspense fallback={<PageLoader />}>
             <Routes>
