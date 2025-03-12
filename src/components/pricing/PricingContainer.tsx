@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -50,7 +49,6 @@ export const PricingContainer = () => {
     let currentCategory = "Core Features";
     
     features.forEach(feature => {
-      // Check if the feature text indicates a category
       if (typeof feature.text === 'string' && feature.text.startsWith("**") && feature.text.endsWith("**")) {
         currentCategory = feature.text.slice(2, -2);
         if (!result[currentCategory]) {
@@ -187,11 +185,10 @@ export const PricingContainer = () => {
               <motion.div
                 key={tier.title}
                 className={cn(
-                  "rounded-xl overflow-hidden border transition-all mt-4 relative group",
+                  "rounded-xl overflow-hidden transition-all mt-4 relative group",
                   tier.popularPlan ? "border-brand-purple shadow-lg" : "border-slate-200",
                   tier.popularPlan && "relative",
                   colorScheme.cardBg, // Using consistent background for the whole card
-                  mobileOptimizationClasses.cleanBorderMobile,
                   "shadow-sm hover:shadow-md",
                   isMobile && "mobile-optimize",
                   "before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:rounded-l-xl",
@@ -411,7 +408,6 @@ export const PricingContainer = () => {
                   tier.popularPlan && "relative",
                   colorScheme.cardBg, // Using consistent background for the whole card
                   "shadow-sm hover:shadow-md",
-                  mobileOptimizationClasses.cleanBorderMobile,
                   isMobile && "mobile-optimize",
                   "before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:rounded-l-xl",
                   `before:bg-gradient-to-b ${colorScheme.gradient.split(' ')[0]} ${colorScheme.gradient.split(' ')[1]} before:opacity-0 group-hover:before:opacity-100 before:transition-opacity`
