@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { usePricing } from "./PricingContext";
 import PricingHeader from "./PricingHeader";
 import { PLAN_DESCRIPTIONS, VALUE_PROPOSITIONS, PLAN_CTAS, FEATURES } from "./pricingData";
-import { ChevronDown, Check, Info, X } from "lucide-react";
+import { ChevronDown, Check, X } from "lucide-react";
 import { PricingFeature } from "./types";
 import { Button } from "../ui/button";
 import { mobileOptimizationClasses } from "@/utils/mobile-optimization";
@@ -117,7 +117,8 @@ export const PricingContainer = () => {
           accent: "bg-blue-500",
           button: "bg-gradient-to-r from-blue-500 to-blue-600 hover:bg-blue-600",
           highlight: "bg-blue-50",
-          gradient: mobileOptimizationClasses.pricingGradientBasic
+          gradient: mobileOptimizationClasses.pricingGradientBasic,
+          cardBg: "bg-gradient-to-b from-blue-50/50 to-white" // Added consistent card background
         };
       case "purple":
         return {
@@ -127,7 +128,8 @@ export const PricingContainer = () => {
           accent: "bg-brand-purple",
           button: "bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-600 hover:from-purple-700 hover:via-blue-700 hover:to-cyan-700",
           highlight: "bg-purple-50",
-          gradient: mobileOptimizationClasses.pricingGradientPro
+          gradient: mobileOptimizationClasses.pricingGradientPro,
+          cardBg: "bg-gradient-to-b from-purple-50/50 to-white" // Added consistent card background
         };
       case "emerald":
         return {
@@ -137,7 +139,8 @@ export const PricingContainer = () => {
           accent: "bg-emerald-500",
           button: "bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700",
           highlight: "bg-emerald-50",
-          gradient: mobileOptimizationClasses.pricingGradientPremium
+          gradient: mobileOptimizationClasses.pricingGradientPremium,
+          cardBg: "bg-gradient-to-b from-emerald-50/50 to-white" // Added consistent card background
         };
       default:
         return {
@@ -147,7 +150,8 @@ export const PricingContainer = () => {
           accent: "bg-gray-500",
           button: "bg-gray-500 hover:bg-gray-600",
           highlight: "bg-gray-50",
-          gradient: ""
+          gradient: "",
+          cardBg: "bg-gradient-to-b from-gray-50/50 to-white" // Added consistent card background
         };
     }
   };
@@ -185,7 +189,8 @@ export const PricingContainer = () => {
                 className={cn(
                   "rounded-lg overflow-hidden border-2 transition-all mt-4",
                   tier.popularPlan ? "border-brand-purple shadow-lg" : "border-slate-200",
-                  tier.popularPlan && "relative"
+                  tier.popularPlan && "relative",
+                  colorScheme.cardBg // Using consistent background for the whole card
                 )}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -193,8 +198,7 @@ export const PricingContainer = () => {
               >
                 {/* Plan header */}
                 <div className={cn(
-                  "p-4 flex justify-between items-start",
-                  colorScheme.gradient
+                  "p-4 flex justify-between items-start"
                 )}>
                   <div>
                     <h3 className={cn(
@@ -300,20 +304,17 @@ export const PricingContainer = () => {
             );
           })}
           
-          {/* Compact feature comparison table for mobile - with gradient background */}
-          <div className="mt-4 pt-2 border-t border-slate-200">
+          {/* Compact feature comparison table for mobile - removed border-t and changed button styling */}
+          <div className="mt-4 pt-2">
             <button
               onClick={() => setExpandedComparisonTable(!expandedComparisonTable)}
-              className="w-auto mx-auto flex items-center justify-between py-2 px-4 text-sm font-medium text-brand-text-primary font-inter rounded-lg bg-gradient-to-br from-white to-slate-50 shadow-sm border border-slate-100"
+              className="w-full mx-auto flex items-center justify-between py-3 px-5 text-sm font-medium text-white font-inter rounded-lg bg-gradient-to-r from-brand-purple to-brand-purple-dark shadow-sm border border-brand-purple/10 hover:shadow-md transition-all duration-200"
             >
-              <span className="flex items-center">
-                <span className="p-1 mr-2 bg-indigo-50 rounded">
-                  <Info className="h-4 w-4 text-indigo-500" />
-                </span>
+              <span className="flex-1 text-center">
                 Compare all features
               </span>
               <ChevronDown className={cn(
-                "h-4 w-4 text-brand-text-light transition-transform",
+                "h-4 w-4 text-white transition-transform",
                 expandedComparisonTable && "rotate-180"
               )} />
             </button>
@@ -389,7 +390,7 @@ export const PricingContainer = () => {
                     ? `border-brand-purple shadow-xl ${colorScheme.border} scale-105 z-10` 
                     : "border-slate-200",
                   tier.popularPlan && "relative",
-                  colorScheme.gradient
+                  colorScheme.cardBg // Using consistent background for the whole card
                 )}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
