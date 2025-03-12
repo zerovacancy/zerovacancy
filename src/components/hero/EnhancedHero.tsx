@@ -27,10 +27,14 @@ const HeroHeadline = ({ isMobile }: { isMobile: boolean }) => (
         "relative",
         "after:content-[''] after:absolute after:-bottom-1 after:left-0",
         "after:w-full after:h-[4px]",
-        "after:bg-gradient-to-r after:from-indigo-500 after:to-purple-600"
+        "after:bg-gradient-to-r after:from-indigo-500 after:to-purple-600",
+        "tracking-wide",
+        "text-shadow-sm",
+        "hover:scale-[1.01] transition-transform duration-300",
+        "will-change-transform"
       )}
     >
-      PROPERTY MARKETING
+      PROPERTY CONTENT
     </span>
   </div>
 );
@@ -58,7 +62,6 @@ const HeroDescription = ({ isMobile }: { isMobile: boolean }) => (
   </div>
 );
 
-// Animated background blobs
 const BackgroundBlobs = () => (
   <>
     <div className="absolute top-[-5%] right-[-5%] w-[40%] h-[40%] rounded-full bg-gradient-to-br from-indigo-300/20 to-purple-400/30 blur-3xl animate-blob"></div>
