@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
@@ -66,11 +67,11 @@ export function Hero() {
           )}>
             <span 
               className={cn(
-                "text-primary inline-block font-medium",
                 "text-3xl sm:text-5xl lg:text-6xl",
-                "tracking-[-0.02em]", 
-                "text-brand-purple-dark",
-                "block sm:inline-block mb-[-0.2em] sm:mb-0 font-jakarta" 
+                "tracking-[-0.02em]",
+                "block sm:inline-block mb-[-0.2em] sm:mb-0 font-jakarta",
+                "bg-clip-text text-transparent",
+                "bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1]"
               )}
             >
               PROPERTY CONTENT THAT
