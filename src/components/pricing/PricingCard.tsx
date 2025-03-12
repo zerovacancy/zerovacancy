@@ -10,7 +10,7 @@ interface PricingCardProps {
   title: string;
   price: number;
   interval: string;
-  description: string; // We'll keep this in the props but not display it
+  description: string;
   features: string[];
   cta: string;
   color?: ColorVariant;
@@ -27,7 +27,7 @@ export const PricingCard = ({
   title,
   price,
   interval,
-  description, // Keeping in props for backward compatibility
+  description,
   features,
   cta,
   color = "blue",
@@ -40,6 +40,7 @@ export const PricingCard = ({
   isCurrentPlan = false
 }: PricingCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const isMobile = useIsMobile();
   const colorStyles = colorVariants[color];
   
@@ -113,12 +114,69 @@ export const PricingCard = ({
         </div>
         
         {valueProposition && (
-          <p className={cn(
-            "mt-3 text-sm font-medium font-inter",
-            colorStyles.accent
-          )}>
-            {valueProposition}
-          </p>
+          <div className="mt-3">
+            <p className={cn(
+              "text-sm font-medium font-inter relative",
+              colorStyles.accent,
+              !isDescriptionExpanded && isMobile && "line-clamp-3"
+            )}>
+              {valueProposition}
+              {!isDescriptionExpanded && isMobile && valueProposition.length > 100 && (
+                <span className={cn("text-brand-purple-medium", colorStyles.accent)}> ...</span>
+              )}
+            </p>
+            
+            {isMobile && valueProposition.length > 100 && (
+              <button 
+                onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+                className={cn(
+                  "mt-1 text-xs font-medium flex items-center gap-1 focus:outline-none touch-manipulation",
+                  colorStyles.accent
+                )}
+              >
+                {isDescriptionExpanded ? "Read less" : "Read more"}
+                <ChevronDown 
+                  className={cn(
+                    "h-3 w-3 transition-transform", 
+                    isDescriptionExpanded && "rotate-180"
+                  )} 
+                />
+              </button>
+            )}
+          </div>
+        )}
+        
+        {description && !valueProposition && (
+          <div className="mt-3">
+            <p className={cn(
+              "text-sm font-medium font-inter relative",
+              colorStyles.accent,
+              !isDescriptionExpanded && isMobile && "line-clamp-3"
+            )}>
+              {description}
+              {!isDescriptionExpanded && isMobile && description.length > 100 && (
+                <span className={cn("text-brand-purple-medium", colorStyles.accent)}> ...</span>
+              )}
+            </p>
+            
+            {isMobile && description.length > 100 && (
+              <button 
+                onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+                className={cn(
+                  "mt-1 text-xs font-medium flex items-center gap-1 focus:outline-none touch-manipulation",
+                  colorStyles.accent
+                )}
+              >
+                {isDescriptionExpanded ? "Read less" : "Read more"}
+                <ChevronDown 
+                  className={cn(
+                    "h-3 w-3 transition-transform", 
+                    isDescriptionExpanded && "rotate-180"
+                  )} 
+                />
+              </button>
+            )}
+          </div>
         )}
       </div>
       
