@@ -23,16 +23,16 @@ export function PricingProvider({ children }: { children: ReactNode }) {
   // Update prices based on billing period
   const currentPrices = {
     starter: 0,
-    pro: isYearly ? PRICING.starterAnnual : PRICING.starterMonthly,
-    premium: isYearly ? PRICING.proAnnual : PRICING.proMonthly
+    pro: isYearly ? PRICING.proAnnual : PRICING.proMonthly,
+    premium: isYearly ? PRICING.premiumAnnual : PRICING.premiumMonthly
   };
   
   // Calculate savings for each plan
   const getSavings = (planType: 'pro' | 'premium') => {
     if (!isYearly) return 0;
     
-    const monthlyCost = planType === 'pro' ? PRICING.starterMonthly : PRICING.proMonthly;
-    const annualCost = planType === 'pro' ? PRICING.starterAnnual : PRICING.proAnnual;
+    const monthlyCost = planType === 'pro' ? PRICING.proMonthly : PRICING.premiumMonthly;
+    const annualCost = planType === 'pro' ? PRICING.proAnnual : PRICING.premiumAnnual;
     
     return Math.round(12 * (monthlyCost - annualCost));
   };
