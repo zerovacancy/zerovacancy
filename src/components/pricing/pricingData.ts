@@ -21,28 +21,28 @@ export const SAVINGS = {
 // Features for each plan with improved organization and wording
 export const FEATURES = {
   free: [
-    { text: "[Core Features] Browse & Discover Content Creators", primary: true },
-    { text: "[Core Features] Limited Access to Creator Profiles", primary: true },
-    { text: "[Core Features] Preview Marketplace Features", primary: true }
+    { text: "Browse & Discover Content Creators", primary: true },
+    { text: "Limited Access to Creator Profiles", primary: true },
+    { text: "Preview Marketplace Features", primary: true }
   ],
   pro: [
-    { text: "[Core Access] Submit Requests for Proposals (RFPs)", primary: true },
-    { text: "[Core Access] Browse & Hire Premium Creators", primary: true },
-    { text: "[Core Access] 1 Revision Included Per Project", primary: true },
-    { text: "[Content Optimization] Social Media Optimized Content", primary: true },
-    { text: "[Content Optimization] SEO-Optimized Content", primary: true },
-    { text: "[Content Optimization] Geo-Targeted Content", primary: true }
+    { text: "Submit Requests for Proposals (RFPs)", primary: true },
+    { text: "Browse & Hire Premium Creators", primary: true },
+    { text: "1 Revision Included Per Project", primary: true },
+    { text: "Social Media Optimized Content", primary: true },
+    { text: "SEO-Optimized Content", primary: true },
+    { text: "Geo-Targeted Content", primary: true }
   ],
   premium: [
-    { text: "[Premium Access] Submit Requests for Proposals (RFPs) Instantly", primary: true },
-    { text: "[Premium Access] Browse & Hire Premium Creators", primary: true },
-    { text: "[Premium Access] 3 Revisions Included Per Project", primary: true },
-    { text: "[Content Optimization] Social Media Optimized Content", primary: true },
-    { text: "[Content Optimization] SEO-Optimized Content", primary: true },
-    { text: "[Content Optimization] Geo-Targeted Content", primary: true },
-    { text: "[Advanced Features] Marketing Channel Optimization", primary: true },
-    { text: "[Premium Benefits] 7-Day Money-Back Guarantee", primary: true },
-    { text: "[Advanced Features] Performance Insights Dashboard", primary: true }
+    { text: "Submit Requests for Proposals (RFPs) Instantly", primary: true },
+    { text: "Browse & Hire Premium Creators", primary: true },
+    { text: "3 Revisions Included Per Project", primary: true },
+    { text: "Social Media Optimized Content", primary: true },
+    { text: "SEO-Optimized Content", primary: true },
+    { text: "Geo-Targeted Content", primary: true },
+    { text: "Marketing Channel Optimization", primary: true },
+    { text: "7-Day Money-Back Guarantee", primary: true },
+    { text: "Performance Insights Dashboard", primary: true }
   ]
 };
 
