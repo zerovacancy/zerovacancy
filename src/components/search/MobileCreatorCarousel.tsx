@@ -22,12 +22,12 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
 }) => {
   const [isFirstVisit, setIsFirstVisit] = useState(true);
 
-  // Optimized carousel settings for mobile with better snap alignment
+  // Optimized carousel settings for mobile with peek view of next card
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: 'start',
     containScroll: 'trimSnaps',
     loop: false,
-    dragFree: true,
+    dragFree: false,
     skipSnaps: false
   });
   
@@ -92,6 +92,21 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
           <span>Swipe to explore</span>
         </div>
       )}
+      
+      {/* Dots indicator */}
+      <div className="absolute bottom-1 left-0 right-0 flex justify-center gap-1.5 pb-1 z-20">
+        {creators.map((_, index) => (
+          <div 
+            key={index} 
+            className={cn(
+              "h-1.5 rounded-full transition-all duration-300",
+              selectedIndex === index 
+                ? "w-4 bg-purple-600" 
+                : "w-1.5 bg-purple-300/50"
+            )}
+          />
+        ))}
+      </div>
 
       {/* Simplified carousel container */}
       <div className="w-full overflow-hidden" ref={emblaRef}>
@@ -100,7 +115,7 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
             <div 
               key={creator.name} 
               style={{ touchAction: 'pan-y' }} 
-              className="min-w-[100%] w-[100%] px-2 my-2"
+              className="min-w-[85%] w-[85%] pl-2 pr-1 my-2"
             >
               <CreatorCard 
                 creator={creator} 
