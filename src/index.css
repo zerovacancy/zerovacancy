@@ -73,6 +73,24 @@
   display: none;
 }
 
+/* Enhanced touch area for mobile pricing toggle */
+@media (max-width: 768px) {
+  .pricing-toggle-button {
+    min-height: 32px; /* Slightly reduced height for mobile */
+    min-width: 80px; /* Ensure good touch target width */
+    padding: 0.5rem 1rem; /* Slightly smaller padding */
+    -webkit-tap-highlight-color: transparent; /* Remove tap highlight on iOS */
+  }
+  
+  /* Mobile-optimized touches for the toggle */
+  .mobile-pricing-toggle {
+    width: 100%;
+    max-width: 260px;
+    margin: 0 auto;
+    touch-action: manipulation;
+  }
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   main {
