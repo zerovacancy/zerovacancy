@@ -70,18 +70,21 @@ const PricingHeader = ({
           </>
         )}
         
-        {/* Updated pricing toggle to match the screenshot */}
+        {/* Single unified toggle for both mobile and desktop */}
         <div className={cn(
-          "flex items-center overflow-hidden rounded-full bg-slate-100 p-1 max-w-md mx-auto",
+          "flex items-center overflow-hidden rounded-full transition-all duration-300 w-full max-w-md mx-auto",
           isSticky ? "scale-90" : "",
-          "transition-all duration-300 w-full"
+          isMobile ? "bg-[#8853FF]/20" : "bg-slate-100",
+          "p-1"
         )}>
           <button
             onClick={() => setIsYearly(false)}
             className={cn(
-              "flex-1 px-6 py-2 rounded-full text-sm font-medium transition-all duration-200",
+              "flex-1 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200",
               !isYearly 
-                ? "bg-white text-gray-700 shadow-sm" 
+                ? isMobile
+                  ? "bg-[#8853FF] text-white shadow-sm"
+                  : "bg-white text-gray-700 shadow-sm" 
                 : "text-gray-500 hover:text-gray-700"
             )}
             aria-pressed={!isYearly}
@@ -92,9 +95,11 @@ const PricingHeader = ({
           <button
             onClick={() => setIsYearly(true)}
             className={cn(
-              "flex-1 px-6 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2",
+              "flex-1 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2",
               isYearly 
-                ? "bg-white text-[#8344FF] shadow-sm" 
+                ? isMobile
+                  ? "bg-white text-[#8853FF] shadow-sm"
+                  : "bg-white text-[#8344FF] shadow-sm" 
                 : "text-gray-500 hover:text-gray-700"
             )}
             aria-pressed={isYearly}
