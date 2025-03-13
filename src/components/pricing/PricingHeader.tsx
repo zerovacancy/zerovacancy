@@ -70,43 +70,40 @@ const PricingHeader = ({
           </>
         )}
         
-        {/* Enhanced toggle container with improved mobile styling */}
+        {/* Updated pricing toggle to match the screenshot */}
         <div className={cn(
-          "flex items-center space-x-2 p-1 rounded-lg transition-all duration-300 w-full max-w-md mx-auto",
-          isMobile ? 
-            "bg-[#F5F0FF] border border-[#E0E0E0] shadow-[0_2px_8px_rgba(0,0,0,0.06)]" : 
-            "bg-slate-100",
-          isSticky ? "scale-90" : ""
+          "flex items-center overflow-hidden rounded-full bg-slate-100 p-1 max-w-md mx-auto",
+          isSticky ? "scale-90" : "",
+          "transition-all duration-300 w-full"
         )}>
           <button
             onClick={() => setIsYearly(false)}
             className={cn(
-              "px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 font-space flex items-center gap-2",
+              "flex-1 px-6 py-2 rounded-full text-sm font-medium transition-all duration-200",
               !isYearly 
-                ? "bg-white text-brand-purple shadow-sm" 
-                : "text-brand-text-secondary hover:text-brand-text-primary hover:bg-white/50"
+                ? "bg-white text-gray-700 shadow-sm" 
+                : "text-gray-500 hover:text-gray-700"
             )}
             aria-pressed={!isYearly}
           >
-            {isMobile && <Calendar size={16} className="text-gray-600" />}
             Monthly
           </button>
           
           <button
             onClick={() => setIsYearly(true)}
             className={cn(
-              "px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 flex items-center gap-2 font-space",
+              "flex-1 px-6 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2",
               isYearly 
-                ? isMobile ? "bg-white text-[#7B3DFF] shadow-sm" : "bg-white text-brand-purple shadow-sm"
-                : "text-brand-text-secondary hover:text-brand-text-primary hover:bg-white/50"
+                ? "bg-white text-[#8344FF] shadow-sm" 
+                : "text-gray-500 hover:text-gray-700"
             )}
             aria-pressed={isYearly}
           >
-            {isMobile && <CalendarDays size={16} className="text-gray-600" />}
             Annual
+            
             {isYearly && (
               <span className={cn(
-                "text-xs bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full",
+                "text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full whitespace-nowrap",
                 animateChange ? "animate-pulse" : ""
               )}>
                 Save 20%
