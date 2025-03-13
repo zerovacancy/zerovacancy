@@ -85,6 +85,9 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
 
   return (
     <div className="w-full relative">
+      {/* Navigation hint overlay - bottom area */}
+      <div className="absolute left-0 right-0 bottom-0 h-16 bg-gradient-to-t from-black/20 to-transparent pointer-events-none z-[2]"></div>
+      
       {/* Swipe instruction */}
       {isFirstVisit && (
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-4 py-2 rounded-full text-sm flex items-center gap-2 shadow-md">
@@ -117,25 +120,27 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
       <button 
         onClick={scrollPrev} 
         className={cn(
-          "absolute left-1 top-[45%] -translate-y-1/2 z-10 rounded-full p-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white", 
-          "touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center shadow-md", 
-          !prevBtnEnabled && "opacity-0 pointer-events-none"
+          "absolute left-2 bottom-4 z-[5] rounded-full p-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white", 
+          "touch-manipulation min-h-[36px] min-w-[36px] flex items-center justify-center shadow-md transition-opacity duration-300", 
+          !prevBtnEnabled && "opacity-40 cursor-not-allowed"
         )} 
+        disabled={!prevBtnEnabled}
         aria-label="Previous creator"
       >
-        <ChevronLeft className="w-5 h-5" />
+        <ChevronLeft className="w-4 h-4" />
       </button>
       
       <button 
         onClick={scrollNext} 
         className={cn(
-          "absolute right-1 top-[45%] -translate-y-1/2 z-10 rounded-full p-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white", 
-          "touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center shadow-md", 
-          !nextBtnEnabled && "opacity-0 pointer-events-none"
+          "absolute right-2 bottom-4 z-[5] rounded-full p-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white", 
+          "touch-manipulation min-h-[36px] min-w-[36px] flex items-center justify-center shadow-md transition-opacity duration-300", 
+          !nextBtnEnabled && "opacity-40 cursor-not-allowed"
         )} 
+        disabled={!nextBtnEnabled}
         aria-label="Next creator"
       >
-        <ChevronRight className="w-5 h-5" />
+        <ChevronRight className="w-4 h-4" />
       </button>
     </div>
   );
