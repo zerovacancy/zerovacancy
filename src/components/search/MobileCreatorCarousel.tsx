@@ -119,7 +119,7 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
         className={cn(
           "absolute -left-4 top-[45%] -translate-y-1/2 z-10 rounded-full p-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white", 
           "touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center shadow-md transition-opacity duration-300", 
-          !prevBtnEnabled && "opacity-40 cursor-not-allowed"
+          !prevBtnEnabled && "opacity-25 cursor-not-allowed"
         )} 
         disabled={!prevBtnEnabled}
         aria-label="Previous creator"
