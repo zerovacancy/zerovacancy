@@ -10,13 +10,18 @@ import { PricingFeature } from "./types";
 import { Button } from "../ui/button";
 import { mobileOptimizationClasses } from "@/utils/mobile-optimization";
 import { ScrollArea } from "../ui/scroll-area";
+import {
+  Dialog,
+  DialogContent,
+  DialogClose,
+  DialogTrigger,
+} from "../ui/dialog";
 
 export const PricingContainer = () => {
   const isMobile = useIsMobile();
   const { isYearly, currentPrices, getSavings, setIsYearly, animateChange } = usePricing();
   const [expandedFeatures, setExpandedFeatures] = useState<{[key: number]: boolean}>({});
   const [expandedDescriptions, setExpandedDescriptions] = useState<{[key: number]: boolean}>({});
-  const [expandedComparisonTable, setExpandedComparisonTable] = useState(false);
   const [showStickyHeader, setShowStickyHeader] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   
@@ -346,144 +351,113 @@ export const PricingContainer = () => {
           })}
           
           <div className="mt-6 pt-2 relative flex flex-col items-center">
-            <button
-              onClick={() => setExpandedComparisonTable(!expandedComparisonTable)}
-              className={cn(
-                "flex items-center justify-between py-2.5 px-4 text-sm font-medium text-white font-inter",
-                "rounded-xl bg-gradient-to-r from-brand-purple to-brand-purple-dark",
-                "shadow-sm border border-brand-purple/10 hover:shadow-md",
-                "transition-all duration-200 relative",
-                "max-w-[240px] w-full"
-              )}
-              aria-expanded={expandedComparisonTable}
-              aria-controls="feature-comparison-table"
-            >
-              <span className="flex-1 text-center">
-                Compare all features
-              </span>
-              <ChevronDown className={cn(
-                "h-4 w-4 text-white transition-transform",
-                expandedComparisonTable && "rotate-180"
-              )} />
-            </button>
-            
-            <AnimatePresence>
-              {expandedComparisonTable && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 10 }}
-                  transition={{ duration: 0.2, ease: "easeOut" }}
-                  className="w-full fixed inset-x-0 bottom-0 z-40"
-                  id="feature-comparison-table"
+            <Dialog>
+              <DialogTrigger asChild>
+                <button
+                  className={cn(
+                    "flex items-center justify-between py-2.5 px-4 text-sm font-medium text-white font-inter",
+                    "rounded-xl bg-gradient-to-r from-brand-purple to-brand-purple-dark",
+                    "shadow-sm border border-brand-purple/10 hover:shadow-md",
+                    "transition-all duration-200 relative",
+                    "max-w-[240px] w-full"
+                  )}
                 >
-                  <div className="absolute inset-0 bg-black/30" onClick={() => setExpandedComparisonTable(false)} />
-                  
-                  <motion.div
-                    initial={{ y: "100%" }}
-                    animate={{ y: 0 }}
-                    exit={{ y: "100%" }}
-                    transition={{ duration: 0.3, ease: "easeInOut" }}
-                    className={cn(
-                      "relative bg-white rounded-t-xl shadow-xl overflow-hidden",
-                      "border-t border-x border-slate-200",
-                      "max-h-[80vh]"
-                    )}
-                  >
-                    <div className="flex items-center justify-between p-4 border-b border-slate-200 sticky top-0 bg-white z-10">
-                      <h3 className="text-lg font-bold text-brand-purple-dark font-jakarta">Feature Comparison</h3>
-                      <button 
-                        onClick={() => setExpandedComparisonTable(false)}
-                        className="p-1 rounded-full hover:bg-slate-100"
-                        aria-label="Close comparison table"
-                      >
-                        <X className="h-5 w-5 text-gray-500" />
-                      </button>
+                  <span className="flex-1 text-center">
+                    Compare all features
+                  </span>
+                  <ChevronDown className="h-4 w-4 text-white" />
+                </button>
+              </DialogTrigger>
+
+              <DialogContent className="p-0 w-[92vw] max-w-[400px] rounded-xl border-slate-200 shadow-xl top-[15%] translate-y-0">
+                <div className="flex items-center justify-between p-4 border-b border-slate-200 sticky top-0 bg-white z-10">
+                  <h3 className="text-lg font-bold text-brand-purple-dark font-jakarta">Feature Comparison</h3>
+                  <DialogClose className="p-1 rounded-full hover:bg-slate-100 focus:outline-none">
+                    <X className="h-5 w-5 text-gray-500" />
+                  </DialogClose>
+                </div>
+                
+                <ScrollArea className="h-[60vh] rounded-b-xl">
+                  <div className="px-4 pb-6">
+                    <div className="grid grid-cols-4 border-b border-slate-200 py-3 sticky top-0 bg-white z-10">
+                      <div className="col-span-1 text-sm font-bold text-gray-800 font-jakarta">Feature</div>
+                      <div className="col-span-1 text-center text-xs font-bold text-blue-700 font-space">Basic</div>
+                      <div className="col-span-1 text-center text-xs font-bold text-purple-700 font-space">Pro</div>
+                      <div className="col-span-1 text-center text-xs font-bold text-emerald-700 font-space">Premium</div>
                     </div>
                     
-                    <ScrollArea className="h-[calc(80vh-57px)]">
-                      <div className="px-4 pb-6">
-                        <div className="grid grid-cols-4 border-b border-slate-200 py-3 sticky top-0 bg-white z-10">
-                          <div className="col-span-1 text-sm font-bold text-gray-800 font-jakarta">Feature</div>
-                          <div className="col-span-1 text-center text-xs font-bold text-blue-700 font-space">Basic</div>
-                          <div className="col-span-1 text-center text-xs font-bold text-purple-700 font-space">Pro</div>
-                          <div className="col-span-1 text-center text-xs font-bold text-emerald-700 font-space">Premium</div>
+                    <div className="pt-4 pb-2">
+                      <h4 className="text-xs font-bold text-brand-purple-dark bg-brand-purple/5 px-3 py-1.5 rounded-lg inline-block mb-3">
+                        Core Features
+                      </h4>
+                      
+                      <div className="space-y-3">
+                        <div className="grid grid-cols-4 items-center hover:bg-slate-50 rounded py-2 transition-colors">
+                          <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">Browse Creators</div>
+                          <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-blue-600" /></div>
+                          <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-purple-600" /></div>
+                          <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-emerald-600" /></div>
                         </div>
-                        
-                        <div className="pt-4 pb-2">
-                          <h4 className="text-xs font-bold text-brand-purple-dark bg-brand-purple/5 px-3 py-1.5 rounded-lg inline-block mb-3">
-                            Core Features
-                          </h4>
-                          
-                          <div className="space-y-3">
-                            <div className="grid grid-cols-4 items-center hover:bg-slate-50 rounded py-2 transition-colors">
-                              <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">Browse Creators</div>
-                              <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-blue-600" /></div>
-                              <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-purple-600" /></div>
-                              <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-emerald-600" /></div>
-                            </div>
-                            <div className="grid grid-cols-4 items-center hover:bg-slate-50 rounded py-2 transition-colors">
-                              <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">Submit RFPs</div>
-                              <div className="col-span-1 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
-                              <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-purple-600" /></div>
-                              <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-emerald-600" /></div>
-                            </div>
-                            <div className="grid grid-cols-4 items-center hover:bg-slate-50 rounded py-2 transition-colors">
-                              <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">Revisions Included</div>
-                              <div className="col-span-1 text-center text-xs font-semibold text-gray-700 font-space">0</div>
-                              <div className="col-span-1 text-center text-xs font-semibold text-purple-700 font-space">1</div>
-                              <div className="col-span-1 text-center text-xs font-semibold text-emerald-700 font-space">3</div>
-                            </div>
-                          </div>
+                        <div className="grid grid-cols-4 items-center hover:bg-slate-50 rounded py-2 transition-colors">
+                          <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">Submit RFPs</div>
+                          <div className="col-span-1 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
+                          <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-purple-600" /></div>
+                          <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-emerald-600" /></div>
                         </div>
-                        
-                        <div className="pt-4 pb-2 border-t border-slate-100">
-                          <h4 className="text-xs font-bold text-purple-700 bg-purple-50 px-3 py-1.5 rounded-lg inline-block mb-3">
-                            Pro Features
-                          </h4>
-                          
-                          <div className="space-y-3">
-                            <div className="grid grid-cols-4 items-center hover:bg-slate-50 rounded py-2 transition-colors">
-                              <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">SEO Optimization</div>
-                              <div className="col-span-1 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
-                              <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-purple-600" /></div>
-                              <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-emerald-600" /></div>
-                            </div>
-                            <div className="grid grid-cols-4 items-center hover:bg-slate-50 rounded py-2 transition-colors">
-                              <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">Priority Support</div>
-                              <div className="col-span-1 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
-                              <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-purple-600" /></div>
-                              <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-emerald-600" /></div>
-                            </div>
-                          </div>
-                        </div>
-                        
-                        <div className="pt-4 pb-2 border-t border-slate-100">
-                          <h4 className="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-lg inline-block mb-3">
-                            Premium Features
-                          </h4>
-                          
-                          <div className="space-y-3">
-                            <div className="grid grid-cols-4 items-center hover:bg-slate-50 rounded py-2 transition-colors">
-                              <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">Marketing Dashboard</div>
-                              <div className="col-span-1 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
-                              <div className="col-span-1 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
-                              <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-emerald-600" /></div>
-                            </div>
-                            <div className="grid grid-cols-4 items-center hover:bg-slate-50 rounded py-2 transition-colors">
-                              <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">Advanced Analytics</div>
-                              <div className="col-span-1 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
-                              <div className="col-span-1 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
-                              <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-emerald-600" /></div>
-                            </div>
-                          </div>
+                        <div className="grid grid-cols-4 items-center hover:bg-slate-50 rounded py-2 transition-colors">
+                          <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">Revisions Included</div>
+                          <div className="col-span-1 text-center text-xs font-semibold text-gray-700 font-space">0</div>
+                          <div className="col-span-1 text-center text-xs font-semibold text-purple-700 font-space">1</div>
+                          <div className="col-span-1 text-center text-xs font-semibold text-emerald-700 font-space">3</div>
                         </div>
                       </div>
-                    </ScrollArea>
-                  </motion.div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+                    </div>
+                    
+                    <div className="pt-4 pb-2 border-t border-slate-100">
+                      <h4 className="text-xs font-bold text-purple-700 bg-purple-50 px-3 py-1.5 rounded-lg inline-block mb-3">
+                        Pro Features
+                      </h4>
+                      
+                      <div className="space-y-3">
+                        <div className="grid grid-cols-4 items-center hover:bg-slate-50 rounded py-2 transition-colors">
+                          <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">SEO Optimization</div>
+                          <div className="col-span-1 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
+                          <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-purple-600" /></div>
+                          <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-emerald-600" /></div>
+                        </div>
+                        <div className="grid grid-cols-4 items-center hover:bg-slate-50 rounded py-2 transition-colors">
+                          <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">Priority Support</div>
+                          <div className="col-span-1 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
+                          <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-purple-600" /></div>
+                          <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-emerald-600" /></div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="pt-4 pb-2 border-t border-slate-100">
+                      <h4 className="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-lg inline-block mb-3">
+                        Premium Features
+                      </h4>
+                      
+                      <div className="space-y-3">
+                        <div className="grid grid-cols-4 items-center hover:bg-slate-50 rounded py-2 transition-colors">
+                          <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">Marketing Dashboard</div>
+                          <div className="col-span-1 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
+                          <div className="col-span-1 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
+                          <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-emerald-600" /></div>
+                        </div>
+                        <div className="grid grid-cols-4 items-center hover:bg-slate-50 rounded py-2 transition-colors">
+                          <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">Advanced Analytics</div>
+                          <div className="col-span-1 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
+                          <div className="col-span-1 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
+                          <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-emerald-600" /></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </ScrollArea>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
       ) : (
