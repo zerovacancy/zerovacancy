@@ -15,6 +15,12 @@ export const PricingToggle = ({
 }: PricingToggleProps) => {
   const isMobile = useIsMobile();
   const [animateChange, setAnimateChange] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
+  
+  // Handle hydration to prevent SSR/client mismatch
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
   
   // Animate highlight when changing billing period
   useEffect(() => {
@@ -23,6 +29,7 @@ export const PricingToggle = ({
     return () => clearTimeout(timer);
   }, [isYearly]);
 
+  // Only render the toggle once hydrated to prevent SSR issues
   return (
     <div className="flex flex-col items-center">
       {/* Toggle container with enhanced styling */}
@@ -40,6 +47,7 @@ export const PricingToggle = ({
             "hover:bg-gray-50",
             isYearly ? "text-slate-600" : "text-brand-purple-dark font-semibold"
           )}
+          aria-pressed={!isYearly}
         >
           Monthly
         </button>
@@ -53,28 +61,30 @@ export const PricingToggle = ({
             "hover:bg-gray-50",
             isYearly ? "text-brand-purple-dark font-semibold" : "text-slate-600"
           )}
+          aria-pressed={isYearly}
         >
           Annual
         </button>
         
         {/* Active slider with enhanced styling */}
-        <motion.div
-          className={cn(
-            "pricing-toggle-slider",
-            isYearly ? "annual" : "monthly",
-            "shadow-md",
-            animateChange && isYearly ? "ring-2 ring-brand-purple/30 ring-offset-1" : ""
-          )}
-          initial={false}
-          animate={{
-            x: isYearly ? "100%" : "0%"
-          }}
-          transition={{
-            type: "spring",
-            stiffness: 300,
-            damping: 30
-          }}
-        />
+        {hydrated && (
+          <motion.div
+            className={cn(
+              "pricing-toggle-slider",
+              "shadow-md",
+              animateChange && isYearly ? "ring-2 ring-brand-purple/30 ring-offset-1" : ""
+            )}
+            initial={false}
+            animate={{
+              x: isYearly ? "100%" : "0%"
+            }}
+            transition={{
+              type: "spring",
+              stiffness: 300,
+              damping: 30
+            }}
+          />
+        )}
       </div>
       
       {/* Savings label for annual billing */}

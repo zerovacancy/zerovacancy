@@ -49,17 +49,10 @@
   background-color: white;
   border-radius: 9999px;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.08);
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   top: 3px;
   left: 3px;
-}
-
-.pricing-toggle-slider.monthly {
+  /* Ensuring this works on mobile without transform conflicts */
   transform: translateX(0);
-}
-
-.pricing-toggle-slider.annual {
-  transform: translateX(100%);
 }
 
 .pricing-toggle-slider:hover {
@@ -104,5 +97,16 @@
   
   .mobile-text-center {
     text-align: center;
+  }
+  
+  /* Mobile pricing toggle adjustments */
+  .pricing-toggle-container {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  .pricing-toggle-button {
+    user-select: none;
+    touch-action: manipulation;
   }
 }
