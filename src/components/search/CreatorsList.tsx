@@ -1,9 +1,12 @@
+
 import React from 'react';
 import { CreatorCard } from '../creator/CreatorCard';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Creator } from '../creator/types';
 import { MobileCreatorCarousel } from './MobileCreatorCarousel';
 import { mobileOptimizationClasses } from '@/utils/mobile-optimization';
+import { ErrorBoundary } from 'react-error-boundary';
+import { ErrorFallback } from '../ErrorFallback';
 
 export const CreatorsList: React.FC = () => {
   const isMobile = useIsMobile();
@@ -63,29 +66,31 @@ export const CreatorsList: React.FC = () => {
   const { improvedShadowMobile, coloredBorderMobile } = mobileOptimizationClasses;
 
   return (
-    <div className={isMobile ? `bg-[#F0EBFA] ${improvedShadowMobile} ${coloredBorderMobile} rounded-xl p-3` : ""}>
-      {!isMobile && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-6">
-          {creators.map((creator) => (
-            <CreatorCard 
-              key={creator.name} 
-              creator={creator} 
-              onImageLoad={handleImageLoad} 
-              loadedImages={loadedImages} 
-              imageRef={imageRef} 
-            />
-          ))}
-        </div>
-      )}
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <div className={isMobile ? `bg-[#F0EBFA] ${improvedShadowMobile} ${coloredBorderMobile} rounded-xl p-3` : ""}>
+        {!isMobile && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-6">
+            {creators.map((creator) => (
+              <CreatorCard 
+                key={creator.name} 
+                creator={creator} 
+                onImageLoad={handleImageLoad} 
+                loadedImages={loadedImages} 
+                imageRef={imageRef} 
+              />
+            ))}
+          </div>
+        )}
 
-      {isMobile && (
-        <MobileCreatorCarousel
-          creators={creators}
-          onImageLoad={handleImageLoad}
-          loadedImages={loadedImages}
-          imageRef={imageRef}
-        />
-      )}
-    </div>
+        {isMobile && (
+          <MobileCreatorCarousel
+            creators={creators}
+            onImageLoad={handleImageLoad}
+            loadedImages={loadedImages}
+            imageRef={imageRef}
+          />
+        )}
+      </div>
+    </ErrorBoundary>
   );
 };

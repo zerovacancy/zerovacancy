@@ -1,4 +1,3 @@
-
 import * as React from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { motion, useAnimationFrame, useMotionTemplate, useMotionValue, useTransform } from "framer-motion";
@@ -61,8 +60,8 @@ export function GlowDialog({
 }: GlowDialogProps) {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const isMobileView = typeof window !== 'undefined' && window.innerWidth < 768;
 
-  // Use useCallback to ensure stable function references
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -74,7 +73,6 @@ export function GlowDialog({
     setIsLoading(true);
     
     try {
-      // Collect metadata
       const metadata = {
         referrer: document.referrer,
         url: window.location.href,
@@ -83,7 +81,6 @@ export function GlowDialog({
         timestamp: new Date().toISOString(),
       };
       
-      // Call our Supabase Edge Function
       const { data, error } = await supabase.functions.invoke('submit-waitlist-email', {
         body: { 
           email, 
@@ -99,7 +96,6 @@ export function GlowDialog({
         return;
       }
       
-      // Handle already subscribed message
       if (data?.status === 'already_subscribed') {
         toast.info(data.message || "You're already on our waitlist!");
       } else {
@@ -116,10 +112,13 @@ export function GlowDialog({
     }
   }, [email, onOpenChange]);
 
+  const dialogContentClassName = isMobileView 
+    ? "max-w-[95vw] md:max-w-3xl overflow-hidden border-none bg-transparent" 
+    : "sm:max-w-2xl md:max-w-3xl overflow-hidden border-none bg-transparent";
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-2xl md:max-w-3xl overflow-hidden border-none bg-transparent">
-        {/* Add the accessible DialogTitle component with proper ARIA role */}
+      <DialogContent className={dialogContentClassName}>
         <DialogTitle className="sr-only">Join Waitlist - Enter Your Email</DialogTitle>
         <motion.div 
           className="relative rounded-lg overflow-hidden bg-[#060606]/80 p-6 sm:p-8 md:p-10"
@@ -140,7 +139,6 @@ export function GlowDialog({
             <div className="h-24 w-24 sm:h-32 sm:w-32 opacity-[0.8] bg-[radial-gradient(var(--sky-500)_40%,transparent_60%)]" />
           </MovingBorder>
           <div className="relative z-10">
-            {/* Visible heading for users */}
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-4 md:mb-6 text-white leading-tight">
               JOIN WAITLIST
             </h2>
@@ -180,4 +178,3 @@ export function GlowDialog({
     </Dialog>
   );
 }
-
