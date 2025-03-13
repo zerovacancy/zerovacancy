@@ -27,11 +27,17 @@ export function PricingInteraction({
   const [showSwipeHint, setShowSwipeHint] = useState(true);
   const [animatePriceChange, setAnimatePriceChange] = useState(false);
   const [activeCardIndex, setActiveCardIndex] = useState(1); // Default to middle card (Professional)
+  const [isLoaded, setIsLoaded] = useState(false);
   const isMobile = useIsMobile();
   
   // Initialize price states based on the initial period
   const [starter, setStarter] = useState(period === 0 ? starterMonth : starterAnnual);
   const [pro, setPro] = useState(period === 0 ? proMonth : proAnnual);
+  
+  // Initialize component after hydration
+  useEffect(() => {
+    setIsLoaded(true);
+  }, []);
   
   // Enhanced period change with animation
   const handleChangePeriod = useCallback((index: number) => {
@@ -66,7 +72,7 @@ export function PricingInteraction({
     return () => clearTimeout(timer);
   }, []);
 
-  // Handle card scrolling with snap effect
+  // Handle card scrolling with snap effect and improved animation
   const handleCardScroll = (index: number) => {
     setActiveCardIndex(index);
   };
@@ -90,13 +96,18 @@ export function PricingInteraction({
   };
 
   return (
-    <div className={cn(
-      "border-2 rounded-[22px] p-4 shadow-lg w-full flex flex-col items-center gap-3 bg-white",
-      "relative overflow-hidden",
-      isMobile ? "max-w-[95%] mx-auto" : "max-w-sm"
-    )}>
+    <div 
+      className={cn(
+        "border-2 rounded-[22px] p-4 shadow-lg w-full flex flex-col items-center gap-3 bg-white",
+        "relative overflow-hidden scroll-container-optimized",
+        "mobile-content-container",
+        isMobile ? "max-w-[95%] mx-auto" : "max-w-sm"
+      )}
+      role="region"
+      aria-label="Pricing plan selection"
+    >
       {/* Enhanced background with subtle gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-white via-white to-slate-50 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-white via-white to-slate-50 pointer-events-none" aria-hidden="true" />
       
       {/* Toggle with slider for period selection */}
       <div className="w-full mb-3 mt-1">
@@ -107,20 +118,23 @@ export function PricingInteraction({
         />
       </div>
       
-      {/* Improved swipe instruction with more eye-catching design */}
+      {/* Improved swipe instruction with more eye-catching design and accessibility */}
       <AnimatePresence>
-        {showSwipeHint && (
+        {showSwipeHint && isLoaded && (
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
+            transition={{ type: "spring", stiffness: 300, damping: 25 }}
             className="text-xs text-gray-500 flex items-center gap-1.5 mb-1.5 bg-slate-50/80 backdrop-blur-sm px-3.5 py-2 rounded-full shadow-sm animate-pulse-subtle font-inter"
+            aria-live="polite"
           >
             <span>Swipe to compare pricing plans</span>
             <motion.span 
               animate={{ x: [0, 3, 0] }}
               transition={{ repeat: Infinity, duration: 1.5 }}
               className="inline-block"
+              aria-hidden="true"
             >
               →
             </motion.span>
@@ -128,9 +142,13 @@ export function PricingInteraction({
         )}
       </AnimatePresence>
       
-      {/* Card pagination indicators */}
-      <div className="flex justify-center gap-1.5 my-1">
-        {plans.map((_, index) => (
+      {/* Card pagination indicators with improved animation and accessibility */}
+      <div 
+        className="flex justify-center gap-1.5 my-1" 
+        role="tablist" 
+        aria-label="Plan navigation"
+      >
+        {plans.map((plan, index) => (
           <motion.button
             key={`indicator-${index}`}
             onClick={() => handleCardScroll(index)}
@@ -141,22 +159,37 @@ export function PricingInteraction({
                 : "w-2 h-2 bg-slate-300"
             )}
             whileTap={{ scale: 0.9 }}
+            whileHover={{ scale: 1.1 }}
+            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+            role="tab"
+            aria-selected={index === activeCardIndex}
+            aria-controls={`pricing-panel-${index}`}
             aria-label={`View ${plans[index].title} plan`}
           />
         ))}
       </div>
       
-      {/* Display all pricing tiers in scrollable container with snap effect */}
+      {/* Display all pricing tiers in scrollable container with enhanced snap effect */}
       <div 
-        className="w-full mt-3 overflow-x-auto snap-x snap-mandatory scrollbar-hide"
-        style={{ scrollBehavior: 'smooth', WebkitOverflowScrolling: 'touch' }}
+        className="w-full mt-3 overflow-x-auto snap-x snap-mandatory scrollbar-hide gpu-accelerated"
+        style={{ 
+          scrollBehavior: 'smooth', 
+          WebkitOverflowScrolling: 'touch',
+          scrollSnapType: 'x mandatory'
+        }}
+        role="tabpanel"
+        aria-label="Pricing plans"
       >
         <div className="flex w-full">
           {plans.map((plan, index) => (
             <div 
               key={index}
+              id={`pricing-panel-${index}`}
               className="min-w-full px-0.5 snap-center"
               style={{ scrollSnapAlign: 'center' }}
+              role="tabpanel"
+              aria-labelledby={`pricing-tab-${index}`}
+              tabIndex={index === activeCardIndex ? 0 : -1}
             >
               <PricingTier
                 key={index}
