@@ -14,14 +14,14 @@ export const PricingPeriodToggle: React.FC<PricingPeriodToggleProps> = ({
   handleChangePeriod, 
   animatePriceChange 
 }) => {
-  // Unified implementation for mobile that matches PricingHeader style
+  // Bold, visible implementation for mobile toggle
   return (
     <div className="w-full flex flex-col items-center">
-      <div className="flex items-center overflow-hidden rounded-full transition-all duration-300 w-full max-w-md mx-auto bg-[#8853FF]/20 p-1">
+      <div className="flex items-center overflow-hidden rounded-full transition-all duration-300 w-full max-w-md mx-auto bg-[#8853FF]/20 p-1.5 shadow-sm">
         <button 
           onClick={() => handleChangePeriod(0)}
           className={cn(
-            "flex-1 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200",
+            "flex-1 px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-200",
             "touch-manipulation focus:outline-none",
             period === 0 
               ? "bg-[#8853FF] text-white shadow-sm" 
@@ -34,7 +34,7 @@ export const PricingPeriodToggle: React.FC<PricingPeriodToggleProps> = ({
         <button 
           onClick={() => handleChangePeriod(1)}
           className={cn(
-            "flex-1 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2", 
+            "flex-1 px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2", 
             "touch-manipulation focus:outline-none",
             period === 1 
               ? "bg-white text-[#8853FF] shadow-sm" 
