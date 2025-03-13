@@ -19,7 +19,6 @@ export const PricingContainer = () => {
   const [showStickyHeader, setShowStickyHeader] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   
-  // Handle scrolling for sticky header
   useEffect(() => {
     if (!isMobile) return;
     
@@ -36,7 +35,6 @@ export const PricingContainer = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [isMobile]);
   
-  // Toggle expanded features for a specific plan
   const toggleFeatures = (index: number) => {
     setExpandedFeatures(prev => ({
       ...prev,
@@ -44,7 +42,6 @@ export const PricingContainer = () => {
     }));
   };
   
-  // Toggle expanded description for a specific plan
   const toggleDescription = (index: number) => {
     setExpandedDescriptions(prev => ({
       ...prev,
@@ -52,7 +49,6 @@ export const PricingContainer = () => {
     }));
   };
   
-  // Helper to group features by category
   const groupFeaturesByCategory = (features: PricingFeature[]) => {
     const result: {[key: string]: PricingFeature[]} = {};
     let currentCategory = "Core Features";
@@ -74,7 +70,6 @@ export const PricingContainer = () => {
     return result;
   };
 
-  // Define pricing tiers with all necessary data
   const pricingTiers = [
     {
       title: "Basic (Free)",
@@ -113,7 +108,6 @@ export const PricingContainer = () => {
     }
   ];
   
-  // Get color scheme based on plan type
   const getColorScheme = (color: string) => {
     switch (color) {
       case "blue":
@@ -165,7 +159,6 @@ export const PricingContainer = () => {
   
   return (
     <div className="w-full pb-10" ref={containerRef}>
-      {/* Sticky header for mobile */}
       <AnimatePresence>
         {isMobile && showStickyHeader && (
           <motion.div
@@ -186,7 +179,6 @@ export const PricingContainer = () => {
         )}
       </AnimatePresence>
       
-      {/* Mobile vertical stack layout */}
       {isMobile ? (
         <div className="px-4">
           {pricingTiers.map((tier, index) => {
@@ -198,7 +190,7 @@ export const PricingContainer = () => {
               <motion.div
                 key={tier.title}
                 className={cn(
-                  "rounded-xl overflow-hidden transition-all mt-4 relative group mx-auto max-w-[280px] w-full", // Match width of CTA
+                  "rounded-xl overflow-hidden transition-all mt-4 relative group mx-auto max-w-[280px] w-full",
                   tier.popularPlan ? (isMobile ? "shadow-lg" : "border-brand-purple shadow-lg") : (isMobile ? "" : "border-slate-200"),
                   tier.popularPlan && "relative",
                   colorScheme.cardBg,
@@ -211,7 +203,6 @@ export const PricingContainer = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
-                {/* Plan header */}
                 <div className={cn(
                   "p-4 flex justify-between items-start gap-2"
                 )}>
@@ -264,7 +255,6 @@ export const PricingContainer = () => {
                       </div>
                     </div>
                     
-                    {/* Annual savings badge */}
                     {isYearly && tier.savings && (
                       <div className="mt-1.5 inline-block bg-green-50 text-green-600 px-2 py-0.5 rounded-full text-[10px] font-medium font-space whitespace-nowrap">
                         Save ${tier.savings}/year
@@ -273,7 +263,6 @@ export const PricingContainer = () => {
                   </div>
                 </div>
                 
-                {/* Main CTA */}
                 <div className="px-4 pb-2 pt-3">
                   <Button 
                     className={cn(
@@ -286,7 +275,6 @@ export const PricingContainer = () => {
                   </Button>
                 </div>
                 
-                {/* Accordion-style feature sections - improved button */}
                 <div className="px-4 pb-4">
                   <button
                     onClick={() => toggleFeatures(index)}
@@ -306,7 +294,6 @@ export const PricingContainer = () => {
                     )} />
                   </button>
                   
-                  {/* Expandable features */}
                   <AnimatePresence>
                     {isExpanded && (
                       <motion.div
@@ -357,7 +344,6 @@ export const PricingContainer = () => {
             );
           })}
           
-          {/* Improved feature comparison table for mobile */}
           <div className="mt-6 pt-2 relative flex flex-col items-center">
             <button
               onClick={() => setExpandedComparisonTable(!expandedComparisonTable)}
@@ -366,7 +352,7 @@ export const PricingContainer = () => {
                 "rounded-xl bg-gradient-to-r from-brand-purple to-brand-purple-dark",
                 "shadow-sm border border-brand-purple/10 hover:shadow-md",
                 "transition-all duration-200 relative",
-                "max-w-[240px] w-full" // Narrower width similar to social proof component
+                "max-w-[240px] w-full"
               )}
               aria-expanded={expandedComparisonTable}
               aria-controls="feature-comparison-table"
@@ -403,7 +389,6 @@ export const PricingContainer = () => {
                       "max-h-[80vh] overflow-y-auto"
                     )}
                   >
-                    {/* Header for comparison table */}
                     <div className="flex items-center justify-between p-4 border-b border-slate-200 sticky top-0 bg-white z-10">
                       <h3 className="text-lg font-bold text-brand-purple-dark font-jakarta">Feature Comparison</h3>
                       <button 
@@ -416,7 +401,6 @@ export const PricingContainer = () => {
                     </div>
                     
                     <div className="px-4 pb-6">
-                      {/* Table header */}
                       <div className="grid grid-cols-4 border-b border-slate-200 py-3 sticky top-[57px] bg-white z-10">
                         <div className="col-span-1 text-sm font-bold text-gray-800 font-jakarta">Feature</div>
                         <div className="col-span-1 text-center text-xs font-bold text-blue-700 font-space">Basic</div>
@@ -424,7 +408,6 @@ export const PricingContainer = () => {
                         <div className="col-span-1 text-center text-xs font-bold text-emerald-700 font-space">Premium</div>
                       </div>
                       
-                      {/* Section: Core Features */}
                       <div className="pt-4 pb-2">
                         <h4 className="text-xs font-bold text-brand-purple-dark bg-brand-purple/5 px-3 py-1.5 rounded-lg inline-block mb-3">
                           Core Features
@@ -452,7 +435,6 @@ export const PricingContainer = () => {
                         </div>
                       </div>
                       
-                      {/* Section: Pro Features */}
                       <div className="pt-4 pb-2 border-t border-slate-100">
                         <h4 className="text-xs font-bold text-purple-700 bg-purple-50 px-3 py-1.5 rounded-lg inline-block mb-3">
                           Pro Features
@@ -474,7 +456,6 @@ export const PricingContainer = () => {
                         </div>
                       </div>
                       
-                      {/* Section: Premium Features */}
                       <div className="pt-4 pb-2 border-t border-slate-100">
                         <h4 className="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-lg inline-block mb-3">
                           Premium Features
@@ -503,7 +484,6 @@ export const PricingContainer = () => {
           </div>
         </div>
       ) : (
-        // Desktop card grid layout
         <div className="grid grid-cols-1 md:grid-cols-3 gap-2 sm:gap-3 lg:gap-4">
           {pricingTiers.map((tier, index) => {
             const colorScheme = getColorScheme(tier.color);
@@ -528,7 +508,6 @@ export const PricingContainer = () => {
                 transition={{ delay: index * 0.1 }}
               >
                 <div className="p-4 sm:p-6">
-                  {/* Header */}
                   <div className="mb-4">
                     <h3 className={cn(
                       "text-xl font-bold font-jakarta",
@@ -539,7 +518,6 @@ export const PricingContainer = () => {
                     <p className="text-sm text-brand-text-secondary font-inter mt-1">{tier.valueProposition}</p>
                   </div>
                   
-                  {/* Pricing */}
                   <div className="mb-6">
                     <div className="flex items-baseline">
                       <span className="text-4xl font-bold text-brand-purple-dark font-space">${tier.price}</span>
@@ -553,7 +531,6 @@ export const PricingContainer = () => {
                     )}
                   </div>
                   
-                  {/* CTA Button */}
                   <Button 
                     className={cn(
                       "w-full py-3 px-5 rounded-lg text-white font-medium transition-all h-11",
@@ -563,7 +540,6 @@ export const PricingContainer = () => {
                     {tier.cta}
                   </Button>
                   
-                  {/* Features */}
                   <div className="mt-8 border-t border-slate-100 pt-4">
                     <h4 className="text-sm font-semibold text-brand-text-primary font-jakarta mb-4">What's included:</h4>
                     
@@ -603,7 +579,6 @@ export const PricingContainer = () => {
                     </div>
                   </div>
                   
-                  {/* Footer note */}
                   {tier.footerText && (
                     <div className="mt-6 pt-4 border-t border-slate-100 text-xs text-brand-text-light font-space">
                       {tier.footerText}
