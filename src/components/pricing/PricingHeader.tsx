@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Calendar, CalendarDays } from "lucide-react";
+import { MobilePricingToggle } from "./MobilePricingToggle";
 
 interface PricingHeaderProps {
   title: string;
@@ -70,52 +71,55 @@ const PricingHeader = ({
           </>
         )}
         
-        {/* Single unified toggle for both mobile and desktop */}
-        <div className={cn(
-          "flex items-center overflow-hidden rounded-full transition-all duration-300 w-full max-w-md mx-auto",
-          isSticky ? "scale-90" : "",
-          isMobile ? "bg-[#8853FF]/20" : "bg-slate-100",
-          "p-1"
-        )}>
-          <button
-            onClick={() => setIsYearly(false)}
-            className={cn(
-              "flex-1 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200",
-              !isYearly 
-                ? isMobile
-                  ? "bg-[#8853FF] text-white shadow-sm"
-                  : "bg-white text-gray-700 shadow-sm" 
-                : "text-gray-500 hover:text-gray-700"
-            )}
-            aria-pressed={!isYearly}
-          >
-            Monthly
-          </button>
-          
-          <button
-            onClick={() => setIsYearly(true)}
-            className={cn(
-              "flex-1 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2",
-              isYearly 
-                ? isMobile
-                  ? "bg-white text-[#8853FF] shadow-sm"
-                  : "bg-white text-[#8344FF] shadow-sm" 
-                : "text-gray-500 hover:text-gray-700"
-            )}
-            aria-pressed={isYearly}
-          >
-            Annual
+        {/* Toggle component - different implementations for mobile and desktop */}
+        {isMobile ? (
+          <MobilePricingToggle 
+            isYearly={isYearly} 
+            onChange={setIsYearly} 
+            animateChange={animateChange}
+          />
+        ) : (
+          <div className={cn(
+            "flex items-center overflow-hidden rounded-full transition-all duration-300 w-full max-w-md mx-auto",
+            isSticky ? "scale-90" : "",
+            "bg-slate-100 p-1"
+          )}>
+            <button
+              onClick={() => setIsYearly(false)}
+              className={cn(
+                "flex-1 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200",
+                !isYearly 
+                  ? "bg-white text-gray-700 shadow-sm" 
+                  : "text-gray-500 hover:text-gray-700"
+              )}
+              aria-pressed={!isYearly}
+            >
+              Monthly
+            </button>
             
-            {isYearly && (
-              <span className={cn(
-                "text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full whitespace-nowrap",
-                animateChange ? "animate-pulse" : ""
-              )}>
-                Save 20%
-              </span>
-            )}
-          </button>
-        </div>
+            <button
+              onClick={() => setIsYearly(true)}
+              className={cn(
+                "flex-1 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2",
+                isYearly 
+                  ? "bg-white text-[#8344FF] shadow-sm" 
+                  : "text-gray-500 hover:text-gray-700"
+              )}
+              aria-pressed={isYearly}
+            >
+              Annual
+              
+              {isYearly && (
+                <span className={cn(
+                  "text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full whitespace-nowrap",
+                  animateChange ? "animate-pulse" : ""
+                )}>
+                  Save 20%
+                </span>
+              )}
+            </button>
+          </div>
+        )}
       </motion.div>
     </div>
   );
