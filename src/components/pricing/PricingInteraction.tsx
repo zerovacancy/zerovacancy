@@ -98,12 +98,14 @@ export function PricingInteraction({
       {/* Enhanced background with subtle gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-white via-white to-slate-50 pointer-events-none" />
       
-      {/* Period toggle with enhanced styling */}
-      <PricingPeriodToggle 
-        period={period}
-        handleChangePeriod={handleChangePeriod}
-        animatePriceChange={animatePriceChange}
-      />
+      {/* Period toggle with slider style */}
+      <div className="w-full mb-1">
+        <PricingPeriodToggle 
+          period={period}
+          handleChangePeriod={handleChangePeriod}
+          animatePriceChange={animatePriceChange}
+        />
+      </div>
       
       {/* Improved swipe instruction with more eye-catching design */}
       <AnimatePresence>
