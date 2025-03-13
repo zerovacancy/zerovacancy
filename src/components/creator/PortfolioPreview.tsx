@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ArrowRight, X, ExternalLink } from 'lucide-react';
-import { Dialog, DialogContent } from '../ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from '../ui/dialog';
 
 interface PortfolioPreviewProps {
   workExamples: string[];
@@ -103,6 +103,7 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
       {/* Enhanced dialog for image preview */}
       <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
         <DialogContent className="sm:max-w-[80vw] p-0 bg-transparent border-0">
+          <DialogTitle className="sr-only">{`${creatorName}'s Portfolio Image`}</DialogTitle>
           <button
             onClick={() => setSelectedImage(null)}
             className="absolute right-4 top-4 z-50 rounded-full bg-black/50 p-2 text-white hover:bg-black/70 transition-colors"
