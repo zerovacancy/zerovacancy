@@ -117,7 +117,7 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
       <button 
         onClick={scrollPrev} 
         className={cn(
-          "absolute left-1 top-[45%] -translate-y-1/2 z-10 rounded-full p-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white", 
+          "absolute -left-1 top-[45%] -translate-y-1/2 z-10 rounded-full p-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white", 
           "touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center shadow-md transition-opacity duration-300", 
           !prevBtnEnabled && "opacity-40 cursor-not-allowed"
         )} 
