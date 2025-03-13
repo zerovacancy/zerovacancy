@@ -6,6 +6,14 @@
 
 export const MOBILE_BREAKPOINT = 768;
 
+// Declare the missing properties on the Window interface
+declare global {
+  interface Window {
+    MSStream?: any;
+    lastTap?: number;
+  }
+}
+
 // Check if the user has requested reduced motion
 export const prefersReducedMotion = () => {
   if (typeof window === "undefined") return false;
