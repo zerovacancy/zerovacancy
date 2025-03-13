@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Card } from '../ui/card';
 import { ArrowRight, Star } from 'lucide-react';
 import { Dialog } from "../ui/dialog";
@@ -24,10 +24,17 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
 
   const firstName = creator.name.split(' ')[0];
 
-  const handleCTAClick = () => {
+  // Use useCallback to memoize the click handler
+  const handleCTAClick = useCallback(() => {
     setStage('input');
     setShowEmailDialog(true);
-  };
+  }, []);
+
+  // Use useCallback to memoize the dialog state change handler
+  const handleDialogOpenChange = useCallback((open: boolean) => {
+    setShowEmailDialog(open);
+    if (!open) setStage('initial');
+  }, []);
 
   return (
     <article className="group select-text h-full">
@@ -212,12 +219,10 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
           </>
         )}
       </div>
+      {/* Always render the dialog component, only control its visibility with the open prop */}
       <GlowDialog 
         open={showEmailDialog} 
-        onOpenChange={(open) => {
-          setShowEmailDialog(open);
-          if (!open) setStage('initial');
-        }}
+        onOpenChange={handleDialogOpenChange}
       />
     </article>
   );

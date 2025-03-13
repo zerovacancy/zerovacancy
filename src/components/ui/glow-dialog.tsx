@@ -1,9 +1,8 @@
 
 import * as React from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { motion, useAnimationFrame, useMotionTemplate, useMotionValue, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState, useCallback } from "react";
 import { Squares } from "@/components/ui/squares";
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 import { Loader2 } from "lucide-react";
@@ -60,10 +59,11 @@ export function GlowDialog({
   open,
   onOpenChange
 }: GlowDialogProps) {
-  const [email, setEmail] = React.useState("");
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Use useCallback to ensure stable function references
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!email) {
@@ -114,7 +114,7 @@ export function GlowDialog({
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [email, onOpenChange]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
