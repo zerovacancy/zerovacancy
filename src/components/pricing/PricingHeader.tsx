@@ -70,51 +70,105 @@ const PricingHeader = ({
           </>
         )}
         
-        {/* Single unified toggle for both mobile and desktop */}
-        <div className={cn(
-          "flex items-center overflow-hidden rounded-full transition-all duration-300 w-full max-w-md mx-auto",
-          isSticky ? "scale-90" : "",
-          isMobile ? "bg-[#8853FF]/20" : "bg-slate-100",
-          "p-1"
-        )}>
-          <button
-            onClick={() => setIsYearly(false)}
-            className={cn(
-              "flex-1 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200",
-              !isYearly 
-                ? isMobile
-                  ? "bg-[#8853FF] text-white shadow-sm"
-                  : "bg-white text-gray-700 shadow-sm" 
-                : "text-gray-500 hover:text-gray-700"
-            )}
-            aria-pressed={!isYearly}
-          >
-            Monthly
-          </button>
-          
-          <button
-            onClick={() => setIsYearly(true)}
-            className={cn(
-              "flex-1 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2",
-              isYearly 
-                ? isMobile
-                  ? "bg-white text-[#8853FF] shadow-sm"
-                  : "bg-white text-[#8344FF] shadow-sm" 
-                : "text-gray-500 hover:text-gray-700"
-            )}
-            aria-pressed={isYearly}
-          >
-            Annual
+        {/* Replace buttons with a proper toggle switch for both mobile and desktop */}
+        <div className="relative w-full max-w-md mx-auto">
+          <div className={cn(
+            "pricing-toggle-container",
+            "border border-gray-200 shadow-sm",
+            "promote-layer gpu-accelerated",
+            "overflow-hidden relative",
+            isSticky ? "scale-90" : ""
+          )}>
+            {/* Monthly Option */}
+            <button
+              onClick={() => setIsYearly(false)}
+              className={cn(
+                "pricing-toggle-button",
+                "touch-manipulation focus:outline-none",
+                "transition-colors duration-200",
+                "hover:bg-gray-50",
+                "touch-target",
+                "z-10",
+                !isYearly ? "text-brand-purple-dark font-semibold" : "text-slate-600"
+              )}
+              aria-pressed={!isYearly}
+              aria-label="Monthly billing"
+            >
+              <motion.span
+                animate={{ 
+                  scale: !isYearly ? 1.05 : 1 
+                }}
+                transition={{ 
+                  type: "spring", 
+                  stiffness: 300, 
+                  damping: 20 
+                }}
+              >
+                Monthly
+              </motion.span>
+            </button>
             
-            {isYearly && (
-              <span className={cn(
-                "text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full whitespace-nowrap",
-                animateChange ? "animate-pulse" : ""
-              )}>
-                Save 20%
-              </span>
-            )}
-          </button>
+            {/* Annual Option */}
+            <button
+              onClick={() => setIsYearly(true)}
+              className={cn(
+                "pricing-toggle-button",
+                "touch-manipulation focus:outline-none",
+                "transition-colors duration-200",
+                "hover:bg-gray-50",
+                "touch-target",
+                "z-10",
+                isYearly ? "text-brand-purple-dark font-semibold" : "text-slate-600"
+              )}
+              aria-pressed={isYearly}
+              aria-label="Annual billing"
+            >
+              <motion.span
+                animate={{ 
+                  scale: isYearly ? 1.05 : 1 
+                }}
+                transition={{ 
+                  type: "spring", 
+                  stiffness: 300, 
+                  damping: 20 
+                }}
+              >
+                Annual
+                
+                {isYearly && (
+                  <span className={cn(
+                    "ml-2 text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full whitespace-nowrap",
+                    animateChange ? "animate-pulse" : ""
+                  )}>
+                    Save 20%
+                  </span>
+                )}
+              </motion.span>
+            </button>
+            
+            {/* Active slider with improved animation */}
+            <motion.div
+              className={cn(
+                "pricing-toggle-slider",
+                "shadow-md",
+                "backface-visibility-hidden",
+                "will-change-transform",
+                animateChange && isYearly ? "ring-2 ring-brand-purple/30 ring-offset-1" : ""
+              )}
+              initial={false}
+              animate={{
+                x: isYearly ? "100%" : "0%",
+                scale: animateChange ? 1.03 : 1
+              }}
+              transition={{
+                type: "spring",
+                stiffness: 400,
+                damping: 30,
+                mass: 1
+              }}
+              aria-hidden="true"
+            />
+          </div>
         </div>
       </motion.div>
     </div>
