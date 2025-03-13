@@ -186,7 +186,7 @@ export const PricingContainer = () => {
       </AnimatePresence>
       
       {isMobile ? (
-        <div className="px-4 pt-2">
+        <div className="px-4">
           {pricingTiers.map((tier, index) => {
             const colorScheme = getColorScheme(tier.color);
             const isExpanded = !!expandedFeatures[index];

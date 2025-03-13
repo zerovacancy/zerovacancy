@@ -6,7 +6,6 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { PricingPeriodToggle } from "./PricingPeriodToggle";
 import { PricingTier } from "./PricingTier";
 import { PricingPlanProps } from "./types";
-import { usePricing } from "./PricingContext";
 
 export interface PricingInteractionProps {
   starterMonth: number;
@@ -23,24 +22,33 @@ export function PricingInteraction({
   proAnnual,
   plans
 }: PricingInteractionProps) {
-  const { isYearly, setIsYearly, animateChange } = usePricing();
+  const [period, setPeriod] = useState(0);  // 0: monthly, 1: annual
   const [expandedFeatures, setExpandedFeatures] = useState<{[key: number]: boolean}>({});
   const [showSwipeHint, setShowSwipeHint] = useState(true);
+  const [animatePriceChange, setAnimatePriceChange] = useState(false);
   const [activeCardIndex, setActiveCardIndex] = useState(1); // Default to middle card (Professional)
   const isMobile = useIsMobile();
   
-  // Get period from isYearly for PricingPeriodToggle (0: monthly, 1: annual)
-  const period = isYearly ? 1 : 0;
+  // Initialize price states based on the initial period
+  const [starter, setStarter] = useState(period === 0 ? starterMonth : starterAnnual);
+  const [pro, setPro] = useState(period === 0 ? proMonth : proAnnual);
   
-  // Initialize price states based on the billing period
-  const starter = isYearly ? starterAnnual : starterMonth;
-  const pro = isYearly ? proAnnual : proMonth;
-  
-  // Enhanced period change with animation - connect to global pricing context
+  // Enhanced period change with animation
   const handleChangePeriod = useCallback((index: number) => {
-    // Convert index (0/1) to boolean for isYearly
-    setIsYearly(index === 1);
-  }, [setIsYearly]);
+    setPeriod(index);
+    setAnimatePriceChange(true);
+    
+    // Set timeout to remove animation class
+    setTimeout(() => setAnimatePriceChange(false), 1200);
+    
+    if (index === 0) {
+      setStarter(starterMonth);
+      setPro(proMonth);
+    } else {
+      setStarter(starterAnnual);
+      setPro(proAnnual);
+    }
+  }, [starterMonth, starterAnnual, proMonth, proAnnual]);
   
   const toggleFeatures = useCallback((index: number) => {
     setExpandedFeatures(prev => ({
@@ -90,12 +98,12 @@ export function PricingInteraction({
       {/* Enhanced background with subtle gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-white via-white to-slate-50 pointer-events-none" />
       
-      {/* Toggle with slider for period selection - ALWAYS visible */}
-      <div className="w-full mb-3 mt-1 z-10 relative pricing-toggle-container">
+      {/* Period toggle with slider style */}
+      <div className="w-full mb-1">
         <PricingPeriodToggle 
           period={period}
           handleChangePeriod={handleChangePeriod}
-          animatePriceChange={animateChange}
+          animatePriceChange={animatePriceChange}
         />
       </div>
       
@@ -156,7 +164,7 @@ export function PricingInteraction({
                 index={index}
                 price={planPrices[index]}
                 period={period}
-                animatePriceChange={animateChange}
+                animatePriceChange={animatePriceChange}
                 expandedFeatures={!!expandedFeatures[index]}
                 toggleFeatures={() => toggleFeatures(index)}
                 handleGetStarted={handleGetStarted}

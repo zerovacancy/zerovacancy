@@ -8,7 +8,6 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { mobileOptimizationClasses, optimizeMobileViewport } from '@/utils/mobile-optimization';
 import { BottomNav } from '@/components/navigation/BottomNav';
 import { Analytics } from '@vercel/analytics/react';
-import './App.css';
 
 const Index = lazy(() => import('./pages/index'));
 const PaymentConfirmation = lazy(() => import('./pages/PaymentConfirmation'));
@@ -68,44 +67,48 @@ function App() {
   const isMobile = useIsMobile();
   const { coloredBgMobile } = mobileOptimizationClasses;
   
-  // Apply mobile optimization immediately for better responsiveness
+  // Use memoized callback functions for event listeners
+  const passiveEventHandler = useCallback(() => {}, []);
+  
   useEffect(() => {
-    // Apply mobile optimization on mount, not conditionally
-    optimizeMobileViewport();
+    if (isMobile) {
+      optimizeMobileViewport();
+    }
     
-    // Prefetch index page
     const timer = setTimeout(() => {
       import('./pages/index');
     }, 200);
     
-    // Optimize event handlers for better touch response
+    // Add event listeners with the same function references
     const passiveOption = { passive: true };
-    document.addEventListener('touchstart', () => {}, passiveOption);
-    document.addEventListener('touchmove', () => {}, passiveOption);
+    document.addEventListener('touchstart', passiveEventHandler, passiveOption);
+    document.addEventListener('touchmove', passiveEventHandler, passiveOption);
+    document.addEventListener('wheel', passiveEventHandler, passiveOption);
     
     if (isMobile) {
       document.body.classList.add('color-white-bg-mobile');
       document.body.classList.add('optimize-animations-mobile');
-      
-      // Set viewport scale on mobile for iOS
-      const viewportMeta = document.querySelector('meta[name="viewport"]');
-      if (viewportMeta) {
-        viewportMeta.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
-      }
+    } else {
+      document.body.classList.remove('color-white-bg-mobile');
+      document.body.classList.remove('optimize-animations-mobile');
     }
     
     return () => {
       clearTimeout(timer);
+      // Remove event listeners using the same function references
+      document.removeEventListener('touchstart', passiveEventHandler);
+      document.removeEventListener('touchmove', passiveEventHandler);
+      document.removeEventListener('wheel', passiveEventHandler);
       document.body.classList.remove('color-white-bg-mobile');
       document.body.classList.remove('optimize-animations-mobile');
     };
-  }, [isMobile]);
+  }, [isMobile, passiveEventHandler]);
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <Router>
         <ScrollToTop />
-        <div className={`relative min-h-screen overflow-x-hidden ${isMobile ? coloredBgMobile : ''}`}>
+        <div className={`relative ${isMobile ? coloredBgMobile : ''}`}>
           <Suspense fallback={<PageLoader />}>
             <Routes>
               <Route path="/" element={<Index />} />
