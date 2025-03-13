@@ -74,7 +74,9 @@ export const PricingFeatures: React.FC<PricingFeaturesProps> = ({
     "SEO-Optimized": "Content optimized to rank higher in search results for property listings",
     "Geo-Targeted": "Content targeted to specific geographic regions relevant to your properties",
     "RFPs": "Request for Proposals - Get competitive offers from creators",
-    "Revisions": "Number of content revision rounds included in your plan"
+    "Revisions": "Number of content revision rounds included in your plan",
+    "Marketing Channel Optimization": "Content tailored specifically for each platform you use (social media, email, listings sites, etc)",
+    "Performance Insights Dashboard": "Analytics on how your content is performing across different platforms"
   };
   
   // Get tooltip text if available
