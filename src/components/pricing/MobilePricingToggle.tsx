@@ -62,9 +62,9 @@ export const MobilePricingToggle = ({
           exit={{ opacity: 0, y: -10 }}
           className="mt-1"
         >
-          <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium text-emerald-700 bg-emerald-50 rounded-full shadow-sm">
-            <Check className="h-3.5 w-3.5 mr-1 text-emerald-600" />
-            Save up to 20% with annual billing
+          <span className="inline-flex items-center px-2.5 py-0.5 text-xs font-medium text-[#4CAF50] bg-[#E8F5E9] rounded-full shadow-sm border border-[#C8E6C9]">
+            <Check className="h-3 w-3 mr-1 text-[#4CAF50]" />
+            Save 20%
           </span>
         </motion.div>
       )}
