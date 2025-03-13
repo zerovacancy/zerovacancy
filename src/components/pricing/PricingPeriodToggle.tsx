@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { Check } from "lucide-react";
 
 interface PricingPeriodToggleProps {
   period: number;
@@ -22,56 +23,35 @@ export const PricingPeriodToggle: React.FC<PricingPeriodToggleProps> = ({
   }, []);
 
   return (
-    <div className="relative w-full z-10">
-      {/* Toggle container with just two options */}
-      <div className="pricing-toggle-container border border-gray-200 shadow-sm max-w-[280px] mx-auto">
-        {/* Monthly option */}
-        <button
-          className={cn(
-            "pricing-toggle-button",
-            "touch-manipulation focus:outline-none transition-colors duration-200", 
-            "hover:bg-gray-50",
-            period === 0 ? "text-brand-purple-dark font-semibold" : "text-slate-600"
-          )}
-          onClick={() => handleChangePeriod(0)}
-          aria-pressed={period === 0}
-        >
+    <div className="relative w-full z-10 flex flex-col items-center">
+      {/* Label text and toggle switch */}
+      <div className="mb-2 flex items-center justify-center gap-6 text-sm font-medium">
+        <span className={period === 0 ? "text-brand-purple-dark font-semibold" : "text-slate-600"}>
           Monthly
-        </button>
+        </span>
         
-        {/* Annual option */}
-        <button
+        {/* The actual toggle switch */}
+        <button 
+          onClick={() => handleChangePeriod(period === 0 ? 1 : 0)}
           className={cn(
-            "pricing-toggle-button",
-            "touch-manipulation focus:outline-none transition-colors duration-200",
-            "hover:bg-gray-50",
-            period === 1 ? "text-brand-purple-dark font-semibold" : "text-slate-600"
+            "relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple focus-visible:ring-offset-2",
+            period === 1 ? "bg-brand-purple" : "bg-slate-200",
           )}
-          onClick={() => handleChangePeriod(1)}
-          aria-pressed={period === 1}
+          type="button"
+          role="switch"
+          aria-checked={period === 1}
         >
-          Annual
+          <span 
+            className={cn(
+              "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition-transform",
+              period === 1 ? "translate-x-5" : "translate-x-0.5"
+            )}
+          />
         </button>
         
-        {/* Slider background with enhanced styling */}
-        {hydrated && (
-          <motion.div
-            className={cn(
-              "pricing-toggle-slider",
-              "shadow-md",
-              animatePriceChange && period === 1 ? "ring-2 ring-brand-purple/30 ring-offset-1" : ""
-            )}
-            initial={false}
-            animate={{
-              x: period === 1 ? "100%" : "0%"
-            }}
-            transition={{
-              type: "spring",
-              stiffness: 300,
-              damping: 30
-            }}
-          />
-        )}
+        <span className={period === 1 ? "text-brand-purple-dark font-semibold" : "text-slate-600"}>
+          Annual
+        </span>
       </div>
       
       {/* Savings label for annual billing */}
@@ -80,12 +60,10 @@ export const PricingPeriodToggle: React.FC<PricingPeriodToggleProps> = ({
           initial={{ opacity: 0, y: -5 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -5 }}
-          className="mt-2 flex justify-center"
+          className="mt-1"
         >
-          <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-medium text-emerald-700 bg-emerald-50 rounded-full shadow-sm">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-0.5" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-            </svg>
+          <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium text-emerald-700 bg-emerald-50 rounded-full shadow-sm">
+            <Check className="h-3 w-3 mr-0.5 text-emerald-600" />
             Save up to 20% with annual billing
           </span>
         </motion.div>

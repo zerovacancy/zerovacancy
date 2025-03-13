@@ -10,7 +10,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Pricing toggle styles with enhanced borders and interactions */
+/* Desktop pricing toggle styles with enhanced borders and interactions */
 .pricing-toggle-container {
   border-radius: 9999px; /* Full rounded corners */
   overflow: hidden;
@@ -51,7 +51,6 @@
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.08);
   top: 3px;
   left: 3px;
-  /* Ensuring this works on mobile without transform conflicts */
   transform: translateX(0);
 }
 
@@ -71,24 +70,6 @@
 /* Remove any third tab styling if it exists */
 .pricing-toggle-container > button:nth-child(3) {
   display: none;
-}
-
-/* Enhanced touch area for mobile pricing toggle */
-@media (max-width: 768px) {
-  .pricing-toggle-button {
-    min-height: 32px; /* Slightly reduced height for mobile */
-    min-width: 80px; /* Ensure good touch target width */
-    padding: 0.5rem 1rem; /* Slightly smaller padding */
-    -webkit-tap-highlight-color: transparent; /* Remove tap highlight on iOS */
-  }
-  
-  /* Mobile-optimized touches for the toggle */
-  .mobile-pricing-toggle {
-    width: 100%;
-    max-width: 260px;
-    margin: 0 auto;
-    touch-action: manipulation;
-  }
 }
 
 /* Responsive adjustments */
@@ -115,17 +96,6 @@
   
   .mobile-text-center {
     text-align: center;
-  }
-  
-  /* Mobile pricing toggle adjustments */
-  .pricing-toggle-container {
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
-  }
-  
-  .pricing-toggle-button {
-    user-select: none;
-    touch-action: manipulation;
   }
   
   /* Mobile animation optimization helpers */
