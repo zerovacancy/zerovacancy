@@ -65,11 +65,12 @@ const TextRotate = forwardRef<TextRotateRef, TextRotateProps>(
       <motion.span
         className={cn(
           "flex flex-wrap whitespace-pre-wrap", 
-          "gpu-accelerated", // Add GPU acceleration
+          "gpu-accelerated will-change-transform", // Enhanced GPU acceleration
+          "translate-z-0", // Force GPU rendering
           mainClassName
         )}
         {...props}
-        layout
+        layout="position"
         transition={transition}
       >
         <span className="sr-only">{texts[currentTextIndex]}</span>
@@ -82,10 +83,11 @@ const TextRotate = forwardRef<TextRotateRef, TextRotateProps>(
             key={currentTextIndex}
             className={cn(
               "flex flex-wrap",
-              "gpu-accelerated", // Add GPU acceleration
+              "gpu-accelerated will-change-transform", // Enhanced GPU acceleration
+              "translate-z-0", // Force GPU rendering 
               splitBy === "lines" && "flex-col w-full"
             )}
-            layout
+            layout="position"
             aria-hidden="true"
           >
             {(splitBy === "characters"
@@ -111,7 +113,8 @@ const TextRotate = forwardRef<TextRotateRef, TextRotateProps>(
                     }}
                     className={cn(
                       "inline-block overflow-visible", 
-                      "gpu-accelerated", // Add GPU acceleration
+                      "gpu-accelerated will-change-transform", // Enhanced GPU acceleration
+                      "translate-z-0 backface-visibility-hidden", // Force GPU rendering with additional optimizations
                       elementLevelClassName
                     )}
                   >

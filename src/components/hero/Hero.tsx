@@ -121,11 +121,11 @@ export function Hero() {
                 )}
                 transition={{ 
                   type: isMobile ? "tween" : "spring",
-                  damping: isMobile ? 18 : 30,
-                  stiffness: isMobile ? 120 : 200,
-                  mass: isMobile ? 0.8 : 1,
-                  duration: isMobile ? 0.5 : 0.4,
-                  ease: "easeOut"
+                  damping: isMobile ? 25 : 30,
+                  stiffness: isMobile ? 100 : 200,
+                  mass: isMobile ? 0.6 : 1,
+                  duration: isMobile ? 0.4 : 0.4,
+                  ease: isMobile ? "circOut" : "easeOut"
                 }}
                 auto={true}
               />
