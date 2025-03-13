@@ -12,15 +12,33 @@ export const prefersReducedMotion = () => {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 };
 
-// Optimized mobile viewport settings that maintain accessibility
+// Optimized mobile viewport settings that prevent unwanted zooming
 export const optimizeMobileViewport = () => {
   if (typeof window === "undefined") return;
   // Find existing viewport meta tag
   const viewport = document.querySelector('meta[name="viewport"]');
   if (viewport) {
-    // Update viewport settings with accessible values
-    viewport.setAttribute('content', 'width=device-width, initial-scale=1.0');
+    // Set viewport to prevent unwanted zooming
+    viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0');
   }
+  
+  // Add touch-action to body to prevent pull-to-refresh
+  document.body.style.touchAction = 'pan-y';
+  document.body.style.overscrollBehavior = 'contain';
+  
+  // Force text size to prevent auto-zoom on inputs
+  const style = document.createElement('style');
+  style.innerHTML = `
+    input, select, textarea {
+      font-size: 16px !important;
+    }
+    
+    body {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+  `;
+  document.head.appendChild(style);
 };
 
 // Helper classes to conditionally apply to components

@@ -91,7 +91,7 @@ export function PricingInteraction({
       <div className="absolute inset-0 bg-gradient-to-b from-white via-white to-slate-50 pointer-events-none" />
       
       {/* Toggle with slider for period selection - ALWAYS visible on mobile */}
-      <div className="w-full mb-3 mt-1">
+      <div className="w-full mb-3 mt-1 z-10 relative">
         <PricingPeriodToggle 
           period={period}
           handleChangePeriod={handleChangePeriod}

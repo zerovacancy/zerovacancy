@@ -20,8 +20,8 @@ export const PricingPeriodToggle: React.FC<PricingPeriodToggleProps> = ({
   // Mobile Toggle Slider implementation with improved visibility and touch targets
   if (isMobile) {
     return (
-      <div className="w-full flex flex-col items-center translate-z-0 pb-2">
-        <div className="w-full max-w-[280px] bg-slate-100 rounded-full p-1 relative h-12 shadow-sm touch-manipulation">
+      <div className="w-full flex flex-col items-center translate-z-0 py-2">
+        <div className="w-full max-w-[280px] bg-slate-100 rounded-full p-1 relative h-12 shadow-md touch-manipulation">
           {/* Background Slider that moves */}
           <div 
             className={cn(

@@ -1,3 +1,4 @@
+
 #root {
     max-width: 1280px;
     margin: 0 auto;
@@ -18,6 +19,8 @@
       -webkit-overflow-scrolling: touch;
       overscroll-behavior-y: contain;
       width: 100%;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
     }
   }
 
@@ -129,7 +132,7 @@
     }
     
     /* Prevent content overflow */
-    .container {
+    .container, #root, body, html {
       width: 100%;
       max-width: 100%;
       overflow-x: hidden;
@@ -138,6 +141,8 @@
     /* We're removing the extra padding for the fixed bottom navigation */
     body {
       padding-bottom: 1rem;
+      overscroll-behavior-y: contain;
+      -webkit-overflow-scrolling: touch;
     }
     
     /* Mobile section visual enhancers */
@@ -194,4 +199,24 @@
   .mobile-hero-container {
     max-width: 100%;
     overflow-x: hidden;
+  }
+  
+  /* Custom fixes for mobile */
+  @media (max-width: 768px) {
+    /* Fix z-index for pricing toggle */
+    .pricing-toggle-container {
+      position: relative;
+      z-index: 20;
+    }
+    
+    /* Ensure content doesn't overflow viewport */
+    html, body {
+      max-width: 100vw;
+      overflow-x: hidden;
+    }
+    
+    /* Fix input zoom issues */
+    input:focus {
+      font-size: 16px !important;
+    }
   }

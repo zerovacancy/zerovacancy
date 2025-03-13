@@ -3,13 +3,12 @@ import { cn } from "@/lib/utils";
 import { useSubscription } from "@/hooks/use-subscription";
 import PricingHeader from "./pricing/PricingHeader";
 import { BackgroundEffects } from "./pricing/BackgroundEffects";
-import { PricingProvider, usePricing } from "./pricing/PricingContext";
+import { PricingProvider } from "./pricing/PricingContext";
 import { PricingContainer } from "./pricing/PricingContainer";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 // Wrapper component that uses the pricing context and passes values to PricingHeader
 const PricingContent = () => {
-  const { isYearly, setIsYearly, animateChange } = usePricing();
   const isMobile = useIsMobile();
   
   return (
@@ -18,9 +17,6 @@ const PricingContent = () => {
       <PricingHeader 
         title="PRICING TIERS" 
         subtitle="Select the package that fits your property's marketing needs"
-        isYearly={isYearly}
-        setIsYearly={setIsYearly}
-        animateChange={animateChange}
       />
       
       {/* Removed wrapping div around PricingContainer for mobile */}
