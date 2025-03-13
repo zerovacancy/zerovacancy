@@ -196,7 +196,7 @@ export const PricingContainer = () => {
               <motion.div
                 key={tier.title}
                 className={cn(
-                  "rounded-xl overflow-hidden transition-all mt-6 relative group mx-auto max-w-[280px] w-full",
+                  "rounded-xl overflow-visible transition-all mt-10 relative group mx-auto max-w-[280px] w-full",
                   tier.popularPlan ? (isMobile ? "shadow-lg" : "border-brand-purple shadow-lg") : (isMobile ? "" : "border-slate-200"),
                   tier.popularPlan && "relative",
                   colorScheme.cardBg,
@@ -210,10 +210,10 @@ export const PricingContainer = () => {
                 transition={{ delay: index * 0.1 }}
               >
                 {tier.popularPlan && (
-                  <div className="absolute -top-3 inset-x-0 flex justify-center z-10">
-                    <div className="py-1 px-3 flex items-center gap-1 rounded-full bg-gradient-to-r from-brand-purple-medium to-brand-purple text-white text-xs font-medium shadow-md">
+                  <div className="absolute -top-5 inset-x-0 flex justify-center z-20">
+                    <div className="py-1 px-3 flex items-center gap-1 rounded-full bg-gradient-to-r from-brand-purple-medium to-brand-purple text-white text-xs font-semibold shadow-md">
                       <Sparkles className="h-3 w-3" />
-                      <span className="font-medium">POPULAR</span>
+                      <span>POPULAR</span>
                     </div>
                   </div>
                 )}
@@ -508,7 +508,7 @@ export const PricingContainer = () => {
               <motion.div
                 key={tier.title}
                 className={cn(
-                  "rounded-xl border overflow-hidden transition-all mt-6 relative group",
+                  "rounded-xl border overflow-visible transition-all mt-12 relative group",
                   tier.popularPlan 
                     ? `border-brand-purple shadow-xl ${colorScheme.border} scale-105 z-10` 
                     : "border-slate-200",
@@ -524,10 +524,10 @@ export const PricingContainer = () => {
                 transition={{ delay: index * 0.1 }}
               >
                 {tier.popularPlan && (
-                  <div className="absolute -top-5 inset-x-0 flex justify-center z-10">
-                    <div className="py-1.5 px-4 flex items-center gap-1 rounded-full bg-gradient-to-r from-brand-purple-medium to-brand-purple text-white text-sm font-medium shadow-md">
+                  <div className="absolute -top-6 inset-x-0 flex justify-center z-20">
+                    <div className="py-1.5 px-4 flex items-center gap-1 rounded-full bg-gradient-to-r from-brand-purple-medium to-brand-purple text-white text-sm font-semibold shadow-md">
                       <Sparkles className="h-3.5 w-3.5" />
-                      <span className="font-medium">MOST POPULAR</span>
+                      <span>MOST POPULAR</span>
                     </div>
                   </div>
                 )}
