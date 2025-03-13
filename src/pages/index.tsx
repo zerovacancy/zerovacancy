@@ -219,7 +219,7 @@ const Index = () => {
           id="pricing" 
           className={cn(
             "w-full",
-            isMobile && "bg-gradient-to-b from-purple-50/30 via-transparent to-transparent relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-8 after:bg-gradient-to-t after:from-purple-50/30 after:to-transparent"
+            isMobile && "bg-gradient-to-b from-purple-50/30 via-transparent to-transparent relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-8 after:bg-gradient-to-t after:from-purple-50/30 after:to-transparent mt-12 pt-8"
           )}
         >
           <Suspense fallback={<SectionLoader />}>
