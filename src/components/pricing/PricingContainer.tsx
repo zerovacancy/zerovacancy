@@ -393,19 +393,37 @@ export const PricingContainer = () => {
                       
                       <div className="space-y-3">
                         <div className="grid grid-cols-4 items-center hover:bg-slate-50 rounded py-2 transition-colors">
-                          <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">Browse Creators</div>
+                          <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">Browse & Discover Content Creators</div>
                           <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-blue-600" /></div>
                           <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-purple-600" /></div>
                           <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-emerald-600" /></div>
                         </div>
                         <div className="grid grid-cols-4 items-center hover:bg-slate-50 rounded py-2 transition-colors">
-                          <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">Submit RFPs</div>
+                          <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">Access to Creator Profiles</div>
+                          <div className="col-span-1 text-center text-[9px] font-semibold text-gray-600">Limited</div>
+                          <div className="col-span-1 text-center text-[9px] font-semibold text-purple-600">Full</div>
+                          <div className="col-span-1 text-center text-[9px] font-semibold text-emerald-600">Full</div>
+                        </div>
+                        <div className="grid grid-cols-4 items-center hover:bg-slate-50 rounded py-2 transition-colors">
+                          <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">Preview Marketplace Features</div>
+                          <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-blue-600" /></div>
+                          <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-purple-600" /></div>
+                          <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-emerald-600" /></div>
+                        </div>
+                        <div className="grid grid-cols-4 items-center hover:bg-slate-50 rounded py-2 transition-colors">
+                          <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">Submit Request for Proposals</div>
+                          <div className="col-span-1 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
+                          <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-purple-600" /></div>
+                          <div className="col-span-1 text-center text-[9px] font-semibold text-emerald-600">Instantly</div>
+                        </div>
+                        <div className="grid grid-cols-4 items-center hover:bg-slate-50 rounded py-2 transition-colors">
+                          <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">Browse & Hire Premium Creators</div>
                           <div className="col-span-1 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
                           <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-purple-600" /></div>
                           <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-emerald-600" /></div>
                         </div>
                         <div className="grid grid-cols-4 items-center hover:bg-slate-50 rounded py-2 transition-colors">
-                          <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">Revisions Included</div>
+                          <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">Revisions Included Per Project</div>
                           <div className="col-span-1 text-center text-xs font-semibold text-gray-700 font-space">0</div>
                           <div className="col-span-1 text-center text-xs font-semibold text-purple-700 font-space">1</div>
                           <div className="col-span-1 text-center text-xs font-semibold text-emerald-700 font-space">3</div>
@@ -415,18 +433,24 @@ export const PricingContainer = () => {
                     
                     <div className="pt-4 pb-2 border-t border-slate-100">
                       <h4 className="text-xs font-bold text-purple-700 bg-purple-50 px-3 py-1.5 rounded-lg inline-block mb-3">
-                        Pro Features
+                        Content Optimization
                       </h4>
                       
                       <div className="space-y-3">
                         <div className="grid grid-cols-4 items-center hover:bg-slate-50 rounded py-2 transition-colors">
-                          <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">SEO Optimization</div>
+                          <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">Social Media Optimized Content</div>
                           <div className="col-span-1 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
                           <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-purple-600" /></div>
                           <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-emerald-600" /></div>
                         </div>
                         <div className="grid grid-cols-4 items-center hover:bg-slate-50 rounded py-2 transition-colors">
-                          <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">Priority Support</div>
+                          <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">SEO-Optimized Content</div>
+                          <div className="col-span-1 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
+                          <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-purple-600" /></div>
+                          <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-emerald-600" /></div>
+                        </div>
+                        <div className="grid grid-cols-4 items-center hover:bg-slate-50 rounded py-2 transition-colors">
+                          <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">Geo-Targeted Content</div>
                           <div className="col-span-1 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
                           <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-purple-600" /></div>
                           <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-emerald-600" /></div>
@@ -441,13 +465,19 @@ export const PricingContainer = () => {
                       
                       <div className="space-y-3">
                         <div className="grid grid-cols-4 items-center hover:bg-slate-50 rounded py-2 transition-colors">
-                          <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">Marketing Dashboard</div>
+                          <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">Marketing Channel Optimization</div>
                           <div className="col-span-1 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
                           <div className="col-span-1 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
                           <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-emerald-600" /></div>
                         </div>
                         <div className="grid grid-cols-4 items-center hover:bg-slate-50 rounded py-2 transition-colors">
-                          <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">Advanced Analytics</div>
+                          <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">7-Day Money-Back Guarantee</div>
+                          <div className="col-span-1 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
+                          <div className="col-span-1 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
+                          <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-emerald-600" /></div>
+                        </div>
+                        <div className="grid grid-cols-4 items-center hover:bg-slate-50 rounded py-2 transition-colors">
+                          <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">Performance Insights Dashboard</div>
                           <div className="col-span-1 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
                           <div className="col-span-1 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
                           <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-emerald-600" /></div>
