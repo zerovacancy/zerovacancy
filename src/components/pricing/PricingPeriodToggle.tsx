@@ -29,125 +29,70 @@ export const PricingPeriodToggle: React.FC<PricingPeriodToggleProps> = ({
 
   return (
     <div className="w-full flex flex-col items-center" aria-live="polite" role="region" aria-label="Pricing period selection">
-      {/* Toggle container with slider - styled to match desktop version */}
+      {/* Toggle container with slider - styled to match screenshot */}
       <div 
-        className={cn(
-          "pricing-toggle-container",
-          "border border-gray-200 shadow-sm",
-          "promote-layer gpu-accelerated",
-          "max-w-[280px]"
-        )}
+        className="h-10 bg-gray-100 rounded-full flex items-center p-1 relative shadow-sm border border-gray-200 max-w-xs mx-auto"
         aria-roledescription="Toggle between monthly and annual pricing"
       >
         {/* Monthly option */}
         <button
           onClick={() => handleChangePeriod(0)}
           className={cn(
-            "pricing-toggle-button",
-            "touch-manipulation focus:outline-none",
-            "transition-colors duration-200", 
-            "hover:bg-gray-50",
-            "touch-target",
-            period === 0 ? "text-brand-purple-dark font-semibold" : "text-slate-600"
+            "h-8 flex-1 z-10 rounded-full flex items-center justify-center",
+            "text-sm transition-colors duration-200 font-medium",
+            period === 0 ? "text-gray-800" : "text-gray-500"
           )}
           aria-pressed={period === 0}
           aria-label="Monthly billing"
         >
-          <motion.span
-            animate={{ 
-              scale: period === 0 ? 1.05 : 1 
-            }}
-            transition={{ 
-              type: "spring", 
-              stiffness: 300, 
-              damping: 20 
-            }}
-          >
-            Monthly
-          </motion.span>
+          Monthly
         </button>
         
         {/* Annual option */}
         <button
           onClick={() => handleChangePeriod(1)}
           className={cn(
-            "pricing-toggle-button",
-            "touch-manipulation focus:outline-none",
-            "transition-colors duration-200",
-            "hover:bg-gray-50",
-            "touch-target",
-            period === 1 ? "text-brand-purple-dark font-semibold" : "text-slate-600"
+            "h-8 flex-1 z-10 rounded-full flex items-center justify-center",
+            "text-sm transition-colors duration-200 font-medium",
+            period === 1 ? "text-gray-800" : "text-gray-500",
+            "relative"
           )}
           aria-pressed={period === 1}
           aria-label="Annual billing"
         >
-          <motion.span
-            animate={{ 
-              scale: period === 1 ? 1.05 : 1 
-            }}
-            transition={{ 
-              type: "spring", 
-              stiffness: 300, 
-              damping: 20 
-            }}
-          >
-            Annual
-          </motion.span>
+          Annual
+          
+          {period === 1 && (
+            <span className={cn(
+              "absolute -top-2 right-2 text-xs bg-green-500 text-white px-2 py-0.5 rounded-full whitespace-nowrap",
+              animatePriceChange ? "animate-pulse" : ""
+            )}>
+              Save 20%
+            </span>
+          )}
         </button>
         
-        {/* Active slider with improved animation and styling */}
+        {/* Active slider with improved animation */}
         {hydrated && (
           <motion.div
-            className={cn(
-              "pricing-toggle-slider",
-              "shadow-md",
-              "backface-visibility-hidden",
-              "will-change-transform",
-              animatePriceChange && period === 1 ? "ring-2 ring-brand-purple/30 ring-offset-1" : ""
-            )}
+            className="absolute top-1 h-8 rounded-full bg-white shadow-sm"
+            style={{ width: 'calc(50% - 4px)' }}
             initial={false}
             animate={{
-              x: period === 1 ? "100%" : "0%",
+              x: period === 1 ? 'calc(100% + 2px)' : '1px',
               scale: animatePriceChange ? 1.03 : 1
             }}
             transition={{
               type: "spring",
               stiffness: 400,
-              damping: 30,
-              mass: 1
+              damping: 30
             }}
             aria-hidden="true"
           />
         )}
       </div>
       
-      {/* Savings badge for annual billing with improved animation */}
-      <AnimatePresence>
-        {period === 1 && (
-          <motion.div
-            initial={{ opacity: 0, y: -10, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -10, scale: 0.95 }}
-            transition={{
-              type: "spring",
-              stiffness: 400,
-              damping: 25
-            }}
-            className="mt-3"
-            aria-live="polite"
-          >
-            <span 
-              className="inline-flex items-center px-3 py-1 text-xs font-medium text-emerald-700 bg-emerald-50 rounded-full shadow-sm animate-pulse-subtle"
-              role="status"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 mr-1" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-              </svg>
-              Save up to 20% with annual billing
-            </span>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Remove the separate savings badge since it's now part of the toggle */}
     </div>
   );
 };

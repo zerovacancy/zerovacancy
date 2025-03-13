@@ -2,7 +2,7 @@
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Calendar, CalendarDays } from "lucide-react";
+import { CalendarDays } from "lucide-react";
 
 interface PricingHeaderProps {
   title: string;
@@ -45,7 +45,6 @@ const PricingHeader = ({
               <div className="relative">
                 <div className="absolute -top-6 -right-6 w-12 h-12 bg-purple-100 rounded-full blur-xl opacity-70" />
                 <div className="absolute -bottom-6 -left-6 w-12 h-12 bg-blue-100 rounded-full blur-xl opacity-70" />
-                {/* Removed the "Transform Your Spaces" text here */}
               </div>
             </div>
             
@@ -70,101 +69,65 @@ const PricingHeader = ({
           </>
         )}
         
-        {/* Replace buttons with a proper toggle switch for both mobile and desktop */}
+        {/* Toggle switch matching the design in the screenshot */}
         <div className="relative w-full max-w-md mx-auto">
           <div className={cn(
-            "pricing-toggle-container",
-            "border border-gray-200 shadow-sm",
-            "promote-layer gpu-accelerated",
-            "overflow-hidden relative",
-            isSticky ? "scale-90" : ""
+            "h-10 bg-gray-100 rounded-full flex items-center p-1 relative",
+            "shadow-sm border border-gray-200",
+            isSticky ? "scale-90" : "",
+            "max-w-xs mx-auto"
           )}>
-            {/* Monthly Option */}
+            {/* Monthly option */}
             <button
               onClick={() => setIsYearly(false)}
               className={cn(
-                "pricing-toggle-button",
-                "touch-manipulation focus:outline-none",
-                "transition-colors duration-200",
-                "hover:bg-gray-50",
-                "touch-target",
-                "z-10",
-                !isYearly ? "text-brand-purple-dark font-semibold" : "text-slate-600"
+                "h-8 flex-1 z-10 rounded-full flex items-center justify-center",
+                "text-sm transition-colors duration-200 font-medium",
+                !isYearly ? "text-gray-800" : "text-gray-500"
               )}
               aria-pressed={!isYearly}
               aria-label="Monthly billing"
             >
-              <motion.span
-                animate={{ 
-                  scale: !isYearly ? 1.05 : 1 
-                }}
-                transition={{ 
-                  type: "spring", 
-                  stiffness: 300, 
-                  damping: 20 
-                }}
-              >
-                Monthly
-              </motion.span>
+              Monthly
             </button>
             
-            {/* Annual Option */}
+            {/* Annual option */}
             <button
               onClick={() => setIsYearly(true)}
               className={cn(
-                "pricing-toggle-button",
-                "touch-manipulation focus:outline-none",
-                "transition-colors duration-200",
-                "hover:bg-gray-50",
-                "touch-target",
-                "z-10",
-                isYearly ? "text-brand-purple-dark font-semibold" : "text-slate-600"
+                "h-8 flex-1 z-10 rounded-full flex items-center justify-center",
+                "text-sm transition-colors duration-200 font-medium",
+                isYearly ? "text-gray-800" : "text-gray-500",
+                "relative"
               )}
               aria-pressed={isYearly}
               aria-label="Annual billing"
             >
-              <motion.span
-                animate={{ 
-                  scale: isYearly ? 1.05 : 1 
-                }}
-                transition={{ 
-                  type: "spring", 
-                  stiffness: 300, 
-                  damping: 20 
-                }}
-              >
-                Annual
-                
-                {isYearly && (
-                  <span className={cn(
-                    "ml-2 text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full whitespace-nowrap",
-                    animateChange ? "animate-pulse" : ""
-                  )}>
-                    Save 20%
-                  </span>
-                )}
-              </motion.span>
+              Annual
+              
+              {isYearly && (
+                <span className={cn(
+                  "absolute -top-2 right-2 text-xs bg-green-500 text-white px-2 py-0.5 rounded-full whitespace-nowrap",
+                  animateChange ? "animate-pulse" : ""
+                )}>
+                  Save 20%
+                </span>
+              )}
             </button>
             
-            {/* Active slider with improved animation */}
+            {/* Active slider background */}
             <motion.div
-              className={cn(
-                "pricing-toggle-slider",
-                "shadow-md",
-                "backface-visibility-hidden",
-                "will-change-transform",
-                animateChange && isYearly ? "ring-2 ring-brand-purple/30 ring-offset-1" : ""
-              )}
+              className="absolute top-1 h-8 rounded-full bg-white shadow-sm"
+              style={{ width: 'calc(50% - 4px)' }}
               initial={false}
               animate={{
-                x: isYearly ? "100%" : "0%",
+                x: isYearly ? 'calc(100% + 2px)' : '1px',
                 scale: animateChange ? 1.03 : 1
               }}
               transition={{
                 type: "spring",
                 stiffness: 400,
-                damping: 30,
-                mass: 1
+                damping: 30
               }}
               aria-hidden="true"
             />
