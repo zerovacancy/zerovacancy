@@ -83,22 +83,22 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   <p className="text-sm text-gray-500 font-light mt-0.5">{creator.location}</p>
                   <p className="text-xs text-gray-600 mt-1.5">{creator.services.join(" • ")}</p>
                 </div>
+
+                {/* Portfolio preview - Enhanced spacing for mobile */}
+                <div className="mb-3">
+                  <PortfolioPreview 
+                    workExamples={creator.workExamples}
+                    creatorName={creator.name}
+                  />
+                </div>
                 
                 {/* Added Rating and availability for mobile view */}
-                <div className="mb-3">
+                <div className="mb-4">
                   <CreatorRating 
                     rating={creator.rating} 
                     reviews={creator.reviews} 
                     name={creator.name} 
                     availabilityStatus={creator.availabilityStatus}
-                  />
-                </div>
-
-                {/* Portfolio preview - Enhanced spacing for mobile */}
-                <div className="mb-4">
-                  <PortfolioPreview 
-                    workExamples={creator.workExamples}
-                    creatorName={creator.name}
                   />
                 </div>
 

@@ -98,8 +98,8 @@ export function PricingInteraction({
       {/* Enhanced background with subtle gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-white via-white to-slate-50 pointer-events-none" />
       
-      {/* Simple, clear toggle buttons */}
-      <div className="w-full mb-3">
+      {/* Toggle with slider for period selection */}
+      <div className="w-full mb-3 mt-1">
         <PricingPeriodToggle 
           period={period}
           handleChangePeriod={handleChangePeriod}
