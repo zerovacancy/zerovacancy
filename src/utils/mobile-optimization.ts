@@ -15,27 +15,51 @@ export const prefersReducedMotion = () => {
 // Optimized mobile viewport settings that prevent unwanted zooming
 export const optimizeMobileViewport = () => {
   if (typeof window === "undefined") return;
+  
   // Find existing viewport meta tag
-  const viewport = document.querySelector('meta[name="viewport"]');
+  let viewport = document.querySelector('meta[name="viewport"]');
+  
+  // Remove any existing viewport meta to ensure clean state
   if (viewport) {
-    // Set viewport to prevent unwanted zooming
-    viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0');
+    viewport.remove();
   }
   
-  // Add touch-action to body to prevent pull-to-refresh
+  // Create a fresh viewport meta tag with strict settings
+  viewport = document.createElement('meta');
+  viewport.setAttribute('name', 'viewport');
+  viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+  document.head.appendChild(viewport);
+  
+  // Force disable pinch zoom with touch-action
+  document.documentElement.style.touchAction = 'pan-x pan-y';
   document.body.style.touchAction = 'pan-y';
-  document.body.style.overscrollBehavior = 'contain';
+  document.body.style.overscrollBehavior = 'none';
   
   // Force text size to prevent auto-zoom on inputs
   const style = document.createElement('style');
   style.innerHTML = `
-    input, select, textarea {
-      font-size: 16px !important;
+    @viewport {
+      width: device-width;
+      zoom: 1.0;
+      user-zoom: fixed;
     }
     
-    body {
+    input, select, textarea {
+      font-size: 16px !important; 
+      max-height: 100%;
+    }
+    
+    body, html {
       -webkit-text-size-adjust: 100%;
       text-size-adjust: 100%;
+      touch-action: manipulation;
+      overflow-x: hidden;
+      max-width: 100vw;
+      position: relative;
+    }
+    
+    * {
+      -webkit-tap-highlight-color: transparent;
     }
   `;
   document.head.appendChild(style);

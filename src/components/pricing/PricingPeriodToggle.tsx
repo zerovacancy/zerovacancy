@@ -17,12 +17,12 @@ export const PricingPeriodToggle: React.FC<PricingPeriodToggleProps> = ({
 }) => {
   const isMobile = useIsMobile();
   
-  // Mobile Toggle Slider implementation with improved visibility and touch targets
+  // Mobile-specific toggle design with high visibility and large touch targets
   if (isMobile) {
     return (
-      <div className="w-full flex flex-col items-center translate-z-0 py-2">
-        <div className="w-full max-w-[280px] bg-slate-100 rounded-full p-1 relative h-12 shadow-md touch-manipulation">
-          {/* Background Slider that moves */}
+      <div className="w-full flex flex-col items-center translate-z-0 py-2 z-50">
+        <div className="w-full max-w-[280px] bg-slate-100 rounded-full p-1 relative h-12 shadow-md">
+          {/* Background Slider */}
           <div 
             className={cn(
               "absolute top-1 rounded-full h-10 bg-gradient-to-r from-[#8853FF] to-[#6E40F2] transition-all duration-300 shadow-sm",
@@ -37,7 +37,7 @@ export const PricingPeriodToggle: React.FC<PricingPeriodToggleProps> = ({
             className={cn(
               "absolute left-0 top-0 w-1/2 h-full flex items-center justify-center",
               "rounded-full text-sm font-medium z-10 transition-colors duration-300",
-              "touch-manipulation active:opacity-90 -webkit-tap-highlight-color-transparent",
+              "touch-manipulation active:opacity-90",
               period === 0 ? "text-white" : "text-gray-500"
             )}
             aria-pressed={period === 0}
@@ -53,7 +53,7 @@ export const PricingPeriodToggle: React.FC<PricingPeriodToggleProps> = ({
               className={cn(
                 "w-full h-full flex items-center justify-center gap-2",
                 "rounded-full text-sm font-medium z-10 transition-colors duration-300",
-                "touch-manipulation active:opacity-90 -webkit-tap-highlight-color-transparent",
+                "touch-manipulation active:opacity-90",
                 period === 1 ? "text-white" : "text-gray-500"
               )}
               aria-pressed={period === 1}
@@ -77,7 +77,7 @@ export const PricingPeriodToggle: React.FC<PricingPeriodToggleProps> = ({
     );
   }
   
-  // Implementation for desktop
+  // Desktop toggle implementation
   return (
     <div className="w-full flex flex-col items-center">
       <div className="flex items-center overflow-hidden rounded-full transition-all duration-300 w-full max-w-md mx-auto bg-[#8853FF]/20 p-1.5 shadow-sm">
