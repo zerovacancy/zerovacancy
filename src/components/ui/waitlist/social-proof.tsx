@@ -21,7 +21,8 @@ export function SocialProof({ className }: SocialProofProps) {
         "border border-indigo-100/80",
         "rounded-full shadow-sm",
         "animate-fade-in",
-        "max-w-[280px] mx-auto", // Limit width
+        isMobile ? "max-w-[280px]" : "max-w-[350px]", // Different widths for mobile/desktop
+        "mx-auto", // Center alignment
         isMobile && "text-xs" // Ensure text size is consistent on mobile
       )}>
         <div className="flex -space-x-1 items-center">
