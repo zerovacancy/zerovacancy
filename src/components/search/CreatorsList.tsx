@@ -67,32 +67,28 @@ export const CreatorsList: React.FC = () => {
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <div className={isMobile ? `bg-[#F0EBFA] ${improvedShadowMobile} ${coloredBorderMobile} rounded-xl p-2` : ""}>
-        {!isMobile && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-6">
-            {creators.map((creator) => (
-              <CreatorCard 
-                key={creator.name} 
-                creator={creator} 
-                onImageLoad={handleImageLoad} 
-                loadedImages={loadedImages} 
-                imageRef={imageRef} 
-              />
-            ))}
-          </div>
-        )}
-
-        {isMobile && (
-          <div className="overflow-hidden rounded-lg">
-            <MobileCreatorCarousel
-              creators={creators}
-              onImageLoad={handleImageLoad}
-              loadedImages={loadedImages}
-              imageRef={imageRef}
+      {!isMobile && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-6">
+          {creators.map((creator) => (
+            <CreatorCard 
+              key={creator.name} 
+              creator={creator} 
+              onImageLoad={handleImageLoad} 
+              loadedImages={loadedImages} 
+              imageRef={imageRef} 
             />
-          </div>
-        )}
-      </div>
+          ))}
+        </div>
+      )}
+
+      {isMobile && (
+        <MobileCreatorCarousel
+          creators={creators}
+          onImageLoad={handleImageLoad}
+          loadedImages={loadedImages}
+          imageRef={imageRef}
+        />
+      )}
     </ErrorBoundary>
   );
 };
