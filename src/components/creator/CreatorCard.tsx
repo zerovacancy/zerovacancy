@@ -52,14 +52,13 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
           {/* Mobile-optimized card with enhanced styling */}
           {isMobile ? (
             <Card className={cn(
-              "overflow-hidden h-full flex flex-col",
-              "bg-white border border-purple-200",
-              "shadow-[0_4px_12px_rgba(138,79,255,0.15)]",
+              "overflow-hidden h-full flex flex-col w-full",
+              "bg-white border-2 border-purple-200",
+              "shadow-[0_5px_16px_rgba(138,79,255,0.2)]",
               "rounded-xl relative"
             )}>
-              {/* Mobile-optimized pattern and border effect */}
+              {/* Mobile-optimized pattern effect */}
               <div className="absolute inset-0 opacity-[0.02] bg-[radial-gradient(#8A4FFF_1px,transparent_1px)] bg-[length:16px_16px] z-0 pointer-events-none"></div>
-              <div className="absolute inset-0 rounded-xl border-2 border-purple-200"></div>
               
               {/* Price tag - Simplified for mobile */}
               <div className="absolute top-3 right-3 z-20">
@@ -68,7 +67,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 </span>
               </div>
 
-              {/* Media container - Simplified aspect ratio */}
+              {/* Media container - Consistent full width */}
               <div className="aspect-[16/9] relative w-full overflow-hidden flex-shrink-0">
                 <CreatorMedia 
                   creator={creator}
@@ -77,8 +76,8 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 />
               </div>
 
-              {/* Enhanced content section with improved typography and spacing */}
-              <div className="px-3.5 py-4 flex flex-col flex-grow relative z-10">
+              {/* Enhanced content section with consistent width and improved spacing */}
+              <div className="w-full px-4 py-4 flex flex-col flex-grow relative z-10">
                 <div className="mb-3">
                   <h3 className="font-semibold text-gray-900 text-[15px] leading-tight">{creator.name}</h3>
                   <p className="text-sm text-gray-500 font-light mt-0.5">{creator.location}</p>
