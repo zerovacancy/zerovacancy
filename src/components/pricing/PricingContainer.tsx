@@ -198,7 +198,7 @@ export const PricingContainer = () => {
               <motion.div
                 key={tier.title}
                 className={cn(
-                  "rounded-xl overflow-hidden transition-all mt-4 relative group mx-auto max-w-md w-full",
+                  "rounded-xl overflow-hidden transition-all mt-4 relative group mx-auto max-w-[280px] w-full", // Match width of CTA
                   tier.popularPlan ? (isMobile ? "shadow-lg" : "border-brand-purple shadow-lg") : (isMobile ? "" : "border-slate-200"),
                   tier.popularPlan && "relative",
                   colorScheme.cardBg,
@@ -357,17 +357,18 @@ export const PricingContainer = () => {
             );
           })}
           
-          {/* Compact feature comparison table for mobile - removed border-t and changed button styling */}
-          <div className="mt-4 pt-2 mx-auto max-w-md w-full">
+          {/* Compact feature comparison table for mobile - adjusted width to match cards */}
+          <div className="mt-4 pt-2 flex justify-center">
             <button
               onClick={() => setExpandedComparisonTable(!expandedComparisonTable)}
               className={cn(
-                "w-full mx-auto flex items-center justify-between py-3 px-5 text-sm font-medium text-white font-inter",
+                "mx-auto flex items-center justify-between py-3 px-5 text-sm font-medium text-white font-inter",
                 "rounded-xl bg-gradient-to-r from-brand-purple to-brand-purple-dark",
                 "shadow-sm border border-brand-purple/10 hover:shadow-md",
                 "transition-all duration-200 relative group",
                 "before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:rounded-l-xl", 
-                "before:bg-gradient-to-b from-purple-400 to-indigo-600 before:opacity-0 group-hover:before:opacity-100 before:transition-opacity"
+                "before:bg-gradient-to-b from-purple-400 to-indigo-600 before:opacity-0 group-hover:before:opacity-100 before:transition-opacity",
+                "max-w-[280px] w-full" // Match width of cards
               )}
             >
               <span className="flex-1 text-center">
@@ -390,7 +391,7 @@ export const PricingContainer = () => {
                 >
                   <div className={cn(
                     "py-4 px-2 mt-2 rounded-xl shadow-sm relative group",
-                    "w-full max-w-md mx-auto",
+                    "w-full max-w-[280px] mx-auto", // Match width of cards and CTA button
                     mobileOptimizationClasses.subtleGradientIndigo,
                     "before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:rounded-l-xl", 
                     "before:bg-gradient-to-b from-indigo-500 to-purple-600 before:opacity-0 group-hover:before:opacity-100 before:transition-opacity"
