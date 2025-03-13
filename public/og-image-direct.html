@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZeroVacancy OG Image</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 1200px;
+      height: 630px;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    
+    .og-container {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #1A1F2C 0%, #3a3365 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 60px;
+      box-sizing: border-box;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .purple-glow {
+      position: absolute;
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, rgba(139, 92, 246, 0.2) 0%, rgba(139, 92, 246, 0) 70%);
+      filter: blur(70px);
+      z-index: 1;
+    }
+    
+    .logo-container {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+    }
+    
+    .logo {
+      max-width: 70%;
+      max-height: 70%;
+      object-fit: contain;
+    }
+    
+    .subtitle {
+      position: relative;
+      z-index: 2;
+      font-size: 28px;
+      margin-top: 40px;
+      opacity: 0.9;
+      text-align: center;
+      max-width: 800px;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+  <div class="og-container">
+    <div class="purple-glow"></div>
+    <div class="logo-container">
+      <img src="logo.png" alt="ZeroVacancy Logo" class="logo">
+    </div>
+    <p class="subtitle">Book top-tier photographers, videographers, and content creators for stunning property marketing</p>
+  </div>
+</body>
+</html>
