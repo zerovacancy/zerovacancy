@@ -34,11 +34,6 @@ export const AnimatedGrid = memo(({
     };
   }, []);
   
-  // Don't render on mobile
-  if (isMobile) {
-    return null;
-  }
-  
   // Only load after initial render to improve page load performance
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -182,6 +177,10 @@ export const AnimatedGrid = memo(({
     };
   }, [handleMove, isVisible]);
 
+  if (isMobile) {
+    return null;
+  }
+
   if (!isVisible) return null;
 
   return (
@@ -238,3 +237,4 @@ export const AnimatedGrid = memo(({
 });
 
 AnimatedGrid.displayName = "AnimatedGrid";
+

@@ -119,7 +119,8 @@ export function GlowDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-2xl md:max-w-3xl overflow-hidden border-none bg-transparent">
-        <DialogTitle className="sr-only">JOIN WAITLIST</DialogTitle>
+        {/* Add the accessible DialogTitle component with proper ARIA role */}
+        <DialogTitle className="sr-only">Join Waitlist - Enter Your Email</DialogTitle>
         <motion.div 
           className="relative rounded-lg overflow-hidden bg-[#060606]/80 p-6 sm:p-8 md:p-10"
           initial={{ scale: 0.95, opacity: 0 }}
@@ -139,6 +140,7 @@ export function GlowDialog({
             <div className="h-24 w-24 sm:h-32 sm:w-32 opacity-[0.8] bg-[radial-gradient(var(--sky-500)_40%,transparent_60%)]" />
           </MovingBorder>
           <div className="relative z-10">
+            {/* Visible heading for users */}
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-4 md:mb-6 text-white leading-tight">
               JOIN WAITLIST
             </h2>
@@ -154,6 +156,7 @@ export function GlowDialog({
                 required
                 disabled={isLoading}
                 className="flex-1 px-4 py-2 rounded-md bg-white/10 border border-white/20 text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-white/30 disabled:opacity-50"
+                aria-label="Email address"
               />
               <HoverBorderGradient 
                 type="submit"
@@ -177,3 +180,4 @@ export function GlowDialog({
     </Dialog>
   );
 }
+
