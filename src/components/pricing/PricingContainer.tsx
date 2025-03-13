@@ -368,7 +368,7 @@ export const PricingContainer = () => {
                 "transition-all duration-200 relative group",
                 "before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:rounded-l-xl", 
                 "before:bg-gradient-to-b from-purple-400 to-indigo-600 before:opacity-0 group-hover:before:opacity-100 before:transition-opacity",
-                "max-w-[280px] w-full" // Match width of cards
+                "max-w-[240px] w-full" // Narrower width similar to social proof component
               )}
             >
               <span className="flex-1 text-center">
@@ -390,50 +390,50 @@ export const PricingContainer = () => {
                   className="overflow-hidden"
                 >
                   <div className={cn(
-                    "py-4 px-2 mt-2 rounded-xl shadow-sm relative group",
-                    "w-full max-w-[280px] mx-auto", // Match width of cards and CTA button
-                    mobileOptimizationClasses.subtleGradientIndigo,
-                    "before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:rounded-l-xl", 
-                    "before:bg-gradient-to-b from-indigo-500 to-purple-600 before:opacity-0 group-hover:before:opacity-100 before:transition-opacity"
+                    "py-4 px-2 mt-2 rounded-xl shadow-sm relative",
+                    "w-full max-w-[280px] mx-auto", // Keep same width as cards
+                    "bg-white", // Better contrast with white background
+                    "border border-slate-200",
+                    "overflow-x-auto" // Ensure content doesn't overflow on small screens
                   )}>
                     <div className="flex border-b border-slate-200 pb-2 mb-3">
-                      <div className="w-1/2 text-sm font-medium text-brand-text-primary font-inter">Feature</div>
-                      <div className="w-1/6 text-center text-xs font-medium text-blue-600 font-space">Basic</div>
-                      <div className="w-1/6 text-center text-xs font-medium text-brand-purple font-space">Pro</div>
-                      <div className="w-1/6 text-center text-xs font-medium text-emerald-600 font-space">Premium</div>
+                      <div className="w-1/2 text-sm font-bold text-gray-700 font-inter">Feature</div>
+                      <div className="w-1/6 text-center text-xs font-bold text-blue-700 font-space">Basic</div>
+                      <div className="w-1/6 text-center text-xs font-bold text-purple-700 font-space">Pro</div>
+                      <div className="w-1/6 text-center text-xs font-bold text-emerald-700 font-space">Premium</div>
                     </div>
                     
-                    {/* Sample comparison items */}
+                    {/* Sample comparison items with better contrast */}
                     <div className="space-y-3">
-                      <div className="flex items-center">
-                        <div className="w-1/2 text-xs text-brand-text-secondary font-inter">Browse Creators</div>
-                        <div className="w-1/6 text-center"><Check className="h-4 w-4 mx-auto text-blue-500" /></div>
-                        <div className="w-1/6 text-center"><Check className="h-4 w-4 mx-auto text-brand-purple" /></div>
-                        <div className="w-1/6 text-center"><Check className="h-4 w-4 mx-auto text-emerald-500" /></div>
+                      <div className="flex items-center hover:bg-slate-50 rounded py-1">
+                        <div className="w-1/2 text-xs font-medium text-gray-700 font-inter">Browse Creators</div>
+                        <div className="w-1/6 text-center"><Check className="h-4 w-4 mx-auto text-blue-600" /></div>
+                        <div className="w-1/6 text-center"><Check className="h-4 w-4 mx-auto text-purple-600" /></div>
+                        <div className="w-1/6 text-center"><Check className="h-4 w-4 mx-auto text-emerald-600" /></div>
                       </div>
-                      <div className="flex items-center">
-                        <div className="w-1/2 text-xs text-brand-text-secondary font-inter">Submit RFPs</div>
-                        <div className="w-1/6 text-center"><X className="h-4 w-4 mx-auto text-slate-300" /></div>
-                        <div className="w-1/6 text-center"><Check className="h-4 w-4 mx-auto text-brand-purple" /></div>
-                        <div className="w-1/6 text-center"><Check className="h-4 w-4 mx-auto text-emerald-500" /></div>
+                      <div className="flex items-center hover:bg-slate-50 rounded py-1">
+                        <div className="w-1/2 text-xs font-medium text-gray-700 font-inter">Submit RFPs</div>
+                        <div className="w-1/6 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
+                        <div className="w-1/6 text-center"><Check className="h-4 w-4 mx-auto text-purple-600" /></div>
+                        <div className="w-1/6 text-center"><Check className="h-4 w-4 mx-auto text-emerald-600" /></div>
                       </div>
-                      <div className="flex items-center">
-                        <div className="w-1/2 text-xs text-brand-text-secondary font-inter">Revisions Included</div>
-                        <div className="w-1/6 text-center text-xs font-space">0</div>
-                        <div className="w-1/6 text-center text-xs font-space">1</div>
-                        <div className="w-1/6 text-center text-xs font-space">3</div>
+                      <div className="flex items-center hover:bg-slate-50 rounded py-1">
+                        <div className="w-1/2 text-xs font-medium text-gray-700 font-inter">Revisions Included</div>
+                        <div className="w-1/6 text-center text-xs font-semibold text-gray-700 font-space">0</div>
+                        <div className="w-1/6 text-center text-xs font-semibold text-purple-700 font-space">1</div>
+                        <div className="w-1/6 text-center text-xs font-semibold text-emerald-700 font-space">3</div>
                       </div>
-                      <div className="flex items-center">
-                        <div className="w-1/2 text-xs text-brand-text-secondary font-inter">SEO Optimization</div>
-                        <div className="w-1/6 text-center"><X className="h-4 w-4 mx-auto text-slate-300" /></div>
-                        <div className="w-1/6 text-center"><Check className="h-4 w-4 mx-auto text-brand-purple" /></div>
-                        <div className="w-1/6 text-center"><Check className="h-4 w-4 mx-auto text-emerald-500" /></div>
+                      <div className="flex items-center hover:bg-slate-50 rounded py-1">
+                        <div className="w-1/2 text-xs font-medium text-gray-700 font-inter">SEO Optimization</div>
+                        <div className="w-1/6 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
+                        <div className="w-1/6 text-center"><Check className="h-4 w-4 mx-auto text-purple-600" /></div>
+                        <div className="w-1/6 text-center"><Check className="h-4 w-4 mx-auto text-emerald-600" /></div>
                       </div>
-                      <div className="flex items-center">
-                        <div className="w-1/2 text-xs text-brand-text-secondary font-inter">Marketing Dashboard</div>
-                        <div className="w-1/6 text-center"><X className="h-4 w-4 mx-auto text-slate-300" /></div>
-                        <div className="w-1/6 text-center"><X className="h-4 w-4 mx-auto text-slate-300" /></div>
-                        <div className="w-1/6 text-center"><Check className="h-4 w-4 mx-auto text-emerald-500" /></div>
+                      <div className="flex items-center hover:bg-slate-50 rounded py-1">
+                        <div className="w-1/2 text-xs font-medium text-gray-700 font-inter">Marketing Dashboard</div>
+                        <div className="w-1/6 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
+                        <div className="w-1/6 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
+                        <div className="w-1/6 text-center"><Check className="h-4 w-4 mx-auto text-emerald-600" /></div>
                       </div>
                     </div>
                   </div>
