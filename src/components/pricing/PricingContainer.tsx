@@ -122,7 +122,7 @@ export const PricingContainer = () => {
           border: "border-blue-200",
           text: "text-blue-700",
           accent: "bg-blue-500",
-          button: "bg-gradient-to-r from-brand-purple to-brand-purple-dark hover:brightness-110",
+          button: "bg-gradient-to-br from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-md shadow-blue-500/20",
           highlight: "bg-blue-50",
           gradient: mobileOptimizationClasses.pricingGradientBasic,
           cardBg: "bg-gradient-to-b from-blue-50/50 to-white"
@@ -133,7 +133,7 @@ export const PricingContainer = () => {
           border: "border-brand-purple/30",
           text: "text-brand-purple-dark",
           accent: "bg-brand-purple",
-          button: "bg-gradient-to-r from-brand-purple to-brand-purple-dark hover:brightness-110 shadow-md shadow-brand-purple/20",
+          button: "bg-gradient-to-br from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-md shadow-purple-500/20",
           highlight: "bg-purple-50",
           gradient: mobileOptimizationClasses.pricingGradientPro,
           cardBg: "bg-gradient-to-b from-purple-50/50 to-white"
@@ -144,7 +144,7 @@ export const PricingContainer = () => {
           border: "border-emerald-200",
           text: "text-emerald-700",
           accent: "bg-emerald-500",
-          button: "bg-gradient-to-r from-brand-purple to-brand-purple-dark hover:brightness-110",
+          button: "bg-gradient-to-br from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-md shadow-blue-500/20",
           highlight: "bg-emerald-50",
           gradient: mobileOptimizationClasses.pricingGradientPremium,
           cardBg: "bg-gradient-to-b from-emerald-50/50 to-white"
@@ -210,11 +210,10 @@ export const PricingContainer = () => {
                 transition={{ delay: index * 0.1 }}
               >
                 <div className={cn(
-                  "p-4 flex justify-between items-start gap-2",
-                  "relative"
+                  "p-4 flex justify-between items-start gap-2"
                 )}>
                   {tier.popularPlan && (
-                    <div className="absolute -top-1 -right-1 bg-brand-purple text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">
+                    <div className="absolute -top-2.5 right-2 bg-brand-purple text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm z-10">
                       POPULAR
                     </div>
                   )}
@@ -521,9 +520,9 @@ export const PricingContainer = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
-                <div className="p-4 sm:p-6 relative">
+                <div className="p-4 sm:p-6">
                   {tier.popularPlan && (
-                    <div className="absolute -top-1 right-6 bg-brand-purple text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">
+                    <div className="absolute -top-3 right-8 bg-brand-purple text-white text-xs font-bold px-3 py-1 rounded-full shadow-md z-10">
                       MOST POPULAR
                     </div>
                   )}
