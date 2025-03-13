@@ -1,6 +1,6 @@
 
 import * as React from "react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { motion, useAnimationFrame, useMotionTemplate, useMotionValue, useTransform } from "framer-motion";
 import { useRef, useState, useCallback } from "react";
 import { Squares } from "@/components/ui/squares";
@@ -119,6 +119,7 @@ export function GlowDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-2xl md:max-w-3xl overflow-hidden border-none bg-transparent">
+        <DialogTitle className="sr-only">JOIN WAITLIST</DialogTitle>
         <motion.div 
           className="relative rounded-lg overflow-hidden bg-[#060606]/80 p-6 sm:p-8 md:p-10"
           initial={{ scale: 0.95, opacity: 0 }}
@@ -139,7 +140,7 @@ export function GlowDialog({
           </MovingBorder>
           <div className="relative z-10">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-4 md:mb-6 text-white leading-tight">
-              JOIN THE VISION COLLECTIVE
+              JOIN WAITLIST
             </h2>
             <p className="text-center text-gray-300 mb-8 max-w-2xl mx-auto text-sm sm:text-base md:text-lg">
               Be among the first to connect with our curated network of property visionaries.
@@ -166,7 +167,7 @@ export function GlowDialog({
                     Joining...
                   </>
                 ) : (
-                  'RESERVE YOUR SPOT'
+                  'JOIN WAITLIST'
                 )}
               </HoverBorderGradient>
             </form>
