@@ -27,14 +27,22 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
   // Use useCallback to memoize the click handler
   const handleCTAClick = useCallback(() => {
     setStage('input');
-    setShowEmailDialog(true);
-  }, []);
+    // Small delay for mobile to ensure state is updated before dialog opens
+    setTimeout(() => {
+      setShowEmailDialog(true);
+    }, isMobile ? 50 : 0);
+  }, [isMobile]);
 
   // Use useCallback to memoize the dialog state change handler
   const handleDialogOpenChange = useCallback((open: boolean) => {
     setShowEmailDialog(open);
-    if (!open) setStage('initial');
-  }, []);
+    if (!open) {
+      // Reset stage with delay on mobile to prevent state conflicts
+      setTimeout(() => {
+        setStage('initial');
+      }, isMobile ? 50 : 0);
+    }
+  }, [isMobile]);
 
   return (
     <article className="group select-text h-full">
@@ -220,10 +228,12 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
         )}
       </div>
       {/* Always render the dialog component, only control its visibility with the open prop */}
-      <GlowDialog 
-        open={showEmailDialog} 
-        onOpenChange={handleDialogOpenChange}
-      />
+      <div className={cn("relative", isMobile && "z-[100]")}>
+        <GlowDialog 
+          open={showEmailDialog} 
+          onOpenChange={handleDialogOpenChange}
+        />
+      </div>
     </article>
   );
 };
