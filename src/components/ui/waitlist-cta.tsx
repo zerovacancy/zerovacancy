@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 import { ShimmerButton } from './shimmer-button';
 import { WaitlistButton } from './waitlist/waitlist-button';
 import { SocialProof } from './waitlist/social-proof';
+import { GlowDialog } from './glow-dialog';
 
 interface WaitlistCTAProps {
   className?: string;
@@ -20,12 +21,18 @@ export const WaitlistCTA: React.FC<WaitlistCTAProps> = ({
   showSocialProof = false,
   onClick
 }) => {
+  const [showGlowDialog, setShowGlowDialog] = useState(false);
+  
   const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    
     if (onClick) {
-      e.preventDefault();
       onClick();
       return;
     }
+    
+    // If no onClick provided, open the dialog directly
+    setShowGlowDialog(true);
   };
 
   return (
@@ -55,6 +62,9 @@ export const WaitlistCTA: React.FC<WaitlistCTAProps> = ({
       
       {/* Only show social proof when explicitly requested */}
       {showSocialProof && <SocialProof className="mt-3" />}
+      
+      {/* Add GlowDialog directly to the component */}
+      <GlowDialog open={showGlowDialog} onOpenChange={setShowGlowDialog} />
     </div>
   );
 };
