@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef, lazy, Suspense, useCallback } from 'react';
 import Header from '../components/Header';
 import { Hero } from '../components/hero/Hero';
@@ -100,6 +101,7 @@ const Index = () => {
   }, [observerCallback]);
   
   const handleTryNowClick = () => {
+    console.log("Try Now button clicked");
     setShowGlowDialog(true);
   };
   
