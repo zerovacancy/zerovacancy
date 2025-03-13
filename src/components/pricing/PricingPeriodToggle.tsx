@@ -14,25 +14,18 @@ export const PricingPeriodToggle: React.FC<PricingPeriodToggleProps> = ({
   handleChangePeriod, 
   animatePriceChange 
 }) => {
-  const [hydrated, setHydrated] = useState(false);
-  
-  // Handle hydration to prevent SSR/client mismatch
-  useEffect(() => {
-    setHydrated(true);
-  }, []);
-
+  // Create a completely custom toggle that doesn't rely on existing CSS classes
   return (
     <div className="w-full flex flex-col items-center">
-      {/* Toggle container with slider */}
-      <div className="pricing-toggle-container border border-gray-200 shadow-sm max-w-[280px]">
+      {/* Toggle container using direct styles */}
+      <div className="relative flex w-full max-w-[280px] rounded-full overflow-hidden p-[3px] shadow-sm border border-gray-200 bg-gray-100">
         {/* Monthly option */}
         <button
           onClick={() => handleChangePeriod(0)}
           className={cn(
-            "pricing-toggle-button",
-            "touch-manipulation focus:outline-none transition-colors duration-200", 
-            "hover:bg-gray-50",
-            period === 0 ? "text-brand-purple-dark font-semibold" : "text-slate-600"
+            "flex-1 relative z-10 rounded-full py-2 px-4 text-center font-medium transition-colors text-sm",
+            "touch-manipulation focus:outline-none",
+            period === 0 ? "text-brand-purple-dark font-semibold" : "text-slate-500"
           )}
           aria-pressed={period === 0}
         >
@@ -43,44 +36,43 @@ export const PricingPeriodToggle: React.FC<PricingPeriodToggleProps> = ({
         <button
           onClick={() => handleChangePeriod(1)}
           className={cn(
-            "pricing-toggle-button",
-            "touch-manipulation focus:outline-none transition-colors duration-200",
-            "hover:bg-gray-50",
-            period === 1 ? "text-brand-purple-dark font-semibold" : "text-slate-600"
+            "flex-1 relative z-10 rounded-full py-2 px-4 text-center font-medium transition-colors text-sm",
+            "touch-manipulation focus:outline-none",
+            period === 1 ? "text-brand-purple-dark font-semibold" : "text-slate-500"
           )}
           aria-pressed={period === 1}
         >
           Annual
         </button>
         
-        {/* Active slider */}
-        {hydrated && (
-          <motion.div
-            className={cn(
-              "pricing-toggle-slider",
-              "shadow-md",
-              animatePriceChange && period === 1 ? "ring-2 ring-brand-purple/30 ring-offset-1" : ""
-            )}
-            initial={false}
-            animate={{
-              x: period === 1 ? "100%" : "0%"
-            }}
-            transition={{
-              type: "spring",
-              stiffness: 300,
-              damping: 30
-            }}
-          />
-        )}
+        {/* Active slider - with inline styles to ensure it works */}
+        <motion.div
+          className="absolute shadow-md bg-white rounded-full"
+          style={{
+            top: 3,
+            left: 3,
+            height: "calc(100% - 6px)",
+            width: "calc(50% - 3px)",
+          }}
+          initial={false}
+          animate={{
+            x: period === 1 ? "100%" : "0%"
+          }}
+          transition={{
+            type: "spring",
+            stiffness: 300,
+            damping: 30
+          }}
+        />
       </div>
       
       {/* Savings badge for annual billing */}
       <AnimatePresence>
         {period === 1 && (
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
+            initial={{ opacity: 0, y: 5 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
+            exit={{ opacity: 0, y: 5 }}
             className="mt-3"
           >
             <span className="inline-flex items-center px-3 py-1 text-xs font-medium text-emerald-700 bg-emerald-50 rounded-full shadow-sm">
