@@ -33,17 +33,6 @@ export const PreviewContent: React.FC = () => {
 
         {/* Creator cards list - direct embedding */}
         <CreatorsList />
-
-        {/* Pagination indicator for mobile */}
-        {isMobile && (
-          <div className="flex justify-center items-center pt-1 pb-0 mt-1">
-            <div className="flex space-x-1.5">
-              <div className="w-2 h-2 rounded-full bg-indigo-600"></div>
-              <div className="w-2 h-2 rounded-full bg-gray-300"></div>
-              <div className="w-2 h-2 rounded-full bg-gray-300"></div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

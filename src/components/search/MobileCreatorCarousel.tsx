@@ -84,7 +84,7 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
   } = mobileOptimizationClasses;
 
   return (
-    <div className="w-full relative">
+    <div className="w-full relative pb-8">
       {/* Swipe instruction */}
       {isFirstVisit && (
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-4 py-2 rounded-full text-sm flex items-center gap-2 shadow-md">
@@ -93,8 +93,28 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
         </div>
       )}
       
-      {/* Dots indicator */}
-      <div className="absolute bottom-1 left-0 right-0 flex justify-center gap-1.5 pb-1 z-20">
+      {/* Simplified carousel container */}
+      <div className="w-full overflow-hidden" ref={emblaRef}>
+        <div className="flex">
+          {creators.map((creator) => (
+            <div 
+              key={creator.name} 
+              style={{ touchAction: 'pan-y' }} 
+              className="min-w-[85%] w-[85%] pl-2 pr-1 pt-1 pb-2"
+            >
+              <CreatorCard 
+                creator={creator} 
+                onImageLoad={onImageLoad} 
+                loadedImages={loadedImages} 
+                imageRef={imageRef} 
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      {/* Dots indicator - repositioned */}
+      <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-1.5 z-20">
         {creators.map((_, index) => (
           <div 
             key={index} 
@@ -106,26 +126,6 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
             )}
           />
         ))}
-      </div>
-
-      {/* Simplified carousel container */}
-      <div className="w-full overflow-hidden" ref={emblaRef}>
-        <div className="flex">
-          {creators.map((creator) => (
-            <div 
-              key={creator.name} 
-              style={{ touchAction: 'pan-y' }} 
-              className="min-w-[85%] w-[85%] pl-2 pr-1 my-2"
-            >
-              <CreatorCard 
-                creator={creator} 
-                onImageLoad={onImageLoad} 
-                loadedImages={loadedImages} 
-                imageRef={imageRef} 
-              />
-            </div>
-          ))}
-        </div>
       </div>
 
       {/* Navigation Arrows */}
