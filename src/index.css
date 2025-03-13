@@ -10,7 +10,68 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Removing old pricing toggle styles that are no longer needed */
+/* Pricing toggle styles with enhanced borders and interactions */
+.pricing-toggle-container {
+  border-radius: 9999px; /* Full rounded corners */
+  overflow: hidden;
+  padding: 3px;
+  background-color: rgba(241, 245, 249, 0.7); /* Slate-100 with transparency */
+  backdrop-filter: blur(8px);
+  box-shadow: inset 0 1px 2px 0 rgba(0, 0, 0, 0.05), 0 2px 6px rgba(0, 0, 0, 0.03);
+  display: flex;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.pricing-toggle-container:hover {
+  box-shadow: inset 0 1px 2px 0 rgba(0, 0, 0, 0.05), 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.pricing-toggle-button {
+  border-radius: 9999px;
+  padding: 0.625rem 1.25rem;
+  font-weight: 500;
+  flex: 1;
+  text-align: center;
+  position: relative;
+  z-index: 20;
+  transition: color 0.3s ease, background-color 0.2s ease;
+  min-height: 40px;
+}
+
+.pricing-toggle-slider {
+  position: absolute;
+  height: calc(100% - 6px);
+  width: calc(50% - 3px);
+  background-color: white;
+  border-radius: 9999px;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.08);
+  top: 3px;
+  left: 3px;
+  /* Ensuring this works on mobile without transform conflicts */
+  transform: translateX(0);
+}
+
+.pricing-toggle-slider:hover {
+  box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.1);
+}
+
+.price-animation {
+  animation: pulse 1s ease-in-out;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* Remove any third tab styling if it exists */
+.pricing-toggle-container > button:nth-child(3) {
+  display: none;
+}
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
