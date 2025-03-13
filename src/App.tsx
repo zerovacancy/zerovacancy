@@ -1,4 +1,5 @@
-import React, { lazy, Suspense, useEffect } from 'react';
+
+import React, { lazy, Suspense, useEffect, useCallback } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, useNavigationType } from 'react-router-dom';
 import { ErrorBoundary } from 'react-error-boundary';
 import ErrorFallback from './components/ErrorFallback';
@@ -66,6 +67,9 @@ function App() {
   const isMobile = useIsMobile();
   const { coloredBgMobile } = mobileOptimizationClasses;
   
+  // Use memoized callback functions for event listeners
+  const passiveEventHandler = useCallback(() => {}, []);
+  
   useEffect(() => {
     if (isMobile) {
       optimizeMobileViewport();
@@ -75,10 +79,11 @@ function App() {
       import('./pages/index');
     }, 200);
     
+    // Add event listeners with the same function references
     const passiveOption = { passive: true };
-    document.addEventListener('touchstart', () => {}, passiveOption);
-    document.addEventListener('touchmove', () => {}, passiveOption);
-    document.addEventListener('wheel', () => {}, passiveOption);
+    document.addEventListener('touchstart', passiveEventHandler, passiveOption);
+    document.addEventListener('touchmove', passiveEventHandler, passiveOption);
+    document.addEventListener('wheel', passiveEventHandler, passiveOption);
     
     if (isMobile) {
       document.body.classList.add('color-white-bg-mobile');
@@ -90,13 +95,14 @@ function App() {
     
     return () => {
       clearTimeout(timer);
-      document.removeEventListener('touchstart', () => {});
-      document.removeEventListener('touchmove', () => {});
-      document.removeEventListener('wheel', () => {});
+      // Remove event listeners using the same function references
+      document.removeEventListener('touchstart', passiveEventHandler);
+      document.removeEventListener('touchmove', passiveEventHandler);
+      document.removeEventListener('wheel', passiveEventHandler);
       document.body.classList.remove('color-white-bg-mobile');
       document.body.classList.remove('optimize-animations-mobile');
     };
-  }, [isMobile]);
+  }, [isMobile, passiveEventHandler]);
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
