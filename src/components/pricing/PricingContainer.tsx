@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { usePricing } from "./PricingContext";
 import PricingHeader from "./PricingHeader";
 import { PLAN_DESCRIPTIONS, VALUE_PROPOSITIONS, PLAN_CTAS, FEATURES } from "./pricingData";
-import { ChevronDown, Check, X, ChevronRight } from "lucide-react";
+import { ChevronDown, Check, X, ChevronRight, Sparkles } from "lucide-react";
 import { PricingFeature } from "./types";
 import { Button } from "../ui/button";
 import { mobileOptimizationClasses } from "@/utils/mobile-optimization";
@@ -196,7 +196,7 @@ export const PricingContainer = () => {
               <motion.div
                 key={tier.title}
                 className={cn(
-                  "rounded-xl overflow-hidden transition-all mt-4 relative group mx-auto max-w-[280px] w-full",
+                  "rounded-xl overflow-hidden transition-all mt-6 relative group mx-auto max-w-[280px] w-full",
                   tier.popularPlan ? (isMobile ? "shadow-lg" : "border-brand-purple shadow-lg") : (isMobile ? "" : "border-slate-200"),
                   tier.popularPlan && "relative",
                   colorScheme.cardBg,
@@ -209,14 +209,17 @@ export const PricingContainer = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
+                {tier.popularPlan && (
+                  <div className="absolute -top-3 inset-x-0 flex justify-center z-10">
+                    <div className="py-1 px-3 flex items-center gap-1 rounded-full bg-gradient-to-r from-brand-purple-medium to-brand-purple text-white text-xs font-medium shadow-md">
+                      <Sparkles className="h-3 w-3" />
+                      <span className="font-medium">POPULAR</span>
+                    </div>
+                  </div>
+                )}
                 <div className={cn(
                   "p-4 flex justify-between items-start gap-2"
                 )}>
-                  {tier.popularPlan && (
-                    <div className="absolute -top-2.5 right-2 bg-brand-purple text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm z-10">
-                      POPULAR
-                    </div>
-                  )}
                   <div className="flex-1 min-w-0">
                     <h3 className={cn(
                       "text-lg font-bold font-jakarta truncate",
@@ -520,12 +523,15 @@ export const PricingContainer = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
-                <div className="p-4 sm:p-6">
-                  {tier.popularPlan && (
-                    <div className="absolute -top-3 right-8 bg-brand-purple text-white text-xs font-bold px-3 py-1 rounded-full shadow-md z-10">
-                      MOST POPULAR
+                {tier.popularPlan && (
+                  <div className="absolute -top-5 inset-x-0 flex justify-center z-10">
+                    <div className="py-1.5 px-4 flex items-center gap-1 rounded-full bg-gradient-to-r from-brand-purple-medium to-brand-purple text-white text-sm font-medium shadow-md">
+                      <Sparkles className="h-3.5 w-3.5" />
+                      <span className="font-medium">MOST POPULAR</span>
                     </div>
-                  )}
+                  </div>
+                )}
+                <div className="p-4 sm:p-6">
                   <div className="mb-4">
                     <h3 className={cn(
                       "text-xl font-bold font-jakarta",
