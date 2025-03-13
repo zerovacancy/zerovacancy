@@ -15,12 +15,48 @@ export const prefersReducedMotion = () => {
 // Optimized mobile viewport settings that maintain accessibility
 export const optimizeMobileViewport = () => {
   if (typeof window === "undefined") return;
+  
   // Find existing viewport meta tag
   const viewport = document.querySelector('meta[name="viewport"]');
   if (viewport) {
-    // Update viewport settings with accessible values
-    viewport.setAttribute('content', 'width=device-width, initial-scale=1.0');
+    // Handle both portrait and landscape orientations with proper scaling
+    const viewportContent = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, height=device-height';
+    viewport.setAttribute('content', viewportContent);
+    
+    // Add orientation change listener to fix scaling issues
+    window.addEventListener('orientationchange', () => {
+      // This forces a reflow after orientation changes to fix scaling issues
+      setTimeout(() => {
+        // Force a repaint by toggling a value
+        document.body.style.opacity = '0.99';
+        setTimeout(() => {
+          document.body.style.opacity = '1';
+        }, 20);
+      }, 100);
+    }, { passive: true });
+    
+    // Apply specific fixes for iOS
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    if (isIOS) {
+      // iOS specific fixes
+      document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+      
+      // Update on resize and orientation change
+      window.addEventListener('resize', () => {
+        document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+      }, { passive: true });
+    }
   }
+  
+  // Prevent double-tap zoom on mobile
+  document.addEventListener('touchend', (e) => {
+    const now = Date.now();
+    const DOUBLE_TAP_THRESHOLD = 300;
+    if (now - (window.lastTap || 0) < DOUBLE_TAP_THRESHOLD) {
+      e.preventDefault();
+    }
+    window.lastTap = now;
+  }, { passive: false });
 };
 
 // Helper classes to conditionally apply to components
@@ -57,4 +93,49 @@ export const mobileOptimizationClasses = {
   
   // Clean border with subtle color
   cleanBorderMobile: "border border-gray-100 sm:border-gray-200",
+  
+  // New: Landscape orientation specific classes
+  landscapeOrientationFix: "landscape:max-h-screen landscape:overflow-auto",
+  landscapeContentFix: "landscape:py-2 landscape:px-2",
+  landscapeHeightFix: "landscape:h-auto",
+  landscapeFlexFix: "landscape:flex-row",
+};
+
+// Check if device is in landscape mode
+export const isLandscapeMode = () => {
+  if (typeof window === "undefined") return false;
+  return window.matchMedia("(orientation: landscape)").matches;
+};
+
+// Apply landscape-specific fixes
+export const applyLandscapeOrientationFixes = () => {
+  if (typeof window === "undefined") return;
+  
+  const handleOrientationChange = () => {
+    const isLandscape = window.matchMedia("(orientation: landscape)").matches;
+    
+    if (isLandscape) {
+      document.documentElement.classList.add('landscape-mode');
+      document.body.classList.add('landscape-mode');
+      document.body.style.height = 'auto';
+      document.body.style.overflowY = 'auto';
+    } else {
+      document.documentElement.classList.remove('landscape-mode');
+      document.body.classList.remove('landscape-mode');
+      document.body.style.height = '';
+      document.body.style.overflowY = '';
+    }
+  };
+  
+  // Check immediately
+  handleOrientationChange();
+  
+  // Handle orientation changes
+  window.addEventListener('orientationchange', handleOrientationChange, { passive: true });
+  window.addEventListener('resize', handleOrientationChange, { passive: true });
+  
+  return () => {
+    window.removeEventListener('orientationchange', handleOrientationChange);
+    window.removeEventListener('resize', handleOrientationChange);
+  };
 };

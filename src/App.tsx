@@ -5,7 +5,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import ErrorFallback from './components/ErrorFallback';
 import { Toaster } from '@/components/ui/toaster';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { mobileOptimizationClasses, optimizeMobileViewport } from '@/utils/mobile-optimization';
+import { mobileOptimizationClasses, optimizeMobileViewport, applyLandscapeOrientationFixes } from '@/utils/mobile-optimization';
 import { BottomNav } from '@/components/navigation/BottomNav';
 import { Analytics } from '@vercel/analytics/react';
 
@@ -71,9 +71,11 @@ function App() {
   const passiveEventHandler = useCallback(() => {}, []);
   
   useEffect(() => {
-    if (isMobile) {
-      optimizeMobileViewport();
-    }
+    // Always apply mobile viewport optimizations, regardless of device type
+    optimizeMobileViewport();
+    
+    // Apply landscape orientation fixes
+    const cleanupLandscapeFixes = applyLandscapeOrientationFixes();
     
     const timer = setTimeout(() => {
       import('./pages/index');
@@ -93,6 +95,17 @@ function App() {
       document.body.classList.remove('optimize-animations-mobile');
     }
     
+    // Fix for viewport height issues on iOS
+    const setVh = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    };
+    
+    // Initial calculation and setup event listener
+    setVh();
+    window.addEventListener('resize', setVh, { passive: true });
+    window.addEventListener('orientationchange', setVh, { passive: true });
+    
     return () => {
       clearTimeout(timer);
       // Remove event listeners using the same function references
@@ -101,6 +114,13 @@ function App() {
       document.removeEventListener('wheel', passiveEventHandler);
       document.body.classList.remove('color-white-bg-mobile');
       document.body.classList.remove('optimize-animations-mobile');
+      
+      // Clean up the landscape orientation fixes
+      if (cleanupLandscapeFixes) cleanupLandscapeFixes();
+      
+      // Clean up viewport height fix
+      window.removeEventListener('resize', setVh);
+      window.removeEventListener('orientationchange', setVh);
     };
   }, [isMobile, passiveEventHandler]);
 
@@ -108,7 +128,7 @@ function App() {
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <Router>
         <ScrollToTop />
-        <div className={`relative ${isMobile ? coloredBgMobile : ''}`}>
+        <div className={`relative ${isMobile ? coloredBgMobile : ''} landscape-container`}>
           <Suspense fallback={<PageLoader />}>
             <Routes>
               <Route path="/" element={<Index />} />
