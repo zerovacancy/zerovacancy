@@ -21,12 +21,29 @@ export const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
     const [isFocused, setIsFocused] = useState(false);
     const [isValid, setIsValid] = useState(false);
     const isMobile = useIsMobile();
+    const internalRef = useRef<HTMLInputElement>(null);
 
     // Validate email as user types
     useEffect(() => {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       setIsValid(email.length > 0 && emailRegex.test(email));
     }, [email]);
+    
+    // Make sure we can capture clicks/taps on mobile
+    useEffect(() => {
+      // Add a small delay to ensure DOM is ready
+      const timer = setTimeout(() => {
+        if (isMobile && internalRef.current) {
+          // Enable direct focusing on the input element
+          const inputElement = internalRef.current;
+          inputElement.setAttribute("inputmode", "email");
+          inputElement.setAttribute("autocorrect", "off");
+          inputElement.setAttribute("spellcheck", "false");
+        }
+      }, 100);
+      
+      return () => clearTimeout(timer);
+    }, [isMobile]);
 
     return (
       <div className={cn(
@@ -54,7 +71,15 @@ export const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
         )}
         
         <Input 
-          ref={inputRef || ref} 
+          ref={(node) => {
+            // Set both refs
+            if (inputRef && node) inputRef.current = node;
+            if (ref) {
+              if (typeof ref === 'function') ref(node);
+              else ref.current = node;
+            }
+            internalRef.current = node;
+          }}
           type="email" 
           placeholder="Enter your email" 
           inputMode="email"
@@ -89,10 +114,17 @@ export const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
           onChange={e => setEmail(e.target.value)} 
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
+          onClick={(e) => {
+            // Ensure focus is properly set on click/tap
+            e.currentTarget.focus();
+            setIsFocused(true);
+          }}
           aria-label="Email address" 
           required 
           disabled={isLoading || disabled}
           autoCapitalize="off"
+          autoCorrect="off"
+          spellCheck="false"
           enterKeyHint="go"
         />
       </div>

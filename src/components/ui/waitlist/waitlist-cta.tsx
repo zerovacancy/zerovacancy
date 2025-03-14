@@ -71,8 +71,7 @@ export function WaitlistCTA({
         console.log("Showing success confirmation with email:", email);
         setShowSuccess(true);
         
-        // Log for debugging
-        toast.success("Thanks for joining our waitlist!");
+        // Don't show toast - we'll use the dialog instead
       }
       
       // Clear the email field on success

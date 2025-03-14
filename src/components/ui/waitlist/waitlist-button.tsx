@@ -77,8 +77,7 @@ export function WaitlistButton({
         console.log("Showing success confirmation with email:", email);
         setShowSuccess(true);
         
-        // Also show toast for fallback feedback
-        toast.success("You've been added to the waitlist!");
+        // Don't show toast - we'll use the dialog instead
         
         // Close the input form
         setOpen(false);
@@ -96,7 +95,15 @@ export function WaitlistButton({
   return (
     <div className={cn("flex flex-col gap-2", className)}>
       {!open ? (
-        <div className="w-full" onClick={() => setOpen(true)}>
+        <div className="w-full" onClick={() => {
+          setOpen(true);
+          // Add a small delay before focusing the input
+          setTimeout(() => {
+            if (inputRef.current) {
+              inputRef.current.focus();
+            }
+          }, 100);
+        }}>
           {children || (
             <Button 
               className={cn(

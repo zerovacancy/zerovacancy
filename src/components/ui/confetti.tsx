@@ -103,7 +103,25 @@ const Confetti = forwardRef<ConfettiRef, Props>((props, ref) => {
 
   useEffect(() => {
     if (!manualstart) {
-      fire()
+      console.log("Auto-firing confetti")
+      
+      // Fire multiple bursts for better effect
+      const fireConfetti = () => {
+        fire({
+          spread: 90,
+          startVelocity: 30,
+          particleCount: 100,
+          gravity: 0.8,
+          origin: { y: 0.1 }
+        })
+      }
+      
+      // Fire immediately
+      fireConfetti()
+      
+      // Fire additional bursts with delays
+      setTimeout(() => fireConfetti(), 250)
+      setTimeout(() => fireConfetti(), 500)
     }
   }, [manualstart, fire])
 
@@ -111,13 +129,14 @@ const Confetti = forwardRef<ConfettiRef, Props>((props, ref) => {
     <ConfettiContext.Provider value={api}>
       <canvas 
         ref={canvasRef} 
-        className="fixed inset-0 z-50 pointer-events-none"
+        className="fixed inset-0 pointer-events-none"
         style={{
           width: "100vw",
           height: "100vh",
           position: "fixed",
           top: 0,
           left: 0,
+          zIndex: 9999, // Ensure it's on top of everything
         }}
         {...rest} 
       />
