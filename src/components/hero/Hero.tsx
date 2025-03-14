@@ -164,7 +164,6 @@ export function Hero() {
           className={cn(isMobile ? "mb-0" : "mb-4 sm:mb-6")} 
           buttonText="RESERVE EARLY ACCESS" 
           showSocialProof={true}
-          showEmailInputDirectly={true} 
         />
       </div>
     </section>
