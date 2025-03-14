@@ -6,6 +6,35 @@ import confetti from "canvas-confetti"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { cn } from "@/lib/utils"
 
+// Define a global celebration function for consistent confetti across the app
+if (typeof window !== 'undefined' && !window.hasOwnProperty('celebrateSuccess')) {
+  window.celebrateSuccess = (isMobile = false) => {
+    console.log("Global celebrateSuccess called");
+    const options = {
+      particleCount: isMobile ? 80 : 150,
+      spread: isMobile ? 60 : 100,
+      origin: { y: 0.25 },
+      startVelocity: 30,
+      gravity: 0.8,
+      decay: 0.94,
+      ticks: 200,
+      colors: ['#8B5CF6', '#6366F1', '#3B82F6', '#10B981'],
+      zIndex: 9999,
+      disableForReducedMotion: false
+    };
+    
+    try {
+      // Fire multiple bursts
+      const fireConfetti = () => confetti(options);
+      fireConfetti();
+      setTimeout(fireConfetti, 300);
+      setTimeout(fireConfetti, 600);
+    } catch (error) {
+      console.error("Error firing global confetti:", error);
+    }
+  };
+}
+
 interface SuccessConfirmationProps {
   open: boolean
   onOpenChange: (open: boolean) => void
@@ -26,60 +55,54 @@ export function SuccessConfirmation({
     if (open) {
       console.log("Success confirmation opened")
       
-      // Fire confetti immediately with direct call (more reliable)
-      const fireConfetti = () => {
-        console.log("Firing confetti...")
-        
-        // Different options for mobile and desktop for better appearance
-        const options = {
-          particleCount: isMobile ? 80 : 150,
-          spread: isMobile ? 60 : 100,
-          origin: { y: 0.25 },
-          startVelocity: 30,
-          gravity: 0.8,
-          decay: 0.94,
-          ticks: 200,
-          disableForReducedMotion: false, // Ensure it works even with reduced motion
-          colors: ['#8B5CF6', '#6366F1', '#3B82F6', '#10B981']
-        }
-        
-        try {
-          // Remove any canvas that might be blocking the confetti
-          const oldCanvases = document.querySelectorAll('canvas[style*="position: fixed"]');
-          oldCanvases.forEach(canvas => {
-            if (canvas.parentNode) {
-              canvas.parentNode.removeChild(canvas);
-            }
-          });
-          
-          // Fire the confetti directly
-          window.confetti(options);
-        } catch (error) {
-          console.error("Error firing direct confetti:", error);
-          
-          // Fallback method
+      // Use the global celebrateSuccess function for consistent confetti effect
+      if (typeof window !== 'undefined' && window.celebrateSuccess) {
+        // Small delay to ensure dialog is visible
+        setTimeout(() => {
+          console.log("Calling global celebrateSuccess");
+          window.celebrateSuccess(isMobile);
+        }, 100);
+      } else {
+        // Fallback direct confetti implementation
+        console.log("Using fallback confetti implementation");
+        const fireConfetti = () => {
           try {
-            confetti(options);
-          } catch (fallbackError) {
-            console.error("Fallback confetti also failed:", fallbackError);
+            confetti({
+              particleCount: isMobile ? 80 : 150,
+              spread: isMobile ? 60 : 100,
+              origin: { y: 0.25 },
+              startVelocity: 30,
+              gravity: 0.8,
+              decay: 0.94,
+              ticks: 200,
+              colors: ['#8B5CF6', '#6366F1', '#3B82F6', '#10B981'],
+              zIndex: 9999,
+              disableForReducedMotion: false
+            });
+          } catch (error) {
+            console.error("Error firing fallback confetti:", error);
           }
-        }
+        };
+        
+        // Fire multiple bursts with slight delays
+        setTimeout(fireConfetti, 100);
+        const confetti1 = setTimeout(fireConfetti, 400);
+        const confetti2 = setTimeout(fireConfetti, 700);
+        
+        // Clear timeouts on cleanup
+        return () => {
+          clearTimeout(confetti1);
+          clearTimeout(confetti2);
+        };
       }
-      
-      // Fire multiple rounds of confetti with slight delays
-      setTimeout(fireConfetti, 50);
-      const confetti1 = setTimeout(fireConfetti, 300);
-      const confetti2 = setTimeout(fireConfetti, 600);
       
       // Auto-close after 4 seconds to ensure users see the confirmation
       const closeTimer = setTimeout(() => {
-        onOpenChange(false)
-      }, 4000)
+        onOpenChange(false);
+      }, 4000);
       
       return () => {
-        clearTimeout(closeTimer)
-        clearTimeout(confetti1)
-        clearTimeout(confetti2)
+        clearTimeout(closeTimer);
       }
     }
   }, [open, onOpenChange, isMobile])
