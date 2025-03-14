@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -8,6 +9,7 @@ import { EmailInput } from "./email-input";
 import { SocialProof } from "./social-proof";
 import { SuccessConfirmation } from "./success-confirmation";
 import { supabase } from "@/integrations/supabase/client";
+import { optimizeMobileViewport } from "@/utils/mobile-optimization";
 
 export function WaitlistButton({
   source = "unknown",
@@ -31,50 +33,65 @@ export function WaitlistButton({
   const inputRef = useRef<HTMLInputElement>(null);
   const isMobile = useIsMobile();
   const formRef = useRef<HTMLFormElement>(null);
+  
+  // Apply mobile optimizations for better input handling
+  useEffect(() => {
+    if (isMobile) {
+      optimizeMobileViewport();
+    }
+  }, [isMobile]);
 
   // Focus the input field when component mounts if showEmailInputDirectly is true
   // or when the email input is revealed after clicking the button
   useEffect(() => {
     if (open && inputRef.current) {
-      const focusInput = () => {
-        if (inputRef.current) {
-          console.log("Attempting to focus email input");
-          // Focus with a slight delay to ensure DOM is ready
-          setTimeout(() => {
-            if (inputRef.current) {
-              inputRef.current.focus();
-              
-              // For iOS, simulate a tap event to trigger keyboard
-              if (isMobile) {
-                try {
-                  // Create and dispatch a touch event to help trigger keyboard on iOS
-                  const touchEvent = new TouchEvent('touchstart', {
-                    bubbles: true,
-                    cancelable: true,
-                    view: window
-                  });
-                  inputRef.current.dispatchEvent(touchEvent);
-                  
-                  // Also click the element
-                  inputRef.current.click();
-                } catch (e) {
-                  console.log("Touch event simulation failed, falling back", e);
-                  // Fallback to click if TouchEvent is not supported
-                  inputRef.current.click();
-                }
+      // Create a function to ensure keyboard shows up
+      const focusAndShowKeyboard = () => {
+        if (!inputRef.current) return;
+        
+        try {
+          // Ensure input is ready for text entry
+          inputRef.current.readOnly = false;
+          
+          // Focus the input to make keyboard appear
+          inputRef.current.focus();
+          
+          // Force blur and refocus to reset any stuck states
+          inputRef.current.blur();
+          inputRef.current.focus();
+          
+          // Simulate clicks and touches to force keyboard on iOS
+          inputRef.current.click();
+          
+          if (isMobile) {
+            // Special handling for iOS Safari
+            if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+              // Create a touch event to help iOS show keyboard
+              try {
+                const touchEvent = new TouchEvent('touchstart', {
+                  bubbles: true,
+                  cancelable: true
+                });
+                inputRef.current.dispatchEvent(touchEvent);
+              } catch (e) {
+                console.log("Touch event simulation failed", e);
+                // Fallback to click
+                inputRef.current.click();
               }
             }
-          }, isMobile ? 300 : 100);
+          }
+        } catch (err) {
+          console.error("Error focusing input:", err);
         }
       };
       
-      focusInput();
+      // Call immediately and with delays to ensure it works
+      focusAndShowKeyboard();
       
-      // Try multiple times with increasing delays on mobile
-      if (isMobile) {
-        setTimeout(focusInput, 500);
-        setTimeout(focusInput, 1000);
-      }
+      // Try with increasing delays to catch any rendering or timing issues
+      setTimeout(focusAndShowKeyboard, 100);
+      setTimeout(focusAndShowKeyboard, 300);
+      setTimeout(focusAndShowKeyboard, 500);
     }
   }, [open, isMobile]);
 
@@ -149,12 +166,19 @@ export function WaitlistButton({
         <div className="w-full">
           {children ? React.cloneElement(children as React.ReactElement, {
             onClick: (e: React.MouseEvent) => {
-              console.log("Button clicked - setting open state");
               e.preventDefault();
               e.stopPropagation();
               
               // Set open state
               setOpen(true);
+              
+              // Ensure focus after state update
+              setTimeout(() => {
+                if (inputRef.current) {
+                  inputRef.current.focus();
+                  inputRef.current.click();
+                }
+              }, 50);
             }
           }) : (
             <Button 
@@ -169,6 +193,14 @@ export function WaitlistButton({
                 
                 // Set open state
                 setOpen(true);
+                
+                // Ensure focus after state update
+                setTimeout(() => {
+                  if (inputRef.current) {
+                    inputRef.current.focus();
+                    inputRef.current.click();
+                  }
+                }, 50);
               }}
             >
               {buttonText}
@@ -176,7 +208,19 @@ export function WaitlistButton({
           )}
         </div>
       ) : (
-        <form ref={formRef} onSubmit={handleSubmit} className="w-full">
+        <form 
+          ref={formRef} 
+          onSubmit={handleSubmit} 
+          className="w-full"
+          onClick={(e) => {
+            // Ensure clicking anywhere in the form focuses the input
+            if (inputRef.current && isMobile) {
+              e.stopPropagation();
+              inputRef.current.focus();
+              inputRef.current.click();
+            }
+          }}
+        >
           <div className="flex flex-col sm:flex-row gap-2 w-full">
             <EmailInput
               setEmail={setEmail}

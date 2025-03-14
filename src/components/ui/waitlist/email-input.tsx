@@ -42,29 +42,73 @@ export const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
         inputElement.setAttribute("autocomplete", "email");
         inputElement.setAttribute("autocapitalize", "off");
         
-        // Force focus on the input (with delay to ensure rendering is complete)
+        // Special handling to ensure keyboard appears on iOS
         setTimeout(() => {
           if (internalRef.current) {
-            try {
-              internalRef.current.focus();
-              
-              // iOS requires interaction to show keyboard
-              const simulateTouch = () => {
-                if (internalRef.current) {
-                  internalRef.current.click();
-                  internalRef.current.focus();
-                }
-              };
-              
-              // Try multiple times with increasing delays
-              simulateTouch();
-              setTimeout(simulateTouch, 200);
-              setTimeout(simulateTouch, 500);
-            } catch (err) {
-              console.error("Error focusing input:", err);
+            internalRef.current.focus();
+            
+            // Force input to be active and selectable
+            internalRef.current.readOnly = false;
+            
+            // Special handling for iOS
+            if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+              // Create and dispatch events that help trigger the keyboard
+              try {
+                // Simulate touch and click events
+                internalRef.current.click();
+                internalRef.current.dispatchEvent(new MouseEvent('mousedown'));
+                internalRef.current.dispatchEvent(new MouseEvent('mouseup'));
+                internalRef.current.dispatchEvent(new MouseEvent('click'));
+                
+                // Try to focus again after a delay
+                setTimeout(() => {
+                  if (internalRef.current) {
+                    internalRef.current.focus();
+                    internalRef.current.click();
+                  }
+                }, 300);
+                
+                // One more attempt with longer delay
+                setTimeout(() => {
+                  if (internalRef.current) {
+                    internalRef.current.focus();
+                    internalRef.current.click();
+                    
+                    // Dispatch blur and focus to reset any stuck states
+                    internalRef.current.dispatchEvent(new FocusEvent('blur'));
+                    internalRef.current.dispatchEvent(new FocusEvent('focus'));
+                  }
+                }, 600);
+              } catch (err) {
+                console.error("Error forcing focus on iOS:", err);
+              }
             }
           }
         }, 100);
+      }
+    }, [isMobile]);
+
+    // Special useEffect to force keyboard on initial render
+    useEffect(() => {
+      // Handle the initial keyboard display
+      if (isMobile) {
+        // Force element to be ready for input immediately
+        const showKeyboard = () => {
+          if (internalRef.current) {
+            // Make sure the input is fully interactive
+            internalRef.current.readOnly = false;
+            internalRef.current.focus();
+            // Set selection range to help trigger keyboard
+            if (internalRef.current.value) {
+              internalRef.current.setSelectionRange(0, internalRef.current.value.length);
+            }
+          }
+        };
+        
+        // Try multiple times with increasing delays
+        showKeyboard();
+        setTimeout(showKeyboard, 250);
+        setTimeout(showKeyboard, 500);
       }
     }, [isMobile]);
 
@@ -118,6 +162,9 @@ export const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
           placeholder="Enter your email" 
           inputMode="email"
           autoComplete="email"
+          autoCapitalize="off"
+          autoCorrect="off"
+          spellCheck="false"
           className={cn(
             "border transition-all duration-300",
             "focus:scale-100", // Prevent default scale to use our custom one
@@ -148,18 +195,25 @@ export const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
           onChange={e => setEmail(e.target.value)} 
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
+          // Handle all forms of interaction to ensure keyboard appears
           onClick={(e) => {
-            // When clicked, ensure focus and show keyboard
-            e.currentTarget.focus();
+            e.stopPropagation();
+            const input = e.currentTarget;
+            input.focus();
+            input.readOnly = false;
+            setIsFocused(true);
+          }}
+          onTouchStart={(e) => {
+            e.stopPropagation();
+            const input = e.currentTarget;
+            input.focus();
+            input.readOnly = false;
             setIsFocused(true);
           }}
           readOnly={false}
           aria-label="Email address" 
           required 
           disabled={isLoading || disabled}
-          autoCapitalize="off"
-          autoCorrect="off"
-          spellCheck="false"
           enterKeyHint="go"
         />
       </div>
