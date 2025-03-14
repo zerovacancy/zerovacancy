@@ -46,9 +46,10 @@ export function ShimmerButton({
           "bg-gradient-to-br from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700",
           "text-white font-medium rounded-lg text-center relative overflow-hidden",
           "shadow-md active:shadow-inner transition-all duration-200",
-          "active:scale-[0.98]",
+          "active:scale-[0.98] cursor-pointer",
           className
         )}
+        type="button"
         {...props}
       >
         <div className="relative z-20 flex items-center justify-center">
@@ -66,14 +67,15 @@ export function ShimmerButton({
         "bg-gradient-to-br from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700",
         "overflow-hidden",
         "shadow-md hover:shadow-lg transition-shadow duration-200",
-        "relative",
+        "relative cursor-pointer",
         className
       )}
+      type="button"
       {...props}
     >
       <div
         className={cn(
-          "absolute inset-0 flex items-center justify-center w-full h-full transition-all",
+          "absolute inset-0 flex items-center justify-center w-full h-full transition-all pointer-events-none",
           shimmerClassName
         )}
       >
@@ -84,19 +86,19 @@ export function ShimmerButton({
             } 0%, transparent 60%, transparent 80%, transparent 100%)`,
           }}
           className={cn(
-            "w-[300%] aspect-square absolute z-[2] animate-[spin_4s_linear_infinite] opacity-0 group-hover:opacity-100",
+            "w-[300%] aspect-square absolute z-[2] animate-[spin_4s_linear_infinite] opacity-0 group-hover:opacity-100 pointer-events-none",
             "group-hover:animate-[spin_4s_linear_infinite]"
           )}
         />
       </div>
-      <span className="z-10 flex items-center justify-center opacity-100">
+      <span className="z-50 flex items-center justify-center opacity-100 relative pointer-events-auto">
         {children}
       </span>
       <div
         style={{
           background: background ?? "transparent",
         }}
-        className="absolute inset-[1px] rounded-md z-[1]"
+        className="absolute inset-[1px] rounded-md z-[1] pointer-events-none"
       />
     </button>
   );
