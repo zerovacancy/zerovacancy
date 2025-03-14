@@ -161,25 +161,71 @@ export function Hero() {
           isInView ? "animate-fade-in delay-200" : "opacity-0" 
         )}
       >
-        {/* Main waitlist CTA */}
-        <WaitlistCTA 
-          className={cn(isMobile ? "mb-2" : "mb-2 sm:mb-3")} // Reduced spacing for desktop
-          buttonText="RESERVE EARLY ACCESS" 
-          showSocialProof={false}
-        />
+        {/* Desktop CTA layout with audience labels and side-by-side buttons */}
+        {!isMobile && (
+          <div className="w-full max-w-4xl mx-auto relative" id="hero-cta-section">
+            {/* Buttons container */}
+            <div className="flex flex-row justify-center gap-[10%] mb-6 relative items-start">
+              {/* Property Owner CTA */}
+              <div className="flex flex-col w-[45%] max-w-[280px]">
+                <div className="flex items-center justify-center mb-3">
+                  <div className="h-[0.5px] w-5 bg-purple-300/80 mr-2"></div>
+                  <span className="text-sm font-bold text-purple-700 tracking-wide">For Property Owners</span>
+                  <div className="h-[0.5px] w-5 bg-purple-300/80 ml-2"></div>
+                </div>
+                <WaitlistCTA 
+                  buttonText="RESERVE EARLY ACCESS" 
+                  showSocialProof={false}
+                />
+              </div>
+              
+              {/* Creator CTA */}
+              <div className="flex flex-col w-[45%] max-w-[280px] relative">
+                <div className="flex items-center justify-center mb-3">
+                  <div className="h-[0.5px] w-5 bg-purple-300/80 mr-2"></div>
+                  <span className="text-sm font-bold text-purple-700 tracking-wide">For Content Creators</span>
+                  <div className="h-[0.5px] w-5 bg-purple-300/80 ml-2"></div>
+                </div>
+                <div className="relative">
+                  <WaitlistCreatorCTA 
+                    buttonText="JOIN AS CREATOR" 
+                    showSocialProof={false}
+                  />
+                </div>
+              </div>
+            </div>
+            
+            {/* Social proof centered below both buttons */}
+            <div className="w-full flex justify-center">
+              <SocialProof className="mt-2.5" />
+            </div>
+          </div>
+        )}
         
-        {/* Creator waitlist CTA */}
-        <div className="w-full max-w-md mx-auto">
-          <WaitlistCreatorCTA 
-            buttonText="JOIN AS CREATOR" 
-            showSocialProof={false}
-          />
-        </div>
-        
-        {/* Social proof centered below both buttons */}
-        <div className="w-full flex justify-center">
-          <SocialProof className="mt-4" />
-        </div>
+        {/* Mobile CTA layout (stacked) */}
+        {isMobile && (
+          <>
+            {/* Main waitlist CTA */}
+            <WaitlistCTA 
+              className="mb-2" 
+              buttonText="RESERVE EARLY ACCESS" 
+              showSocialProof={false}
+            />
+            
+            {/* Creator waitlist CTA */}
+            <div className="w-full max-w-md mx-auto">
+              <WaitlistCreatorCTA 
+                buttonText="JOIN AS CREATOR" 
+                showSocialProof={false}
+              />
+            </div>
+            
+            {/* Social proof centered below both buttons */}
+            <div className="w-full flex justify-center">
+              <SocialProof className="mt-4" />
+            </div>
+          </>
+        )}
       </div>
     </section>
   );
