@@ -7,6 +7,7 @@ import { useState, useRef } from "react";
 import { toast } from "sonner";
 import { EmailInput } from "./email-input";
 import { SocialProof } from "./social-proof";
+import { SuccessConfirmation } from "./success-confirmation";
 import { supabase } from "@/integrations/supabase/client";
 
 export function WaitlistButton({
@@ -23,6 +24,8 @@ export function WaitlistButton({
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [submittedEmail, setSubmittedEmail] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const isMobile = useIsMobile();
 
@@ -65,12 +68,19 @@ export function WaitlistButton({
       // Handle already subscribed message
       if (data?.status === 'already_subscribed') {
         toast.info(data.message || "You're already on our waitlist!");
+        setOpen(false);
       } else {
-        toast.success("You've been added to the waitlist!");
+        // Store the email for the success confirmation
+        setSubmittedEmail(email);
+        
+        // Show success confirmation with confetti
+        setShowSuccess(true);
+        
+        // Close the input form
+        setOpen(false);
       }
       
       setEmail("");
-      setOpen(false);
     } catch (error) {
       console.error("Error submitting email:", error);
       toast.error("Failed to join the waitlist. Please try again later.");
@@ -130,6 +140,13 @@ export function WaitlistButton({
           {/* Social proof is now moved to the main component */}
         </form>
       )}
+      
+      {/* Success Confirmation with Confetti Effect */}
+      <SuccessConfirmation 
+        open={showSuccess} 
+        onOpenChange={setShowSuccess}
+        email={submittedEmail}
+      />
     </div>
   );
 };

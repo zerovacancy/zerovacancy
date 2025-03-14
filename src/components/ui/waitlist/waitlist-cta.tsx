@@ -8,6 +8,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { EmailInput } from "./email-input";
 import { WaitlistButton } from "./waitlist-button";
 import { SocialProof } from "./social-proof";
+import { SuccessConfirmation } from "./success-confirmation";
 import { supabase } from "@/integrations/supabase/client";
 
 export function WaitlistCTA({
@@ -19,6 +20,8 @@ export function WaitlistCTA({
 }) {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [submittedEmail, setSubmittedEmail] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const isMobile = useIsMobile();
   
@@ -61,7 +64,11 @@ export function WaitlistCTA({
       if (data?.status === 'already_subscribed') {
         toast.info(data.message || "You're already on our waitlist!");
       } else {
-        toast.success("Thanks for joining our waitlist!");
+        // Store the email for the success confirmation
+        setSubmittedEmail(email);
+        
+        // Show success confirmation with confetti
+        setShowSuccess(true);
       }
       
       // Clear the email field on success
@@ -93,6 +100,13 @@ export function WaitlistCTA({
       
       {/* Social Proof Section - Always visible */}
       <SocialProof />
+
+      {/* Success Confirmation with Confetti Effect */}
+      <SuccessConfirmation 
+        open={showSuccess} 
+        onOpenChange={setShowSuccess}
+        email={submittedEmail}
+      />
     </div>
   );
 }
