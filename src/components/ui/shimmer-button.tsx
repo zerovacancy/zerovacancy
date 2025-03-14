@@ -66,7 +66,7 @@ export function ShimmerButton({
         "bg-gradient-to-br from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700",
         "overflow-hidden",
         "shadow-md hover:shadow-lg transition-shadow duration-200",
-        "relative touch-none",
+        "relative",
         className
       )}
       {...props}

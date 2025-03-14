@@ -56,8 +56,18 @@ export const optimizeMobileViewport = () => {
     }
   }
   
-  // Prevent double-tap zoom on mobile
+  // Prevent double-tap zoom on mobile, but exclude buttons and links
   document.addEventListener('touchend', (e) => {
+    // Don't prevent default on interactive elements
+    const target = e.target as HTMLElement;
+    const isInteractiveElement = 
+      target.tagName === 'BUTTON' || 
+      target.tagName === 'A' ||
+      target.closest('button') || 
+      target.closest('a');
+    
+    if (isInteractiveElement) return;
+    
     const now = Date.now();
     const DOUBLE_TAP_THRESHOLD = 300;
     if (now - (window.lastTap || 0) < DOUBLE_TAP_THRESHOLD) {

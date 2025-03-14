@@ -3,8 +3,11 @@ import React from 'react';
 import { Search } from 'lucide-react';
 import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
+import { useNavigate } from 'react-router-dom';
 
 export const MobileSearchButton: React.FC = () => {
+  const navigate = useNavigate();
+  
   return (
     <div className="sm:hidden mt-2 mb-4">
       <Button 
@@ -16,10 +19,9 @@ export const MobileSearchButton: React.FC = () => {
           "shadow-md shadow-indigo-200/40 hover:shadow-lg hover:shadow-indigo-300/30",
           "text-sm rounded-lg font-medium font-inter",
           // Better haptic feedback
-          "active:scale-[0.98] transition-all duration-200",
-          // Touch optimization
-          "touch-manipulation"
+          "active:scale-[0.98] transition-all duration-200"
         )}
+        onClick={() => navigate('/search')}
       >
         <div className="flex items-center justify-center w-full">
           <Search className="w-5 h-5 mr-2.5 flex-shrink-0" />

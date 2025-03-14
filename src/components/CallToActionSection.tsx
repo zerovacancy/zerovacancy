@@ -3,9 +3,11 @@ import React from 'react';
 import { ShimmerButton } from './ui/shimmer-button';
 import { ArrowRight, TrendingUp } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useNavigate } from 'react-router-dom';
 
 const CallToActionSection = () => {
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
   
   return (
     <div className="w-full mx-auto max-w-4xl text-center relative z-10 px-4 sm:px-6 lg:px-8 py-14 sm:py-16 lg:py-20 will-change-transform">
@@ -37,14 +39,16 @@ const CallToActionSection = () => {
       
       <div className="flex flex-col sm:flex-row gap-6 sm:gap-5 justify-center items-center mt-2">
         <ShimmerButton 
-          className="w-full sm:w-auto min-w-[200px] touch-manipulation h-[52px] text-base font-semibold transition-all duration-300 hover:scale-105"
+          className="w-full sm:w-auto min-w-[200px] h-[52px] text-base font-semibold transition-all duration-300 hover:scale-105"
+          onClick={() => navigate('/waitlist')}
         >
           <span>JOIN THE WAITLIST</span>
           <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 text-white/90" />
         </ShimmerButton>
         
         <ShimmerButton 
-          className="w-full sm:w-auto min-w-[180px] touch-manipulation h-[52px] text-base font-semibold bg-gray-50 text-gray-800 border border-gray-200 hover:bg-gray-100 transition-all duration-300"
+          className="w-full sm:w-auto min-w-[180px] h-[52px] text-base font-semibold bg-gray-50 text-gray-800 border border-gray-200 hover:bg-gray-100 transition-all duration-300"
+          onClick={() => navigate('/creators')}
         >
           <span>EXPLORE CREATOR PORTFOLIOS</span>
         </ShimmerButton>
