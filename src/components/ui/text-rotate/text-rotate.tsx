@@ -99,7 +99,10 @@ const TextRotate = forwardRef<TextRotateRef, TextRotateProps>(
             ).map((wordObj, wordIndex, array) => (
               <span
                 key={wordIndex}
-                className={cn("inline-flex overflow-visible", splitLevelClassName)}
+                className={cn(
+                  "inline-flex overflow-visible relative", 
+                  splitLevelClassName
+                )}
               >
                 {wordObj.characters.map((char, charIndex) => (
                   <motion.span

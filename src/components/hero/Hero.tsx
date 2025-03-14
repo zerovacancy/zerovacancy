@@ -4,6 +4,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { WaitlistCTA } from "../ui/waitlist-cta";
 import { TextRotate } from "../ui/text-rotate";
+import { GlowEffect } from "../ui/glow-effect";
 
 const TITLES = ["CONVERTS", "CAPTIVATES", "CLOSES"];
 
@@ -90,45 +91,68 @@ export function Hero() {
                 isMobile && "mobile-optimize"
               )}
             >
-              {/* Adding a background highlight for the text rotation */}
+              {/* Enhanced highlight background with glow effect */}
               <div 
                 className={cn(
                   "absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2",
-                  "bg-[#F5F0FF]/40 rounded-lg z-[-1]",
+                  "rounded-xl z-[-1]",
+                  "overflow-hidden",
                   isMobile 
-                    ? "w-[105%] h-[85%] px-3" 
-                    : "w-[110%] h-[80%] px-6 sm:px-8 lg:px-10"
+                    ? "w-[110%] h-[90%] px-3" 
+                    : "w-[115%] h-[85%] px-6 sm:px-8 lg:px-10"
                 )}
                 aria-hidden="true"
-              ></div>
+              >
+                <div className="absolute inset-0 bg-[#F5F0FF]/40"></div>
+                <GlowEffect 
+                  colors={['rgba(138, 43, 226, 0.15)', 'rgba(65, 105, 225, 0.15)']} 
+                  blur="soft" 
+                  mode="breathe" 
+                  scale={1.1}
+                  duration={3.5}
+                />
+              </div>
               
-              <TextRotate
-                texts={TITLES}
-                mainClassName="flex justify-center items-center overflow-visible"
-                staggerFrom="last"
-                initial={{ y: "100%", opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: "-100%", opacity: 0 }}
-                staggerDuration={0}
-                rotationInterval={3500}
-                splitLevelClassName="overflow-visible"
-                elementLevelClassName={cn(
-                  "text-4xl sm:text-5xl lg:text-7xl",
-                  "font-bold font-jakarta tracking-[-0.02em]",
-                  "bg-clip-text text-transparent", 
+              <div className="relative">
+                <TextRotate
+                  texts={TITLES}
+                  mainClassName="flex justify-center items-center overflow-visible"
+                  staggerFrom="last"
+                  initial={{ y: "15%", opacity: 0, scale: 0.95 }}
+                  animate={{ y: 0, opacity: 1, scale: 1 }}
+                  exit={{ y: "-15%", opacity: 0, scale: 0.95 }}
+                  staggerDuration={0.03}
+                  rotationInterval={3500}
+                  splitLevelClassName="overflow-visible"
+                  elementLevelClassName={cn(
+                    // Increased size compared to static text by using text-4xl+x rather than text-4xl
+                    "text-[2.65rem] sm:text-[3.25rem] lg:text-[4.25rem]",
+                    "font-bold font-jakarta tracking-[-0.02em]",
+                    "bg-clip-text text-transparent", 
+                    "bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1]",
+                    "relative overflow-visible"
+                  )}
+                  transition={{ 
+                    type: isMobile ? "tween" : "spring",
+                    damping: isMobile ? 25 : 16,
+                    stiffness: isMobile ? 100 : 150,
+                    mass: isMobile ? 0.6 : 0.8,
+                    duration: isMobile ? 0.4 : 0.4,
+                    ease: isMobile ? "circOut" : "easeOut"
+                  }}
+                  auto={true}
+                />
+                
+                {/* Animated underline effect */}
+                <div className={cn(
+                  "absolute bottom-[-4px] sm:bottom-[-6px] left-1/2 transform -translate-x-1/2",
+                  "h-[2px] sm:h-[3px]",
                   "bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1]",
-                  "overflow-visible"
-                )}
-                transition={{ 
-                  type: isMobile ? "tween" : "spring",
-                  damping: isMobile ? 25 : 30,
-                  stiffness: isMobile ? 100 : 200,
-                  mass: isMobile ? 0.6 : 1,
-                  duration: isMobile ? 0.4 : 0.4,
-                  ease: isMobile ? "circOut" : "easeOut"
-                }}
-                auto={true}
-              />
+                  "animate-pulse-subtle",
+                  "w-[90%] sm:w-[80%]",
+                  "rounded-full"
+                )} />
+              </div>
             </div>
           </h1>
         </div>
