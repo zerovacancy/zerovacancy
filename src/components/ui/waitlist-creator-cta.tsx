@@ -37,7 +37,7 @@ export const WaitlistCreatorCTA: React.FC<WaitlistCreatorCTAProps> = ({
             "shadow-md", 
             "h-12 sm:h-14 text-sm sm:text-base", 
             "transition-all duration-300",
-            "bg-white text-purple-600 border-2 border-purple-600 hover:bg-purple-50"
+            "bg-white text-white border-2 border-purple-600 hover:bg-purple-50"
           )}
         >
           {buttonText}
