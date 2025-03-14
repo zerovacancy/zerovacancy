@@ -3,7 +3,7 @@
 
 import { cn } from "@/lib/utils";
 import { GlowingEffect } from "@/components/ui/effects/glowing-effect";
-import { BorderBeam } from "@/components/ui/effects/border-beam";
+import { OptimizedBorderBeam } from "@/components/ui/effects/optimized-border-beam";
 import { AnimatedGrid } from "@/components/ui/effects/animated-grid";
 
 export interface SquaresProps {
@@ -25,10 +25,9 @@ export function Squares({
 }: SquaresProps) {
   return (
     <div className="relative w-full h-full rounded-lg overflow-hidden">
-      <BorderBeam 
+      <OptimizedBorderBeam 
         size={300}
         duration={8}
-        anchor={90}
         borderWidth={2}
         colorFrom="#ff40aa"
         colorTo="#40ffb3"
