@@ -101,24 +101,29 @@ export function GlowDialog({
         return;
       }
       
-      // First clear email field and close the glow dialog
+      // First, store email for success dialog
+      const emailToStore = email;
+      
+      // Clear input field
       setEmail("");
+      
+      // Close the glow dialog
       onOpenChange(false);
       
-      // Wait a small delay before showing the success dialog and confetti
-      setTimeout(() => {
-        // Set status and email for the success dialog
-        if (data?.status === 'already_subscribed') {
-          setAlreadySubscribed(true);
-        } else {
-          setAlreadySubscribed(false);
-        }
-        setSubmittedEmail(email);
-        
-        // Now show the success dialog - confetti will be handled there
-        console.log("Showing success dialog after glow dialog closed");
-        setShowSuccess(true);
-      }, 300);
+      // Use a requestAnimationFrame to ensure the dialog closing animation completes
+      // before showing the success dialog - this prevents UI jank
+      requestAnimationFrame(() => {
+        // Wait a small delay before showing the success dialog
+        setTimeout(() => {
+          // Set status and email for the success dialog
+          setSubmittedEmail(emailToStore);
+          setAlreadySubscribed(data?.status === 'already_subscribed');
+          
+          // Now show the success dialog - confetti will be handled there
+          console.log("Showing success dialog after glow dialog closed");
+          setShowSuccess(true);
+        }, 400); // Increased delay for better transition
+      });
     } catch (error) {
       console.error("Error submitting email:", error);
       toast.error("Failed to join the waitlist. Please try again later.");
