@@ -22,7 +22,7 @@ export const WaitlistCTA: React.FC<WaitlistCTAProps> = ({
 }) => {
   return (
     <div className={cn(
-      "w-full max-w-md mx-auto", 
+      "w-full max-w-xs mx-auto", // Changed from max-w-md to max-w-xs for narrower buttons
       className
     )}>
       <WaitlistButton 

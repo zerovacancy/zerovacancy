@@ -5,6 +5,8 @@ import { cn } from "@/lib/utils";
 import { WaitlistCTA } from "../ui/waitlist-cta";
 import { WaitlistCreatorCTA } from "../ui/waitlist-creator-cta";
 import { TextRotate } from "../ui/text-rotate";
+import { SocialProof } from '@/components/ui/waitlist/social-proof';
+import { Separator } from "../ui/separator";
 
 const TITLES = ["CONVERTS", "CAPTIVATES", "CLOSES"];
 
@@ -153,24 +155,31 @@ export function Hero() {
         </div>
       </div>
 
+      {/* Add a subtle separator */}
+      <Separator className="w-24 mx-auto mt-8 mb-2 bg-indigo-100/70" />
+
       <div 
         className={cn(
           "w-full", 
-          isMobile ? "mt-1" : "mt-5 sm:mt-6",
+          isMobile ? "mt-1" : "mt-8 sm:mt-10", // Increased spacing
           "px-4 sm:px-4",
           isInView ? "animate-fade-in delay-200" : "opacity-0" 
         )}
       >
-        {/* New side-by-side CTA layout */}
+        {/* Side-by-side CTA layout */}
         <div className="max-w-2xl mx-auto">
           {/* Two-column layout container */}
-          <div className="flex flex-col space-y-6">
+          <div className="flex flex-col space-y-8"> {/* Increased spacing */}
             {/* Buttons container with side-by-side layout */}
-            <div className="flex flex-row justify-between gap-[5%]">
+            <div className="flex flex-row justify-center gap-[8%]"> {/* Centered with gap */}
               {/* Property Owner CTA Column */}
-              <div className="w-[47.5%] flex flex-col">
-                <div className="text-center text-xs sm:text-sm text-gray-600 mb-2">
-                  For Property Owners
+              <div className="w-[46%] max-w-[280px] flex flex-col">
+                <div className="flex flex-col items-center mb-3">
+                  <div className="text-center font-medium text-xs sm:text-sm text-gray-700 mb-1">
+                    For Property Owners
+                  </div>
+                  {/* Visual connector */}
+                  <div className="h-3 w-px bg-indigo-200"></div>
                 </div>
                 <WaitlistCTA 
                   buttonText="RESERVE EARLY ACCESS" 
@@ -180,9 +189,13 @@ export function Hero() {
               </div>
               
               {/* Content Creator CTA Column */}
-              <div className="w-[47.5%] flex flex-col">
-                <div className="text-center text-xs sm:text-sm text-gray-600 mb-2">
-                  For Content Creators
+              <div className="w-[46%] max-w-[280px] flex flex-col">
+                <div className="flex flex-col items-center mb-3">
+                  <div className="text-center font-medium text-xs sm:text-sm text-gray-700 mb-1">
+                    For Content Creators
+                  </div>
+                  {/* Visual connector */}
+                  <div className="h-3 w-px bg-indigo-200"></div>
                 </div>
                 <WaitlistCreatorCTA 
                   buttonText="JOIN AS CREATOR"
@@ -194,11 +207,7 @@ export function Hero() {
             
             {/* Social proof centered below both buttons */}
             <div className="flex justify-center">
-              <div className="w-full max-w-md">
-                <div className="flex justify-center">
-                  <SocialProof className="mt-1" />
-                </div>
-              </div>
+              <SocialProof />
             </div>
           </div>
         </div>
@@ -206,8 +215,5 @@ export function Hero() {
     </section>
   );
 }
-
-// Import SocialProof to maintain the same functionality
-import { SocialProof } from '@/components/ui/waitlist/social-proof';
 
 export default Hero;
