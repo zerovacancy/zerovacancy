@@ -11,7 +11,18 @@ export const mobileOptimizationClasses = {
   improvedShadowMobile: "shadow-[0_4px_12px_rgba(0,0,0,0.08)]",
   coloredBorderMobile: "border border-purple-100/40",
   cardBgMobile: "bg-white/90 backdrop-blur-sm",
-  coloredBgMobile: "bg-gradient-to-b from-white via-purple-50/10 to-white"
+  coloredBgMobile: "bg-gradient-to-b from-white via-purple-50/10 to-white",
+  
+  // Subtle gradients for feature cards
+  subtleGradientPurple: "bg-gradient-to-b from-purple-50/60 to-white",
+  subtleGradientBlue: "bg-gradient-to-b from-blue-50/60 to-white",
+  subtleGradientIndigo: "bg-gradient-to-b from-indigo-50/60 to-white",
+  subtleGradientCyan: "bg-gradient-to-b from-cyan-50/60 to-white",
+  
+  // Pricing card gradients
+  pricingGradientBasic: "from-blue-600 to-indigo-600",
+  pricingGradientPro: "from-purple-600 to-indigo-600", 
+  pricingGradientPremium: "from-emerald-600 to-blue-600"
 };
 
 /**
