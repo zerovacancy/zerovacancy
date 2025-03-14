@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef, lazy, Suspense, useCallback } from 'react';
 import Header from '../components/Header';
 import { Hero } from '../components/hero/Hero';
@@ -154,11 +153,6 @@ const Index = () => {
       )}
 
       <main className="flex-1 pb-16 sm:pb-0 w-full">
-        {/* Pre-launch indicator badge - hidden on mobile */}
-        <div className="fixed top-4 right-4 z-50 bg-gradient-to-r from-brand-purple to-brand-purple-medium px-3 py-1 rounded-full text-white text-xs font-medium shadow-md hidden md:block">
-          Pre-Launch Preview
-        </div>
-        
         <BackgroundEffects 
           blobColors={{
             first: "bg-purple-100",
