@@ -5,7 +5,7 @@ import { FeatureHeader } from "./FeatureHeader";
 import { AnimatePresence, motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { FeatureItem } from "./FeatureItem";
-import { Button } from "@/components/ui/buttons/button";
+import { Button } from "@/components/ui/button";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 

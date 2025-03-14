@@ -1,10 +1,11 @@
 
 import React, { useEffect, useState } from 'react';
-import { Header, Footer } from '@/components/navigation';
-import { Button } from '@/components/ui/buttons/button';
+import Header from '@/components/Header';
+import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
+import Footer from '@/components/Footer';
 import { CreditCard, LogOut, User } from 'lucide-react';
 
 const Account = () => {

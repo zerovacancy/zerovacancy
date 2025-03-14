@@ -1,10 +1,10 @@
 
 import { cn } from "@/lib/utils";
 import { useSubscription } from "@/hooks/use-subscription";
-import PricingHeader from "./PricingHeader";
-import { BackgroundEffects } from "./BackgroundEffects";
-import { PricingProvider, usePricing } from "./PricingContext";
-import { PricingContainer } from "./PricingContainer";
+import PricingHeader from "./pricing/PricingHeader";
+import { BackgroundEffects } from "./pricing/BackgroundEffects";
+import { PricingProvider, usePricing } from "./pricing/PricingContext";
+import { PricingContainer } from "./pricing/PricingContainer";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { isLandscapeMode } from "@/utils/mobile-optimization";
 import { useEffect, useState } from "react";

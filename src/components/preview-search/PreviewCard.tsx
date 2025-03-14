@@ -3,10 +3,10 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { OptimizedBorderBeam } from '../ui/effects/optimized-border-beam';
-import { GlowingEffect } from '../ui/effects/glowing-effect';
-import { AnimatedGrid } from '../ui/effects/animated-grid';
-import { GradientBlobBackground } from '@/components/ui/backgrounds/gradient-blob-background';
+import { BorderBeam } from '../ui/border-beam';
+import { GlowingEffect } from '../ui/glowing-effect';
+import { AnimatedGrid } from '../ui/animated-grid';
+import { GradientBlobBackground } from '@/components/ui/gradient-blob-background';
 
 interface PreviewCardProps {
   isVisible: boolean;
@@ -35,7 +35,7 @@ export const PreviewCard: React.FC<PreviewCardProps> = ({ isVisible, children })
       {/* Only render effects on desktop */}
       {!isMobile && (
         <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden rounded-lg sm:rounded-xl">
-          <OptimizedBorderBeam 
+          <BorderBeam 
             colorFrom="#9370DB" 
             colorTo="#C19EF9" 
             duration={18}

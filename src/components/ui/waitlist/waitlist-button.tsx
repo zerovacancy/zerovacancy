@@ -1,5 +1,5 @@
 
-import { Button } from "@/components/ui/buttons/button";
+import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";

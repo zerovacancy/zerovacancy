@@ -2,7 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LogIn } from 'lucide-react';
-import { Button } from '@/components/ui/buttons/button';
+import { Button } from '@/components/ui/button';
 
 type AuthButtonsProps = {
   user: any;

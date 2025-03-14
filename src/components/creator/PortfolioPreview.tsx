@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ArrowRight, X, ExternalLink } from 'lucide-react';
-import { Dialog, DialogContent, DialogTitle } from '../ui/layout/dialog';
+import { Dialog, DialogContent, DialogTitle } from '../ui/dialog';
 
 interface PortfolioPreviewProps {
   workExamples: string[];

@@ -1,13 +1,13 @@
 
 import React, { useState, useCallback } from 'react';
-import { Card } from '../ui/layout/card';
+import { Card } from '../ui/card';
 import { ArrowRight, Star } from 'lucide-react';
-import { Dialog } from "../ui/layout/dialog";
+import { Dialog } from "../ui/dialog";
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { CreatorRating } from './CreatorRating';
 import { GlowDialog } from '../ui/glow-dialog';
-import { OptimizedBorderBeam } from '../ui/effects/optimized-border-beam';
+import { BorderBeam } from '../ui/border-beam';
 import { CreatorMedia } from './CreatorMedia';
 import { PortfolioPreview } from './PortfolioPreview';
 import type { CreatorCardProps } from './types';
@@ -144,7 +144,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 
                 {/* Card content - Border beam and glowing effect */}
                 <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden rounded-xl">
-                  <OptimizedBorderBeam 
+                  <BorderBeam 
                     colorFrom="#9370DB" 
                     colorTo="#C19EF9" 
                     duration={20}

@@ -3,7 +3,6 @@
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { animate } from "framer-motion";
-import { prefersReducedMotion } from "@/lib/mobile";
 
 interface GlowingEffectProps {
   blur?: number;
@@ -16,7 +15,6 @@ interface GlowingEffectProps {
   disabled?: boolean;
   movementDuration?: number;
   borderWidth?: number;
-  optimized?: boolean;
 }
 
 const GlowingEffect = memo(
@@ -31,20 +29,11 @@ const GlowingEffect = memo(
     movementDuration = 2,
     borderWidth = 1,
     disabled = false,
-    optimized = false,
   }: GlowingEffectProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const lastPosition = useRef({ x: 0, y: 0 });
     const animationFrameRef = useRef<number>(0);
     const [isMobile, setIsMobile] = useState(false);
-    const [isActive, setIsActive] = useState(false);
-    const [angle, setAngle] = useState(0);
-    
-    // Check if reduced motion is preferred
-    const reducedMotion = prefersReducedMotion();
-    
-    // Determine whether to use optimized version
-    const useOptimized = optimized || reducedMotion || isMobile;
     
     // Check if mobile on mount
     useEffect(() => {
@@ -60,13 +49,14 @@ const GlowingEffect = memo(
       };
     }, []);
     
-    // If on mobile or disabled, don't process any animations
-    const effectivelyDisabled = disabled || (isMobile && !useOptimized);
+    // If on mobile, don't process any animations
+    if (isMobile) {
+      disabled = true;
+    }
 
-    // Standard complex effect handler
-    const handleStandardMove = useCallback(
+    const handleMove = useCallback(
       (e?: MouseEvent | { x: number; y: number }) => {
-        if (!containerRef.current || useOptimized || effectivelyDisabled) return;
+        if (!containerRef.current || disabled) return;
 
         if (animationFrameRef.current) {
           cancelAnimationFrame(animationFrameRef.current);
@@ -125,65 +115,13 @@ const GlowingEffect = memo(
           });
         });
       },
-      [inactiveZone, proximity, movementDuration, useOptimized, effectivelyDisabled]
+      [inactiveZone, proximity, movementDuration, disabled]
     );
-    
-    // Optimized effect handler
-    const handleOptimizedMove = useCallback((e: MouseEvent) => {
-      if (!containerRef.current || effectivelyDisabled || !useOptimized) return;
-      
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
-      
-      animationFrameRef.current = requestAnimationFrame(() => {
-        const rect = containerRef.current?.getBoundingClientRect();
-        if (!rect) return;
-        
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
-        
-        // Only activate if mouse is outside the inactive zone
-        const distance = Math.sqrt(x * x + y * y);
-        const inactiveRadius = 0.5 * Math.min(rect.width, rect.height) * inactiveZone;
-        
-        if (distance < inactiveRadius) {
-          setIsActive(false);
-          return;
-        }
-        
-        // Check if mouse is near the element
-        const isNear = 
-          e.clientX > rect.left - proximity &&
-          e.clientX < rect.left + rect.width + proximity &&
-          e.clientY > rect.top - proximity &&
-          e.clientY < rect.top + rect.height + proximity;
-          
-        setIsActive(isNear);
-        
-        if (isNear) {
-          // Calculate angle for the gradient
-          const angleRad = Math.atan2(y, x);
-          const angleDeg = (angleRad * 180) / Math.PI + 90;
-          setAngle(angleDeg);
-        }
-      });
-    }, [inactiveZone, proximity, effectivelyDisabled, useOptimized]);
-
-    // Choose the appropriate handler based on optimization setting
-    const handleMove = useOptimized ? handleOptimizedMove : handleStandardMove;
 
     useEffect(() => {
-      if (effectivelyDisabled) return;
+      if (disabled) return;
 
-      const handleScroll = () => {
-        if (useOptimized) {
-          setIsActive(false);
-        } else {
-          handleStandardMove();
-        }
-      };
-      
+      const handleScroll = () => handleMove();
       const handlePointerMove = (e: PointerEvent) => handleMove(e);
 
       window.addEventListener("scroll", handleScroll, { passive: true });
@@ -198,57 +136,8 @@ const GlowingEffect = memo(
         window.removeEventListener("scroll", handleScroll);
         document.body.removeEventListener("pointermove", handlePointerMove);
       };
-    }, [handleMove, handleStandardMove, effectivelyDisabled, useOptimized]);
+    }, [handleMove, disabled]);
 
-    // Render optimized version
-    if (useOptimized) {
-      return (
-        <>
-          <div
-            className={cn(
-              "pointer-events-none absolute -inset-px hidden rounded-[inherit] border opacity-0 transition-opacity",
-              glow && "opacity-100",
-              variant === "white" && "border-white",
-              disabled && "!block"
-            )}
-          />
-          <div
-            ref={containerRef}
-            style={{
-              '--blur': `${blur}px`,
-              '--spread': spread,
-              '--angle': `${angle}deg`,
-              '--active': isActive ? '1' : '0',
-              '--border-width': `${borderWidth}px`,
-            } as React.CSSProperties}
-            className={cn(
-              "pointer-events-none absolute inset-0 rounded-[inherit] opacity-100 transition-opacity",
-              glow && "opacity-100",
-              blur > 0 && "blur-[var(--blur)]",
-              "overflow-hidden",
-              className,
-              disabled && "!hidden"
-            )}
-          >
-            <div
-              className={cn(
-                "absolute inset-0 rounded-[inherit]",
-                'after:content-[""] after:rounded-[inherit] after:absolute after:inset-[calc(-1*var(--border-width))]',
-                "after:border-[length:var(--border-width)] after:border-transparent",
-                variant === "white" 
-                  ? "after:bg-white" 
-                  : "after:bg-gradient-to-r after:from-[#dd7bbb] after:via-[#d79f1e] after:to-[#4c7894]",
-                "after:opacity-0 after:transition-opacity after:duration-300",
-                "after:opacity-[var(--active)]",
-                isActive && "after:animate-rotate-gradient"
-              )}
-            />
-          </div>
-        </>
-      );
-    }
-
-    // Render standard complex version
     return (
       <>
         <div
@@ -322,4 +211,3 @@ const GlowingEffect = memo(
 GlowingEffect.displayName = "GlowingEffect";
 
 export { GlowingEffect };
-export default GlowingEffect;

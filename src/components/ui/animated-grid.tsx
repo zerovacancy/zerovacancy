@@ -1,22 +1,16 @@
+
 "use client";
 
-import React, { memo, useCallback, useEffect, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { animate } from "framer-motion";
-import { prefersReducedMotion } from "@/lib/mobile";
 
 export interface AnimatedGridProps {
   className?: string;
-  colors?: string[];
-  optimized?: boolean;
-  delay?: number;
 }
 
 export const AnimatedGrid = memo(({
   className,
-  colors = ["#dd7bbb", "#d79f1e", "#5a922c", "#4c7894"],
-  optimized = false,
-  delay = optimized ? 30000 : 1000,
 }: AnimatedGridProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const lastPosition = useRef({ x: 0, y: 0 });
@@ -25,12 +19,6 @@ export const AnimatedGrid = memo(({
   const isActiveRef = useRef(false);
   const currentAngleRef = useRef(0);
   const [isMobile, setIsMobile] = useState(false);
-  
-  // Check if reduced motion is preferred
-  const reducedMotion = prefersReducedMotion();
-  
-  // Determine whether to use optimized version
-  const useOptimized = optimized || reducedMotion || isMobile;
   
   // Check if mobile on component mount
   useEffect(() => {
@@ -50,7 +38,7 @@ export const AnimatedGrid = memo(({
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsVisible(true);
-    }, delay);
+    }, 1000); // Keep at 1s for better UX
 
     return () => {
       clearTimeout(timer);
@@ -58,7 +46,7 @@ export const AnimatedGrid = memo(({
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [delay]);
+  }, []);
 
   // Set up intersection observer for better performance
   useEffect(() => {
@@ -85,7 +73,7 @@ export const AnimatedGrid = memo(({
 
   const handleMove = useCallback(
     (e?: MouseEvent | { x: number; y: number }) => {
-      if (useOptimized || !containerRef.current || !isVisible) return;
+      if (!containerRef.current || !isVisible) return;
 
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
@@ -157,11 +145,11 @@ export const AnimatedGrid = memo(({
         }
       });
     },
-    [isVisible, useOptimized]
+    [isVisible]
   );
 
   useEffect(() => {
-    if (!isVisible || useOptimized) return;
+    if (!isVisible) return;
 
     // Optimize event listeners with passive flag
     const handleScroll = () => {
@@ -187,47 +175,14 @@ export const AnimatedGrid = memo(({
       window.removeEventListener("scroll", handleScroll);
       document.body.removeEventListener("pointermove", handlePointerMove);
     };
-  }, [handleMove, isVisible, useOptimized]);
+  }, [handleMove, isVisible]);
+
+  if (isMobile) {
+    return null;
+  }
 
   if (!isVisible) return null;
 
-  // Render optimized version
-  if (useOptimized) {
-    return (
-      <div className={cn("relative w-full h-full overflow-hidden", className)}>
-        <div
-          className={cn(
-            "absolute inset-0 bg-grid-pattern animate-grid-rotate",
-            "opacity-0 transition-opacity duration-1000",
-            isVisible && "opacity-100"
-          )}
-          style={{
-            backgroundImage: `
-              radial-gradient(circle, ${colors[0]} 10%, ${colors[0]}00 20%),
-              radial-gradient(circle at 40% 40%, ${colors[1]} 5%, ${colors[1]}00 15%),
-              radial-gradient(circle at 60% 60%, ${colors[2]} 10%, ${colors[2]}00 20%), 
-              radial-gradient(circle at 40% 60%, ${colors[3]} 10%, ${colors[3]}00 20%),
-              conic-gradient(
-                from 0deg at 50% 50%,
-                ${colors[0]} 0%,
-                ${colors[1]} 25%,
-                ${colors[2]} 50%, 
-                ${colors[3]} 75%,
-                ${colors[0]} 100%
-              )
-            `,
-            transform: 'translateZ(0)',
-            backfaceVisibility: 'hidden',
-            backgroundSize: '200% 200%',
-            backgroundPosition: 'center',
-            animation: 'grid-rotate 15s linear infinite',
-          }}
-        />
-      </div>
-    );
-  }
-
-  // Render standard interactive version
   return (
     <div className={cn("relative will-change-transform promote-layer hidden sm:block", className)}>
       <div
@@ -238,17 +193,17 @@ export const AnimatedGrid = memo(({
           "--active": "0",
           "--glowingeffect-border-width": "2px",
           "--repeating-conic-gradient-times": "5",
-          "--gradient": `radial-gradient(circle, ${colors[0]} 10%, ${colors[0]}00 20%),
-            radial-gradient(circle at 40% 40%, ${colors[1]} 5%, ${colors[1]}00 15%),
-            radial-gradient(circle at 60% 60%, ${colors[2]} 10%, ${colors[2]}00 20%), 
-            radial-gradient(circle at 40% 60%, ${colors[3]} 10%, ${colors[3]}00 20%),
+          "--gradient": `radial-gradient(circle, #dd7bbb 10%, #dd7bbb00 20%),
+            radial-gradient(circle at 40% 40%, #d79f1e 5%, #d79f1e00 15%),
+            radial-gradient(circle at 60% 60%, #5a922c 10%, #5a922c00 20%), 
+            radial-gradient(circle at 40% 60%, #4c7894 10%, #4c789400 20%),
             repeating-conic-gradient(
               from var(--start) at 50% 50%,
-              ${colors[0]} 0%,
-              ${colors[1]} calc(25% / var(--repeating-conic-gradient-times)),
-              ${colors[2]} calc(50% / var(--repeating-conic-gradient-times)), 
-              ${colors[3]} calc(75% / var(--repeating-conic-gradient-times)),
-              ${colors[0]} calc(100% / var(--repeating-conic-gradient-times))
+              #dd7bbb 0%,
+              #d79f1e calc(25% / var(--repeating-conic-gradient-times)),
+              #5a922c calc(50% / var(--repeating-conic-gradient-times)), 
+              #4c7894 calc(75% / var(--repeating-conic-gradient-times)),
+              #dd7bbb calc(100% / var(--repeating-conic-gradient-times))
             )`,
           transform: 'translateZ(0)',
           backfaceVisibility: 'hidden',
@@ -283,4 +238,3 @@ export const AnimatedGrid = memo(({
 
 AnimatedGrid.displayName = "AnimatedGrid";
 
-export default AnimatedGrid;

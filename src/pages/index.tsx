@@ -1,20 +1,20 @@
 import React, { useState, useEffect, useRef, lazy, Suspense, useCallback } from 'react';
-import { Header } from '@/components/navigation';
-import { Hero } from '@/components/hero/Hero';
-import { Footer } from '@/components/navigation';
+import Header from '../components/Header';
+import { Hero } from '../components/hero/Hero';
+import Footer from '../components/Footer';
 import { Banner } from '@/components/ui/banner';
-import { Button } from '@/components/ui/buttons/button';
+import { Button } from '@/components/ui/button';
 import { Star } from 'lucide-react';
 import { GlowDialog } from '@/components/ui/glow-dialog';
-import { AnimatedShinyText } from '@/components/ui/effects/animated-shiny-text';
+import { AnimatedShinyText } from '@/components/ui/animated-shiny-text';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import { BackgroundEffects } from '@/components/features/BackgroundEffects';
 
-const OptimizedHowItWorks = lazy(() => import('@/components/how-it-works/OptimizedHowItWorks'));
+const OptimizedHowItWorks = lazy(() => import('../components/how-it-works/OptimizedHowItWorks'));
 const FeaturesSectionWithHoverEffects = lazy(() => import('@/components/features/Features'));
-const Pricing = lazy(() => import('@/components/pricing/Pricing'));
-const PreviewSearch = lazy(() => import('@/components/preview-search/PreviewSearch'));
+const Pricing = lazy(() => import('@/components/Pricing'));
+const PreviewSearch = lazy(() => import('../components/preview-search'));
 
 const SectionLoader = () => (
   <div className="w-full py-16 flex items-center justify-center">

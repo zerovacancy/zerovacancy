@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import TermsModal from '@/components/TermsModal';
+import TermsModal from './TermsModal';
 import { Mail, Clock, MapPin, ExternalLink, Search, Users, HelpCircle, ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';

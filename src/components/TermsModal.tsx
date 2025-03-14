@@ -5,8 +5,8 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/layout/dialog";
-import { ScrollArea } from "@/components/ui/layout/scroll-area";
+} from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface TermsModalProps {
   open: boolean;

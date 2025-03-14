@@ -1,9 +1,9 @@
 import * as React from "react";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/layout/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { motion, useAnimationFrame, useMotionTemplate, useMotionValue, useTransform } from "framer-motion";
 import { useRef, useState, useCallback } from "react";
 import { Squares } from "@/components/ui/squares";
-import { HoverBorderGradient } from "@/components/ui/effects/hover-border-gradient";
+import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
