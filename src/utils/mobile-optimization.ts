@@ -4,6 +4,17 @@
  */
 
 /**
+ * Classes for consistent mobile optimization
+ */
+export const mobileOptimizationClasses = {
+  gradientBgMobile: "bg-gradient-to-b from-white to-purple-50/30",
+  improvedShadowMobile: "shadow-[0_4px_12px_rgba(0,0,0,0.08)]",
+  coloredBorderMobile: "border border-purple-100/40",
+  cardBgMobile: "bg-white/90 backdrop-blur-sm",
+  coloredBgMobile: "bg-gradient-to-b from-white via-purple-50/10 to-white"
+};
+
+/**
  * Applies mobile viewport optimizations to improve touch responsiveness
  * This addresses the 300ms tap delay and other mobile-specific issues
  */
@@ -35,6 +46,75 @@ export const optimizeMobileViewport = () => {
   
   // Add passive event listeners to improve scroll performance
   document.addEventListener('touchstart', () => {}, { passive: true });
+};
+
+/**
+ * Check if the device is in landscape mode
+ */
+export const isLandscapeMode = (): boolean => {
+  if (typeof window === 'undefined') return false;
+  
+  // Check orientation
+  if (window.matchMedia) {
+    return window.matchMedia("(orientation: landscape)").matches;
+  }
+  
+  // Fallback to width/height comparison
+  return window.innerWidth > window.innerHeight;
+};
+
+/**
+ * Apply specific fixes for landscape orientation on mobile
+ */
+export const applyLandscapeOrientationFixes = (): (() => void) => {
+  if (typeof window === 'undefined') return () => {};
+  
+  // Create and add a style element for landscape mode optimizations
+  const style = document.createElement('style');
+  style.textContent = `
+    @media (orientation: landscape) and (max-height: 500px) {
+      .landscape-container {
+        height: 100%;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      .landscape-content-fix {
+        padding-top: 0.5rem !important;
+        padding-bottom: 0.5rem !important;
+        margin-top: 0.5rem !important;
+        margin-bottom: 0.5rem !important;
+      }
+      .landscape-text-fix {
+        font-size: 0.75rem !important;
+      }
+      .landscape-pricing {
+        padding-top: 0.5rem !important;
+        padding-bottom: 1rem !important;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+  
+  // Return cleanup function
+  return () => {
+    document.head.removeChild(style);
+  };
+};
+
+/**
+ * Debounces a function to prevent multiple rapid executions
+ */
+export const debounce = <T extends (...args: any[]) => any>(
+  fn: T,
+  delay: number
+): ((...args: Parameters<T>) => void) => {
+  let timer: ReturnType<typeof setTimeout> | null = null;
+  return (...args: Parameters<T>) => {
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(() => {
+      fn(...args);
+    }, delay);
+  };
 };
 
 /**
@@ -79,4 +159,27 @@ export const createTouchHandler = (handler: () => void) => {
   };
   
   return touchHandler;
+};
+
+/**
+ * Creates a pure touch handler without any event conflicting logic
+ * Specifically designed for CTA buttons on mobile
+ */
+export const createOptimizedTouchHandler = (handler: () => void) => {
+  return {
+    onClick: (e: React.MouseEvent) => {
+      if (e.detail > 0) { // Real user click, not synthetic event
+        console.log('Optimized touch handler: click event');
+        handler();
+      }
+    },
+    
+    onTouchEnd: (e: React.TouchEvent) => {
+      // The most reliable event on mobile
+      e.preventDefault();
+      e.stopPropagation();
+      console.log('Optimized touch handler: touchend event');
+      handler();
+    }
+  };
 };

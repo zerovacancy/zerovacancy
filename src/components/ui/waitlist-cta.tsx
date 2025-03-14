@@ -5,7 +5,7 @@ import { ShimmerButton } from './shimmer-button';
 import { WaitlistButton } from './waitlist/waitlist-button';
 import { SocialProof } from './waitlist/social-proof';
 import { GlowDialog } from './glow-dialog';
-import { createTouchHandler } from '@/utils/mobile-optimization';
+import { createOptimizedTouchHandler } from '@/utils/mobile-optimization';
 
 interface WaitlistCTAProps {
   className?: string;
@@ -25,6 +25,7 @@ export const WaitlistCTA: React.FC<WaitlistCTAProps> = ({
   const [showGlowDialog, setShowGlowDialog] = useState(false);
   
   const handleClick = () => {
+    console.log('WaitlistCTA: handleClick triggered');
     if (onClick) {
       onClick();
       return;
@@ -34,8 +35,8 @@ export const WaitlistCTA: React.FC<WaitlistCTAProps> = ({
     setShowGlowDialog(true);
   };
   
-  // Create a touch-optimized handler
-  const touchHandlers = createTouchHandler(handleClick);
+  // Use optimized handler for mobile
+  const touchHandlers = createOptimizedTouchHandler(handleClick);
 
   return (
     <div className={cn(
@@ -43,11 +44,11 @@ export const WaitlistCTA: React.FC<WaitlistCTAProps> = ({
       className
     )}>
       <div 
-        onClick={touchHandlers.onClick}
-        onTouchStart={touchHandlers.onTouchStart}
-        onTouchMove={touchHandlers.onTouchMove}
-        onTouchEnd={touchHandlers.onTouchEnd}
         className="cursor-pointer touch-manipulation"
+        role="button"
+        aria-label={buttonText}
+        tabIndex={0}
+        {...touchHandlers}
       >
         <ShimmerButton 
           className={cn(
@@ -58,7 +59,6 @@ export const WaitlistCTA: React.FC<WaitlistCTAProps> = ({
             "touch-manipulation",
           )}
           // Important: Remove onClick here since we're handling it in the parent div
-          // This prevents double triggering
         >
           {buttonText}
         </ShimmerButton>

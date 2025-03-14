@@ -31,23 +31,15 @@ export const ShimmerButton = React.forwardRef<HTMLButtonElement, ShimmerButtonPr
   ) => {
     const isMobile = useIsMobile();
     
-    // This creates a more responsive event handler for touch events
-    const enhanceTouchFeedback = (originalHandler?: React.MouseEventHandler<HTMLButtonElement>) => {
-      return (e: React.MouseEvent<HTMLButtonElement>) => {
-        if (originalHandler) {
-          originalHandler(e);
-        }
-      };
-    };
-    
     return (
       <button
         ref={ref}
         className={cn(
           "relative h-12 w-full overflow-hidden px-4 py-2 group",
           "rounded-full transition-all duration-300 flex items-center justify-center",
-          // Added explicit tap highlight color for WebKit browsers
+          "touch-manipulation", // Add touch optimization class
           "-webkit-tap-highlight-color-transparent",
+          "will-change-transform", // Adding performance optimization
           "active:scale-95",
           className
         )}
@@ -56,12 +48,8 @@ export const ShimmerButton = React.forwardRef<HTMLButtonElement, ShimmerButtonPr
           borderRadius,
           WebkitTapHighlightColor: 'transparent'
         }}
-        onClick={enhanceTouchFeedback(props.onClick)}
-        // Explicitly add touch event attributes for mobile
-        {...(isMobile ? {
-          "data-mobile-optimized": "true"
-        } : {})}
         {...props}
+        data-mobile-optimized="true"
       >
         <div
           className="absolute inset-0 w-full h-full"

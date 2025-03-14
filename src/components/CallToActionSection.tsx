@@ -4,18 +4,19 @@ import { ShimmerButton } from './ui/shimmer-button';
 import { ArrowRight, TrendingUp } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { GlowDialog } from './ui/glow-dialog';
-import { createTouchHandler } from '@/utils/mobile-optimization';
+import { createOptimizedTouchHandler } from '@/utils/mobile-optimization';
 
 const CallToActionSection = () => {
   const isMobile = useIsMobile();
   const [showGlowDialog, setShowGlowDialog] = useState(false);
   
   const handleWaitlistClick = () => {
+    console.log('CallToActionSection: handleWaitlistClick triggered');
     setShowGlowDialog(true);
   };
   
-  // Create touch-optimized handlers
-  const touchHandlers = createTouchHandler(handleWaitlistClick);
+  // Use optimized touch handlers
+  const touchHandlers = createOptimizedTouchHandler(handleWaitlistClick);
   
   return (
     <>
@@ -48,10 +49,10 @@ const CallToActionSection = () => {
           <div className="w-full sm:w-auto">
             <div 
               className="cursor-pointer touch-manipulation" 
-              onClick={touchHandlers.onClick}
-              onTouchStart={touchHandlers.onTouchStart}
-              onTouchMove={touchHandlers.onTouchMove}
-              onTouchEnd={touchHandlers.onTouchEnd}
+              role="button"
+              aria-label="JOIN THE WAITLIST"
+              tabIndex={0}
+              {...touchHandlers}
             >
               <ShimmerButton 
                 className="w-full sm:w-auto min-w-[200px] touch-manipulation h-[52px] text-base font-semibold transition-all duration-300 hover:scale-105"
@@ -64,6 +65,7 @@ const CallToActionSection = () => {
           
           <ShimmerButton 
             className="w-full sm:w-auto min-w-[180px] touch-manipulation h-[52px] text-base font-semibold bg-gray-50 text-gray-800 border border-gray-200 hover:bg-gray-100 transition-all duration-300"
+            onClick={() => console.log('Portfolio button clicked')}
           >
             <span>EXPLORE CREATOR PORTFOLIOS</span>
           </ShimmerButton>

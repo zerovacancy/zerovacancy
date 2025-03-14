@@ -1,3 +1,4 @@
+
 /* ./src/App.css */
 @tailwind base;
 @tailwind components;
@@ -51,10 +52,18 @@
   
   .touch-manipulation {
     touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
   }
   
   .mobile-optimize {
     -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
   }
   
   .mobile-section-gradient {
@@ -66,6 +75,20 @@
     background: linear-gradient(to right, rgba(148, 163, 184, 0), rgb(148, 163, 184), rgba(148, 163, 184, 0));
     margin-top: 1.5rem;
     margin-bottom: 1.5rem;
+  }
+  
+  /* New: CTA button specific mobile optimization */
+  .cta-button-mobile {
+    cursor: pointer !important;
+    -webkit-tap-highlight-color: transparent !important;
+    touch-action: manipulation !important;
+    will-change: transform !important;
+    transform: translateZ(0) !important;
+    backface-visibility: hidden !important;
+    outline: none !important;
+    -webkit-touch-callout: none !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
   }
 }
 
@@ -143,9 +166,25 @@
 /* Mobile touch optimization */
 @media (max-width: 768px) {
   /* Set default touch actions to improve responsiveness */
-  html, body, button, a, [role="button"], .cursor-pointer {
+  html, body {
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
+    overflow-x: hidden;
+  }
+  
+  /* Optimize all clickable elements */
+  button, 
+  a, 
+  [role="button"], 
+  .cursor-pointer, 
+  .touch-manipulation, 
+  [data-mobile-optimized="true"] {
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-touch-callout: none !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
+    cursor: pointer !important;
   }
   
   /* Increase hit target sizes for better mobile experience */
@@ -159,6 +198,23 @@
     cursor: pointer;
     will-change: transform;
     transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+  
+  /* GPU acceleration for smooth animations */
+  .gpu-accelerated {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    will-change: transform;
+  }
+  
+  /* Landscape orientation adjustments */
+  @media (orientation: landscape) {
+    .landscape-container {
+      height: 100%;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
   }
 }
 
@@ -168,4 +224,19 @@
   -webkit-tap-highlight-color: transparent !important;
   cursor: pointer;
   will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Additional GPU performance optimizations */
+.will-change-transform {
+  will-change: transform;
+}
+
+.translate-z-0 {
+  transform: translateZ(0);
+}
+
+.backface-visibility-hidden {
+  backface-visibility: hidden;
 }
