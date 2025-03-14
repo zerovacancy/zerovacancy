@@ -3,10 +3,10 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { BorderBeam } from '../ui/border-beam';
-import { GlowingEffect } from '../ui/glowing-effect';
-import { AnimatedGrid } from '../ui/animated-grid';
-import { GradientBlobBackground } from '@/components/ui/gradient-blob-background';
+import { BorderBeam } from '../ui/effects/border-beam';
+import { GlowingEffect } from '../ui/effects/glowing-effect';
+import { AnimatedGrid } from '../ui/effects/animated-grid';
+import { GradientBlobBackground } from '@/components/ui/backgrounds/gradient-blob-background';
 
 interface PreviewCardProps {
   isVisible: boolean;

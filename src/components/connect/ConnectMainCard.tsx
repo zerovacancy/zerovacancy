@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Card } from '@/components/ui/card';
+import { Card } from '@/components/ui/layout/card';
 import AccountStatusCard from './AccountStatusCard';
 import ConnectActionButtons from './ConnectActionButtons';
 

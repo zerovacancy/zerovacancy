@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Search } from 'lucide-react';
-import { Button } from '../ui/button';
+import { Button } from '../ui/buttons/button';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 

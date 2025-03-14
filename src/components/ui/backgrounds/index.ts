@@ -1,10 +1,14 @@
 /**
- * Background effect components
+ * Background components
  */
 
+// Export individual background components
 export { default as AuroraBackground } from './aurora-background';
-export { default as BackgroundGradient } from './background-gradient';
+export { BackgroundGradient } from './background-gradient';
 export { default as BeamsBackground } from './beams-background';
 export { default as GradientBlobBackground } from './gradient-blob-background';
 export { default as WarpBackground } from './warp-background';
-export { default as WavyBackground } from './wavy-background';
+export { WavyBackground } from './wavy-background';
+
+// Export unified Background component
+export { Background } from './background';

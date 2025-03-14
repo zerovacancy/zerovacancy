@@ -2,9 +2,9 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { GlowingEffect } from "@/components/ui/glowing-effect";
-import { BorderBeam } from "@/components/ui/border-beam";
-import { AnimatedGrid } from "@/components/ui/animated-grid";
+import { GlowingEffect } from "@/components/ui/effects/glowing-effect";
+import { BorderBeam } from "@/components/ui/effects/border-beam";
+import { AnimatedGrid } from "@/components/ui/effects/animated-grid";
 
 export interface SquaresProps {
   direction?: "right" | "left" | "up" | "down" | "diagonal";

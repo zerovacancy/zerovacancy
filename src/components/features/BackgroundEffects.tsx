@@ -1,6 +1,6 @@
 
 import React, { useRef, useEffect, useState } from 'react';
-import { GradientBlobBackground } from '@/components/ui/gradient-blob-background';
+import { GradientBlobBackground } from '@/components/ui/backgrounds/gradient-blob-background';
 import { cn } from '@/lib/utils';
 
 interface BackgroundEffectsProps {

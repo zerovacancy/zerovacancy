@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
-import { ShimmerButton } from './shimmer-button';
+import { ShimmerButton } from './buttons/shimmer-button';
 import { WaitlistButton } from './waitlist/waitlist-button';
 import { SocialProof } from './waitlist/social-proof';
 

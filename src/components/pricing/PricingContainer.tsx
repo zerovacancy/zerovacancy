@@ -7,15 +7,15 @@ import PricingHeader from "./PricingHeader";
 import { PLAN_DESCRIPTIONS, VALUE_PROPOSITIONS, PLAN_CTAS, FEATURES } from "./pricingData";
 import { ChevronDown, Check, X, ChevronRight, Sparkles } from "lucide-react";
 import { PricingFeature } from "./types";
-import { Button } from "../ui/button";
+import { Button } from "../ui/buttons/button";
 import { mobileOptimizationClasses } from "@/utils/mobile-optimization";
-import { ScrollArea } from "../ui/scroll-area";
+import { ScrollArea } from "../ui/layout/scroll-area";
 import {
   Dialog,
   DialogContent,
   DialogClose,
   DialogTrigger,
-} from "../ui/dialog";
+} from "../ui/layout/dialog";
 
 export const PricingContainer = () => {
   const isMobile = useIsMobile();

@@ -1,13 +1,13 @@
 
 import React, { useState, useCallback } from 'react';
-import { Card } from '../ui/card';
+import { Card } from '../ui/layout/card';
 import { ArrowRight, Star } from 'lucide-react';
-import { Dialog } from "../ui/dialog";
+import { Dialog } from "../ui/layout/dialog";
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { CreatorRating } from './CreatorRating';
 import { GlowDialog } from '../ui/glow-dialog';
-import { BorderBeam } from '../ui/border-beam';
+import { BorderBeam } from '../ui/effects/border-beam';
 import { CreatorMedia } from './CreatorMedia';
 import { PortfolioPreview } from './PortfolioPreview';
 import type { CreatorCardProps } from './types';

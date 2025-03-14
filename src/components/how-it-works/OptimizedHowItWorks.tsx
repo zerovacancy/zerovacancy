@@ -4,7 +4,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import SectionHeaderSimple from './SectionHeaderSimple';
 import MobileStepsGridSimple from './MobileStepsGridSimple';
 import DesktopStepsGridSimple from './DesktopStepsGridSimple';
-import BeamsBackground from '@/components/ui/beams-background';
+import BeamsBackground from '@/components/ui/backgrounds/beams-background';
 
 const OptimizedHowItWorks: React.FC = () => {
   const isMobile = useIsMobile();
