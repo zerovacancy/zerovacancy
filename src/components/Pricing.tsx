@@ -1,4 +1,3 @@
-
 import { cn } from "@/lib/utils";
 import { useSubscription } from "@/hooks/use-subscription";
 import PricingHeader from "./pricing/PricingHeader";
@@ -61,13 +60,11 @@ const PricingContent = () => {
         <PricingContainer />
       </div>
       
-      {/* Single Compare All Features button below pricing tiers */}
+      {/* Removed the wrapping div and directly rendering the button when on mobile */}
       {isMobile && (
-        <div className="mb-8 mt-1">
-          <CompareAllFeaturesButton 
-            className="bg-brand-purple text-white hover:bg-brand-purple/90 active:bg-brand-purple/95 border-none shadow-md w-[85%] max-w-[320px]"
-          />
-        </div>
+        <CompareAllFeaturesButton 
+          className="bg-brand-purple text-white hover:bg-brand-purple/90 active:bg-brand-purple/95 border-none shadow-md w-[85%] max-w-[320px] mx-auto mb-8 mt-1"
+        />
       )}
       
       {/* Small copy text replacing the CommonFeatures component */}
