@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef, lazy, Suspense, useCallback } from 'react';
 import Header from '../components/Header';
 import { Hero } from '../components/hero/Hero';
@@ -11,7 +10,6 @@ import { AnimatedShinyText } from '@/components/ui/animated-shiny-text';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import { BackgroundEffects } from '@/components/features/BackgroundEffects';
-import { optimizeMobileViewport } from '@/utils/mobile-optimization';
 
 const OptimizedHowItWorks = lazy(() => import('../components/how-it-works/OptimizedHowItWorks'));
 const FeaturesSectionWithHoverEffects = lazy(() => import('@/components/features/Features'));
@@ -39,11 +37,6 @@ const Index = () => {
     3: true,
     4: true
   });
-  
-  // Apply mobile optimizations on mount
-  useEffect(() => {
-    optimizeMobileViewport();
-  }, []);
   
   useEffect(() => {
     const hasVisited = localStorage.getItem('hasVisited');

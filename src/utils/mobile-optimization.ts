@@ -1,196 +1,149 @@
 
 /**
- * Utility functions for optimizing mobile touch interactions
+ * Utility functions for improving mobile performance
+ * Disables heavy animations and effects on mobile devices
  */
 
-/**
- * Classes for consistent mobile optimization
- */
-export const mobileOptimizationClasses = {
-  gradientBgMobile: "bg-gradient-to-b from-white to-purple-50/30",
-  improvedShadowMobile: "shadow-[0_4px_12px_rgba(0,0,0,0.08)]",
-  coloredBorderMobile: "border border-purple-100/40",
-  cardBgMobile: "bg-white/90 backdrop-blur-sm",
-  coloredBgMobile: "bg-gradient-to-b from-white via-purple-50/10 to-white",
-  
-  // Subtle gradients for feature cards
-  subtleGradientPurple: "bg-gradient-to-b from-purple-50/60 to-white",
-  subtleGradientBlue: "bg-gradient-to-b from-blue-50/60 to-white",
-  subtleGradientIndigo: "bg-gradient-to-b from-indigo-50/60 to-white",
-  subtleGradientCyan: "bg-gradient-to-b from-cyan-50/60 to-white",
-  
-  // Pricing card gradients
-  pricingGradientBasic: "from-blue-600 to-indigo-600",
-  pricingGradientPro: "from-purple-600 to-indigo-600", 
-  pricingGradientPremium: "from-emerald-600 to-blue-600"
+export const MOBILE_BREAKPOINT = 768;
+
+// Declare the missing properties on the Window interface
+declare global {
+  interface Window {
+    MSStream?: any;
+    lastTap?: number;
+  }
+}
+
+// Check if the user has requested reduced motion
+export const prefersReducedMotion = () => {
+  if (typeof window === "undefined") return false;
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 };
 
-/**
- * Applies mobile viewport optimizations to improve touch responsiveness
- * This addresses the 300ms tap delay and other mobile-specific issues
- */
+// Optimized mobile viewport settings that maintain accessibility
 export const optimizeMobileViewport = () => {
-  // Only run on client-side
-  if (typeof window === 'undefined') return;
+  if (typeof window === "undefined") return;
   
-  // Add touch-action meta tag if it doesn't exist
-  if (!document.querySelector('meta[name="viewport"][content*="touch-action"]')) {
-    const existingViewport = document.querySelector('meta[name="viewport"]');
+  // Find existing viewport meta tag
+  const viewport = document.querySelector('meta[name="viewport"]');
+  if (viewport) {
+    // Handle both portrait and landscape orientations with proper scaling
+    const viewportContent = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, height=device-height';
+    viewport.setAttribute('content', viewportContent);
     
-    if (existingViewport) {
-      let content = existingViewport.getAttribute('content') || '';
-      if (!content.includes('touch-action')) {
-        content += ', touch-action=manipulation';
-        existingViewport.setAttribute('content', content);
-      }
-    } else {
-      // Create new viewport meta if it doesn't exist
-      const meta = document.createElement('meta');
-      meta.name = 'viewport';
-      meta.content = 'width=device-width, initial-scale=1, touch-action=manipulation';
-      document.head.appendChild(meta);
+    // Add orientation change listener to fix scaling issues
+    window.addEventListener('orientationchange', () => {
+      // This forces a reflow after orientation changes to fix scaling issues
+      setTimeout(() => {
+        // Force a repaint by toggling a value
+        document.body.style.opacity = '0.99';
+        setTimeout(() => {
+          document.body.style.opacity = '1';
+        }, 20);
+      }, 100);
+    }, { passive: true });
+    
+    // Apply specific fixes for iOS
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    if (isIOS) {
+      // iOS specific fixes
+      document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+      
+      // Update on resize and orientation change
+      window.addEventListener('resize', () => {
+        document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+      }, { passive: true });
     }
   }
   
-  // Apply additional touch optimizations
-  document.documentElement.style.touchAction = 'manipulation';
-  
-  // Add passive event listeners to improve scroll performance
-  document.addEventListener('touchstart', () => {}, { passive: true });
-};
-
-/**
- * Check if the device is in landscape mode
- */
-export const isLandscapeMode = (): boolean => {
-  if (typeof window === 'undefined') return false;
-  
-  // Check orientation
-  if (window.matchMedia) {
-    return window.matchMedia("(orientation: landscape)").matches;
-  }
-  
-  // Fallback to width/height comparison
-  return window.innerWidth > window.innerHeight;
-};
-
-/**
- * Apply specific fixes for landscape orientation on mobile
- */
-export const applyLandscapeOrientationFixes = (): (() => void) => {
-  if (typeof window === 'undefined') return () => {};
-  
-  // Create and add a style element for landscape mode optimizations
-  const style = document.createElement('style');
-  style.textContent = `
-    @media (orientation: landscape) and (max-height: 500px) {
-      .landscape-container {
-        height: 100%;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
-      }
-      .landscape-content-fix {
-        padding-top: 0.5rem !important;
-        padding-bottom: 0.5rem !important;
-        margin-top: 0.5rem !important;
-        margin-bottom: 0.5rem !important;
-      }
-      .landscape-text-fix {
-        font-size: 0.75rem !important;
-      }
-      .landscape-pricing {
-        padding-top: 0.5rem !important;
-        padding-bottom: 1rem !important;
-      }
-    }
-  `;
-  document.head.appendChild(style);
-  
-  // Return cleanup function
-  return () => {
-    document.head.removeChild(style);
-  };
-};
-
-/**
- * Debounces a function to prevent multiple rapid executions
- */
-export const debounce = <T extends (...args: any[]) => any>(
-  fn: T,
-  delay: number
-): ((...args: Parameters<T>) => void) => {
-  let timer: ReturnType<typeof setTimeout> | null = null;
-  return (...args: Parameters<T>) => {
-    if (timer) clearTimeout(timer);
-    timer = setTimeout(() => {
-      fn(...args);
-    }, delay);
-  };
-};
-
-/**
- * Creates an enhanced touch event handler that handles both mouse and touch events
- * with proper cancellation to prevent ghost clicks
- */
-export const createTouchHandler = (handler: () => void) => {
-  let touchMoved = false;
-  let lastTouchTime = 0;
-  
-  const touchHandler = {
-    onClick: (e: React.MouseEvent) => {
-      // Prevent ghost clicks by checking if a touch event happened recently
-      const now = Date.now();
-      if (now - lastTouchTime < 500) {
-        e.preventDefault();
-        e.stopPropagation();
-        return;
-      }
-      
-      handler();
-    },
-    
-    onTouchStart: () => {
-      touchMoved = false;
-      lastTouchTime = Date.now();
-    },
-    
-    onTouchMove: () => {
-      touchMoved = true;
-    },
-    
-    onTouchEnd: (e: React.TouchEvent) => {
-      lastTouchTime = Date.now();
-      
-      if (!touchMoved) {
-        // Only trigger on taps, not swipes
-        e.preventDefault();
-        handler();
-      }
-    }
-  };
-  
-  return touchHandler;
-};
-
-/**
- * Creates a pure touch handler without any event conflicting logic
- * Specifically designed for CTA buttons on mobile
- */
-export const createOptimizedTouchHandler = (handler: () => void) => {
-  return {
-    onClick: (e: React.MouseEvent) => {
-      if (e.detail > 0) { // Real user click, not synthetic event
-        console.log('Optimized touch handler: click event');
-        handler();
-      }
-    },
-    
-    onTouchEnd: (e: React.TouchEvent) => {
-      // The most reliable event on mobile
+  // Prevent double-tap zoom on mobile
+  document.addEventListener('touchend', (e) => {
+    const now = Date.now();
+    const DOUBLE_TAP_THRESHOLD = 300;
+    if (now - (window.lastTap || 0) < DOUBLE_TAP_THRESHOLD) {
       e.preventDefault();
-      e.stopPropagation();
-      console.log('Optimized touch handler: touchend event');
-      handler();
     }
+    window.lastTap = now;
+  }, { passive: false });
+};
+
+// Helper classes to conditionally apply to components
+export const mobileOptimizationClasses = {
+  // Hide elements completely on mobile
+  hideOnMobile: "sm:block hidden",
+  // Only show on mobile
+  showOnMobile: "sm:hidden block",
+  // Disable hover effects on mobile
+  noHoverEffectsMobile: "sm:hover:scale-105 sm:hover:shadow-lg sm:transition-all",
+  // Improved shadows for mobile
+  improvedShadowMobile: "shadow-md sm:shadow-lg",
+  // Gradient background for mobile (subtle purple tint)
+  gradientBgMobile: "bg-gradient-to-br from-white to-purple-50 sm:bg-white",
+  // Colored background for mobile, white for desktop
+  coloredBgMobile: "bg-purple-50 sm:bg-white",
+  // Card background for mobile with subtle gradient
+  cardBgMobile: "bg-gradient-to-tr from-white via-white to-purple-50 sm:bg-white",
+  // Reduced opacity on mobile
+  reducedOpacityMobile: "opacity-70 sm:opacity-100",
+  // Border with color for mobile
+  coloredBorderMobile: "border border-purple-100 sm:border-gray-200",
+  
+  // New subtle gradients for different components
+  subtleGradientPurple: "bg-gradient-to-br from-white to-purple-50/70 hover:from-white hover:to-purple-50/90",
+  subtleGradientBlue: "bg-gradient-to-br from-white to-blue-50/70 hover:from-white hover:to-blue-50/90",
+  subtleGradientIndigo: "bg-gradient-to-br from-white to-indigo-50/70 hover:from-white hover:to-indigo-50/90",
+  subtleGradientCyan: "bg-gradient-to-br from-white to-cyan-50/70 hover:from-white hover:to-cyan-50/90",
+  
+  // Brighter gradients for pricing cards
+  pricingGradientBasic: "bg-gradient-to-br from-white to-blue-50/80 hover:to-blue-50",
+  pricingGradientPro: "bg-gradient-to-br from-white to-purple-50/80 hover:to-purple-50",
+  pricingGradientPremium: "bg-gradient-to-br from-white to-emerald-50/80 hover:to-emerald-50",
+  
+  // Clean border with subtle color
+  cleanBorderMobile: "border border-gray-100 sm:border-gray-200",
+  
+  // New: Landscape orientation specific classes
+  landscapeOrientationFix: "landscape:max-h-screen landscape:overflow-auto",
+  landscapeContentFix: "landscape:py-2 landscape:px-2",
+  landscapeHeightFix: "landscape:h-auto",
+  landscapeFlexFix: "landscape:flex-row",
+};
+
+// Check if device is in landscape mode
+export const isLandscapeMode = () => {
+  if (typeof window === "undefined") return false;
+  return window.matchMedia("(orientation: landscape)").matches;
+};
+
+// Apply landscape-specific fixes
+export const applyLandscapeOrientationFixes = () => {
+  if (typeof window === "undefined") return;
+  
+  const handleOrientationChange = () => {
+    const isLandscape = window.matchMedia("(orientation: landscape)").matches;
+    
+    if (isLandscape) {
+      document.documentElement.classList.add('landscape-mode');
+      document.body.classList.add('landscape-mode');
+      document.body.style.height = 'auto';
+      document.body.style.overflowY = 'auto';
+    } else {
+      document.documentElement.classList.remove('landscape-mode');
+      document.body.classList.remove('landscape-mode');
+      document.body.style.height = '';
+      document.body.style.overflowY = '';
+    }
+  };
+  
+  // Check immediately
+  handleOrientationChange();
+  
+  // Handle orientation changes
+  window.addEventListener('orientationchange', handleOrientationChange, { passive: true });
+  window.addEventListener('resize', handleOrientationChange, { passive: true });
+  
+  return () => {
+    window.removeEventListener('orientationchange', handleOrientationChange);
+    window.removeEventListener('resize', handleOrientationChange);
   };
 };

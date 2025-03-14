@@ -46,8 +46,6 @@ export function WaitlistButton({
         timestamp: new Date().toISOString(),
       };
       
-      console.log('Submitting email to waitlist:', email);
-      
       // Call our Supabase Edge Function
       const { error, data } = await supabase.functions.invoke('submit-waitlist-email', {
         body: { 
@@ -81,31 +79,17 @@ export function WaitlistButton({
     }
   };
 
-  const handleOpenToggle = () => {
-    console.log('WaitlistButton: toggling open state');
-    setOpen(true);
-  };
-
   return (
     <div className={cn("flex flex-col gap-2", className)}>
       {!open ? (
-        <div 
-          className="w-full touch-manipulation cta-button-mobile" 
-          onClick={handleOpenToggle}
-          role="button"
-          aria-label={buttonText}
-          tabIndex={0}
-          data-mobile-optimized="true"
-        >
+        <div className="w-full" onClick={() => setOpen(true)}>
           {children || (
             <Button 
               className={cn(
                 "w-full py-6 text-base font-medium font-jakarta",
                 "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700",
-                "touch-manipulation cta-button-mobile",
                 isMobile ? "text-sm" : "text-base"
               )}
-              // Remove onClick here to prevent event duplication
             >
               {buttonText}
             </Button>
@@ -130,7 +114,6 @@ export function WaitlistButton({
                 "bg-gradient-to-r from-indigo-600 to-purple-600",
                 "hover:from-indigo-700 hover:to-purple-700",
                 "transition-all duration-200 ease-in-out",
-                "touch-manipulation",
                 isMobile && "min-h-[48px]"
               )}
             >
@@ -144,6 +127,7 @@ export function WaitlistButton({
               )}
             </Button>
           </div>
+          {/* Social proof is now moved to the main component */}
         </form>
       )}
     </div>

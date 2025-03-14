@@ -1,62 +1,103 @@
 
 "use client";
 
-import * as React from "react";
+import React, { ButtonHTMLAttributes, useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { useIsMobile } from "@/hooks/use-mobile";
 
-interface ShimmerButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  shimmerColor?: string;
-  shimmerSize?: string;
-  borderRadius?: string;
-  shimmerDuration?: string;
+interface ShimmerButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  children: React.ReactNode;
   background?: string;
   className?: string;
-  children: React.ReactNode;
+  shimmerClassName?: string;
+  mainColor?: string;
+  disableOnMobile?: boolean;
 }
 
-export const ShimmerButton = React.forwardRef<HTMLButtonElement, ShimmerButtonProps>(
-  (
-    {
-      shimmerColor = "rgba(255, 255, 255, 0.25)",
-      shimmerSize = "0.1em",
-      borderRadius = "9999px",
-      shimmerDuration = "4s", // Slowed down from 2s to 4s
-      background = "linear-gradient(110deg, #00AAEA 0%, #2F5BA9 40%, #932DD2 70%, #9B2C78 100%)",
-      className,
-      children,
-      ...props
-    },
-    ref
-  ) => {
-    const isMobile = useIsMobile();
+export function ShimmerButton({
+  children,
+  background,
+  className,
+  shimmerClassName,
+  mainColor,
+  disableOnMobile = false,
+  ...props
+}: ShimmerButtonProps) {
+  const [isMobile, setIsMobile] = useState(false);
+  
+  // Check if mobile on mount
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
     
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+    };
+  }, []);
+  
+  // Use simplified button on mobile if disableOnMobile is true
+  if (isMobile && disableOnMobile) {
     return (
       <button
-        ref={ref}
         className={cn(
-          "relative h-12 w-full overflow-hidden px-4 py-2 group",
-          "rounded-full transition-all duration-300 flex items-center justify-center",
-          "touch-manipulation", // Add touch optimization class
-          "-webkit-tap-highlight-color-transparent",
-          "will-change-transform", // Adding performance optimization
-          "active:scale-95",
+          "bg-gradient-to-br from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700",
+          "text-white font-medium rounded-lg text-center relative overflow-hidden",
+          "shadow-md active:shadow-inner transition-all duration-200",
+          "active:scale-[0.98]",
           className
         )}
-        style={{
-          background,
-          borderRadius,
-          WebkitTapHighlightColor: 'transparent'
-        }}
         {...props}
-        data-mobile-optimized="true"
       >
-        <div className="relative z-10 flex items-center justify-center gap-1 sm:gap-2">
+        <div className="relative z-20 flex items-center justify-center">
           {children}
         </div>
       </button>
     );
   }
-);
 
-ShimmerButton.displayName = "ShimmerButton";
+  return (
+    <button
+      className={cn(
+        "inline-flex h-10 py-2 px-4 items-center justify-center rounded-md text-sm font-medium",
+        "text-white",
+        "bg-gradient-to-br from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700",
+        "overflow-hidden",
+        "shadow-md hover:shadow-lg transition-shadow duration-200",
+        "relative touch-none",
+        className
+      )}
+      {...props}
+    >
+      <div
+        className={cn(
+          "absolute inset-0 flex items-center justify-center w-full h-full transition-all",
+          shimmerClassName
+        )}
+      >
+        <div
+          style={{
+            backgroundImage: `conic-gradient(from 0deg at 50% 50%, ${
+              mainColor ?? "#3b82f6"
+            } 0%, transparent 60%, transparent 80%, transparent 100%)`,
+          }}
+          className={cn(
+            "w-[300%] aspect-square absolute z-[2] animate-[spin_4s_linear_infinite] opacity-0 group-hover:opacity-100",
+            "group-hover:animate-[spin_4s_linear_infinite]"
+          )}
+        />
+      </div>
+      <span className="z-10 flex items-center justify-center opacity-100">
+        {children}
+      </span>
+      <div
+        style={{
+          background: background ?? "transparent",
+        }}
+        className="absolute inset-[1px] rounded-md z-[1]"
+      />
+    </button>
+  );
+}

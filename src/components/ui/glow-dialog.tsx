@@ -1,6 +1,5 @@
-
 import * as React from "react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { motion, useAnimationFrame, useMotionTemplate, useMotionValue, useTransform } from "framer-motion";
 import { useRef, useState, useCallback } from "react";
 import { Squares } from "@/components/ui/squares";
@@ -71,11 +70,6 @@ export function GlowDialog({
       return;
     }
 
-    if (!email.includes('@')) {
-      toast.error("Please enter a valid email address");
-      return;
-    }
-
     setIsLoading(true);
     
     try {
@@ -124,7 +118,8 @@ export function GlowDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={dialogContentClassName} aria-describedby="waitlist-dialog-description">
+      <DialogContent className={dialogContentClassName}>
+        <DialogTitle className="sr-only">Join Waitlist - Enter Your Email</DialogTitle>
         <motion.div 
           className="relative rounded-lg overflow-hidden bg-[#060606]/80 p-6 sm:p-8 md:p-10"
           initial={{ scale: 0.95, opacity: 0 }}

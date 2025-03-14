@@ -43,7 +43,7 @@ export const PricingPeriodToggle: React.FC<PricingPeriodToggleProps> = ({
         >
           <span 
             className={cn(
-              "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition-transform duration-300", // added duration-300 for smoother toggle
+              "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition-transform",
               period === 1 ? "translate-x-5" : "translate-x-0.5"
             )}
           />
@@ -59,7 +59,6 @@ export const PricingPeriodToggle: React.FC<PricingPeriodToggleProps> = ({
         <motion.div
           initial={{ opacity: 0, y: -5 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }} // Slowed down from default
           exit={{ opacity: 0, y: -5 }}
           className="mt-1"
         >
