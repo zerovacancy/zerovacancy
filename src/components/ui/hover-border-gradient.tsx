@@ -20,7 +20,7 @@ export function HoverBorderGradient({
   containerClassName,
   className,
   as: Tag = "button",
-  duration = 1,
+  duration = 3, // Changed from 1 to 3 for slower animation
   clockwise = true,
   ...props
 }: HoverBorderGradientProps) {
@@ -91,7 +91,7 @@ export function HoverBorderGradient({
             ? [movingMap[direction], highlight]
             : movingMap[direction],
         }}
-        transition={{ ease: "linear", duration: duration ?? 1 }}
+        transition={{ ease: "linear", duration: duration ?? 3 }} // Changed from 1 to 3
       />
       <div className="bg-black absolute z-1 flex-none inset-[2px] rounded-[100px]" />
     </Tag>
