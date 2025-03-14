@@ -72,10 +72,18 @@ export const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
         
         <Input 
           ref={(node) => {
-            // Simply set all refs directly
+            // Handle the refs properly
             if (node) {
-              if (inputRef) inputRef.current = node;
-              if (ref && typeof ref !== 'function') ref.current = node;
+              if (inputRef && 'current' in inputRef) {
+                inputRef.current = node;
+              }
+              if (ref) {
+                if (typeof ref === 'function') {
+                  ref(node);
+                } else if ('current' in ref) {
+                  ref.current = node;
+                }
+              }
               internalRef.current = node;
               
               // Log ref set for debugging
@@ -124,7 +132,6 @@ export const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
           required 
           disabled={isLoading || disabled}
           autoCapitalize="none"
-          autoComplete="email"
           enterKeyHint="go"
         />
       </div>
