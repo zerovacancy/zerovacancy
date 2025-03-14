@@ -1,3 +1,4 @@
+
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.7.1'
 import { corsHeaders } from "../_shared/cors.ts"
@@ -99,7 +100,13 @@ serve(async (req) => {
     }
 
     // Extract and validate email and other data
-    const { email, source = 'waitlist', marketingConsent = true, metadata = {} } = requestData as any
+    const { 
+      email, 
+      source = 'waitlist', 
+      marketingConsent = true, 
+      metadata = {},
+      userType = 'property_owner' // Default user type
+    } = requestData as any
 
     if (!email) {
       return new Response(
@@ -123,7 +130,7 @@ serve(async (req) => {
       )
     }
 
-    console.log(`Processing waitlist email: ${email} from source: ${source}`)
+    console.log(`Processing waitlist email: ${email} from source: ${source}, user type: ${userType}`)
 
     // Add email to waitlist_subscribers table using service role client
     const { data, error } = await supabase
@@ -133,7 +140,8 @@ serve(async (req) => {
           email,
           source,
           marketing_consent: marketingConsent,
-          metadata
+          metadata,
+          user_type: userType
         }
       ])
       .select()
@@ -168,17 +176,22 @@ serve(async (req) => {
     let emailResult = null
     if (resendApiKey) {
       try {
-        console.log(`Preparing to send confirmation email to ${email}`)
+        console.log(`Preparing to send confirmation email to ${email} (user type: ${userType})`)
         const resend = new Resend(resendApiKey)
 
         // Get username from email
         const userName = email.split('@')[0];
         
-        // Generate both HTML and plain text email templates
-        const emailHtml = generateEmailTemplate(userName);
-        const emailText = generatePlainTextEmailTemplate(userName);
+        // Generate both HTML and plain text email templates based on user type
+        const emailHtml = userType === 'creator' 
+          ? generateCreatorEmailTemplate(userName)
+          : generateEmailTemplate(userName);
+          
+        const emailText = userType === 'creator'
+          ? generateCreatorPlainTextEmailTemplate(userName)
+          : generatePlainTextEmailTemplate(userName);
         
-        console.log('Email templates generated successfully')
+        console.log('Email templates generated successfully for user type:', userType)
 
         // Updated "from" address to use the verified domain
         const from = 'Team Zero <zero@zerovacancy.ai>'
@@ -188,10 +201,15 @@ serve(async (req) => {
         emailResult = await resend.emails.send({
           from,
           to: email,
-          subject: 'Welcome to the ZeroVacancy Waitlist!',
+          subject: userType === 'creator' 
+            ? 'Welcome to the ZeroVacancy Creator Waitlist!' 
+            : 'Welcome to the ZeroVacancy Waitlist!',
           html: emailHtml,
           text: emailText, // Add plain text version
-          tags: [{ name: 'source', value: source }]
+          tags: [
+            { name: 'source', value: source },
+            { name: 'user_type', value: userType }
+          ]
         })
 
         // Log detailed response from Resend API
@@ -248,6 +266,7 @@ serve(async (req) => {
       JSON.stringify({
         status: 'success',
         message: 'Successfully added to waitlist',
+        userType,
         emailSent: !!emailResult,
         data,
         emailDetails: emailResult ? { id: emailResult.id } : null
@@ -269,7 +288,7 @@ serve(async (req) => {
   }
 })
 
-// Function to generate plain text email template
+// Function to generate plain text email template for property owners
 function generatePlainTextEmailTemplate(userName: string) {
   return `
 Welcome to ZeroVacancy!
@@ -291,7 +310,29 @@ Privacy Policy: https://www.zerovacancy.ai/privacy
   `.trim();
 }
 
-// Function to generate email HTML template
+// Function to generate plain text email template for creators
+function generateCreatorPlainTextEmailTemplate(userName: string) {
+  return `
+Join Our Creator Network at ZeroVacancy!
+
+Thank you for your interest in joining ZeroVacancy as a content creator! We're building the premier marketplace for real estate content professionals.
+
+What happens next:
+- You'll be among the first content creators invited to join our platform
+- Gain access to a steady stream of quality clients
+- Keep more of your earnings with our creator-friendly commission structure
+
+We're excited to showcase your talents to property owners who value high-quality content.
+
+Visit our website: https://www.zerovacancy.ai
+
+© 2025 ZeroVacancy. All rights reserved.
+Terms of Service: https://www.zerovacancy.ai/terms
+Privacy Policy: https://www.zerovacancy.ai/privacy
+  `.trim();
+}
+
+// Function to generate email HTML template for property owners
 function generateEmailTemplate(userName: string) {
   return `
     <center style="width: 100%; background-color: #f5f5f5; text-align: left;">
@@ -377,6 +418,123 @@ function generateEmailTemplate(userName: string) {
                   <td class="mobile-padding" style="padding: 0 30px 30px 30px;">
                     <p class="mobile-font" style="margin: 0; font-family: 'Inter', Arial, sans-serif; font-size: 16px; line-height: 24px; color: #333333; text-align: center;">
                       We can't wait to connect you with top-tier content creators for your property marketing needs.
+                    </p>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="mobile-padding" style="padding: 0 30px 40px 30px; text-align: center;">
+                    <a style="background-color: #8A57DE; font-family: 'Space Grotesk', Arial, sans-serif; font-size: 16px; font-weight: bold; text-decoration: none; padding: 14px 30px; color: #ffffff; border-radius: 4px; display: inline-block; mso-padding-alt: 0; text-underline-color: #8A57DE;" href="https://www.zerovacancy.ai">
+                      <span style="mso-text-raise: 10pt;">Visit Our Website</span>
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 30px 0; text-align: center; background-color: #f5f5f5;">
+              <p style="margin: 0; font-family: 'Inter', Arial, sans-serif; font-size: 14px; line-height: 20px; color: #666666;">
+                © 2025 ZeroVacancy. All rights reserved.
+              </p>
+              <p style="margin: 10px 0 0 0; font-family: 'Inter', Arial, sans-serif; font-size: 14px; line-height: 20px; color: #666666;">
+                <a style="color: #666666; text-decoration: underline;" href="https://www.zerovacancy.ai/terms">Terms of Service</a> &nbsp;|&nbsp;
+                <a style="color: #666666; text-decoration: underline;" href="https://www.zerovacancy.ai/privacy">Privacy Policy</a> &nbsp;|&nbsp;
+                <a style="color: #666666; text-decoration: underline;" href="[Unsubscribe_Link]">Unsubscribe</a>
+              </p>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </center>
+  `;
+}
+
+// Function to generate email HTML template for creators
+function generateCreatorEmailTemplate(userName: string) {
+  return `
+    <center style="width: 100%; background-color: #f5f5f5; text-align: left;">
+      <div style="display: none; font-size: 1px; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden; mso-hide: all; font-family: sans-serif;">
+        Thank you for your interest in joining ZeroVacancy as a content creator! We're excited to have you with us.
+      </div>
+      <div class="email-container" style="max-width: 600px; margin: 0 auto;">
+        <table style="margin: 0 auto;" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" align="center">
+          <tr>
+            <td style="padding: 40px 0 30px 0; text-align: center; background-color: #f5f5f5;">
+              <a href="https://www.zerovacancy.ai">
+                <img style="height: auto; display: block; margin: 0 auto; border: 0; max-width: 300px;" width="300" alt="ZeroVacancy" src="https://www.zerovacancy.ai/logo.png">
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <td style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+              <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+                <tr>
+                  <td class="mobile-padding" style="padding: 40px 30px 20px 30px; text-align: center;">
+                    <h1 style="margin: 0; font-family: 'Space Grotesk', Arial, sans-serif; font-size: 28px; line-height: 36px; color: #000000; font-weight: bold;">Join Our Creator Network!</h1>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="mobile-padding" style="padding: 0 30px 20px 30px;">
+                    <p class="mobile-font" style="margin: 0; font-family: 'Inter', Arial, sans-serif; font-size: 16px; line-height: 24px; color: #333333; text-align: center;">
+                      Thank you for your interest in joining ZeroVacancy as a content creator! We're building the premier marketplace for real estate content professionals.
+                    </p>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="mobile-padding" style="padding: 0 30px 20px 30px;">
+                    <p class="mobile-font" style="margin: 0 0 15px 0; font-family: 'Inter', Arial, sans-serif; font-size: 16px; line-height: 24px; color: #333333; text-align: center; font-weight: bold;">
+                      What happens next:
+                    </p>
+                    <table style="max-width: 400px; margin: 0 auto;" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+                      <tr>
+                        <td style="text-align: left; padding: 5px 0;">
+                          <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+                            <tr>
+                              <td style="vertical-align: top;" width="30">
+                                <div style="background-color: #8A57DE; width: 8px; height: 8px; border-radius: 50%; margin-top: 8px;"></div>
+                              </td>
+                              <td class="mobile-font" style="font-family: 'Inter', Arial, sans-serif; font-size: 16px; line-height: 24px; color: #333333;">
+                                You'll be among the first content creators invited to join our platform
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="text-align: left; padding: 5px 0;">
+                          <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+                            <tr>
+                              <td style="vertical-align: top;" width="30">
+                                <div style="background-color: #8A57DE; width: 8px; height: 8px; border-radius: 50%; margin-top: 8px;"></div>
+                              </td>
+                              <td class="mobile-font" style="font-family: 'Inter', Arial, sans-serif; font-size: 16px; line-height: 24px; color: #333333;">
+                                Gain access to a steady stream of quality clients
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="text-align: left; padding: 5px 0;">
+                          <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
+                            <tr>
+                              <td style="vertical-align: top;" width="30">
+                                <div style="background-color: #8A57DE; width: 8px; height: 8px; border-radius: 50%; margin-top: 8px;"></div>
+                              </td>
+                              <td class="mobile-font" style="font-family: 'Inter', Arial, sans-serif; font-size: 16px; line-height: 24px; color: #333333;">
+                                Keep more of your earnings with our creator-friendly commission structure
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="mobile-padding" style="padding: 0 30px 30px 30px;">
+                    <p class="mobile-font" style="margin: 0; font-family: 'Inter', Arial, sans-serif; font-size: 16px; line-height: 24px; color: #333333; text-align: center;">
+                      We're excited to showcase your talents to property owners who value high-quality content.
                     </p>
                   </td>
                 </tr>

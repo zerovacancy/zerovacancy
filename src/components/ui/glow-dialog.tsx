@@ -1,3 +1,4 @@
+
 import * as React from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { motion, useAnimationFrame, useMotionTemplate, useMotionValue, useTransform } from "framer-motion";
@@ -9,6 +10,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { SuccessConfirmation } from "@/components/ui/waitlist/success-confirmation";
 import confetti from "canvas-confetti";
+import { cn } from "@/lib/utils";
 
 const MovingBorder = ({
   children,
@@ -65,6 +67,7 @@ export function GlowDialog({
   const [showSuccess, setShowSuccess] = useState(false);
   const [submittedEmail, setSubmittedEmail] = useState("");
   const [alreadySubscribed, setAlreadySubscribed] = useState(false);
+  const [isCreator, setIsCreator] = useState(false);
   const isMobileView = typeof window !== 'undefined' && window.innerWidth < 768;
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
@@ -91,7 +94,8 @@ export function GlowDialog({
           email, 
           source: "glow_dialog", 
           marketingConsent: true,
-          metadata
+          metadata,
+          userType: isCreator ? 'creator' : 'property_owner'
         }
       });
       
@@ -130,7 +134,7 @@ export function GlowDialog({
     } finally {
       setIsLoading(false);
     }
-  }, [email, onOpenChange]);
+  }, [email, onOpenChange, isCreator]);
 
   const dialogContentClassName = isMobileView 
     ? "max-w-[95vw] md:max-w-3xl overflow-hidden border-none bg-transparent" 
@@ -166,7 +170,7 @@ export function GlowDialog({
             <p className="text-center text-gray-300 mb-8 max-w-2xl mx-auto text-sm sm:text-base md:text-lg">
               Be among the first to connect with our curated network of property visionaries.
             </p>
-            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 justify-center items-stretch max-w-md mx-auto">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-3 justify-center max-w-md mx-auto">
               <input
                 type="email"
                 inputMode="email"
@@ -182,21 +186,55 @@ export function GlowDialog({
                 className="flex-1 px-4 py-2 rounded-md bg-white/10 border border-white/20 text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-white/30 disabled:opacity-50"
                 aria-label="Email address"
               />
-              <HoverBorderGradient 
-                type="submit"
-                className="!bg-white !text-black hover:!bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed"
-                duration={1.5}
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Joining...
-                  </>
-                ) : (
-                  'JOIN WAITLIST'
-                )}
-              </HoverBorderGradient>
+              
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 mt-1">
+                <HoverBorderGradient 
+                  type="submit"
+                  className={cn(
+                    "!bg-white !text-black hover:!bg-white/90",
+                    "disabled:opacity-50 disabled:cursor-not-allowed",
+                    "flex-1"
+                  )}
+                  duration={1.5}
+                  disabled={isLoading}
+                  onClick={() => setIsCreator(false)}
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Joining...
+                    </>
+                  ) : (
+                    'JOIN AS PROPERTY OWNER'
+                  )}
+                </HoverBorderGradient>
+                
+                <HoverBorderGradient 
+                  type="button"
+                  className={cn(
+                    "!bg-gradient-to-r !from-purple-600 !to-blue-600",
+                    "!text-white hover:!bg-gradient-to-r hover:!from-purple-700 hover:!to-blue-700",
+                    "disabled:opacity-50 disabled:cursor-not-allowed",
+                    "flex-1"
+                  )}
+                  duration={1.5}
+                  disabled={isLoading}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsCreator(true);
+                    handleSubmit(e);
+                  }}
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Joining...
+                    </>
+                  ) : (
+                    'JOIN AS CREATOR'
+                  )}
+                </HoverBorderGradient>
+              </div>
             </form>
           </div>
         </motion.div>
@@ -209,6 +247,7 @@ export function GlowDialog({
       onOpenChange={setShowSuccess}
       email={submittedEmail}
       alreadySubscribed={alreadySubscribed}
+      isCreator={isCreator}
     />
     </>
   );

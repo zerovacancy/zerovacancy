@@ -3,6 +3,7 @@ import React, { useRef, useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { WaitlistCTA } from "../ui/waitlist-cta";
+import { WaitlistCreatorCTA } from "../ui/waitlist-creator-cta";
 import { TextRotate } from "../ui/text-rotate";
 
 const TITLES = ["CONVERTS", "CAPTIVATES", "CLOSES"];
@@ -160,11 +161,20 @@ export function Hero() {
           isInView ? "animate-fade-in delay-200" : "opacity-0" 
         )}
       >
+        {/* Main waitlist CTA */}
         <WaitlistCTA 
-          className={cn(isMobile ? "mb-0" : "mb-4 sm:mb-6")} 
+          className={cn(isMobile ? "mb-2" : "mb-4 sm:mb-6")} 
           buttonText="RESERVE EARLY ACCESS" 
           showSocialProof={true}
         />
+        
+        {/* Creator waitlist CTA */}
+        <div className="w-full max-w-md mx-auto">
+          <div className="text-center text-sm text-gray-600 mb-2">Are you a content creator?</div>
+          <WaitlistCreatorCTA 
+            buttonText="JOIN AS CREATOR" 
+          />
+        </div>
       </div>
     </section>
   );

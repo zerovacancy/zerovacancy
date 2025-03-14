@@ -1,3 +1,4 @@
+
 import React, { useEffect } from "react"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { CheckCircle } from "lucide-react"
@@ -78,6 +79,7 @@ interface SuccessConfirmationProps {
   onOpenChange: (open: boolean) => void
   email?: string
   alreadySubscribed?: boolean
+  isCreator?: boolean
 }
 
 export function SuccessConfirmation({
@@ -85,6 +87,7 @@ export function SuccessConfirmation({
   onOpenChange,
   email,
   alreadySubscribed = false,
+  isCreator = false
 }: SuccessConfirmationProps) {
   const isMobile = useIsMobile()
 
@@ -132,6 +135,38 @@ export function SuccessConfirmation({
     }
   }, [open, onOpenChange, isMobile])
 
+  const getSuccessTitle = () => {
+    if (alreadySubscribed) {
+      return "Already Subscribed";
+    }
+    
+    return isCreator ? "Joined Creator Waitlist!" : "Success!";
+  };
+  
+  const getSuccessMessage = () => {
+    if (alreadySubscribed) {
+      return email 
+        ? `${email} is already on our waitlist.` 
+        : "You're already on our waitlist!";
+    }
+    
+    if (isCreator) {
+      return email 
+        ? `We've added ${email} to our creator waitlist.` 
+        : "You've successfully joined our creator waitlist.";
+    }
+    
+    return email 
+      ? `We've added ${email} to our waitlist.` 
+      : "You've successfully joined our waitlist.";
+  };
+  
+  const getNotificationMessage = () => {
+    return isCreator
+      ? "We'll notify you as soon as we open creator applications."
+      : "We'll notify you as soon as we launch.";
+  };
+
   return (
     <>
       {/* Remove the Confetti component since we're using direct calls */}
@@ -175,20 +210,13 @@ export function SuccessConfirmation({
                   "bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600"
                 )}
               >
-                {alreadySubscribed ? "Already Subscribed" : "Success!"}
+                {getSuccessTitle()}
               </h3>
               <p className="text-gray-600">
-                {alreadySubscribed
-                  ? email 
-                    ? `${email} is already on our waitlist.` 
-                    : "You're already on our waitlist!"
-                  : email 
-                    ? `We've added ${email} to our waitlist.` 
-                    : "You've successfully joined our waitlist."
-                }
+                {getSuccessMessage()}
               </p>
               <p className="text-sm text-gray-500 mt-2">
-                We'll notify you as soon as we launch.
+                {getNotificationMessage()}
               </p>
             </div>
           </div>
