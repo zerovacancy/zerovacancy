@@ -160,18 +160,7 @@ export function Hero() {
           isInView ? "animate-fade-in delay-200" : "opacity-0" 
         )}
       >
-        <WaitlistCTA 
-          className={cn(isMobile ? "mb-0" : "mb-4 sm:mb-6")} 
-          buttonText="RESERVE EARLY ACCESS" 
-          showSocialProof={true}
-          onButtonClick={() => {
-            console.log("Reserve Early Access clicked - scrolling to waitlist");
-            const waitlistSection = document.getElementById('waitlist');
-            if (waitlistSection) {
-              waitlistSection.scrollIntoView({ behavior: 'smooth' });
-            }
-          }}
-        />
+        <WaitlistCTA className={cn(isMobile ? "mb-0" : "mb-4 sm:mb-6")} buttonText="RESERVE EARLY ACCESS" showSocialProof={true} />
       </div>
     </section>
   );
