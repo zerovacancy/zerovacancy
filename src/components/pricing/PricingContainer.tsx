@@ -368,7 +368,7 @@ export const PricingContainer = () => {
                     "rounded-xl bg-gradient-to-r from-brand-purple to-brand-purple-dark",
                     "shadow-sm border border-brand-purple/10 hover:shadow-md",
                     "transition-all duration-200 relative",
-                    "max-w-[240px] w-full"
+                    "max-w-[240px] w-full mb-6"
                   )}
                 >
                   <span className="flex-1 text-center">
@@ -618,3 +618,4 @@ export const PricingContainer = () => {
     </div>
   );
 };
+

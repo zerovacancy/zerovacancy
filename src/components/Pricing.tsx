@@ -1,3 +1,4 @@
+
 import { cn } from "@/lib/utils";
 import { useSubscription } from "@/hooks/use-subscription";
 import PricingHeader from "./pricing/PricingHeader";
@@ -7,7 +8,6 @@ import { PricingContainer } from "./pricing/PricingContainer";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { isLandscapeMode } from "@/utils/mobile-optimization";
 import { useEffect, useState } from "react";
-import { CompareAllFeaturesButton } from "./pricing/CompareAllFeaturesButton";
 
 // Wrapper component that uses the pricing context and passes values to PricingHeader
 const PricingContent = () => {
@@ -59,13 +59,6 @@ const PricingContent = () => {
       )}>
         <PricingContainer />
       </div>
-      
-      {/* Removed the wrapping div and directly rendering the button when on mobile */}
-      {isMobile && (
-        <CompareAllFeaturesButton 
-          className="bg-brand-purple text-white hover:bg-brand-purple/90 active:bg-brand-purple/95 border-none shadow-md w-[85%] max-w-[320px] mx-auto mb-8 mt-1"
-        />
-      )}
       
       {/* Small copy text replacing the CommonFeatures component */}
       <div className={cn(
