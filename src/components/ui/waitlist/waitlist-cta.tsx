@@ -15,12 +15,14 @@ export function WaitlistCTA({
   className,
   source = "landing_page",
   buttonText = "JOIN WAITLIST",
-  showSocialProof = true
+  showSocialProof = true,
+  onButtonClick
 }: {
   className?: string;
   source?: string;
   buttonText?: string;
   showSocialProof?: boolean;
+  onButtonClick?: () => void; 
 }) {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -101,10 +103,11 @@ export function WaitlistCTA({
           inputRef={inputRef}
         />
         
-        {/* Pass the buttonText received from Hero */}
+        {/* Pass the buttonText received from Hero with custom onClick if needed */}
         <WaitlistButton 
           source={source}
           buttonText={buttonText}
+          onClick={onButtonClick}
         />
       </form>
       

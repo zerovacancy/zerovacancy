@@ -40,6 +40,17 @@ export function ShimmerButton({
   
   // Use simplified button on mobile if disableOnMobile is true
   if (isMobile && disableOnMobile) {
+    // Extract onClick from props to handle it separately
+    const { onClick, ...restProps } = props;
+    
+    const handleMobileButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+      console.log("Mobile ShimmerButton clicked, passing event to onClick handler");
+      // Call the original onClick if it exists
+      if (onClick) {
+        onClick(e);
+      }
+    };
+    
     return (
       <button
         className={cn(
@@ -50,7 +61,8 @@ export function ShimmerButton({
           className
         )}
         type="button"
-        {...props}
+        onClick={handleMobileButtonClick}
+        {...restProps}
       >
         <div className="relative z-20 flex items-center justify-center">
           {children}
@@ -58,6 +70,17 @@ export function ShimmerButton({
       </button>
     );
   }
+
+  // Extract onClick from props to handle it separately
+  const { onClick, ...restProps } = props;
+  
+  const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    console.log("ShimmerButton clicked, passing event to onClick handler");
+    // Call the original onClick if it exists
+    if (onClick) {
+      onClick(e);
+    }
+  };
 
   return (
     <button
@@ -71,7 +94,8 @@ export function ShimmerButton({
         className
       )}
       type="button"
-      {...props}
+      onClick={handleButtonClick}
+      {...restProps}
     >
       <div
         className={cn(
