@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { WaitlistCTA } from "../ui/waitlist-cta";
 import { WaitlistCreatorCTA } from "../ui/waitlist-creator-cta";
 import { TextRotate } from "../ui/text-rotate";
+import { SocialProof } from "../ui/waitlist/social-proof";
 
 const TITLES = ["CONVERTS", "CAPTIVATES", "CLOSES"];
 
@@ -161,19 +162,30 @@ export function Hero() {
           isInView ? "animate-fade-in delay-200" : "opacity-0" 
         )}
       >
-        {/* Main waitlist CTA */}
-        <WaitlistCTA 
-          className={cn(isMobile ? "mb-2" : "mb-4 sm:mb-6")} 
-          buttonText="RESERVE EARLY ACCESS" 
-          showSocialProof={true}
-        />
+        {/* CTA Container with buttons side by side */}
+        <div className="flex flex-row justify-center gap-4 w-full max-w-3xl mx-auto mb-4">
+          {/* Property Owner Button */}
+          <div className="flex flex-col space-y-2 flex-1">
+            <div className="text-center text-sm text-gray-600 font-medium">For Property Owners</div>
+            <WaitlistCTA 
+              buttonText="RESERVE EARLY ACCESS" 
+              showSocialProof={false}
+            />
+          </div>
+          
+          {/* Creator Button */}
+          <div className="flex flex-col space-y-2 flex-1">
+            <div className="text-center text-sm text-gray-600 font-medium">For Content Creators</div>
+            <WaitlistCreatorCTA 
+              buttonText="JOIN AS CREATOR" 
+              showSocialProof={false}
+            />
+          </div>
+        </div>
         
-        {/* Creator waitlist CTA */}
-        <div className="w-full max-w-md mx-auto">
-          <div className="text-center text-sm text-gray-600 mb-2">Are you a content creator?</div>
-          <WaitlistCreatorCTA 
-            buttonText="JOIN AS CREATOR" 
-          />
+        {/* Social proof centered below both buttons */}
+        <div className="w-full flex justify-center">
+          <SocialProof className="mt-4" />
         </div>
       </div>
     </section>

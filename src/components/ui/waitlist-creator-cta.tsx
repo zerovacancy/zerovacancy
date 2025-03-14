@@ -33,11 +33,11 @@ export const WaitlistCreatorCTA: React.FC<WaitlistCreatorCTAProps> = ({
       >
         <ShimmerButton 
           className={cn(
-            "w-full text-white", 
-            "shadow-md shadow-purple-500/20", 
+            "w-full",
+            "shadow-md", 
             "h-12 sm:h-14 text-sm sm:text-base", 
             "transition-all duration-300",
-            "bg-gradient-to-r from-purple-600 to-blue-600"
+            "bg-white text-purple-600 border-2 border-purple-600 hover:bg-purple-50"
           )}
         >
           {buttonText}
