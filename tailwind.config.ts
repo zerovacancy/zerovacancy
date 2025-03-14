@@ -94,11 +94,6 @@ const config: Config = {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-5px)" },
         },
-        // Add pulse-subtle animation
-        "pulse-subtle": {
-          "0%, 100%": { opacity: 1 },
-          "50%": { opacity: 0.85 },
-        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -106,8 +101,6 @@ const config: Config = {
         shine: "shine var(--duration) ease-in-out infinite alternate",
         // Add bounce-subtle animation
         "bounce-subtle": "bounce-subtle 2s ease-in-out infinite",
-        // Add pulse-subtle animation
-        "pulse-subtle": "pulse-subtle 3s ease-in-out infinite",
       },
     },
   },

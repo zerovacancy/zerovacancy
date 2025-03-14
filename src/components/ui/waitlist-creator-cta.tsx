@@ -22,7 +22,7 @@ export const WaitlistCreatorCTA: React.FC<WaitlistCreatorCTAProps> = ({
 }) => {
   return (
     <div className={cn(
-      "w-full max-w-xs mx-auto", // Changed from max-w-md to max-w-xs for narrower buttons
+      "w-full max-w-md mx-auto", 
       className
     )}>
       <WaitlistCreatorButton 
@@ -33,12 +33,11 @@ export const WaitlistCreatorCTA: React.FC<WaitlistCreatorCTAProps> = ({
       >
         <ShimmerButton 
           className={cn(
-            "w-full", 
-            "shadow-md shadow-purple-500/10", 
+            "w-full text-white", 
+            "shadow-md shadow-purple-500/20", 
             "h-12 sm:h-14 text-sm sm:text-base", 
             "transition-all duration-300",
-            "bg-white border-2 border-purple-500 text-purple-600 hover:bg-purple-50",
-            "font-medium"
+            "bg-gradient-to-r from-purple-600 to-blue-600"
           )}
         >
           {buttonText}

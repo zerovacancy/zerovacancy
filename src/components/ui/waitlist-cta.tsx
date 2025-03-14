@@ -22,7 +22,7 @@ export const WaitlistCTA: React.FC<WaitlistCTAProps> = ({
 }) => {
   return (
     <div className={cn(
-      "w-full max-w-xs mx-auto", // Changed from max-w-md to max-w-xs for narrower buttons
+      "w-full max-w-md mx-auto", 
       className
     )}>
       <WaitlistButton 
@@ -37,8 +37,6 @@ export const WaitlistCTA: React.FC<WaitlistCTAProps> = ({
             "shadow-md shadow-blue-500/20", 
             "h-12 sm:h-14 text-sm sm:text-base", 
             "transition-all duration-300",
-            "bg-gradient-to-r from-purple-600 to-blue-600",
-            "font-medium"
           )}
         >
           {buttonText}

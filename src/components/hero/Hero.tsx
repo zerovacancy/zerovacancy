@@ -5,8 +5,6 @@ import { cn } from "@/lib/utils";
 import { WaitlistCTA } from "../ui/waitlist-cta";
 import { WaitlistCreatorCTA } from "../ui/waitlist-creator-cta";
 import { TextRotate } from "../ui/text-rotate";
-import { SocialProof } from '@/components/ui/waitlist/social-proof';
-import { Separator } from "../ui/separator";
 
 const TITLES = ["CONVERTS", "CAPTIVATES", "CLOSES"];
 
@@ -155,61 +153,27 @@ export function Hero() {
         </div>
       </div>
 
-      {/* Add a subtle separator */}
-      <Separator className="w-24 mx-auto mt-8 mb-2 bg-indigo-100/70" />
-
       <div 
         className={cn(
           "w-full", 
-          isMobile ? "mt-1" : "mt-8 sm:mt-10", // Increased spacing
+          isMobile ? "mt-1" : "mt-5 sm:mt-6",
           "px-4 sm:px-4",
           isInView ? "animate-fade-in delay-200" : "opacity-0" 
         )}
       >
-        {/* Side-by-side CTA layout */}
-        <div className="max-w-2xl mx-auto">
-          {/* Two-column layout container */}
-          <div className="flex flex-col space-y-8"> {/* Increased spacing */}
-            {/* Buttons container with side-by-side layout */}
-            <div className="flex flex-row justify-center gap-[8%]"> {/* Centered with gap */}
-              {/* Property Owner CTA Column */}
-              <div className="w-[46%] max-w-[280px] flex flex-col">
-                <div className="flex flex-col items-center mb-3">
-                  <div className="text-center font-medium text-xs sm:text-sm text-gray-700 mb-1">
-                    For Property Owners
-                  </div>
-                  {/* Visual connector */}
-                  <div className="h-3 w-px bg-indigo-200"></div>
-                </div>
-                <WaitlistCTA 
-                  buttonText="RESERVE EARLY ACCESS" 
-                  showSocialProof={false}
-                  className="w-full"
-                />
-              </div>
-              
-              {/* Content Creator CTA Column */}
-              <div className="w-[46%] max-w-[280px] flex flex-col">
-                <div className="flex flex-col items-center mb-3">
-                  <div className="text-center font-medium text-xs sm:text-sm text-gray-700 mb-1">
-                    For Content Creators
-                  </div>
-                  {/* Visual connector */}
-                  <div className="h-3 w-px bg-indigo-200"></div>
-                </div>
-                <WaitlistCreatorCTA 
-                  buttonText="JOIN AS CREATOR"
-                  showSocialProof={false}
-                  className="w-full"
-                />
-              </div>
-            </div>
-            
-            {/* Social proof centered below both buttons */}
-            <div className="flex justify-center">
-              <SocialProof />
-            </div>
-          </div>
+        {/* Main waitlist CTA */}
+        <WaitlistCTA 
+          className={cn(isMobile ? "mb-2" : "mb-4 sm:mb-6")} 
+          buttonText="RESERVE EARLY ACCESS" 
+          showSocialProof={true}
+        />
+        
+        {/* Creator waitlist CTA */}
+        <div className="w-full max-w-md mx-auto">
+          <div className="text-center text-sm text-gray-600 mb-2">Are you a content creator?</div>
+          <WaitlistCreatorCTA 
+            buttonText="JOIN AS CREATOR" 
+          />
         </div>
       </div>
     </section>
