@@ -167,33 +167,56 @@ export function WaitlistButton({
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="w-full">
-          <div className="flex flex-col sm:flex-row gap-2 w-full">
+          <div className={cn(
+            "flex items-center w-full",
+            "max-w-md mx-auto",
+            "bg-white overflow-hidden",
+            "rounded-xl shadow-sm",
+            "border border-gray-200/70",
+            "transition-all duration-300",
+            "hover:shadow-md hover:border-indigo-200/70",
+            "focus-within:ring-2 focus-within:ring-indigo-200/50 focus-within:border-indigo-300",
+            isMobile ? "flex-col gap-2" : "flex-row h-14 p-1"
+          )}>
             <EmailInput
               setEmail={setEmail}
               email={email}
               isLoading={loading}
               disabled={loading}
-              className="flex-grow"
+              className={cn(
+                "w-full",
+                isMobile ? "w-full" : "w-[65%] lg:w-[70%]",
+                isMobile ? "" : "border-0 shadow-none rounded-r-none"
+              )}
               inputRef={inputRef}
+              noShadow={!isMobile}
             />
             <Button 
               type="submit" 
               disabled={loading} 
               className={cn(
-                "h-12 sm:min-w-[130px] font-medium text-white",
+                "font-medium text-white",
                 "bg-gradient-to-r from-indigo-600 to-purple-600",
                 "hover:from-indigo-700 hover:to-purple-700",
                 "transition-all duration-200 ease-in-out",
-                isMobile && "min-h-[48px]"
+                "rounded-xl",
+                "flex items-center justify-center",
+                "shadow-sm",
+                "focus:ring-2 focus:ring-purple-500/50 focus:ring-offset-2",
+                "focus-visible:outline-none",
+                isMobile 
+                  ? "w-full h-12 text-sm py-3"
+                  : "w-[35%] lg:w-[30%] h-full text-sm whitespace-nowrap"
               )}
+              aria-label="Subscribe to waitlist"
             >
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Joining...
+                  <span className="whitespace-nowrap">{isMobile ? "Joining..." : "Processing..."}</span>
                 </>
               ) : (
-                buttonText
+                <span className="whitespace-nowrap">{buttonText}</span>
               )}
             </Button>
           </div>

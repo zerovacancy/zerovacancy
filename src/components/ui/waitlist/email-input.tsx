@@ -14,10 +14,11 @@ interface EmailInputProps {
   disabled?: boolean;
   inputRef?: React.RefObject<HTMLInputElement>;
   className?: string;
+  noShadow?: boolean;
 }
 
 export const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
-  ({ email, setEmail, isLoading, disabled, inputRef, className }, ref) => {
+  ({ email, setEmail, isLoading, disabled, inputRef, className, noShadow = false }, ref) => {
     const [isFocused, setIsFocused] = useState(false);
     const [isValid, setIsValid] = useState(false);
     const isMobile = useIsMobile();
@@ -48,13 +49,13 @@ export const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
     return (
       <div className={cn(
         "relative transition-all duration-300", 
-        isMobile ? "w-full" : "w-[380px]",
-        isFocused && "scale-[1.02] transform",
+        isMobile ? "w-full" : noShadow ? "w-full" : "w-[380px]",
+        isFocused && !noShadow && "scale-[1.02] transform",
         className
       )}>
         {/* Input field with mail icon */}
         <div className={cn(
-          "absolute left-3 top-1/2 transform -translate-y-1/2",
+          "absolute left-4 top-1/2 transform -translate-y-1/2 z-10",
           "text-transparent bg-clip-text",
           isFocused || isValid 
             ? "bg-gradient-to-r from-indigo-600 to-purple-600" 
@@ -65,7 +66,7 @@ export const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
         
         {/* Check mark for valid email */}
         {isValid && (
-          <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-500 animate-fade-in">
+          <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-green-500 animate-fade-in z-10">
             <CheckCircle className="h-5 w-5" />
           </div>
         )}
@@ -85,29 +86,33 @@ export const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
           inputMode="email"
           autoComplete="email"
           className={cn(
-            "border transition-all duration-300",
+            "transition-all duration-300",
+            "focus-visible:outline-none",
             "focus:scale-100", // Prevent default scale to use our custom one
+            noShadow && "focus:ring-0 focus:ring-offset-0 focus:border-0 rounded-l-xl rounded-r-none",
+            !noShadow && "border",
             isMobile 
               ? [
                   "h-[50px]",
                   "bg-white", 
-                  isFocused ? "border-indigo-400 ring-2 ring-indigo-200" : "border-gray-100",
-                  "pl-10 pr-3 py-2",
+                  isFocused && !noShadow ? "border-indigo-400 ring-2 ring-indigo-200" : "border-gray-100",
+                  "pl-12 pr-3 py-3",
                   "text-base",
                   "placeholder:text-gray-400", 
                   "rounded-xl",
-                  "shadow-[inset_0_1px_2px_rgba(0,0,0,0.08)]"
+                  !noShadow && "shadow-[inset_0_1px_2px_rgba(0,0,0,0.08)]"
                 ] 
               : [
                   "h-[52px]",
-                  "border-gray-200 bg-white", 
-                  "focus:ring-2 focus:ring-primary/50 focus:border-transparent", 
-                  "pl-10 pr-4 py-2", 
+                  "bg-white", 
+                  !noShadow && "border-gray-200",
+                  !noShadow && "focus:ring-2 focus:ring-primary/50 focus:border-transparent", 
+                  "pl-12 pr-4 py-3", 
                   "text-base placeholder:text-gray-400", 
-                  "rounded-xl",
-                  isFocused ? "border-indigo-400 ring-2 ring-indigo-200 shadow-[0_0_10px_rgba(99,102,241,0.2)]" : "",
-                  "shadow-[inset_0_1px_2px_rgba(0,0,0,0.08)]",
-                  "hover:border-indigo-300 hover:shadow-[0_0_8px_rgba(99,102,241,0.15)]"
+                  !noShadow && "rounded-xl",
+                  !noShadow && isFocused ? "border-indigo-400 ring-2 ring-indigo-200 shadow-[0_0_10px_rgba(99,102,241,0.2)]" : "",
+                  !noShadow && "shadow-[inset_0_1px_2px_rgba(0,0,0,0.08)]",
+                  !noShadow && "hover:border-indigo-300 hover:shadow-[0_0_8px_rgba(99,102,241,0.15)]"
                 ]
           )} 
           value={email} 
