@@ -2,13 +2,13 @@
 import { cn } from "@/lib/utils";
 import { useSubscription } from "@/hooks/use-subscription";
 import PricingHeader from "./pricing/PricingHeader";
-import PricingCardList from "./pricing/PricingCardList";
-import { PricingContext } from "./pricing/PricingContext";
+import { PricingCardList } from "./pricing/PricingCardList";
+import { PricingProvider } from "./pricing/PricingContext";
 import { PricingFAQ } from "./pricing/PricingFAQ";
 import { PricingFeatures } from "./pricing/PricingFeatures";
-import { pricingData } from "./pricing/pricingData";
+import { FEATURES } from "./pricing/pricingData";
 import { BackgroundEffects } from "./pricing/BackgroundEffects";
-import PricingContainer from "./pricing/PricingContainer";
+import { PricingContainer } from "./pricing/PricingContainer";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useState } from "react";
 
@@ -34,12 +34,7 @@ const Pricing = () => {
       <BackgroundEffects />
       
       {/* Create context for pricing components */}
-      <PricingContext.Provider value={{
-        isLoading,
-        subscription,
-        toggleFeatures,
-        showAllFeatures
-      }}>
+      <PricingProvider>
         {/* Main content container */}
         <div className="container px-4 md:px-6 relative z-10">
           {/* Section header with title and description */}
@@ -67,7 +62,12 @@ const Pricing = () => {
       {/* Hide the features section by default */}
       {showAllFeatures && (
         <div className="container px-4 md:px-6 mt-12 relative z-10">
-          <PricingFeatures features={pricingData.commonFeatures} />
+          <PricingFeatures 
+            features={FEATURES.pro} 
+            expandedFeatures={showAllFeatures}
+            toggleFeatures={toggleFeatures}
+            planIndex={1}
+          />
         </div>
       )}
       
@@ -75,7 +75,7 @@ const Pricing = () => {
       <div className="container px-4 md:px-6 mt-16 md:mt-20 relative z-10">
         <PricingFAQ />
       </div>
-      </PricingContext.Provider>
+      </PricingProvider>
     </section>
   );
 };
