@@ -97,11 +97,50 @@ export function WaitlistButton({
     }
   };
 
+  const handleButtonClick = (e: React.MouseEvent) => {
+    console.log("WaitlistButton handleButtonClick triggered");
+    
+    // If custom onClick is provided, call it instead of the default behavior
+    if (onClick) {
+      console.log("Executing custom onClick handler from props");
+      e.stopPropagation();
+      onClick();
+      return;
+    }
+    
+    // Default behavior: open the email form
+    console.log("Opening email form (default behavior)");
+    e.stopPropagation();
+    setOpen(true);
+    
+    // Focus the input after a short delay
+    setTimeout(() => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    }, 200);
+  };
+
   return (
     <div className={cn("flex flex-col gap-2", className)}>
       {!open ? (
-        <div className="w-full">
-          {children || (
+        <div 
+          className="w-full" 
+          onClick={(e) => e.stopPropagation()}
+          onTouchStart={(e) => e.stopPropagation()}
+        >
+          {children ? (
+            <div 
+              onClick={handleButtonClick}
+              onTouchStart={(e) => {
+                console.log("Touch event on WaitlistButton children");
+                e.stopPropagation();
+              }}
+              className="w-full cursor-pointer"
+            >
+              {children}
+            </div>
+          ) : (
             <Button 
               className={cn(
                 "w-full py-6 text-base font-medium font-jakarta",
@@ -109,27 +148,7 @@ export function WaitlistButton({
                 isMobile ? "text-sm" : "text-base"
               )}
               type="button"
-              onClick={(e) => {
-                // Call custom onClick if provided
-                if (onClick) {
-                  onClick();
-                  return;
-                }
-                
-                console.log("Button clicked - setting open state");
-                e.stopPropagation();
-                
-                // Set open state immediately
-                setOpen(true);
-                
-                // Simple focus attempt after a short delay
-                setTimeout(() => {
-                  console.log("Trying to focus input after delay");
-                  if (inputRef.current) {
-                    inputRef.current.focus();
-                  }
-                }, 200);
-              }}
+              onClick={handleButtonClick}
             >
               {buttonText}
             </Button>
@@ -167,7 +186,6 @@ export function WaitlistButton({
               )}
             </Button>
           </div>
-          {/* Social proof is now moved to the main component */}
         </form>
       )}
       

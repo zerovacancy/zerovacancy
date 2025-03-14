@@ -36,6 +36,16 @@ export function Hero() {
     };
   }, []);
 
+  const scrollToWaitlist = () => {
+    console.log("Scrolling to waitlist section");
+    const waitlistSection = document.getElementById('waitlist');
+    if (waitlistSection) {
+      waitlistSection.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      console.error("Waitlist section not found");
+    }
+  };
+
   return (
     <section 
       ref={sectionRef}
@@ -164,13 +174,7 @@ export function Hero() {
           className={cn(isMobile ? "mb-0" : "mb-4 sm:mb-6")} 
           buttonText="RESERVE EARLY ACCESS" 
           showSocialProof={true}
-          onButtonClick={() => {
-            console.log("Reserve Early Access clicked - scrolling to waitlist");
-            const waitlistSection = document.getElementById('waitlist');
-            if (waitlistSection) {
-              waitlistSection.scrollIntoView({ behavior: 'smooth' });
-            }
-          }}
+          onButtonClick={scrollToWaitlist}
         />
       </div>
     </section>

@@ -10,14 +10,23 @@ interface WaitlistCTAProps {
   source?: string;
   buttonText?: string;
   showSocialProof?: boolean;
+  onButtonClick?: () => void;
 }
 
 export const WaitlistCTA: React.FC<WaitlistCTAProps> = ({ 
   className,
   source = "landing_page", 
   buttonText = "JOIN WAITLIST",
-  showSocialProof = false
+  showSocialProof = false,
+  onButtonClick
 }) => {
+  const handleClick = () => {
+    console.log("WaitlistCTA button clicked, passing to onButtonClick handler");
+    if (onButtonClick) {
+      onButtonClick();
+    }
+  };
+
   return (
     <div className={cn(
       "w-full max-w-md mx-auto", 
@@ -27,6 +36,7 @@ export const WaitlistCTA: React.FC<WaitlistCTAProps> = ({
         source={source}
         buttonText={buttonText}
         className="w-full py-4"
+        onClick={handleClick}
       >
         <ShimmerButton 
           className={cn(
