@@ -10,12 +10,14 @@ interface SuccessConfirmationProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   email?: string
+  alreadySubscribed?: boolean
 }
 
 export function SuccessConfirmation({
   open,
   onOpenChange,
   email,
+  alreadySubscribed = false,
 }: SuccessConfirmationProps) {
   const isMobile = useIsMobile()
 
@@ -26,6 +28,9 @@ export function SuccessConfirmation({
       
       // Fire confetti immediately with direct call (more reliable)
       const fireConfetti = () => {
+        console.log("Firing confetti...")
+        
+        // Different options for mobile and desktop for better appearance
         const options = {
           particleCount: isMobile ? 80 : 150,
           spread: isMobile ? 60 : 100,
@@ -34,21 +39,37 @@ export function SuccessConfirmation({
           gravity: 0.8,
           decay: 0.94,
           ticks: 200,
-          zIndex: 9999,
+          disableForReducedMotion: false, // Ensure it works even with reduced motion
           colors: ['#8B5CF6', '#6366F1', '#3B82F6', '#10B981']
         }
         
         try {
-          confetti(options)
+          // Remove any canvas that might be blocking the confetti
+          const oldCanvases = document.querySelectorAll('canvas[style*="position: fixed"]');
+          oldCanvases.forEach(canvas => {
+            if (canvas.parentNode) {
+              canvas.parentNode.removeChild(canvas);
+            }
+          });
+          
+          // Fire the confetti directly
+          window.confetti(options);
         } catch (error) {
-          console.error("Error firing direct confetti:", error)
+          console.error("Error firing direct confetti:", error);
+          
+          // Fallback method
+          try {
+            confetti(options);
+          } catch (fallbackError) {
+            console.error("Fallback confetti also failed:", fallbackError);
+          }
         }
       }
       
-      // Fire multiple rounds of confetti for a better effect
-      fireConfetti()
-      const confetti1 = setTimeout(() => fireConfetti(), 300)
-      const confetti2 = setTimeout(() => fireConfetti(), 600)
+      // Fire multiple rounds of confetti with slight delays
+      setTimeout(fireConfetti, 50);
+      const confetti1 = setTimeout(fireConfetti, 300);
+      const confetti2 = setTimeout(fireConfetti, 600);
       
       // Auto-close after 4 seconds to ensure users see the confirmation
       const closeTimer = setTimeout(() => {
@@ -106,12 +127,17 @@ export function SuccessConfirmation({
                   "bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600"
                 )}
               >
-                Success!
+                {alreadySubscribed ? "Already Subscribed" : "Success!"}
               </h3>
               <p className="text-gray-600">
-                {email 
-                  ? `We've added ${email} to our waitlist.` 
-                  : "You've successfully joined our waitlist."}
+                {alreadySubscribed
+                  ? email 
+                    ? `${email} is already on our waitlist.` 
+                    : "You're already on our waitlist!"
+                  : email 
+                    ? `We've added ${email} to our waitlist.` 
+                    : "You've successfully joined our waitlist."
+                }
               </p>
               <p className="text-sm text-gray-500 mt-2">
                 We'll notify you as soon as we launch.

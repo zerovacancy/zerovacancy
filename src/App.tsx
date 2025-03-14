@@ -144,7 +144,15 @@ function App() {
           <ConditionalBottomNav />
         </div>
         <Toaster />
-        <SonnerToaster position="top-right" closeButton richColors />
+        {/* Only use SonnerToaster for error notifications, not for success */}
+        <SonnerToaster 
+          position="top-right" 
+          closeButton 
+          richColors
+          toastOptions={{
+            duration: 3000
+          }} 
+        />
         <Analytics />
       </Router>
     </ErrorBoundary>

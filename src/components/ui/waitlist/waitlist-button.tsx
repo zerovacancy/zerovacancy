@@ -26,6 +26,7 @@ export function WaitlistButton({
   const [email, setEmail] = useState("");
   const [showSuccess, setShowSuccess] = useState(false);
   const [submittedEmail, setSubmittedEmail] = useState("");
+  const [alreadySubscribed, setAlreadySubscribed] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const isMobile = useIsMobile();
 
@@ -67,17 +68,19 @@ export function WaitlistButton({
       
       // Handle already subscribed message
       if (data?.status === 'already_subscribed') {
-        toast.info(data.message || "You're already on our waitlist!");
+        // Instead of a toast, show confirmation dialog with special message
+        setSubmittedEmail(email);
+        setAlreadySubscribed(true);
+        setShowSuccess(true);
         setOpen(false);
       } else {
         // Store the email for the success confirmation
         setSubmittedEmail(email);
+        setAlreadySubscribed(false);
         
         // Show success confirmation with confetti
         console.log("Showing success confirmation with email:", email);
         setShowSuccess(true);
-        
-        // Don't show toast - we'll use the dialog instead
         
         // Close the input form
         setOpen(false);
@@ -157,6 +160,7 @@ export function WaitlistButton({
         open={showSuccess} 
         onOpenChange={setShowSuccess}
         email={submittedEmail}
+        alreadySubscribed={alreadySubscribed}
       />
     </div>
   );
