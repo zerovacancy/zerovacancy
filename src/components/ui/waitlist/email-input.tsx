@@ -72,13 +72,15 @@ export const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
         
         <Input 
           ref={(node) => {
-            // Set both refs
-            if (inputRef && node) inputRef.current = node;
-            if (ref) {
-              if (typeof ref === 'function') ref(node);
-              else ref.current = node;
+            // Simply set all refs directly
+            if (node) {
+              if (inputRef) inputRef.current = node;
+              if (ref && typeof ref !== 'function') ref.current = node;
+              internalRef.current = node;
+              
+              // Log ref set for debugging
+              console.log("Email input ref set successfully");
             }
-            internalRef.current = node;
           }}
           type="email" 
           placeholder="Enter your email" 
@@ -114,33 +116,16 @@ export const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
           onChange={e => setEmail(e.target.value)} 
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
-          onClick={(e) => {
-            // Ensure focus is properly set on click/tap
-            e.currentTarget.focus();
+          onClick={() => {
+            console.log("Email input clicked");
             setIsFocused(true);
-            
-            // For iOS, we need to force the keyboard to appear
-            if (isMobile) {
-              // This creates a temporary non-selectable range
-              const input = e.currentTarget;
-              input.selectionStart = input.selectionEnd = input.value.length;
-              
-              // Use this special workaround for iOS focus issues
-              const event = new Event('focus', { bubbles: true });
-              input.dispatchEvent(event);
-            }
           }}
-          // Add readOnly false to make sure keyboard shows on iOS
-          readOnly={false}
           aria-label="Email address" 
           required 
           disabled={isLoading || disabled}
-          autoCapitalize="off"
-          autoCorrect="off"
-          spellCheck="false"
+          autoCapitalize="none"
+          autoComplete="email"
           enterKeyHint="go"
-          // Add autocomplete settings that help iOS/Safari
-          x-inputmode="email"
         />
       </div>
     );

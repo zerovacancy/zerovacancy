@@ -106,37 +106,20 @@ export function WaitlistButton({
                 "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700",
                 isMobile ? "text-sm" : "text-base"
               )}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
+              type="button"
+              onClick={() => {
+                console.log("Button clicked - setting open state");
                 
-                // Set open state
+                // Set open state immediately
                 setOpen(true);
                 
-                // Use a longer delay for mobile devices
-                const focusDelay = isMobile ? 300 : 150;
-                
-                // Schedule focus after animation completes
+                // Simple focus attempt after a short delay
                 setTimeout(() => {
+                  console.log("Trying to focus input after delay");
                   if (inputRef.current) {
-                    try {
-                      // Try to focus and also make sure keyboard appears on mobile
-                      inputRef.current.focus();
-                      
-                      // On iOS, we may need to tap the field to get keyboard to show
-                      if (isMobile) {
-                        inputRef.current.click();
-                        
-                        // iOS may need this extra nudge
-                        setTimeout(() => {
-                          if (inputRef.current) inputRef.current.focus();
-                        }, 100);
-                      }
-                    } catch (error) {
-                      console.error("Error focusing input:", error);
-                    }
+                    inputRef.current.focus();
                   }
-                }, focusDelay);
+                }, 200);
               }}
             >
               {buttonText}
@@ -144,7 +127,7 @@ export function WaitlistButton({
           )}
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="w-full">
+        <form onSubmit={handleSubmit} className="w-full" id="waitlist-form">
           <div className="flex flex-col sm:flex-row gap-2 w-full">
             <EmailInput
               setEmail={setEmail}
