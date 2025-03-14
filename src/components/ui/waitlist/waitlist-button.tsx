@@ -98,15 +98,7 @@ export function WaitlistButton({
   return (
     <div className={cn("flex flex-col gap-2", className)}>
       {!open ? (
-        <div className="w-full" onClick={() => {
-          setOpen(true);
-          // Add a small delay before focusing the input
-          setTimeout(() => {
-            if (inputRef.current) {
-              inputRef.current.focus();
-            }
-          }, 100);
-        }}>
+        <div className="w-full">
           {children || (
             <Button 
               className={cn(
@@ -114,6 +106,38 @@ export function WaitlistButton({
                 "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700",
                 isMobile ? "text-sm" : "text-base"
               )}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Set open state
+                setOpen(true);
+                
+                // Use a longer delay for mobile devices
+                const focusDelay = isMobile ? 300 : 150;
+                
+                // Schedule focus after animation completes
+                setTimeout(() => {
+                  if (inputRef.current) {
+                    try {
+                      // Try to focus and also make sure keyboard appears on mobile
+                      inputRef.current.focus();
+                      
+                      // On iOS, we may need to tap the field to get keyboard to show
+                      if (isMobile) {
+                        inputRef.current.click();
+                        
+                        // iOS may need this extra nudge
+                        setTimeout(() => {
+                          if (inputRef.current) inputRef.current.focus();
+                        }, 100);
+                      }
+                    } catch (error) {
+                      console.error("Error focusing input:", error);
+                    }
+                  }
+                }, focusDelay);
+              }}
             >
               {buttonText}
             </Button>

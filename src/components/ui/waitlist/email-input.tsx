@@ -118,7 +118,20 @@ export const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
             // Ensure focus is properly set on click/tap
             e.currentTarget.focus();
             setIsFocused(true);
+            
+            // For iOS, we need to force the keyboard to appear
+            if (isMobile) {
+              // This creates a temporary non-selectable range
+              const input = e.currentTarget;
+              input.selectionStart = input.selectionEnd = input.value.length;
+              
+              // Use this special workaround for iOS focus issues
+              const event = new Event('focus', { bubbles: true });
+              input.dispatchEvent(event);
+            }
           }}
+          // Add readOnly false to make sure keyboard shows on iOS
+          readOnly={false}
           aria-label="Email address" 
           required 
           disabled={isLoading || disabled}
@@ -126,6 +139,8 @@ export const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
           autoCorrect="off"
           spellCheck="false"
           enterKeyHint="go"
+          // Add autocomplete settings that help iOS/Safari
+          x-inputmode="email"
         />
       </div>
     );
