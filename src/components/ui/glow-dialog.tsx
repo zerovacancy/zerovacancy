@@ -7,6 +7,8 @@ import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { SuccessConfirmation } from "@/components/ui/waitlist/success-confirmation";
+import confetti from "canvas-confetti";
 
 const MovingBorder = ({
   children,
@@ -60,6 +62,9 @@ export function GlowDialog({
 }: GlowDialogProps) {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [submittedEmail, setSubmittedEmail] = useState("");
+  const [alreadySubscribed, setAlreadySubscribed] = useState(false);
   const isMobileView = typeof window !== 'undefined' && window.innerWidth < 768;
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
@@ -96,13 +101,21 @@ export function GlowDialog({
         return;
       }
       
+      // Handle success with modal confirmation instead of toast
       if (data?.status === 'already_subscribed') {
-        toast.info(data.message || "You're already on our waitlist!");
+        setAlreadySubscribed(true);
+        setSubmittedEmail(email);
+        setShowSuccess(true);
       } else {
-        toast.success("You've been added to the waitlist. We'll be in touch soon!");
+        setAlreadySubscribed(false);
+        setSubmittedEmail(email);
+        setShowSuccess(true);
       }
       
+      // Clear email field
       setEmail("");
+      
+      // Close the glow dialog (we'll show the success confirmation instead)
       onOpenChange(false);
     } catch (error) {
       console.error("Error submitting email:", error);
@@ -117,15 +130,16 @@ export function GlowDialog({
     : "sm:max-w-2xl md:max-w-3xl overflow-hidden border-none bg-transparent";
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={dialogContentClassName}>
-        <DialogTitle className="sr-only">Join Waitlist - Enter Your Email</DialogTitle>
-        <motion.div 
-          className="relative rounded-lg overflow-hidden bg-[#060606]/80 p-6 sm:p-8 md:p-10"
-          initial={{ scale: 0.95, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          exit={{ scale: 0.95, opacity: 0 }}
-        >
+    <>
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className={dialogContentClassName}>
+          <DialogTitle className="sr-only">Join Waitlist - Enter Your Email</DialogTitle>
+          <motion.div 
+            className="relative rounded-lg overflow-hidden bg-[#060606]/80 p-6 sm:p-8 md:p-10"
+            initial={{ scale: 0.95, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.95, opacity: 0 }}
+          >
           <div className="absolute inset-0">
             <Squares
               direction="diagonal"
@@ -148,9 +162,14 @@ export function GlowDialog({
             <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 justify-center items-stretch max-w-md mx-auto">
               <input
                 type="email"
+                inputMode="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 placeholder="Enter your email"
+                autoCapitalize="off"
+                autoCorrect="off"
+                spellCheck="false"
+                enterKeyHint="go"
                 required
                 disabled={isLoading}
                 className="flex-1 px-4 py-2 rounded-md bg-white/10 border border-white/20 text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-white/30 disabled:opacity-50"
@@ -176,5 +195,14 @@ export function GlowDialog({
         </motion.div>
       </DialogContent>
     </Dialog>
+    
+    {/* Success Confirmation Dialog with Confetti Effect */}
+    <SuccessConfirmation 
+      open={showSuccess}
+      onOpenChange={setShowSuccess}
+      email={submittedEmail}
+      alreadySubscribed={alreadySubscribed}
+    />
+    </>
   );
 }
