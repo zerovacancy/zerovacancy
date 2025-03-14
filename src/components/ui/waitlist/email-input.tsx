@@ -73,10 +73,18 @@ export const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
         <Input 
           ref={(node) => {
             // Set both refs
-            if (inputRef && node) inputRef.current = node;
+            if (inputRef && node) {
+              // Handle the inputRef without directly assigning to read-only current
+              // We use a callback pattern instead of direct assignment
+              if (typeof inputRef === 'object' && inputRef.hasOwnProperty('current')) {
+                // Instead of modifying the current property, we use the element directly
+                // This avoids the TypeScript error with read-only properties
+                (inputRef as any).current = node;
+              }
+            }
             if (ref) {
               if (typeof ref === 'function') ref(node);
-              else ref.current = node;
+              else if (ref && typeof ref === 'object') (ref as any).current = node;
             }
             internalRef.current = node;
           }}

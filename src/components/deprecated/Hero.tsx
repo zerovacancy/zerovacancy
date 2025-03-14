@@ -1,5 +1,5 @@
 
-// This component has been moved to the deprecated folder
+// This component has been deprecated
 // Import is redirected to maintain backward compatibility
-import Hero from './deprecated/Hero';
+import Hero from '../hero/Hero';
 export default Hero;

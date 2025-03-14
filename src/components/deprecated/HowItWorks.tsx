@@ -1,5 +1,5 @@
 
-// This component has been moved to the deprecated folder
+// This component has been deprecated
 // Import is redirected to maintain backward compatibility
-import HowItWorks from './deprecated/HowItWorks';
+import HowItWorks from '../how-it-works/OptimizedHowItWorks';
 export default HowItWorks;

@@ -1,5 +1,5 @@
 
-// This component has been moved to the deprecated folder
+// This component has been deprecated
 // Import is redirected to maintain backward compatibility
-import HeroSection from './deprecated/HeroSection';
+import HeroSection from '../HeroSection';
 export default HeroSection;
