@@ -1,4 +1,3 @@
-
 import React, { useRef, useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { PreviewCard } from './PreviewCard';
@@ -91,7 +90,6 @@ const PreviewSearch = () => {
       )} 
       ref={containerRef}
     >
-      {/* Title section outside of card and gradient background */}
       <div className="text-center mb-6 relative z-20">
         <motion.h2 
           initial={{ opacity: 0, y: 10 }}
@@ -128,7 +126,6 @@ const PreviewSearch = () => {
       </div>
 
       <div className="mx-auto relative group max-w-7xl">
-        {/* Enhanced gradient background only on desktop */}
         {!isMobile && (
           <div className={cn(
             "absolute -inset-0.5 sm:-inset-1 rounded-xl sm:rounded-2xl bg-gradient-to-r from-purple-800/25 via-indigo-700/30 to-purple-900/25 blur-[2px] sm:blur-sm transition-all duration-500",
@@ -142,18 +139,9 @@ const PreviewSearch = () => {
         </PreviewCard>
       </div>
       
-      {/* Mobile section divider */}
       {isMobile && (
         <div className="mobile-section-divider mt-6"></div>
       )}
-      
-      {/* Add pre-launch "Coming Soon" overlay */}
-      <div className={cn(
-        "absolute top-2 right-2 px-3 py-1 bg-brand-purple text-white rounded-full font-semibold text-xs z-30 shadow-md",
-        "animate-pulse" // Add subtle animation to draw attention
-      )}>
-        Preview
-      </div>
       
       <GlowDialog open={showGlowDialog} onOpenChange={setShowGlowDialog} />
     </div>
