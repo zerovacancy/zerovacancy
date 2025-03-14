@@ -10,25 +10,97 @@ import { cn } from "@/lib/utils"
 if (typeof window !== 'undefined' && !window.hasOwnProperty('celebrateSuccess')) {
   window.celebrateSuccess = (isMobile = false) => {
     console.log("Global celebrateSuccess called");
-    const options = {
+    
+    // Clear any existing canvases to prevent rendering issues
+    const oldCanvases = document.querySelectorAll('canvas.confetti-canvas');
+    oldCanvases.forEach(canvas => {
+      if (canvas.parentNode) {
+        canvas.parentNode.removeChild(canvas);
+      }
+    });
+    
+    // Create a canvas element specifically for confetti
+    const canvas = document.createElement('canvas');
+    canvas.className = 'confetti-canvas';
+    canvas.style.position = 'fixed';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    canvas.style.width = '100vw';
+    canvas.style.height = '100vh';
+    canvas.style.zIndex = '9999';
+    canvas.style.pointerEvents = 'none';
+    document.body.appendChild(canvas);
+    
+    // Create confetti instance with our canvas
+    const myConfetti = confetti.create(canvas, {
+      resize: true,
+      useWorker: true
+    });
+    
+    // Base options
+    const baseOptions = {
       particleCount: isMobile ? 80 : 150,
       spread: isMobile ? 60 : 100,
-      origin: { y: 0.25 },
       startVelocity: 30,
-      gravity: 0.8,
-      decay: 0.94,
-      ticks: 200,
-      colors: ['#8B5CF6', '#6366F1', '#3B82F6', '#10B981'],
-      zIndex: 9999,
-      disableForReducedMotion: false
+      gravity: 0.8, 
+      decay: 0.95,
+      ticks: 500, // Longer animation duration
+      origin: { y: 0.25 },
+      colors: ['#8B5CF6', '#6366F1', '#3B82F6', '#10B981', '#EC4899', '#F43F5E'],
+      shapes: ['circle', 'square'],
+      scalar: isMobile ? 0.7 : 1,
     };
     
     try {
-      // Fire multiple bursts
-      const fireConfetti = () => confetti(options);
+      // Create a more complex multi-step animation
+      const fireConfetti = () => {
+        // Center burst
+        myConfetti({
+          ...baseOptions,
+          angle: 90,
+          origin: { y: 0.25, x: 0.5 }
+        });
+        
+        // Wait 150ms then fire from left side
+        setTimeout(() => {
+          myConfetti({
+            ...baseOptions,
+            angle: 60,
+            particleCount: isMobile ? 40 : 80,
+            origin: { y: 0.2, x: 0.15 }
+          });
+        }, 150);
+        
+        // Wait 250ms then fire from right side
+        setTimeout(() => {
+          myConfetti({
+            ...baseOptions,
+            angle: 120,
+            particleCount: isMobile ? 40 : 80,
+            origin: { y: 0.2, x: 0.85 }
+          });
+        }, 250);
+        
+        // Final burst after 400ms
+        setTimeout(() => {
+          myConfetti({
+            ...baseOptions,
+            startVelocity: 25,
+            origin: { y: 0.45, x: 0.5 }
+          });
+        }, 400);
+      };
+      
+      // Fire initial burst
       fireConfetti();
-      setTimeout(fireConfetti, 300);
-      setTimeout(fireConfetti, 600);
+      
+      // Remove canvas after animation completes
+      setTimeout(() => {
+        if (canvas && canvas.parentNode) {
+          canvas.parentNode.removeChild(canvas);
+        }
+      }, 6000); // Wait 6 seconds before removing 
+      
     } catch (error) {
       console.error("Error firing global confetti:", error);
     }
@@ -55,55 +127,109 @@ export function SuccessConfirmation({
     if (open) {
       console.log("Success confirmation opened")
       
+      // Keep track of timeouts to clear on cleanup
+      const timeouts: NodeJS.Timeout[] = [];
+      
       // Use the global celebrateSuccess function for consistent confetti effect
       if (typeof window !== 'undefined' && window.celebrateSuccess) {
         // Small delay to ensure dialog is visible
-        setTimeout(() => {
+        const confettiTimeout = setTimeout(() => {
           console.log("Calling global celebrateSuccess");
           window.celebrateSuccess(isMobile);
         }, 100);
+        timeouts.push(confettiTimeout);
       } else {
-        // Fallback direct confetti implementation
+        // Fallback direct confetti implementation if the global function isn't available
         console.log("Using fallback confetti implementation");
+        
+        // Create a dedicated canvas for this confetti instance
+        const canvas = document.createElement('canvas');
+        canvas.className = 'confetti-canvas';
+        canvas.style.position = 'fixed';
+        canvas.style.top = '0';
+        canvas.style.left = '0';
+        canvas.style.width = '100vw';
+        canvas.style.height = '100vh';
+        canvas.style.zIndex = '9999';
+        canvas.style.pointerEvents = 'none';
+        document.body.appendChild(canvas);
+        
+        const myConfetti = confetti.create(canvas, {
+          resize: true,
+          useWorker: true
+        });
+        
+        // Base options
+        const baseOptions = {
+          particleCount: isMobile ? 80 : 150,
+          spread: isMobile ? 60 : 100,
+          startVelocity: 30,
+          gravity: 0.8, 
+          decay: 0.95,
+          ticks: 500,
+          origin: { y: 0.25 },
+          colors: ['#8B5CF6', '#6366F1', '#3B82F6', '#10B981', '#EC4899', '#F43F5E'],
+          shapes: ['circle', 'square'],
+        };
+        
+        // Main confetti function
         const fireConfetti = () => {
           try {
-            confetti({
-              particleCount: isMobile ? 80 : 150,
-              spread: isMobile ? 60 : 100,
-              origin: { y: 0.25 },
-              startVelocity: 30,
-              gravity: 0.8,
-              decay: 0.94,
-              ticks: 200,
-              colors: ['#8B5CF6', '#6366F1', '#3B82F6', '#10B981'],
-              zIndex: 9999,
-              disableForReducedMotion: false
+            // Center burst
+            myConfetti({
+              ...baseOptions,
+              angle: 90,
+              origin: { y: 0.25, x: 0.5 }
             });
+            
+            // Left and right bursts with delay
+            const leftTimeout = setTimeout(() => {
+              myConfetti({
+                ...baseOptions,
+                angle: 60,
+                particleCount: isMobile ? 40 : 80,
+                origin: { y: 0.2, x: 0.15 }
+              });
+            }, 150);
+            timeouts.push(leftTimeout);
+            
+            const rightTimeout = setTimeout(() => {
+              myConfetti({
+                ...baseOptions,
+                angle: 120,
+                particleCount: isMobile ? 40 : 80,
+                origin: { y: 0.2, x: 0.85 }
+              });
+            }, 250);
+            timeouts.push(rightTimeout);
           } catch (error) {
             console.error("Error firing fallback confetti:", error);
           }
         };
         
-        // Fire multiple bursts with slight delays
-        setTimeout(fireConfetti, 100);
-        const confetti1 = setTimeout(fireConfetti, 400);
-        const confetti2 = setTimeout(fireConfetti, 700);
+        // Initial delay before firing
+        const initialTimeout = setTimeout(fireConfetti, 100);
+        timeouts.push(initialTimeout);
         
-        // Clear timeouts on cleanup
-        return () => {
-          clearTimeout(confetti1);
-          clearTimeout(confetti2);
-        };
+        // Cleanup canvas when dialog closes
+        const canvasTimeout = setTimeout(() => {
+          if (canvas && canvas.parentNode) {
+            canvas.parentNode.removeChild(canvas);
+          }
+        }, 6000);
+        timeouts.push(canvasTimeout);
       }
       
-      // Auto-close after 4 seconds to ensure users see the confirmation
+      // Auto-close after 5 seconds to ensure users see the confirmation AND confetti animation
       const closeTimer = setTimeout(() => {
         onOpenChange(false);
-      }, 4000);
+      }, 5000);
+      timeouts.push(closeTimer);
       
+      // Cleanup all timeouts
       return () => {
-        clearTimeout(closeTimer);
-      }
+        timeouts.forEach(timeout => clearTimeout(timeout));
+      };
     }
   }, [open, onOpenChange, isMobile])
 

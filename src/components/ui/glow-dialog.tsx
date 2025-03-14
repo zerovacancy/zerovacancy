@@ -101,67 +101,24 @@ export function GlowDialog({
         return;
       }
       
-      // Handle success with modal confirmation instead of toast
-      if (data?.status === 'already_subscribed') {
-        setAlreadySubscribed(true);
-        setSubmittedEmail(email);
-        setShowSuccess(true);
-      } else {
-        setAlreadySubscribed(false);
-        setSubmittedEmail(email);
-        setShowSuccess(true);
-        
-        // Use the global celebrateSuccess function
-        if (typeof window !== 'undefined' && window.celebrateSuccess) {
-          console.log("Calling global celebrateSuccess from GlowDialog");
-          // Small delay to ensure success dialog is shown first
-          setTimeout(() => {
-            window.celebrateSuccess(isMobileView);
-          }, 150);
-        } else {
-          // Fallback direct confetti implementation
-          console.log("Using fallback confetti from GlowDialog");
-          setTimeout(() => {
-            try {
-              // Fire multiple bursts with different configurations for visual variety
-              confetti({
-                particleCount: 150,
-                spread: 100,
-                origin: { y: 0.25 },
-                zIndex: 9999,
-              });
-              
-              setTimeout(() => {
-                confetti({
-                  particleCount: 100,
-                  angle: 60,
-                  spread: 80,
-                  origin: { x: 0.2, y: 0.35 },
-                  zIndex: 9999,
-                });
-              }, 250);
-              
-              setTimeout(() => {
-                confetti({
-                  particleCount: 100,
-                  angle: 120,
-                  spread: 80,
-                  origin: { x: 0.8, y: 0.35 },
-                  zIndex: 9999,
-                });
-              }, 400);
-            } catch (error) {
-              console.error("Error firing direct confetti:", error);
-            }
-          }, 100);
-        }
-      }
-      
-      // Clear email field
+      // First clear email field and close the glow dialog
       setEmail("");
-      
-      // Close the glow dialog (we'll show the success confirmation instead)
       onOpenChange(false);
+      
+      // Wait a small delay before showing the success dialog and confetti
+      setTimeout(() => {
+        // Set status and email for the success dialog
+        if (data?.status === 'already_subscribed') {
+          setAlreadySubscribed(true);
+        } else {
+          setAlreadySubscribed(false);
+        }
+        setSubmittedEmail(email);
+        
+        // Now show the success dialog - confetti will be handled there
+        console.log("Showing success dialog after glow dialog closed");
+        setShowSuccess(true);
+      }, 300);
     } catch (error) {
       console.error("Error submitting email:", error);
       toast.error("Failed to join the waitlist. Please try again later.");
