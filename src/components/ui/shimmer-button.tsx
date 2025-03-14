@@ -44,7 +44,7 @@ export function ShimmerButton({
     const { onClick, ...restProps } = props;
     
     const handleMobileButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-      console.log("Mobile ShimmerButton clicked");
+      console.log("Mobile ShimmerButton clicked, passing event to onClick handler");
       // Call the original onClick if it exists
       if (onClick) {
         onClick(e);
@@ -75,7 +75,7 @@ export function ShimmerButton({
   const { onClick, ...restProps } = props;
   
   const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    console.log("ShimmerButton clicked");
+    console.log("ShimmerButton clicked, passing event to onClick handler");
     // Call the original onClick if it exists
     if (onClick) {
       onClick(e);
@@ -97,6 +97,24 @@ export function ShimmerButton({
       onClick={handleButtonClick}
       {...restProps}
     >
+      <div
+        className={cn(
+          "absolute inset-0 flex items-center justify-center w-full h-full transition-all pointer-events-none",
+          shimmerClassName
+        )}
+      >
+        <div
+          style={{
+            backgroundImage: `conic-gradient(from 0deg at 50% 50%, ${
+              mainColor ?? "#3b82f6"
+            } 0%, transparent 60%, transparent 80%, transparent 100%)`,
+          }}
+          className={cn(
+            "w-[300%] aspect-square absolute z-[2] animate-[spin_4s_linear_infinite] opacity-0 group-hover:opacity-100 pointer-events-none",
+            "group-hover:animate-[spin_4s_linear_infinite]"
+          )}
+        />
+      </div>
       <span className="z-50 flex items-center justify-center opacity-100 relative pointer-events-auto">
         {children}
       </span>

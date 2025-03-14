@@ -36,22 +36,6 @@ export function Hero() {
     };
   }, []);
 
-  const scrollToWaitlist = () => {
-    console.log("Scrolling to waitlist section");
-    const waitlistSection = document.getElementById('waitlist');
-    if (waitlistSection) {
-      waitlistSection.scrollIntoView({ behavior: 'smooth' });
-      console.log("Scrolled to waitlist section successfully");
-    } else {
-      console.error("Waitlist section not found");
-      // Fallback: Scroll to the bottom of the page if section not found
-      window.scrollTo({
-        top: document.body.scrollHeight,
-        behavior: 'smooth'
-      });
-    }
-  };
-
   return (
     <section 
       ref={sectionRef}
@@ -180,7 +164,13 @@ export function Hero() {
           className={cn(isMobile ? "mb-0" : "mb-4 sm:mb-6")} 
           buttonText="RESERVE EARLY ACCESS" 
           showSocialProof={true}
-          onButtonClick={scrollToWaitlist}
+          onButtonClick={() => {
+            console.log("Reserve Early Access clicked - scrolling to waitlist");
+            const waitlistSection = document.getElementById('waitlist');
+            if (waitlistSection) {
+              waitlistSection.scrollIntoView({ behavior: 'smooth' });
+            }
+          }}
         />
       </div>
     </section>
