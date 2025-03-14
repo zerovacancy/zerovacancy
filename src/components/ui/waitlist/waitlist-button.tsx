@@ -14,14 +14,12 @@ export function WaitlistButton({
   source = "unknown",
   className,
   children,
-  buttonText = "JOIN WAITLIST",
-  onClick
+  buttonText = "JOIN WAITLIST"
 }: {
   source?: string;
   className?: string;
   children?: React.ReactNode;
   buttonText?: string;
-  onClick?: () => void;
 }) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -109,15 +107,8 @@ export function WaitlistButton({
                 isMobile ? "text-sm" : "text-base"
               )}
               type="button"
-              onClick={(e) => {
-                // Call custom onClick if provided
-                if (onClick) {
-                  onClick();
-                  return;
-                }
-                
+              onClick={() => {
                 console.log("Button clicked - setting open state");
-                e.stopPropagation();
                 
                 // Set open state immediately
                 setOpen(true);
