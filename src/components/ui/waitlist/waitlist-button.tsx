@@ -14,14 +14,16 @@ export function WaitlistButton({
   source = "unknown",
   className,
   children,
-  buttonText = "JOIN WAITLIST"
+  buttonText = "JOIN WAITLIST",
+  showEmailInputDirectly = false
 }: {
   source?: string;
   className?: string;
   children?: React.ReactNode;
   buttonText?: string;
+  showEmailInputDirectly?: boolean;
 }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(showEmailInputDirectly);
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [showSuccess, setShowSuccess] = useState(false);
@@ -29,6 +31,26 @@ export function WaitlistButton({
   const [alreadySubscribed, setAlreadySubscribed] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const isMobile = useIsMobile();
+
+  // Focus the input field when component mounts if showEmailInputDirectly is true
+  React.useEffect(() => {
+    if (showEmailInputDirectly && inputRef.current) {
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.focus();
+          console.log("Auto-focusing email input on initial render");
+          
+          // Extra help for mobile devices
+          if (isMobile) {
+            inputRef.current.click();
+            setTimeout(() => {
+              if (inputRef.current) inputRef.current.focus();
+            }, 100);
+          }
+        }
+      }, 500);
+    }
+  }, [showEmailInputDirectly, isMobile]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

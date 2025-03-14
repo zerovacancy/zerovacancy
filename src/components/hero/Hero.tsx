@@ -160,7 +160,12 @@ export function Hero() {
           isInView ? "animate-fade-in delay-200" : "opacity-0" 
         )}
       >
-        <WaitlistCTA className={cn(isMobile ? "mb-0" : "mb-4 sm:mb-6")} buttonText="RESERVE EARLY ACCESS" showSocialProof={true} />
+        <WaitlistCTA 
+          className={cn(isMobile ? "mb-0" : "mb-4 sm:mb-6")} 
+          buttonText="RESERVE EARLY ACCESS" 
+          showSocialProof={true}
+          showEmailInputDirectly={true} 
+        />
       </div>
     </section>
   );

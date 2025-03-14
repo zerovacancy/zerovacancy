@@ -10,13 +10,15 @@ interface WaitlistCTAProps {
   source?: string;
   buttonText?: string;
   showSocialProof?: boolean;
+  showEmailInputDirectly?: boolean;
 }
 
 export const WaitlistCTA: React.FC<WaitlistCTAProps> = ({ 
   className,
   source = "landing_page", 
   buttonText = "JOIN WAITLIST",
-  showSocialProof = false
+  showSocialProof = false,
+  showEmailInputDirectly = false
 }) => {
   return (
     <div className={cn(
@@ -27,6 +29,7 @@ export const WaitlistCTA: React.FC<WaitlistCTAProps> = ({
         source={source}
         buttonText={buttonText}
         className="w-full py-4"
+        showEmailInputDirectly={showEmailInputDirectly}
       >
         <ShimmerButton 
           className={cn(
