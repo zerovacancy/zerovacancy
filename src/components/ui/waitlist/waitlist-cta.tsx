@@ -13,14 +13,10 @@ import { supabase } from "@/integrations/supabase/client";
 
 export function WaitlistCTA({
   className,
-  source = "landing_page",
-  buttonText = "JOIN WAITLIST",
-  showSocialProof = true
+  source = "landing_page"
 }: {
   className?: string;
   source?: string;
-  buttonText?: string;
-  showSocialProof?: boolean;
 }) {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -101,15 +97,15 @@ export function WaitlistCTA({
           inputRef={inputRef}
         />
         
-        {/* Pass the buttonText received from Hero */}
+        {/* Fixed: Removed the isLoading prop */}
         <WaitlistButton 
           source={source}
-          buttonText={buttonText}
+          buttonText="JOIN WAITLIST"
         />
       </form>
       
-      {/* Social Proof Section - Conditionally visible */}
-      {showSocialProof && <SocialProof />}
+      {/* Social Proof Section - Always visible */}
+      <SocialProof />
 
       {/* Success Confirmation with Confetti Effect */}
       <SuccessConfirmation 
