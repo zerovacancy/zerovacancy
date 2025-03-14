@@ -161,23 +161,53 @@ export function Hero() {
           isInView ? "animate-fade-in delay-200" : "opacity-0" 
         )}
       >
-        {/* Main waitlist CTA */}
-        <WaitlistCTA 
-          className={cn(isMobile ? "mb-2" : "mb-4 sm:mb-6")} 
-          buttonText="RESERVE EARLY ACCESS" 
-          showSocialProof={true}
-        />
-        
-        {/* Creator waitlist CTA */}
-        <div className="w-full max-w-md mx-auto">
-          <div className="text-center text-sm text-gray-600 mb-2">Are you a content creator?</div>
-          <WaitlistCreatorCTA 
-            buttonText="JOIN AS CREATOR" 
-          />
+        {/* New side-by-side CTA layout */}
+        <div className="max-w-2xl mx-auto">
+          {/* Two-column layout container */}
+          <div className="flex flex-col space-y-6">
+            {/* Buttons container with side-by-side layout */}
+            <div className="flex flex-row justify-between gap-[5%]">
+              {/* Property Owner CTA Column */}
+              <div className="w-[47.5%] flex flex-col">
+                <div className="text-center text-xs sm:text-sm text-gray-600 mb-2">
+                  For Property Owners
+                </div>
+                <WaitlistCTA 
+                  buttonText="RESERVE EARLY ACCESS" 
+                  showSocialProof={false}
+                  className="w-full"
+                />
+              </div>
+              
+              {/* Content Creator CTA Column */}
+              <div className="w-[47.5%] flex flex-col">
+                <div className="text-center text-xs sm:text-sm text-gray-600 mb-2">
+                  For Content Creators
+                </div>
+                <WaitlistCreatorCTA 
+                  buttonText="JOIN AS CREATOR"
+                  showSocialProof={false}
+                  className="w-full"
+                />
+              </div>
+            </div>
+            
+            {/* Social proof centered below both buttons */}
+            <div className="flex justify-center">
+              <div className="w-full max-w-md">
+                <div className="flex justify-center">
+                  <SocialProof className="mt-1" />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
   );
 }
+
+// Import SocialProof to maintain the same functionality
+import { SocialProof } from '@/components/ui/waitlist/social-proof';
 
 export default Hero;

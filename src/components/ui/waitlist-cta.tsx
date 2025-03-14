@@ -37,6 +37,8 @@ export const WaitlistCTA: React.FC<WaitlistCTAProps> = ({
             "shadow-md shadow-blue-500/20", 
             "h-12 sm:h-14 text-sm sm:text-base", 
             "transition-all duration-300",
+            "bg-gradient-to-r from-purple-600 to-blue-600",
+            "font-medium"
           )}
         >
           {buttonText}
