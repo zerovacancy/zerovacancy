@@ -74,7 +74,11 @@ export function WaitlistButton({
         setSubmittedEmail(email);
         
         // Show success confirmation with confetti
+        console.log("Showing success confirmation with email:", email);
         setShowSuccess(true);
+        
+        // Also show toast for fallback feedback
+        toast.success("You've been added to the waitlist!");
         
         // Close the input form
         setOpen(false);

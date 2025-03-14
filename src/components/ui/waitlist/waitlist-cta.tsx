@@ -68,7 +68,11 @@ export function WaitlistCTA({
         setSubmittedEmail(email);
         
         // Show success confirmation with confetti
+        console.log("Showing success confirmation with email:", email);
         setShowSuccess(true);
+        
+        // Log for debugging
+        toast.success("Thanks for joining our waitlist!");
       }
       
       // Clear the email field on success

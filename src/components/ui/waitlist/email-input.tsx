@@ -91,7 +91,9 @@ export const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
           onBlur={() => setIsFocused(false)}
           aria-label="Email address" 
           required 
-          disabled={isLoading || disabled} 
+          disabled={isLoading || disabled}
+          autoCapitalize="off"
+          enterKeyHint="go"
         />
       </div>
     );

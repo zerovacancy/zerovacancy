@@ -67,6 +67,11 @@ const Confetti = forwardRef<ConfettiRef, Props>((props, ref) => {
 
   const fire = useCallback(
     (opts = {}) => {
+      if (!instanceRef.current) {
+        console.warn("Confetti instance not initialized")
+        return
+      }
+      
       const mobileAdjustedOptions = isMobile
         ? {
             particleCount: 80,
@@ -75,10 +80,14 @@ const Confetti = forwardRef<ConfettiRef, Props>((props, ref) => {
           }
         : opts
       
-      return instanceRef.current?.({
-        ...options,
-        ...mobileAdjustedOptions,
-      })
+      try {
+        return instanceRef.current({
+          ...options,
+          ...mobileAdjustedOptions,
+        })
+      } catch (error) {
+        console.error("Error firing confetti:", error)
+      }
     },
     [options, isMobile],
   )

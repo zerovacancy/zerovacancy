@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation, useNavigationType 
 import { ErrorBoundary } from 'react-error-boundary';
 import ErrorFallback from './components/ErrorFallback';
 import { Toaster } from '@/components/ui/toaster';
+import { Toaster as SonnerToaster } from 'sonner';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { mobileOptimizationClasses, optimizeMobileViewport, applyLandscapeOrientationFixes } from '@/utils/mobile-optimization';
 import { BottomNav } from '@/components/navigation/BottomNav';
@@ -143,6 +144,7 @@ function App() {
           <ConditionalBottomNav />
         </div>
         <Toaster />
+        <SonnerToaster position="top-right" closeButton richColors />
         <Analytics />
       </Router>
     </ErrorBoundary>

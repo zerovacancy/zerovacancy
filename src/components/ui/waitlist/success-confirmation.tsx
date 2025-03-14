@@ -21,13 +21,24 @@ export function SuccessConfirmation({
 
   // Fire confetti when dialog opens
   useEffect(() => {
+    // Debugging
+    console.log("Success confirmation dialog state:", { open })
+    
     if (open) {
-      setConfettiActive(true)
+      // Add a small delay to ensure confetti shows after dialog is rendered
+      const confettiTimer = setTimeout(() => {
+        setConfettiActive(true)
+      }, 100)
+      
       // Auto-close after 3 seconds
-      const timer = setTimeout(() => {
+      const closeTimer = setTimeout(() => {
         onOpenChange(false)
       }, 3000)
-      return () => clearTimeout(timer)
+      
+      return () => {
+        clearTimeout(confettiTimer)
+        clearTimeout(closeTimer)
+      }
     } else {
       setConfettiActive(false)
     }
