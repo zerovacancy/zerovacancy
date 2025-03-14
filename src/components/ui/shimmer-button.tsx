@@ -20,6 +20,7 @@ export function ShimmerButton({
   shimmerClassName,
   mainColor,
   disableOnMobile = false,
+  onClick,
   ...props
 }: ShimmerButtonProps) {
   const [isMobile, setIsMobile] = useState(false);
@@ -46,9 +47,10 @@ export function ShimmerButton({
           "bg-gradient-to-br from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700",
           "text-white font-medium rounded-lg text-center relative overflow-hidden",
           "shadow-md active:shadow-inner transition-all duration-200",
-          "active:scale-[0.98]",
+          "active:scale-[0.98] cursor-pointer",
           className
         )}
+        onClick={onClick}
         {...props}
       >
         <div className="relative z-20 flex items-center justify-center">
@@ -66,9 +68,10 @@ export function ShimmerButton({
         "bg-gradient-to-br from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700",
         "overflow-hidden",
         "shadow-md hover:shadow-lg transition-shadow duration-200",
-        "relative",
+        "relative cursor-pointer",
         className
       )}
+      onClick={onClick}
       {...props}
     >
       <div

@@ -121,7 +121,41 @@ export function WaitlistButton({
     <div className={cn("flex flex-col gap-2", className)}>
       {!open ? (
         <div className="w-full">
-          {children || (
+          {children ? React.cloneElement(children as React.ReactElement, {
+            onClick: (e: React.MouseEvent) => {
+              console.log("ShimmerButton clicked - setting open state");
+              e.preventDefault();
+              e.stopPropagation();
+              
+              // Set open state
+              setOpen(true);
+              
+              // Use a longer delay for mobile devices
+              const focusDelay = isMobile ? 300 : 150;
+              
+              // Schedule focus after animation completes
+              setTimeout(() => {
+                if (inputRef.current) {
+                  try {
+                    // Try to focus and also make sure keyboard appears on mobile
+                    inputRef.current.focus();
+                    
+                    // On iOS, we may need to tap the field to get keyboard to show
+                    if (isMobile) {
+                      inputRef.current.click();
+                      
+                      // iOS may need this extra nudge
+                      setTimeout(() => {
+                        if (inputRef.current) inputRef.current.focus();
+                      }, 100);
+                    }
+                  } catch (error) {
+                    console.error("Error focusing input:", error);
+                  }
+                }
+              }, focusDelay);
+            }
+          }) : (
             <Button 
               className={cn(
                 "w-full py-6 text-base font-medium font-jakarta",
