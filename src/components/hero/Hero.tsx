@@ -41,8 +41,14 @@ export function Hero() {
     const waitlistSection = document.getElementById('waitlist');
     if (waitlistSection) {
       waitlistSection.scrollIntoView({ behavior: 'smooth' });
+      console.log("Scrolled to waitlist section successfully");
     } else {
       console.error("Waitlist section not found");
+      // Fallback: Scroll to the bottom of the page if section not found
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: 'smooth'
+      });
     }
   };
 

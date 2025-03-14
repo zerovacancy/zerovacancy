@@ -10,6 +10,7 @@ import { AnimatedShinyText } from '@/components/ui/animated-shiny-text';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import { BackgroundEffects } from '@/components/features/BackgroundEffects';
+import CallToActionSection from '@/components/CallToActionSection';
 
 const OptimizedHowItWorks = lazy(() => import('../components/how-it-works/OptimizedHowItWorks'));
 const FeaturesSectionWithHoverEffects = lazy(() => import('@/components/features/Features'));
@@ -226,6 +227,8 @@ const Index = () => {
             <Pricing />
           </Suspense>
         </section>
+
+        <CallToActionSection />
 
         <Footer />
       </main>
