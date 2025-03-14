@@ -1,7 +1,6 @@
 
 import React, { useEffect } from 'react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
+import { Header, Footer } from '@/components/navigation';
 import AuthCheckingState from '@/components/connect/AuthCheckingState';
 import ConnectMainCard from '@/components/connect/ConnectMainCard';
 import { useAuthCheck } from '@/hooks/use-auth-check';
