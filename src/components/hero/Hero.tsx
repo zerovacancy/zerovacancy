@@ -162,25 +162,19 @@ export function Hero() {
           isInView ? "animate-fade-in delay-200" : "opacity-0" 
         )}
       >
-        {/* CTA Container with buttons side by side */}
-        <div className="flex flex-row justify-center gap-4 w-full max-w-3xl mx-auto mb-4">
-          {/* Property Owner Button */}
-          <div className="flex flex-col space-y-2 flex-1">
-            <div className="text-center text-sm text-gray-600 font-medium">For Property Owners</div>
-            <WaitlistCTA 
-              buttonText="RESERVE EARLY ACCESS" 
-              showSocialProof={false}
-            />
-          </div>
-          
-          {/* Creator Button */}
-          <div className="flex flex-col space-y-2 flex-1">
-            <div className="text-center text-sm text-gray-600 font-medium">For Content Creators</div>
-            <WaitlistCreatorCTA 
-              buttonText="JOIN AS CREATOR" 
-              showSocialProof={false}
-            />
-          </div>
+        {/* Main waitlist CTA */}
+        <WaitlistCTA 
+          className={cn(isMobile ? "mb-2" : "mb-4 sm:mb-6")} 
+          buttonText="RESERVE EARLY ACCESS" 
+          showSocialProof={false}
+        />
+        
+        {/* Creator waitlist CTA */}
+        <div className="w-full max-w-md mx-auto">
+          <WaitlistCreatorCTA 
+            buttonText="JOIN AS CREATOR" 
+            showSocialProof={false}
+          />
         </div>
         
         {/* Social proof centered below both buttons */}
@@ -193,3 +187,4 @@ export function Hero() {
 }
 
 export default Hero;
+
