@@ -1,219 +1,171 @@
+/* ./src/App.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-#root {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 2rem;
-    text-align: center;
+/* Custom global styles */
+@layer base {
+  body {
+    @apply bg-white text-gray-900 antialiased;
   }
-
-  @media (max-width: 768px) {
-    #root {
-      padding: 0.25rem;
-      max-width: 100%;
-    }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
   }
-
-  /* Add specific styling for landscape orientation */
-  @media (orientation: landscape) and (max-width: 1024px) {
-    #root {
-      padding: 0.5rem;
-      height: auto;
-      overflow-y: auto;
-    }
+  
+  h1 {
+    @apply text-4xl md:text-5xl lg:text-6xl;
   }
-
-  .logo {
-    height: 6em;
-    padding: 1.5em;
-    will-change: filter;
-    transition: filter 300ms;
+  
+  h2 {
+    @apply text-3xl md:text-4xl;
   }
-  .logo:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
+  
+  h3 {
+    @apply text-2xl md:text-3xl;
   }
-  .logo.react:hover {
-    filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+/* Custom component styles */
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none;
   }
-
-  @keyframes logo-spin {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
+  
+  .btn-primary {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90;
   }
-
-  @media (prefers-reduced-motion: no-preference) {
-    a:nth-of-type(2) .logo {
-      animation: logo-spin infinite 20s linear;
-    }
+  
+  .btn-secondary {
+    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80;
   }
-
-  .card {
-    padding: 2em;
+  
+  .glassmorphism {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
   }
-
-  .read-the-docs {
-    color: #888;
-  }
-
-  /* Hide scrollbar for Chrome, Safari and Opera */
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
-  }
-
-  /* Hide scrollbar for IE, Edge and Firefox */
-  .scrollbar-hide {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
-  }
-
-  /* Animations optimization utilities */
-  .will-change-transform {
-    will-change: transform;
-  }
-
-  /* Layer promotion for frequently animated elements */
-  .promote-layer {
-    transform: translateZ(0);
-    backface-visibility: hidden;
-  }
-
-  /* Mobile touch optimizations */
-  @media (max-width: 768px) {
-    /* Mobile optimization: Disable hover effects on mobile for better performance */
-    .hover-effects-disabled {
-      pointer-events: none;
-    }
-
-    /* Increase touch target sizes */
-    .touch-target {
-      min-height: 44px;
-      min-width: 44px;
-    }
-
-    /* Optimize scrolling */
-    .scroll-container-optimized {
-      -webkit-overflow-scrolling: touch;
-      overscroll-behavior-y: contain;
-      scroll-behavior: smooth;
-    }
-
-    /* Reduce animation complexity */
-    .reduce-animation {
-      animation-duration: 0.5s !important;
-      transition-duration: 0.3s !important;
-    }
-
-    /* Improve padding for mobile content */
-    .mobile-content-container {
-      padding-left: 0.5rem !important;
-      padding-right: 0.5rem !important;
-    }
-
-    /* Improve touch targets for mobile */
-    button, a, input, select, textarea {
-      min-height: 36px;
-    }
-
-    /* We're removing the extra padding for the fixed bottom navigation */
-    body {
-      padding-bottom: 1rem;
-    }
-    
-    /* Mobile section visual enhancers */
-    .mobile-section-divider {
-      display: block;
-      width: 33%;
-      height: 1px;
-      background-color: rgba(139, 92, 246, 0.2);
-      margin: 8px auto;
-    }
-    
-    .mobile-section-gradient {
-      position: relative;
-      z-index: 1;
-    }
-    
-    .mobile-section-gradient::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 15px;
-      background: linear-gradient(to bottom, rgba(139, 92, 246, 0.08), transparent);
-      z-index: -1;
-    }
-    
-    .mobile-section-gradient::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 15px;
-      background: linear-gradient(to top, rgba(139, 92, 246, 0.08), transparent);
-      z-index: -1;
-    }
-    
-    .mobile-alternate-cards > *:nth-child(odd) {
-      background-color: white;
-    }
-    
-    .mobile-alternate-cards > *:nth-child(even) {
-      background-color: rgba(237, 233, 254, 0.2);
-    }
-  }
-
-  /* Enhanced active states for touch devices */
+  
   .touch-manipulation {
     touch-action: manipulation;
   }
-
-  /* Fix for mobile overflow issues */
-  .mobile-hero-container {
-    max-width: 100%;
-    overflow-x: hidden;
+  
+  .mobile-optimize {
+    -webkit-tap-highlight-color: transparent;
   }
-
-  /* Landscape mode specific styles */
-  @media (orientation: landscape) and (max-width: 1024px) {
-    html.landscape-mode,
-    body.landscape-mode {
-      overflow-y: auto !important;
-      height: auto !important;
-      position: relative !important;
-      max-height: none !important;
-    }
-    
-    .landscape-container {
-      padding: 0.5rem;
-      max-height: none !important;
-      overflow-y: auto !important;
-    }
-    
-    /* Adjust pricing section specifically for landscape */
-    .landscape-pricing {
-      padding-top: 0.5rem !important;
-      padding-bottom: 1rem !important;
-    }
-    
-    /* Make sure everything scales properly */
-    .landscape-content-fix {
-      transform: none !important;
-      height: auto !important;
-      min-height: auto !important;
-    }
-    
-    /* Ensure text is readable */
-    .landscape-text-fix {
-      font-size: 95% !important;
-    }
-    
-    /* Ensure pricing toggle is visible */
-    .pricing-toggle-container {
-      margin: 0.5rem auto !important;
-    }
+  
+  .mobile-section-gradient {
+    background: linear-gradient(180deg, rgba(246, 243, 255, 0.8) 0%, rgba(246, 243, 255, 0) 60%);
   }
+  
+  .mobile-section-divider {
+    height: 1px;
+    background: linear-gradient(to right, rgba(148, 163, 184, 0), rgb(148, 163, 184), rgba(148, 163, 184, 0));
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* Animations */
+@keyframes shimmer {
+  0% {
+    backgroundPosition: -200% 0;
+  }
+  100% {
+    backgroundPosition: 200% 0;
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes float-subtle {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-subtle {
+  animation: float-subtle 6s ease-in-out infinite;
+}
+
+@keyframes pulse-subtle {
+  0% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0.8;
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 3s ease-in-out infinite;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out forwards;
+}
+
+/* Mobile touch optimization */
+@media (max-width: 768px) {
+  /* Set default touch actions to improve responsiveness */
+  html, body, button, a, [role="button"], .cursor-pointer {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Increase hit target sizes for better mobile experience */
+  button, .btn, [role="button"], a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Fix for iOS click event delay */
+  [data-mobile-optimized="true"] {
+    cursor: pointer;
+    will-change: transform;
+    transform: translateZ(0);
+  }
+}
+
+/* Extra optimization for main waitlist CTAs */
+.touch-manipulation {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent !important;
+  cursor: pointer;
+  will-change: transform;
+}

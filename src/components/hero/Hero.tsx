@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { WaitlistCTA } from "../ui/waitlist-cta";
 import { TextRotate } from "../ui/text-rotate";
 import { GlowDialog } from "../ui/glow-dialog";
+import { createTouchHandler } from "@/utils/mobile-optimization";
 
 const TITLES = ["CONVERTS", "CAPTIVATES", "CLOSES"];
 
@@ -41,6 +42,9 @@ export function Hero() {
   const handleWaitlistClick = () => {
     setShowGlowDialog(true);
   };
+  
+  // Create touch-optimized handlers
+  const touchHandlers = createTouchHandler(handleWaitlistClick);
 
   return (
     <>
@@ -166,12 +170,16 @@ export function Hero() {
             isInView ? "animate-fade-in delay-200" : "opacity-0" 
           )}
         >
-          <WaitlistCTA 
-            className={cn(isMobile ? "mb-0" : "mb-4 sm:mb-6")} 
-            buttonText="RESERVE EARLY ACCESS" 
-            showSocialProof={true}
-            onClick={handleWaitlistClick}
-          />
+          <div
+            className={cn("touch-manipulation", isMobile ? "mb-0" : "mb-4 sm:mb-6")}
+            data-mobile-optimized="true"
+          >
+            <WaitlistCTA 
+              buttonText="RESERVE EARLY ACCESS" 
+              showSocialProof={true}
+              onClick={handleWaitlistClick}
+            />
+          </div>
         </div>
       </section>
 

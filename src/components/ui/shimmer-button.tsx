@@ -1,103 +1,122 @@
 
 "use client";
 
-import React, { ButtonHTMLAttributes, useState, useEffect } from "react";
+import * as React from "react";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
 
-interface ShimmerButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  children: React.ReactNode;
+interface ShimmerButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  shimmerColor?: string;
+  shimmerSize?: string;
+  borderRadius?: string;
+  shimmerDuration?: string;
   background?: string;
   className?: string;
-  shimmerClassName?: string;
-  mainColor?: string;
-  disableOnMobile?: boolean;
+  children: React.ReactNode;
 }
 
-export function ShimmerButton({
-  children,
-  background,
-  className,
-  shimmerClassName,
-  mainColor,
-  disableOnMobile = false,
-  ...props
-}: ShimmerButtonProps) {
-  const [isMobile, setIsMobile] = useState(false);
-  
-  // Check if mobile on mount
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+export const ShimmerButton = React.forwardRef<HTMLButtonElement, ShimmerButtonProps>(
+  (
+    {
+      shimmerColor = "white",
+      shimmerSize = "0.1em",
+      borderRadius = "9999px",
+      shimmerDuration = "2s",
+      background = "linear-gradient(110deg, #00AAEA 0%, #2F5BA9 40%, #932DD2 70%, #9B2C78 100%)",
+      className,
+      children,
+      ...props
+    },
+    ref
+  ) => {
+    const isMobile = useIsMobile();
+    
+    // This creates a more responsive event handler for touch events
+    const enhanceTouchFeedback = (originalHandler?: React.MouseEventHandler<HTMLButtonElement>) => {
+      return (e: React.MouseEvent<HTMLButtonElement>) => {
+        if (originalHandler) {
+          originalHandler(e);
+        }
+      };
     };
     
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    
-    return () => {
-      window.removeEventListener('resize', checkMobile);
-    };
-  }, []);
-  
-  // Use simplified button on mobile if disableOnMobile is true
-  if (isMobile && disableOnMobile) {
     return (
       <button
+        ref={ref}
         className={cn(
-          "bg-gradient-to-br from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700",
-          "text-white font-medium rounded-lg text-center relative overflow-hidden",
-          "shadow-md active:shadow-inner transition-all duration-200",
-          "active:scale-[0.98]",
+          "relative h-12 w-full overflow-hidden px-4 py-2 group",
+          "rounded-full transition-all duration-300 flex items-center justify-center",
+          // Added explicit tap highlight color for WebKit browsers
+          "-webkit-tap-highlight-color-transparent",
+          "active:scale-95",
           className
         )}
+        style={{
+          background,
+          borderRadius,
+          WebkitTapHighlightColor: 'transparent'
+        }}
+        onClick={enhanceTouchFeedback(props.onClick)}
+        // Explicitly add touch event attributes for mobile
+        {...(isMobile ? {
+          "data-mobile-optimized": "true"
+        } : {})}
         {...props}
       >
-        <div className="relative z-20 flex items-center justify-center">
+        <div
+          className="absolute inset-0 w-full h-full"
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            overflow: "hidden",
+          }}
+        >
+          <div
+            className="h-full w-5 z-5 absolute top-0 overflow-hidden blur-[10px]"
+            style={{
+              animation: `shimmer ${shimmerDuration} infinite linear`,
+              background: `linear-gradient(90deg, transparent, ${shimmerColor}, transparent)`,
+              transform: "skewX(-20deg)",
+              animationTimeline: "auto",
+            }}
+          />
+          <div
+            className="h-full w-5 z-5 absolute top-0 overflow-hidden"
+            style={{
+              animation: `shimmer ${shimmerDuration} infinite linear`,
+              background: `linear-gradient(90deg, transparent, ${shimmerColor}, transparent)`,
+              transform: "skewX(-20deg)",
+              animationTimeline: "auto",
+            }}
+          />
+        </div>
+
+        <div className="relative z-10 flex items-center justify-center gap-1 sm:gap-2">
           {children}
         </div>
       </button>
     );
   }
+);
 
-  return (
-    <button
-      className={cn(
-        "inline-flex h-10 py-2 px-4 items-center justify-center rounded-md text-sm font-medium",
-        "text-white",
-        "bg-gradient-to-br from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700",
-        "overflow-hidden",
-        "shadow-md hover:shadow-lg transition-shadow duration-200",
-        "relative touch-none",
-        className
-      )}
-      {...props}
-    >
-      <div
-        className={cn(
-          "absolute inset-0 flex items-center justify-center w-full h-full transition-all",
-          shimmerClassName
-        )}
-      >
-        <div
-          style={{
-            backgroundImage: `conic-gradient(from 0deg at 50% 50%, ${
-              mainColor ?? "#3b82f6"
-            } 0%, transparent 60%, transparent 80%, transparent 100%)`,
-          }}
-          className={cn(
-            "w-[300%] aspect-square absolute z-[2] animate-[spin_4s_linear_infinite] opacity-0 group-hover:opacity-100",
-            "group-hover:animate-[spin_4s_linear_infinite]"
-          )}
-        />
-      </div>
-      <span className="z-10 flex items-center justify-center opacity-100">
-        {children}
-      </span>
-      <div
-        style={{
-          background: background ?? "transparent",
-        }}
-        className="absolute inset-[1px] rounded-md z-[1]"
-      />
-    </button>
-  );
+ShimmerButton.displayName = "ShimmerButton";
+
+const shimmerAnimation = `
+@keyframes shimmer {
+  0% {
+    left: -50%;
+  }
+  100% {
+    left: 150%;
+  }
+}
+`;
+
+// Inject the shimmer animation into the document
+if (typeof document !== "undefined") {
+  const style = document.createElement("style");
+  style.textContent = shimmerAnimation;
+  document.head.appendChild(style);
 }

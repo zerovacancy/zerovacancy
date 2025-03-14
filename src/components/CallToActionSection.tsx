@@ -4,6 +4,7 @@ import { ShimmerButton } from './ui/shimmer-button';
 import { ArrowRight, TrendingUp } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { GlowDialog } from './ui/glow-dialog';
+import { createTouchHandler } from '@/utils/mobile-optimization';
 
 const CallToActionSection = () => {
   const isMobile = useIsMobile();
@@ -12,6 +13,9 @@ const CallToActionSection = () => {
   const handleWaitlistClick = () => {
     setShowGlowDialog(true);
   };
+  
+  // Create touch-optimized handlers
+  const touchHandlers = createTouchHandler(handleWaitlistClick);
   
   return (
     <>
@@ -42,13 +46,20 @@ const CallToActionSection = () => {
         
         <div className="flex flex-col sm:flex-row gap-6 sm:gap-5 justify-center items-center mt-2">
           <div className="w-full sm:w-auto">
-            <ShimmerButton 
-              onClick={handleWaitlistClick}
-              className="w-full sm:w-auto min-w-[200px] touch-manipulation h-[52px] text-base font-semibold transition-all duration-300 hover:scale-105"
+            <div 
+              className="cursor-pointer touch-manipulation" 
+              onClick={touchHandlers.onClick}
+              onTouchStart={touchHandlers.onTouchStart}
+              onTouchMove={touchHandlers.onTouchMove}
+              onTouchEnd={touchHandlers.onTouchEnd}
             >
-              <span>JOIN THE WAITLIST</span>
-              <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 text-white/90" />
-            </ShimmerButton>
+              <ShimmerButton 
+                className="w-full sm:w-auto min-w-[200px] touch-manipulation h-[52px] text-base font-semibold transition-all duration-300 hover:scale-105"
+              >
+                <span>JOIN THE WAITLIST</span>
+                <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 text-white/90" />
+              </ShimmerButton>
+            </div>
           </div>
           
           <ShimmerButton 
