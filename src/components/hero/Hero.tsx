@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
@@ -164,7 +163,7 @@ export function Hero() {
       >
         {/* Main waitlist CTA */}
         <WaitlistCTA 
-          className={cn(isMobile ? "mb-2" : "mb-4 sm:mb-6")} 
+          className={cn(isMobile ? "mb-2" : "mb-2 sm:mb-3")} // Reduced spacing for desktop
           buttonText="RESERVE EARLY ACCESS" 
           showSocialProof={false}
         />
@@ -187,4 +186,3 @@ export function Hero() {
 }
 
 export default Hero;
-
