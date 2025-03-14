@@ -176,7 +176,6 @@ export function Hero() {
                 <WaitlistCTA 
                   buttonText="RESERVE EARLY ACCESS" 
                   showSocialProof={false}
-                  showEmailInputDirectly={true}
                 />
               </div>
               
@@ -191,7 +190,6 @@ export function Hero() {
                   <WaitlistCreatorCTA 
                     buttonText="JOIN AS CREATOR" 
                     showSocialProof={false}
-                    showEmailInputDirectly={true}
                   />
                 </div>
               </div>
@@ -212,7 +210,6 @@ export function Hero() {
               className="mb-2" 
               buttonText="RESERVE EARLY ACCESS" 
               showSocialProof={false}
-              showEmailInputDirectly={true}
             />
             
             {/* Creator waitlist CTA */}
@@ -220,7 +217,6 @@ export function Hero() {
               <WaitlistCreatorCTA 
                 buttonText="JOIN AS CREATOR" 
                 showSocialProof={false}
-                showEmailInputDirectly={true}
               />
             </div>
             

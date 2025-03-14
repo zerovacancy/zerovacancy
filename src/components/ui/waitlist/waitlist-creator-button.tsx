@@ -164,13 +164,14 @@ export function WaitlistCreatorButton({
   return (
     <div className={cn("flex flex-col gap-2", className)}>
       {!open ? (
+        // Only show the CTA button when not open
         <div className="w-full">
           {children ? React.cloneElement(children as React.ReactElement, {
             onClick: (e: React.MouseEvent) => {
               e.preventDefault();
               e.stopPropagation();
               
-              // Set open state
+              // Set open state to show the email form
               setOpen(true);
               
               // Ensure focus after state update
@@ -192,7 +193,7 @@ export function WaitlistCreatorButton({
                 e.preventDefault();
                 e.stopPropagation();
                 
-                // Set open state
+                // Set open state to show the email form
                 setOpen(true);
                 
                 // Ensure focus after state update
@@ -209,6 +210,7 @@ export function WaitlistCreatorButton({
           )}
         </div>
       ) : (
+        // Show the email form when open
         <form 
           ref={formRef} 
           onSubmit={handleSubmit} 
