@@ -2,7 +2,6 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { Users } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface SocialProofProps {
@@ -13,45 +12,65 @@ export function SocialProof({ className }: SocialProofProps) {
   const isMobile = useIsMobile();
   
   return (
-    <div className={cn("flex items-center justify-center mt-2 sm:mt-3", className)}> 
-      {/* Social proof pill */}
+    <div className={cn("flex items-center justify-center mt-2", className)}> 
+      {/* Elegant social proof pill with refined design */}
       <div className={cn(
-        "flex items-center gap-2 sm:gap-3 px-4 py-2",
-        "bg-gradient-to-r from-indigo-50 to-purple-50",
-        "border border-indigo-100/80",
-        "rounded-full shadow-sm",
+        "flex flex-col items-center", // Changed to column layout for vertical centering
+        "bg-gradient-to-r from-[#F5F0FF]/95 to-[#F0F5FF]/95",
+        "rounded-[18px]", // Exact match to other rounded elements
+        "shadow-[0_2px_6px_rgba(124,58,237,0.15)]", // Refined shadow matching site style
+        "border border-[#8A64FF]/20",
         "animate-fade-in",
-        "max-w-fit", // Adjusted width to fit content
+        isMobile ? "w-auto max-w-[220px]" : "w-auto max-w-[260px]", // Width adjusted for device
         "mx-auto", // Center alignment
-        isMobile && "text-xs" // Ensure text size is consistent on mobile
+        "transition-all duration-300",
+        "hover:shadow-[0_3px_10px_rgba(124,58,237,0.18)]",
+        isMobile ? "px-3 py-2" : "px-4 py-2.5"
       )}>
-        <div className="flex -space-x-1 items-center">
-          <div className={cn(
-            "rounded-full bg-gradient-to-br from-indigo-600 via-purple-600 to-blue-600",
-            "flex items-center justify-center text-[8px] text-white font-bold",
-            "border-2 border-white shadow-sm",
-            isMobile ? "w-6 h-6" : "w-7 h-7"
-          )}>JT</div>
-          <div className={cn(
-            "rounded-full bg-gradient-to-br from-indigo-600 via-purple-600 to-blue-600",
-            "flex items-center justify-center text-[8px] text-white font-bold",
-            "border-2 border-white shadow-sm",
-            isMobile ? "w-6 h-6" : "w-7 h-7"
-          )}>MI</div>
-          <div className={cn(
-            "rounded-full bg-gradient-to-br from-indigo-600 via-purple-600 to-blue-600",
-            "flex items-center justify-center text-[8px] text-white font-bold",
-            "border-2 border-white shadow-sm",
-            isMobile ? "w-6 h-6" : "w-7 h-7"
-          )}>AS</div>
+        {/* Top row with avatars and counter */}
+        <div className="flex items-center justify-center mb-1">
+          {/* Overlapping avatars with refined overlap */}
+          <div className="flex -space-x-1.5 items-center mr-2">
+            <div className={cn(
+              "rounded-full bg-gradient-to-r from-purple-600 to-blue-600",
+              "flex items-center justify-center text-[6px] text-white font-bold",
+              "border-[1.5px] border-white shadow-sm",
+              isMobile ? "w-4 h-4" : "w-5 h-5"
+            )}>JT</div>
+            <div className={cn(
+              "rounded-full bg-gradient-to-r from-purple-600 to-blue-600",
+              "flex items-center justify-center text-[6px] text-white font-bold",
+              "border-[1.5px] border-white shadow-sm", 
+              isMobile ? "w-4 h-4" : "w-5 h-5"
+            )}>MI</div>
+            <div className={cn(
+              "rounded-full bg-gradient-to-r from-purple-600 to-blue-600",
+              "flex items-center justify-center text-[6px] text-white font-bold",
+              "border-[1.5px] border-white shadow-sm",
+              isMobile ? "w-4 h-4" : "w-5 h-5"
+            )}>AS</div>
+          </div>
+          
+          {/* Counter with extra bold weight for more impact */}
+          <span className={cn(
+            "font-jakarta font-bold tracking-tight",
+            "bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-600",
+            isMobile ? "text-sm" : "text-[15px]"
+          )}>
+            2,165+
+          </span>
         </div>
         
-        <div className={cn(
-          "flex items-center",
-          isMobile && "text-xs"
-        )}>
-          <Users className="h-4 w-4 text-indigo-600 mr-1.5" />
-          <span className="font-bold text-indigo-700">2,165+</span>
+        {/* Bottom row with descriptive text, centered */}
+        <div className="text-center w-full">
+          <span className={cn(
+            "font-inter whitespace-nowrap",
+            "text-[#5A5A72]", // Exact match to bodySecondary from color-theme.ts
+            "tracking-[0.02em] leading-tight", // Consistent letter spacing
+            isMobile ? "text-[8px]" : "text-[9px]"
+          )}>
+            PROPERTY OWNERS & CREATORS JOINED
+          </span>
         </div>
       </div>
     </div>
