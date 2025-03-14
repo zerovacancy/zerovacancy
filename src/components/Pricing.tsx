@@ -61,17 +61,19 @@ const PricingContent = () => {
         <PricingContainer />
       </div>
       
-      {/* Centralized Compare All Features button below pricing tiers */}
+      {/* Single Compare All Features button below pricing tiers */}
       {isMobile && (
-        <div className="mb-5">
-          <CompareAllFeaturesButton />
+        <div className="mb-8 mt-1">
+          <CompareAllFeaturesButton 
+            className="bg-brand-purple text-white hover:bg-brand-purple/90 active:bg-brand-purple/95 border-none shadow-md w-[85%] max-w-[320px]"
+          />
         </div>
       )}
       
       {/* Small copy text replacing the CommonFeatures component */}
       <div className={cn(
-        "text-center text-sm text-slate-500 max-w-2xl mx-auto mt-5 mb-10",
-        isMobile && "px-4 mb-8 mt-3 bg-slate-50/50 py-4 rounded-xl border border-slate-100",
+        "text-center text-sm text-slate-500 max-w-2xl mx-auto mt-3 mb-10",
+        isMobile && "px-4 mb-8 bg-slate-50/50 py-4 rounded-xl border border-slate-100",
         isLandscape && "mt-1 mb-4 landscape-text-fix" // Reduce margins in landscape mode
       )}>
         <p className={cn(
