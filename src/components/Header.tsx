@@ -29,7 +29,7 @@ const Header = () => {
           </Link>
         </div>
 
-        <DesktopNavigation menuItems={menuItems} />
+        <DesktopNavigation menuItems={menuItems} onPrelaunchLinkClick={() => setShowSignInModal(true)} />
 
         <div className="flex items-center space-x-3 md:space-x-4">
           {user ? <UserMenu onSignOut={handleSignOut} /> : null}

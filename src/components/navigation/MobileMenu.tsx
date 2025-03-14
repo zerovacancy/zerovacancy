@@ -27,14 +27,24 @@ const MobileMenu = ({
     <div className="md:hidden">
       <div className={`pt-2 pb-4 space-y-1 sm:px-3 rounded-xl ${gradientBgMobile} ${improvedShadowMobile} ${coloredBorderMobile}`}>
         {menuItems.map((item) => (
-          <Link
+          <a
             key={item.label}
-            to={item.href}
+            href={item.href}
             className="block px-4 py-3 text-base font-medium text-brand-purple-dark hover:bg-purple-100 hover:text-brand-purple rounded-lg my-1 transition-colors"
-            onClick={onClose}
+            onClick={(e) => {
+              // If it's not a hash link to a section, prevent default and show waitlist
+              if (!item.href.startsWith('/#')) {
+                e.preventDefault();
+                onSignInClick();
+              }
+              onClose();
+            }}
           >
             {item.label}
-          </Link>
+            {!item.href.startsWith('/#') && (
+              <span className="ml-2 px-1.5 py-0.5 text-[10px] font-semibold uppercase bg-gray-100 text-gray-500 rounded">Soon</span>
+            )}
+          </a>
         ))}
         
         {!user ? (
@@ -51,20 +61,30 @@ const MobileMenu = ({
           </Button>
         ) : (
           <>
-            <Link
-              to="/account"
+            <a
+              href="#"
               className="block px-4 py-3 text-base font-medium text-brand-purple-dark hover:bg-purple-100 hover:text-brand-purple rounded-lg my-1 transition-colors"
-              onClick={onClose}
+              onClick={(e) => {
+                e.preventDefault();
+                onSignInClick();
+                onClose();
+              }}
             >
               My Account
-            </Link>
-            <Link
-              to="/connect/onboarding"
+              <span className="ml-2 px-1.5 py-0.5 text-[10px] font-semibold uppercase bg-gray-100 text-gray-500 rounded">Soon</span>
+            </a>
+            <a
+              href="#"
               className="block px-4 py-3 text-base font-medium text-brand-purple-dark hover:bg-purple-100 hover:text-brand-purple rounded-lg my-1 transition-colors"
-              onClick={onClose}
+              onClick={(e) => {
+                e.preventDefault();
+                onSignInClick();
+                onClose();
+              }}
             >
               Connect Setup
-            </Link>
+              <span className="ml-2 px-1.5 py-0.5 text-[10px] font-semibold uppercase bg-gray-100 text-gray-500 rounded">Soon</span>
+            </a>
             <button
               className="block w-full text-left px-4 py-3 text-base font-medium text-red-600 hover:bg-red-50 rounded-lg my-1 transition-colors"
               onClick={() => {

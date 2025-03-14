@@ -5,9 +5,11 @@ import TermsModal from './TermsModal';
 import { Mail, Clock, MapPin, ExternalLink, Search, Users, HelpCircle, ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { GlowDialog } from '@/components/ui/glow-dialog';
 
 const Footer = () => {
   const [showTerms, setShowTerms] = useState(false);
+  const [showGlowDialog, setShowGlowDialog] = useState(false);
   const currentYear = new Date().getFullYear();
   const isMobile = useIsMobile();
   
@@ -33,11 +35,17 @@ const Footer = () => {
             
             {/* Social media icons */}
             <div className="flex space-x-3 pt-2">
-              <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center transition-colors hover:bg-gray-200 cursor-pointer">
+              <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center transition-colors hover:bg-gray-200 cursor-pointer relative group" onClick={() => setShowGlowDialog(true)}>
                 <Users size={16} className="text-brand-purple-medium" />
+                <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap transition-opacity">
+                  Coming Soon
+                </div>
               </div>
-              <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center transition-colors hover:bg-gray-200 cursor-pointer">
+              <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center transition-colors hover:bg-gray-200 cursor-pointer relative group" onClick={() => setShowGlowDialog(true)}>
                 <Search size={16} className="text-brand-purple-medium" />
+                <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap transition-opacity">
+                  Coming Soon
+                </div>
               </div>
             </div>
           </div>
@@ -50,28 +58,32 @@ const Footer = () => {
             </h4>
             <ul className="space-y-3">
               <li>
-                <Link to="/search" className="text-brand-text-secondary hover:text-brand-purple-medium text-sm transition-colors flex items-center group font-inter">
+                <a href="/#find-creators" className="text-brand-text-secondary hover:text-brand-purple-medium text-sm transition-colors flex items-center group font-inter">
                   <span className="h-0.5 w-0 bg-brand-purple-medium transition-all duration-300 mr-0 group-hover:w-2 group-hover:mr-2"></span>
                   Find Creators
-                </Link>
+                </a>
               </li>
               <li>
-                <Link to="/how-it-works" className="text-brand-text-secondary hover:text-brand-purple-medium text-sm transition-colors flex items-center group font-inter">
+                <a href="/#how-it-works" className="text-brand-text-secondary hover:text-brand-purple-medium text-sm transition-colors flex items-center group font-inter">
                   <span className="h-0.5 w-0 bg-brand-purple-medium transition-all duration-300 mr-0 group-hover:w-2 group-hover:mr-2"></span>
                   How It Works
-                </Link>
+                </a>
               </li>
               <li>
-                <Link to="/pricing" className="text-brand-text-secondary hover:text-brand-purple-medium text-sm transition-colors flex items-center group font-inter">
+                <a href="/#pricing" className="text-brand-text-secondary hover:text-brand-purple-medium text-sm transition-colors flex items-center group font-inter">
                   <span className="h-0.5 w-0 bg-brand-purple-medium transition-all duration-300 mr-0 group-hover:w-2 group-hover:mr-2"></span>
                   Pricing
-                </Link>
+                </a>
               </li>
               <li>
-                <Link to="/success-stories" className="text-brand-text-secondary hover:text-brand-purple-medium text-sm transition-colors flex items-center group font-inter">
+                <a href="#" onClick={(e) => {
+                  e.preventDefault();
+                  setShowGlowDialog(true);
+                }} className="text-brand-text-secondary hover:text-brand-purple-medium text-sm transition-colors flex items-center group font-inter">
                   <span className="h-0.5 w-0 bg-brand-purple-medium transition-all duration-300 mr-0 group-hover:w-2 group-hover:mr-2"></span>
                   Success Stories
-                </Link>
+                  <span className="ml-2 px-1.5 py-0.5 text-[10px] font-semibold uppercase bg-gray-100 text-gray-500 rounded">Soon</span>
+                </a>
               </li>
             </ul>
           </div>
@@ -84,28 +96,44 @@ const Footer = () => {
             </h4>
             <ul className="space-y-3">
               <li>
-                <Link to="/join-as-creator" className="text-brand-text-secondary hover:text-brand-purple-medium text-sm transition-colors flex items-center group font-inter">
+                <a href="#" onClick={(e) => {
+                  e.preventDefault();
+                  setShowGlowDialog(true);
+                }} className="text-brand-text-secondary hover:text-brand-purple-medium text-sm transition-colors flex items-center group font-inter">
                   <span className="h-0.5 w-0 bg-brand-purple-medium transition-all duration-300 mr-0 group-hover:w-2 group-hover:mr-2"></span>
                   Apply to Join
-                </Link>
+                  <span className="ml-2 px-1.5 py-0.5 text-[10px] font-semibold uppercase bg-gray-100 text-gray-500 rounded">Soon</span>
+                </a>
               </li>
               <li>
-                <Link to="/creator-guidelines" className="text-brand-text-secondary hover:text-brand-purple-medium text-sm transition-colors flex items-center group font-inter">
+                <a href="#" onClick={(e) => {
+                  e.preventDefault();
+                  setShowGlowDialog(true);
+                }} className="text-brand-text-secondary hover:text-brand-purple-medium text-sm transition-colors flex items-center group font-inter">
                   <span className="h-0.5 w-0 bg-brand-purple-medium transition-all duration-300 mr-0 group-hover:w-2 group-hover:mr-2"></span>
                   Creator Guidelines
-                </Link>
+                  <span className="ml-2 px-1.5 py-0.5 text-[10px] font-semibold uppercase bg-gray-100 text-gray-500 rounded">Soon</span>
+                </a>
               </li>
               <li>
-                <Link to="/commission-structure" className="text-brand-text-secondary hover:text-brand-purple-medium text-sm transition-colors flex items-center group font-inter">
+                <a href="#" onClick={(e) => {
+                  e.preventDefault();
+                  setShowGlowDialog(true);
+                }} className="text-brand-text-secondary hover:text-brand-purple-medium text-sm transition-colors flex items-center group font-inter">
                   <span className="h-0.5 w-0 bg-brand-purple-medium transition-all duration-300 mr-0 group-hover:w-2 group-hover:mr-2"></span>
                   Commission Structure
-                </Link>
+                  <span className="ml-2 px-1.5 py-0.5 text-[10px] font-semibold uppercase bg-gray-100 text-gray-500 rounded">Soon</span>
+                </a>
               </li>
               <li>
-                <Link to="/resources" className="text-brand-text-secondary hover:text-brand-purple-medium text-sm transition-colors flex items-center group font-inter">
+                <a href="#" onClick={(e) => {
+                  e.preventDefault();
+                  setShowGlowDialog(true);
+                }} className="text-brand-text-secondary hover:text-brand-purple-medium text-sm transition-colors flex items-center group font-inter">
                   <span className="h-0.5 w-0 bg-brand-purple-medium transition-all duration-300 mr-0 group-hover:w-2 group-hover:mr-2"></span>
                   Resources
-                </Link>
+                  <span className="ml-2 px-1.5 py-0.5 text-[10px] font-semibold uppercase bg-gray-100 text-gray-500 rounded">Soon</span>
+                </a>
               </li>
             </ul>
           </div>
@@ -132,20 +160,30 @@ const Footer = () => {
               </li>
               <li>
                 <a 
-                  href="/contact" 
+                  href="#" 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setShowGlowDialog(true);
+                  }}
                   className="text-brand-text-secondary hover:text-brand-purple-medium text-sm transition-colors flex items-center mt-2 font-inter"
                 >
                   <MapPin className="w-4 h-4 mr-2 text-brand-purple-medium/70" />
                   Contact Us
+                  <span className="ml-2 px-1.5 py-0.5 text-[10px] font-semibold uppercase bg-gray-100 text-gray-500 rounded">Soon</span>
                 </a>
               </li>
               <li>
                 <a 
-                  href="/faq" 
+                  href="#" 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setShowGlowDialog(true);
+                  }}
                   className="text-brand-text-secondary hover:text-brand-purple-medium text-sm transition-colors flex items-center mt-2 font-inter"
                 >
                   <HelpCircle className="w-4 h-4 mr-2 text-brand-purple-medium/70" />
                   FAQ
+                  <span className="ml-2 px-1.5 py-0.5 text-[10px] font-semibold uppercase bg-gray-100 text-gray-500 rounded">Soon</span>
                 </a>
               </li>
             </ul>
@@ -172,18 +210,26 @@ const Footer = () => {
                 <span>Terms & Conditions</span>
                 <ExternalLink className="ml-1 w-3 h-3 text-gray-400" />
               </button>
-              <Link
-                to="/terms"
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setShowTerms(true);
+                }}
                 className="text-brand-text-light hover:text-brand-purple-medium text-sm transition-colors font-inter"
               >
-                Terms & Conditions (Page)
-              </Link>
-              <Link
-                to="/privacy"
+                Terms & Conditions
+              </a>
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setShowTerms(true);
+                }}
                 className="text-brand-text-light hover:text-brand-purple-medium text-sm transition-colors font-inter"
               >
                 Privacy Policy
-              </Link>
+              </a>
             </div>
           </div>
         </div>
@@ -206,6 +252,11 @@ const Footer = () => {
       <TermsModal
         open={showTerms}
         onOpenChange={setShowTerms}
+      />
+      
+      <GlowDialog 
+        open={showGlowDialog} 
+        onOpenChange={setShowGlowDialog} 
       />
     </footer>
   );

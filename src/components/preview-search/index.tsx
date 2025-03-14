@@ -6,11 +6,13 @@ import { PreviewHeader } from './PreviewHeader';
 import { PreviewContent } from './PreviewContent';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { motion } from 'framer-motion';
+import { GlowDialog } from '@/components/ui/glow-dialog';
 
 const PreviewSearch = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
+  const [showGlowDialog, setShowGlowDialog] = useState(false);
   const isMobile = useIsMobile();
   
   useEffect(() => {
@@ -108,6 +110,21 @@ const PreviewSearch = () => {
         >
           Because extraordinary spaces deserve extraordinary storytellers
         </motion.p>
+        
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 10 }}
+          transition={{ duration: 0.5, delay: 0.8 }}
+          className="mt-4 mb-4"
+        >
+          <button
+            onClick={() => setShowGlowDialog(true)}
+            className="inline-flex items-center justify-center px-6 py-3 text-sm font-medium transition-colors rounded-md text-white bg-gradient-to-r from-brand-purple to-brand-purple-medium hover:from-brand-purple-dark hover:to-brand-purple shadow-md"
+          >
+            Join as a Creator
+            <span className="ml-2 px-1.5 py-0.5 text-[10px] font-semibold uppercase bg-white text-brand-purple-dark rounded">Soon</span>
+          </button>
+        </motion.div>
       </div>
 
       <div className="mx-auto relative group max-w-7xl">
@@ -129,6 +146,16 @@ const PreviewSearch = () => {
       {isMobile && (
         <div className="mobile-section-divider mt-6"></div>
       )}
+      
+      {/* Add pre-launch "Coming Soon" overlay */}
+      <div className={cn(
+        "absolute top-2 right-2 px-3 py-1 bg-brand-purple text-white rounded-full font-semibold text-xs z-30 shadow-md",
+        "animate-pulse" // Add subtle animation to draw attention
+      )}>
+        Preview
+      </div>
+      
+      <GlowDialog open={showGlowDialog} onOpenChange={setShowGlowDialog} />
     </div>
   );
 };
