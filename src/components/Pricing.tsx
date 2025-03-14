@@ -1,82 +1,133 @@
-
 import { cn } from "@/lib/utils";
 import { useSubscription } from "@/hooks/use-subscription";
 import PricingHeader from "./pricing/PricingHeader";
-import { PricingCardList } from "./pricing/PricingCardList";
-import { PricingProvider } from "./pricing/PricingContext";
-import { PricingFAQ } from "./pricing/PricingFAQ";
-import { PricingFeatures } from "./pricing/PricingFeatures";
-import { FEATURES } from "./pricing/pricingData";
 import { BackgroundEffects } from "./pricing/BackgroundEffects";
+import { PricingProvider, usePricing } from "./pricing/PricingContext";
 import { PricingContainer } from "./pricing/PricingContainer";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useState } from "react";
+import { isLandscapeMode } from "@/utils/mobile-optimization";
+import { useEffect, useState } from "react";
+import { CompareAllFeaturesButton } from "./pricing/CompareAllFeaturesButton";
 
-const Pricing = () => {
+// Wrapper component that uses the pricing context and passes values to PricingHeader
+const PricingContent = () => {
+  const { isYearly, setIsYearly, animateChange } = usePricing();
   const isMobile = useIsMobile();
-  const { subscription, isLoading } = useSubscription();
-  const [showAllFeatures, setShowAllFeatures] = useState(false);
+  const [isLandscape, setIsLandscape] = useState(false);
   
-  // We'll convert this to a function we can use in our templates
-  const toggleFeatures = () => {
-    setShowAllFeatures(!showAllFeatures);
-  };
+  // Update landscape state when orientation changes
+  useEffect(() => {
+    const checkOrientation = () => {
+      setIsLandscape(isLandscapeMode());
+    };
+    
+    // Check initially
+    checkOrientation();
+    
+    // Add listeners for orientation changes
+    window.addEventListener('resize', checkOrientation);
+    window.addEventListener('orientationchange', checkOrientation);
+    
+    return () => {
+      window.removeEventListener('resize', checkOrientation);
+      window.removeEventListener('orientationchange', checkOrientation);
+    };
+  }, []);
   
   return (
-    <section 
-      id="pricing" 
-      className={cn(
-        "relative w-full py-16 md:py-20 overflow-hidden",
-        "bg-gradient-to-b from-slate-50 to-white"
-      )}
-    >
-      {/* Subtle animated background effects */}
-      <BackgroundEffects />
+    <>
+      <div className={cn(
+        "w-full",
+        isMobile && "bg-slate-50/70 border border-slate-200/70 rounded-2xl px-4 pt-5 pb-6 shadow-sm mb-6 mt-2",
+        isLandscape && "py-3 mb-2"
+      )}>
+        {/* Enhanced header with toggle now integrated */}
+        <PricingHeader 
+          title="PRICING TIERS" 
+          subtitle="Select the package that fits your property's marketing needs"
+          isYearly={isYearly}
+          setIsYearly={setIsYearly}
+          animateChange={animateChange}
+        />
+      </div>
       
-      {/* Create context for pricing components */}
-      <PricingProvider>
-        {/* Main content container */}
-        <div className="container px-4 md:px-6 relative z-10">
-          {/* Section header with title and description */}
-          <div className="mb-8 md:mb-10 text-center">
-            <h2 className="font-bold tracking-tight text-3xl md:text-4xl mb-4">
-              Simple, transparent pricing
-            </h2>
-            <p className="text-muted-foreground md:text-lg max-w-[800px] mx-auto">
-              Choose the plan that's right for you and start connecting with creators today.
-            </p>
-          </div>
-          
-          {/* Pricing cards container */}
-          <PricingContainer />
-        </div>
+      {/* Removed wrapping div around PricingContainer for mobile */}
+      <div className={cn(
+        "mt-4 sm:mt-10 lg:mt-12 mb-6 sm:mb-8 lg:mb-10",
+        !isMobile && "mx-auto rounded-xl shadow-sm max-w-[95%] py-8 px-4", // Only apply container div on desktop
+        isLandscape && "landscape-content-fix mt-2 mb-2 py-2" // Apply landscape specific fixes
+      )}>
+        <PricingContainer />
+      </div>
+      
+      {/* Removed the wrapping div and directly rendering the button when on mobile */}
+      {isMobile && (
+        <CompareAllFeaturesButton 
+          className="bg-brand-purple text-white hover:bg-brand-purple/90 active:bg-brand-purple/95 border-none shadow-md w-[85%] max-w-[320px] mx-auto mb-8 mt-1"
+        />
+      )}
       
       {/* Small copy text replacing the CommonFeatures component */}
-      <div className="text-center mt-6 mb-12 px-4">
-        <p className="text-sm text-gray-600 max-w-lg mx-auto">
-          All plans include unlimited creator searches, message templates, 
-          and basic analytics. Upgrade anytime as your needs grow.
+      <div className={cn(
+        "text-center text-sm text-slate-500 max-w-2xl mx-auto mt-3 mb-10",
+        isMobile && "px-4 mb-8 bg-slate-50/50 py-4 rounded-xl border border-slate-100",
+        isLandscape && "mt-1 mb-4 landscape-text-fix" // Reduce margins in landscape mode
+      )}>
+        <p className={cn(
+          "text-xs font-light",
+          isLandscape && "mt-[-10px]" // Adjust top margin in landscape
+        )}>
+          All plans include: High-resolution images, dedicated support, property website, mobile-optimized, digital downloads, no watermarks. Custom plans available for agencies and teams. 
         </p>
       </div>
+    </>
+  );
+};
 
-      {/* Hide the features section by default */}
-      {showAllFeatures && (
-        <div className="container px-4 md:px-6 mt-12 relative z-10">
-          <PricingFeatures 
-            features={FEATURES.pro} 
-            expandedFeatures={showAllFeatures}
-            toggleFeatures={toggleFeatures}
-            planIndex={1}
-          />
+const Pricing = () => {
+  const {
+    subscription,
+    isLoading
+  } = useSubscription();
+  
+  // Track landscape mode
+  const [isLandscape, setIsLandscape] = useState(false);
+  
+  useEffect(() => {
+    const checkOrientation = () => {
+      setIsLandscape(isLandscapeMode());
+    };
+    
+    // Check initially
+    checkOrientation();
+    
+    // Add listeners for orientation changes
+    window.addEventListener('resize', checkOrientation);
+    window.addEventListener('orientationchange', checkOrientation);
+    
+    return () => {
+      window.removeEventListener('resize', checkOrientation);
+      window.removeEventListener('orientationchange', checkOrientation);
+    };
+  }, []);
+  
+  return (
+    <PricingProvider>
+      <div className={cn(
+        "relative w-full py-8 sm:py-12 lg:py-20 overflow-hidden",
+        isLandscape && "landscape-pricing py-2 sm:py-4" // Apply landscape specific classes
+      )}>
+        {/* Background decorative elements - now showing on both mobile and desktop */}
+        <BackgroundEffects />
+        
+        <div className={cn(
+          "max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10",
+          isLandscape && "px-2 sm:px-3" // Reduce padding in landscape mode
+        )}>
+          <PricingContent />
         </div>
-      )}
-      
-      {/* Add FAQ section */}
-      <div className="container px-4 md:px-6 mt-16 md:mt-20 relative z-10">
-        <PricingFAQ />
       </div>
-      </PricingProvider>
-    </section>
+    </PricingProvider>
   );
 };
 
