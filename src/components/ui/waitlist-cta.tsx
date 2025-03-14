@@ -23,9 +23,7 @@ export const WaitlistCTA: React.FC<WaitlistCTAProps> = ({
 }) => {
   const [showGlowDialog, setShowGlowDialog] = useState(false);
   
-  const handleClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    
+  const handleClick = () => {
     if (onClick) {
       onClick();
       return;
@@ -41,23 +39,17 @@ export const WaitlistCTA: React.FC<WaitlistCTAProps> = ({
       className
     )}>
       <div onClick={handleClick}>
-        <WaitlistButton 
-          source={source}
-          buttonText={buttonText}
-          className="w-full py-4"
+        <ShimmerButton 
+          className={cn(
+            "w-full text-white", 
+            "shadow-md shadow-blue-500/20", 
+            "h-12 sm:h-14 text-sm sm:text-base", 
+            "transition-all duration-300", 
+            "touch-manipulation",
+          )}
         >
-          <ShimmerButton 
-            className={cn(
-              "w-full text-white", 
-              "shadow-md shadow-blue-500/20", 
-              "h-12 sm:h-14 text-sm sm:text-base", 
-              "transition-all duration-300", 
-              "touch-manipulation",
-            )}
-          >
-            {buttonText}
-          </ShimmerButton>
-        </WaitlistButton>
+          {buttonText}
+        </ShimmerButton>
       </div>
       
       {/* Only show social proof when explicitly requested */}
