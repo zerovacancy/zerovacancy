@@ -1,28 +1,43 @@
+/**
+ * Core utility functions
+ */
 
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
+/**
+ * Merge class names with Tailwind CSS classes
+ */
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
-// Add animation utilities
-export const pulseAnimation = "animate-[pulse_2s_cubic-bezier(0.4,0,0.6,1)_infinite]";
+// CSS animation constants
+export const pulseAnimation = "animate-pulse-subtle";
 
-// Add price formatting utility
-export function formatPrice(price: number): string {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
+/**
+ * Format price with currency symbol and proper decimal places
+ */
+export function formatPrice(
+  price: number,
+  options: {
+    currency?: "USD" | "EUR" | "GBP" | "BRL";
+    notation?: Intl.NumberFormatOptions["notation"];
+  } = {}
+) {
+  const { currency = "USD", notation = "compact" } = options;
+  
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency,
+    notation,
+    maximumFractionDigits: 2,
   }).format(price);
 }
 
-// Add feature comparison helpers
-export function compareFeatures(
-  featureKey: string, 
-  planLevels: { [key: string]: boolean | string | number }
-): { [key: string]: boolean | string | number } {
-  return planLevels;
+/**
+ * Compare features for pricing plans
+ */
+export function compareFeatures(a: any, b: any) {
+  return a;
 }
