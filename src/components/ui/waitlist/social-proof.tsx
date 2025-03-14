@@ -21,7 +21,7 @@ export function SocialProof({ className }: SocialProofProps) {
         "border border-indigo-100/80",
         "rounded-full shadow-sm",
         "animate-fade-in",
-        isMobile ? "max-w-[280px]" : "max-w-[350px]", // Different widths for mobile/desktop
+        "max-w-fit", // Adjusted width to fit content
         "mx-auto", // Center alignment
         isMobile && "text-xs" // Ensure text size is consistent on mobile
       )}>
@@ -47,14 +47,11 @@ export function SocialProof({ className }: SocialProofProps) {
         </div>
         
         <div className={cn(
-          "flex items-center whitespace-nowrap",
+          "flex items-center",
           isMobile && "text-xs"
         )}>
           <Users className="h-4 w-4 text-indigo-600 mr-1.5" />
           <span className="font-bold text-indigo-700">2,165+</span>
-          <span className="text-gray-400 mx-1.5">•</span>
-          <span className="text-gray-800">Queue: </span>
-          <span className="text-indigo-700 font-bold">{isMobile ? "1-2 days" : "2-3 weeks"}</span>
         </div>
       </div>
     </div>
