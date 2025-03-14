@@ -22,27 +22,50 @@ export const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
     const [isValid, setIsValid] = useState(false);
     const isMobile = useIsMobile();
     const internalRef = useRef<HTMLInputElement>(null);
-
+    
     // Validate email as user types
     useEffect(() => {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       setIsValid(email.length > 0 && emailRegex.test(email));
     }, [email]);
     
-    // Make sure we can capture clicks/taps on mobile
+    // Improve mobile input experience
     useEffect(() => {
-      // Add a small delay to ensure DOM is ready
-      const timer = setTimeout(() => {
-        if (isMobile && internalRef.current) {
-          // Enable direct focusing on the input element
-          const inputElement = internalRef.current;
-          inputElement.setAttribute("inputmode", "email");
-          inputElement.setAttribute("autocorrect", "off");
-          inputElement.setAttribute("spellcheck", "false");
-        }
-      }, 100);
-      
-      return () => clearTimeout(timer);
+      if (isMobile && internalRef.current) {
+        // Configure input for better mobile experience
+        const inputElement = internalRef.current;
+        
+        // Set mobile-friendly input attributes
+        inputElement.setAttribute("inputmode", "email");
+        inputElement.setAttribute("autocorrect", "off");
+        inputElement.setAttribute("spellcheck", "false");
+        inputElement.setAttribute("autocomplete", "email");
+        inputElement.setAttribute("autocapitalize", "off");
+        
+        // Force focus on the input (with delay to ensure rendering is complete)
+        setTimeout(() => {
+          if (internalRef.current) {
+            try {
+              internalRef.current.focus();
+              
+              // iOS requires interaction to show keyboard
+              const simulateTouch = () => {
+                if (internalRef.current) {
+                  internalRef.current.click();
+                  internalRef.current.focus();
+                }
+              };
+              
+              // Try multiple times with increasing delays
+              simulateTouch();
+              setTimeout(simulateTouch, 200);
+              setTimeout(simulateTouch, 500);
+            } catch (err) {
+              console.error("Error focusing input:", err);
+            }
+          }
+        }, 100);
+      }
     }, [isMobile]);
 
     return (
@@ -72,21 +95,24 @@ export const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
         
         <Input 
           ref={(node) => {
-            // Set both refs
-            if (inputRef && node) {
-              // Handle the inputRef without directly assigning to read-only current
-              // We use a callback pattern instead of direct assignment
-              if (typeof inputRef === 'object' && inputRef.hasOwnProperty('current')) {
-                // Instead of modifying the current property, we use the element directly
-                // This avoids the TypeScript error with read-only properties
-                (inputRef as any).current = node;
+            // Handle refs safely
+            if (node) {
+              // Set internal ref
+              internalRef.current = node;
+              
+              // Handle forwarded ref
+              if (typeof ref === 'function') {
+                ref(node);
+              } else if (ref) {
+                // Use this pattern to avoid TypeScript errors with read-only refs
+                (ref as React.MutableRefObject<HTMLInputElement | null>).current = node;
+              }
+              
+              // Handle passed inputRef (if any)
+              if (inputRef) {
+                (inputRef as React.MutableRefObject<HTMLInputElement | null>).current = node;
               }
             }
-            if (ref) {
-              if (typeof ref === 'function') ref(node);
-              else if (ref && typeof ref === 'object') (ref as any).current = node;
-            }
-            internalRef.current = node;
           }}
           type="email" 
           placeholder="Enter your email" 
@@ -123,22 +149,10 @@ export const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           onClick={(e) => {
-            // Ensure focus is properly set on click/tap
+            // When clicked, ensure focus and show keyboard
             e.currentTarget.focus();
             setIsFocused(true);
-            
-            // For iOS, we need to force the keyboard to appear
-            if (isMobile) {
-              // This creates a temporary non-selectable range
-              const input = e.currentTarget;
-              input.selectionStart = input.selectionEnd = input.value.length;
-              
-              // Use this special workaround for iOS focus issues
-              const event = new Event('focus', { bubbles: true });
-              input.dispatchEvent(event);
-            }
           }}
-          // Add readOnly false to make sure keyboard shows on iOS
           readOnly={false}
           aria-label="Email address" 
           required 
@@ -147,8 +161,6 @@ export const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
           autoCorrect="off"
           spellCheck="false"
           enterKeyHint="go"
-          // Add autocomplete settings that help iOS/Safari
-          x-inputmode="email"
         />
       </div>
     );

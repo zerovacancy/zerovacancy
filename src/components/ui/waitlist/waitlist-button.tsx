@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -31,26 +30,53 @@ export function WaitlistButton({
   const [alreadySubscribed, setAlreadySubscribed] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const isMobile = useIsMobile();
+  const formRef = useRef<HTMLFormElement>(null);
 
   // Focus the input field when component mounts if showEmailInputDirectly is true
+  // or when the email input is revealed after clicking the button
   useEffect(() => {
-    if (showEmailInputDirectly && inputRef.current) {
-      setTimeout(() => {
+    if (open && inputRef.current) {
+      const focusInput = () => {
         if (inputRef.current) {
-          inputRef.current.focus();
-          console.log("Auto-focusing email input on initial render");
-          
-          // Extra help for mobile devices
-          if (isMobile) {
-            inputRef.current.click();
-            setTimeout(() => {
-              if (inputRef.current) inputRef.current.focus();
-            }, 100);
-          }
+          console.log("Attempting to focus email input");
+          // Focus with a slight delay to ensure DOM is ready
+          setTimeout(() => {
+            if (inputRef.current) {
+              inputRef.current.focus();
+              
+              // For iOS, simulate a tap event to trigger keyboard
+              if (isMobile) {
+                try {
+                  // Create and dispatch a touch event to help trigger keyboard on iOS
+                  const touchEvent = new TouchEvent('touchstart', {
+                    bubbles: true,
+                    cancelable: true,
+                    view: window
+                  });
+                  inputRef.current.dispatchEvent(touchEvent);
+                  
+                  // Also click the element
+                  inputRef.current.click();
+                } catch (e) {
+                  console.log("Touch event simulation failed, falling back", e);
+                  // Fallback to click if TouchEvent is not supported
+                  inputRef.current.click();
+                }
+              }
+            }
+          }, isMobile ? 300 : 100);
         }
-      }, 500);
+      };
+      
+      focusInput();
+      
+      // Try multiple times with increasing delays on mobile
+      if (isMobile) {
+        setTimeout(focusInput, 500);
+        setTimeout(focusInput, 1000);
+      }
     }
-  }, [showEmailInputDirectly, isMobile]);
+  }, [open, isMobile]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -123,37 +149,12 @@ export function WaitlistButton({
         <div className="w-full">
           {children ? React.cloneElement(children as React.ReactElement, {
             onClick: (e: React.MouseEvent) => {
-              console.log("ShimmerButton clicked - setting open state");
+              console.log("Button clicked - setting open state");
               e.preventDefault();
               e.stopPropagation();
               
               // Set open state
               setOpen(true);
-              
-              // Use a longer delay for mobile devices
-              const focusDelay = isMobile ? 300 : 150;
-              
-              // Schedule focus after animation completes
-              setTimeout(() => {
-                if (inputRef.current) {
-                  try {
-                    // Try to focus and also make sure keyboard appears on mobile
-                    inputRef.current.focus();
-                    
-                    // On iOS, we may need to tap the field to get keyboard to show
-                    if (isMobile) {
-                      inputRef.current.click();
-                      
-                      // iOS may need this extra nudge
-                      setTimeout(() => {
-                        if (inputRef.current) inputRef.current.focus();
-                      }, 100);
-                    }
-                  } catch (error) {
-                    console.error("Error focusing input:", error);
-                  }
-                }
-              }, focusDelay);
             }
           }) : (
             <Button 
@@ -168,31 +169,6 @@ export function WaitlistButton({
                 
                 // Set open state
                 setOpen(true);
-                
-                // Use a longer delay for mobile devices
-                const focusDelay = isMobile ? 300 : 150;
-                
-                // Schedule focus after animation completes
-                setTimeout(() => {
-                  if (inputRef.current) {
-                    try {
-                      // Try to focus and also make sure keyboard appears on mobile
-                      inputRef.current.focus();
-                      
-                      // On iOS, we may need to tap the field to get keyboard to show
-                      if (isMobile) {
-                        inputRef.current.click();
-                        
-                        // iOS may need this extra nudge
-                        setTimeout(() => {
-                          if (inputRef.current) inputRef.current.focus();
-                        }, 100);
-                      }
-                    } catch (error) {
-                      console.error("Error focusing input:", error);
-                    }
-                  }
-                }, focusDelay);
               }}
             >
               {buttonText}
@@ -200,7 +176,7 @@ export function WaitlistButton({
           )}
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="w-full">
+        <form ref={formRef} onSubmit={handleSubmit} className="w-full">
           <div className="flex flex-col sm:flex-row gap-2 w-full">
             <EmailInput
               setEmail={setEmail}
