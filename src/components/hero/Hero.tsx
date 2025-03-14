@@ -4,6 +4,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { WaitlistCTA } from "../ui/waitlist-cta";
 import { TextRotate } from "../ui/text-rotate";
+import { ArrowRight } from "lucide-react";
 
 const TITLES = ["CONVERTS", "CAPTIVATES", "CLOSES"];
 
@@ -160,7 +161,35 @@ export function Hero() {
           isInView ? "animate-fade-in delay-200" : "opacity-0" 
         )}
       >
-        <WaitlistCTA className={cn(isMobile ? "mb-0" : "mb-4 sm:mb-6")} buttonText="RESERVE EARLY ACCESS" showSocialProof={true} />
+        {/* Direct implementation for better control */}
+        <div className={cn("w-full max-w-xl mx-auto px-4 sm:px-0", isMobile ? "mb-0" : "mb-4 sm:mb-6")}>
+          <button 
+            onClick={() => {
+              console.log("Reserve Early Access clicked");
+              
+              // Scroll to waitlist section
+              const waitlistSection = document.getElementById('waitlist');
+              if (waitlistSection) {
+                waitlistSection.scrollIntoView({ behavior: 'smooth' });
+              } else {
+                // Fallback if element not found
+                window.location.href = "#waitlist";
+              }
+            }}
+            className={cn(
+              "w-full md:w-auto py-4 px-8 text-base font-semibold font-jakarta tracking-wide",
+              "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700",
+              "text-white rounded-xl shadow-lg",
+              "transition-all duration-300 hover:shadow-xl active:scale-[0.98]",
+              "cursor-pointer relative overflow-hidden",
+              "flex items-center justify-center gap-2 mx-auto md:mx-0"
+            )}
+            type="button"
+          >
+            RESERVE EARLY ACCESS
+            <ArrowRight className="h-5 w-5 ml-1" />
+          </button>
+        </div>
       </div>
     </section>
   );
