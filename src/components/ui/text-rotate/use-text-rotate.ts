@@ -14,7 +14,6 @@ export function useTextRotate(
   onNext?: (index: number) => void
 ) {
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
-  const [active, setActive] = useState(true);
   const animationFrameRef = useRef<number | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   
@@ -78,11 +77,6 @@ export function useTextRotate(
       handleIndexChange(0);
     }
   }, [currentTextIndex, handleIndexChange]);
-  
-  const setTexts = useCallback((newTexts: string[]) => {
-    // This is a placeholder function in case we want to dynamically update texts
-    // We're not using it currently but adding for future extensibility
-  }, []);
 
   // Auto-rotation effect with optimized debouncing for mobile
   useEffect(() => {
@@ -95,10 +89,10 @@ export function useTextRotate(
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
     
-    // Enhanced timing with slight pause between animations for a more natural feel
+    // Use a longer delay and tween-only animations for mobile
     const delay = isMobileView ? 
       // Allow more time between transitions on mobile for better performance
-      rotationInterval + 800 : 
+      rotationInterval + 1200 : 
       rotationInterval;
     
     // Use a simple timeout for consistent timing
@@ -149,8 +143,6 @@ export function useTextRotate(
     previous,
     jumpTo,
     reset,
-    calculateStaggerDelay,
-    active,
-    setTexts
+    calculateStaggerDelay
   };
 }
