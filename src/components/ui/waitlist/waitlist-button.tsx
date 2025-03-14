@@ -180,20 +180,22 @@ export function WaitlistButton({
               type="submit" 
               disabled={loading} 
               className={cn(
-                "h-12 font-medium text-white whitespace-normal",
+                "h-12 font-medium text-white",
                 "bg-gradient-to-r from-indigo-600 to-purple-600",
                 "hover:from-indigo-700 hover:to-purple-700",
                 "transition-all duration-200 ease-in-out",
-                isMobile ? "min-h-[48px]" : "min-w-[170px] px-4"
+                isMobile 
+                  ? "min-h-[48px] text-sm whitespace-normal" 
+                  : "min-w-[220px] px-4 whitespace-nowrap"
               )}
             >
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  <span className="text-sm">Joining...</span>
+                  <span>{isMobile ? "Joining..." : "Processing..."}</span>
                 </>
               ) : (
-                <span className="text-sm">{buttonText}</span>
+                <span>{buttonText}</span>
               )}
             </Button>
           </div>
