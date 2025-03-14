@@ -1,19 +1,30 @@
-
 "use client";
 
 import { cn } from "@/lib/utils";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { prefersReducedMotion } from "@/lib/mobile";
 
 // Add CSS property definition for offsetDistance
-const style = document.createElement('style');
-style.textContent = `
-  @property --offset-distance {
-    syntax: '<percentage>';
-    initial-value: 0%;
-    inherits: false;
+try {
+  if (typeof document !== 'undefined') {
+    const style = document.createElement('style');
+    style.textContent = `
+      @property --offset-distance {
+        syntax: '<percentage>';
+        initial-value: 0%;
+        inherits: false;
+      }
+      
+      @keyframes border-beam-simple {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(calc(100% + var(--size) * 1px)); }
+      }
+    `;
+    document.head.appendChild(style);
   }
-`;
-document.head.appendChild(style);
+} catch (e) {
+  console.warn('Could not add CSS property definition', e);
+}
 
 export interface BorderBeamProps {
   className?: string
@@ -24,6 +35,7 @@ export interface BorderBeamProps {
   colorFrom?: string
   colorTo?: string
   delay?: number
+  optimized?: boolean
 }
 
 export function BorderBeam({
@@ -35,7 +47,47 @@ export function BorderBeam({
   colorFrom = "#ffaa40",
   colorTo = "#9c40ff",
   delay = 0,
+  optimized = false,
 }: BorderBeamProps) {
+  // Check if reduced motion is preferred
+  const reducedMotion = prefersReducedMotion();
+  
+  // Force optimized mode if reduced motion is preferred
+  const useOptimized = optimized || reducedMotion;
+  
+  if (useOptimized) {
+    return (
+      <div
+        style={
+          {
+            "--size": size,
+            "--duration": `${duration}s`,
+            "--border-width": borderWidth,
+            "--color-from": colorFrom,
+            "--color-to": colorTo,
+            "--delay": `-${delay}s`,
+          } as React.CSSProperties
+        }
+        className={cn(
+          "pointer-events-none absolute inset-0 rounded-[inherit] border-[calc(var(--border-width)*1px)] border-transparent",
+          "overflow-hidden",
+          className,
+        )}
+      >
+        <div 
+          className={cn(
+            "absolute inset-0 rounded-[inherit]",
+            "after:absolute after:top-0 after:left-0 after:h-full after:w-[calc(var(--size)*1px)]",
+            "after:animate-border-beam-simple after:animation-delay-[var(--delay)]",
+            "after:bg-gradient-to-r after:from-[var(--color-from)] after:via-[var(--color-to)] after:to-transparent",
+            "overflow-hidden"
+          )}
+        />
+      </div>
+    );
+  }
+  
+  // Advanced version with more complex animation
   return (
     <div
       style={
@@ -56,5 +108,7 @@ export function BorderBeam({
         className
       )}
     />
-  )
+  );
 }
+
+export default BorderBeam;
