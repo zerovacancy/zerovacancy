@@ -364,17 +364,17 @@ export const PricingContainer = () => {
               <DialogTrigger asChild>
                 <button
                   className={cn(
-                    "flex items-center justify-between py-2.5 px-4 text-sm font-medium text-white font-inter",
-                    "rounded-xl bg-gradient-to-r from-brand-purple to-brand-purple-dark",
-                    "shadow-sm border border-brand-purple/10 hover:shadow-md",
-                    "transition-all duration-200 relative",
-                    "max-w-[240px] w-full mb-6"
+                    "touch-manipulation mx-auto flex items-center justify-center gap-1.5",
+                    "rounded-full py-3 px-5 min-h-[48px] shadow-sm",
+                    "bg-[#f5f5f7] text-brand-purple text-sm font-medium",
+                    "border border-slate-200/80 transition-all duration-200",
+                    "hover:bg-slate-100 active:bg-slate-200",
+                    "w-[70%] max-w-[280px]",
+                    "mb-6"
                   )}
                 >
-                  <span className="flex-1 text-center">
-                    Compare all features
-                  </span>
-                  <ChevronDown className="h-4 w-4 text-white" />
+                  <span>Compare all features</span>
+                  <ChevronDown className="h-4 w-4 opacity-80" />
                 </button>
               </DialogTrigger>
 
@@ -618,4 +618,3 @@ export const PricingContainer = () => {
     </div>
   );
 };
-
