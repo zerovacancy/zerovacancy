@@ -1,9 +1,9 @@
 
+import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
-import { useState, useRef } from "react";
 import { toast } from "sonner";
 import { EmailInput } from "./email-input";
 import { SocialProof } from "./social-proof";
@@ -33,7 +33,7 @@ export function WaitlistButton({
   const isMobile = useIsMobile();
 
   // Focus the input field when component mounts if showEmailInputDirectly is true
-  React.useEffect(() => {
+  useEffect(() => {
     if (showEmailInputDirectly && inputRef.current) {
       setTimeout(() => {
         if (inputRef.current) {
