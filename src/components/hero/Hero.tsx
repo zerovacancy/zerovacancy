@@ -141,28 +141,60 @@ export function Hero() {
                 isMobile && "mobile-optimize"
               )}
             >
-              {/* Animated glow behind text */}
-              <div 
-                className={cn(
-                  "absolute z-0 w-full max-w-2xl mx-auto h-full",
-                  "bg-gradient-to-r from-purple-300/30 via-indigo-300/30 to-blue-300/30",
-                  "rounded-[100%] filter blur-[60px] animate-pulse",
-                  isMobile ? "opacity-50" : "opacity-70"
-                )}
-              ></div>
-              
-              {/* Enhanced background highlight for the text rotation */}
+              {/* Background highlight container for text rotation - always visible */}
               <div 
                 className={cn(
                   "absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2",
                   "bg-gradient-to-r from-[#F5F0FF]/70 via-[#F0F5FF]/60 to-[#F5F0FF]/70 rounded-lg z-[-1]", // Added gradient
-                  "shadow-lg border border-white/20", // Enhanced with border
+                  "shadow-lg border border-white/20 overflow-hidden", // Enhanced with border
                   isMobile 
                     ? "w-[105%] h-[85%] px-3" 
                     : "w-[110%] h-[80%] px-6 sm:px-8 lg:px-10"
                 )}
                 aria-hidden="true"
-              ></div>
+              >
+                {/* Synced background glows using 3 elements with different animations */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  {/* First glow - synced with first word */}
+                  <div 
+                    className="absolute w-[140%] h-[140%] opacity-0"
+                    style={{
+                      background: "radial-gradient(circle, rgba(139, 92, 246, 0.3) 0%, transparent 70%)",
+                      animation: "opacity-pulse 10.5s infinite",
+                      animationDelay: "0s"
+                    }}
+                  ></div>
+                  
+                  {/* Second glow - synced with second word */}
+                  <div 
+                    className="absolute w-[140%] h-[140%] opacity-0"
+                    style={{
+                      background: "radial-gradient(circle, rgba(99, 102, 241, 0.3) 0%, transparent 70%)",
+                      animation: "opacity-pulse 10.5s infinite",
+                      animationDelay: "3.5s"
+                    }}
+                  ></div>
+                  
+                  {/* Third glow - synced with third word */}
+                  <div 
+                    className="absolute w-[140%] h-[140%] opacity-0"
+                    style={{
+                      background: "radial-gradient(circle, rgba(79, 70, 229, 0.3) 0%, transparent 70%)",
+                      animation: "opacity-pulse 10.5s infinite", 
+                      animationDelay: "7s"
+                    }}
+                  ></div>
+                </div>
+              </div>
+              
+              {/* Add global style for the animation - This will be inserted once */}
+              <style dangerouslySetInnerHTML={{__html: `
+                @keyframes opacity-pulse {
+                  0%, 30%, 100% { opacity: 0; }
+                  5%, 25% { opacity: 1; }
+                }
+              `}} />
+              
               
               <TextRotate
                 texts={TITLES}
