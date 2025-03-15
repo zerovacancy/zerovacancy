@@ -213,16 +213,16 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 <div className="mt-auto pt-2">
                   <button 
                     onClick={handleCTAClick}
-                    aria-label={`Get priority access to ${creator.name}`}
+                    aria-label={`Join as creator with ${creator.name}`}
                     className="w-full flex items-center justify-center text-sm px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-md font-medium font-jakarta shadow-md h-[44px]"
                   >
                     {stage === 'initial' ? (
                       <>
-                        <span>Get Priority Access</span>
+                        <span>JOIN AS CREATOR</span>
                         <ArrowRight className="w-3.5 h-3.5 ml-2" aria-hidden="true" />
                       </>
                     ) : stage === 'input' ? (
-                      <span>Get Early Access</span>
+                      <span>JOIN AS CREATOR</span>
                     ) : (
                       <span>Waitlist Joined!</span>
                     )}
@@ -244,7 +244,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   onClick={handleCTAClick}
                   className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium font-jakarta rounded-lg py-3 px-5 flex items-center justify-center shadow-md border border-indigo-400/30"
                 >
-                  <span className="text-base">Get Priority Access</span>
+                  <span className="text-base">JOIN AS CREATOR</span>
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </button>
               </div>
