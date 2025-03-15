@@ -9,6 +9,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { mobileOptimizationClasses, optimizeMobileViewport, applyLandscapeOrientationFixes } from '@/utils/mobile-optimization';
 import { BottomNav } from '@/components/navigation/BottomNav';
 import { Analytics } from '@vercel/analytics/react';
+import { SEOProvider } from '@/components/SEO';
 
 const Index = lazy(() => import('./pages/index'));
 const PaymentConfirmation = lazy(() => import('./pages/PaymentConfirmation'));
@@ -127,9 +128,10 @@ function App() {
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <Router>
-        <ScrollToTop />
-        <div className={`relative ${isMobile ? coloredBgMobile : ''} landscape-container`}>
+      <SEOProvider>
+        <Router>
+          <ScrollToTop />
+          <div className={`relative ${isMobile ? coloredBgMobile : ''} landscape-container`}>
           <Suspense fallback={<PageLoader />}>
             <Routes>
               <Route path="/" element={<Index />} />
@@ -155,6 +157,7 @@ function App() {
         />
         <Analytics />
       </Router>
+      </SEOProvider>
     </ErrorBoundary>
   );
 }

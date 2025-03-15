@@ -12,6 +12,15 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+/**
+ * Format URL for canonical links
+ */
+export function formatCanonicalURL(path: string): string {
+  const baseURL = 'https://www.zerovacancy.ai';
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  return `${baseURL}${normalizedPath}`;
+}
+
 // CSS animation constants
 export const pulseAnimation = "animate-pulse-subtle";
 

@@ -3,10 +3,18 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import SEO from '@/components/SEO';
+import { organizationSchema } from '@/lib/seo';
 
 const Terms = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEO 
+        title="Terms and Conditions | ZeroVacancy" 
+        description="Terms and conditions for using the ZeroVacancy platform. Read our policies regarding content creators, property owners, and service usage."
+        canonicalPath="/terms"
+        structuredData={organizationSchema}
+      />
       <div className="container max-w-4xl mx-auto py-8 px-4">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-2xl font-semibold">ZeroVacancy Terms and Conditions</h1>

@@ -10,6 +10,8 @@ import { AnimatedShinyText } from '@/components/ui/animated-shiny-text';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import { BackgroundEffects } from '@/components/features/BackgroundEffects';
+import SEO from '@/components/SEO';
+import { homepageSchema, organizationSchema } from '@/lib/seo';
 
 const OptimizedHowItWorks = lazy(() => import('../components/how-it-works/OptimizedHowItWorks'));
 const FeaturesSectionWithHoverEffects = lazy(() => import('@/components/features/Features'));
@@ -109,6 +111,12 @@ const Index = () => {
   
   return (
     <div className="flex flex-col min-h-screen w-full">
+      <SEO 
+        title="Property Content Creators | ZeroVacancy" 
+        description="Connect with elite content creators who transform your spaces into compelling visual stories. Find photographers, videographers, and more for your properties."
+        canonicalPath="/"
+        structuredData={[homepageSchema, organizationSchema]}
+      />
       <Header />
       {showBanner && !isMobile && (
         <div className="relative">
