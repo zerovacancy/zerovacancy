@@ -638,3 +638,4 @@ function generateEmailTemplate(userName: string) {
                             <!-- Terms -->
                             <td style="padding: 0 8px;">
                               <a href="https://www.zerovacancy.ai/terms" target="_blank" style="font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; color: #5425B3; text-decoration: none;">
+                                Terms
