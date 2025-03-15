@@ -85,14 +85,25 @@ export function Hero() {
           )}>
             <span 
               className={cn(
-                isMobile ? "text-[2rem]" : "text-3xl sm:text-5xl lg:text-6xl",
+                // Reduce size by ~25% for mobile (from 2rem to 1.6rem)
+                isMobile ? "text-[1.6rem]" : "text-3xl sm:text-5xl lg:text-6xl",
                 "tracking-[-0.02em]",
                 "block sm:inline-block mb-[-0.2em] sm:mb-0 font-jakarta",
                 "bg-clip-text text-transparent",
                 "bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1]",
-                "drop-shadow-[0_1px_2px_rgba(74,45,217,0.05)]" // Subtle shadow for better contrast
+                // Refined typographic weight from bold to medium
+                isMobile ? "font-medium" : "font-bold",
+                "drop-shadow-[0_1px_2px_rgba(74,45,217,0.05)]", // Subtle shadow for better contrast
+                // Add a subtle background pattern for better framing on mobile
+                isMobile && "relative",
+                // More breathing room between title and revolving text
+                isMobile && "mb-3"
               )}
             >
+              {/* Add subtle pattern behind text on mobile */}
+              {isMobile && (
+                <div className="absolute inset-0 -z-10 opacity-10 bg-[radial-gradient(#8A57DE_1px,transparent_1px)] [background-size:20px_20px] blur-[0.5px]"></div>
+              )}
               PROPERTY CONTENT THAT
             </span>
 
@@ -101,29 +112,18 @@ export function Hero() {
               aria-label="Property Content animation"
               className={cn(
                 "relative flex w-full justify-center",
+                // Increased height on mobile for better spacing
                 isMobile 
-                  ? "h-[2.8em] mt-0" 
+                  ? "h-[3.2em] mt-1" 
                   : "h-[4.5em] sm:h-[3em] md:h-[2.5em] lg:h-[2.5em] mt-1 sm:mt-1",
                 "overflow-visible",
                 "gpu-accelerated",
                 isMobile && "mobile-optimize"
               )}
             >
-              {/* Indicator dots only for desktop */}
-              {!isMobile && (
-                <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1.5 z-10">
-                  {TITLES.map((_, index) => (
-                    <div 
-                      key={index}
-                      className={cn(
-                        "w-1 h-1 rounded-full transition-all duration-500 ease-out",
-                        index === currentTextIndex 
-                          ? "bg-[#8A2BE2]/80 scale-125" 
-                          : "bg-[#8A2BE2]/20"
-                      )}
-                    />
-                  ))}
-                </div>
+              {/* Subtle background glow effect for revolving text on mobile */}
+              {isMobile && (
+                <div className="absolute inset-0 -z-10 bg-gradient-to-b from-[#8A2BE2]/5 to-transparent rounded-full blur-xl transform scale-[1.5] opacity-60"></div>
               )}
               
               <TextRotate
@@ -137,15 +137,20 @@ export function Hero() {
                 rotationInterval={3500}
                 splitLevelClassName="overflow-visible"
                 elementLevelClassName={cn(
-                  isMobile ? "text-[2.8rem]" : "text-4xl sm:text-5xl lg:text-7xl",
+                  // Slightly larger for mobile (from 2.8rem to 3rem) for more emphasis
+                  isMobile ? "text-[3rem]" : "text-4xl sm:text-5xl lg:text-7xl",
                   "font-bold font-jakarta tracking-[-0.02em]",
                   "bg-clip-text text-transparent", 
-                  // Static gradient for mobile, animated for desktop
-                  "bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1]",
+                  // Enhanced gradient for mobile
+                  isMobile 
+                    ? "bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1]" 
+                    : "bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1]",
                   !isMobile && "animate-shimmer-slide bg-size-200",
                   "overflow-visible",
-                  // Enhanced glow effect instead of background box
-                  "drop-shadow-[0_2px_3px_rgba(74,45,217,0.15)]",
+                  // Enhanced glow effect for mobile
+                  isMobile 
+                    ? "drop-shadow-[0_2px_8px_rgba(138,43,226,0.3)]" 
+                    : "drop-shadow-[0_2px_3px_rgba(74,45,217,0.15)]",
                   "filter brightness-110",
                   // No underline on mobile
                   !isMobile && "border-b-[3px] border-[#8A2BE2]/15 pb-1"
@@ -194,8 +199,8 @@ export function Hero() {
           isMobile ? "mt-0" : "mt-5 sm:mt-6",
           "px-4 sm:px-4",
           isInView ? "animate-fade-in delay-200" : "opacity-0",
-          // Improve contrast with subtle backing for mobile layout
-          isMobile && "relative after:absolute after:inset-0 after:bg-gradient-to-b after:from-transparent after:via-white/50 after:to-transparent after:rounded-xl after:-z-10"
+          // Mobile layout
+          isMobile && "relative"
         )}
       >
         {/* Desktop CTA layout with audience labels and side-by-side buttons */}
@@ -227,6 +232,7 @@ export function Hero() {
                   <WaitlistCreatorCTA 
                     buttonText="JOIN AS CREATOR" 
                     showSocialProof={false}
+                    className="[&_button]:border-[3px]"
                   />
                 </div>
               </div>
@@ -243,9 +249,9 @@ export function Hero() {
         {isMobile && (
           <>
             {/* Container with entrance animation */}
-            <div className="w-full flex flex-col items-center space-y-1.5 animate-fade-in-up">
+            <div className="w-full flex flex-col items-center space-y-2 animate-fade-in-up">
               {/* CTA button container - consistent width */}
-              <div className="w-full max-w-[280px] mx-auto flex flex-col gap-1.5">
+              <div className="w-full max-w-[280px] mx-auto flex flex-col gap-2.5">
                 {/* Main waitlist CTA */}
                 <WaitlistCTA 
                   className="mb-0" 
@@ -260,11 +266,8 @@ export function Hero() {
                 />
               </div>
               
-              {/* Visual connector element - subtle */}
-              <div className="w-[1px] h-1 bg-gradient-to-b from-purple-300/40 to-transparent mx-auto"></div>
-              
               {/* Social proof centered below both buttons with animation */}
-              <div className="w-full flex justify-center mt-1 animate-pulse-subtle" style={{animationDuration: "4s"}}>
+              <div className="w-full flex justify-center mt-1.5 animate-pulse-subtle" style={{animationDuration: "4s"}}>
                 <SocialProof className="mt-0 w-full max-w-[280px]" />
               </div>
             </div>

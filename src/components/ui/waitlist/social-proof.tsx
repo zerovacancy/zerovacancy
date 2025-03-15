@@ -78,7 +78,7 @@ export function SocialProof({ className }: SocialProofProps) {
           {/* Row 2: Descriptive text with improved contrast */}
           <span className={cn(
             "font-inter whitespace-nowrap text-center",
-            "text-[#444458]", // Darker for better contrast
+            "bg-clip-text text-transparent bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600", // Match counter color
             "tracking-[0.02em] leading-tight", 
             "uppercase",
             isMobile ? "text-[9px]" : "text-[9px]" // Slightly larger on mobile

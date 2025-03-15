@@ -34,16 +34,23 @@ export const WaitlistCreatorCTA: React.FC<WaitlistCreatorCTAProps> = ({
       >
         <Button
           variant="outline"
+          style={{borderWidth: '2px'}}
           className={cn(
             "w-full",
-            "shadow-[0_2px_6px_rgba(88,41,217,0.08)]", 
+            "shadow-[0_2px_6px_rgba(88,41,217,0.12)]", 
             "h-12 sm:h-14 text-sm sm:text-base", 
             "transition-all duration-300 ease-in-out",
-            "bg-gradient-to-r from-[#FCFAFF] to-[#F7F5FF]",
-            "hover:bg-gradient-to-r hover:from-[#F8F4FF] hover:to-[#F2EFFF]",
-            "hover:shadow-[0_2px_8px_rgba(88,41,217,0.12)]",
-            "border-2 border-[#5829D9]",
-            "text-[#5829D9] font-medium font-jakarta tracking-tight"
+            "bg-gradient-to-r from-[#FCF7FF] via-[#F9F0FF] to-[#F5EAFF]",
+            "hover:bg-gradient-to-r hover:from-[#F8F0FF] hover:via-[#F3E8FF] hover:to-[#F0E4FF]",
+            "hover:shadow-[0_2px_10px_rgba(88,41,217,0.18)]",
+            "border-0 border-2 sm:border-2 border-[#7B3DFF]",
+            "text-[#5829D9] font-bold font-jakarta tracking-tight",
+            "relative overflow-hidden",
+            // Add subtle glimmer effect
+            "after:absolute after:content-[''] after:top-0 after:left-[-100%] after:w-full after:h-full",
+            "after:bg-gradient-to-r after:from-transparent after:via-white/30 after:to-transparent",
+            "after:transition-all after:duration-1000 after:ease-in-out",
+            "hover:after:left-[100%]"
           )}
         >
           {buttonText}
