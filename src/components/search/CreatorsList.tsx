@@ -29,7 +29,7 @@ export const CreatorsList: React.FC = () => {
     }, 
     {
       name: "Jane Cooper",
-      services: ["Professional Photography", "Interior Design", "Staging"],
+      services: ["Photography", "Interior Design", "Staging"],
       price: 200,
       rating: 4.8,
       reviews: 98,
@@ -70,13 +70,24 @@ export const CreatorsList: React.FC = () => {
       {!isMobile && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-6">
           {creators.map((creator) => (
-            <CreatorCard 
-              key={creator.name} 
-              creator={creator} 
-              onImageLoad={handleImageLoad} 
-              loadedImages={loadedImages} 
-              imageRef={imageRef} 
-            />
+            <div key={creator.name} className="h-full flex min-h-[500px]" style={{
+              display: 'flex',
+              flexDirection: 'column',
+              height: '100%'
+            }}>
+              <CreatorCard 
+                creator={creator} 
+                onImageLoad={handleImageLoad} 
+                loadedImages={loadedImages} 
+                imageRef={imageRef} 
+              />
+              {/* Fallback button in case the card's button is hidden by CSS */}
+              <div className="hidden md:hidden">
+                <button className="bg-purple-600 text-white p-2 rounded w-full">
+                  Get Priority Access (Fallback)
+                </button>
+              </div>
+            </div>
           ))}
         </div>
       )}

@@ -100,14 +100,16 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
             <div 
               key={creator.name} 
               style={{ touchAction: 'pan-y' }} 
-              className="min-w-[90%] w-[90%] px-2 py-1"
+              className="min-w-[90%] w-[90%] px-2 py-1.5 flex h-full"
             >
-              <CreatorCard 
-                creator={creator} 
-                onImageLoad={onImageLoad} 
-                loadedImages={loadedImages} 
-                imageRef={imageRef} 
-              />
+              <div className="w-full h-full">
+                <CreatorCard 
+                  creator={creator} 
+                  onImageLoad={onImageLoad} 
+                  loadedImages={loadedImages} 
+                  imageRef={imageRef} 
+                />
+              </div>
             </div>
           ))}
         </div>

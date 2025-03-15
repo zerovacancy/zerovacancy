@@ -29,21 +29,22 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
               "justify-center px-3.5 py-0",
               "text-xs font-medium font-inter",
               "text-gray-600", 
-              "bg-gray-50/90 hover:bg-gray-100 rounded-md",
-              "transition-colors duration-200",
-              "border border-gray-200/70", // Lighter border color
+              "bg-gradient-to-r from-[#F9F7FF] to-white hover:from-[#F5F0FF] hover:to-white", // Subtle gradient background
+              "rounded-md shadow-sm", // Added subtle shadow
+              "transition-all duration-200",
+              "border-[1.5px] border-[rgba(138,79,255,0.3)]", // Stronger border with purple tint
               "hover:text-gray-800 active:bg-gray-100",
-              "h-[34px]", // Reduced visible height for more compact appearance
+              "h-[34px]", // Maintained compact visible height
               "after:absolute after:inset-0 after:h-[44px]", // Invisible touch target overlay
               "relative", // Needed for the absolute positioned overlay
               "ml-1" // Slight left margin to align with content
             )}
           >
-            <SlidersHorizontal className="w-3 h-3 mr-1.5 text-gray-500/90" />
-            <span className="mx-0.5">Filters</span>
+            <SlidersHorizontal className="w-3 h-3 mr-1.5 text-gray-600" /> {/* Increased contrast */}
+            <span className="mx-0.5 font-medium">Filters</span> {/* Ensured font weight */}
             <ChevronDown className={cn(
               "w-3 h-3 ml-1",
-              "text-gray-500/90",
+              "text-gray-600", // Increased contrast
               "transition-transform duration-300", // Smoother transition
               showMoreFilters ? "rotate-180" : ""
             )} />
