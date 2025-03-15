@@ -1,3 +1,4 @@
+
 @tailwind utilities;
 
 @layer utilities {
@@ -132,6 +133,11 @@
   @keyframes tealGlowPulse {
     0%, 100% { box-shadow: 0 2px 10px rgba(0, 194, 168, 0.2); }
     50% { box-shadow: 0 4px 20px rgba(0, 194, 168, 0.4); }
+  }
+  
+  @keyframes shimmer-slide {
+    from { background-position: 200% center; }
+    to { background-position: -200% center; }
   }
   
   @media (max-width: 767px) {

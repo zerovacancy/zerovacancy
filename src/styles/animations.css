@@ -75,7 +75,8 @@
   }
 
   .animate-shimmer-slide {
-    animation: shimmer 2s infinite linear;
+    animation: shimmer-slide 3s infinite linear;
+    background-size: 200% 100%;
   }
   
   .animate-sparkle {
