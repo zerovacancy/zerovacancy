@@ -203,7 +203,9 @@ export const PricingContainer = () => {
                   "shadow-sm hover:shadow-md",
                   isMobile && "mobile-optimize",
                   "before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:rounded-l-xl",
-                  `before:bg-gradient-to-b ${colorScheme.gradient.split(' ')[0]} ${colorScheme.gradient.split(' ')[1]} before:opacity-0 group-hover:before:opacity-100 before:transition-opacity`
+                  `before:bg-gradient-to-b ${colorScheme.gradient.split(' ')[0]} ${colorScheme.gradient.split(' ')[1]} before:opacity-0 group-hover:before:opacity-100 before:transition-opacity`,
+                  // Add glowing border for Professional plan on mobile
+                  tier.title === "Professional" && "ring-3 ring-purple-400/20 ring-offset-0 shadow-[0_0_12px_rgba(139,92,246,0.3)]"
                 )}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -517,7 +519,9 @@ export const PricingContainer = () => {
                   "shadow-sm hover:shadow-md",
                   isMobile && "mobile-optimize",
                   "before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:rounded-l-xl",
-                  `before:bg-gradient-to-b ${colorScheme.gradient.split(' ')[0]} ${colorScheme.gradient.split(' ')[1]} before:opacity-0 group-hover:before:opacity-100 before:transition-opacity`
+                  `before:bg-gradient-to-b ${colorScheme.gradient.split(' ')[0]} ${colorScheme.gradient.split(' ')[1]} before:opacity-0 group-hover:before:opacity-100 before:transition-opacity`,
+                  // Add glowing border for Professional plan
+                  tier.title === "Professional" && "ring-4 ring-purple-400/20 ring-offset-0 shadow-[0_0_15px_rgba(139,92,246,0.3)]"
                 )}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
