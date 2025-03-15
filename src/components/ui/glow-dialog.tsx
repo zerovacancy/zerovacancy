@@ -30,6 +30,52 @@ export function GlowDialog({
   const [isEmailValid, setIsEmailValid] = useState(false);
   const isMobileView = typeof window !== 'undefined' && window.innerWidth < 768;
   const emailInputRef = useRef<HTMLInputElement>(null);
+  
+  // Add effect for mobile keyboard focus
+  useEffect(() => {
+    if (open && emailInputRef.current && isMobileView) {
+      const focusInput = () => {
+        if (!emailInputRef.current) return;
+        
+        // Set all mobile-friendly attributes
+        const input = emailInputRef.current;
+        input.readOnly = false;
+        input.inputMode = 'email';
+        input.setAttribute('autocorrect', 'off');
+        input.setAttribute('autocapitalize', 'off');
+        input.setAttribute('spellcheck', 'false');
+        
+        // Focus and click to trigger keyboard
+        input.focus();
+        input.click();
+        
+        // Special handling for iOS
+        if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+          // Create and dispatch events to help trigger keyboard
+          try {
+            input.dispatchEvent(new MouseEvent('mousedown'));
+            input.dispatchEvent(new MouseEvent('mouseup'));
+            input.dispatchEvent(new MouseEvent('click'));
+            
+            // Delay and try again
+            setTimeout(() => {
+              if (emailInputRef.current) {
+                emailInputRef.current.focus();
+                emailInputRef.current.click();
+              }
+            }, 300);
+          } catch (err) {
+            console.error("Error forcing mobile keyboard:", err);
+          }
+        }
+      };
+      
+      // Try multiple times with delays
+      focusInput();
+      setTimeout(focusInput, 100);
+      setTimeout(focusInput, 400);
+    }
+  }, [open, isMobileView]);
 
   useEffect(() => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -130,20 +176,21 @@ export function GlowDialog({
               100% { opacity: 1; transform: translateY(0); }
             }
             
+            /* Fixed placeholder styles - now uses dark text on light background */
             input::placeholder {
-              color: white !important;
-              opacity: 0.9 !important;
+              color: #6B7280 !important; /* gray-500 */
+              opacity: 0.8 !important;
             }
             
             .mobile-placeholder::placeholder {
-              color: white !important;
-              opacity: 0.9 !important;
+              color: #6B7280 !important; /* gray-500 */
+              opacity: 0.8 !important;
             }
             
             @media screen and (max-width: 768px) {
               .mobile-placeholder::placeholder {
-                color: white !important;
-                opacity: 0.9 !important;
+                color: #6B7280 !important; /* gray-500 */
+                opacity: 0.8 !important;
               }
             }
           `}</style>
@@ -173,8 +220,9 @@ export function GlowDialog({
               <form onSubmit={handleSubmit} className="flex flex-col gap-5 justify-center max-w-md mx-auto">
                 <div className="relative">
                   <label htmlFor="email-input" className="sr-only">Email Address</label>
-                  {/* Simple, standard input with minimal styling */}
+                  {/* Enhanced mobile-friendly input */}
                   <input
+                    ref={emailInputRef}
                     type="email"
                     name="email"
                     value={email}
@@ -185,6 +233,25 @@ export function GlowDialog({
                       backgroundColor: "white",
                       opacity: 1
                     }}
+                    // Mobile-specific attributes
+                    inputMode="email"
+                    autoCorrect="off"
+                    autoCapitalize="off"
+                    spellCheck="false"
+                    autoComplete="email"
+                    // Handle all interactions
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      e.currentTarget.focus();
+                      setIsEmailFocused(true);
+                    }}
+                    onTouchStart={(e) => {
+                      e.stopPropagation();
+                      e.currentTarget.focus();
+                      setIsEmailFocused(true);
+                    }}
+                    onFocus={() => setIsEmailFocused(true)}
+                    onBlur={() => setIsEmailFocused(false)}
                     required
                   />
                   {isEmailValid && (
