@@ -213,7 +213,14 @@ export function WaitlistButton({
         <form 
           ref={formRef} 
           onSubmit={handleSubmit} 
-          className="w-full"
+          style={{ width: isMobile ? '100%' : '280px', height: isMobile ? 'auto' : '56px' }}
+          className={cn(
+            "mx-auto",
+            "rounded-lg overflow-hidden",
+            "shadow-md",
+            "transform transition-all duration-300 animate-fade-in",
+            "flex flex-row items-stretch relative"
+          )}
           onClick={(e) => {
             // Ensure clicking anywhere in the form focuses the input
             if (inputRef.current && isMobile) {
@@ -223,38 +230,49 @@ export function WaitlistButton({
             }
           }}
         >
-          <div className="flex flex-col sm:flex-row gap-2 w-full">
+          {/* Back button moved outside the form */}
+          <button
+            type="button"
+            onClick={() => setOpen(false)}
+            className="absolute -top-7 right-0 text-purple-700 hover:text-purple-900 flex items-center text-xs font-medium font-inter transition-colors"
+          >
+            <span>Back</span>
+          </button>
+
+          {/* Email Input - fixed to take 70% width */}
+          <div className="w-[70%] bg-white">
             <EmailInput
               setEmail={setEmail}
               email={email}
               isLoading={loading}
               disabled={loading}
-              className="flex-grow"
               inputRef={inputRef}
             />
-            <Button 
-              type="submit" 
-              disabled={loading} 
-              className={cn(
-                "h-12 font-medium text-white",
-                "bg-gradient-to-r from-indigo-600 to-purple-600",
-                "hover:from-indigo-700 hover:to-purple-700",
-                "transition-all duration-200 ease-in-out",
-                isMobile 
-                  ? "min-h-[48px] text-sm whitespace-normal" 
-                  : "min-w-[220px] px-4 whitespace-nowrap"
-              )}
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  <span>{isMobile ? "Joining..." : "Processing..."}</span>
-                </>
-              ) : (
-                <span>{buttonText}</span>
-              )}
-            </Button>
           </div>
+
+          {/* Submit Button - fixed to take 30% width */}
+          <Button 
+            type="submit" 
+            disabled={loading} 
+            className={cn(
+              "w-[30%] h-full",
+              "rounded-none rounded-r-lg",
+              "font-medium text-white text-sm font-jakarta tracking-tight",
+              "bg-gradient-to-r from-purple-600 to-blue-600",
+              "hover:from-purple-700 hover:to-blue-700",
+              "transition-all duration-200 ease-in-out",
+              "flex items-center justify-center"
+            )}
+          >
+            {loading ? (
+              <>
+                <Loader2 className="mr-1 h-4 w-4 animate-spin" />
+                <span>...</span>
+              </>
+            ) : (
+              <span>Submit</span>
+            )}
+          </Button>
         </form>
       )}
       

@@ -114,25 +114,14 @@ export const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
 
     return (
       <div className={cn(
-        "relative transition-all duration-300", 
-        isMobile ? "w-full" : "w-[380px]",
-        isFocused && "scale-[1.02] transform",
+        "relative h-full w-full",
         className
       )}>
-        {/* Input field with mail icon */}
-        <div className={cn(
-          "absolute left-3 top-1/2 transform -translate-y-1/2",
-          "text-transparent bg-clip-text",
-          isFocused || isValid 
-            ? "bg-gradient-to-r from-indigo-600 to-purple-600" 
-            : "text-gray-400"
-        )}>
-          <Mail className="h-5 w-5" />
-        </div>
+        {/* No icon */}
         
         {/* Check mark for valid email */}
         {isValid && (
-          <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-500 animate-fade-in">
+          <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-500 animate-fade-in duration-200 z-10">
             <CheckCircle className="h-5 w-5" />
           </div>
         )}
@@ -166,30 +155,13 @@ export const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
           autoCorrect="off"
           spellCheck="false"
           className={cn(
-            "border transition-all duration-300",
-            "focus:scale-100", // Prevent default scale to use our custom one
-            isMobile 
-              ? [
-                  "h-[50px]",
-                  "bg-white", 
-                  isFocused ? "border-indigo-400 ring-2 ring-indigo-200" : "border-gray-100",
-                  "pl-10 pr-3 py-2",
-                  "text-base",
-                  "placeholder:text-gray-400", 
-                  "rounded-xl",
-                  "shadow-[inset_0_1px_2px_rgba(0,0,0,0.08)]"
-                ] 
-              : [
-                  "h-[52px]",
-                  "border-gray-200 bg-white", 
-                  "focus:ring-2 focus:ring-primary/50 focus:border-transparent", 
-                  "pl-10 pr-4 py-2", 
-                  "text-base placeholder:text-gray-400", 
-                  "rounded-xl",
-                  isFocused ? "border-indigo-400 ring-2 ring-indigo-200 shadow-[0_0_10px_rgba(99,102,241,0.2)]" : "",
-                  "shadow-[inset_0_1px_2px_rgba(0,0,0,0.08)]",
-                  "hover:border-indigo-300 hover:shadow-[0_0_8px_rgba(99,102,241,0.15)]"
-                ]
+            "h-full w-full",
+            "px-3",
+            "border-none outline-none focus:ring-0",
+            "text-sm sm:text-base font-inter",
+            "placeholder:text-gray-400 placeholder:font-inter",
+            "bg-white transition-all duration-200",
+            "rounded-none"
           )} 
           value={email} 
           onChange={e => setEmail(e.target.value)} 

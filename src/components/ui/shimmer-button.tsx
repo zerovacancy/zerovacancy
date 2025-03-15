@@ -64,12 +64,12 @@ export function ShimmerButton({
     <button
       className={cn(
         "inline-flex h-10 py-2 px-4 items-center justify-center rounded-md text-sm font-medium",
-        "text-white",
+        "text-white", // Default text color, can be overridden by className
         "bg-gradient-to-br from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700",
         "overflow-hidden",
         "shadow-md hover:shadow-lg transition-shadow duration-200",
         "relative cursor-pointer",
-        className
+        className // This will override the default text-white if specified
       )}
       onClick={onClick}
       {...props}

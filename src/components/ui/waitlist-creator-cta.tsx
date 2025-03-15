@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 import { ShimmerButton } from './shimmer-button';
 import { WaitlistCreatorButton } from './waitlist/waitlist-creator-button';
 import { SocialProof } from './waitlist/social-proof';
+import { Button } from './button';
 
 interface WaitlistCreatorCTAProps {
   className?: string;
@@ -31,17 +32,22 @@ export const WaitlistCreatorCTA: React.FC<WaitlistCreatorCTAProps> = ({
         className="w-full py-4"
         showEmailInputDirectly={showEmailInputDirectly}
       >
-        <ShimmerButton 
+        <Button
+          variant="outline"
           className={cn(
             "w-full",
-            "shadow-md", 
+            "shadow-[0_2px_6px_rgba(88,41,217,0.08)]", 
             "h-12 sm:h-14 text-sm sm:text-base", 
-            "transition-all duration-300",
-            "bg-white text-white border-2 border-purple-600 hover:bg-purple-50"
+            "transition-all duration-300 ease-in-out",
+            "bg-gradient-to-r from-[#FCFAFF] to-[#F7F5FF]",
+            "hover:bg-gradient-to-r hover:from-[#F8F4FF] hover:to-[#F2EFFF]",
+            "hover:shadow-[0_2px_8px_rgba(88,41,217,0.12)]",
+            "border-2 border-[#5829D9]",
+            "text-[#5829D9] font-medium font-jakarta tracking-tight"
           )}
         >
           {buttonText}
-        </ShimmerButton>
+        </Button>
       </WaitlistCreatorButton>
       
       {/* Only show social proof when explicitly requested */}
