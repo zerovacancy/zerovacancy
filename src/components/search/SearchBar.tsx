@@ -21,8 +21,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   const isMobile = useIsMobile();
 
   return (
-    <div className="w-full space-y-2 sm:space-y-3">
-      <div className="flex flex-col gap-1.5 sm:gap-3">
+    <div className="w-full space-y-1 sm:space-y-3">
+      <div className="flex flex-col gap-0 sm:gap-3">
         <div className={cn(
           "relative flex flex-col sm:flex-row w-full rounded-lg sm:rounded-xl overflow-hidden",
           "sm:shadow-[0_3px_16px_rgba(0,0,0,0.08)]",
@@ -30,7 +30,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           "bg-white divide-y sm:divide-y-0 sm:divide-x divide-gray-200",
           "transition-all duration-300",
           "hover:shadow-[0_5px_20px_rgba(0,0,0,0.1)]",
-          "sm:pr-0"
+          "sm:pr-0",
+          "mx-auto" // Center align on all devices for consistent edge alignment
         )}>
           {/* Content type select */}
           <ContentTypeSelect />

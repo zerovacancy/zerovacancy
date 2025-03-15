@@ -29,10 +29,11 @@ export const ContentTypeSelect = () => {
           "group-hover:bg-gray-50/80",
           "font-medium rounded-l-lg",
           "border-0",
+          isMobile && "shadow-sm",
           "placeholder:text-gray-500" // Increased contrast for placeholder
         )}
       >
-        <option value="">Select content type</option>
+        <option value="">{isMobile ? "Photography, Video, etc." : "Select content type"}</option>
         <option value="professional-photography">Professional Photography</option>
         <option value="virtual-tours">Virtual Tours (360° POV)</option>
         <option value="drone-video">Drone Video Tours</option>

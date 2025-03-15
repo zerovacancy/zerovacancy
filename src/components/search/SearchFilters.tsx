@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { DollarSign, Star, ChevronDown, Users, Palette, Map, Compass } from 'lucide-react';
+import { DollarSign, Star, ChevronDown, Users, Palette, Map, Compass, SlidersHorizontal } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 
@@ -15,54 +15,68 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
 }) => {
   const isMobile = useIsMobile();
   return (
-    <>
+    <div className={isMobile ? "-mt-2 -mb-1" : ""}>
       <div className={cn(
         isMobile 
-          ? "flex items-center justify-center px-0.5 py-2 mt-1" 
+          ? "flex items-center justify-start px-1 py-1 mt-0 mb-1" 
           : "flex items-center justify-between px-0.5 py-1"
       )}>
-        <button
-          onClick={onToggleFilters}
-          className={cn(
-            "inline-flex items-center gap-1.5", 
-            isMobile ? (
-              cn(
-                "justify-center px-5 py-2",
-                "text-sm font-medium",
-                "text-white", 
-                "bg-gradient-to-r from-purple-600 to-indigo-600 rounded-md",
-                "transition-all duration-200",
-                "border border-purple-300/20",
-                "shadow-sm",
-                "hover:shadow-md active:scale-[0.98]"
-              )
-            ) : (
-              cn(
-                "px-3 py-2 -ml-1",
-                "text-sm font-medium",
-                "text-gray-700 hover:text-gray-900", 
-                "hover:bg-gray-50 rounded-md",
-                "transition-colors duration-200",
-                "border border-transparent hover:border-gray-200/70"
-              )
-            ),
-            "min-h-[40px]" // Minimum touch target height
-          )}
-        >
-          Advanced Filters
-          <ChevronDown className={cn(
-            "w-4 h-4",
-            isMobile ? "text-white/90" : "text-gray-500",
-            "transition-transform duration-300", // Smoother transition
-            showMoreFilters ? "rotate-180" : ""
-          )} />
-        </button>
+        {isMobile ? (
+          <button
+            onClick={onToggleFilters}
+            className={cn(
+              "inline-flex items-center gap-1.5", 
+              "justify-center px-3.5 py-0",
+              "text-xs font-medium font-inter",
+              "text-gray-600", 
+              "bg-gray-50/90 hover:bg-gray-100 rounded-md",
+              "transition-colors duration-200",
+              "border border-gray-200/70", // Lighter border color
+              "hover:text-gray-800 active:bg-gray-100",
+              "h-[34px]", // Reduced visible height for more compact appearance
+              "after:absolute after:inset-0 after:h-[44px]", // Invisible touch target overlay
+              "relative", // Needed for the absolute positioned overlay
+              "ml-1" // Slight left margin to align with content
+            )}
+          >
+            <SlidersHorizontal className="w-3 h-3 mr-1.5 text-gray-500/90" />
+            <span className="mx-0.5">Filters</span>
+            <ChevronDown className={cn(
+              "w-3 h-3 ml-1",
+              "text-gray-500/90",
+              "transition-transform duration-300", // Smoother transition
+              showMoreFilters ? "rotate-180" : ""
+            )} />
+          </button>
+        ) : (
+          <button
+            onClick={onToggleFilters}
+            className={cn(
+              "inline-flex items-center gap-1.5", 
+              "px-3 py-2 -ml-1",
+              "text-sm font-medium",
+              "text-gray-700 hover:text-gray-900", 
+              "hover:bg-gray-50 rounded-md",
+              "transition-colors duration-200",
+              "border border-transparent hover:border-gray-200/70",
+              "min-h-[40px]" // Minimum touch target height
+            )}
+          >
+            Advanced Filters
+            <ChevronDown className={cn(
+              "w-4 h-4",
+              "text-gray-500",
+              "transition-transform duration-300", // Smoother transition
+              showMoreFilters ? "rotate-180" : ""
+            )} />
+          </button>
+        )}
       </div>
 
       <div className={cn(
         "grid grid-cols-1 sm:grid-cols-3 gap-3 transition-all duration-300",
         showMoreFilters 
-          ? "opacity-100 h-auto max-h-[450px] mt-2" // Added height for more filters
+          ? "opacity-100 h-auto max-h-[450px] mt-1" // Reduced top margin for tighter spacing
           : "opacity-0 h-0 max-h-0 mt-0 overflow-hidden"
       )}>
         {/* Investment Range Filter */}
@@ -199,6 +213,6 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
           </select>
         </div>
       </div>
-    </>
+    </div>
   );
 };

@@ -125,7 +125,7 @@ export const LocationInput: React.FC<LocationInputProps> = ({ value, onLocationS
       <input
         ref={inputRef}
         type="text"
-        placeholder="Enter city or zip code"
+        placeholder={isMobile ? "Enter location or creator specialty" : "Enter city or zip code"}
         value={inputValue}
         onChange={handleLocationChange}
         onKeyDown={handleKeyDown}
@@ -148,6 +148,7 @@ export const LocationInput: React.FC<LocationInputProps> = ({ value, onLocationS
           "transition-colors duration-200",
           "focus:outline-none focus:ring-2 focus:ring-indigo-500/30 group-hover:bg-gray-50/80",
           "border-0",
+          isMobile && "shadow-sm",
           "placeholder:text-gray-400",
           "font-medium"
         )}

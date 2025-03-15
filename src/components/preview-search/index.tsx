@@ -6,6 +6,7 @@ import { PreviewContent } from './PreviewContent';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { motion } from 'framer-motion';
 import { GlowDialog } from '@/components/ui/glow-dialog';
+import { Camera } from 'lucide-react';
 
 const PreviewSearch = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -85,44 +86,89 @@ const PreviewSearch = () => {
   return (
     <div 
       className={cn(
-        "w-full px-2 sm:px-4 md:px-6 lg:px-8 xl:px-10 content-visibility-auto py-6 sm:py-6 md:py-8",
-        isMobile && "relative mobile-section-gradient bg-[#F6F3FF]/80"
+        "w-full px-2 sm:px-4 md:px-6 lg:px-8 xl:px-10 content-visibility-auto",
+        "py-6 sm:py-6 md:py-8",
+        isMobile ? "relative bg-[#F6F3FF]/80 mt-3 rounded-t-2xl border-t border-purple-100/70" : ""
       )} 
       ref={containerRef}
     >
-      <div className="text-center mb-6 relative z-20">
-        <motion.h2 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 10 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight mb-2"
-        >
-          FIND YOUR CREATIVE COLLABORATOR
-        </motion.h2>
+      {/* Enhanced section header with improved design */}
+      <div className={cn(
+        "text-center relative z-20",
+        "pb-4 mb-4",
+        isMobile && "border-b border-purple-100"
+      )}>
+        {/* Section label for better organization */}
+        {isMobile && (
+          <div className="mb-3 flex items-center justify-center">
+            <div className="h-px w-5 bg-purple-200 mr-2"></div>
+            <span className="text-xs uppercase tracking-wider text-purple-700 font-semibold">Creator Network</span>
+            <div className="h-px w-5 bg-purple-200 ml-2"></div>
+          </div>
+        )}
         
-        <motion.p 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: isVisible ? 1 : 0 }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-          className="text-sm sm:text-base text-gray-600 max-w-md mx-auto mb-6"
-        >
-          Because extraordinary spaces deserve extraordinary storytellers
-        </motion.p>
-        
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 10 }}
-          transition={{ duration: 0.5, delay: 0.8 }}
-          className="mt-4 mb-4"
-        >
-          <button
-            onClick={() => setShowGlowDialog(true)}
-            className="inline-flex items-center justify-center px-6 py-3 text-sm font-medium transition-colors rounded-md text-white bg-gradient-to-r from-brand-purple to-brand-purple-medium hover:from-brand-purple-dark hover:to-brand-purple shadow-md"
+        <div className={cn(
+          "flex",
+          isMobile ? "flex-col" : "items-center justify-between"
+        )}>
+          <div className={cn(
+            "flex-1",
+            isMobile && "mb-3"
+          )}>
+            <motion.h2 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 10 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight mb-2"
+            >
+              FIND YOUR CREATIVE COLLABORATOR
+            </motion.h2>
+            
+            <motion.p 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: isVisible ? 1 : 0 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+              className="text-sm sm:text-base text-gray-600 max-w-md mx-auto"
+            >
+              Because extraordinary spaces deserve extraordinary storytellers
+            </motion.p>
+          </div>
+          
+          {/* Creator CTA button with outlined style to distinguish from search */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 10 }}
+            transition={{ duration: 0.5, delay: 0.8 }}
+            className={cn(
+              isMobile ? "mt-2 mb-2" : "ml-4"
+            )}
           >
-            Join as a Creator
-            <span className="ml-2 px-1.5 py-0.5 text-[10px] font-semibold uppercase bg-white text-brand-purple-dark rounded">Soon</span>
-          </button>
-        </motion.div>
+            <button
+              onClick={() => setShowGlowDialog(true)}
+              className={cn(
+                "inline-flex items-center justify-center",
+                "px-5 py-2.5",
+                "text-sm font-medium",
+                "rounded-md",
+                "transition-all duration-200",
+                // Outlined style to distinguish from search button
+                "text-purple-700 bg-white",
+                "border-2 border-purple-500",
+                "hover:bg-purple-50",
+                "shadow-sm",
+                "min-h-[44px]" // Minimum touch target size
+              )}
+            >
+              <Camera className="h-4 w-4 mr-2 opacity-80" />
+              Join as a Creator
+            </button>
+          </motion.div>
+        </div>
+
+        {/* Visual separator for mobile */}
+        {isMobile && (
+          <div className="w-12 h-1 bg-gradient-to-r from-purple-200 via-purple-300 to-purple-200 rounded-full mx-auto mt-4 opacity-60"></div>
+        )}
       </div>
 
       <div className="mx-auto relative group max-w-7xl">

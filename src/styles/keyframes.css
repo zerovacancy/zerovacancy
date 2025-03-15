@@ -65,7 +65,12 @@
   
   @keyframes pulse-subtle {
     0%, 100% { opacity: 1; }
-    50% { opacity: 0.8; }
+    50% { opacity: 0.85; }
+  }
+  
+  @keyframes counter-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.9; transform: scale(1.05); }
   }
   
   @keyframes expandWidth {
@@ -133,6 +138,11 @@
   @keyframes tealGlowPulse {
     0%, 100% { box-shadow: 0 2px 10px rgba(0, 194, 168, 0.2); }
     50% { box-shadow: 0 4px 20px rgba(0, 194, 168, 0.4); }
+  }
+  
+  @keyframes fade-in-up {
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
   }
   
   @keyframes shimmer-slide {

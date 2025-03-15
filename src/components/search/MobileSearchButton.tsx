@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Search } from 'lucide-react';
+import { Search, ChevronDown } from 'lucide-react';
 import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
@@ -9,7 +9,7 @@ export const MobileSearchButton: React.FC = () => {
   const navigate = useNavigate();
   
   return (
-    <div className="sm:hidden mt-2 mb-4">
+    <div className="sm:hidden mt-2 mb-5">
       <Button 
         className={cn(
           "w-full h-12 min-h-[48px]", // Larger touch target

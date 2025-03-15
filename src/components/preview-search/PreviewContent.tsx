@@ -19,12 +19,15 @@ export const PreviewContent: React.FC = () => {
 
   return (
     <div className="w-full">
-      {/* Simplified structure for mobile */}
+      {/* Enhanced structure with better visual hierarchy */}
       <div className={cn(
-        isMobile ? "bg-transparent" : "bg-gray-50/60 border border-gray-100 rounded-lg overflow-hidden shadow-sm p-6 px-6"
+        isMobile 
+          ? "bg-transparent" 
+          : "bg-gray-50/60 border border-gray-100 rounded-lg overflow-hidden shadow-sm p-6 px-6"
       )}>
-        {/* Search bar component */}
-        <div className={isMobile ? "mb-3" : "mb-4"}>
+        
+        {/* Search bar component - reduced spacing */}
+        <div className={isMobile ? "mb-1" : "mb-4"}>
           <SearchBar 
             value={location}
             onLocationSelect={handleLocationSelect}
