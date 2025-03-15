@@ -1,3 +1,4 @@
+
 import * as React from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { motion } from "framer-motion";
@@ -159,7 +160,8 @@ export function GlowDialog({
               <X className="h-6 w-6" />
             </button>
           </div>
-          <style jsx>{`
+          <style>
+            {`
             .svg-crisp {
               shape-rendering: geometricPrecision;
               text-rendering: geometricPrecision;
@@ -193,7 +195,8 @@ export function GlowDialog({
                 opacity: 0.8 !important;
               }
             }
-          `}</style>
+            `}
+          </style>
           <motion.div 
             className="relative rounded-lg overflow-hidden bg-gradient-to-r from-[#5425B3] via-[#6933E8] to-[#3151D3] p-7 sm:p-9 md:p-12 shadow-[0_10px_40px_rgba(0,0,0,0.4)]"
             initial={{ scale: 0.95, opacity: 0 }}

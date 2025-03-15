@@ -180,48 +180,21 @@ export function SuccessConfirmation({
           )}
         >
           <div className="p-6 flex flex-col items-center justify-center space-y-4">
-            <div className="relative">
-              <div
-                className={cn(
-                  "w-16 h-16 rounded-full bg-green-100 flex items-center justify-center",
-                  "animate-in zoom-in-50 duration-300"
-                )}
-              >
-                <CheckCircle className="h-8 w-8 text-green-600" />
-              </div>
-              <div
-                className={cn(
-                  "absolute inset-0 rounded-full",
-                  "bg-gradient-to-r from-green-400 to-green-500 opacity-20",
-                  "blur-xl"
-                )}
-              />
+            <div className="h-24 w-24 bg-purple-50 rounded-full flex items-center justify-center mb-2">
+              <CheckCircle className="h-12 w-12 text-purple-600" />
             </div>
-
-            <div 
-              className={cn(
-                "space-y-2 animate-in fade-in-50 duration-300 delay-150", 
-                "max-w-[320px] mx-auto"
-              )}
-            >
-              <h3 
-                className={cn(
-                  "text-xl font-semibold text-gray-900",
-                  "bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600"
-                )}
-              >
-                {getSuccessTitle()}
-              </h3>
-              <p className="text-gray-600">
-                {getSuccessMessage()}
-              </p>
-              <p className="text-sm text-gray-500 mt-2">
-                {getNotificationMessage()}
-              </p>
-            </div>
+            <h3 className="text-xl font-bold text-purple-900 font-space">
+              {getSuccessTitle()}
+            </h3>
+            <p className="text-gray-600 max-w-[24rem]">
+              {getSuccessMessage()}
+            </p>
+            <p className="text-gray-500 text-sm">
+              {getNotificationMessage()}
+            </p>
           </div>
         </DialogContent>
       </Dialog>
     </>
-  )
+  );
 }
