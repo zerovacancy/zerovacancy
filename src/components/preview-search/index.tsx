@@ -5,14 +5,11 @@ import { PreviewHeader } from './PreviewHeader';
 import { PreviewContent } from './PreviewContent';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { motion } from 'framer-motion';
-import { GlowDialog } from '@/components/ui/glow-dialog';
-import { Camera } from 'lucide-react';
 
 const PreviewSearch = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
-  const [showGlowDialog, setShowGlowDialog] = useState(false);
   const isMobile = useIsMobile();
   
   useEffect(() => {
@@ -88,7 +85,7 @@ const PreviewSearch = () => {
       className={cn(
         "w-full px-2 sm:px-4 md:px-6 lg:px-8 xl:px-10 content-visibility-auto",
         "py-6 sm:py-6 md:py-8",
-        isMobile ? "relative bg-[#F6F3FF]/80 mt-3 rounded-t-2xl border-t border-purple-100/70" : ""
+        isMobile ? "relative bg-[#F5F0FF] mt-3 rounded-t-2xl border-t border-purple-100/70" : "bg-[#F5F0FF]/60"
       )} 
       ref={containerRef}
     >
@@ -134,35 +131,7 @@ const PreviewSearch = () => {
             </motion.p>
           </div>
           
-          {/* Creator CTA button with outlined style to distinguish from search */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 10 }}
-            transition={{ duration: 0.5, delay: 0.8 }}
-            className={cn(
-              isMobile ? "mt-2 mb-2" : "ml-4"
-            )}
-          >
-            <button
-              onClick={() => setShowGlowDialog(true)}
-              className={cn(
-                "inline-flex items-center justify-center",
-                "px-5 py-2.5",
-                "text-sm font-medium",
-                "rounded-md",
-                "transition-all duration-200",
-                // Outlined style to distinguish from search button
-                "text-purple-700 bg-white",
-                "border-2 border-purple-500",
-                "hover:bg-purple-50",
-                "shadow-sm",
-                "min-h-[44px]" // Minimum touch target size
-              )}
-            >
-              <Camera className="h-4 w-4 mr-2 opacity-80" />
-              Join as a Creator
-            </button>
-          </motion.div>
+          {/* Removed CTA button */}
         </div>
 
         {/* Visual separator for mobile */}
@@ -188,8 +157,6 @@ const PreviewSearch = () => {
       {isMobile && (
         <div className="mobile-section-divider mt-6"></div>
       )}
-      
-      <GlowDialog open={showGlowDialog} onOpenChange={setShowGlowDialog} />
     </div>
   );
 };
