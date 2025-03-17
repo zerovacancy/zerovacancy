@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { DollarSign, Star, ChevronDown, Users, Palette, Map, Compass, SlidersHorizontal } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -14,10 +15,13 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
 }) => {
   const isMobile = useIsMobile();
   return (
-    <div className={isMobile ? "mt-2 mb-0" : ""}>
+    <div className={cn(
+      "w-full", // Ensure full width
+      isMobile ? "mt-2 mb-1" : ""
+    )}>
       <div className={cn(
         isMobile 
-          ? "flex items-center justify-start px-0.5 py-0"
+          ? "flex items-center justify-start py-1 px-0"
           : "flex items-center justify-between px-0.5 py-1"
       )}>
         {isMobile ? (
@@ -25,7 +29,7 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
             onClick={onToggleFilters}
             className={cn(
               "inline-flex items-center gap-1",
-              "justify-center px-2 py-0",
+              "justify-center px-2.5 py-0.5",
               "text-xs font-medium font-inter",
               "text-gray-600", 
               "bg-gray-50 hover:bg-gray-100",
@@ -33,14 +37,14 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
               "transition-all duration-200",
               "border border-gray-200",
               "hover:text-gray-800 active:bg-gray-100",
-              "h-6",
-              "ml-0.5"
+              "h-8", // Standardized smaller height
+              "ml-0" // Proper alignment
             )}
           >
-            <SlidersHorizontal className="w-2.5 h-2.5 mr-1 text-gray-500" />
+            <SlidersHorizontal className="w-3 h-3 mr-1 text-gray-500" />
             <span className="font-medium">Filters</span>
             <ChevronDown className={cn(
-              "w-2.5 h-2.5 ml-0.5",
+              "w-3 h-3 ml-0.5",
               "text-gray-500",
               "transition-transform duration-300",
               showMoreFilters ? "rotate-180" : ""

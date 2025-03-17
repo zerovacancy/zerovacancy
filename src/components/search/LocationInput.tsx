@@ -121,7 +121,7 @@ export const LocationInput: React.FC<LocationInputProps> = ({ value, onLocationS
       "z-50"
     )} style={{ position: 'relative', zIndex: 50 }}>
       <MapPin className={cn(
-        "w-3 h-3 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2", // Smaller icon on mobile
+        "w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2", // Standardized icon size
         "transition-all duration-200",
         "group-hover:text-indigo-500"
       )} />
@@ -146,10 +146,10 @@ export const LocationInput: React.FC<LocationInputProps> = ({ value, onLocationS
           }
         }}
         className={cn(
-          "w-full h-9 pl-8 pr-7", // Adjusted padding and reduced height for mobile
-          "bg-white text-xs text-gray-700", // Smaller text on mobile
+          "w-full h-12 pl-10 pr-8", // Standardized height and padding
+          "bg-white text-sm text-gray-700", // Standardized text size
           "transition-colors duration-200",
-          "focus:outline-none focus:ring-1 focus:ring-indigo-500/30", // Lighter focus ring on mobile
+          "focus:outline-none focus:ring-1 focus:ring-indigo-500/30", // Lighter focus ring
           "border-0",
           isMobile && "rounded-none", // No rounded corners on mobile (middle element)
           "placeholder:text-gray-400",
@@ -165,13 +165,13 @@ export const LocationInput: React.FC<LocationInputProps> = ({ value, onLocationS
         <button
           onClick={clearLocation}
           className={cn(
-            "absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600", // Adjusted position
+            "absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600", // Adjusted position
             "transition-all duration-200",
             "rounded-full p-1 hover:bg-gray-100" // Reduced padding
           )}
           aria-label="Clear location"
         >
-          <X className="w-3 h-3" /> {/* Smaller icon on mobile */}
+          <X className="w-3.5 h-3.5" /> {/* Adjusted icon size */}
         </button>
       )}
 

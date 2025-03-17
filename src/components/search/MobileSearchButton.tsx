@@ -9,21 +9,22 @@ export const MobileSearchButton: React.FC = () => {
   const navigate = useNavigate();
   
   return (
-    <div className="sm:hidden w-full px-0">
+    <div className="sm:hidden w-full">
       <Button 
         className={cn(
-          "w-full h-9", // Reduced height for better proportions
+          "w-full h-12", // Standardized height 
           "bg-gradient-to-r from-indigo-600 to-brand-purple hover:from-indigo-700 hover:to-brand-purple text-white",
           "shadow-sm", // Lighter shadow
           "text-sm font-medium font-inter",
           "active:scale-[0.98] transition-all duration-200",
-          "rounded-b-md rounded-t-none border-0", // Remove borders completely
+          "rounded-b-md rounded-t-none", // Remove borders completely
+          "border-0", // Explicitly remove borders
           "flex items-center justify-center"
         )}
         onClick={() => navigate('/search')}
       >
-        <Search className="w-3.5 h-3.5 mr-2 flex-shrink-0" /> {/* Reduced icon size */}
-        <span className="text-xs">DISCOVER</span> {/* Reduced text size */}
+        <Search className="w-4 h-4 mr-2 flex-shrink-0" /> {/* Adjusted icon size */}
+        <span>DISCOVER</span>
       </Button>
     </div>
   );

@@ -14,7 +14,8 @@ export const SearchButton: React.FC = () => {
           "px-5 py-2 rounded-r-lg",
           "h-full min-h-[48px] min-w-[120px]",
           "hover:from-indigo-700 hover:to-brand-purple/90",
-          "transition-all duration-300"
+          "transition-all duration-300",
+          "border-0" // Explicitly remove borders
         )}
       >
         <Search className="w-4 h-4 mr-2" />

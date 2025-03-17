@@ -21,7 +21,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   const isMobile = useIsMobile();
 
   return (
-    <div className="w-full space-y-0 sm:space-y-3"> {/* Removed spacing on mobile */}
+    <div className="w-full px-0"> {/* Ensure full width */}
       <div className="flex flex-col gap-0 sm:gap-3">
         {/* Desktop & Mobile search container with different styling */}
         <div className={cn(
@@ -33,8 +33,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           "bg-white sm:divide-y-0 sm:divide-x divide-gray-200",
           "transition-all duration-300",
           "hover:sm:shadow-[0_5px_20px_rgba(0,0,0,0.1)]",
-          "sm:pr-0",
-          "mx-auto" // Center align on all devices for consistent edge alignment
+          "sm:pr-0"
         )}>
           {/* Content type select */}
           <ContentTypeSelect />
@@ -50,7 +49,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         <MobileSearchButton />
 
         {/* Advanced filter section with improved transitions */}
-        <div className="pt-1 mt-0"> {/* Added minimal padding instead of margin */}
+        <div className="w-full pt-1 mt-1"> {/* Ensure full width with consistent spacing */}
           <SearchFilters
             showMoreFilters={showMoreFilters}
             onToggleFilters={() => setShowMoreFilters(!showMoreFilters)}
