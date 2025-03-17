@@ -1,4 +1,3 @@
-
 import * as React from "react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { motion } from "framer-motion";
@@ -9,18 +8,34 @@ import { supabase } from "@/integrations/supabase/client";
 import { SuccessConfirmation } from "@/components/ui/waitlist/success-confirmation";
 import confetti from "canvas-confetti";
 import { cn } from "@/lib/utils";
-
-// Component has been removed - using custom animation instead
+import { usePopupTrigger } from "@/hooks/use-popup-trigger";
 
 interface GlowDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  triggerStrategy?: 'immediate' | 'exit-intent' | 'scroll-depth' | 'time-delay' | 'combined';
+  forceOpen?: boolean;
 }
 
 export function GlowDialog({
-  open,
-  onOpenChange
+  open: controlledOpen,
+  onOpenChange: controlledOnOpenChange,
+  triggerStrategy = 'combined',
+  forceOpen = false
 }: GlowDialogProps) {
+  const {
+    shouldShowPopup,
+    resetTrigger,
+    triggerPopup
+  } = usePopupTrigger({
+    strategy: triggerStrategy,
+    scrollThreshold: 60,
+    timeDelay: 40000,
+    minEngagementTime: 10000,
+    maxFrequency: 24,
+    storageKey: 'waitlist_popup_last_shown'
+  });
+
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -32,13 +47,25 @@ export function GlowDialog({
   const isMobileView = typeof window !== 'undefined' && window.innerWidth < 768;
   const emailInputRef = useRef<HTMLInputElement>(null);
   
-  // Add effect for mobile keyboard focus
+  const isOpen = controlledOpen !== undefined 
+    ? controlledOpen 
+    : (forceOpen || shouldShowPopup);
+  
+  const handleOpenChange = (newOpenState: boolean) => {
+    if (controlledOnOpenChange) {
+      controlledOnOpenChange(newOpenState);
+    } else {
+      if (!newOpenState) {
+        resetTrigger();
+      }
+    }
+  };
+  
   useEffect(() => {
-    if (open && emailInputRef.current && isMobileView) {
+    if (isOpen && emailInputRef.current && isMobileView) {
       const focusInput = () => {
         if (!emailInputRef.current) return;
         
-        // Set all mobile-friendly attributes
         const input = emailInputRef.current;
         input.readOnly = false;
         input.inputMode = 'email';
@@ -46,19 +73,15 @@ export function GlowDialog({
         input.setAttribute('autocapitalize', 'off');
         input.setAttribute('spellcheck', 'false');
         
-        // Focus and click to trigger keyboard
         input.focus();
         input.click();
         
-        // Special handling for iOS
         if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-          // Create and dispatch events to help trigger keyboard
           try {
             input.dispatchEvent(new MouseEvent('mousedown'));
             input.dispatchEvent(new MouseEvent('mouseup'));
             input.dispatchEvent(new MouseEvent('click'));
             
-            // Delay and try again
             setTimeout(() => {
               if (emailInputRef.current) {
                 emailInputRef.current.focus();
@@ -71,12 +94,11 @@ export function GlowDialog({
         }
       };
       
-      // Try multiple times with delays
       focusInput();
       setTimeout(focusInput, 100);
       setTimeout(focusInput, 400);
     }
-  }, [open, isMobileView]);
+  }, [isOpen, isMobileView]);
 
   useEffect(() => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -122,7 +144,7 @@ export function GlowDialog({
       
       setEmail("");
       
-      onOpenChange(false);
+      handleOpenChange(false);
       
       requestAnimationFrame(() => {
         setTimeout(() => {
@@ -139,7 +161,7 @@ export function GlowDialog({
     } finally {
       setIsLoading(false);
     }
-  }, [email, onOpenChange, isCreator]);
+  }, [email, handleOpenChange, isCreator]);
 
   const dialogContentClassName = isMobileView 
     ? "max-w-[95vw] md:max-w-3xl overflow-hidden border-none bg-transparent" 
@@ -147,12 +169,12 @@ export function GlowDialog({
 
   return (
     <>
-      <Dialog open={open} onOpenChange={onOpenChange}>
+      <Dialog open={isOpen} onOpenChange={handleOpenChange}>
         <DialogContent className={dialogContentClassName}>
           <DialogTitle className="sr-only">Join Waitlist - Enter Your Email</DialogTitle>
           <div className="absolute top-4 right-4 z-50">
             <button 
-              onClick={() => onOpenChange(false)}
+              onClick={() => handleOpenChange(false)}
               className="text-white hover:text-white transition-colors duration-200 rounded-full p-2.5 hover:bg-white/20 bg-black/30 shadow-md"
               aria-label="Close dialog"
               style={{ minHeight: '44px', minWidth: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
@@ -178,20 +200,19 @@ export function GlowDialog({
               100% { opacity: 1; transform: translateY(0); }
             }
             
-            /* Fixed placeholder styles - now uses dark text on light background */
             input::placeholder {
-              color: #6B7280 !important; /* gray-500 */
+              color: #6B7280 !important;
               opacity: 0.8 !important;
             }
             
             .mobile-placeholder::placeholder {
-              color: #6B7280 !important; /* gray-500 */
+              color: #6B7280 !important;
               opacity: 0.8 !important;
             }
             
             @media screen and (max-width: 768px) {
               .mobile-placeholder::placeholder {
-                color: #6B7280 !important; /* gray-500 */
+                color: #6B7280 !important;
                 opacity: 0.8 !important;
               }
             }
@@ -205,7 +226,6 @@ export function GlowDialog({
           >
             <div className="absolute inset-0 bg-[radial-gradient(#ffffff20_1px,transparent_1px)] [background-size:18px_18px] opacity-25"></div>
             
-            {/* Simple background glow effect */}
             <div className="absolute top-[-50%] left-[-50%] h-[200%] w-[200%]" style={{ animation: "spin 10s linear infinite" }}>
               <div className="absolute top-0 left-0 right-0 bottom-0 m-auto w-[45%] h-[45%] rounded-full bg-white blur-[80px] opacity-10"></div>
             </div>
@@ -223,7 +243,6 @@ export function GlowDialog({
               <form onSubmit={handleSubmit} className="flex flex-col gap-5 justify-center max-w-md mx-auto">
                 <div className="relative">
                   <label htmlFor="email-input" className="sr-only">Email Address</label>
-                  {/* Enhanced mobile-friendly input */}
                   <input
                     ref={emailInputRef}
                     type="email"
@@ -236,13 +255,11 @@ export function GlowDialog({
                       backgroundColor: "white",
                       opacity: 1
                     }}
-                    // Mobile-specific attributes
                     inputMode="email"
                     autoCorrect="off"
                     autoCapitalize="off"
                     spellCheck="false"
                     autoComplete="email"
-                    // Handle all interactions
                     onClick={(e) => {
                       e.stopPropagation();
                       e.currentTarget.focus();
@@ -277,8 +294,6 @@ export function GlowDialog({
                     </div>
                   )}
                 </div>
-                
-                {/* Single prominent CTA */}
                 <button 
                   type="submit"
                   className={cn(
@@ -322,8 +337,6 @@ export function GlowDialog({
                     </>
                   )}
                 </button>
-                
-                {/* Social proof section matching hero section but adapted for background */}
                 <div className="flex flex-col items-center justify-center mt-6 mb-1">
                   <div className="flex flex-wrap justify-center gap-1 mb-2">
                     <div className="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center text-white text-xs font-medium">MJ</div>

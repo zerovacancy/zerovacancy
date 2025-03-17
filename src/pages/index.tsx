@@ -40,14 +40,6 @@ const Index = () => {
     4: true
   });
   
-  useEffect(() => {
-    const hasVisited = localStorage.getItem('hasVisited');
-    setShowGlowDialog(!hasVisited);
-    if (!hasVisited) {
-      localStorage.setItem('hasVisited', 'true');
-    }
-  }, []);
-  
   const observerCallback = useCallback((entries: IntersectionObserverEntry[]) => {
     entries.forEach(entry => {
       const index = parseInt(entry.target.getAttribute('data-section-index') || '-1', 10);
@@ -237,7 +229,13 @@ const Index = () => {
 
         <Footer />
       </main>
-      <GlowDialog open={showGlowDialog} onOpenChange={setShowGlowDialog} />
+      
+      {/* Updated GlowDialog with improved trigger strategy */}
+      <GlowDialog 
+        open={showGlowDialog} 
+        onOpenChange={setShowGlowDialog}
+        triggerStrategy="combined"
+      />
     </div>
   );
 };

@@ -1,8 +1,8 @@
-
 @tailwind utilities;
 
 @layer utilities {
   /* Keyframes for Tailwind */
+  
   @keyframes fadeIn {
     0% { opacity: 0; transform: translateY(8px); }
     100% { opacity: 1; transform: translateY(0); }
@@ -150,15 +150,24 @@
     to { background-position: -200% center; }
   }
   
-  /* Mobile-specific animation optimizations */
-  @keyframes simple-fade {
+  @keyframes gentlePopIn {
+    0% { opacity: 0; transform: scale(0.98); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  
+  @keyframes gentleFadeIn {
     0% { opacity: 0; }
     100% { opacity: 1; }
   }
   
-  @keyframes simple-slide {
-    0% { transform: translateY(10px); opacity: 0; }
-    100% { transform: translateY(0); opacity: 1; }
+  @keyframes subtleSlideUp {
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes subtlePulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
   }
   
   @media (max-width: 767px) {
@@ -192,7 +201,6 @@
       transform: none !important;
     }
     
-    /* New mobile-specific animations */
     .mobile-fade {
       animation: simple-fade 0.4s ease-out forwards !important;
     }
