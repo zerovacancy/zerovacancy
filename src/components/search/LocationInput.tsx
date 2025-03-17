@@ -116,7 +116,10 @@ export const LocationInput: React.FC<LocationInputProps> = ({ value, onLocationS
   }, []);
 
   return (
-    <div className="w-full sm:w-[40%] relative group" style={{ position: 'relative', zIndex: 50 }}>
+    <div className={cn(
+      "w-full sm:w-[40%] relative group", 
+      "z-50"
+    )} style={{ position: 'relative', zIndex: 50 }}>
       <MapPin className={cn(
         "w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2",
         "transition-all duration-200",
@@ -143,12 +146,12 @@ export const LocationInput: React.FC<LocationInputProps> = ({ value, onLocationS
           }
         }}
         className={cn(
-          "w-full h-12 sm:h-12 pl-11 pr-10", // Increased height and padding
+          "w-full h-12 sm:h-12 pl-11 pr-10", 
           "bg-white text-sm text-gray-700",
           "transition-colors duration-200",
           "focus:outline-none focus:ring-2 focus:ring-indigo-500/30 group-hover:bg-gray-50/80",
           "border-0",
-          isMobile && "shadow-sm",
+          isMobile && "rounded-none", // No rounded corners on mobile (middle element)
           "placeholder:text-gray-400",
           "font-medium"
         )}

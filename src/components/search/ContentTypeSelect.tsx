@@ -8,7 +8,10 @@ export const ContentTypeSelect = () => {
   const isMobile = useIsMobile();
   
   return (
-    <div className="w-full sm:w-[40%] relative group">
+    <div className={cn(
+      "w-full sm:w-[40%] relative group",
+      isMobile && "border-b border-gray-200"
+    )}>
       <Camera className={cn(
         "w-4 h-4 text-indigo-500/70 absolute left-4 top-1/2 -translate-y-1/2",
         "transition-all duration-200",
@@ -22,15 +25,15 @@ export const ContentTypeSelect = () => {
       )} />
       <select
         className={cn(
-          "w-full h-12 sm:h-12 pl-11 pr-10 appearance-none", // Increased height for mobile
+          "w-full h-12 sm:h-12 pl-11 pr-10 appearance-none", 
           "bg-white text-sm text-gray-700",
           "transition-colors duration-200",
           "focus:outline-none focus:ring-2 focus:ring-indigo-500/30",
           "group-hover:bg-gray-50/80",
-          "font-medium rounded-l-lg",
+          "font-medium",
+          isMobile ? "rounded-t-lg rounded-b-none" : "rounded-l-lg", // Top rounded corners on mobile
           "border-0",
-          isMobile && "shadow-sm",
-          "placeholder:text-gray-500" // Increased contrast for placeholder
+          "placeholder:text-gray-500"
         )}
       >
         <option value="">{isMobile ? "Photography, Video, etc." : "Select content type"}</option>
