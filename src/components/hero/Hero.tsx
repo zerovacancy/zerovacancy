@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
@@ -18,15 +19,18 @@ export function Hero() {
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isInView) {
+      // Use longer intervals on mobile for better readability and performance
+      const intervalTime = isMobile ? 4200 : 3500;
+      
       interval = setInterval(() => {
         setCurrentTextIndex(prev => (prev + 1) % TITLES.length);
-      }, 3500);
+      }, intervalTime);
     }
     
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [isInView]);
+  }, [isInView, isMobile]);
 
   useEffect(() => {
     if (!sectionRef.current) return;
@@ -58,14 +62,13 @@ export function Hero() {
       className={cn(
         "flex items-center justify-center flex-col", 
         "px-5 sm:px-6", 
-        isMobile ? "py-3 my-0 pt-8 pb-10" : "py-6 sm:py-12 lg:py-16 my-2 sm:my-6 lg:my-8", // Further increased bottom padding
+        isMobile ? "py-3 my-0 pt-8 pb-10" : "py-6 sm:py-12 lg:py-16 my-2 sm:my-6 lg:my-8", 
         "min-h-fit sm:min-h-[36vh]",
         "relative z-10", 
         "gap-2 sm:gap-6", 
         "touch-manipulation",
         "bg-gradient-to-b from-purple-50/80 via-indigo-50/60 to-blue-50/30",
         isInView ? "animate-fade-in" : "opacity-0",
-        // Refined visual separation from the section below
         isMobile && "after:absolute after:bottom-0 after:left-0 after:w-full after:h-8 after:bg-gradient-to-t after:from-blue-100/60 after:via-indigo-50/30 after:to-transparent"
       )} 
     >
@@ -85,18 +88,14 @@ export function Hero() {
           )}>
             <span 
               className={cn(
-                // Reduce size by ~25% for mobile (from 2rem to 1.6rem)
                 isMobile ? "text-[1.6rem]" : "text-3xl sm:text-5xl lg:text-6xl",
                 "tracking-[-0.02em]",
                 "block sm:inline-block mb-[-0.2em] sm:mb-0 font-jakarta",
                 "bg-clip-text text-transparent",
                 "bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1]",
-                // Refined typographic weight from bold to medium
                 isMobile ? "font-medium" : "font-bold",
-                "drop-shadow-[0_1px_2px_rgba(74,45,217,0.05)]", // Subtle shadow for better contrast
-                // Add a subtle background pattern for better framing on mobile
+                "drop-shadow-[0_1px_2px_rgba(74,45,217,0.05)]", 
                 isMobile && "relative",
-                // More breathing room between title and revolving text
                 isMobile && "mb-3"
               )}
             >
@@ -112,9 +111,8 @@ export function Hero() {
               aria-label="Property Content animation"
               className={cn(
                 "relative flex w-full justify-center",
-                // Increased height on mobile for better spacing
                 isMobile 
-                  ? "h-[3.2em] mt-1" 
+                  ? "h-[3.5em] mt-2" // Increased height for better visibility
                   : "h-[4.5em] sm:h-[3em] md:h-[2.5em] lg:h-[2.5em] mt-1 sm:mt-1",
                 "overflow-visible",
                 "gpu-accelerated",
@@ -130,39 +128,43 @@ export function Hero() {
                 texts={TITLES}
                 mainClassName="flex justify-center items-center overflow-visible"
                 staggerFrom="last"
-                initial={{ y: "40%", opacity: 0, scale: 0.95 }}
-                animate={{ y: 0, opacity: 1, scale: 1 }}
-                exit={{ y: "-40%", opacity: 0, scale: 0.95 }}
-                staggerDuration={0}
-                rotationInterval={3500}
+                // Simpler, more direct animations for mobile
+                initial={isMobile ? { y: 30, opacity: 0 } : { y: "40%", opacity: 0, scale: 0.95 }}
+                animate={isMobile ? { y: 0, opacity: 1 } : { y: 0, opacity: 1, scale: 1 }}
+                exit={isMobile ? { y: -30, opacity: 0 } : { y: "-40%", opacity: 0, scale: 0.95 }}
+                // Disable staggering completely on mobile
+                staggerDuration={isMobile ? 0 : 0}
+                // Longer rotation interval for mobile
+                rotationInterval={isMobile ? 4200 : 3500}
                 splitLevelClassName="overflow-visible"
                 elementLevelClassName={cn(
-                  // Slightly larger for mobile (from 2.8rem to 3rem) for more emphasis
                   isMobile ? "text-[3rem]" : "text-4xl sm:text-5xl lg:text-7xl",
                   "font-bold font-jakarta tracking-[-0.02em]",
                   "bg-clip-text text-transparent", 
-                  // Enhanced gradient for mobile
                   isMobile 
                     ? "bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1]" 
                     : "bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1]",
                   !isMobile && "animate-shimmer-slide bg-size-200",
                   "overflow-visible",
-                  // Enhanced glow effect for mobile
                   isMobile 
                     ? "drop-shadow-[0_2px_8px_rgba(138,43,226,0.3)]" 
                     : "drop-shadow-[0_2px_3px_rgba(74,45,217,0.15)]",
                   "filter brightness-110",
-                  // No underline on mobile
                   !isMobile && "border-b-[3px] border-[#8A2BE2]/15 pb-1"
                 )}
-                transition={{ 
-                  type: "spring",
-                  damping: isMobile ? 32 : 34,
-                  stiffness: isMobile ? 280 : 300,
-                  mass: isMobile ? 0.5 : 0.6,
-                  duration: 0.6,
-                  ease: "easeOut"
-                }}
+                transition={isMobile ? 
+                  { 
+                    type: "tween", 
+                    duration: 0.4,
+                    ease: "easeOut"
+                  } : { 
+                    type: "spring",
+                    damping: 34,
+                    stiffness: 300,
+                    mass: 0.6,
+                    duration: 0.6,
+                    ease: "easeOut"
+                  }}
                 auto={true}
               />
             </div>
@@ -178,7 +180,7 @@ export function Hero() {
             "mx-auto", 
             "font-inter",
             "relative",
-            isMobile ? "-mt-2 mb-6 text-sm" : "" // Increased space between headline and description
+            isMobile ? "-mt-2 mb-6 text-sm" : ""
           )}
         >
           {isMobile ? (
@@ -199,7 +201,6 @@ export function Hero() {
           isMobile ? "mt-0" : "mt-5 sm:mt-6",
           "px-4 sm:px-4",
           isInView ? "animate-fade-in delay-200" : "opacity-0",
-          // Mobile layout
           isMobile && "relative"
         )}
       >

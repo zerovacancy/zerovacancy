@@ -1,7 +1,7 @@
-
 import { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import { WordObject } from "./types";
 import { getStaggerDelay, splitIntoCharacters } from "./utils";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export function useTextRotate(
   texts: string[],
@@ -16,15 +16,26 @@ export function useTextRotate(
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const animationFrameRef = useRef<number | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isMobile = useIsMobile();
   
   // Validate texts array
   const safeTexts = useMemo(() => {
     return Array.isArray(texts) && texts.length > 0 ? texts : [""];
   }, [texts]);
 
-  // Memoize elements generation
+  // Memoize elements generation with optimizations for mobile
   const elements = useMemo(() => {
     const currentText = safeTexts[currentTextIndex];
+    
+    // For mobile, use a simpler splitting strategy to reduce animation complexity
+    if (isMobile) {
+      // Just return the whole word as a single element for mobile to reduce animation load
+      return splitBy === "characters" ? 
+        [{ characters: [currentText], needsSpace: false }] : 
+        [currentText];
+    }
+    
+    // Desktop behavior remains the same with more complex animations
     if (splitBy === "characters") {
       const text = currentText.split(" ");
       return text.map((word, i) => ({
@@ -37,7 +48,7 @@ export function useTextRotate(
       : splitBy === "lines"
         ? currentText.split("\n")
         : currentText.split(splitBy);
-  }, [safeTexts, currentTextIndex, splitBy]);
+  }, [safeTexts, currentTextIndex, splitBy, isMobile]);
 
   // Helper function to handle index changes and trigger callback
   const handleIndexChange = useCallback((newIndex: number) => {
@@ -82,23 +93,17 @@ export function useTextRotate(
   useEffect(() => {
     if (!auto) return;
     
-    // Check if we're potentially on a mobile device by window width
-    const isMobileView = typeof window !== 'undefined' && window.innerWidth < 768;
-    
     // Clear any existing timers and animation frames
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
     
-    // Use a longer delay and tween-only animations for mobile
-    const delay = isMobileView ? 
-      // Allow more time between transitions on mobile for better performance
-      rotationInterval + 1200 : 
-      rotationInterval;
+    // Use a longer delay for mobile for better performance and readability
+    const delay = isMobile ? rotationInterval + 800 : rotationInterval;
     
     // Use a simple timeout for consistent timing
     timeoutRef.current = setTimeout(() => {
-      // For mobile, use a single RAF to reduce jank
-      if (isMobileView) {
+      // For mobile, avoid RAF to reduce potential jank
+      if (isMobile) {
         next();
       } else {
         // On desktop, use double RAF for smooth vsync alignment
@@ -114,11 +119,11 @@ export function useTextRotate(
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
       if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
     };
-  }, [next, rotationInterval, auto]);
+  }, [next, rotationInterval, auto, isMobile]);
 
   const calculateStaggerDelay = useCallback((wordIndex: number, charIndex: number, wordArray: WordObject[]) => {
-    // Skip stagger calculation if staggerDuration is 0
-    if (staggerDuration === 0) return 0;
+    // Skip stagger calculation for mobile completely
+    if (isMobile || staggerDuration === 0) return 0;
     
     const previousCharsCount = wordArray
       .slice(0, wordIndex)
@@ -134,7 +139,7 @@ export function useTextRotate(
       staggerFrom,
       staggerDuration
     );
-  }, [staggerFrom, staggerDuration]);
+  }, [staggerFrom, staggerDuration, isMobile]);
 
   return {
     currentTextIndex,

@@ -150,6 +150,17 @@
     to { background-position: -200% center; }
   }
   
+  /* Mobile-specific animation optimizations */
+  @keyframes simple-fade {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  
+  @keyframes simple-slide {
+    0% { transform: translateY(10px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+  
   @media (max-width: 767px) {
     .mobile-no-animate {
       animation: none !important;
@@ -179,6 +190,15 @@
     .mobile-optimize {
       will-change: auto !important;
       transform: none !important;
+    }
+    
+    /* New mobile-specific animations */
+    .mobile-fade {
+      animation: simple-fade 0.4s ease-out forwards !important;
+    }
+    
+    .mobile-slide {
+      animation: simple-slide 0.4s ease-out forwards !important;
     }
   }
 }
