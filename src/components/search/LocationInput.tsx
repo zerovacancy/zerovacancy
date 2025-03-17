@@ -121,7 +121,7 @@ export const LocationInput: React.FC<LocationInputProps> = ({ value, onLocationS
       "z-50"
     )} style={{ position: 'relative', zIndex: 50 }}>
       <MapPin className={cn(
-        "w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2",
+        "w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 absolute left-3 sm:left-4 top-1/2 -translate-y-1/2", // Smaller icon on mobile
         "transition-all duration-200",
         "group-hover:text-indigo-500"
       )} />
@@ -146,10 +146,10 @@ export const LocationInput: React.FC<LocationInputProps> = ({ value, onLocationS
           }
         }}
         className={cn(
-          "w-full h-12 sm:h-12 pl-11 pr-10", 
-          "bg-white text-sm text-gray-700",
+          "w-full h-10 sm:h-12 pl-9 sm:pl-11 pr-8 sm:pr-10", // Adjusted padding and reduced height for mobile
+          "bg-white text-xs sm:text-sm text-gray-700", // Smaller text on mobile
           "transition-colors duration-200",
-          "focus:outline-none focus:ring-2 focus:ring-indigo-500/30 group-hover:bg-gray-50/80",
+          "focus:outline-none focus:ring-1 sm:focus:ring-2 focus:ring-indigo-500/30 group-hover:bg-gray-50/80", // Lighter focus ring on mobile
           "border-0",
           isMobile && "rounded-none", // No rounded corners on mobile (middle element)
           "placeholder:text-gray-400",
@@ -165,13 +165,13 @@ export const LocationInput: React.FC<LocationInputProps> = ({ value, onLocationS
         <button
           onClick={clearLocation}
           className={cn(
-            "absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600",
+            "absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600", // Adjusted position
             "transition-all duration-200",
-            "rounded-full p-1.5 hover:bg-gray-100" // Increased padding for touch
+            "rounded-full p-1 hover:bg-gray-100" // Reduced padding
           )}
           aria-label="Clear location"
         >
-          <X className="w-4 h-4" />
+          <X className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> {/* Smaller icon on mobile */}
         </button>
       )}
 

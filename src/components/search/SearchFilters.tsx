@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { DollarSign, Star, ChevronDown, Users, Palette, Map, Compass, SlidersHorizontal } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -15,37 +14,35 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
 }) => {
   const isMobile = useIsMobile();
   return (
-    <div className={isMobile ? "-mt-2 -mb-1" : ""}>
+    <div className={isMobile ? "mt-1 mb-0" : ""}>
       <div className={cn(
         isMobile 
-          ? "flex items-center justify-start px-1 py-1 mt-0 mb-1" 
+          ? "flex items-center justify-start px-0 py-1"
           : "flex items-center justify-between px-0.5 py-1"
       )}>
         {isMobile ? (
           <button
             onClick={onToggleFilters}
             className={cn(
-              "inline-flex items-center gap-1.5", 
-              "justify-center px-3.5 py-0",
+              "inline-flex items-center gap-1",
+              "justify-center px-2.5 py-0",
               "text-xs font-medium font-inter",
               "text-gray-600", 
-              "bg-gradient-to-r from-[#F9F7FF] to-white hover:from-[#F5F0FF] hover:to-white", // Subtle gradient background
-              "rounded-md shadow-sm", // Added subtle shadow
+              "bg-gray-50 hover:bg-gray-100",
+              "rounded-md shadow-sm",
               "transition-all duration-200",
-              "border-[1.5px] border-[rgba(138,79,255,0.3)]", // Stronger border with purple tint
+              "border border-gray-200",
               "hover:text-gray-800 active:bg-gray-100",
-              "h-[34px]", // Maintained compact visible height
-              "after:absolute after:inset-0 after:h-[44px]", // Invisible touch target overlay
-              "relative", // Needed for the absolute positioned overlay
-              "ml-1" // Slight left margin to align with content
+              "h-7",
+              "ml-0"
             )}
           >
-            <SlidersHorizontal className="w-3 h-3 mr-1.5 text-gray-600" /> {/* Increased contrast */}
-            <span className="mx-0.5 font-medium">Filters</span> {/* Ensured font weight */}
+            <SlidersHorizontal className="w-3 h-3 mr-1 text-gray-500" />
+            <span className="font-medium">Filters</span>
             <ChevronDown className={cn(
-              "w-3 h-3 ml-1",
-              "text-gray-600", // Increased contrast
-              "transition-transform duration-300", // Smoother transition
+              "w-3 h-3 ml-0.5",
+              "text-gray-500",
+              "transition-transform duration-300",
               showMoreFilters ? "rotate-180" : ""
             )} />
           </button>
@@ -60,14 +57,14 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
               "hover:bg-gray-50 rounded-md",
               "transition-colors duration-200",
               "border border-transparent hover:border-gray-200/70",
-              "min-h-[40px]" // Minimum touch target height
+              "min-h-[40px]"
             )}
           >
             Advanced Filters
             <ChevronDown className={cn(
               "w-4 h-4",
               "text-gray-500",
-              "transition-transform duration-300", // Smoother transition
+              "transition-transform duration-300",
               showMoreFilters ? "rotate-180" : ""
             )} />
           </button>
@@ -77,16 +74,15 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
       <div className={cn(
         "grid grid-cols-1 sm:grid-cols-3 gap-3 transition-all duration-300",
         showMoreFilters 
-          ? "opacity-100 h-auto max-h-[450px] mt-1" // Reduced top margin for tighter spacing
+          ? "opacity-100 h-auto max-h-[450px] mt-1"
           : "opacity-0 h-0 max-h-0 mt-0 overflow-hidden"
       )}>
-        {/* Investment Range Filter */}
         <div className="relative group">
           <DollarSign className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
           <ChevronDown className="w-3.5 h-3.5 text-gray-300 absolute right-4 top-1/2 -translate-y-1/2" />
           <select
             className={cn(
-              "w-full h-12 px-11 rounded-lg appearance-none", // Increased height for better touch
+              "w-full h-12 px-11 rounded-lg appearance-none",
               "border border-gray-200 bg-white",
               "text-sm text-gray-700",
               "transition-colors duration-200",
@@ -102,13 +98,12 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
           </select>
         </div>
 
-        {/* Creative Availability Filter */}
         <div className="relative group">
           <Users className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
           <ChevronDown className="w-3.5 h-3.5 text-gray-300 absolute right-4 top-1/2 -translate-y-1/2" />
           <select
             className={cn(
-              "w-full h-12 px-11 rounded-lg appearance-none", // Increased height for better touch
+              "w-full h-12 px-11 rounded-lg appearance-none",
               "border border-gray-200 bg-white",
               "text-sm text-gray-700",
               "transition-colors duration-200",
@@ -124,13 +119,12 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
           </select>
         </div>
 
-        {/* Vision Alignment Filter */}
         <div className="relative group">
           <Star className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
           <ChevronDown className="w-3.5 h-3.5 text-gray-300 absolute right-4 top-1/2 -translate-y-1/2" />
           <select
             className={cn(
-              "w-full h-12 px-11 rounded-lg appearance-none", // Increased height for better touch
+              "w-full h-12 px-11 rounded-lg appearance-none",
               "border border-gray-200 bg-white",
               "text-sm text-gray-700",
               "transition-colors duration-200",
@@ -146,13 +140,12 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
           </select>
         </div>
 
-        {/* Spatial Storytelling Approach */}
         <div className="relative group">
           <Map className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
           <ChevronDown className="w-3.5 h-3.5 text-gray-300 absolute right-4 top-1/2 -translate-y-1/2" />
           <select
             className={cn(
-              "w-full h-12 px-11 rounded-lg appearance-none", // Increased height for better touch
+              "w-full h-12 px-11 rounded-lg appearance-none",
               "border border-gray-200 bg-white",
               "text-sm text-gray-700",
               "transition-colors duration-200",
@@ -168,13 +161,12 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
           </select>
         </div>
 
-        {/* Aesthetic Direction */}
         <div className="relative group">
           <Palette className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
           <ChevronDown className="w-3.5 h-3.5 text-gray-300 absolute right-4 top-1/2 -translate-y-1/2" />
           <select
             className={cn(
-              "w-full h-12 px-11 rounded-lg appearance-none", // Increased height for better touch
+              "w-full h-12 px-11 rounded-lg appearance-none",
               "border border-gray-200 bg-white",
               "text-sm text-gray-700",
               "transition-colors duration-200",
@@ -191,13 +183,12 @@ export const SearchFilters: React.FC<SearchFiltersProps> = ({
           </select>
         </div>
 
-        {/* Visual Narrative Style */}
         <div className="relative group">
           <Compass className="w-4 h-4 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" />
           <ChevronDown className="w-3.5 h-3.5 text-gray-300 absolute right-4 top-1/2 -translate-y-1/2" />
           <select
             className={cn(
-              "w-full h-12 px-11 rounded-lg appearance-none", // Increased height for better touch
+              "w-full h-12 px-11 rounded-lg appearance-none",
               "border border-gray-200 bg-white",
               "text-sm text-gray-700",
               "transition-colors duration-200",

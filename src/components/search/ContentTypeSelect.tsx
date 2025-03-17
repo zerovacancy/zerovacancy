@@ -10,28 +10,28 @@ export const ContentTypeSelect = () => {
   return (
     <div className={cn(
       "w-full sm:w-[40%] relative group",
-      isMobile && "border-b border-gray-200"
+      isMobile && "border-b border-gray-100" // Lighter border
     )}>
       <Camera className={cn(
-        "w-4 h-4 text-indigo-500/70 absolute left-4 top-1/2 -translate-y-1/2",
+        "w-3.5 h-3.5 text-indigo-500/70 absolute left-3 top-1/2 -translate-y-1/2", // Smaller icon with adjusted position
         "transition-all duration-200",
         "group-hover:text-indigo-600"
       )} />
       <ChevronDown className={cn(
-        "w-3.5 h-3.5 text-gray-400 absolute right-4 top-1/2 -translate-y-1/2",
+        "w-3 h-3 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2", // Smaller icon with adjusted position
         "transition-all duration-300",
         "group-hover:text-gray-600 group-hover:transform group-hover:translate-y-[1px]",
         "animate-pulse-subtle" // Add subtle animation
       )} />
       <select
         className={cn(
-          "w-full h-12 sm:h-12 pl-11 pr-10 appearance-none", 
-          "bg-white text-sm text-gray-700",
+          "w-full h-10 sm:h-12 pl-9 pr-8 appearance-none", // Reduced height and padding for mobile
+          "bg-white text-xs sm:text-sm text-gray-700", // Smaller text on mobile
           "transition-colors duration-200",
-          "focus:outline-none focus:ring-2 focus:ring-indigo-500/30",
+          "focus:outline-none focus:ring-1 focus:ring-indigo-500/30", // Lighter focus ring
           "group-hover:bg-gray-50/80",
           "font-medium",
-          isMobile ? "rounded-t-lg rounded-b-none" : "rounded-l-lg", // Top rounded corners on mobile
+          isMobile ? "rounded-t-md rounded-b-none" : "rounded-l-lg", // Smaller radius on mobile
           "border-0",
           "placeholder:text-gray-500"
         )}
