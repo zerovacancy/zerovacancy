@@ -71,7 +71,7 @@ export function SocialProof({ className }: SocialProofProps) {
               )}
               style={isMobile ? {animationDuration: "4s"} : {}}
             >
-              2,165+
+              2,100+
             </span>
           </div>
           
