@@ -47,13 +47,13 @@ const PreviewSearch = () => {
   const creatorData = [
     {
       name: "Emily Johnson",
-      services: ["Photography", "Virtual Staging"],
+      services: ["TikTok", "POV Tour", "Organic Content"],
       price: 150,
       rating: 4.9,
       reviews: 127,
-      location: "New York, NY",
+      location: "Chicago, IL",
       image: "/newemilyprofile.jpg",
-      workExamples: ["/1-d2e3f802.jpg"],
+      workExamples: ["/creatorcontent/emily-johnson/work-1.webp", "/creatorcontent/emily-johnson/work-2.jpg", "/creatorcontent/emily-johnson/work-3.jpg"],
       availabilityStatus: "available-now" as const
     }, 
     {
@@ -64,7 +64,7 @@ const PreviewSearch = () => {
       reviews: 98,
       location: "Los Angeles, CA",
       image: "/janeprofile.png",
-      workExamples: ["/janesub.jpg", "/janesub2.png", "/janesub3.webp"],
+      workExamples: ["/creatorcontent/jane-cooper/work-1.jpg", "/creatorcontent/jane-cooper/work-2.jpg", "/creatorcontent/jane-cooper/work-3.jpg"],
       availabilityStatus: "available-tomorrow" as const
     }, 
     {
@@ -74,8 +74,8 @@ const PreviewSearch = () => {
       rating: 4.7,
       reviews: 82,
       location: "Chicago, IL",
-      image: "/emily profile.jpeg",
-      workExamples: ["/1-d2e3f802.jpg"],
+      image: "/michaelprofile.mov",
+      workExamples: ["/creatorcontent/michael-brown/work-1.jpg", "/creatorcontent/michael-brown/work-2.jpg", "/creatorcontent/michael-brown/work-3.jpg"],
       availabilityStatus: "premium-only" as const
     }
   ];

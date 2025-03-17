@@ -12,13 +12,15 @@ interface MobileCreatorCarouselProps {
   onImageLoad: (imageSrc: string) => void;
   loadedImages: Set<string>;
   imageRef: (node: HTMLImageElement | null) => void;
+  onPreviewClick?: (imageSrc: string) => void;
 }
 
 export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
   creators,
   onImageLoad,
   loadedImages,
-  imageRef
+  imageRef,
+  onPreviewClick
 }) => {
   const [isFirstVisit, setIsFirstVisit] = useState(true);
 
@@ -107,7 +109,8 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
                   creator={creator} 
                   onImageLoad={onImageLoad} 
                   loadedImages={loadedImages} 
-                  imageRef={imageRef} 
+                  imageRef={imageRef}
+                  onPreviewClick={onPreviewClick}
                 />
               </div>
             </div>

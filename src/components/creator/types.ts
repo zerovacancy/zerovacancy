@@ -24,6 +24,7 @@ export interface CreatorCardProps {
   onImageLoad?: (imageSrc: string) => void;
   loadedImages: Set<string>;
   imageRef: (node: HTMLImageElement | null) => void;
+  onPreviewClick?: (imageSrc: string) => void;
 }
 
 export type AvailabilityStatus = 'available-now' | 'available-tomorrow' | 'premium-only';

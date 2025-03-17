@@ -8,11 +8,13 @@ import { Dialog, DialogContent, DialogTitle } from '../ui/dialog';
 interface PortfolioPreviewProps {
   workExamples: string[];
   creatorName: string;
+  onPreviewClick?: (imageSrc: string) => void;
 }
 
 export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({ 
   workExamples,
-  creatorName
+  creatorName,
+  onPreviewClick
 }) => {
   const isMobile = useIsMobile();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -45,7 +47,7 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
                   "shadow-sm aspect-square",
                   "bg-gray-50"
                 )}
-                onClick={() => setSelectedImage(example)}
+                onClick={() => onPreviewClick ? onPreviewClick(example) : setSelectedImage(example)}
               >
                 <img 
                   src={example}
@@ -76,7 +78,7 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
                   "aspect-square", 
                   "bg-gray-50"
                 )}
-                onClick={() => setSelectedImage(example)}
+                onClick={() => onPreviewClick ? onPreviewClick(example) : setSelectedImage(example)}
               >
                 <img 
                   src={example}
@@ -100,27 +102,29 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
         )}
       </div>
 
-      {/* Enhanced dialog for image preview */}
-      <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
-        <DialogContent className="sm:max-w-[80vw] p-0 bg-transparent border-0">
-          <DialogTitle className="sr-only">{`${creatorName}'s Portfolio Image`}</DialogTitle>
-          <button
-            onClick={() => setSelectedImage(null)}
-            className="absolute right-4 top-4 z-50 rounded-full bg-black/50 p-2 text-white hover:bg-black/70 transition-colors"
-            aria-label="Close preview"
-          >
-            <X className="h-4 w-4" />
-          </button>
-          {selectedImage && (
-            <img
-              src={selectedImage}
-              alt={`${creatorName}'s property photography - enlarged portfolio view showing detailed real estate photography`}
-              className="w-full h-full object-contain rounded-lg"
-              style={{ maxHeight: '80vh' }}
-            />
-          )}
-        </DialogContent>
-      </Dialog>
+      {/* Enhanced dialog for image preview - only shown if onPreviewClick is not provided */}
+      {!onPreviewClick && (
+        <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
+          <DialogContent className="sm:max-w-[80vw] p-0 bg-transparent border-0">
+            <DialogTitle className="sr-only">{`${creatorName}'s Portfolio Image`}</DialogTitle>
+            <button
+              onClick={() => setSelectedImage(null)}
+              className="absolute right-4 top-4 z-50 rounded-full bg-black/50 p-2 text-white hover:bg-black/70 transition-colors"
+              aria-label="Close preview"
+            >
+              <X className="h-4 w-4" />
+            </button>
+            {selectedImage && (
+              <img
+                src={selectedImage}
+                alt={`${creatorName}'s property photography - enlarged portfolio view showing detailed real estate photography`}
+                className="w-full h-full object-contain rounded-lg"
+                style={{ maxHeight: '80vh' }}
+              />
+            )}
+          </DialogContent>
+        </Dialog>
+      )}
     </>
   );
 };

@@ -15,7 +15,8 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
   creator, 
   onImageLoad, 
   loadedImages, 
-  imageRef 
+  imageRef,
+  onPreviewClick
 }) => {
   const isMobile = useIsMobile();
   const [showEmailDialog, setShowEmailDialog] = useState(false);
@@ -188,7 +189,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                       <div 
                         key={index}
                         className="relative h-[70px] touch-manipulation rounded-md overflow-hidden border border-purple-100/80 shadow-sm transition-transform duration-150 active:scale-95"
-                        onClick={() => setSelectedImage(example)}
+                        onClick={() => onPreviewClick ? onPreviewClick(example) : setSelectedImage(example)}
                       >
                         <img 
                           src={example}
@@ -363,6 +364,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     <PortfolioPreview 
                       workExamples={creator.workExamples}
                       creatorName={creator.name}
+                      onPreviewClick={onPreviewClick}
                     />
                   </div>
 
@@ -383,8 +385,8 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
         />
       )}
       
-      {/* Image preview dialog */}
-      {selectedImage && (
+      {/* Image preview dialog - only shown if onPreviewClick is not provided */}
+      {selectedImage && !onPreviewClick && (
         <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
           <DialogContent className="p-0 bg-transparent border-0 max-w-[90vw] sm:max-w-[80vw]">
             <div className="relative">

@@ -212,7 +212,7 @@ export function Hero() {
               <div className="flex flex-col w-[45%] max-w-[280px]">
                 <div className="flex items-center justify-center mb-3">
                   <div className="h-[0.5px] w-5 bg-purple-300/80 mr-2"></div>
-                  <span className="text-sm font-bold text-purple-700 tracking-wide">For Property Owners</span>
+                  <span className="text-sm font-bold text-purple-700 tracking-wide font-jakarta">For Property Owners</span>
                   <div className="h-[0.5px] w-5 bg-purple-300/80 ml-2"></div>
                 </div>
                 <WaitlistCTA 
@@ -225,7 +225,7 @@ export function Hero() {
               <div className="flex flex-col w-[45%] max-w-[280px] relative">
                 <div className="flex items-center justify-center mb-3">
                   <div className="h-[0.5px] w-5 bg-purple-300/80 mr-2"></div>
-                  <span className="text-sm font-bold text-purple-700 tracking-wide">For Content Creators</span>
+                  <span className="text-sm font-bold text-purple-700 tracking-wide font-jakarta">For Content Creators</span>
                   <div className="h-[0.5px] w-5 bg-purple-300/80 ml-2"></div>
                 </div>
                 <div className="relative">

@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { CreatorCard } from '../creator/CreatorCard';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Creator } from '../creator/types';
@@ -7,6 +7,9 @@ import { MobileCreatorCarousel } from './MobileCreatorCarousel';
 import { mobileOptimizationClasses } from '@/utils/mobile-optimization';
 import { ErrorBoundary } from 'react-error-boundary';
 import { ErrorFallback } from '../ErrorFallback';
+import { Dialog, DialogContent, DialogTitle } from '../ui/dialog';
+import { X } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 export const CreatorsList: React.FC = () => {
   const isMobile = useIsMobile();
@@ -14,7 +17,7 @@ export const CreatorsList: React.FC = () => {
   const creators: Creator[] = [
     {
       name: "Emily Johnson",
-      services: ["TikTok", "POV", "#TourWithMe"],
+      services: ["TikTok", "POV Tour", "Organic Content"],
       price: 150,
       rating: 4.9,
       reviews: 127,
@@ -49,7 +52,7 @@ export const CreatorsList: React.FC = () => {
       rating: 4.7,
       reviews: 82,
       location: "New York, NY",
-      image: "/emily profile.jpeg",
+      image: "/michaelprofile.mov",
       workExamples: [
         "/creatorcontent/michael-brown/work-1.jpg",
         "/creatorcontent/michael-brown/work-2.jpg",
@@ -59,9 +62,22 @@ export const CreatorsList: React.FC = () => {
     }
   ];
 
-  const loadedImages = new Set<string>();
-  const handleImageLoad = (imageSrc: string) => {};
-  const imageRef = (el: HTMLImageElement | null) => {};
+  const [loadedImages, setLoadedImages] = useState(new Set<string>());
+  const [selectedPreviewImage, setSelectedPreviewImage] = useState<string | null>(null);
+  
+  const handleImageLoad = (imageSrc: string) => {
+    setLoadedImages(prev => new Set([...prev, imageSrc]));
+  };
+  
+  const imageRef = (el: HTMLImageElement | null) => {
+    if (el) {
+      const src = el.getAttribute('data-src');
+      if (src) {
+        el.onload = () => handleImageLoad(src);
+        el.src = src;
+      }
+    }
+  };
 
   const { improvedShadowMobile, coloredBorderMobile } = mobileOptimizationClasses;
 
@@ -79,7 +95,8 @@ export const CreatorsList: React.FC = () => {
                 creator={creator} 
                 onImageLoad={handleImageLoad} 
                 loadedImages={loadedImages} 
-                imageRef={imageRef} 
+                imageRef={imageRef}
+                onPreviewClick={setSelectedPreviewImage}
               />
               {/* Fallback button in case the card's button is hidden by CSS */}
               <div className="hidden md:hidden">
@@ -98,8 +115,37 @@ export const CreatorsList: React.FC = () => {
           onImageLoad={handleImageLoad}
           loadedImages={loadedImages}
           imageRef={imageRef}
+          onPreviewClick={setSelectedPreviewImage}
         />
       )}
+      
+      {/* Image Preview Dialog */}
+      <Dialog open={!!selectedPreviewImage} onOpenChange={() => setSelectedPreviewImage(null)}>
+        <DialogContent className={cn(
+          isMobile ? "w-[95vw] max-w-[95vw]" : "sm:max-w-[80vw]", 
+          "p-0 bg-transparent border-0"
+        )}>
+          <DialogTitle className="sr-only">Portfolio Image Preview</DialogTitle>
+          <button
+            onClick={() => setSelectedPreviewImage(null)}
+            className={cn(
+              "absolute z-50 rounded-full bg-black/50 text-white hover:bg-black/70 transition-colors",
+              isMobile ? "right-2 top-2 p-1.5" : "right-4 top-4 p-2"
+            )}
+            aria-label="Close preview"
+          >
+            <X className={cn(isMobile ? "h-3.5 w-3.5" : "h-4 w-4")} />
+          </button>
+          {selectedPreviewImage && (
+            <img
+              src={selectedPreviewImage}
+              alt="Property photography - enlarged portfolio view"
+              className="w-full h-full object-contain rounded-lg"
+              style={{ maxHeight: isMobile ? '85vh' : '80vh' }}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </ErrorBoundary>
   );
 };

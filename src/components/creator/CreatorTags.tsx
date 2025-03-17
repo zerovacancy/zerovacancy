@@ -16,7 +16,7 @@ export const getDefaultTags = (name: string, services: string[]) => {
     return ['#Interior', '#Design', '#Staging'];
   }
   if (name === 'Emily Johnson') {
-    return ['#POV', '#TikTok', '#ComeTourWithMe'];
+    return ['#TikTok', '#POVTour', '#OrganicContent'];
   }
   if (name === 'Michael Brown') {
     return ['#3DTours', '#FloorPlans', '#Interactive'];
@@ -31,7 +31,7 @@ export const getTagStyle = (tag: string) => {
   if (['#Interior', '#Design', '#Staging'].includes(tag)) {
     return "bg-[#F2FCE2]/90 text-[#3B823E] hover:bg-[#DCF5DC] hover:text-[#2E6A31] border border-[#3B823E]/20";
   }
-  if (['#POV', '#TikTok', '#ComeTourWithMe'].includes(tag)) {
+  if (['#POVTour', '#TikTok', '#OrganicContent'].includes(tag)) {
     return "bg-[#FDE1D3]/90 text-[#C4704F] hover:bg-[#FECDA7] hover:text-[#9D5B3F] border border-[#C4704F]/20";
   }
   if (['#3DTours', '#FloorPlans', '#Interactive'].includes(tag)) {
