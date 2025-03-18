@@ -81,14 +81,14 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               </div>
 
               {/* Content sections with proper organization */}
-              <div className="w-full px-3 py-2 flex flex-col relative z-10 flex-grow flex-shrink-0">
+              <div className="w-full px-4 pt-3 pb-3 flex flex-col relative z-10 flex-grow flex-shrink-0">
                 {/* Creator info section */}
-                <div className="pb-2.5 mb-2.5 border-b border-purple-100/60">
+                <div className="pb-3 mb-3 border-b border-purple-100/70">
                   {/* Creator name and location with proper styling */}
-                  <div className="flex justify-between items-center mb-2">
-                    <h3 className="text-[15px] leading-tight font-semibold text-gray-800">{creator.name}</h3>
+                  <div className="flex justify-between items-center mb-2.5">
+                    <h3 className="text-base leading-tight font-semibold text-gray-800">{creator.name}</h3>
                     <p className="text-gray-500 text-xs flex items-center">
-                      <svg className="w-3 h-3 mr-1 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <svg className="w-3.5 h-3.5 mr-1 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                         <circle cx="12" cy="10" r="3"></circle>
                       </svg>
@@ -97,12 +97,12 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   </div>
                   
                   {/* Ratings and availability grouped together */}
-                  <div className="flex justify-between items-center mb-2 py-1 px-2 bg-gray-50/80 rounded-md border border-gray-100/80">
+                  <div className="flex justify-between items-center mb-3 py-2 px-3 bg-gray-50/90 rounded-lg border border-gray-100 shadow-sm">
                     <div className="flex items-center">
-                      <Star className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400 mr-1" />
-                      <span className="text-sm font-medium font-space text-gray-700">{creator.rating.toFixed(1)}</span>
+                      <Star className="w-4 h-4 text-yellow-400 fill-yellow-400 mr-1.5" />
+                      <span className="text-sm font-semibold font-space text-gray-700">{creator.rating.toFixed(1)}</span>
                       {creator.reviews > 0 && (
-                        <span className="text-xs text-gray-500 ml-1 font-inter">
+                        <span className="text-xs text-gray-500 ml-1.5 font-inter">
                           ({creator.reviews})
                         </span>
                       )}
@@ -110,22 +110,22 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     
                     {/* Availability indicator with improved styling */}
                     {creator.availabilityStatus && (
-                      <div className="flex items-center px-2 py-0.5 rounded-full text-xs font-medium">
+                      <div className="flex items-center py-1 px-2.5 rounded-full text-xs font-medium bg-white shadow-sm border border-gray-100">
                         {creator.availabilityStatus === 'available-now' && (
                           <span className="flex items-center text-emerald-700">
-                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 animate-pulse shadow-[0_0_4px_rgba(16,185,129,0.6)]"></div>
+                            <div className="w-2 h-2 rounded-full bg-emerald-500 mr-1.5 animate-pulse shadow-[0_0_4px_rgba(16,185,129,0.6)]"></div>
                             Available Now
                           </span>
                         )}
                         {creator.availabilityStatus === 'available-tomorrow' && (
                           <span className="flex items-center text-amber-700">
-                            <Clock className="w-3.5 h-3.5 mr-1 text-amber-500" />
+                            <Clock className="w-3.5 h-3.5 mr-1.5 text-amber-500" />
                             Available Soon
                           </span>
                         )}
                         {creator.availabilityStatus === 'premium-only' && (
                           <span className="flex items-center text-purple-700">
-                            <Crown className="w-3.5 h-3.5 mr-1 text-purple-500" />
+                            <Crown className="w-3.5 h-3.5 mr-1.5 text-purple-500" />
                             Premium Only
                           </span>
                         )}
@@ -134,25 +134,25 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   </div>
                   
                   {/* Services with organized tag styling */}
-                  <div className="flex flex-wrap gap-1.5 mt-1 max-w-full">
+                  <div className="flex flex-wrap gap-1.5 mt-2 px-2 py-2 bg-purple-50/40 rounded-lg border border-purple-100/30 max-w-full">
                     {creator.services.map((service, index) => {
                       const isPlatform = service.includes('TikTok') || service.includes('Instagram') || service.includes('YouTube');
                       const isHashtag = service.startsWith('#');
                       const isVisualStyle = service.includes('Tour') || service.includes('POV') || service.includes('Photo') || service.includes('Video');
                       const isSpecialty = service.includes('Staging') || service.includes('Design') || service.includes('Plan');
                       
-                      let bgColor = "bg-purple-100/50 border-purple-200/80 text-purple-800";
-                      if (isPlatform) bgColor = "bg-blue-50 border-blue-200/80 text-blue-700";
-                      if (isHashtag) bgColor = "bg-indigo-50 border-indigo-200/80 text-indigo-700";
-                      if (isVisualStyle) bgColor = "bg-violet-50 border-violet-200/80 text-violet-700";
-                      if (isSpecialty) bgColor = "bg-teal-50 border-teal-200/80 text-teal-700";
+                      let bgColor = "bg-purple-100 border-purple-200 text-purple-800";
+                      if (isPlatform) bgColor = "bg-blue-100 border-blue-200 text-blue-700";
+                      if (isHashtag) bgColor = "bg-indigo-100 border-indigo-200 text-indigo-700";
+                      if (isVisualStyle) bgColor = "bg-violet-100 border-violet-200 text-violet-700";
+                      if (isSpecialty) bgColor = "bg-teal-100 border-teal-200 text-teal-700";
                       
                       // Only show the first 4 services to save space
                       if (index < 4) {
                         return (
                           <span 
                             key={index} 
-                            className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] border whitespace-nowrap touch-manipulation ${bgColor}`}
+                            className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs border whitespace-nowrap touch-manipulation shadow-sm ${bgColor}`}
                           >
                             <span>{service}</span>
                           </span>
@@ -161,7 +161,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                         return (
                           <span 
                             key={index} 
-                            className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] text-gray-500 border border-gray-200 bg-gray-50"
+                            className="inline-flex items-center px-2.5 py-1 rounded-full text-xs text-gray-600 border border-gray-200 bg-white shadow-sm"
                           >
                             +{creator.services.length - 4} more
                           </span>
@@ -175,34 +175,49 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 {/* Recent Work section with proper header */}
                 <div className="mb-2">
                   {/* Section header */}
-                  <div className="mb-2 flex justify-between items-center">
+                  <div className="mb-3 flex justify-between items-center">
                     <div className="flex items-center">
-                      <div className="w-0.5 h-3 bg-gradient-to-b from-indigo-400/80 to-purple-400/80 rounded-full mr-1.5"></div>
-                      <div className="text-[11px] text-gray-600 font-medium font-space uppercase tracking-wide">Recent Work</div>
+                      <div className="w-1 h-4 bg-gradient-to-b from-indigo-400/80 to-purple-400/80 rounded-full mr-2"></div>
+                      <div className="text-xs text-gray-700 font-medium font-space uppercase tracking-wide">Recent Work</div>
                     </div>
-                    <div className="text-[10px] text-purple-500 font-medium">View All →</div>
+                    <button 
+                      className="text-xs text-purple-600 font-medium px-2 py-1 rounded-md bg-purple-50/80 hover:bg-purple-100/80 transition-colors"
+                      onClick={() => onPreviewClick ? onPreviewClick(creator.workExamples[0]) : setSelectedImage(creator.workExamples[0])}
+                    >
+                      View All →
+                    </button>
                   </div>
                   
                   {/* Improved portfolio thumbnails with touch-optimized targets */}
-                  <div className="grid grid-cols-3 gap-2">
+                  <div className="grid grid-cols-3 gap-2.5">
                     {creator.workExamples.slice(0, 3).map((example, index) => (
-                      <div 
+                      <button 
                         key={index}
-                        className="relative h-[60px] touch-manipulation rounded-md overflow-hidden border border-purple-100/80 shadow-sm transition-transform duration-150 active:scale-95"
+                        className="relative h-[70px] touch-manipulation rounded-lg overflow-hidden border border-purple-100 shadow-sm active:shadow-inner transition-all duration-150 active:scale-95 focus:outline-none focus:ring-2 focus:ring-purple-400/50"
                         onClick={() => onPreviewClick ? onPreviewClick(example) : setSelectedImage(example)}
+                        aria-label={`View ${index === 0 ? 'interior' : index === 1 ? 'exterior' : 'detail'} image`}
                       >
                         <img 
                           src={example}
                           alt={`${creator.name}'s work ${index + 1}`}
                           className="object-cover h-full w-full"
                         />
-                        {/* Label overlay with gradient background */}
-                        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-black/10 py-1 text-center">
-                          <span className="text-[9px] text-white font-medium uppercase tracking-wide font-space">
+                        {/* Enhanced label overlay with gradient background */}
+                        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-black/5 py-1 text-center">
+                          <span className="text-[10px] text-white font-medium uppercase tracking-wide font-space">
                             {index === 0 ? 'Interior' : index === 1 ? 'Exterior' : 'Detail'}
                           </span>
                         </div>
-                      </div>
+                        {/* Tap indicator */}
+                        <div className="absolute inset-0 bg-purple-600/10 opacity-0 active:opacity-100 transition-opacity flex items-center justify-center">
+                          <div className="w-7 h-7 rounded-full bg-white/80 shadow-sm flex items-center justify-center">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M15 3H21V9" stroke="#6D28D9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                              <path d="M21 3L9 15" stroke="#6D28D9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            </svg>
+                          </div>
+                        </div>
+                      </button>
                     ))}
                   </div>
                 </div>
@@ -211,16 +226,16 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 <div className="flex-grow min-h-[5px]"></div>
                 
                 {/* CTA button with fixed positioning for alignment across cards */}
-                <div className="mt-auto pt-1">
+                <div className="mt-auto pt-3">
                   <button 
                     onClick={handleCTAClick}
                     aria-label={`Join as creator with ${creator.name}`}
-                    className="w-full flex items-center justify-center text-sm px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-md font-medium font-jakarta shadow-md h-[40px]"
+                    className="w-full flex items-center justify-center text-sm px-5 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold font-jakarta shadow-md h-[50px] hover:shadow-lg active:shadow-inner transition-all duration-200"
                   >
                     {stage === 'initial' ? (
                       <>
                         <span>JOIN AS CREATOR</span>
-                        <ArrowRight className="w-3.5 h-3.5 ml-2" aria-hidden="true" />
+                        <ArrowRight className="w-4 h-4 ml-2" aria-hidden="true" />
                       </>
                     ) : stage === 'input' ? (
                       <span>JOIN AS CREATOR</span>
