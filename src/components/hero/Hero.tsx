@@ -19,8 +19,8 @@ export function Hero() {
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isInView) {
-      // Much longer intervals for better readability, especially on mobile
-      const intervalTime = isMobile ? 6500 : 5500;
+      // Standard interval for word rotation
+      const intervalTime = isMobile ? 3500 : 3000;
       
       interval = setInterval(() => {
         setCurrentTextIndex(prev => (prev + 1) % TITLES.length);
@@ -151,8 +151,8 @@ export function Hero() {
                 exit={isMobile ? { y: -30, opacity: 0 } : { y: "-40%", opacity: 0, scale: 0.95 }}
                 // Disable staggering completely on mobile
                 staggerDuration={isMobile ? 0 : 0}
-                // Longer rotation interval for mobile
-                rotationInterval={isMobile ? 6500 : 5500}
+                // Standard rotation interval
+                rotationInterval={isMobile ? 3500 : 3000}
                 splitLevelClassName="overflow-visible"
                 elementLevelClassName={cn(
                   isMobile ? "text-[3.5rem]" : "text-4xl sm:text-5xl lg:text-7xl",
@@ -170,17 +170,17 @@ export function Hero() {
                 transition={isMobile ? 
                   { 
                     type: "spring", 
-                    damping: 35,
-                    stiffness: 150,
-                    mass: 1.0,
-                    duration: 0.8,
+                    damping: 25,
+                    stiffness: 200,
+                    mass: 0.6,
+                    duration: 0.5,
                     ease: "easeOut"
                   } : { 
                     type: "spring",
-                    damping: 40,
-                    stiffness: 200,
-                    mass: 0.8,
-                    duration: 0.8,
+                    damping: 30,
+                    stiffness: 250,
+                    mass: 0.5,
+                    duration: 0.5,
                     ease: "easeOut"
                   }}
                 auto={true}
