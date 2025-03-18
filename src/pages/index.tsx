@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button';
 import { Star } from 'lucide-react';
 import { GlowDialog } from '@/components/ui/glow-dialog';
 import { AnimatedShinyText } from '@/components/ui/animated-shiny-text';
-import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import { BackgroundEffects } from '@/components/features/BackgroundEffects';
 import SEO from '@/components/SEO';
