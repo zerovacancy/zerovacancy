@@ -172,7 +172,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 </div>
                 
                 {/* Recent Work section with proper header */}
-                <div className="mb-1.5">
+                <div className="mb-16"> {/* Increased bottom margin to make room for the CTA */}
                   {/* Section header */}
                   <div className="mb-3 flex justify-between items-center">
                     <div className="flex items-center">
@@ -221,8 +221,8 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   </div>
                 </div>
 
-                {/* CTA button with fixed height */}
-                <div className="mt-3">
+                {/* CTA button with fixed positioning at the bottom */}
+                <div className="absolute bottom-3 left-0 right-0 px-4">
                   <button 
                     onClick={handleCTAClick}
                     aria-label={`Join as creator with ${creator.name}`}
@@ -332,7 +332,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   </div>
 
                   {/* Portfolio preview with reduced spacing */}
-                  <div className="mb-1 rounded-md overflow-hidden">
+                  <div className="mb-14 rounded-md overflow-hidden"> {/* Increased bottom margin to make room for the fixed CTA button */}
                     <PortfolioPreview 
                       workExamples={creator.workExamples}
                       creatorName={creator.name}
@@ -340,7 +340,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     />
                   </div>
 
-                  {/* Desktop CTA with reduced spacing */}
+                  {/* Desktop CTA with fixed positioning at the bottom of the card */}
                   <div className="absolute bottom-3 left-0 right-0 z-50 px-5">
                     {/* Subtle visual indicator with reduced spacing */}
                     <div className="mb-2 mt-1 mx-auto w-8 h-0.5 rounded-full bg-gray-200"></div>
