@@ -68,14 +68,17 @@ export function Hero() {
         "gap-3 sm:gap-6", 
         "touch-manipulation",
         isMobile 
-          ? "bg-gradient-to-b from-purple-100/70 via-indigo-50/60 to-blue-50/50" 
+          ? "bg-white" 
           : "bg-gradient-to-b from-purple-50/80 via-indigo-50/60 to-blue-50/30",
         isInView ? "animate-fade-in" : "opacity-0",
-        isMobile && "after:absolute after:bottom-0 after:left-0 after:w-full after:h-14 after:bg-gradient-to-t after:from-blue-100/60 after:via-indigo-50/30 after:to-transparent"
       )} 
     >
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOGE2NGZmIiBzdHJva2Utd2lkdGg9IjAuNSIgc3Ryb2tlLW9wYWNpdHk9IjAuMDYiPjxwYXRoIGQ9Ik0wIDBMNDAgNDAiLz48cGF0aCBkPSJNNDAgMEwwIDQwIi8+PC9nPjwvc3ZnPg==')] opacity-30"></div>
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(138,99,255,0.04)_0%,rgba(255,255,255,0)_70%)]"></div>
+      {!isMobile && (
+        <>
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOGE2NGZmIiBzdHJva2Utd2lkdGg9IjAuNSIgc3Ryb2tlLW9wYWNpdHk9IjAuMDYiPjxwYXRoIGQ9Ik0wIDBMNDAgNDAiLz48cGF0aCBkPSJNNDAgMEwwIDQwIi8+PC9nPjwvc3ZnPg==')] opacity-30"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(138,99,255,0.04)_0%,rgba(255,255,255,0)_70%)]"></div>
+        </>
+      )}
       
       {/* Decorative elements - visible on mobile */}
       {isMobile && (
@@ -98,7 +101,7 @@ export function Hero() {
         <div className="relative">
           <h1 className={cn(
             "tracking-tight leading-[1.15] font-bold font-jakarta",
-            isMobile ? "mb-0 mt-2 text-left pl-1" : "mb-2 sm:mb-6 text-center"
+            isMobile ? "mb-0 mt-2 text-center" : "mb-2 sm:mb-6 text-center"
           )}>
             <span 
               className={cn(

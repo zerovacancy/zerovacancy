@@ -16,7 +16,7 @@ export function SocialProof({ className }: SocialProofProps) {
       {/* Enhanced social proof pill with refined design */}
       <div className={cn(
         "flex items-center", // Horizontal layout
-        "bg-gradient-to-r from-purple-50 via-purple-100/80 to-purple-50", // Subtle gradient background
+        "bg-white", // Clean white background
         "rounded-xl", // Slightly more pronounced corners
         "border border-purple-300/15", // Brand purple border with low opacity
         "animate-fade-in",
