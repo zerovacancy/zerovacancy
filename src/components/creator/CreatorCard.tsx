@@ -173,7 +173,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 </div>
                 
                 {/* Recent Work section with proper header */}
-                <div className="mb-2">
+                <div className="mb-1.5">
                   {/* Section header */}
                   <div className="mb-3 flex justify-between items-center">
                     <div className="flex items-center">
@@ -222,11 +222,8 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   </div>
                 </div>
 
-                {/* Spacer to push CTA to bottom */}
-                <div className="flex-grow min-h-[5px]"></div>
-                
                 {/* CTA button with fixed positioning for alignment across cards */}
-                <div className="mt-auto pt-3">
+                <div className="mt-2">
                   <button 
                     onClick={handleCTAClick}
                     aria-label={`Join as creator with ${creator.name}`}
