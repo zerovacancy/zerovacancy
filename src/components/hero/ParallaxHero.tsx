@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useRef, useEffect, useState } from "react";
@@ -162,11 +161,13 @@ export function ParallaxHero() {
         )}
         {/* Image group with dynamic blur effect based on proximity */}
         <motion.div className="absolute inset-0 overflow-hidden">
-          {/* Top center image - strategically positioned */}
+          {/* TOP LEFT image */}
           <motion.div 
             className={cn(
               "absolute",
-              isMobile ? "top-[-5%] left-[50%] -translate-x-1/2 z-10" : "top-[25%] left-[10%]", // Centered at top on mobile
+              isMobile 
+                ? "top-[5%] left-[5%] z-10" 
+                : "top-[25%] left-[10%]",
               "transform-style-3d perspective-[800px]"
             )}
             initial={{ opacity: 0 }}
@@ -178,30 +179,34 @@ export function ParallaxHero() {
               alt="Property content"
               className={cn(
                 "object-cover rounded-xl",
-                "shadow-[0_10px_25px_rgba(102,51,255,0.3)_,_inset_0_0_0_1px_rgba(255,255,255,0.6)]", // Enhanced shadow with subtle inner glow
-                isMobile ? "w-[160px] h-[120px] opacity-100 rotate-[-6deg]" : "w-32 h-24" // Standardized size with rotation
+                "shadow-[0_10px_25px_rgba(102,51,255,0.3)_,_inset_0_0_0_1px_rgba(255,255,255,0.6)]",
+                isMobile 
+                  ? "w-[130px] h-[100px] opacity-90 rotate-[-4deg]" 
+                  : "w-32 h-24"
               )}
               style={{ 
-                transform: (!isMobile && !prefersReducedMotion) ? 
-                  `translate3d(${-mousePosition.x * 1.5}px, ${-mousePosition.y * 1.5}px, 0) 
-                   rotate(-3deg) rotateX(${mousePosition.y * 0.02}deg) rotateY(${-mousePosition.x * 0.02}deg)
-                   scale(${1 + Math.min(Math.abs(mousePosition.x), Math.abs(mousePosition.y)) * 0.0005})` : 
-                  isMobile ? "translateY(4px) rotate(-6deg)" : "rotate(-3deg)", // Subtle movement on mobile
-                filter: (!isMobile && !prefersReducedMotion) ? 
-                  `blur(${Math.abs(mousePosition.x) < 100 && Math.abs(mousePosition.y) < 100 ? 1 : 0}px)` : 
-                  "contrast(1.05) saturate(1.05)", // Slight enhancement on all devices
-                opacity: (!isMobile && !prefersReducedMotion) ? 
-                  (Math.abs(mousePosition.x) < 80 && Math.abs(mousePosition.y) < 80 ? 0.8 : 0.95) : 
-                  1 // Full opacity on mobile and reduced motion
+                transform: (!isMobile && !prefersReducedMotion) 
+                  ? `translate3d(${-mousePosition.x * 1.5}px, ${-mousePosition.y * 1.5}px, 0) 
+                     rotate(-3deg) rotateX(${mousePosition.y * 0.02}deg) rotateY(${-mousePosition.x * 0.02}deg)
+                     scale(${1 + Math.min(Math.abs(mousePosition.x), Math.abs(mousePosition.y)) * 0.0005})` 
+                  : "rotate(-4deg)",
+                filter: (!isMobile && !prefersReducedMotion) 
+                  ? `blur(${Math.abs(mousePosition.x) < 100 && Math.abs(mousePosition.y) < 100 ? 1 : 0}px)` 
+                  : "contrast(1.05) saturate(1.05)",
+                opacity: (!isMobile && !prefersReducedMotion) 
+                  ? (Math.abs(mousePosition.x) < 80 && Math.abs(mousePosition.y) < 80 ? 0.8 : 0.95) 
+                  : 0.9
               }}
             />
           </motion.div>
 
-          {/* Bottom left image - strategically positioned */}
+          {/* TOP RIGHT image */}
           <motion.div
             className={cn(
               "absolute",
-              isMobile ? "bottom-[1%] left-[5%] z-10" : "top-[10%] left-[24%]", // Bottom left corner on mobile
+              isMobile 
+                ? "top-[5%] right-[5%] z-10" 
+                : "top-[10%] left-[24%]",
               "transform-style-3d perspective-[800px]"
             )}
             initial={{ opacity: 0 }}
@@ -209,34 +214,38 @@ export function ParallaxHero() {
             transition={{ delay: 0.5 }}
           >
             <motion.img
-              src={PARALLAX_IMAGES[1]}
+              src={PARALLAX_IMAGES[6]}
               alt="Property content"
               className={cn(
                 "object-cover rounded-xl",
-                "shadow-[0_10px_25px_rgba(138,92,249,0.3)_,_inset_0_0_0_1px_rgba(255,255,255,0.6)]", // Consistent shadow style
-                isMobile ? "w-[160px] h-[120px] opacity-100 rotate-[6deg]" : "w-56 h-44" // Standardized size with rotation
+                "shadow-[0_10px_25px_rgba(138,92,249,0.3)_,_inset_0_0_0_1px_rgba(255,255,255,0.6)]",
+                isMobile 
+                  ? "w-[130px] h-[100px] opacity-90 rotate-[4deg]" 
+                  : "w-56 h-44"
               )}
               style={{ 
-                transform: (!isMobile && !prefersReducedMotion) ? 
-                  `translate3d(${-mousePosition.x * 2}px, ${-mousePosition.y * 2}px, 0) 
-                   rotate(-12deg) rotateX(${mousePosition.y * 0.03}deg) rotateY(${-mousePosition.x * 0.03}deg)
-                   scale(${1 + Math.min(Math.abs(mousePosition.x), Math.abs(mousePosition.y)) * 0.0008})` : 
-                  "rotate(6deg)", // Match the class rotation
-                filter: (!isMobile && !prefersReducedMotion) ? 
-                  `blur(${Math.abs(mousePosition.x) < 120 && Math.abs(mousePosition.y) < 120 ? 1 : 0}px)` : 
-                  "contrast(1.05) saturate(1.05)",
-                opacity: (!isMobile && !prefersReducedMotion) ? 
-                  (Math.abs(mousePosition.x) < 100 && Math.abs(mousePosition.y) < 100 ? 0.8 : 0.95) : 
-                  1 // Full opacity on mobile and reduced motion
+                transform: (!isMobile && !prefersReducedMotion) 
+                  ? `translate3d(${-mousePosition.x * 2}px, ${-mousePosition.y * 2}px, 0) 
+                     rotate(-12deg) rotateX(${mousePosition.y * 0.03}deg) rotateY(${-mousePosition.x * 0.03}deg)
+                     scale(${1 + Math.min(Math.abs(mousePosition.x), Math.abs(mousePosition.y)) * 0.0008})` 
+                  : "rotate(4deg)",
+                filter: (!isMobile && !prefersReducedMotion) 
+                  ? `blur(${Math.abs(mousePosition.x) < 120 && Math.abs(mousePosition.y) < 120 ? 1 : 0}px)` 
+                  : "contrast(1.05) saturate(1.05)",
+                opacity: (!isMobile && !prefersReducedMotion) 
+                  ? (Math.abs(mousePosition.x) < 100 && Math.abs(mousePosition.y) < 100 ? 0.8 : 0.95) 
+                  : 0.9
               }}
             />
           </motion.div>
 
-          {/* NEW: Left side image */}
+          {/* MIDDLE LEFT image */}
           <motion.div
             className={cn(
               "absolute",
-              isMobile ? "top-[30%] left-[2%] z-10" : "top-[40%] left-[3%]", 
+              isMobile 
+                ? "top-[28%] left-[3%] z-10" 
+                : "top-[40%] left-[3%]",
               "transform-style-3d perspective-[800px]"
             )}
             initial={{ opacity: 0 }}
@@ -248,100 +257,34 @@ export function ParallaxHero() {
               alt="Property content"
               className={cn(
                 "object-cover rounded-xl",
-                "shadow-[0_10px_25px_rgba(102,51,255,0.3)_,_inset_0_0_0_1px_rgba(255,255,255,0.6)]", 
-                isMobile ? "w-[140px] h-[100px] opacity-90 rotate-[-4deg]" : "w-48 h-36" 
+                "shadow-[0_10px_25px_rgba(102,51,255,0.3)_,_inset_0_0_0_1px_rgba(255,255,255,0.6)]",
+                isMobile 
+                  ? "w-[120px] h-[90px] opacity-80 rotate-[-5deg]" 
+                  : "w-48 h-36"
               )}
               style={{ 
-                transform: (!isMobile && !prefersReducedMotion) ? 
-                  `translate3d(${-mousePosition.x * 1.2}px, ${-mousePosition.y * 1.2}px, 0) 
-                   rotate(-4deg) rotateX(${mousePosition.y * 0.02}deg) rotateY(${-mousePosition.x * 0.02}deg)
-                   scale(${1 + Math.min(Math.abs(mousePosition.x), Math.abs(mousePosition.y)) * 0.0006})` : 
-                  "rotate(-4deg)",
-                filter: (!isMobile && !prefersReducedMotion) ? 
-                  `blur(${Math.abs(mousePosition.x) < 120 && Math.abs(mousePosition.y) < 120 ? 1 : 0}px)` : 
-                  "contrast(1.05) saturate(1.05)",
-                opacity: (!isMobile && !prefersReducedMotion) ? 
-                  (Math.abs(mousePosition.x) < 100 && Math.abs(mousePosition.y) < 100 ? 0.8 : 0.95) : 
-                  0.9
+                transform: (!isMobile && !prefersReducedMotion) 
+                  ? `translate3d(${-mousePosition.x * 1.2}px, ${-mousePosition.y * 1.2}px, 0) 
+                     rotate(-4deg) rotateX(${mousePosition.y * 0.02}deg) rotateY(${-mousePosition.x * 0.02}deg)
+                     scale(${1 + Math.min(Math.abs(mousePosition.x), Math.abs(mousePosition.y)) * 0.0006})` 
+                  : "rotate(-5deg)",
+                filter: (!isMobile && !prefersReducedMotion) 
+                  ? `blur(${Math.abs(mousePosition.x) < 120 && Math.abs(mousePosition.y) < 120 ? 1 : 0}px)` 
+                  : "contrast(1.05) saturate(1.05)",
+                opacity: (!isMobile && !prefersReducedMotion) 
+                  ? (Math.abs(mousePosition.x) < 100 && Math.abs(mousePosition.y) < 100 ? 0.8 : 0.95) 
+                  : 0.8
               }}
             />
           </motion.div>
 
-          {/* Hide this image on mobile for cleaner layout */}
+          {/* MIDDLE RIGHT image */}
           <motion.div
             className={cn(
               "absolute",
-              isMobile ? "hidden" : "bottom-[18%] left-[15%]", // Hidden on mobile for better composition
-              "transform-style-3d perspective-[800px]"
-            )}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: isInView ? 1 : 0 }}
-            transition={{ delay: 0.7 }}
-          >
-            <motion.img
-              src={PARALLAX_IMAGES[2]}
-              alt="Property content"
-              className={cn(
-                "object-cover rounded-xl",
-                "shadow-[0_20px_50px_rgba(102,51,255,0.3)]",
-                isMobile ? "w-48 h-48 opacity-100" : "w-60 h-60" // Larger on mobile, full opacity
-              )}
-              style={{ 
-                transform: (!isMobile && !prefersReducedMotion) ? 
-                  `translate3d(${-mousePosition.x * 4}px, ${-mousePosition.y * 4}px, 0) 
-                   rotate(-4deg) rotateX(${mousePosition.y * 0.04}deg) rotateY(${-mousePosition.x * 0.04}deg)
-                   scale(${1 + Math.min(Math.abs(mousePosition.x), Math.abs(mousePosition.y)) * 0.001})` : 
-                  "rotate(-4deg)",
-                filter: (!isMobile && !prefersReducedMotion) ? 
-                  `blur(${Math.abs(mousePosition.x) < 150 && Math.abs(mousePosition.y) < 150 ? 1 : 0}px)` : 
-                  "contrast(1.05) saturate(1.05)",
-                opacity: (!isMobile && !prefersReducedMotion) ? 
-                  (Math.abs(mousePosition.x) < 120 && Math.abs(mousePosition.y) < 120 ? 0.8 : 0.95) : 
-                  1 // Full opacity on mobile and reduced motion
-              }}
-            />
-          </motion.div>
-
-          {/* Bottom right image - strategically positioned */}
-          <motion.div
-            className={cn(
-              "absolute",
-              isMobile ? "bottom-[1%] right-[5%] z-10" : "top-[8%] right-[15%]", // Bottom right corner on mobile
-              "transform-style-3d perspective-[800px]"
-            )}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: isInView ? 1 : 0 }}
-            transition={{ delay: 0.9 }}
-          >
-            <motion.img
-              src={PARALLAX_IMAGES[3]}
-              alt="Property content"
-              className={cn(
-                "object-cover rounded-xl",
-                "shadow-[0_10px_25px_rgba(65,105,225,0.3)_,_inset_0_0_0_1px_rgba(255,255,255,0.6)]", // Consistent shadow style
-                isMobile ? "w-[160px] h-[120px] opacity-100 rotate-[-8deg]" : "w-60 h-52" // Standardized size with opposite rotation
-              )}
-              style={{ 
-                transform: (!isMobile && !prefersReducedMotion) ? 
-                  `translate3d(${-mousePosition.x * 2}px, ${-mousePosition.y * 2}px, 0) 
-                   rotate(6deg) rotateX(${mousePosition.y * 0.02}deg) rotateY(${-mousePosition.x * 0.02}deg)
-                   scale(${1 + Math.min(Math.abs(mousePosition.x), Math.abs(mousePosition.y)) * 0.0006})` : 
-                  "rotate(-8deg)", // Match the class rotation
-                filter: (!isMobile && !prefersReducedMotion) ? 
-                  `blur(${Math.abs(mousePosition.x) < 120 && Math.abs(mousePosition.y) < 120 ? 1 : 0}px)` : 
-                  "contrast(1.05) saturate(1.05)",
-                opacity: (!isMobile && !prefersReducedMotion) ? 
-                  (Math.abs(mousePosition.x) < 100 && Math.abs(mousePosition.y) < 100 ? 0.8 : 0.95) : 
-                  1 // Full opacity on mobile and reduced motion
-              }}
-            />
-          </motion.div>
-
-          {/* NEW: Right side image */}
-          <motion.div
-            className={cn(
-              "absolute",
-              isMobile ? "top-[30%] right-[2%] z-10" : "top-[40%] right-[3%]", 
+              isMobile 
+                ? "top-[28%] right-[3%] z-10" 
+                : "top-[40%] right-[3%]",
               "transform-style-3d perspective-[800px]"
             )}
             initial={{ opacity: 0 }}
@@ -353,100 +296,112 @@ export function ParallaxHero() {
               alt="Property content"
               className={cn(
                 "object-cover rounded-xl",
-                "shadow-[0_10px_25px_rgba(65,105,225,0.3)_,_inset_0_0_0_1px_rgba(255,255,255,0.6)]", 
-                isMobile ? "w-[140px] h-[100px] opacity-90 rotate-[4deg]" : "w-48 h-36" 
+                "shadow-[0_10px_25px_rgba(65,105,225,0.3)_,_inset_0_0_0_1px_rgba(255,255,255,0.6)]",
+                isMobile 
+                  ? "w-[120px] h-[90px] opacity-80 rotate-[5deg]" 
+                  : "w-48 h-36"
               )}
               style={{ 
-                transform: (!isMobile && !prefersReducedMotion) ? 
-                  `translate3d(${-mousePosition.x * 1.2}px, ${-mousePosition.y * 1.2}px, 0) 
-                   rotate(4deg) rotateX(${mousePosition.y * 0.02}deg) rotateY(${-mousePosition.x * 0.02}deg)
-                   scale(${1 + Math.min(Math.abs(mousePosition.x), Math.abs(mousePosition.y)) * 0.0006})` : 
-                  "rotate(4deg)",
-                filter: (!isMobile && !prefersReducedMotion) ? 
-                  `blur(${Math.abs(mousePosition.x) < 120 && Math.abs(mousePosition.y) < 120 ? 1 : 0}px)` : 
-                  "contrast(1.05) saturate(1.05)",
-                opacity: (!isMobile && !prefersReducedMotion) ? 
-                  (Math.abs(mousePosition.x) < 100 && Math.abs(mousePosition.y) < 100 ? 0.8 : 0.95) : 
-                  0.9
+                transform: (!isMobile && !prefersReducedMotion) 
+                  ? `translate3d(${-mousePosition.x * 1.2}px, ${-mousePosition.y * 1.2}px, 0) 
+                     rotate(4deg) rotateX(${mousePosition.y * 0.02}deg) rotateY(${-mousePosition.x * 0.02}deg)
+                     scale(${1 + Math.min(Math.abs(mousePosition.x), Math.abs(mousePosition.y)) * 0.0006})` 
+                  : "rotate(5deg)",
+                filter: (!isMobile && !prefersReducedMotion) 
+                  ? `blur(${Math.abs(mousePosition.x) < 120 && Math.abs(mousePosition.y) < 120 ? 1 : 0}px)` 
+                  : "contrast(1.05) saturate(1.05)",
+                opacity: (!isMobile && !prefersReducedMotion) 
+                  ? (Math.abs(mousePosition.x) < 100 && Math.abs(mousePosition.y) < 100 ? 0.8 : 0.95) 
+                  : 0.8
               }}
             />
           </motion.div>
 
-          {/* Hide this image on mobile for cleaner layout */}
+          {/* BOTTOM LEFT image */}
           <motion.div
             className={cn(
               "absolute",
-              isMobile ? "hidden" : "bottom-[8%] right-[10%]", // Hidden on mobile for better composition
+              isMobile 
+                ? "bottom-[5%] left-[5%] z-10" 
+                : "bottom-[18%] left-[15%]",
               "transform-style-3d perspective-[800px]"
             )}
             initial={{ opacity: 0 }}
             animate={{ opacity: isInView ? 1 : 0 }}
-            transition={{ delay: 1.1 }}
+            transition={{ delay: 0.7 }}
           >
             <motion.img
-              src={PARALLAX_IMAGES[4]}
+              src={PARALLAX_IMAGES[1]}
               alt="Property content"
               className={cn(
                 "object-cover rounded-xl",
-                "shadow-[0_15px_45px_rgba(138,92,249,0.18)]",
-                isMobile ? "w-56 h-56 opacity-100" : "w-72 h-72" // Larger on mobile, full opacity
+                "shadow-[0_10px_25px_rgba(138,92,249,0.3)_,_inset_0_0_0_1px_rgba(255,255,255,0.6)]",
+                isMobile 
+                  ? "w-[120px] h-[90px] opacity-90 rotate-[-6deg]" 
+                  : "w-60 h-60"
               )}
               style={{ 
-                transform: (!isMobile && !prefersReducedMotion) ? 
-                  `translate3d(${-mousePosition.x * 1}px, ${-mousePosition.y * 1}px, 0) 
-                   rotate(12deg) rotateX(${mousePosition.y * 0.01}deg) rotateY(${-mousePosition.x * 0.01}deg)
-                   scale(${1 + Math.min(Math.abs(mousePosition.x), Math.abs(mousePosition.y)) * 0.0004})` : 
-                  "rotate(12deg)",
-                filter: (!isMobile && !prefersReducedMotion) ? 
-                  `blur(${Math.abs(mousePosition.x) < 120 && Math.abs(mousePosition.y) < 120 ? 1 : 0}px)` : 
-                  "contrast(1.05) saturate(1.05)",
-                opacity: (!isMobile && !prefersReducedMotion) ? 
-                  (Math.abs(mousePosition.x) < 100 && Math.abs(mousePosition.y) < 100 ? 0.8 : 0.95) : 
-                  1 // Full opacity on mobile and reduced motion
+                transform: (!isMobile && !prefersReducedMotion) 
+                  ? `translate3d(${-mousePosition.x * 4}px, ${-mousePosition.y * 4}px, 0) 
+                     rotate(-4deg) rotateX(${mousePosition.y * 0.04}deg) rotateY(${-mousePosition.x * 0.04}deg)
+                     scale(${1 + Math.min(Math.abs(mousePosition.x), Math.abs(mousePosition.y)) * 0.001})` 
+                  : "rotate(-6deg)",
+                filter: (!isMobile && !prefersReducedMotion) 
+                  ? `blur(${Math.abs(mousePosition.x) < 150 && Math.abs(mousePosition.y) < 150 ? 1 : 0}px)` 
+                  : "contrast(1.05) saturate(1.05)",
+                opacity: (!isMobile && !prefersReducedMotion) 
+                  ? (Math.abs(mousePosition.x) < 120 && Math.abs(mousePosition.y) < 120 ? 0.8 : 0.95) 
+                  : 0.9
               }}
             />
           </motion.div>
 
-          {/* NEW: Top right image */}
+          {/* BOTTOM RIGHT image */}
           <motion.div
             className={cn(
               "absolute",
-              isMobile ? "top-[-5%] right-[15%] z-10" : "top-[12%] right-[30%]", 
+              isMobile 
+                ? "bottom-[5%] right-[5%] z-10" 
+                : "top-[8%] right-[15%]",
               "transform-style-3d perspective-[800px]"
             )}
             initial={{ opacity: 0 }}
             animate={{ opacity: isInView ? 1 : 0 }}
-            transition={{ delay: 0.4 }}
+            transition={{ delay: 0.9 }}
           >
             <motion.img
-              src={PARALLAX_IMAGES[6]}
+              src={PARALLAX_IMAGES[3]}
               alt="Property content"
               className={cn(
                 "object-cover rounded-xl",
-                "shadow-[0_10px_25px_rgba(138,92,249,0.3)_,_inset_0_0_0_1px_rgba(255,255,255,0.6)]", 
-                isMobile ? "w-[130px] h-[100px] opacity-90 rotate-[5deg]" : "w-40 h-32" 
+                "shadow-[0_10px_25px_rgba(65,105,225,0.3)_,_inset_0_0_0_1px_rgba(255,255,255,0.6)]",
+                isMobile 
+                  ? "w-[120px] h-[90px] opacity-90 rotate-[6deg]" 
+                  : "w-60 h-52"
               )}
               style={{ 
-                transform: (!isMobile && !prefersReducedMotion) ? 
-                  `translate3d(${-mousePosition.x * 1.8}px, ${-mousePosition.y * 1.8}px, 0) 
-                   rotate(5deg) rotateX(${mousePosition.y * 0.03}deg) rotateY(${-mousePosition.x * 0.03}deg)
-                   scale(${1 + Math.min(Math.abs(mousePosition.x), Math.abs(mousePosition.y)) * 0.0007})` : 
-                  "rotate(5deg)",
-                filter: (!isMobile && !prefersReducedMotion) ? 
-                  `blur(${Math.abs(mousePosition.x) < 120 && Math.abs(mousePosition.y) < 120 ? 1 : 0}px)` : 
-                  "contrast(1.05) saturate(1.05)",
-                opacity: (!isMobile && !prefersReducedMotion) ? 
-                  (Math.abs(mousePosition.x) < 100 && Math.abs(mousePosition.y) < 100 ? 0.8 : 0.95) : 
-                  0.9
+                transform: (!isMobile && !prefersReducedMotion) 
+                  ? `translate3d(${-mousePosition.x * 2}px, ${-mousePosition.y * 2}px, 0) 
+                     rotate(6deg) rotateX(${mousePosition.y * 0.02}deg) rotateY(${-mousePosition.x * 0.02}deg)
+                     scale(${1 + Math.min(Math.abs(mousePosition.x), Math.abs(mousePosition.y)) * 0.0006})` 
+                  : "rotate(6deg)",
+                filter: (!isMobile && !prefersReducedMotion) 
+                  ? `blur(${Math.abs(mousePosition.x) < 120 && Math.abs(mousePosition.y) < 120 ? 1 : 0}px)` 
+                  : "contrast(1.05) saturate(1.05)",
+                opacity: (!isMobile && !prefersReducedMotion) 
+                  ? (Math.abs(mousePosition.x) < 100 && Math.abs(mousePosition.y) < 100 ? 0.8 : 0.95) 
+                  : 0.9
               }}
             />
           </motion.div>
 
-          {/* NEW: Bottom image */}
+          {/* BOTTOM CENTER image */}
           <motion.div
             className={cn(
               "absolute",
-              isMobile ? "bottom-[15%] left-[50%] -translate-x-1/2 z-10" : "bottom-[15%] left-[50%] -translate-x-1/2", 
+              isMobile 
+                ? "bottom-[12%] left-1/2 -translate-x-1/2 z-10" 
+                : "bottom-[15%] left-[50%] -translate-x-1/2",
               "transform-style-3d perspective-[800px]"
             )}
             initial={{ opacity: 0 }}
@@ -458,29 +413,67 @@ export function ParallaxHero() {
               alt="Property content"
               className={cn(
                 "object-cover rounded-xl",
-                "shadow-[0_10px_25px_rgba(102,51,255,0.3)_,_inset_0_0_0_1px_rgba(255,255,255,0.6)]", 
-                isMobile ? "w-[140px] h-[100px] opacity-90 rotate-[-3deg]" : "w-48 h-36" 
+                "shadow-[0_10px_25px_rgba(102,51,255,0.3)_,_inset_0_0_0_1px_rgba(255,255,255,0.6)]",
+                isMobile 
+                  ? "w-[120px] h-[90px] opacity-90 rotate-[0deg]" 
+                  : "w-48 h-36"
               )}
               style={{ 
-                transform: (!isMobile && !prefersReducedMotion) ? 
-                  `translate3d(${-mousePosition.x * 1.5}px, ${-mousePosition.y * 1.5}px, 0) 
-                   rotate(-3deg) rotateX(${mousePosition.y * 0.02}deg) rotateY(${-mousePosition.x * 0.02}deg)
-                   scale(${1 + Math.min(Math.abs(mousePosition.x), Math.abs(mousePosition.y)) * 0.0006})` : 
-                  "rotate(-3deg)",
-                filter: (!isMobile && !prefersReducedMotion) ? 
-                  `blur(${Math.abs(mousePosition.x) < 120 && Math.abs(mousePosition.y) < 120 ? 1 : 0}px)` : 
-                  "contrast(1.05) saturate(1.05)",
-                opacity: (!isMobile && !prefersReducedMotion) ? 
-                  (Math.abs(mousePosition.x) < 100 && Math.abs(mousePosition.y) < 100 ? 0.8 : 0.95) : 
-                  0.9
+                transform: (!isMobile && !prefersReducedMotion) 
+                  ? `translate3d(${-mousePosition.x * 1.5}px, ${-mousePosition.y * 1.5}px, 0) 
+                     rotate(-3deg) rotateX(${mousePosition.y * 0.02}deg) rotateY(${-mousePosition.x * 0.02}deg)
+                     scale(${1 + Math.min(Math.abs(mousePosition.x), Math.abs(mousePosition.y)) * 0.0006})` 
+                  : "rotate(0deg)",
+                filter: (!isMobile && !prefersReducedMotion) 
+                  ? `blur(${Math.abs(mousePosition.x) < 120 && Math.abs(mousePosition.y) < 120 ? 1 : 0}px)` 
+                  : "contrast(1.05) saturate(1.05)",
+                opacity: (!isMobile && !prefersReducedMotion) 
+                  ? (Math.abs(mousePosition.x) < 100 && Math.abs(mousePosition.y) < 100 ? 0.8 : 0.95) 
+                  : 0.9
               }}
             />
           </motion.div>
+
+          {/* Desktop-only images that would crowd mobile view */}
+          {!isMobile && (
+            <>
+              <motion.div
+                className="absolute bottom-[8%] right-[10%] transform-style-3d perspective-[800px]"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: isInView ? 1 : 0 }}
+                transition={{ delay: 1.1 }}
+              >
+                <motion.img
+                  src={PARALLAX_IMAGES[4]}
+                  alt="Property content"
+                  className="object-cover rounded-xl shadow-[0_15px_45px_rgba(138,92,249,0.18)] w-72 h-72"
+                  style={{ 
+                    transform: !prefersReducedMotion
+                      ? `translate3d(${-mousePosition.x * 1}px, ${-mousePosition.y * 1}px, 0) 
+                         rotate(12deg) rotateX(${mousePosition.y * 0.01}deg) rotateY(${-mousePosition.x * 0.01}deg)
+                         scale(${1 + Math.min(Math.abs(mousePosition.x), Math.abs(mousePosition.y)) * 0.0004})`
+                      : "rotate(12deg)",
+                    filter: !prefersReducedMotion
+                      ? `blur(${Math.abs(mousePosition.x) < 120 && Math.abs(mousePosition.y) < 120 ? 1 : 0}px)`
+                      : "contrast(1.05) saturate(1.05)",
+                    opacity: !prefersReducedMotion
+                      ? (Math.abs(mousePosition.x) < 100 && Math.abs(mousePosition.y) < 100 ? 0.8 : 0.95)
+                      : 1
+                  }}
+                />
+              </motion.div>
+            </>
+          )}
         </motion.div>
       </div>
 
-      {/* Clean minimal background overlay */}
-      <div className="absolute inset-0 z-5 bg-gradient-to-t from-white/20 to-transparent pointer-events-none"></div>
+      {/* Mobile-optimized background overlay for better legibility */}
+      <div className={cn(
+        "absolute inset-0 z-5 pointer-events-none",
+        isMobile 
+          ? "bg-gradient-to-t from-white/30 via-white/10 to-transparent" 
+          : "bg-gradient-to-t from-white/20 to-transparent"
+      )}></div>
       
       {/* Content overlay */}
       <div className="z-10 flex flex-col items-center justify-center max-w-4xl mx-auto text-center relative px-4">
@@ -489,7 +482,7 @@ export function ParallaxHero() {
           className={cn(
             "relative overflow-hidden transform-gpu",
             isMobile ? 
-              "backdrop-blur-[5px] rounded-[1.3rem] p-4 pt-4 pb-5 border border-white/60 shadow-[0_15px_35px_rgba(102,51,255,0.2),_0_3px_5px_rgba(102,51,255,0.1)] bg-gradient-to-br from-white/80 to-purple-50/60" : 
+              "backdrop-blur-[8px] rounded-[1.3rem] p-4 pt-4 pb-5 border border-white/80 shadow-[0_15px_35px_rgba(102,51,255,0.25),_0_3px_5px_rgba(102,51,255,0.15)] bg-gradient-to-br from-white/90 to-purple-50/70" : 
               "backdrop-blur-[2px] shadow-[0_15px_35px_rgba(102,51,255,0.18),_0_3px_5px_rgba(102,51,255,0.08)] border border-white/30 rounded-2xl p-6 pt-7 pb-9 sm:p-10"
           )}
           initial={{ opacity: 0, y: 10 }}
@@ -503,7 +496,7 @@ export function ParallaxHero() {
           <div className={cn(
             "absolute inset-0 z-0",
             isMobile ? 
-              "bg-gradient-to-br from-white/80 to-purple-50/60" : 
+              "bg-gradient-to-br from-white/90 to-purple-50/70" : 
               "bg-gradient-to-br from-white/70 via-white/60 to-[#f0e6ff]/40"
           )}></div>
           
@@ -553,7 +546,7 @@ export function ParallaxHero() {
                 "relative z-10 inline-block",
                 "bg-clip-text text-transparent bg-gradient-to-r from-[#6633FF] to-[#8A5CF9]",
                 isMobile ? 
-                  "block mb-[0.25rem] text-[1.2rem] drop-shadow-[0_2px_2px_rgba(102,51,255,0.25)]" : 
+                  "block mb-[0.25rem] text-[1rem] drop-shadow-[0_2px_2px_rgba(102,51,255,0.25)]" : 
                   "block mb-1 sm:mb-4 text-3xl sm:text-4xl lg:text-5xl drop-shadow-[0_2px_2px_rgba(102,51,255,0.2)]",
                 "font-jakarta"
               )}
@@ -582,7 +575,7 @@ export function ParallaxHero() {
                   "font-bold font-jakarta tracking-tight",
                   "bg-clip-text text-transparent bg-gradient-to-r from-[#6633FF] to-[#8A5CF9]",
                   "drop-shadow-[0_2px_1px_rgba(102,51,255,0.3)]",
-                  isMobile ? "border-b-[1px] border-[#6633FF]/20 pb-1" : "border-b-2 border-[#6633FF]/10 pb-1"
+                  isMobile ? "border-b-[1px] border-[#6633FF]/30 pb-1" : "border-b-2 border-[#6633FF]/10 pb-1"
                 )}
                 transition={{ 
                   type: "spring",
