@@ -6,7 +6,6 @@ import { WaitlistCTA } from "../ui/waitlist-cta";
 import { WaitlistCreatorCTA } from "../ui/waitlist-creator-cta";
 import { TextRotate } from "../ui/text-rotate";
 import { SocialProof } from "../ui/waitlist/social-proof";
-import { FloatingBackground } from "../ui/floating-background";
 
 const TITLES = ["CONVERTS", "CAPTIVATES", "CLOSES"];
 
@@ -68,9 +67,7 @@ export function Hero() {
         "relative z-10", 
         "gap-3 sm:gap-6", 
         "touch-manipulation",
-        isMobile 
-          ? "bg-white" 
-          : "bg-gradient-to-b from-purple-50/80 via-indigo-50/60 to-blue-50/30",
+        "bg-transparent",
         isInView ? "animate-fade-in" : "opacity-0",
       )} 
     >
@@ -81,8 +78,14 @@ export function Hero() {
         </>
       )}
       
-      {/* Floating background for mobile */}
-      {isMobile && <FloatingBackground className="absolute inset-0 z-0" />}
+      {/* Rich background gradient for mobile */}
+      {isMobile && (
+        <>
+          <div className="absolute inset-0 bg-gradient-to-b from-purple-200/95 via-indigo-100/90 to-blue-50/80 z-0"></div>
+          <div className="absolute top-0 right-0 w-32 h-32 bg-purple-300/20 rounded-full blur-xl"></div>
+          <div className="absolute bottom-20 left-0 w-32 h-32 bg-indigo-300/30 rounded-full blur-xl"></div>
+        </>
+      )}
 
       <div 
         className={cn(
