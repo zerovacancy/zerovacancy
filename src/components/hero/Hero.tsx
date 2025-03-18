@@ -209,7 +209,7 @@ export function Hero() {
                   <h2 className="text-gray-800 font-bold text-[1.3rem] mt-0">Elite content that works</h2>
                   <div className="h-[1px] w-10 bg-gradient-to-r from-transparent via-purple-400/30 to-transparent mx-auto mt-1"></div>
                 </div>
-                <p className="text-gray-600 font-normal text-[16px] max-w-[280px] leading-relaxed mb-1.5 mt-0.5">
+                <p className="text-gray-600 font-normal text-[16px] max-w-[280px] leading-relaxed mb-0 mt-0.5">
                   Transforms properties, delivers professional photos, showcases your property's full potential
                 </p>
               </div>
@@ -223,7 +223,7 @@ export function Hero() {
       <div 
         className={cn(
           "w-full", 
-          isMobile ? "mt-0" : "mt-5 sm:mt-6",
+          isMobile ? "mt-[-8px]" : "mt-5 sm:mt-6",
           "px-4 sm:px-4",
           isInView ? "animate-fade-in delay-200" : "opacity-0",
           isMobile && "relative"
