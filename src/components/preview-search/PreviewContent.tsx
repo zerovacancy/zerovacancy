@@ -32,7 +32,7 @@ export const PreviewContent = () => {
   const creatorData = [
     {
       name: "Emily Johnson",
-      services: ["TikTok", "POV Tour", "Content"],
+      services: ["TikTok", "POV Tour", "Organic"], // Changed "Content" to "Organic" to fix mobile layout
       price: 150,
       rating: 4.9,
       reviews: 127,
@@ -43,7 +43,7 @@ export const PreviewContent = () => {
     }, 
     {
       name: "Jane Cooper",
-      services: ["Interior", "Design", "Staging"],  // Ensured 3 services for Jane
+      services: ["Interior", "Design", "Staging"],
       price: 200,
       rating: 4.8,
       reviews: 98,
@@ -54,7 +54,7 @@ export const PreviewContent = () => {
     }, 
     {
       name: "Michael Brown",
-      services: ["3D Tours", "Floor Plans", "Interactive"],  // Ensured 3 services for Michael
+      services: ["3D Tours", "Floor Plans", "Interactive"],
       price: 175,
       rating: 4.7,
       reviews: 82,
