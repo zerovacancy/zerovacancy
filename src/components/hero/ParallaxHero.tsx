@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useRef, useEffect, useState } from "react";
@@ -346,12 +347,10 @@ export function ParallaxHero() {
         {/* Text content container with premium card-like treatment */}
         <motion.div 
           className={cn(
-            "relative overflow-hidden backdrop-blur-[2px] transform-gpu",
-            "shadow-[0_15px_35px_rgba(102,51,255,0.18),_0_3px_5px_rgba(102,51,255,0.08)]", // Enhanced shadow
-            "border border-white/30", // More visible border for better separation
+            "relative overflow-hidden transform-gpu",
             isMobile ? 
-              "rounded-[1.3rem] p-5 pt-5 pb-6" : // Increased corner radius on mobile
-              "rounded-2xl p-6 pt-7 pb-9 sm:p-10"
+              "backdrop-blur-[5px] rounded-[1.3rem] p-4 pt-4 pb-5 border border-white/60 shadow-[0_15px_35px_rgba(102,51,255,0.2),_0_3px_5px_rgba(102,51,255,0.1)] bg-gradient-to-br from-white/80 to-purple-50/60" : 
+              "backdrop-blur-[2px] shadow-[0_15px_35px_rgba(102,51,255,0.18),_0_3px_5px_rgba(102,51,255,0.08)] border border-white/30 rounded-2xl p-6 pt-7 pb-9 sm:p-10"
           )}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : 10 }}
@@ -364,7 +363,7 @@ export function ParallaxHero() {
           <div className={cn(
             "absolute inset-0 z-0",
             isMobile ? 
-              "bg-white bg-opacity-90" : 
+              "bg-gradient-to-br from-white/80 to-purple-50/60" : 
               "bg-gradient-to-br from-white/70 via-white/60 to-[#f0e6ff]/40"
           )}></div>
           
@@ -402,8 +401,8 @@ export function ParallaxHero() {
           <motion.h1 
             className={cn(
               "tracking-tight leading-tight font-bold font-jakarta relative z-10",
-              isMobile ? "text-2xl" : "text-4xl sm:text-5xl lg:text-6xl",
-              isMobile ? "w-full mb-3" : "w-full mb-5 sm:mb-7"
+              isMobile ? "text-xl" : "text-4xl sm:text-5xl lg:text-6xl",
+              isMobile ? "w-full mb-2" : "w-full mb-5 sm:mb-7"
             )}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : 20 }}
@@ -414,7 +413,7 @@ export function ParallaxHero() {
                 "relative z-10 inline-block",
                 "bg-clip-text text-transparent bg-gradient-to-r from-[#6633FF] to-[#8A5CF9]",
                 isMobile ? 
-                  "block mb-[0.35rem] text-[1.4rem] drop-shadow-[0_2px_2px_rgba(102,51,255,0.25)]" : 
+                  "block mb-[0.25rem] text-[1.2rem] drop-shadow-[0_2px_2px_rgba(102,51,255,0.25)]" : 
                   "block mb-1 sm:mb-4 text-3xl sm:text-4xl lg:text-5xl drop-shadow-[0_2px_2px_rgba(102,51,255,0.2)]",
                 "font-jakarta"
               )}
@@ -425,7 +424,7 @@ export function ParallaxHero() {
             <div 
               className={cn(
                 "relative flex w-full justify-center",
-                isMobile ? "h-[4.5em]" : "h-[2.5em]",
+                isMobile ? "h-[3.5em]" : "h-[2.5em]",
                 "overflow-visible"
               )}
             >
@@ -439,11 +438,11 @@ export function ParallaxHero() {
                 staggerDuration={0.03}
                 rotationInterval={3500}
                 elementLevelClassName={cn(
-                  isMobile ? "text-[2.8rem] leading-tight pb-1" : "text-5xl sm:text-6xl lg:text-7xl",
+                  isMobile ? "text-[2.2rem] leading-tight pb-1" : "text-5xl sm:text-6xl lg:text-7xl",
                   "font-bold font-jakarta tracking-tight",
                   "bg-clip-text text-transparent bg-gradient-to-r from-[#6633FF] to-[#8A5CF9]",
                   "drop-shadow-[0_2px_1px_rgba(102,51,255,0.3)]",
-                  isMobile ? "border-b-[1px] border-[#6633FF]/10 pb-1" : "border-b-2 border-[#6633FF]/10 pb-1"
+                  isMobile ? "border-b-[1px] border-[#6633FF]/20 pb-1" : "border-b-2 border-[#6633FF]/10 pb-1"
                 )}
                 transition={{ 
                   type: "spring",
@@ -467,14 +466,14 @@ export function ParallaxHero() {
               "text-[#3D3A5A] font-inter relative z-10",
               "max-w-[95%] sm:max-w-[600px] mx-auto",
               "font-medium",
-              isMobile ? "text-[0.95rem] leading-[1.65] mb-6" : "text-base sm:text-lg mb-10"
+              isMobile ? "text-[0.8rem] leading-[1.5] mb-3" : "text-base sm:text-lg mb-10"
             )}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : 20 }}
             transition={{ duration: 0.4, delay: 0.4 }}
           >
             {isMobile ? (
-              "Connect with elite content creators who transform your spaces into compelling visual stories."
+              "Connect with top creators who transform your spaces into compelling visual stories."
             ) : (
               "Connect with elite content creators who transform your spaces into compelling visual stories. Our curated network of real estate specialists delivers photography, video, and 3D content that doesn't just show your property—it showcases its potential."
             )}
@@ -537,8 +536,8 @@ export function ParallaxHero() {
                   <div className="flex flex-col mb-4">
                     {/* Main waitlist CTA with increased touch target */}
                     <WaitlistCTA 
-                      className="mb-0 [&_button]:py-[1.1rem] [&_button]:h-[48px] [&_button]:transition-all [&_button]:duration-300 [&_button]:active:scale-[1.02] [&_button]:active:brightness-110" 
-                      buttonText="RESERVE EARLY ACCESS" 
+                      className="mb-0 [&_button]:py-[0.6rem] [&_button]:h-[38px] [&_button]:transition-all [&_button]:duration-300 [&_button]:active:scale-[1.02] [&_button]:active:brightness-110 [&_button]:shadow-md [&_button]:shadow-purple-500/20 [&_button]:text-[0.7rem] [&_button]:font-bold [&_button]:tracking-wider [&_input]:bg-white/90" 
+                      buttonText="RESERVE ACCESS" 
                       showSocialProof={false}
                     />
                     
@@ -547,7 +546,7 @@ export function ParallaxHero() {
                       {/* Subtle connecting indicator */}
                       <div className="absolute -top-1 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-b-[6px] border-b-[#F5F0FF] z-10"></div>
                       <SocialProof 
-                        className="mt-0 transform-gpu animate-fade-in" 
+                        className="mt-0 transform-gpu animate-fade-in scale-75 origin-top" 
                         style={{animationDuration: "0.5s", animationDelay: "0.3s"}} 
                       />
                     </div>
@@ -557,7 +556,7 @@ export function ParallaxHero() {
                   <WaitlistCreatorCTA 
                     buttonText="JOIN AS CREATOR" 
                     showSocialProof={false}
-                    className="[&_button]:py-[1.1rem] [&_button]:h-[48px] [&_button]:transition-all [&_button]:duration-300 [&_button]:active:scale-[1.02] [&_button]:active:brightness-105 [&_button]:border-purple-700/70 [&_button]:text-purple-700"
+                    className="[&_button]:py-[0.6rem] [&_button]:h-[38px] [&_button]:transition-all [&_button]:duration-300 [&_button]:active:scale-[1.02] [&_button]:active:brightness-105 [&_button]:bg-transparent [&_button]:shadow-sm [&_button]:shadow-purple-500/10 [&_button]:text-[0.7rem] [&_button]:font-bold [&_button]:tracking-wider [&_button]:border-purple-700/70 [&_button]:text-purple-700"
                   />
                 </div>
               </div>
