@@ -15,81 +15,33 @@ export function SocialProof({ className }: SocialProofProps) {
     <div className={cn("flex items-center justify-center", className)}> 
       {/* Enhanced social proof pill with refined design */}
       <div className={cn(
-        "flex flex-col items-center", // Column layout for vertical centering
-        "bg-gradient-to-r from-[#F5F0FF]/95 to-[#F0F5FF]/95", // Increased opacity for better readability
-        "rounded-[18px]", // Match other rounded elements
-        "shadow-[0_2px_8px_rgba(124,58,237,0.15)]", // Slightly enhanced shadow for badge-like appearance
-        "border border-[#8A64FF]/30", // More visible border for distinction
-        isMobile && "shadow-[inset_0_0_6px_rgba(124,58,237,0.08)]", // Subtle inner glow on mobile
+        "flex items-center", // Horizontal layout
+        "bg-gradient-to-r from-purple-50 via-purple-100/80 to-purple-50", // Subtle gradient background
+        "rounded-xl", // Slightly more pronounced corners
+        "border border-purple-300/15", // Brand purple border with low opacity
         "animate-fade-in",
-        isMobile ? "w-auto max-w-[220px]" : "w-auto max-w-[260px]", // Narrower on mobile to differentiate from buttons
+        "w-auto", // Auto width, not full width
         "mx-auto", // Center alignment
-        "transition-all duration-300",
-        "hover:shadow-[0_2px_6px_rgba(124,58,237,0.15)]", // Subtle hover effect
-        isMobile ? "px-3 py-1.5" : "px-4 py-2.5" // Reduced height on mobile
+        "shadow-[0_2px_6px_rgba(124,58,237,0.08)]", // Subtle purple-tinted shadow
+        "px-3.5 py-2", // Slightly larger padding for better visibility
+        "backdrop-blur-sm", // Subtle blur effect
+        "relative" // For positioning the accent element
       )}>
-        {/* Top row with avatars and counter - perfectly centered */}
-        <div className="flex flex-col items-center w-full">
-          {/* Row 1: Avatars and number, perfectly centered */}
-          <div className="flex items-center justify-center mb-1">
-            {/* Enhanced avatars */}
-            <div 
-              className="flex -space-x-1.5 items-center mr-2 animate-pulse"
-              style={isMobile ? {animationDuration: "3s"} : {}}
-            >
-              <div className={cn(
-                "rounded-full bg-gradient-to-r from-purple-700 to-blue-600",
-                "flex items-center justify-center text-[7px] text-white font-bold", // Larger text
-                "border-[2px] border-white", // Thicker white border for better contrast
-                "shadow-[0_1px_4px_rgba(138,43,226,0.4)]", // Enhanced shadow for better pop
-                isMobile ? "w-[18px] h-[18px]" : "w-5 h-5" // Larger on mobile
-              )}>JT</div>
-              <div className={cn(
-                "rounded-full bg-gradient-to-r from-purple-700 to-blue-600",
-                "flex items-center justify-center text-[7px] text-white font-bold", // Larger text
-                "border-[2px] border-white", // Thicker white border for better contrast
-                "shadow-[0_1px_4px_rgba(138,43,226,0.4)]", // Enhanced shadow for better pop
-                isMobile ? "w-[18px] h-[18px]" : "w-5 h-5" // Larger on mobile
-              )}>MI</div>
-              <div className={cn(
-                "rounded-full bg-gradient-to-r from-purple-700 to-blue-600",
-                "flex items-center justify-center text-[7px] text-white font-bold", // Larger text
-                "border-[2px] border-white", // Thicker white border for better contrast
-                "shadow-[0_1px_4px_rgba(138,43,226,0.4)]", // Enhanced shadow for better pop
-                isMobile ? "w-[18px] h-[18px]" : "w-5 h-5" // Larger on mobile
-              )}>AS</div>
-            </div>
-            
-            {/* Counter with enhanced gradient and scale-pulse animation */}
-            <span 
-              className={cn(
-                "font-jakarta font-extrabold tracking-tight",
-                "bg-clip-text text-transparent bg-gradient-to-r from-purple-800 via-indigo-600 to-blue-600",
-                "drop-shadow-[0_0px_2px_rgba(124,58,237,0.25)]", // Enhanced text shadow for better contrast
-                "animate-counter-pulse", // Special animation just for the counter
-                "inline-block", // Needed for transform to work properly
-                isMobile ? "text-[19px]" : "text-[15px]", // Even larger on mobile for emphasis
-                isMobile && "animate-pulse-subtle" // Add subtle pulse animation for mobile
-              )}
-              style={isMobile ? {
-                animationDuration: "4s",
-                // Add custom animation for pulsing effect
-                animation: "pulse 3s infinite ease-in-out"
-              } : {}}
-            >
-              2,165+
-            </span>
-          </div>
-          
-          {/* Row 2: Descriptive text with improved contrast */}
-          <span className={cn(
-            "font-inter whitespace-nowrap text-center",
-            "bg-clip-text text-transparent bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600", // Match counter color
-            "tracking-[0.01em] leading-tight", 
-            "uppercase",
-            isMobile ? "text-[8px]" : "text-[9px]" // Smaller on mobile for better contrast with number
-          )}>
-            {isMobile ? "Members Joined" : "Property Owners & Creators Joined"}
+        
+        {/* Avatar initials */}
+        <div className="flex -space-x-1 items-center mr-2.5">
+          <div className="w-5 h-5 rounded-full bg-gradient-to-r from-purple-600 to-purple-700 flex items-center justify-center text-[8px] text-white font-bold border border-white">JT</div>
+          <div className="w-5 h-5 rounded-full bg-gradient-to-r from-purple-600 to-purple-700 flex items-center justify-center text-[8px] text-white font-bold border border-white">MI</div>
+          <div className="w-5 h-5 rounded-full bg-gradient-to-r from-purple-600 to-purple-700 flex items-center justify-center text-[8px] text-white font-bold border border-white">AS</div>
+        </div>
+        
+        {/* Counter and text */}
+        <div className="flex items-center">
+          <span className="font-jakarta font-bold text-purple-700 text-[15px] mr-1.5">
+            2,165+
+          </span>
+          <span className="font-inter text-xs text-gray-700 whitespace-nowrap font-medium">
+            members joined
           </span>
         </div>
       </div>

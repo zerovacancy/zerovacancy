@@ -55,6 +55,10 @@
     animation: bounce 2s ease-in-out infinite;
   }
   
+  .animate-subtle-pulse {
+    animation: subtlePulse 3s ease-in-out infinite;
+  }
+  
   .animate-pulse-subtle {
     animation: pulse-subtle 2s ease-in-out infinite;
   }
@@ -79,7 +83,7 @@
   }
 
   .animate-shimmer-slide {
-    animation: shimmer-slide 8s infinite ease-in-out;
+    animation: shimmer-slide 20s infinite ease-in-out;
     background-size: 200% 100%;
   }
   
