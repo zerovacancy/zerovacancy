@@ -69,13 +69,15 @@ export const CreatorTags: React.FC<CreatorTagsProps> = ({ tags }) => {
           <button
             key={index}
             className={cn(
-              isMobile ? "text-xs px-2.5 py-1.5" : "text-[10px] sm:text-xs px-2.5 py-1.5", // Smaller text and padding on mobile
+              isMobile ? "text-xs px-2.5 py-1.5 max-w-[120px]" : "text-[10px] sm:text-xs px-2.5 py-1.5", // Added max-width to prevent expanding
               "rounded-full",
               "transition-all duration-200 whitespace-nowrap",
               "hover:scale-105 active:scale-95 cursor-pointer shadow-sm hover:shadow-md",
               "flex items-center gap-1",
               "touch-manipulation", // Better touch behavior
-              getTagStyle(tag)
+              getTagStyle(tag),
+              // Fix for "Content" tag specifically on mobile
+              isMobile && tag === "Content" && "w-auto flex-shrink-0"
             )}
             role="listitem"
           >
