@@ -120,7 +120,7 @@ export function ParallaxHero() {
         "flex items-center justify-center",
         "py-12 px-4 sm:px-6",
         isMobile ? 
-          "bg-gradient-to-br from-[#f5eeff] via-[#f8f5ff] to-[#eef5ff]" : 
+          "bg-purple-100" : 
           "bg-gradient-to-b from-[#f0e6ff] via-[#f8f5ff] to-[#e6f0ff]",
         "shadow-[inset_0_5px_15px_rgba(138,92,249,0.07),inset_0_-5px_15px_rgba(102,153,255,0.07)]",
         isInView ? "animate-fade-in" : "opacity-0"
