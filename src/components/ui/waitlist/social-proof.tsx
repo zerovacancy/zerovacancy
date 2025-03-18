@@ -77,7 +77,7 @@ export function SocialProof({ className }: SocialProofProps) {
                 animation: "pulse 3s infinite ease-in-out"
               } : {}}
             >
-              2,100+
+              2,165+
             </span>
           </div>
           
