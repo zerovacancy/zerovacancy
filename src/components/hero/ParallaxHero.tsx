@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useRef, useEffect, useState } from "react";
@@ -35,6 +36,7 @@ export function ParallaxHero() {
   const [isInView, setIsInView] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
   
   // Check for reduced motion preference
   useEffect(() => {
@@ -61,6 +63,20 @@ export function ParallaxHero() {
       }
     };
   }, []);
+
+  // Handle scroll effect for mobile parallax
+  useEffect(() => {
+    if (!isMobile || prefersReducedMotion) return;
+    
+    const handleScroll = () => {
+      setScrollY(window.scrollY * 0.05); // Subtle multiplier for parallax effect
+    };
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [isMobile, prefersReducedMotion]);
 
   // Handle parallax effect
   useEffect(() => {
@@ -116,12 +132,12 @@ export function ParallaxHero() {
       <section 
         ref={sectionRef}
         className={cn(
-        "w-full min-h-[90vh] relative overflow-hidden",
+        "w-full relative overflow-hidden",
         "flex items-center justify-center",
         "py-12 px-4 sm:px-6",
         isMobile ? 
-          "bg-purple-100" : 
-          "bg-gradient-to-b from-[#f0e6ff] via-[#f8f5ff] to-[#e6f0ff]",
+          "min-h-[70vh] bg-gradient-to-b from-purple-100 to-white/90" : 
+          "min-h-[90vh] bg-gradient-to-b from-[#f0e6ff] via-[#f8f5ff] to-[#e6f0ff]",
         "shadow-[inset_0_5px_15px_rgba(138,92,249,0.07),inset_0_-5px_15px_rgba(102,153,255,0.07)]",
         isInView ? "animate-fade-in" : "opacity-0"
       )}
@@ -129,7 +145,7 @@ export function ParallaxHero() {
       {/* Subtle dot grid pattern */}
       <div className={cn(
         "absolute inset-0 z-0 mix-blend-overlay",
-        isMobile ? "opacity-[0.03]" : "opacity-[0.04]"
+        isMobile ? "opacity-[0.05]" : "opacity-[0.04]"
       )} 
            style={{ 
              backgroundImage: `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%236633FF' fill-opacity='0.3'%3E%3Ccircle cx='1' cy='1' r='1'/%3E%3C/g%3E%3C/svg%3E")`,
@@ -147,7 +163,7 @@ export function ParallaxHero() {
       <div className="absolute bottom-[15%] right-[10%] w-[25vw] h-[25vh] rounded-full bg-[#4169E1]/[0.05] blur-[60px] z-0"></div>
       <div className="absolute top-[40%] right-[8%] w-[15vw] h-[20vh] rounded-full bg-[#8A5CF9]/[0.06] blur-[70px] z-0"></div>
 
-      {/* Parallax floating images - strategically positioned */}
+      {/* Parallax floating images - optimized layout */}
       <div 
         ref={containerRef}
         className="absolute inset-0 w-full h-full overflow-hidden z-1 pointer-events-none"
@@ -159,13 +175,14 @@ export function ParallaxHero() {
             <label htmlFor="reduced-motion" className="text-[9px] uppercase font-medium">Reduce motion</label>
           </div>
         )}
+        
         {/* Image group with dynamic blur effect based on proximity */}
         <motion.div className="absolute inset-0 overflow-hidden">
-          {/* Top center image - strategically positioned */}
+          {/* Top left image - new position for mobile */}
           <motion.div 
             className={cn(
               "absolute",
-              isMobile ? "top-[-5%] left-[50%] -translate-x-1/2 z-10" : "top-[25%] left-[10%]", // Centered at top on mobile
+              isMobile ? "top-[3%] left-[12%] z-20" : "top-[25%] left-[10%]",
               "transform-style-3d perspective-[800px]"
             )}
             initial={{ opacity: 0 }}
@@ -177,56 +194,121 @@ export function ParallaxHero() {
               alt="Property content"
               className={cn(
                 "object-cover rounded-xl",
-                "shadow-[0_10px_25px_rgba(102,51,255,0.3)_,_inset_0_0_0_1px_rgba(255,255,255,0.6)]", // Enhanced shadow with subtle inner glow
-                isMobile ? "w-[160px] h-[120px] opacity-100 rotate-[-6deg]" : "w-32 h-24" // Standardized size with rotation
+                "shadow-[0_10px_25px_rgba(102,51,255,0.4)_,_inset_0_0_0_1px_rgba(255,255,255,0.6)]", // Enhanced shadow with subtle inner glow
+                isMobile ? "w-[175px] h-[130px] opacity-100 rotate-[-8deg]" : "w-32 h-24" // Slightly larger on mobile
               )}
               style={{ 
                 transform: (!isMobile && !prefersReducedMotion) ? 
                   `translate3d(${-mousePosition.x * 1.5}px, ${-mousePosition.y * 1.5}px, 0) 
                    rotate(-3deg) rotateX(${mousePosition.y * 0.02}deg) rotateY(${-mousePosition.x * 0.02}deg)
                    scale(${1 + Math.min(Math.abs(mousePosition.x), Math.abs(mousePosition.y)) * 0.0005})` : 
-                  isMobile ? "translateY(4px) rotate(-6deg)" : "rotate(-3deg)", // Subtle movement on mobile
-                filter: (!isMobile && !prefersReducedMotion) ? 
-                  `blur(${Math.abs(mousePosition.x) < 100 && Math.abs(mousePosition.y) < 100 ? 1 : 0}px)` : 
-                  "contrast(1.05) saturate(1.05)", // Slight enhancement on all devices
-                opacity: (!isMobile && !prefersReducedMotion) ? 
-                  (Math.abs(mousePosition.x) < 80 && Math.abs(mousePosition.y) < 80 ? 0.8 : 0.95) : 
-                  1 // Full opacity on mobile and reduced motion
+                  isMobile ? `translateY(${-scrollY * 0.5}px) rotate(-8deg)` : "rotate(-3deg)", // Subtle vertical movement on scroll for mobile
+                filter: "contrast(1.05) saturate(1.1)", // Slightly enhanced contrast
+                opacity: 1
               }}
             />
           </motion.div>
+
+          {/* Top right image - adjusted position for mobile */}
+          <motion.div 
+            className={cn(
+              "absolute",
+              isMobile ? "top-[6%] right-[12%] z-10" : "top-[10%] right-[24%]",
+              "transform-style-3d perspective-[800px]"
+            )}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isInView ? 1 : 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <motion.img
+              src={PARALLAX_IMAGES[0]}
+              alt="Property content"
+              className={cn(
+                "object-cover rounded-xl",
+                "shadow-[0_15px_35px_rgba(138,92,249,0.35)_,_inset_0_0_0_1px_rgba(255,255,255,0.6)]", // Enhanced shadow with subtle inner glow
+                isMobile ? "w-[165px] h-[125px] opacity-100 rotate-[6deg]" : "w-40 h-32" // Standardized size with rotation
+              )}
+              style={{ 
+                transform: (!isMobile && !prefersReducedMotion) ? 
+                  `translate3d(${-mousePosition.x * 1.8}px, ${-mousePosition.y * 1.8}px, 0) 
+                   rotate(6deg) rotateX(${mousePosition.y * 0.03}deg) rotateY(${-mousePosition.x * 0.03}deg)
+                   scale(${1 + Math.min(Math.abs(mousePosition.x), Math.abs(mousePosition.y)) * 0.0008})` : 
+                  isMobile ? `translateY(${-scrollY * 0.7}px) rotate(6deg)` : "rotate(6deg)", // Subtle vertical movement on scroll for mobile
+                filter: "contrast(1.05) saturate(1.1)",
+                opacity: 1
+              }}
+            />
+          </motion.div>
+
+          {/* Middle left image - NEW for mobile */}
+          {isMobile && (
+            <motion.div
+              className="absolute top-[32%] left-[5%] z-20 transform-style-3d perspective-[800px]"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: isInView ? 1 : 0 }}
+              transition={{ delay: 0.5 }}
+            >
+              <motion.img
+                src={PARALLAX_IMAGES[6]}
+                alt="Property content"
+                className="w-[150px] h-[110px] object-cover rounded-xl shadow-[0_12px_30px_rgba(102,51,255,0.35)_,_inset_0_0_0_1px_rgba(255,255,255,0.6)] rotate-[-4deg]"
+                style={{ 
+                  transform: `translateY(${-scrollY * 0.4}px) rotate(-4deg)`,
+                  filter: "contrast(1.05) saturate(1.1)",
+                  opacity: 1
+                }}
+              />
+            </motion.div>
+          )}
+
+          {/* Middle right image - NEW for mobile */}
+          {isMobile && (
+            <motion.div
+              className="absolute top-[36%] right-[5%] z-20 transform-style-3d perspective-[800px]"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: isInView ? 1 : 0 }}
+              transition={{ delay: 0.6 }}
+            >
+              <motion.img
+                src={PARALLAX_IMAGES[7]}
+                alt="Property content"
+                className="w-[160px] h-[120px] object-cover rounded-xl shadow-[0_12px_30px_rgba(65,105,225,0.35)_,_inset_0_0_0_1px_rgba(255,255,255,0.6)] rotate-[5deg]"
+                style={{ 
+                  transform: `translateY(${-scrollY * 0.6}px) rotate(5deg)`,
+                  filter: "contrast(1.05) saturate(1.1)",
+                  opacity: 1
+                }}
+              />
+            </motion.div>
+          )}
 
           {/* Bottom left image - strategically positioned */}
           <motion.div
             className={cn(
               "absolute",
-              isMobile ? "bottom-[1%] left-[5%] z-10" : "top-[10%] left-[24%]", // Bottom left corner on mobile
+              isMobile ? "bottom-[6%] left-[8%] z-10" : "top-[10%] left-[24%]", // Bottom left corner on mobile
               "transform-style-3d perspective-[800px]"
             )}
             initial={{ opacity: 0 }}
             animate={{ opacity: isInView ? 1 : 0 }}
-            transition={{ delay: 0.5 }}
+            transition={{ delay: 0.7 }}
           >
             <motion.img
               src={PARALLAX_IMAGES[1]}
               alt="Property content"
               className={cn(
                 "object-cover rounded-xl",
-                "shadow-[0_10px_25px_rgba(138,92,249,0.3)_,_inset_0_0_0_1px_rgba(255,255,255,0.6)]", // Consistent shadow style
-                isMobile ? "w-[160px] h-[120px] opacity-100 rotate-[6deg]" : "w-56 h-44" // Standardized size with rotation
+                "shadow-[0_10px_30px_rgba(138,92,249,0.4)_,_inset_0_0_0_1px_rgba(255,255,255,0.6)]", // Consistent shadow style
+                isMobile ? "w-[170px] h-[130px] opacity-100 rotate-[8deg]" : "w-56 h-44" // Standardized size with rotation
               )}
               style={{ 
                 transform: (!isMobile && !prefersReducedMotion) ? 
                   `translate3d(${-mousePosition.x * 2}px, ${-mousePosition.y * 2}px, 0) 
                    rotate(-12deg) rotateX(${mousePosition.y * 0.03}deg) rotateY(${-mousePosition.x * 0.03}deg)
                    scale(${1 + Math.min(Math.abs(mousePosition.x), Math.abs(mousePosition.y)) * 0.0008})` : 
-                  "rotate(6deg)", // Match the class rotation
-                filter: (!isMobile && !prefersReducedMotion) ? 
-                  `blur(${Math.abs(mousePosition.x) < 120 && Math.abs(mousePosition.y) < 120 ? 1 : 0}px)` : 
-                  "contrast(1.05) saturate(1.05)",
-                opacity: (!isMobile && !prefersReducedMotion) ? 
-                  (Math.abs(mousePosition.x) < 100 && Math.abs(mousePosition.y) < 100 ? 0.8 : 0.95) : 
-                  1 // Full opacity on mobile and reduced motion
+                  isMobile ? `translateY(${-scrollY * 0.3}px) rotate(8deg)` : "rotate(-12deg)", // Subtle movement on scroll
+                filter: "contrast(1.05) saturate(1.1)",
+                opacity: 1
               }}
             />
           </motion.div>
@@ -240,15 +322,15 @@ export function ParallaxHero() {
             )}
             initial={{ opacity: 0 }}
             animate={{ opacity: isInView ? 1 : 0 }}
-            transition={{ delay: 0.7 }}
+            transition={{ delay: 0.85 }}
           >
             <motion.img
-              src={PARALLAX_IMAGES[2]}
+              src={PARALLAX_IMAGES[5]}
               alt="Property content"
               className={cn(
                 "object-cover rounded-xl",
                 "shadow-[0_20px_50px_rgba(102,51,255,0.3)]",
-                isMobile ? "w-48 h-48 opacity-100" : "w-60 h-60" // Larger on mobile, full opacity
+                "w-60 h-60" // Larger on mobile, full opacity
               )}
               style={{ 
                 transform: (!isMobile && !prefersReducedMotion) ? 
@@ -270,7 +352,7 @@ export function ParallaxHero() {
           <motion.div
             className={cn(
               "absolute",
-              isMobile ? "bottom-[1%] right-[5%] z-10" : "top-[8%] right-[15%]", // Bottom right corner on mobile
+              isMobile ? "bottom-[6%] right-[8%] z-10" : "top-[8%] right-[15%]", // Bottom right corner on mobile
               "transform-style-3d perspective-[800px]"
             )}
             initial={{ opacity: 0 }}
@@ -282,21 +364,17 @@ export function ParallaxHero() {
               alt="Property content"
               className={cn(
                 "object-cover rounded-xl",
-                "shadow-[0_10px_25px_rgba(65,105,225,0.3)_,_inset_0_0_0_1px_rgba(255,255,255,0.6)]", // Consistent shadow style
-                isMobile ? "w-[160px] h-[120px] opacity-100 rotate-[-8deg]" : "w-60 h-52" // Standardized size with opposite rotation
+                "shadow-[0_10px_30px_rgba(65,105,225,0.4)_,_inset_0_0_0_1px_rgba(255,255,255,0.6)]", // Enhanced shadow
+                isMobile ? "w-[180px] h-[135px] opacity-100 rotate-[-6deg]" : "w-60 h-52" // Slightly larger on mobile
               )}
               style={{ 
                 transform: (!isMobile && !prefersReducedMotion) ? 
                   `translate3d(${-mousePosition.x * 2}px, ${-mousePosition.y * 2}px, 0) 
                    rotate(6deg) rotateX(${mousePosition.y * 0.02}deg) rotateY(${-mousePosition.x * 0.02}deg)
                    scale(${1 + Math.min(Math.abs(mousePosition.x), Math.abs(mousePosition.y)) * 0.0006})` : 
-                  "rotate(-8deg)", // Match the class rotation
-                filter: (!isMobile && !prefersReducedMotion) ? 
-                  `blur(${Math.abs(mousePosition.x) < 120 && Math.abs(mousePosition.y) < 120 ? 1 : 0}px)` : 
-                  "contrast(1.05) saturate(1.05)",
-                opacity: (!isMobile && !prefersReducedMotion) ? 
-                  (Math.abs(mousePosition.x) < 100 && Math.abs(mousePosition.y) < 100 ? 0.8 : 0.95) : 
-                  1 // Full opacity on mobile and reduced motion
+                  isMobile ? `translateY(${-scrollY * 0.4}px) rotate(-6deg)` : "rotate(6deg)", // Subtle movement on scroll
+                filter: "contrast(1.05) saturate(1.1)",
+                opacity: 1
               }}
             />
           </motion.div>
@@ -318,7 +396,7 @@ export function ParallaxHero() {
               className={cn(
                 "object-cover rounded-xl",
                 "shadow-[0_15px_45px_rgba(138,92,249,0.18)]",
-                isMobile ? "w-56 h-56 opacity-100" : "w-72 h-72" // Larger on mobile, full opacity
+                "w-72 h-72" // Larger on mobile, full opacity
               )}
               style={{ 
                 transform: (!isMobile && !prefersReducedMotion) ? 
@@ -341,7 +419,7 @@ export function ParallaxHero() {
       {/* Clean minimal background overlay */}
       <div className="absolute inset-0 z-5 bg-gradient-to-t from-white/20 to-transparent pointer-events-none"></div>
       
-      {/* Content overlay */}
+      {/* Content overlay - adjusted for mobile */}
       <div className="z-10 flex flex-col items-center justify-center max-w-4xl mx-auto text-center relative px-4">
         {/* Text content container with premium card-like treatment */}
         <motion.div 
@@ -350,7 +428,7 @@ export function ParallaxHero() {
             "shadow-[0_15px_35px_rgba(102,51,255,0.18),_0_3px_5px_rgba(102,51,255,0.08)]", // Enhanced shadow
             "border border-white/30", // More visible border for better separation
             isMobile ? 
-              "rounded-[1.3rem] p-5 pt-5 pb-6" : // Increased corner radius on mobile
+              "rounded-[1.3rem] p-4 pt-5 pb-5" : // Increased corner radius and reduced padding on mobile
               "rounded-2xl p-6 pt-7 pb-9 sm:p-10"
           )}
           initial={{ opacity: 0, y: 10 }}
@@ -398,12 +476,12 @@ export function ParallaxHero() {
             )}></div>
           </div>
           
-          {/* Main heading */}
+          {/* Main heading - condensed for mobile */}
           <motion.h1 
             className={cn(
               "tracking-tight leading-tight font-bold font-jakarta relative z-10",
-              isMobile ? "text-2xl" : "text-4xl sm:text-5xl lg:text-6xl",
-              isMobile ? "w-full mb-3" : "w-full mb-5 sm:mb-7"
+              isMobile ? "text-xl" : "text-4xl sm:text-5xl lg:text-6xl",
+              isMobile ? "w-full mb-2" : "w-full mb-5 sm:mb-7"
             )}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : 20 }}
@@ -414,7 +492,7 @@ export function ParallaxHero() {
                 "relative z-10 inline-block",
                 "bg-clip-text text-transparent bg-gradient-to-r from-[#6633FF] to-[#8A5CF9]",
                 isMobile ? 
-                  "block mb-[0.35rem] text-[1.4rem] drop-shadow-[0_2px_2px_rgba(102,51,255,0.25)]" : 
+                  "block mb-[0.3rem] text-[1.2rem] drop-shadow-[0_2px_2px_rgba(102,51,255,0.25)]" : 
                   "block mb-1 sm:mb-4 text-3xl sm:text-4xl lg:text-5xl drop-shadow-[0_2px_2px_rgba(102,51,255,0.2)]",
                 "font-jakarta"
               )}
@@ -425,7 +503,7 @@ export function ParallaxHero() {
             <div 
               className={cn(
                 "relative flex w-full justify-center",
-                isMobile ? "h-[4.5em]" : "h-[2.5em]",
+                isMobile ? "h-[4.2em]" : "h-[2.5em]",
                 "overflow-visible"
               )}
             >
@@ -439,7 +517,7 @@ export function ParallaxHero() {
                 staggerDuration={0.03}
                 rotationInterval={3500}
                 elementLevelClassName={cn(
-                  isMobile ? "text-[2.8rem] leading-tight pb-1" : "text-5xl sm:text-6xl lg:text-7xl",
+                  isMobile ? "text-[2.6rem] leading-tight pb-1" : "text-5xl sm:text-6xl lg:text-7xl",
                   "font-bold font-jakarta tracking-tight",
                   "bg-clip-text text-transparent bg-gradient-to-r from-[#6633FF] to-[#8A5CF9]",
                   "drop-shadow-[0_2px_1px_rgba(102,51,255,0.3)]",
@@ -461,13 +539,13 @@ export function ParallaxHero() {
             <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#6633FF]/10 to-transparent my-1"></div>
           )}
 
-          {/* Subheading with clean typography - improved for mobile */}
+          {/* Subheading with clean typography - reduced size for mobile */}
           <motion.p
             className={cn(
               "text-[#3D3A5A] font-inter relative z-10",
               "max-w-[95%] sm:max-w-[600px] mx-auto",
               "font-medium",
-              isMobile ? "text-[0.95rem] leading-[1.65] mb-6" : "text-base sm:text-lg mb-10"
+              isMobile ? "text-[0.9rem] leading-[1.5] mb-5" : "text-base sm:text-lg mb-10"
             )}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : 20 }}
@@ -480,7 +558,7 @@ export function ParallaxHero() {
             )}
           </motion.p>
 
-        {/* CTA Buttons */}
+        {/* CTA Buttons - with optimized spacing for mobile */}
         <motion.div
           className="w-full relative z-10"
           initial={{ opacity: 0, y: 20 }}
@@ -528,26 +606,26 @@ export function ParallaxHero() {
             </div>
           )}
           
-          {/* Mobile CTA layout - improved with better spacing and touch areas */}
+          {/* Mobile CTA layout - optimized with better spacing and touch areas */}
           {isMobile && (
             <>
               <div className="w-full flex flex-col items-center">
-                <div className="w-full max-w-[280px] mx-auto flex flex-col">
+                <div className="w-full max-w-[270px] mx-auto flex flex-col">
                   {/* Primary CTA with social proof grouped closely */}
-                  <div className="flex flex-col mb-4">
+                  <div className="flex flex-col mb-3">
                     {/* Main waitlist CTA with increased touch target */}
                     <WaitlistCTA 
-                      className="mb-0 [&_button]:py-[1.1rem] [&_button]:h-[48px] [&_button]:transition-all [&_button]:duration-300 [&_button]:active:scale-[1.02] [&_button]:active:brightness-110" 
+                      className="mb-0 [&_button]:py-[0.9rem] [&_button]:h-[44px] [&_button]:transition-all [&_button]:duration-300 [&_button]:active:scale-[1.02] [&_button]:active:brightness-110" 
                       buttonText="RESERVE EARLY ACCESS" 
                       showSocialProof={false}
                     />
                     
                     {/* Social proof directly beneath primary CTA with tighter spacing and visual connection */}
-                    <div className="w-full flex flex-col items-center mt-[10px] relative">
+                    <div className="w-full flex flex-col items-center mt-[8px] relative">
                       {/* Subtle connecting indicator */}
                       <div className="absolute -top-1 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-b-[6px] border-b-[#F5F0FF] z-10"></div>
                       <SocialProof 
-                        className="mt-0 transform-gpu animate-fade-in" 
+                        className="mt-0 transform-gpu animate-fade-in scale-90" 
                         style={{animationDuration: "0.5s", animationDelay: "0.3s"}} 
                       />
                     </div>
@@ -557,7 +635,7 @@ export function ParallaxHero() {
                   <WaitlistCreatorCTA 
                     buttonText="JOIN AS CREATOR" 
                     showSocialProof={false}
-                    className="[&_button]:py-[1.1rem] [&_button]:h-[48px] [&_button]:transition-all [&_button]:duration-300 [&_button]:active:scale-[1.02] [&_button]:active:brightness-105 [&_button]:border-purple-700/70 [&_button]:text-purple-700"
+                    className="[&_button]:py-[0.9rem] [&_button]:h-[44px] [&_button]:transition-all [&_button]:duration-300 [&_button]:active:scale-[1.02] [&_button]:active:brightness-105 [&_button]:border-purple-700/70 [&_button]:text-purple-700"
                   />
                 </div>
               </div>
