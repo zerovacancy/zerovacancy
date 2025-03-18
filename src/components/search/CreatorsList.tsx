@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { CreatorCard } from '../creator/CreatorCard';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -17,7 +16,7 @@ export const CreatorsList: React.FC = () => {
   const creators: Creator[] = [
     {
       name: "Emily Johnson",
-      services: ["TikTok", "POV Tour", "Organic"],  // Changed "Content" to "Organic" to fix mobile layout
+      services: ["TikTok", "POV Tour", "Content"],
       price: 150,
       rating: 4.9,
       reviews: 127,
@@ -98,7 +97,6 @@ export const CreatorsList: React.FC = () => {
                 imageRef={imageRef}
                 onPreviewClick={setSelectedPreviewImage}
               />
-              {/* Fallback button in case the card's button is hidden by CSS */}
               <div className="hidden md:hidden">
                 <button className="bg-purple-600 text-white p-2 rounded w-full">
                   Get Priority Access (Fallback)
@@ -119,7 +117,6 @@ export const CreatorsList: React.FC = () => {
         />
       )}
       
-      {/* Image Preview Dialog */}
       <Dialog open={!!selectedPreviewImage} onOpenChange={() => setSelectedPreviewImage(null)}>
         <DialogContent className={cn(
           isMobile ? "w-[95vw] max-w-[95vw]" : "sm:max-w-[80vw]", 

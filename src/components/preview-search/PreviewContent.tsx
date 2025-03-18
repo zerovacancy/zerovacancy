@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { CreatorCard } from '../creator/CreatorCard';
@@ -32,7 +31,7 @@ export const PreviewContent = () => {
   const creatorData = [
     {
       name: "Emily Johnson",
-      services: ["TikTok", "POV Tour", "Organic"], // Changed "Content" to "Organic" to fix mobile layout
+      services: ["TikTok", "POV Tour", "Content"],
       price: 150,
       rating: 4.9,
       reviews: 127,

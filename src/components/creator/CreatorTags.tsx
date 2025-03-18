@@ -55,32 +55,32 @@ export const CreatorTags: React.FC<CreatorTagsProps> = ({ tags }) => {
         // Enhanced horizontal scrolling hint for mobile
         isMobile ? "after:content-[''] after:absolute after:right-0 after:top-0 after:h-full after:w-8 after:bg-gradient-to-l after:from-white after:to-transparent after:pointer-events-none" : "",
         // Fix for mobile tag container to show all tags
-        isMobile ? "w-full min-w-0 px-0.5" : ""
+        isMobile ? "w-full min-w-0 px-0" : ""
       )}
       role="list"
       aria-label="Creator specialties"
     >
       <div className={cn(
-        "flex flex-nowrap gap-2.5",
+        "flex flex-nowrap gap-1.5", // Reduced gap between tags for better fit
         // Ensure tags have enough space on mobile
-        isMobile && "pr-2"
+        isMobile && "pr-1" // Reduced right padding
       )}>
         {tags.map((tag, index) => (
           <button
             key={index}
             className={cn(
-              isMobile ? "text-sm px-3.5 py-2" : "text-[10px] sm:text-xs px-2.5 py-1.5", // Restored original tag size and style
+              isMobile ? "text-xs px-2.5 py-1.5" : "text-[10px] sm:text-xs px-2.5 py-1.5", // Smaller text and padding on mobile
               "rounded-full",
               "transition-all duration-200 whitespace-nowrap",
               "hover:scale-105 active:scale-95 cursor-pointer shadow-sm hover:shadow-md",
-              "flex items-center gap-1.5",
+              "flex items-center gap-1",
               "touch-manipulation", // Better touch behavior
               getTagStyle(tag)
             )}
             role="listitem"
           >
             {shouldHaveIcon(tag) && isMobile && (
-              <Tag className="w-3.5 h-3.5" aria-hidden="true" />
+              <Tag className="w-3 h-3" aria-hidden="true" />
             )}
             {shouldHaveIcon(tag) && !isMobile && (
               <Tag className="w-2.5 h-2.5" aria-hidden="true" />
