@@ -172,7 +172,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 </div>
                 
                 {/* Recent Work section with proper header */}
-                <div className="mb-16"> {/* Increased bottom margin to make room for the CTA */}
+                <div className="mb-14"> {/* Adjusted to provide just enough space for CTA */}
                   {/* Section header */}
                   <div className="mb-3 flex justify-between items-center">
                     <div className="flex items-center">
@@ -221,12 +221,19 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   </div>
                 </div>
 
-                {/* CTA button with fixed positioning at the bottom */}
+                {/* CTA button with fixed positioning at the bottom - Enhanced according to requirements */}
                 <div className="absolute bottom-3 left-0 right-0 px-4">
                   <button 
                     onClick={handleCTAClick}
                     aria-label={`Join as creator with ${creator.name}`}
-                    className="w-full flex items-center justify-center text-sm px-5 py-3 bg-purple-600 text-white rounded-lg font-semibold font-jakarta shadow-md h-[46px] hover:bg-purple-700 active:shadow-inner transition-all duration-200"
+                    className="w-full flex items-center justify-center text-sm px-5 py-3 rounded-lg font-semibold font-jakarta h-[46px] 
+                    bg-gradient-to-r from-indigo-600 to-purple-600 text-white
+                    border border-white/20 shadow-md
+                    hover:shadow-[0_0_15px_rgba(138,79,255,0.4)] 
+                    hover:scale-[1.02] 
+                    transition-all duration-300
+                    bg-[length:200%_200%] bg-[position:0%_0%]
+                    hover:bg-[position:100%_100%]"
                   >
                     {stage === 'initial' ? (
                       <>
@@ -332,7 +339,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   </div>
 
                   {/* Portfolio preview with reduced spacing */}
-                  <div className="mb-14 rounded-md overflow-hidden"> {/* Increased bottom margin to make room for the fixed CTA button */}
+                  <div className="mb-14 rounded-md overflow-hidden"> {/* Adjusted to provide just enough space for CTA */}
                     <PortfolioPreview 
                       workExamples={creator.workExamples}
                       creatorName={creator.name}
@@ -340,14 +347,22 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     />
                   </div>
 
-                  {/* Desktop CTA with fixed positioning at the bottom of the card */}
+                  {/* Desktop CTA with fixed positioning at the bottom of the card - Enhanced per requirements */}
                   <div className="absolute bottom-3 left-0 right-0 z-50 px-5">
                     {/* Subtle visual indicator with reduced spacing */}
                     <div className="mb-2 mt-1 mx-auto w-8 h-0.5 rounded-full bg-gray-200"></div>
                     
                     <button 
                       onClick={handleCTAClick}
-                      className="w-full bg-purple-600 text-white font-medium font-jakarta rounded-lg py-3 px-5 flex items-center justify-center shadow-md hover:bg-purple-700 transition-colors"
+                      className="w-full rounded-lg py-3 px-5 flex items-center justify-center
+                      bg-gradient-to-r from-indigo-600 to-purple-600 text-white
+                      border border-white/20 shadow-md
+                      hover:shadow-[0_0_15px_rgba(138,79,255,0.4)] 
+                      hover:scale-[1.02] 
+                      font-medium font-jakarta
+                      transition-all duration-300
+                      bg-[length:200%_200%] bg-[position:0%_0%]
+                      hover:bg-[position:100%_100%]"
                     >
                       <span className="text-base">JOIN AS CREATOR</span>
                       <ArrowRight className="w-4 h-4 ml-2" />
