@@ -163,7 +163,7 @@ const Index = () => {
           blobOpacity={0.15}
           withSpotlight={true}
           spotlightClassName="from-purple-500/5 via-violet-500/5 to-blue-500/5"
-          baseColor={isMobile ? "bg-transparent" : "bg-white/80"} 
+          baseColor="bg-white/80" 
           pattern="none"
           className="py-0"
           animationSpeed="slow"

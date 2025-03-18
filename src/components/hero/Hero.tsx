@@ -67,7 +67,9 @@ export function Hero() {
         "relative z-10", 
         "gap-3 sm:gap-6", 
         "touch-manipulation",
-        "bg-transparent",
+        isMobile 
+          ? "bg-transparent" 
+          : "bg-gradient-to-b from-purple-50/80 via-indigo-50/60 to-blue-50/30",
         isInView ? "animate-fade-in" : "opacity-0",
       )} 
     >
