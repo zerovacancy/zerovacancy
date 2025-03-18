@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback } from 'react';
 import { Card } from '../ui/card';
 import { ArrowRight, Star, X, Clock, Crown } from 'lucide-react';
@@ -56,14 +57,14 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               "shadow-[0_4px_12px_rgba(138,79,255,0.15)]",
               "hover:shadow-[0_6px_16px_rgba(138,79,255,0.2)]",
               "rounded-xl relative transition-all duration-200",
-              "h-full" // Removed fixed min-height to allow card to adapt to content
+              "h-full" // Allow card to adapt to content
             )}>
               {/* Very subtle pattern effect */}
               <div className="absolute inset-0 opacity-[0.01] bg-[radial-gradient(#8A4FFF_1px,transparent_1px)] bg-[length:16px_16px] z-0 pointer-events-none"></div>
               
               {/* Media section with properly positioned price tag */}
               <div className="relative">
-                {/* Optimized media container with balanced aspect ratio */}
+                {/* Fixed aspect ratio for all cards */}
                 <div className="aspect-[4/3] relative w-full overflow-hidden flex-shrink-0 rounded-t-md">
                   <CreatorMedia 
                     creator={creator}
@@ -193,7 +194,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     </button>
                   </div>
                   
-                  {/* Improved portfolio thumbnails with touch-optimized targets */}
+                  {/* Fixed height portfolio thumbnails */}
                   <div className="grid grid-cols-3 gap-2.5">
                     {creator.workExamples.slice(0, 3).map((example, index) => (
                       <button 
@@ -227,12 +228,12 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   </div>
                 </div>
 
-                {/* CTA button with fixed positioning for alignment across cards */}
-                <div className="mt-2">
+                {/* CTA button with fixed height */}
+                <div className="mt-3">
                   <button 
                     onClick={handleCTAClick}
                     aria-label={`Join as creator with ${creator.name}`}
-                    className="w-full flex items-center justify-center text-sm px-5 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold font-jakarta shadow-md h-[50px] hover:shadow-lg active:shadow-inner transition-all duration-200"
+                    className="w-full flex items-center justify-center text-sm px-5 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold font-jakarta shadow-md h-[46px] hover:shadow-lg active:shadow-inner transition-all duration-200"
                   >
                     {stage === 'initial' ? (
                       <>

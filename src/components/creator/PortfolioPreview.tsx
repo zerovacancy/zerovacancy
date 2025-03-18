@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -44,7 +43,7 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
                 className={cn(
                   "relative rounded-md overflow-hidden cursor-pointer group",
                   "border border-gray-100",
-                  "shadow-sm aspect-square",
+                  "shadow-sm aspect-square", // Fixed aspect ratio for consistency
                   "bg-gray-50"
                 )}
                 onClick={() => onPreviewClick ? onPreviewClick(example) : setSelectedImage(example)}
