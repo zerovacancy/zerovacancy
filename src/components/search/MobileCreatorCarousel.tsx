@@ -84,7 +84,7 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
   } = mobileOptimizationClasses;
 
   return (
-    <div className="w-full relative pb-3 px-3 -mx-3">
+    <div className="w-full relative pb-2 px-0 mx-0">
       {isFirstVisit && (
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-4 py-2 rounded-full text-sm flex items-center gap-2 shadow-md">
           <Grip className="w-4 h-4" />
@@ -93,12 +93,12 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
       )}
       
       <div className="w-full overflow-hidden rounded-xl" ref={emblaRef}>
-        <div className="flex">
+        <div className="flex flex-nowrap">
           {creators.map((creator) => (
             <div 
               key={creator.name} 
               style={{ touchAction: 'pan-y' }} 
-              className="min-w-[85%] w-[85%] py-2 px-2 flex-shrink-0"
+              className="min-w-[96%] w-[96%] py-1 px-1 flex-shrink-0 flex-grow-0"
             >
               <CreatorCard 
                 creator={creator} 

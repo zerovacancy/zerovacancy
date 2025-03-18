@@ -50,13 +50,13 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
         <div className="relative h-full w-full">
           {isMobile ? (
             <Card className={cn(
-              "overflow-hidden flex flex-col w-full",
+              "overflow-hidden flex flex-col w-full min-w-0",
               "bg-white",
               "border border-purple-200/70",
               "shadow-[0_4px_12px_rgba(138,79,255,0.15)]",
               "hover:shadow-[0_6px_16px_rgba(138,79,255,0.2)]",
               "rounded-xl relative transition-all duration-200",
-              "h-full min-h-[520px]" // Fixed height ensures consistent sizing
+              "h-full" // Removed fixed min-height to allow card to adapt to content
             )}>
               {/* Very subtle pattern effect */}
               <div className="absolute inset-0 opacity-[0.01] bg-[radial-gradient(#8A4FFF_1px,transparent_1px)] bg-[length:16px_16px] z-0 pointer-events-none"></div>
@@ -81,7 +81,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               </div>
 
               {/* Content sections with proper organization */}
-              <div className="w-full px-3.5 py-3 flex flex-col relative z-10 flex-grow flex-shrink-0">
+              <div className="w-full px-3 py-2 flex flex-col relative z-10 flex-grow flex-shrink-0 min-w-0">
                 {/* Creator info section */}
                 <div className="pb-2.5 mb-2.5 border-b border-purple-100/60">
                   {/* Creator name and location with proper styling */}
@@ -97,7 +97,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   </div>
                   
                   {/* Ratings and availability grouped together */}
-                  <div className="flex justify-between items-center mb-2.5 py-1.5 px-2 bg-gray-50/80 rounded-md border border-gray-100/80">
+                  <div className="flex justify-between items-center mb-2 py-1 px-2 bg-gray-50/80 rounded-md border border-gray-100/80">
                     <div className="flex items-center">
                       <Star className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400 mr-1" />
                       <span className="text-sm font-medium font-space text-gray-700">{creator.rating.toFixed(1)}</span>
@@ -173,7 +173,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 </div>
                 
                 {/* Recent Work section with proper header */}
-                <div className="mb-3">
+                <div className="mb-2">
                   {/* Section header */}
                   <div className="mb-2 flex justify-between items-center">
                     <div className="flex items-center">
@@ -188,7 +188,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     {creator.workExamples.slice(0, 3).map((example, index) => (
                       <div 
                         key={index}
-                        className="relative h-[70px] touch-manipulation rounded-md overflow-hidden border border-purple-100/80 shadow-sm transition-transform duration-150 active:scale-95"
+                        className="relative h-[60px] touch-manipulation rounded-md overflow-hidden border border-purple-100/80 shadow-sm transition-transform duration-150 active:scale-95"
                         onClick={() => onPreviewClick ? onPreviewClick(example) : setSelectedImage(example)}
                       >
                         <img 
@@ -211,11 +211,11 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 <div className="flex-grow min-h-[5px]"></div>
                 
                 {/* CTA button with fixed positioning for alignment across cards */}
-                <div className="mt-auto pt-2">
+                <div className="mt-auto pt-1">
                   <button 
                     onClick={handleCTAClick}
                     aria-label={`Join as creator with ${creator.name}`}
-                    className="w-full flex items-center justify-center text-sm px-4 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-md font-medium font-jakarta shadow-md h-[44px]"
+                    className="w-full flex items-center justify-center text-sm px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-md font-medium font-jakarta shadow-md h-[40px]"
                   >
                     {stage === 'initial' ? (
                       <>
