@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { cn } from '@/lib/utils';
 
@@ -68,25 +69,27 @@ export const FloatingBackground: React.FC<FloatingBackgroundProps> = ({
       </div>
       
       {/* CSS animations */}
-      <style jsx global>{`
-        @keyframes float-slow {
-          0%, 100% {
-            transform: translate(0, 0) rotate(var(--rotation, 0deg));
+      <style>
+        {`
+          @keyframes float-slow {
+            0%, 100% {
+              transform: translate(0, 0) rotate(var(--rotation, 0deg));
+            }
+            50% {
+              transform: translate(calc(var(--direction, 1) * 20px), -15px) rotate(calc(var(--rotation, 0deg) + 2deg));
+            }
           }
-          50% {
-            transform: translate(calc(var(--direction, 1) * 20px), -15px) rotate(calc(var(--rotation, 0deg) + 2deg));
+          
+          @keyframes float-medium {
+            0%, 100% {
+              transform: translate(0, 0) rotate(var(--rotation, 0deg));
+            }
+            50% {
+              transform: translate(calc(var(--direction, 1) * 30px), -20px) rotate(calc(var(--rotation, 0deg) - 3deg));
+            }
           }
-        }
-        
-        @keyframes float-medium {
-          0%, 100% {
-            transform: translate(0, 0) rotate(var(--rotation, 0deg));
-          }
-          50% {
-            transform: translate(calc(var(--direction, 1) * 30px), -20px) rotate(calc(var(--rotation, 0deg) - 3deg));
-          }
-        }
-      `}</style>
+        `}
+      </style>
     </div>
   );
 };
