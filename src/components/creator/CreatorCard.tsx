@@ -50,7 +50,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
         <div className="relative h-full w-full">
           {isMobile ? (
             <Card className={cn(
-              "overflow-hidden flex flex-col w-full min-w-0",
+              "overflow-hidden flex flex-col w-full",
               "bg-white",
               "border border-purple-200/70",
               "shadow-[0_4px_12px_rgba(138,79,255,0.15)]",
@@ -81,7 +81,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               </div>
 
               {/* Content sections with proper organization */}
-              <div className="w-full px-3 py-2 flex flex-col relative z-10 flex-grow flex-shrink-0 min-w-0">
+              <div className="w-full px-3 py-2 flex flex-col relative z-10 flex-grow flex-shrink-0">
                 {/* Creator info section */}
                 <div className="pb-2.5 mb-2.5 border-b border-purple-100/60">
                   {/* Creator name and location with proper styling */}
