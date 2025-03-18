@@ -13,7 +13,9 @@ export const CreatorCardSkeleton = () => {
       "bg-white border border-purple-100/50",
       "animate-pulse flex flex-col",
       "rounded-xl relative transition-all duration-200",
-      isMobile ? "shadow-sm" : "shadow-md"
+      isMobile 
+        ? "shadow-[0_8px_12px_-3px_rgba(138,79,255,0.1),_0_4px_6px_-4px_rgba(138,79,255,0.15),_inset_0_1px_3px_rgba(255,255,255,0.3)]" 
+        : "shadow-[0_10px_15px_-3px_rgba(138,79,255,0.1),_0_4px_6px_-4px_rgba(138,79,255,0.15),_inset_0_1px_3px_rgba(255,255,255,0.3)]"
     )}>
       {/* Media section */}
       <div className={cn(

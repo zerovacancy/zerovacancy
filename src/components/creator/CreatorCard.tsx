@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback } from 'react';
 import { Card } from '../ui/card';
 import { ArrowRight, Star, X, Clock, Crown } from 'lucide-react';
@@ -55,8 +54,8 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               "bg-white/80", // Semi-transparent background for glass effect
               "backdrop-blur-[5px]", // Reduced blur for mobile
               "border border-purple-200/80", // More visible border on mobile
-              "shadow-[0_4px_12px_rgba(138,79,255,0.18)]",
-              "hover:shadow-[0_6px_16px_rgba(138,79,255,0.25)]",
+              "shadow-[0_8px_12px_-3px_rgba(138,79,255,0.1),_0_4px_6px_-4px_rgba(138,79,255,0.15),_inset_0_1px_3px_rgba(255,255,255,0.3)]",
+              "hover:shadow-[0_10px_15px_-3px_rgba(138,79,255,0.15),_0_4px_6px_-4px_rgba(138,79,255,0.2),_inset_0_1px_3px_rgba(255,255,255,0.4)]",
               "rounded-xl relative transition-all duration-200",
               "h-full", // Allow card to adapt to content
               "translate-z-0 backface-visibility-hidden", // Hardware acceleration for mobile
@@ -280,8 +279,8 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 "hover:translate-y-[-2px]",
                 "bg-white/70 backdrop-blur-[8px]", // Premium glass effect for desktop
                 "border border-purple-200/40", // Subtle border
-                "shadow-[0_6px_16px_rgba(138,79,255,0.08)]",
-                "hover:shadow-[0_14px_28px_rgba(138,79,255,0.12)]",
+                "shadow-[0_10px_15px_-3px_rgba(138,79,255,0.1),_0_4px_6px_-4px_rgba(138,79,255,0.15),_inset_0_1px_3px_rgba(255,255,255,0.3)]",
+                "hover:shadow-[0_14px_20px_-3px_rgba(138,79,255,0.15),_0_6px_8px_-4px_rgba(138,79,255,0.2),_inset_0_1px_3px_rgba(255,255,255,0.4)]",
                 "rounded-xl",
                 "h-full", // Ensure consistent height for desktop
                 "block", // Force block display

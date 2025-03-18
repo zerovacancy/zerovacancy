@@ -87,7 +87,7 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
   return (
     <div className="w-full relative pb-2 px-0 mx-0 translate-z-0">
       {isFirstVisit && (
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-4 py-2 rounded-full text-sm flex items-center gap-2 shadow-md backdrop-blur-sm">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-4 py-2 rounded-full text-sm flex items-center gap-2 shadow-[0_8px_12px_-3px_rgba(138,79,255,0.2),_0_4px_6px_-4px_rgba(138,79,255,0.25)] backdrop-blur-sm">
           <Grip className="w-4 h-4" />
           <span>Swipe to explore</span>
         </div>
@@ -135,7 +135,7 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
         onClick={scrollPrev} 
         className={cn(
           "absolute left-1 top-[40%] -translate-y-1/2 z-10 rounded-full p-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white", 
-          "touch-manipulation h-[36px] w-[36px] flex items-center justify-center shadow-md backdrop-blur-sm transition-opacity duration-300", 
+          "touch-manipulation h-[36px] w-[36px] flex items-center justify-center shadow-[0_6px_10px_-2px_rgba(138,79,255,0.25),_0_3px_4px_-2px_rgba(138,79,255,0.3)] backdrop-blur-sm transition-opacity duration-300", 
           !prevBtnEnabled && "opacity-25 cursor-not-allowed"
         )} 
         disabled={!prevBtnEnabled}
@@ -148,7 +148,7 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
         onClick={scrollNext} 
         className={cn(
           "absolute right-4 top-[40%] -translate-y-1/2 z-10 rounded-full p-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white", 
-          "touch-manipulation h-[36px] w-[36px] flex items-center justify-center shadow-md backdrop-blur-sm transition-opacity duration-300", 
+          "touch-manipulation h-[36px] w-[36px] flex items-center justify-center shadow-[0_6px_10px_-2px_rgba(138,79,255,0.25),_0_3px_4px_-2px_rgba(138,79,255,0.3)] backdrop-blur-sm transition-opacity duration-300", 
           !nextBtnEnabled && "opacity-0 pointer-events-none"
         )} 
         disabled={!nextBtnEnabled}
