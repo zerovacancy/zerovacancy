@@ -69,7 +69,7 @@ export const CreatorTags: React.FC<CreatorTagsProps> = ({ tags }) => {
           <button
             key={index}
             className={cn(
-              isMobile ? "text-xs px-2.5 py-1.5" : "text-[10px] sm:text-xs px-2.5 py-1.5", // Adjusted tag size on mobile
+              isMobile ? "text-sm px-3.5 py-2" : "text-[10px] sm:text-xs px-2.5 py-1.5", // Restored original tag size and style
               "rounded-full",
               "transition-all duration-200 whitespace-nowrap",
               "hover:scale-105 active:scale-95 cursor-pointer shadow-sm hover:shadow-md",
@@ -79,8 +79,11 @@ export const CreatorTags: React.FC<CreatorTagsProps> = ({ tags }) => {
             )}
             role="listitem"
           >
-            {shouldHaveIcon(tag) && (
-              <Tag className={cn(isMobile ? "w-3 h-3" : "w-2.5 h-2.5")} aria-hidden="true" />
+            {shouldHaveIcon(tag) && isMobile && (
+              <Tag className="w-3.5 h-3.5" aria-hidden="true" />
+            )}
+            {shouldHaveIcon(tag) && !isMobile && (
+              <Tag className="w-2.5 h-2.5" aria-hidden="true" />
             )}
             {tag}
           </button>
