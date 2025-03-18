@@ -1,3 +1,4 @@
+
 import React, { useCallback, useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight, Grip } from 'lucide-react';
 import useEmblaCarousel from 'embla-carousel-react';
@@ -95,19 +96,16 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
       <div className="w-full overflow-hidden rounded-xl" ref={emblaRef}>
         <div className="flex">
           {creators.map((creator) => (
-            <div 
+            <CreatorCard 
               key={creator.name} 
-              style={{ touchAction: 'pan-y' }} 
+              creator={creator} 
+              onImageLoad={onImageLoad} 
+              loadedImages={loadedImages} 
+              imageRef={imageRef}
+              onPreviewClick={onPreviewClick}
               className="min-w-[85%] w-[85%] py-2 px-2 flex-shrink-0"
-            >
-              <CreatorCard 
-                creator={creator} 
-                onImageLoad={onImageLoad} 
-                loadedImages={loadedImages} 
-                imageRef={imageRef}
-                onPreviewClick={onPreviewClick}
-              />
-            </div>
+              style={{ touchAction: 'pan-y' }}
+            />
           ))}
         </div>
       </div>
