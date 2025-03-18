@@ -64,7 +64,13 @@ export function ParallaxHero() {
 
   // Handle parallax effect
   useEffect(() => {
-    if (!containerRef.current || isMobile || prefersReducedMotion) return;
+    if (!containerRef.current) return;
+
+    // Set initial position for all devices
+    setMousePosition({ x: 5, y: 5 });
+
+    // Only add mousemove for non-mobile and when motion is enabled
+    if (isMobile || prefersReducedMotion) return;
 
     const handleMouseMove = (e: MouseEvent) => {
       const { left, top, width, height } = containerRef.current?.getBoundingClientRect() || {};
@@ -179,13 +185,13 @@ export function ParallaxHero() {
                   `translate3d(${-mousePosition.x * 1.5}px, ${-mousePosition.y * 1.5}px, 0) 
                    rotate(-3deg) rotateX(${mousePosition.y * 0.02}deg) rotateY(${-mousePosition.x * 0.02}deg)
                    scale(${1 + Math.min(Math.abs(mousePosition.x), Math.abs(mousePosition.y)) * 0.0005})` : 
-                  isMobile ? "translateY(4px)" : "rotate(-3deg)", // Subtle movement on mobile
+                  isMobile ? "translateY(4px) rotate(-6deg)" : "rotate(-3deg)", // Subtle movement on mobile
                 filter: (!isMobile && !prefersReducedMotion) ? 
                   `blur(${Math.abs(mousePosition.x) < 100 && Math.abs(mousePosition.y) < 100 ? 1 : 0}px)` : 
-                  isMobile ? "contrast(1.05) saturate(1.05)" : undefined, // Slight enhancement on mobile
+                  "contrast(1.05) saturate(1.05)", // Slight enhancement on all devices
                 opacity: (!isMobile && !prefersReducedMotion) ? 
                   (Math.abs(mousePosition.x) < 80 && Math.abs(mousePosition.y) < 80 ? 0.8 : 0.95) : 
-                  undefined
+                  1 // Full opacity on mobile and reduced motion
               }}
             />
           </motion.div>
@@ -214,13 +220,13 @@ export function ParallaxHero() {
                   `translate3d(${-mousePosition.x * 2}px, ${-mousePosition.y * 2}px, 0) 
                    rotate(-12deg) rotateX(${mousePosition.y * 0.03}deg) rotateY(${-mousePosition.x * 0.03}deg)
                    scale(${1 + Math.min(Math.abs(mousePosition.x), Math.abs(mousePosition.y)) * 0.0008})` : 
-                  "rotate(-6deg)",
+                  "rotate(6deg)", // Match the class rotation
                 filter: (!isMobile && !prefersReducedMotion) ? 
                   `blur(${Math.abs(mousePosition.x) < 120 && Math.abs(mousePosition.y) < 120 ? 1 : 0}px)` : 
-                  undefined,
+                  "contrast(1.05) saturate(1.05)",
                 opacity: (!isMobile && !prefersReducedMotion) ? 
                   (Math.abs(mousePosition.x) < 100 && Math.abs(mousePosition.y) < 100 ? 0.8 : 0.95) : 
-                  undefined
+                  1 // Full opacity on mobile and reduced motion
               }}
             />
           </motion.div>
@@ -252,10 +258,10 @@ export function ParallaxHero() {
                   "rotate(-4deg)",
                 filter: (!isMobile && !prefersReducedMotion) ? 
                   `blur(${Math.abs(mousePosition.x) < 150 && Math.abs(mousePosition.y) < 150 ? 1 : 0}px)` : 
-                  undefined,
+                  "contrast(1.05) saturate(1.05)",
                 opacity: (!isMobile && !prefersReducedMotion) ? 
                   (Math.abs(mousePosition.x) < 120 && Math.abs(mousePosition.y) < 120 ? 0.8 : 0.95) : 
-                  undefined
+                  1 // Full opacity on mobile and reduced motion
               }}
             />
           </motion.div>
@@ -284,13 +290,13 @@ export function ParallaxHero() {
                   `translate3d(${-mousePosition.x * 2}px, ${-mousePosition.y * 2}px, 0) 
                    rotate(6deg) rotateX(${mousePosition.y * 0.02}deg) rotateY(${-mousePosition.x * 0.02}deg)
                    scale(${1 + Math.min(Math.abs(mousePosition.x), Math.abs(mousePosition.y)) * 0.0006})` : 
-                  "rotate(6deg)",
+                  "rotate(-8deg)", // Match the class rotation
                 filter: (!isMobile && !prefersReducedMotion) ? 
                   `blur(${Math.abs(mousePosition.x) < 120 && Math.abs(mousePosition.y) < 120 ? 1 : 0}px)` : 
-                  undefined,
+                  "contrast(1.05) saturate(1.05)",
                 opacity: (!isMobile && !prefersReducedMotion) ? 
                   (Math.abs(mousePosition.x) < 100 && Math.abs(mousePosition.y) < 100 ? 0.8 : 0.95) : 
-                  undefined
+                  1 // Full opacity on mobile and reduced motion
               }}
             />
           </motion.div>
@@ -322,10 +328,10 @@ export function ParallaxHero() {
                   "rotate(12deg)",
                 filter: (!isMobile && !prefersReducedMotion) ? 
                   `blur(${Math.abs(mousePosition.x) < 120 && Math.abs(mousePosition.y) < 120 ? 1 : 0}px)` : 
-                  undefined,
+                  "contrast(1.05) saturate(1.05)",
                 opacity: (!isMobile && !prefersReducedMotion) ? 
                   (Math.abs(mousePosition.x) < 100 && Math.abs(mousePosition.y) < 100 ? 0.8 : 0.95) : 
-                  undefined
+                  1 // Full opacity on mobile and reduced motion
               }}
             />
           </motion.div>
