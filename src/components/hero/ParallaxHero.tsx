@@ -9,10 +9,18 @@ import { WaitlistCreatorCTA } from "../ui/waitlist-creator-cta";
 import { TextRotate } from "../ui/text-rotate";
 import { SocialProof } from "../ui/waitlist/social-proof";
 
-// Add CSS for radial gradient only - no mobile overrides
+// Add CSS for radial gradient and frosted glass effect
 const radialGradientStyle = `
   .bg-radial-gradient {
     background: radial-gradient(circle at center, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 70%);
+  }
+  
+  .frosted-glass {
+    background-color: rgba(248, 245, 255, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 10px 25px rgba(102, 51, 255, 0.15);
   }
 `;
 
@@ -483,7 +491,7 @@ export function ParallaxHero() {
             "relative overflow-hidden transform-gpu",
             isMobile ? 
               "backdrop-blur-[8px] rounded-[1.3rem] p-4 pt-4 pb-5 border border-white/80 shadow-[0_15px_35px_rgba(102,51,255,0.25),_0_3px_5px_rgba(102,51,255,0.15)] bg-gradient-to-br from-white/90 to-purple-50/70" : 
-              "backdrop-blur-[2px] shadow-[0_15px_35px_rgba(102,51,255,0.18),_0_3px_5px_rgba(102,51,255,0.08)] border border-white/30 rounded-2xl p-6 pt-7 pb-9 sm:p-10"
+              "frosted-glass backdrop-blur-[10px] rounded-2xl p-6 pt-7 pb-9 sm:p-10"
           )}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : 10 }}
@@ -492,13 +500,10 @@ export function ParallaxHero() {
             transform: "translateY(-2px) translateZ(0)" 
           }}
         >
-          {/* Enhanced gradient background - updated for mobile */}
-          <div className={cn(
-            "absolute inset-0 z-0",
-            isMobile ? 
-              "bg-gradient-to-br from-white/90 to-purple-50/70" : 
-              "bg-gradient-to-br from-white/70 via-white/60 to-[#f0e6ff]/40"
-          )}></div>
+          {/* Enhanced gradient background - desktop removed, only for mobile */}
+          {isMobile && (
+            <div className="absolute inset-0 z-0 bg-gradient-to-br from-white/90 to-purple-50/70"></div>
+          )}
           
           {/* Abstract shapes for decoration */}
           <div className="absolute -bottom-20 -right-20 w-64 h-64 rounded-full bg-gradient-to-tr from-[#6633FF]/5 to-[#8A5CF9]/3 blur-3xl z-0"></div>
