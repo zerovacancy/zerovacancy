@@ -1,4 +1,3 @@
-
 import React, { lazy, Suspense, useEffect, useCallback } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, useNavigationType } from 'react-router-dom';
 import { ErrorBoundary } from 'react-error-boundary';
@@ -10,6 +9,9 @@ import { mobileOptimizationClasses, optimizeMobileViewport, applyLandscapeOrient
 import { BottomNav } from '@/components/navigation/BottomNav';
 import { Analytics } from '@vercel/analytics/react';
 import { SEOProvider } from '@/components/SEO';
+import { ScrollToTop } from '@/components/ui/scroll-to-top';
+import { ScrollProgress } from '@/components/ui/scroll-progress';
+import { CookieConsent } from '@/components/ui/cookie-consent';
 
 const Index = lazy(() => import('./pages/index'));
 const PaymentConfirmation = lazy(() => import('./pages/PaymentConfirmation'));
@@ -18,6 +20,7 @@ const Account = lazy(() => import('./pages/Account'));
 const ConnectSuccess = lazy(() => import('./pages/ConnectSuccess'));
 const ConnectRefresh = lazy(() => import('./pages/ConnectRefresh'));
 const ConnectOnboarding = lazy(() => import('./pages/ConnectOnboarding'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 const PageLoader = () => {
   return (
@@ -30,7 +33,7 @@ const PageLoader = () => {
   );
 };
 
-const ScrollToTop = () => {
+const ScrollToTopComponent = () => {
   const location = useLocation();
   const navigationType = useNavigationType();
   
@@ -65,60 +68,49 @@ const ConditionalBottomNav = () => {
 function App() {
   const isMobile = useIsMobile();
   
-  // Use memoized callback functions for event listeners
   const passiveEventHandler = useCallback(() => {}, []);
   
   useEffect(() => {
-    // Always apply mobile viewport optimizations, regardless of device type
     optimizeMobileViewport();
     
-    // Apply landscape orientation fixes
     const cleanupLandscapeFixes = applyLandscapeOrientationFixes();
     
     const timer = setTimeout(() => {
       import('./pages/index');
     }, 200);
     
-    // Add event listeners with the same function references
     const passiveOption = { passive: true };
     document.addEventListener('touchstart', passiveEventHandler, passiveOption);
     document.addEventListener('touchmove', passiveEventHandler, passiveOption);
     document.addEventListener('wheel', passiveEventHandler, passiveOption);
     
     if (isMobile) {
-      // Removed color-white-bg-mobile to prevent global purple background
       document.body.classList.add('optimize-animations-mobile');
     } else {
       document.body.classList.remove('color-white-bg-mobile');
       document.body.classList.remove('optimize-animations-mobile');
     }
     
-    // Fix for viewport height issues on iOS
     const setVh = () => {
       const vh = window.innerHeight * 0.01;
       document.documentElement.style.setProperty('--vh', `${vh}px`);
     };
     
-    // Initial calculation and setup event listener
     setVh();
     window.addEventListener('resize', setVh, { passive: true });
     window.addEventListener('orientationchange', setVh, { passive: true });
     
     return () => {
       clearTimeout(timer);
-      // Remove event listeners using the same function references
       document.removeEventListener('touchstart', passiveEventHandler);
       document.removeEventListener('touchmove', passiveEventHandler);
       document.removeEventListener('wheel', passiveEventHandler);
       
-      // Remove both classes for consistency, even though we're not adding color-white-bg-mobile anymore
       document.body.classList.remove('color-white-bg-mobile');
       document.body.classList.remove('optimize-animations-mobile');
       
-      // Clean up the landscape orientation fixes
       if (cleanupLandscapeFixes) cleanupLandscapeFixes();
       
-      // Clean up viewport height fix
       window.removeEventListener('resize', setVh);
       window.removeEventListener('orientationchange', setVh);
     };
@@ -129,6 +121,8 @@ function App() {
       <SEOProvider>
         <Router>
           <ScrollToTop />
+          <ScrollProgress />
+          {React.createElement(ScrollToTop)}
           <div className="relative landscape-container">
           <Suspense fallback={<PageLoader />}>
             <Routes>
@@ -139,10 +133,12 @@ function App() {
               <Route path="/connect/success" element={<ConnectSuccess />} />
               <Route path="/connect/refresh" element={<ConnectRefresh />} />
               <Route path="/connect/onboarding" element={<ConnectOnboarding />} />
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
           <ConditionalBottomNav />
         </div>
+        <CookieConsent />
         <Toaster />
         {/* Only use SonnerToaster for error notifications, not for success */}
         <SonnerToaster 

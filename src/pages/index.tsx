@@ -101,6 +101,13 @@ const Index = () => {
     sectionsRef.current[index] = el;
   };
   
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+  
   return (
     <div className="flex flex-col min-h-screen w-full">
       <SEO 
@@ -152,7 +159,7 @@ const Index = () => {
         </div>
       )}
 
-      <main className="flex-1 pb-16 sm:pb-0 w-full">
+      <main className="flex-1 pb-16 sm:pb-0 w-full" id="main-content">
         <BackgroundEffects 
           blobColors={{
             first: "bg-purple-100",
@@ -238,10 +245,30 @@ const Index = () => {
           </Suspense>
         </section>
 
+        {!isMobile && (
+          <div className="fixed right-6 top-1/2 transform -translate-y-1/2 z-40 hidden lg:flex flex-col items-center gap-3">
+            {['how-it-works', 'find-creators', 'features', 'pricing'].map((section, index) => {
+              const isActive = visibleSections[index + 1];
+              return (
+                <button
+                  key={section}
+                  onClick={() => scrollToSection(section)}
+                  className={cn(
+                    "w-3 h-3 rounded-full transition-all duration-200",
+                    isActive 
+                      ? "bg-purple-600 scale-125 shadow-sm" 
+                      : "bg-purple-300/50 hover:bg-purple-400"
+                  )}
+                  aria-label={`Scroll to ${section.replace('-', ' ')}`}
+                />
+              );
+            })}
+          </div>
+        )}
+
         <Footer />
       </main>
       
-      {/* Updated GlowDialog with improved trigger strategy */}
       <GlowDialog 
         open={showGlowDialog} 
         onOpenChange={setShowGlowDialog}
