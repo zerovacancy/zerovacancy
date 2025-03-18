@@ -1,3 +1,4 @@
+
 export interface Creator {
   name: string;
   services: string[];
@@ -25,6 +26,8 @@ export interface CreatorCardProps {
   loadedImages: Set<string>;
   imageRef: (node: HTMLImageElement | null) => void;
   onPreviewClick?: (imageSrc: string) => void;
+  className?: string;
+  style?: React.CSSProperties;
 }
 
 export type AvailabilityStatus = 'available-now' | 'available-tomorrow' | 'premium-only';
