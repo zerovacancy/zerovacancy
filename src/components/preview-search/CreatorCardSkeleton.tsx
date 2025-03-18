@@ -3,7 +3,6 @@ import React from 'react';
 import { Card } from '@/components/ui/card';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
-import { OptimizedBorderBeam } from '@/components/ui/optimized-border-beam';
 
 export const CreatorCardSkeleton = () => {
   const isMobile = useIsMobile();
@@ -11,25 +10,17 @@ export const CreatorCardSkeleton = () => {
   return (
     <Card className={cn(
       "overflow-hidden w-full h-full", 
-      "bg-white border border-transparent", // Changed to transparent border to work with gradient
+      "bg-white border border-gray-200", // Clean white card with light border
       "animate-pulse flex flex-col",
-      "rounded-xl relative transition-all duration-200",
+      "rounded-lg relative transition-all duration-200",
       isMobile 
-        ? "shadow-[0_8px_12px_-3px_rgba(138,79,255,0.1),_0_4px_6px_-4px_rgba(138,79,255,0.15),_inset_0_1px_3px_rgba(255,255,255,0.3)]" 
-        : "shadow-[0_10px_15px_-3px_rgba(138,79,255,0.1),_0_4px_6px_-4px_rgba(138,79,255,0.15),_inset_0_1px_3px_rgba(255,255,255,0.3)]"
+        ? "shadow-[0_2px_4px_rgba(0,0,0,0.08)]" 
+        : "shadow-[0_2px_8px_rgba(0,0,0,0.08)]"
     )}>
-      {/* Add animated gradient border */}
-      <OptimizedBorderBeam 
-        colorFrom="#8a4fff" 
-        colorTo="#4f46e5" 
-        duration={15}
-        borderWidth={1}
-      />
-      
       {/* Media section */}
       <div className={cn(
         "relative w-full overflow-hidden flex-shrink-0",
-        "bg-gradient-to-r from-purple-100/80 to-indigo-100/80",
+        "bg-gray-100", // Light gray for loading state
         isMobile ? "aspect-[4/3]" : "aspect-[4/3]"
       )}></div>
       
@@ -40,39 +31,39 @@ export const CreatorCardSkeleton = () => {
       )}>
         {/* Creator name */}
         <div className="flex justify-between items-center">
-          <div className="h-5 w-32 bg-purple-200/60 rounded-lg"></div>
-          <div className="h-4 w-20 bg-gray-200/70 rounded-full"></div>
+          <div className="h-5 w-32 bg-gray-200 rounded-lg"></div>
+          <div className="h-4 w-20 bg-gray-200 rounded-full"></div>
         </div>
         
         {/* Rating */}
         <div className="flex items-center space-x-2 mt-1">
           <div className="flex">
             {[...Array(5)].map((_, i) => (
-              <div key={i} className="w-4 h-4 rounded-full bg-gray-200/70 mr-0.5"></div>
+              <div key={i} className="w-4 h-4 rounded-full bg-gray-200 mr-0.5"></div>
             ))}
           </div>
-          <div className="h-3 w-12 bg-gray-200/70 rounded-full"></div>
+          <div className="h-3 w-12 bg-gray-200 rounded-full"></div>
         </div>
         
         {/* Services */}
         <div className="flex flex-wrap gap-1.5 mt-1">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="h-6 w-20 bg-purple-200/60 rounded-full"></div>
+            <div key={i} className="h-6 w-20 bg-gray-200 rounded-full"></div>
           ))}
         </div>
         
-        {/* Recent works - with subtle gradient divider */}
-        <div className="mt-3 pt-2 gradient-divider">
-          <div className="h-4 w-24 bg-gray-200/70 rounded-full mb-3"></div>
+        {/* Recent works - with subtle divider */}
+        <div className="mt-3 pt-2 border-t border-gray-100">
+          <div className="h-4 w-24 bg-gray-200 rounded-full mb-3"></div>
           <div className="grid grid-cols-3 gap-2">
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="aspect-square bg-purple-100/70 rounded-lg"></div>
+              <div key={i} className="aspect-square bg-gray-100 rounded-lg"></div>
             ))}
           </div>
         </div>
         
         {/* CTA Button */}
-        <div className="mt-4 h-10 bg-gradient-to-r from-indigo-300/80 to-purple-300/80 rounded-lg"></div>
+        <div className="mt-4 h-10 bg-gray-300 rounded-lg"></div>
       </div>
     </Card>
   );

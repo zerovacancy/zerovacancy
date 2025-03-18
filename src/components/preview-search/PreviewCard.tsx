@@ -3,10 +3,6 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { BorderBeam } from '../ui/border-beam';
-import { GlowingEffect } from '../ui/glowing-effect';
-import { AnimatedGrid } from '../ui/animated-grid';
-import { GradientBlobBackground } from '@/components/ui/gradient-blob-background';
 
 interface PreviewCardProps {
   isVisible: boolean;
@@ -29,50 +25,16 @@ export const PreviewCard: React.FC<PreviewCardProps> = ({ isVisible, children })
       }}
       viewport={{ once: true, margin: "-50px" }}
       className={cn(
-        isMobile ? "relative" : "relative rounded-lg sm:rounded-xl overflow-hidden shadow-lg sm:shadow-xl border border-zinc-200/70 bg-white/95 will-change-transform backdrop-blur-sm"
+        isMobile ? "relative" : "relative rounded-lg sm:rounded-lg overflow-hidden shadow-md sm:shadow-md border border-gray-200 bg-white will-change-transform"
       )}
     >
-      {/* Only render effects on desktop */}
-      {!isMobile && (
-        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden rounded-lg sm:rounded-xl">
-          <BorderBeam 
-            colorFrom="#9370DB" 
-            colorTo="#C19EF9" 
-            duration={18}
-            borderWidth={1.5}
-          />
-          <GlowingEffect 
-            variant="default" 
-            blur={8} 
-            glow={true} 
-            inactiveZone={0.55}
-            spread={18}
-            borderWidth={1.2}
-            className="opacity-30"
-          />
-          <AnimatedGrid className="opacity-8" />
-        </div>
-      )}
-
-      {/* Simple transparent background on mobile, gradient blob on desktop */}
+      {/* Simple clean background layout */}
       {isMobile ? (
         <>{children}</>
       ) : (
-        <GradientBlobBackground 
-          className="min-h-0 w-full" 
-          baseColor="bg-white/95"
-          pattern="none"
-          blobColors={{
-            first: "bg-purple-200",
-            second: "bg-indigo-200",
-            third: "bg-blue-200"
-          }}
-          blobOpacity={0.3}
-          withSpotlight={true}
-          spotlightClassName="from-purple-500/15 via-indigo-500/15 to-blue-500/15"
-        >
+        <div className="min-h-0 w-full bg-white">
           {children}
-        </GradientBlobBackground>
+        </div>
       )}
     </motion.div>
   );
