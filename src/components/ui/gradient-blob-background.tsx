@@ -2,6 +2,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { OptimizedSpotlight } from './optimized-spotlight';
+
 interface GradientBlobBackgroundProps {
   className?: string;
   children?: React.ReactNode;
@@ -19,7 +20,9 @@ interface GradientBlobBackgroundProps {
   blobSize?: 'small' | 'medium' | 'large';
   baseColor?: string;
   animationSpeed?: 'slow' | 'medium' | 'fast';
+  interactive?: boolean;
 }
+
 export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
   className = '',
   children,
@@ -36,12 +39,16 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
   blobOpacity = 0.15,
   blobSize = 'medium',
   baseColor = 'bg-white/80',
-  animationSpeed = 'medium'
+  animationSpeed = 'medium',
+  interactive = false
 }) => {
   const [isMounted, setIsMounted] = useState(false);
   const isReducedMotion = useRef(false);
   const [isMobile, setIsMobile] = useState(false);
-
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  
   // Check if mobile and for reduced motion preference
   useEffect(() => {
     setIsMounted(true);
@@ -49,9 +56,15 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
       isReducedMotion.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const checkMobile = () => {
         setIsMobile(window.innerWidth < 768);
+        if (containerRef.current) {
+          const { width, height } = containerRef.current.getBoundingClientRect();
+          setDimensions({ width, height });
+        }
       };
+      
       checkMobile();
       window.addEventListener('resize', checkMobile);
+      
       return () => {
         window.removeEventListener('resize', checkMobile);
       };
@@ -60,13 +73,34 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
       return () => {}; // Empty cleanup if error
     }
   }, []);
-
+  
+  // Track mouse position for interactive mode
+  useEffect(() => {
+    if (!interactive || isMobile || !containerRef.current) return;
+    
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!containerRef.current) return;
+      
+      const { left, top } = containerRef.current.getBoundingClientRect();
+      setMousePosition({
+        x: e.clientX - left,
+        y: e.clientY - top
+      });
+    };
+    
+    window.addEventListener('mousemove', handleMouseMove);
+    
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
+  }, [interactive, isMobile]);
+  
   // Don't render animations for users with reduced motion preference or mobile
   const shouldAnimate = isMounted && !isReducedMotion.current && !isMobile;
 
   // For mobile, render simplified background without animations
   if (isMobile) {
-    return <div className={cn(`relative w-full overflow-hidden ${baseColor}`, className)}>
+    return <div ref={containerRef} className={cn(`relative w-full overflow-hidden ${baseColor}`, className)}>
         {/* Simple gradient background for mobile */}
         <div className="absolute inset-0 bg-gradient-to-b from-white/80 to-gray-100/80"></div>
         
@@ -110,6 +144,26 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
     return `${base * multipliers[animationSpeed]}s`;
   };
   
+  // Calculate interactive blob transformations
+  const getInteractiveStyles = (index: number) => {
+    if (!interactive || !dimensions.width || !dimensions.height) return {};
+    
+    // Create subtle movement based on mouse position
+    const xPercent = mousePosition.x / dimensions.width;
+    const yPercent = mousePosition.y / dimensions.height;
+    
+    const offsets = [
+      { x: -15 * xPercent, y: -15 * yPercent },
+      { x: 15 * xPercent, y: -10 * yPercent },
+      { x: -10 * xPercent, y: 15 * yPercent }
+    ];
+    
+    return {
+      transform: `translate(${offsets[index].x}px, ${offsets[index].y}px)`,
+      transition: 'transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)'
+    };
+  };
+  
   // Only render dot/grid patterns if specified
   const renderPattern = () => {
     if (pattern === 'dots') {
@@ -132,22 +186,40 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
     return null;
   };
   
-  return <div className={cn(`relative w-full overflow-hidden ${baseColor}`, className)}>
+  return <div ref={containerRef} className={cn(`relative w-full overflow-hidden ${baseColor}`, className)}>
       {/* Pattern background - only if pattern is not 'none' */}
       {renderPattern()}
       
       {/* Render main blobs (always visible) */}
-      <div className={cn(`absolute -top-10 -left-20 ${getBlobSizeClass('first')} ${blobColors.first} rounded-full mix-blend-multiply filter blur-3xl opacity-${Math.round(blobOpacity * 100)}`)} style={shouldAnimate ? {
-      animation: `blob ${getAnimationDuration(45)} infinite`
-    } : {}}></div>
-      <div className={cn(`absolute top-[40%] -right-20 ${getBlobSizeClass('second')} ${blobColors.second} rounded-full mix-blend-multiply filter blur-3xl opacity-${Math.round(blobOpacity * 100)}`)} style={shouldAnimate ? {
-      animation: `blob ${getAnimationDuration(50)} infinite`,
-      animationDelay: `${getAnimationDuration(8)}`
-    } : {}}></div>
-      <div className={cn(`absolute -bottom-40 left-[20%] ${getBlobSizeClass('third')} ${blobColors.third} rounded-full mix-blend-multiply filter blur-3xl opacity-${Math.round(blobOpacity * 100)}`)} style={shouldAnimate ? {
-      animation: `blob ${getAnimationDuration(40)} infinite`,
-      animationDelay: `${getAnimationDuration(15)}`
-    } : {}}></div>
+      <div 
+        className={cn(`absolute -top-10 -left-20 ${getBlobSizeClass('first')} ${blobColors.first} rounded-full mix-blend-multiply filter blur-3xl opacity-${Math.round(blobOpacity * 100)}`)} 
+        style={{
+          ...(shouldAnimate ? {
+            animation: `blob ${getAnimationDuration(45)} infinite`
+          } : {}),
+          ...getInteractiveStyles(0)
+        }}
+      ></div>
+      <div 
+        className={cn(`absolute top-[40%] -right-20 ${getBlobSizeClass('second')} ${blobColors.second} rounded-full mix-blend-multiply filter blur-3xl opacity-${Math.round(blobOpacity * 100)}`)} 
+        style={{
+          ...(shouldAnimate ? {
+            animation: `blob ${getAnimationDuration(50)} infinite`,
+            animationDelay: `${getAnimationDuration(8)}`
+          } : {}),
+          ...getInteractiveStyles(1)
+        }}
+      ></div>
+      <div 
+        className={cn(`absolute -bottom-40 left-[20%] ${getBlobSizeClass('third')} ${blobColors.third} rounded-full mix-blend-multiply filter blur-3xl opacity-${Math.round(blobOpacity * 100)}`)} 
+        style={{
+          ...(shouldAnimate ? {
+            animation: `blob ${getAnimationDuration(40)} infinite`,
+            animationDelay: `${getAnimationDuration(15)}`
+          } : {}),
+          ...getInteractiveStyles(2)
+        }}
+      ></div>
       
       {/* Spotlight effect - only if withSpotlight is true */}
       {withSpotlight && <OptimizedSpotlight className={spotlightClassName} size={spotlightSize} />}

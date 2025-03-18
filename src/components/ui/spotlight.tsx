@@ -1,98 +1,127 @@
 
-'use client';
-import React, { useRef, useState, useCallback, useEffect } from 'react';
-import { motion, useSpring, useTransform, SpringOptions } from 'framer-motion';
+"use client";
+
+import React, { useState, useRef, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
-type SpotlightProps = {
+interface SpotlightProps {
   className?: string;
+  children: React.ReactNode;
   size?: number;
-  springOptions?: SpringOptions;
-};
+  color?: string;
+  fadeDuration?: number;
+  disabled?: boolean;
+}
 
-export function Spotlight({
+export const Spotlight: React.FC<SpotlightProps> = ({
   className,
-  size = 200,
-  springOptions = { bounce: 0 },
-}: SpotlightProps) {
+  children,
+  size = 300,
+  color = 'rgba(255, 255, 255, 0.08)',
+  fadeDuration = 0.4,
+  disabled = false
+}) => {
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [opacity, setOpacity] = useState(0);
+  const [isActive, setIsActive] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isHovered, setIsHovered] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-  const [parentElement, setParentElement] = useState<HTMLElement | null>(null);
-
-  const mouseX = useSpring(0, springOptions);
-  const mouseY = useSpring(0, springOptions);
-
-  const spotlightLeft = useTransform(mouseX, (x) => `${x - size / 2}px`);
-  const spotlightTop = useTransform(mouseY, (y) => `${y - size / 2}px`);
-
+  const [isMobile, setIsMobile] = useState(false);
+  
+  // Check for mobile devices
   useEffect(() => {
-    if (containerRef.current) {
-      const parent = containerRef.current.parentElement;
-      if (parent) {
-        parent.style.position = 'relative';
-        parent.style.overflow = 'hidden';
-        setParentElement(parent);
-        
-        // Check if element is visible in viewport
-        const observer = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              setIsVisible(entry.isIntersecting);
-            });
-          },
-          { threshold: 0.1 }
-        );
-        
-        observer.observe(parent);
-        return () => observer.disconnect();
-      }
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+    };
+  }, []);
+  
+  // Check for reduced motion preference
+  const [isReducedMotion, setIsReducedMotion] = useState(false);
+  
+  useEffect(() => {
+    try {
+      const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const handleReducedMotionChange = () => {
+        setIsReducedMotion(mediaQuery.matches);
+      };
+      
+      handleReducedMotionChange();
+      mediaQuery.addEventListener('change', handleReducedMotionChange);
+      
+      return () => {
+        mediaQuery.removeEventListener('change', handleReducedMotionChange);
+      };
+    } catch (err) {
+      console.error("Error checking for reduced motion preference:", err);
     }
   }, []);
-
-  const handleMouseMove = useCallback(
-    (event: MouseEvent) => {
-      if (!parentElement || !isVisible) return;
-      const { left, top } = parentElement.getBoundingClientRect();
-      mouseX.set(event.clientX - left);
-      mouseY.set(event.clientY - top);
-    },
-    [mouseX, mouseY, parentElement, isVisible]
-  );
-
-  useEffect(() => {
-    if (!parentElement || !isVisible) return;
-
-    // Only add listeners if the element is visible
-    parentElement.addEventListener('mousemove', handleMouseMove);
-    parentElement.addEventListener('mouseenter', () => setIsHovered(true));
-    parentElement.addEventListener('mouseleave', () => setIsHovered(false));
-
-    return () => {
-      parentElement.removeEventListener('mousemove', handleMouseMove);
-      parentElement.removeEventListener('mouseenter', () => setIsHovered(true));
-      parentElement.removeEventListener('mouseleave', () => setIsHovered(false));
-    };
-  }, [parentElement, handleMouseMove, isVisible]);
-
-  // Don't render anything if not visible in viewport
-  if (!isVisible) return null;
+  
+  // No spotlight on mobile or reduced motion
+  if (isMobile || isReducedMotion || disabled) {
+    return <div className={cn('relative', className)}>{children}</div>;
+  }
+  
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!containerRef.current) return;
+    
+    const rect = containerRef.current.getBoundingClientRect();
+    setPosition({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    });
+  };
+  
+  const handleMouseEnter = () => {
+    setIsActive(true);
+    setOpacity(1);
+  };
+  
+  const handleMouseLeave = () => {
+    setIsActive(false);
+    setOpacity(0);
+  };
 
   return (
-    <motion.div
+    <div 
       ref={containerRef}
-      className={cn(
-        'pointer-events-none absolute rounded-full bg-[radial-gradient(circle_at_center,var(--tw-gradient-stops),transparent_80%)] blur-xl transition-opacity duration-200 will-change-transform',
-        'from-zinc-50 via-zinc-100 to-zinc-200',
-        isHovered ? 'opacity-100' : 'opacity-0',
-        className
-      )}
-      style={{
-        width: size,
-        height: size,
-        left: spotlightLeft,
-        top: spotlightTop,
-      }}
-    />
+      className={cn('relative overflow-hidden', className)}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      {/* Spotlight effect */}
+      <motion.div
+        className="pointer-events-none absolute -inset-px z-0"
+        animate={{
+          opacity,
+          transition: { duration: fadeDuration }
+        }}
+      >
+        <div
+          className="absolute"
+          style={{
+            background: `radial-gradient(circle ${size}px at ${position.x}px ${position.y}px, ${color}, transparent)`,
+            width: '100%',
+            height: '100%',
+            left: 0,
+            top: 0,
+          }}
+        />
+      </motion.div>
+      
+      {/* Content */}
+      <div className="relative z-10">
+        {children}
+      </div>
+    </div>
   );
-}
+};
+
+export default Spotlight;

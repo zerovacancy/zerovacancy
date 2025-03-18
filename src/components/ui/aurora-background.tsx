@@ -6,17 +6,35 @@ import React, { ReactNode, useRef, useEffect, useState } from "react";
 interface AuroraBackgroundProps extends React.HTMLProps<HTMLDivElement> {
   children: ReactNode;
   showRadialGradient?: boolean;
+  intensity?: 'low' | 'medium' | 'high';
+  interactive?: boolean;
 }
 
 export const AuroraBackground = ({
   className,
   children,
   showRadialGradient = true,
+  intensity = 'medium',
+  interactive = false,
   ...props
 }: AuroraBackgroundProps) => {
   const [isVisible, setIsVisible] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const ref = useRef<HTMLDivElement>(null);
+  const auroraRef = useRef<HTMLDivElement>(null);
   
+  // Set intensity factor based on prop
+  const getIntensityFactor = () => {
+    switch(intensity) {
+      case 'low': return 0.7;
+      case 'high': return 1.3;
+      default: return 1;
+    }
+  };
+  
+  const intensityFactor = getIntensityFactor();
+  
+  // Handle intersection observation for animation trigger
   useEffect(() => {
     if (!ref.current) return;
     
@@ -40,6 +58,55 @@ export const AuroraBackground = ({
       observer.disconnect();
     };
   }, []);
+  
+  // Handle interactive mouse movement
+  useEffect(() => {
+    if (!interactive || !ref.current || !auroraRef.current) return;
+    
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!ref.current) return;
+      
+      const rect = ref.current.getBoundingClientRect();
+      // Calculate normalized position relative to the element (0-1)
+      const x = (e.clientX - rect.left) / rect.width;
+      const y = (e.clientY - rect.top) / rect.height;
+      
+      setMousePosition({ x, y });
+      
+      // Update CSS variables for interactive effect
+      if (auroraRef.current) {
+        auroraRef.current.style.setProperty('--mouse-x', `${x * 100}%`);
+        auroraRef.current.style.setProperty('--mouse-y', `${y * 100}%`);
+      }
+    };
+    
+    const resetPosition = () => {
+      if (auroraRef.current) {
+        auroraRef.current.style.setProperty('--mouse-x', '50%');
+        auroraRef.current.style.setProperty('--mouse-y', '50%');
+      }
+    };
+    
+    window.addEventListener('mousemove', handleMouseMove);
+    ref.current.addEventListener('mouseleave', resetPosition);
+    
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      if (ref.current) {
+        ref.current.removeEventListener('mouseleave', resetPosition);
+      }
+    };
+  }, [interactive]);
+  
+  const getInteractiveStyles = () => {
+    if (!interactive) return {};
+    
+    return {
+      "--mouse-x": "50%",
+      "--mouse-y": "50%",
+      "--intensity": intensityFactor.toString()
+    } as React.CSSProperties;
+  };
 
   return (
     <div
@@ -53,6 +120,8 @@ export const AuroraBackground = ({
       {isVisible && (
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div
+            ref={auroraRef}
+            style={getInteractiveStyles()}
             className={cn(
               `
             [--white-gradient:repeating-linear-gradient(100deg,var(--white)_0%,var(--white)_7%,var(--transparent)_10%,var(--transparent)_12%,var(--white)_16%)]
@@ -61,15 +130,20 @@ export const AuroraBackground = ({
             [background-image:var(--white-gradient),var(--aurora)]
             dark:[background-image:var(--dark-gradient),var(--aurora)]
             [background-size:300%,_200%]
-            [background-position:50%_50%,50%_50%]
-            filter blur-[10px] invert dark:invert-0
+            ${interactive ? 
+              '[background-position:calc(var(--mouse-x,50%)*0.5 + 25%)_calc(var(--mouse-y,50%)*0.5 + 25%),var(--mouse-x,50%)_var(--mouse-y,50%)]' : 
+              '[background-position:50%_50%,50%_50%]'}
+            filter blur-[calc(10px*var(--intensity,1))] invert dark:invert-0
             after:content-[""] after:absolute after:inset-0 after:[background-image:var(--white-gradient),var(--aurora)] 
             after:dark:[background-image:var(--dark-gradient),var(--aurora)]
             after:[background-size:200%,_100%] 
-            after:animate-aurora after:[background-attachment:fixed] after:mix-blend-difference
-            absolute -inset-[10px] opacity-40 will-change-transform`,
+            ${interactive ? 
+              'after:[background-position:calc(100% - var(--mouse-x, 50%))_calc(100% - var(--mouse-y, 50%)),var(--mouse-x, 50%)_var(--mouse-y, 50%)]' : 
+              'after:animate-aurora after:[background-attachment:fixed]'} 
+            after:mix-blend-difference
+            absolute -inset-[10px] opacity-[calc(0.4*var(--intensity,1))] will-change-transform transition-all duration-700`,
               showRadialGradient &&
-                `[mask-image:radial-gradient(ellipse_at_100%_0%,black_10%,var(--transparent)_70%)]`
+                `[mask-image:radial-gradient(ellipse_at_${interactive ? 'var(--mouse-x, 100%)_var(--mouse-y, 0%)' : '100% 0%'},black_${interactive ? '20%' : '10%'},var(--transparent)_${interactive ? '80%' : '70%'})]`
             )}
           ></div>
         </div>
