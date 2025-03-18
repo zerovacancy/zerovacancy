@@ -9,18 +9,51 @@ import { WaitlistCreatorCTA } from "../ui/waitlist-creator-cta";
 import { TextRotate } from "../ui/text-rotate";
 import { SocialProof } from "../ui/waitlist/social-proof";
 
-// Add CSS for radial gradient and frosted glass effect
 const radialGradientStyle = `
   .bg-radial-gradient {
     background: radial-gradient(circle at center, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 70%);
   }
   
   .frosted-glass {
-    background-color: rgba(248, 245, 255, 0.85);
+    background: linear-gradient(to bottom, rgba(245, 240, 255, 0.9), rgba(255, 255, 255, 0.85));
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    box-shadow: 0 10px 25px rgba(102, 51, 255, 0.15);
+    border: 1px solid;
+    border-image: linear-gradient(to right, rgba(138, 92, 249, 0.3), rgba(102, 51, 255, 0.2)) 1;
+    box-shadow: 0 10px 30px rgba(102, 51, 255, 0.12), inset 0 0 40px rgba(102, 51, 255, 0.05);
+  }
+  
+  .premium-container-mobile {
+    background: linear-gradient(to bottom, rgba(245, 240, 255, 0.9), rgba(255, 255, 255, 0.85));
+    box-shadow: 0 10px 25px rgba(102, 51, 255, 0.2), inset 0 0 20px rgba(102, 51, 255, 0.03);
+  }
+  
+  .gradient-border-bottom {
+    position: relative;
+  }
+  
+  .gradient-border-bottom:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 15%;
+    width: 70%;
+    height: 2px;
+    background: linear-gradient(to right, transparent, rgba(102, 51, 255, 0.3), transparent);
+  }
+  
+  .text-glow {
+    text-shadow: 0 0 10px rgba(102, 51, 255, 0.2);
+  }
+  
+  .creator-button-hover {
+    transition: all 0.3s ease;
+  }
+  
+  .creator-button-hover:hover {
+    transform: translateY(-2px) scale(1.01);
+    box-shadow: 0 5px 15px rgba(102, 51, 255, 0.15);
+    border-width: 2.5px;
   }
 `;
 
@@ -44,7 +77,6 @@ export function ParallaxHero() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   
-  // Check for reduced motion preference
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     setPrefersReducedMotion(mediaQuery.matches);
@@ -56,7 +88,6 @@ export function ParallaxHero() {
     if (mediaQuery.addEventListener) {
       mediaQuery.addEventListener('change', handleChange);
     } else {
-      // For older browsers
       mediaQuery.addListener(handleChange);
     }
     
@@ -64,20 +95,16 @@ export function ParallaxHero() {
       if (mediaQuery.removeEventListener) {
         mediaQuery.removeEventListener('change', handleChange);
       } else {
-        // For older browsers
         mediaQuery.removeListener(handleChange);
       }
     };
   }, []);
 
-  // Handle parallax effect
   useEffect(() => {
     if (!containerRef.current) return;
 
-    // Set initial position for all devices
     setMousePosition({ x: 5, y: 5 });
 
-    // Only add mousemove for non-mobile and when motion is enabled
     if (isMobile || prefersReducedMotion) return;
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -93,7 +120,6 @@ export function ParallaxHero() {
     };
   }, [isMobile, prefersReducedMotion]);
 
-  // Track visibility
   useEffect(() => {
     if (!sectionRef.current) return;
 
@@ -134,7 +160,6 @@ export function ParallaxHero() {
         isInView ? "animate-fade-in" : "opacity-0"
       )}
     >
-      {/* Subtle dot grid pattern */}
       <div className={cn(
         "absolute inset-0 z-0 mix-blend-overlay",
         isMobile ? "opacity-[0.03]" : "opacity-[0.04]"
@@ -147,29 +172,23 @@ export function ParallaxHero() {
            }}
       ></div>
       
-      {/* Radial gradient for focal point */}
       <div className="absolute inset-0 z-0 bg-radial-gradient opacity-80 pointer-events-none"></div>
       
-      {/* Soft color accents */}
       <div className="absolute top-[10%] left-[5%] w-[30vw] h-[30vh] rounded-full bg-[#6633FF]/[0.06] blur-[80px] z-0"></div>
       <div className="absolute bottom-[15%] right-[10%] w-[25vw] h-[25vh] rounded-full bg-[#4169E1]/[0.05] blur-[60px] z-0"></div>
       <div className="absolute top-[40%] right-[8%] w-[15vw] h-[20vh] rounded-full bg-[#8A5CF9]/[0.06] blur-[70px] z-0"></div>
 
-      {/* Parallax floating images - strategically positioned */}
       <div 
         ref={containerRef}
         className="absolute inset-0 w-full h-full overflow-hidden z-1 pointer-events-none"
       >
-        {/* Reduced motion setting - using prefers-reduced-motion media query */}
         {isMobile && (
           <div className="absolute top-2 right-2 z-30 text-[10px] flex items-center text-purple-700/70" aria-hidden="true">
             <input type="checkbox" id="reduced-motion" className="mr-1 h-3 w-3" checked={prefersReducedMotion} onChange={() => setPrefersReducedMotion(!prefersReducedMotion)} />
             <label htmlFor="reduced-motion" className="text-[9px] uppercase font-medium">Reduce motion</label>
           </div>
         )}
-        {/* Image group with dynamic blur effect based on proximity */}
         <motion.div className="absolute inset-0 overflow-hidden">
-          {/* TOP LEFT image */}
           <motion.div 
             className={cn(
               "absolute",
@@ -208,7 +227,6 @@ export function ParallaxHero() {
             />
           </motion.div>
 
-          {/* TOP RIGHT image */}
           <motion.div
             className={cn(
               "absolute",
@@ -247,7 +265,6 @@ export function ParallaxHero() {
             />
           </motion.div>
 
-          {/* MIDDLE LEFT image */}
           <motion.div
             className={cn(
               "absolute",
@@ -286,7 +303,6 @@ export function ParallaxHero() {
             />
           </motion.div>
 
-          {/* MIDDLE RIGHT image */}
           <motion.div
             className={cn(
               "absolute",
@@ -325,7 +341,6 @@ export function ParallaxHero() {
             />
           </motion.div>
 
-          {/* BOTTOM LEFT image */}
           <motion.div
             className={cn(
               "absolute",
@@ -364,7 +379,6 @@ export function ParallaxHero() {
             />
           </motion.div>
 
-          {/* BOTTOM RIGHT image */}
           <motion.div
             className={cn(
               "absolute",
@@ -403,7 +417,6 @@ export function ParallaxHero() {
             />
           </motion.div>
 
-          {/* BOTTOM CENTER image */}
           <motion.div
             className={cn(
               "absolute",
@@ -442,7 +455,6 @@ export function ParallaxHero() {
             />
           </motion.div>
 
-          {/* Desktop-only images that would crowd mobile view */}
           {!isMobile && (
             <>
               <motion.div
@@ -475,7 +487,6 @@ export function ParallaxHero() {
         </motion.div>
       </div>
 
-      {/* Mobile-optimized background overlay for better legibility */}
       <div className={cn(
         "absolute inset-0 z-5 pointer-events-none",
         isMobile 
@@ -483,15 +494,13 @@ export function ParallaxHero() {
           : "bg-gradient-to-t from-white/20 to-transparent"
       )}></div>
       
-      {/* Content overlay */}
       <div className="z-10 flex flex-col items-center justify-center max-w-4xl mx-auto text-center relative px-4">
-        {/* Text content container with premium card-like treatment */}
         <motion.div 
           className={cn(
             "relative overflow-hidden transform-gpu",
             isMobile ? 
-              "backdrop-blur-[8px] rounded-[1.3rem] p-4 pt-4 pb-5 border border-white/80 shadow-[0_15px_35px_rgba(102,51,255,0.25),_0_3px_5px_rgba(102,51,255,0.15)] bg-gradient-to-br from-white/90 to-purple-50/70" : 
-              "frosted-glass backdrop-blur-[10px] rounded-2xl p-6 pt-7 pb-9 sm:p-10"
+              "premium-container-mobile backdrop-blur-[8px] rounded-[1.3rem] p-5 pt-5 pb-6 border border-white/80 shadow-[0_15px_35px_rgba(102,51,255,0.25),_0_3px_5px_rgba(102,51,255,0.15)]" : 
+              "frosted-glass backdrop-blur-[10px] rounded-2xl p-7 pt-8 pb-10 sm:p-12"
           )}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : 10 }}
@@ -500,47 +509,61 @@ export function ParallaxHero() {
             transform: "translateY(-2px) translateZ(0)" 
           }}
         >
-          {/* Enhanced gradient background - desktop removed, only for mobile */}
           {isMobile && (
             <div className="absolute inset-0 z-0 bg-gradient-to-br from-white/90 to-purple-50/70"></div>
           )}
           
-          {/* Abstract shapes for decoration */}
           <div className="absolute -bottom-20 -right-20 w-64 h-64 rounded-full bg-gradient-to-tr from-[#6633FF]/5 to-[#8A5CF9]/3 blur-3xl z-0"></div>
           
-          {/* Corner decorative elements - enhanced for mobile with gradient border */}
-          <div className="absolute top-0 left-0 w-16 h-16 pointer-events-none z-0">
+          <div className="absolute top-0 left-0 w-20 h-20 pointer-events-none z-0">
             <div className={cn(
-              "absolute top-0 left-0 h-8",
-              isMobile ? "w-[1.5px] bg-gradient-to-b from-[#6633FF]/30 to-transparent" : 
-                        "w-[1px] bg-gradient-to-b from-[#6633FF]/20 to-transparent"
+              "absolute top-0 left-0 h-10",
+              isMobile ? 
+                "w-[1.5px] bg-gradient-to-b from-[#6633FF]/40 to-transparent" : 
+                "w-[1.5px] bg-gradient-to-b from-[#6633FF]/30 to-transparent"
             )}></div>
             <div className={cn(
-              "absolute top-0 left-0 h-[1px]",
-              isMobile ? "w-10 bg-gradient-to-r from-[#6633FF]/30 to-transparent" : 
-                        "w-8 bg-gradient-to-r from-[#6633FF]/20 to-transparent"
-            )}></div>
-          </div>
-          
-          <div className="absolute bottom-0 right-0 w-16 h-16 pointer-events-none z-0">
-            <div className={cn(
-              "absolute bottom-0 right-0 h-8",
-              isMobile ? "w-[1.5px] bg-gradient-to-t from-[#6633FF]/30 to-transparent" :
-                        "w-[1px] bg-gradient-to-t from-[#6633FF]/20 to-transparent"
-            )}></div>
-            <div className={cn(
-              "absolute bottom-0 right-0 h-[1px]",
-              isMobile ? "w-10 bg-gradient-to-l from-[#6633FF]/30 to-transparent" :
-                        "w-8 bg-gradient-to-l from-[#6633FF]/20 to-transparent"
+              "absolute top-0 left-0 w-10",
+              isMobile ? 
+                "h-[1.5px] bg-gradient-to-r from-[#6633FF]/40 to-transparent" : 
+                "h-[1.5px] bg-gradient-to-r from-[#6633FF]/30 to-transparent"
             )}></div>
           </div>
           
-          {/* Main heading */}
+          <div className="absolute bottom-0 right-0 w-20 h-20 pointer-events-none z-0">
+            <div className={cn(
+              "absolute bottom-0 right-0 h-10",
+              isMobile ? 
+                "w-[1.5px] bg-gradient-to-t from-[#6633FF]/40 to-transparent" :
+                "w-[1.5px] bg-gradient-to-t from-[#6633FF]/30 to-transparent"
+            )}></div>
+            <div className={cn(
+              "absolute bottom-0 right-0 w-10",
+              isMobile ? 
+                "h-[1.5px] bg-gradient-to-l from-[#6633FF]/40 to-transparent" :
+                "h-[1.5px] bg-gradient-to-l from-[#6633FF]/30 to-transparent"
+            )}></div>
+          </div>
+
+          {!isMobile && (
+            <>
+              <div className="absolute top-0 right-0 w-20 h-20 pointer-events-none z-0">
+                <div className="absolute top-0 right-0 h-10 w-[1.5px] bg-gradient-to-b from-[#6633FF]/30 to-transparent"></div>
+                <div className="absolute top-0 right-0 w-10 h-[1.5px] bg-gradient-to-l from-[#6633FF]/30 to-transparent"></div>
+              </div>
+              
+              <div className="absolute bottom-0 left-0 w-20 h-20 pointer-events-none z-0">
+                <div className="absolute bottom-0 left-0 h-10 w-[1.5px] bg-gradient-to-t from-[#6633FF]/30 to-transparent"></div>
+                <div className="absolute bottom-0 left-0 w-10 h-[1.5px] bg-gradient-to-r from-[#6633FF]/30 to-transparent"></div>
+              </div>
+            </>
+          )}
+          
           <motion.h1 
             className={cn(
               "tracking-tight leading-tight font-bold font-jakarta relative z-10",
               isMobile ? "text-xl" : "text-4xl sm:text-5xl lg:text-6xl",
-              isMobile ? "w-full mb-2" : "w-full mb-5 sm:mb-7"
+              isMobile ? "w-full mb-3" : "w-full mb-6 sm:mb-8"
             )}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : 20 }}
@@ -552,8 +575,8 @@ export function ParallaxHero() {
                 "bg-clip-text text-transparent bg-gradient-to-r from-[#6633FF] to-[#8A5CF9]",
                 isMobile ? 
                   "block mb-[0.25rem] text-[1rem] drop-shadow-[0_2px_2px_rgba(102,51,255,0.25)]" : 
-                  "block mb-1 sm:mb-4 text-3xl sm:text-4xl lg:text-5xl drop-shadow-[0_2px_2px_rgba(102,51,255,0.2)]",
-                "font-jakarta"
+                  "block mb-2 sm:mb-5 text-3xl sm:text-4xl lg:text-5xl drop-shadow-[0_2px_2px_rgba(102,51,255,0.25)]",
+                "font-jakarta font-semibold"
               )}
             >
               PROPERTY CONTENT THAT
@@ -577,10 +600,12 @@ export function ParallaxHero() {
                 rotationInterval={3500}
                 elementLevelClassName={cn(
                   isMobile ? "text-[2.2rem] leading-tight pb-1" : "text-5xl sm:text-6xl lg:text-7xl",
-                  "font-bold font-jakarta tracking-tight",
+                  "font-bold font-jakarta tracking-tight text-glow",
                   "bg-clip-text text-transparent bg-gradient-to-r from-[#6633FF] to-[#8A5CF9]",
-                  "drop-shadow-[0_2px_1px_rgba(102,51,255,0.3)]",
-                  isMobile ? "border-b-[1px] border-[#6633FF]/30 pb-1" : "border-b-2 border-[#6633FF]/10 pb-1"
+                  "drop-shadow-[0_2px_1px_rgba(102,51,255,0.35)]",
+                  isMobile ? 
+                    "border-b-[1.5px] border-[#6633FF]/30 pb-1 gradient-border-bottom" : 
+                    "border-b-2 border-[#6633FF]/20 pb-1 gradient-border-bottom"
                 )}
                 transition={{ 
                   type: "spring",
@@ -593,18 +618,16 @@ export function ParallaxHero() {
             </div>
           </motion.h1>
 
-          {/* Subtle divider line */}
-          {isMobile && (
-            <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-[#6633FF]/10 to-transparent my-1"></div>
-          )}
+          <div className="w-24 h-[1px] bg-gradient-to-r from-transparent via-[#6633FF]/15 to-transparent my-2"></div>
 
-          {/* Subheading with clean typography - improved for mobile */}
           <motion.p
             className={cn(
               "text-[#3D3A5A] font-inter relative z-10",
               "max-w-[95%] sm:max-w-[600px] mx-auto",
               "font-medium",
-              isMobile ? "text-[0.8rem] leading-[1.5] mb-3" : "text-base sm:text-lg mb-10"
+              isMobile ? 
+                "text-[0.85rem] leading-[1.6] tracking-[0.01em] mb-4" : 
+                "text-base sm:text-lg leading-relaxed tracking-wide mb-12"
             )}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : 20 }}
@@ -617,89 +640,79 @@ export function ParallaxHero() {
             )}
           </motion.p>
 
-        {/* CTA Buttons */}
-        <motion.div
-          className="w-full relative z-10"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : 20 }}
-          transition={{ duration: 0.4, delay: 0.6 }}
-        >
-          {/* Desktop CTA layout */}
-          {!isMobile && (
-            <div className="w-full max-w-4xl mx-auto relative">
-              <div className="flex flex-row justify-center gap-[10%] mb-6 relative items-start">
-                {/* Property Owner CTA */}
-                <div className="flex flex-col w-[45%] max-w-[280px]">
-                  <div className="flex items-center justify-center mb-3">
-                    <div className="h-[0.5px] w-5 bg-purple-300/80 mr-2"></div>
-                    <span className="text-sm font-bold text-purple-700 tracking-wide font-jakarta">For Property Owners</span>
-                    <div className="h-[0.5px] w-5 bg-purple-300/80 ml-2"></div>
-                  </div>
-                  <WaitlistCTA 
-                    buttonText="RESERVE EARLY ACCESS" 
-                    showSocialProof={false}
-                  />
-                </div>
-                
-                {/* Creator CTA */}
-                <div className="flex flex-col w-[45%] max-w-[280px] relative">
-                  <div className="flex items-center justify-center mb-3">
-                    <div className="h-[0.5px] w-5 bg-purple-300/80 mr-2"></div>
-                    <span className="text-sm font-bold text-purple-700 tracking-wide font-jakarta">For Content Creators</span>
-                    <div className="h-[0.5px] w-5 bg-purple-300/80 ml-2"></div>
-                  </div>
-                  <div className="relative">
-                    <WaitlistCreatorCTA 
-                      buttonText="JOIN AS CREATOR" 
-                      showSocialProof={false}
-                      className="[&_button]:border-[3px]"
-                    />
-                  </div>
-                </div>
-              </div>
-              
-              {/* Social proof centered below both buttons */}
-              <div className="w-full flex justify-center">
-                <SocialProof className="mt-2.5" />
-              </div>
-            </div>
-          )}
-          
-          {/* Mobile CTA layout - improved with better spacing and touch areas */}
-          {isMobile && (
-            <>
-              <div className="w-full flex flex-col items-center">
-                <div className="w-full max-w-[280px] mx-auto flex flex-col">
-                  {/* Primary CTA with social proof grouped closely */}
-                  <div className="flex flex-col mb-4">
-                    {/* Main waitlist CTA with increased touch target */}
+          <motion.div
+            className="w-full relative z-10"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : 20 }}
+            transition={{ duration: 0.4, delay: 0.6 }}
+          >
+            {!isMobile && (
+              <div className="w-full max-w-4xl mx-auto relative">
+                <div className="flex flex-row justify-center gap-[12%] mb-8 relative items-start">
+                  <div className="flex flex-col w-[44%] max-w-[280px]">
+                    <div className="flex items-center justify-center mb-4">
+                      <div className="h-[0.5px] w-6 bg-purple-300/80 mr-2"></div>
+                      <span className="text-sm font-bold text-purple-700 tracking-wide font-jakarta">For Property Owners</span>
+                      <div className="h-[0.5px] w-6 bg-purple-300/80 ml-2"></div>
+                    </div>
                     <WaitlistCTA 
-                      className="mb-0 [&_button]:py-[0.6rem] [&_button]:h-[38px] [&_button]:transition-all [&_button]:duration-300 [&_button]:active:scale-[1.02] [&_button]:active:brightness-110 [&_button]:shadow-md [&_button]:shadow-purple-500/20 [&_button]:text-[0.7rem] [&_button]:font-bold [&_button]:tracking-wider [&_input]:bg-white/90" 
-                      buttonText="RESERVE ACCESS" 
+                      buttonText="RESERVE EARLY ACCESS" 
                       showSocialProof={false}
+                      className="[&_button]:shadow-lg [&_button]:shadow-purple-500/25 [&_button]:hover:shadow-purple-500/35 [&_button]:hover:translate-y-[-2px] [&_button]:hover:scale-[1.01] [&_button]:transition-all [&_button]:duration-300"
                     />
-                    
-                    {/* Social proof directly beneath primary CTA with tighter spacing and visual connection */}
-                    <div className="w-full flex flex-col items-center mt-[10px] relative">
-                      {/* Subtle connecting indicator */}
-                      <div className="absolute -top-1 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-b-[6px] border-b-[#F5F0FF] z-10"></div>
-                      <SocialProof 
-                        className="mt-0 transform-gpu animate-fade-in scale-75 origin-top"
+                  </div>
+                  
+                  <div className="flex flex-col w-[44%] max-w-[280px] relative">
+                    <div className="flex items-center justify-center mb-4">
+                      <div className="h-[0.5px] w-6 bg-purple-300/80 mr-2"></div>
+                      <span className="text-sm font-bold text-purple-700 tracking-wide font-jakarta">For Content Creators</span>
+                      <div className="h-[0.5px] w-6 bg-purple-300/80 ml-2"></div>
+                    </div>
+                    <div className="relative">
+                      <WaitlistCreatorCTA 
+                        buttonText="JOIN AS CREATOR" 
+                        showSocialProof={false}
+                        className="[&_button]:border-[3px] [&_button]:border-purple-600 [&_button]:creator-button-hover [&_button]:transition-all [&_button]:duration-300"
                       />
                     </div>
                   </div>
-                  
-                  {/* Creator CTA as separate alternative option */}
-                  <WaitlistCreatorCTA 
-                    buttonText="JOIN AS CREATOR" 
-                    showSocialProof={false}
-                    className="[&_button]:py-[0.6rem] [&_button]:h-[38px] [&_button]:transition-all [&_button]:duration-300 [&_button]:active:scale-[1.02] [&_button]:active:brightness-105 [&_button]:bg-transparent [&_button]:shadow-sm [&_button]:shadow-purple-500/10 [&_button]:text-[0.7rem] [&_button]:font-bold [&_button]:tracking-wider [&_button]:border-purple-700/70 [&_button]:text-purple-700"
-                  />
+                </div>
+                
+                <div className="w-full flex justify-center mt-2">
+                  <SocialProof className="mt-3" />
                 </div>
               </div>
-            </>
-          )}
-        </motion.div>
+            )}
+            
+            {isMobile && (
+              <>
+                <div className="w-full flex flex-col items-center">
+                  <div className="w-full max-w-[280px] mx-auto flex flex-col">
+                    <div className="flex flex-col mb-5">
+                      <WaitlistCTA 
+                        className="mb-0 [&_button]:py-[0.6rem] [&_button]:h-[38px] [&_button]:transition-all [&_button]:duration-300 [&_button]:active:scale-[1.02] [&_button]:active:brightness-110 [&_button]:shadow-md [&_button]:shadow-purple-500/30 [&_button]:text-[0.7rem] [&_button]:font-bold [&_button]:tracking-wider [&_input]:bg-white/90" 
+                        buttonText="RESERVE ACCESS" 
+                        showSocialProof={false}
+                      />
+                      
+                      <div className="w-full flex flex-col items-center mt-[12px] relative">
+                        <div className="absolute -top-1 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-b-[6px] border-b-[#F5F0FF] z-10"></div>
+                        <SocialProof 
+                          className="mt-0 transform-gpu animate-fade-in scale-75 origin-top"
+                        />
+                      </div>
+                    </div>
+                    
+                    <WaitlistCreatorCTA 
+                      buttonText="JOIN AS CREATOR" 
+                      showSocialProof={false}
+                      className="[&_button]:py-[0.6rem] [&_button]:h-[38px] [&_button]:transition-all [&_button]:duration-300 [&_button]:active:scale-[1.02] [&_button]:active:brightness-105 [&_button]:bg-transparent [&_button]:shadow-md [&_button]:shadow-purple-500/15 [&_button]:text-[0.7rem] [&_button]:font-bold [&_button]:tracking-wider [&_button]:border-purple-700/80 [&_button]:text-purple-700 [&_button]:border-[2px]"
+                    />
+                  </div>
+                </div>
+              </>
+            )}
+          </motion.div>
         </motion.div>
       </div>
     </section>
