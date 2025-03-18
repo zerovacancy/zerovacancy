@@ -80,42 +80,46 @@ export const PreviewContent = () => {
             ))}
           </div>
         ) : (
-          <MobileCreatorCarousel 
-            creators={creatorData}
-            onImageLoad={handleImageLoad}
-            loadedImages={loadedImages}
-            imageRef={(node) => { imageRef.current = node; }}
-            onPreviewClick={setSelectedImage}
-          />
+          <div className="backdrop-blur-[3px] bg-gradient-to-b from-white/30 to-purple-50/10 p-2 rounded-xl">
+            <MobileCreatorCarousel 
+              creators={creatorData}
+              onImageLoad={handleImageLoad}
+              loadedImages={loadedImages}
+              imageRef={(node) => { imageRef.current = node; }}
+              onPreviewClick={setSelectedImage}
+            />
+          </div>
         )
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-5">
-          {isLoading ? (
-            <>
-              {[1, 2, 3].map((item) => (
-                <CreatorCardSkeleton key={item} />
-              ))}
-            </>
-          ) : (
-            creatorData.map((creator, index) => (
-              <CreatorCard 
-                key={index}
-                creator={creator}
-                onImageLoad={handleImageLoad}
-                loadedImages={loadedImages}
-                imageRef={(node) => { imageRef.current = node; }}
-                onPreviewClick={setSelectedImage}
-              />
-            ))
-          )}
+        <div className="backdrop-blur-[5px] bg-white/40 p-4 rounded-xl border border-purple-100/30 shadow-lg">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-5">
+            {isLoading ? (
+              <>
+                {[1, 2, 3].map((item) => (
+                  <CreatorCardSkeleton key={item} />
+                ))}
+              </>
+            ) : (
+              creatorData.map((creator, index) => (
+                <CreatorCard 
+                  key={index}
+                  creator={creator}
+                  onImageLoad={handleImageLoad}
+                  loadedImages={loadedImages}
+                  imageRef={(node) => { imageRef.current = node; }}
+                  onPreviewClick={setSelectedImage}
+                />
+              ))
+            )}
+          </div>
         </div>
       )}
 
-      {/* Image preview dialog */}
+      {/* Image preview dialog with glass morphism */}
       {selectedImage && (
         <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
           <DialogContent className="p-0 bg-transparent border-0 max-w-[90vw] sm:max-w-[80vw]">
-            <div className="relative">
+            <div className="relative backdrop-blur-md bg-black/30 p-1 rounded-lg">
               <img
                 src={selectedImage}
                 alt="Portfolio work"
@@ -123,7 +127,7 @@ export const PreviewContent = () => {
               />
               <button
                 onClick={() => setSelectedImage(null)}
-                className="absolute right-3 top-3 bg-black/50 rounded-full p-1.5 text-white"
+                className="absolute right-3 top-3 bg-black/50 backdrop-blur-sm rounded-full p-1.5 text-white"
               >
                 <X className="h-4 w-4" />
               </button>

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -42,7 +43,7 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
                 key={index}
                 className={cn(
                   "relative rounded-md overflow-hidden cursor-pointer group",
-                  "border border-gray-100",
+                  "border border-purple-100/80",
                   "shadow-sm aspect-square", // Fixed aspect ratio for consistency
                   "bg-gray-50"
                 )}
@@ -58,9 +59,11 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
                     target.src = '/placeholder.svg';
                   }}
                 />
-                {/* Hover overlay for work examples */}
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
-                  <ExternalLink className="w-4 h-4 text-white" />
+                {/* Glass morphism hover overlay */}
+                <div className="absolute inset-0 bg-black/40 backdrop-blur-[3px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+                  <div className="p-1.5 bg-white/20 rounded-full">
+                    <ExternalLink className="w-3.5 h-3.5 text-white" />
+                  </div>
                 </div>
               </div>
             ))}
@@ -72,7 +75,7 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
                 key={index}
                 className={cn(
                   "relative rounded-md overflow-hidden cursor-pointer group",
-                  "border border-gray-100",
+                  "border border-purple-100/80",
                   "shadow-sm hover:shadow-md transition-shadow duration-200",
                   "aspect-square", 
                   "bg-gray-50"
@@ -89,8 +92,8 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
                     target.src = '/placeholder.svg';
                   }}
                 />
-                {/* Enhanced hover overlay with view icon */}
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+                {/* Enhanced glass morphism hover overlay */}
+                <div className="absolute inset-0 bg-black/40 backdrop-blur-[6px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                   <div className="p-1.5 bg-white/20 rounded-full backdrop-blur-sm">
                     <ExternalLink className="w-3.5 h-3.5 text-white" />
                   </div>
@@ -101,25 +104,27 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
         )}
       </div>
 
-      {/* Enhanced dialog for image preview - only shown if onPreviewClick is not provided */}
+      {/* Enhanced dialog with glass morphism for image preview */}
       {!onPreviewClick && (
         <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
           <DialogContent className="sm:max-w-[80vw] p-0 bg-transparent border-0">
             <DialogTitle className="sr-only">{`${creatorName}'s Portfolio Image`}</DialogTitle>
             <button
               onClick={() => setSelectedImage(null)}
-              className="absolute right-4 top-4 z-50 rounded-full bg-black/50 p-2 text-white hover:bg-black/70 transition-colors"
+              className="absolute right-4 top-4 z-50 rounded-full bg-black/50 backdrop-blur-sm p-2 text-white hover:bg-black/70 transition-colors"
               aria-label="Close preview"
             >
               <X className="h-4 w-4" />
             </button>
             {selectedImage && (
-              <img
-                src={selectedImage}
-                alt={`${creatorName}'s property photography - enlarged portfolio view showing detailed real estate photography`}
-                className="w-full h-full object-contain rounded-lg"
-                style={{ maxHeight: '80vh' }}
-              />
+              <div className="backdrop-blur-md bg-black/30 p-1 rounded-lg">
+                <img
+                  src={selectedImage}
+                  alt={`${creatorName}'s property photography - enlarged portfolio view showing detailed real estate photography`}
+                  className="w-full h-full object-contain rounded-lg"
+                  style={{ maxHeight: '80vh' }}
+                />
+              </div>
             )}
           </DialogContent>
         </Dialog>
