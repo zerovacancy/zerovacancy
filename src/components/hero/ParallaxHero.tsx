@@ -232,6 +232,41 @@ export function ParallaxHero() {
             />
           </motion.div>
 
+          {/* NEW: Left side image */}
+          <motion.div
+            className={cn(
+              "absolute",
+              isMobile ? "top-[30%] left-[2%] z-10" : "top-[40%] left-[3%]", 
+              "transform-style-3d perspective-[800px]"
+            )}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isInView ? 1 : 0 }}
+            transition={{ delay: 0.6 }}
+          >
+            <motion.img
+              src={PARALLAX_IMAGES[5]}
+              alt="Property content"
+              className={cn(
+                "object-cover rounded-xl",
+                "shadow-[0_10px_25px_rgba(102,51,255,0.3)_,_inset_0_0_0_1px_rgba(255,255,255,0.6)]", 
+                isMobile ? "w-[140px] h-[100px] opacity-90 rotate-[-4deg]" : "w-48 h-36" 
+              )}
+              style={{ 
+                transform: (!isMobile && !prefersReducedMotion) ? 
+                  `translate3d(${-mousePosition.x * 1.2}px, ${-mousePosition.y * 1.2}px, 0) 
+                   rotate(-4deg) rotateX(${mousePosition.y * 0.02}deg) rotateY(${-mousePosition.x * 0.02}deg)
+                   scale(${1 + Math.min(Math.abs(mousePosition.x), Math.abs(mousePosition.y)) * 0.0006})` : 
+                  "rotate(-4deg)",
+                filter: (!isMobile && !prefersReducedMotion) ? 
+                  `blur(${Math.abs(mousePosition.x) < 120 && Math.abs(mousePosition.y) < 120 ? 1 : 0}px)` : 
+                  "contrast(1.05) saturate(1.05)",
+                opacity: (!isMobile && !prefersReducedMotion) ? 
+                  (Math.abs(mousePosition.x) < 100 && Math.abs(mousePosition.y) < 100 ? 0.8 : 0.95) : 
+                  0.9
+              }}
+            />
+          </motion.div>
+
           {/* Hide this image on mobile for cleaner layout */}
           <motion.div
             className={cn(
@@ -302,6 +337,41 @@ export function ParallaxHero() {
             />
           </motion.div>
 
+          {/* NEW: Right side image */}
+          <motion.div
+            className={cn(
+              "absolute",
+              isMobile ? "top-[30%] right-[2%] z-10" : "top-[40%] right-[3%]", 
+              "transform-style-3d perspective-[800px]"
+            )}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isInView ? 1 : 0 }}
+            transition={{ delay: 0.8 }}
+          >
+            <motion.img
+              src={PARALLAX_IMAGES[7]}
+              alt="Property content"
+              className={cn(
+                "object-cover rounded-xl",
+                "shadow-[0_10px_25px_rgba(65,105,225,0.3)_,_inset_0_0_0_1px_rgba(255,255,255,0.6)]", 
+                isMobile ? "w-[140px] h-[100px] opacity-90 rotate-[4deg]" : "w-48 h-36" 
+              )}
+              style={{ 
+                transform: (!isMobile && !prefersReducedMotion) ? 
+                  `translate3d(${-mousePosition.x * 1.2}px, ${-mousePosition.y * 1.2}px, 0) 
+                   rotate(4deg) rotateX(${mousePosition.y * 0.02}deg) rotateY(${-mousePosition.x * 0.02}deg)
+                   scale(${1 + Math.min(Math.abs(mousePosition.x), Math.abs(mousePosition.y)) * 0.0006})` : 
+                  "rotate(4deg)",
+                filter: (!isMobile && !prefersReducedMotion) ? 
+                  `blur(${Math.abs(mousePosition.x) < 120 && Math.abs(mousePosition.y) < 120 ? 1 : 0}px)` : 
+                  "contrast(1.05) saturate(1.05)",
+                opacity: (!isMobile && !prefersReducedMotion) ? 
+                  (Math.abs(mousePosition.x) < 100 && Math.abs(mousePosition.y) < 100 ? 0.8 : 0.95) : 
+                  0.9
+              }}
+            />
+          </motion.div>
+
           {/* Hide this image on mobile for cleaner layout */}
           <motion.div
             className={cn(
@@ -333,6 +403,76 @@ export function ParallaxHero() {
                 opacity: (!isMobile && !prefersReducedMotion) ? 
                   (Math.abs(mousePosition.x) < 100 && Math.abs(mousePosition.y) < 100 ? 0.8 : 0.95) : 
                   1 // Full opacity on mobile and reduced motion
+              }}
+            />
+          </motion.div>
+
+          {/* NEW: Top right image */}
+          <motion.div
+            className={cn(
+              "absolute",
+              isMobile ? "top-[-5%] right-[15%] z-10" : "top-[12%] right-[30%]", 
+              "transform-style-3d perspective-[800px]"
+            )}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isInView ? 1 : 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <motion.img
+              src={PARALLAX_IMAGES[6]}
+              alt="Property content"
+              className={cn(
+                "object-cover rounded-xl",
+                "shadow-[0_10px_25px_rgba(138,92,249,0.3)_,_inset_0_0_0_1px_rgba(255,255,255,0.6)]", 
+                isMobile ? "w-[130px] h-[100px] opacity-90 rotate-[5deg]" : "w-40 h-32" 
+              )}
+              style={{ 
+                transform: (!isMobile && !prefersReducedMotion) ? 
+                  `translate3d(${-mousePosition.x * 1.8}px, ${-mousePosition.y * 1.8}px, 0) 
+                   rotate(5deg) rotateX(${mousePosition.y * 0.03}deg) rotateY(${-mousePosition.x * 0.03}deg)
+                   scale(${1 + Math.min(Math.abs(mousePosition.x), Math.abs(mousePosition.y)) * 0.0007})` : 
+                  "rotate(5deg)",
+                filter: (!isMobile && !prefersReducedMotion) ? 
+                  `blur(${Math.abs(mousePosition.x) < 120 && Math.abs(mousePosition.y) < 120 ? 1 : 0}px)` : 
+                  "contrast(1.05) saturate(1.05)",
+                opacity: (!isMobile && !prefersReducedMotion) ? 
+                  (Math.abs(mousePosition.x) < 100 && Math.abs(mousePosition.y) < 100 ? 0.8 : 0.95) : 
+                  0.9
+              }}
+            />
+          </motion.div>
+
+          {/* NEW: Bottom image */}
+          <motion.div
+            className={cn(
+              "absolute",
+              isMobile ? "bottom-[15%] left-[50%] -translate-x-1/2 z-10" : "bottom-[15%] left-[50%] -translate-x-1/2", 
+              "transform-style-3d perspective-[800px]"
+            )}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isInView ? 1 : 0 }}
+            transition={{ delay: 1.0 }}
+          >
+            <motion.img
+              src={PARALLAX_IMAGES[0]}
+              alt="Property content"
+              className={cn(
+                "object-cover rounded-xl",
+                "shadow-[0_10px_25px_rgba(102,51,255,0.3)_,_inset_0_0_0_1px_rgba(255,255,255,0.6)]", 
+                isMobile ? "w-[140px] h-[100px] opacity-90 rotate-[-3deg]" : "w-48 h-36" 
+              )}
+              style={{ 
+                transform: (!isMobile && !prefersReducedMotion) ? 
+                  `translate3d(${-mousePosition.x * 1.5}px, ${-mousePosition.y * 1.5}px, 0) 
+                   rotate(-3deg) rotateX(${mousePosition.y * 0.02}deg) rotateY(${-mousePosition.x * 0.02}deg)
+                   scale(${1 + Math.min(Math.abs(mousePosition.x), Math.abs(mousePosition.y)) * 0.0006})` : 
+                  "rotate(-3deg)",
+                filter: (!isMobile && !prefersReducedMotion) ? 
+                  `blur(${Math.abs(mousePosition.x) < 120 && Math.abs(mousePosition.y) < 120 ? 1 : 0}px)` : 
+                  "contrast(1.05) saturate(1.05)",
+                opacity: (!isMobile && !prefersReducedMotion) ? 
+                  (Math.abs(mousePosition.x) < 100 && Math.abs(mousePosition.y) < 100 ? 0.8 : 0.95) : 
+                  0.9
               }}
             />
           </motion.div>
@@ -546,8 +686,7 @@ export function ParallaxHero() {
                       {/* Subtle connecting indicator */}
                       <div className="absolute -top-1 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-b-[6px] border-b-[#F5F0FF] z-10"></div>
                       <SocialProof 
-                        className="mt-0 transform-gpu animate-fade-in scale-75 origin-top" 
-                        style={{animationDuration: "0.5s", animationDelay: "0.3s"}} 
+                        className="mt-0 transform-gpu animate-fade-in scale-75 origin-top"
                       />
                     </div>
                   </div>
