@@ -56,7 +56,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               "shadow-[0_4px_12px_rgba(138,79,255,0.15)]",
               "hover:shadow-[0_6px_16px_rgba(138,79,255,0.2)]",
               "rounded-xl relative transition-all duration-200",
-              "h-full" // Fixed height to ensure consistent card sizing
+              "h-full min-h-[520px]" // Fixed height ensures consistent sizing
             )}>
               {/* Very subtle pattern effect */}
               <div className="absolute inset-0 opacity-[0.01] bg-[radial-gradient(#8A4FFF_1px,transparent_1px)] bg-[length:16px_16px] z-0 pointer-events-none"></div>
@@ -81,7 +81,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               </div>
 
               {/* Content sections with proper organization */}
-              <div className="w-full px-3.5 py-3 flex flex-col relative z-10 flex-grow flex-shrink-0 h-full">
+              <div className="w-full px-3.5 py-3 flex flex-col relative z-10 flex-grow flex-shrink-0">
                 {/* Creator info section */}
                 <div className="pb-2.5 mb-2.5 border-b border-purple-100/60">
                   {/* Creator name and location with proper styling */}

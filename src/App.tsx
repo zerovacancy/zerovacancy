@@ -20,11 +20,8 @@ const ConnectRefresh = lazy(() => import('./pages/ConnectRefresh'));
 const ConnectOnboarding = lazy(() => import('./pages/ConnectOnboarding'));
 
 const PageLoader = () => {
-  const { gradientBgMobile } = mobileOptimizationClasses;
-  const isMobile = useIsMobile();
-  
   return (
-    <div className={`fixed inset-0 flex items-center justify-center ${isMobile ? gradientBgMobile : 'bg-background'}`}>
+    <div className="fixed inset-0 flex items-center justify-center bg-background">
       <div className="w-16 h-16 relative">
         <div className="w-full h-full rounded-full border-4 border-purple-100"></div>
         <div className="w-full h-full rounded-full border-4 border-brand-purple animate-spin absolute top-0 left-0 border-t-transparent"></div>
@@ -67,7 +64,6 @@ const ConditionalBottomNav = () => {
 
 function App() {
   const isMobile = useIsMobile();
-  const { coloredBgMobile } = mobileOptimizationClasses;
   
   // Use memoized callback functions for event listeners
   const passiveEventHandler = useCallback(() => {}, []);
@@ -90,7 +86,7 @@ function App() {
     document.addEventListener('wheel', passiveEventHandler, passiveOption);
     
     if (isMobile) {
-      document.body.classList.add('color-white-bg-mobile');
+      // Removed color-white-bg-mobile to prevent global purple background
       document.body.classList.add('optimize-animations-mobile');
     } else {
       document.body.classList.remove('color-white-bg-mobile');
@@ -114,6 +110,8 @@ function App() {
       document.removeEventListener('touchstart', passiveEventHandler);
       document.removeEventListener('touchmove', passiveEventHandler);
       document.removeEventListener('wheel', passiveEventHandler);
+      
+      // Remove both classes for consistency, even though we're not adding color-white-bg-mobile anymore
       document.body.classList.remove('color-white-bg-mobile');
       document.body.classList.remove('optimize-animations-mobile');
       
@@ -131,7 +129,7 @@ function App() {
       <SEOProvider>
         <Router>
           <ScrollToTop />
-          <div className={`relative ${isMobile ? coloredBgMobile : ''} landscape-container`}>
+          <div className="relative landscape-container">
           <Suspense fallback={<PageLoader />}>
             <Routes>
               <Route path="/" element={<Index />} />

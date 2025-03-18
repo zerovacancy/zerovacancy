@@ -84,8 +84,8 @@ const PreviewSearch = () => {
     <div 
       className={cn(
         "w-full px-2 sm:px-4 md:px-6 lg:px-8 xl:px-10 content-visibility-auto",
-        "py-6 sm:py-6 md:py-8",
-        isMobile ? "relative bg-[#F5F0FF] mt-3 rounded-t-2xl border-t border-purple-100/70" : "bg-[#F5F0FF]/60"
+        isMobile ? "py-6 pb-4" : "py-6 sm:py-6 md:py-8", /* Reduced bottom padding on mobile */
+        isMobile ? "relative mt-3 rounded-2xl border border-purple-100/70 bg-[#F5F0FF]" : "bg-[#F5F0FF]/60"
       )} 
       ref={containerRef}
     >
@@ -98,9 +98,9 @@ const PreviewSearch = () => {
         {/* Section label for better organization */}
         {isMobile && (
           <div className="mb-3 flex items-center justify-center">
-            <div className="h-px w-5 bg-purple-200 mr-2"></div>
-            <span className="text-xs uppercase tracking-wider text-purple-700 font-semibold">Creator Network</span>
-            <div className="h-px w-5 bg-purple-200 ml-2"></div>
+            <div className="h-px w-5 bg-gray-200 mr-2"></div>
+            <span className="text-xs uppercase tracking-wider text-gray-700 font-semibold">Creator Network</span>
+            <div className="h-px w-5 bg-gray-200 ml-2"></div>
           </div>
         )}
         
@@ -155,7 +155,7 @@ const PreviewSearch = () => {
       </div>
       
       {isMobile && (
-        <div className="mobile-section-divider mt-6"></div>
+        <div className="mobile-section-divider mt-6 mb-1"></div>
       )}
     </div>
   );

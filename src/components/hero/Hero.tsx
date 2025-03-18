@@ -250,26 +250,29 @@ export function Hero() {
         {isMobile && (
           <>
             {/* Container with entrance animation */}
-            <div className="w-full flex flex-col items-center space-y-2 animate-fade-in-up">
+            <div className="w-full flex flex-col items-center animate-fade-in-up">
               {/* CTA button container - consistent width */}
-              <div className="w-full max-w-[280px] mx-auto flex flex-col gap-2.5">
-                {/* Main waitlist CTA */}
-                <WaitlistCTA 
-                  className="mb-0" 
-                  buttonText="RESERVE EARLY ACCESS" 
-                  showSocialProof={false}
-                />
+              <div className="w-full max-w-[280px] mx-auto flex flex-col">
+                {/* Primary CTA with social proof grouped closely */}
+                <div className="flex flex-col mb-5">
+                  {/* Main waitlist CTA */}
+                  <WaitlistCTA 
+                    className="mb-0" 
+                    buttonText="RESERVE EARLY ACCESS" 
+                    showSocialProof={false}
+                  />
+                  
+                  {/* Social proof directly beneath primary CTA with tight spacing */}
+                  <div className="w-full flex justify-center mt-3 animate-pulse-subtle" style={{animationDuration: "4s"}}>
+                    <SocialProof className="mt-0 w-full max-w-[280px] scale-[0.9] transform-gpu origin-top" />
+                  </div>
+                </div>
                 
-                {/* Creator waitlist CTA */}
+                {/* Creator CTA as separate alternative option */}
                 <WaitlistCreatorCTA 
                   buttonText="JOIN AS CREATOR" 
                   showSocialProof={false}
                 />
-              </div>
-              
-              {/* Social proof centered below both buttons with animation */}
-              <div className="w-full flex justify-center mt-1.5 animate-pulse-subtle" style={{animationDuration: "4s"}}>
-                <SocialProof className="mt-0 w-full max-w-[280px]" />
               </div>
             </div>
           </>

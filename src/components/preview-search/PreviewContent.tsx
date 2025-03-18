@@ -34,8 +34,12 @@ export const PreviewContent: React.FC = () => {
           />
         </div>
 
-        {/* Creator cards list - direct embedding */}
-        <CreatorsList />
+        {/* Creator cards list - with containment wrapper */}
+        <div className={cn(
+          isMobile ? "overflow-hidden pb-2" : ""
+        )}>
+          <CreatorsList />
+        </div>
       </div>
     </div>
   );
