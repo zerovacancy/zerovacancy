@@ -6,6 +6,7 @@ import { WaitlistCTA } from "../ui/waitlist-cta";
 import { WaitlistCreatorCTA } from "../ui/waitlist-creator-cta";
 import { TextRotate } from "../ui/text-rotate";
 import { SocialProof } from "../ui/waitlist/social-proof";
+import { FloatingBackground } from "../ui/floating-background";
 
 const TITLES = ["CONVERTS", "CAPTIVATES", "CLOSES"];
 
@@ -80,16 +81,8 @@ export function Hero() {
         </>
       )}
       
-      {/* Decorative elements - visible on mobile */}
-      {isMobile && (
-        <>
-          {/* Top right decorative circle */}
-          <div className="absolute top-0 right-0 w-28 h-28 bg-purple-200/20 rounded-full blur-xl -z-10"></div>
-          
-          {/* Bottom left decorative element */}
-          <div className="absolute bottom-10 left-0 w-24 h-24 bg-indigo-200/20 rounded-full blur-xl -z-10"></div>
-        </>
-      )}
+      {/* Floating background for mobile */}
+      {isMobile && <FloatingBackground className="absolute inset-0 z-0" />}
 
       <div 
         className={cn(
