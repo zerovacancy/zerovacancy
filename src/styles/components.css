@@ -1,4 +1,3 @@
-
 @layer components {
   /* Scrollbar hiding for mobile pricing carousel */
   .scrollbar-hide::-webkit-scrollbar {
@@ -189,6 +188,28 @@
     right: 0;
     height: 8px;
     background: linear-gradient(to top, rgba(165, 180, 252, 0.2), transparent);
+  }
+
+  /* Border beam animation */
+  @keyframes border-beam-simple {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(calc(100% + var(--size) * 1px)); }
+  }
+
+  /* Section divider with subtle gradient */
+  .gradient-divider {
+    position: relative;
+    border-bottom: none;
+  }
+
+  .gradient-divider::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right, rgba(138, 79, 255, 0.1), rgba(79, 70, 229, 0.2), rgba(138, 79, 255, 0.1));
   }
 
   @keyframes availability-shimmer {

@@ -3,6 +3,7 @@ import React from 'react';
 import { Card } from '@/components/ui/card';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
+import { OptimizedBorderBeam } from '@/components/ui/optimized-border-beam';
 
 export const CreatorCardSkeleton = () => {
   const isMobile = useIsMobile();
@@ -10,13 +11,21 @@ export const CreatorCardSkeleton = () => {
   return (
     <Card className={cn(
       "overflow-hidden w-full h-full", 
-      "bg-white border border-purple-100/50",
+      "bg-white border border-transparent", // Changed to transparent border to work with gradient
       "animate-pulse flex flex-col",
       "rounded-xl relative transition-all duration-200",
       isMobile 
         ? "shadow-[0_8px_12px_-3px_rgba(138,79,255,0.1),_0_4px_6px_-4px_rgba(138,79,255,0.15),_inset_0_1px_3px_rgba(255,255,255,0.3)]" 
         : "shadow-[0_10px_15px_-3px_rgba(138,79,255,0.1),_0_4px_6px_-4px_rgba(138,79,255,0.15),_inset_0_1px_3px_rgba(255,255,255,0.3)]"
     )}>
+      {/* Add animated gradient border */}
+      <OptimizedBorderBeam 
+        colorFrom="#8a4fff" 
+        colorTo="#4f46e5" 
+        duration={15}
+        borderWidth={1}
+      />
+      
       {/* Media section */}
       <div className={cn(
         "relative w-full overflow-hidden flex-shrink-0",
@@ -52,8 +61,8 @@ export const CreatorCardSkeleton = () => {
           ))}
         </div>
         
-        {/* Recent works */}
-        <div className="mt-3">
+        {/* Recent works - with subtle gradient divider */}
+        <div className="mt-3 pt-2 gradient-divider">
           <div className="h-4 w-24 bg-gray-200/70 rounded-full mb-3"></div>
           <div className="grid grid-cols-3 gap-2">
             {[...Array(3)].map((_, i) => (

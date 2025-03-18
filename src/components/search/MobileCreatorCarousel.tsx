@@ -117,6 +117,7 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
       <div className="absolute top-0 bottom-0 right-0 w-10 z-10 pointer-events-none bg-gradient-to-r from-transparent to-white/30 backdrop-blur-[3px]"></div>
       <div className="absolute top-0 bottom-0 left-0 w-3 z-10 pointer-events-none bg-gradient-to-l from-transparent to-white/20 backdrop-blur-[3px]"></div>
       
+      {/* Navigation dots */}
       <div className="absolute bottom-1 left-0 right-0 flex justify-center gap-1.5 z-20">
         {creators.map((_, index) => (
           <div 
@@ -131,6 +132,7 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
         ))}
       </div>
 
+      {/* Navigation buttons */}
       <button 
         onClick={scrollPrev} 
         className={cn(

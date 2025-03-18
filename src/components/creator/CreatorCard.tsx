@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback } from 'react';
 import { Card } from '../ui/card';
 import { ArrowRight, Star, X, Clock, Crown } from 'lucide-react';
@@ -9,6 +10,7 @@ import { GlowDialog } from '../ui/glow-dialog';
 import { BorderBeam } from '../ui/border-beam';
 import { CreatorMedia } from './CreatorMedia';
 import { PortfolioPreview } from './PortfolioPreview';
+import { OptimizedBorderBeam } from '../ui/optimized-border-beam';
 import type { CreatorCardProps } from './types';
 
 export const CreatorCard: React.FC<CreatorCardProps> = ({ 
@@ -53,7 +55,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               "overflow-hidden flex flex-col w-full",
               "bg-white/80", // Semi-transparent background for glass effect
               "backdrop-blur-[5px]", // Reduced blur for mobile
-              "border border-purple-200/80", // More visible border on mobile
+              "border border-transparent", // Changed to transparent for gradient border
               "shadow-[0_8px_12px_-3px_rgba(138,79,255,0.1),_0_4px_6px_-4px_rgba(138,79,255,0.15),_inset_0_1px_3px_rgba(255,255,255,0.3)]",
               "hover:shadow-[0_10px_15px_-3px_rgba(138,79,255,0.15),_0_4px_6px_-4px_rgba(138,79,255,0.2),_inset_0_1px_3px_rgba(255,255,255,0.4)]",
               "rounded-xl relative transition-all duration-200",
@@ -61,6 +63,14 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               "translate-z-0 backface-visibility-hidden", // Hardware acceleration for mobile
               "will-change-transform" // Performance optimization
             )}>
+              {/* Add animated gradient border */}
+              <OptimizedBorderBeam 
+                colorFrom="#8a4fff" 
+                colorTo="#4f46e5" 
+                duration={15}
+                borderWidth={1}
+              />
+              
               {/* Glass morphism subtle overlay */}
               <div className="absolute inset-0 bg-gradient-to-b from-white/40 to-white/10 opacity-40 pointer-events-none z-[1] rounded-xl"></div>
               
@@ -89,7 +99,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               {/* Content sections with proper organization */}
               <div className="w-full px-4 pt-3 pb-3 flex flex-col relative z-10 flex-grow flex-shrink-0">
                 {/* Creator info section */}
-                <div className="pb-3 mb-3 border-b border-purple-100/80">
+                <div className="pb-3 mb-3 gradient-divider">
                   {/* Creator name and location with proper styling */}
                   <div className="flex justify-between items-center mb-2.5">
                     <h3 className="text-base leading-tight font-semibold text-gray-800">{creator.name}</h3>
@@ -183,7 +193,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   </div>
                 </div>
                 
-                {/* Recent Work section with proper header */}
+                {/* Recent Work section with proper header - updated with gradient divider */}
                 <div className="mb-1.5">
                   {/* Section header */}
                   <div className="mb-3 flex justify-between items-center">
@@ -278,7 +288,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 "will-change-transform transition-all duration-300",
                 "hover:translate-y-[-2px]",
                 "bg-white/70 backdrop-blur-[8px]", // Premium glass effect for desktop
-                "border border-purple-200/40", // Subtle border
+                "border border-transparent", // Changed to transparent for gradient border
                 "shadow-[0_10px_15px_-3px_rgba(138,79,255,0.1),_0_4px_6px_-4px_rgba(138,79,255,0.15),_inset_0_1px_3px_rgba(255,255,255,0.3)]",
                 "hover:shadow-[0_14px_20px_-3px_rgba(138,79,255,0.15),_0_6px_8px_-4px_rgba(138,79,255,0.2),_inset_0_1px_3px_rgba(255,255,255,0.4)]",
                 "rounded-xl",
@@ -291,6 +301,14 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 flexDirection: 'column',
                 position: 'relative'
               }}>
+                {/* Add animated gradient border */}
+                <OptimizedBorderBeam 
+                  colorFrom="#8a4fff" 
+                  colorTo="#4f46e5" 
+                  duration={18}
+                  borderWidth={1.5}
+                />
+                
                 {/* Enhanced glass morphism effects */}
                 <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-purple-50/20 to-indigo-50/10 opacity-70 pointer-events-none z-[1] rounded-xl"></div>
                 
@@ -298,7 +316,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 <div className="absolute inset-0 opacity-[0.01] bg-[radial-gradient(#8A4FFF_1px,transparent_1px)] bg-[length:20px_20px] z-0 pointer-events-none"></div>
                 
                 {/* Subtle border effect - more minimal */}
-                <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden rounded-xl border border-purple-100/50">
+                <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden rounded-xl">
                 </div>
 
                 {/* Optimized price tag - compact and visually distinct */}
@@ -320,7 +338,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 {/* Content section with reduced spacing */}
                 <div className="px-5 pt-4 pb-2 flex flex-col relative z-10 flex-grow" style={{ minHeight: "250px" }}>
                   {/* Enhanced creator info section with improved visual hierarchy */}
-                  <div className="mb-3 pb-3 border-b border-purple-100/40">
+                  <div className="mb-3 pb-3 gradient-divider">
                     <div className="py-2 px-3 -mx-2 mb-2 bg-purple-50/60 backdrop-blur-sm border-l-2 border-purple-400 rounded-r-md">
                       <h3 className="text-title leading-tight font-semibold text-purple-800">{creator.name}</h3>
                     </div>
@@ -369,7 +387,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
 
                   {/* Refined rating section with reduced spacing */}
                   <div className="mb-2 p-2 rounded-md bg-white/60 backdrop-blur-sm border border-purple-100/40 shadow-sm">
-                    <div className="mb-1.5 pb-1 border-b border-gray-100 flex justify-between items-center">
+                    <div className="mb-1.5 pb-1 gradient-divider flex justify-between items-center">
                       <div className="flex items-center">
                         <div className="w-0.5 h-3.5 bg-gradient-to-b from-indigo-400/80 to-purple-400/80 rounded-full mr-1.5"></div>
                         <div className="text-[11px] text-gray-500 font-medium font-space uppercase tracking-wide">Ratings</div>
