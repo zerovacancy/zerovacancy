@@ -134,8 +134,13 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   </div>
                   
                   {/* Services with organized tag styling */}
-                  <div className="flex flex-wrap gap-1.5 mt-2 px-2 py-2 bg-purple-50/40 rounded-lg border border-purple-100/30 max-w-full">
+                  <div className="flex flex-wrap gap-x-1.5 gap-y-1 mt-2 px-2 py-2 bg-purple-50/40 rounded-lg border border-purple-100/30 max-w-full">
                     {creator.services.map((service, index) => {
+                      // Force specific line wrapping for Emily Johnson on mobile
+                      const forceWrap = isMobile && 
+                                      creator.name === "Emily Johnson" && 
+                                      (index === 2 || index === creator.services.length - 1);
+                      
                       const isPlatform = service.includes('TikTok') || service.includes('Instagram') || service.includes('YouTube');
                       const isHashtag = service.startsWith('#');
                       const isVisualStyle = service.includes('Tour') || service.includes('POV') || service.includes('Photo') || service.includes('Video');
@@ -152,7 +157,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                         return (
                           <span 
                             key={index} 
-                            className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs border whitespace-nowrap touch-manipulation shadow-sm ${bgColor}`}
+                            className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs border whitespace-nowrap touch-manipulation shadow-sm ${bgColor} ${forceWrap ? 'w-full md:w-auto mt-1 md:mt-0' : ''}`}
                           >
                             <span>{service}</span>
                           </span>

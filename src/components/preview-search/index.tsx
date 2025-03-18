@@ -47,7 +47,7 @@ const PreviewSearch = () => {
   const creatorData = [
     {
       name: "Emily Johnson",
-      services: ["TikTok", "POV Tour", "Organic Content"],
+      services: ["TikTok", "POV Tour", "Content"],
       price: 150,
       rating: 4.9,
       reviews: 127,
