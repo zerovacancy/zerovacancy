@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, lazy, Suspense, useCallback } from 'react';
 import Header from '../components/Header';
-import ParallaxHero from '../components/hero/ParallaxHero';
+import { Hero } from '../components/hero/Hero';
 import Footer from '../components/Footer';
 import { Banner } from '@/components/ui/banner';
 import { Button } from '@/components/ui/button';
@@ -168,7 +168,7 @@ const Index = () => {
           animationSpeed="slow"
         >
           <section ref={addSectionRef(0)} className="w-full">
-            <ParallaxHero />
+            <Hero />
           </section>
         </BackgroundEffects>
         
@@ -191,7 +191,7 @@ const Index = () => {
           className={cn(
             "relative w-full",
             !isMobile && "bg-[#F5F0FF]/60 py-10",
-            isMobile && "relative" // Removed purple background
+            isMobile && "bg-[#F6F3FF] relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-8 after:bg-gradient-to-t after:from-[#F6F3FF] after:to-transparent"
           )}
         >
           <div className="max-w-7xl mx-auto relative z-10 py-10 sm:py-16 lg:py-20">
