@@ -78,14 +78,7 @@ export function Hero() {
         </>
       )}
       
-      {/* Rich background gradient for mobile */}
-      {isMobile && (
-        <>
-          <div className="absolute inset-0 bg-gradient-to-b from-purple-200/95 via-indigo-100/90 to-blue-50/80 z-0"></div>
-          <div className="absolute top-0 right-0 w-32 h-32 bg-purple-300/20 rounded-full blur-xl"></div>
-          <div className="absolute bottom-20 left-0 w-32 h-32 bg-indigo-300/30 rounded-full blur-xl"></div>
-        </>
-      )}
+      {/* Background is now handled in the parent component */}
 
       <div 
         className={cn(

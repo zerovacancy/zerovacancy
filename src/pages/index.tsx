@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, lazy, Suspense, useCallback } from 'react';
+import { useIsMobile } from '@/hooks/use-mobile';
 import Header from '../components/Header';
 import { Hero } from '../components/hero/Hero';
 import Footer from '../components/Footer';
@@ -162,14 +163,25 @@ const Index = () => {
           blobOpacity={0.15}
           withSpotlight={true}
           spotlightClassName="from-purple-500/5 via-violet-500/5 to-blue-500/5"
-          baseColor="bg-white/80" 
+          baseColor={isMobile ? "bg-transparent" : "bg-white/80"} 
           pattern="none"
           className="py-0"
           animationSpeed="slow"
         >
-          <section ref={addSectionRef(0)} className="w-full">
-            <Hero />
-          </section>
+          {isMobile ? (
+            <section ref={addSectionRef(0)} className="w-full bg-transparent">
+              <div className="absolute inset-0 bg-gradient-to-b from-purple-200/95 via-indigo-100/90 to-blue-50/80"></div>
+              <div className="absolute top-0 right-0 w-32 h-32 bg-purple-300/20 rounded-full blur-xl"></div>
+              <div className="absolute bottom-20 left-0 w-32 h-32 bg-indigo-300/30 rounded-full blur-xl"></div>
+              <div className="relative z-10">
+                <Hero />
+              </div>
+            </section>
+          ) : (
+            <section ref={addSectionRef(0)} className="w-full">
+              <Hero />
+            </section>
+          )}
         </BackgroundEffects>
         
         <section 
