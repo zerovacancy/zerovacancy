@@ -29,7 +29,7 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
     loop: false,
     dragFree: false,
     skipSnaps: false,
-    inViewThreshold: 0.8,
+    inViewThreshold: 0.85,
     startIndex: 0,
     watchDrag: false
   });
@@ -84,7 +84,7 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
   } = mobileOptimizationClasses;
 
   return (
-    <div className="w-full relative pb-2 px-3 mx-0">
+    <div className="w-full relative pb-2 px-0 mx-0">
       {isFirstVisit && (
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-4 py-2 rounded-full text-sm flex items-center gap-2 shadow-md">
           <Grip className="w-4 h-4" />
@@ -98,7 +98,7 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
             <div 
               key={creator.name} 
               style={{ touchAction: 'pan-y' }} 
-              className="min-w-[82%] w-[82%] py-1 px-1 flex-shrink-0 flex-grow-0"
+              className="min-w-[90%] w-[90%] py-1 px-1 flex-shrink-0 flex-grow-0"
             >
               <CreatorCard 
                 creator={creator} 
@@ -144,7 +144,7 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
       <button 
         onClick={scrollNext} 
         className={cn(
-          "absolute right-1 top-[40%] -translate-y-1/2 z-10 rounded-full p-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white", 
+          "absolute right-4 top-[40%] -translate-y-1/2 z-10 rounded-full p-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white", 
           "touch-manipulation h-[36px] w-[36px] flex items-center justify-center shadow-md transition-opacity duration-300", 
           !nextBtnEnabled && "opacity-0 pointer-events-none"
         )} 
