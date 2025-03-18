@@ -28,6 +28,7 @@ export const PreviewContent = () => {
     setLoadedImages(prev => new Set([...prev, imagePath]));
   };
 
+  // Updated creator data to ensure each creator has exactly 3 tags for consistency
   const creatorData = [
     {
       name: "Emily Johnson",
@@ -42,7 +43,7 @@ export const PreviewContent = () => {
     }, 
     {
       name: "Jane Cooper",
-      services: ["Video Tours", "Drone Footage"],
+      services: ["Interior", "Design", "Staging"],  // Ensured 3 services for Jane
       price: 200,
       rating: 4.8,
       reviews: 98,
@@ -53,7 +54,7 @@ export const PreviewContent = () => {
     }, 
     {
       name: "Michael Brown",
-      services: ["3D Tours", "Floor Plans"],
+      services: ["3D Tours", "Floor Plans", "Interactive"],  // Ensured 3 services for Michael
       price: 175,
       rating: 4.7,
       reviews: 82,

@@ -17,7 +17,7 @@ export const CreatorsList: React.FC = () => {
   const creators: Creator[] = [
     {
       name: "Emily Johnson",
-      services: ["TikTok", "POV Tour", "Organic Content"],
+      services: ["TikTok", "POV Tour", "Organic Content"],  // Ensure all have 3 services
       price: 150,
       rating: 4.9,
       reviews: 127,
@@ -32,7 +32,7 @@ export const CreatorsList: React.FC = () => {
     }, 
     {
       name: "Jane Cooper",
-      services: ["Photography", "Interior Design", "Staging"],
+      services: ["Photography", "Interior Design", "Staging"],  // Ensure all have 3 services
       price: 200,
       rating: 4.8,
       reviews: 98,
@@ -47,7 +47,7 @@ export const CreatorsList: React.FC = () => {
     }, 
     {
       name: "Michael Brown",
-      services: ["Drone Pilot", "Virtual Tours", "Videography"],
+      services: ["3D Tours", "Floor Plans", "Interactive"],  // Ensure all have 3 services
       price: 175,
       rating: 4.7,
       reviews: 82,

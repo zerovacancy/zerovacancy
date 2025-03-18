@@ -53,17 +53,23 @@ export const CreatorTags: React.FC<CreatorTagsProps> = ({ tags }) => {
       className={cn(
         "overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']",
         // Enhanced horizontal scrolling hint for mobile
-        isMobile ? "after:content-[''] after:absolute after:right-0 after:top-0 after:h-full after:w-8 after:bg-gradient-to-l after:from-white after:to-transparent after:pointer-events-none" : ""
+        isMobile ? "after:content-[''] after:absolute after:right-0 after:top-0 after:h-full after:w-8 after:bg-gradient-to-l after:from-white after:to-transparent after:pointer-events-none" : "",
+        // Fix for mobile tag container to show all tags
+        isMobile ? "w-full min-w-0 px-0.5" : ""
       )}
       role="list"
       aria-label="Creator specialties"
     >
-      <div className="flex flex-nowrap gap-2.5">
+      <div className={cn(
+        "flex flex-nowrap gap-2.5",
+        // Ensure tags have enough space on mobile
+        isMobile && "pr-2"
+      )}>
         {tags.map((tag, index) => (
           <button
             key={index}
             className={cn(
-              isMobile ? "text-sm px-3.5 py-2" : "text-[10px] sm:text-xs px-2.5 py-1.5", // Larger tags on mobile
+              isMobile ? "text-xs px-2.5 py-1.5" : "text-[10px] sm:text-xs px-2.5 py-1.5", // Adjusted tag size on mobile
               "rounded-full",
               "transition-all duration-200 whitespace-nowrap",
               "hover:scale-105 active:scale-95 cursor-pointer shadow-sm hover:shadow-md",
@@ -73,11 +79,8 @@ export const CreatorTags: React.FC<CreatorTagsProps> = ({ tags }) => {
             )}
             role="listitem"
           >
-            {shouldHaveIcon(tag) && isMobile && (
-              <Tag className="w-3.5 h-3.5" aria-hidden="true" />
-            )}
-            {shouldHaveIcon(tag) && !isMobile && (
-              <Tag className="w-2.5 h-2.5" aria-hidden="true" />
+            {shouldHaveIcon(tag) && (
+              <Tag className={cn(isMobile ? "w-3 h-3" : "w-2.5 h-2.5")} aria-hidden="true" />
             )}
             {tag}
           </button>
