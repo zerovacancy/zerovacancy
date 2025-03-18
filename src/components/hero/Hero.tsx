@@ -115,7 +115,8 @@ export function Hero() {
                   ? "drop-shadow-[0_2px_4px_rgba(74,45,217,0.15)]" 
                   : "drop-shadow-[0_1px_2px_rgba(74,45,217,0.05)]", 
                 isMobile && "relative",
-                isMobile && "mb-3"
+                isMobile && "mb-3",
+                "w-full mx-auto text-center"
               )}
             >
               {/* Add subtle pattern behind text on mobile */}
