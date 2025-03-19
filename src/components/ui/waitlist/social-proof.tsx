@@ -15,12 +15,12 @@ export function SocialProof({ className, style }: SocialProofProps) {
   
   // 3D Button styling for the social proof container with mobile adjustment
   const socialProof3DStyle = {
-    // Main container styles
-    background: 'linear-gradient(180deg, #FFFFFF 0%, #F8F8FA 100%)', // Same gradient as white 3D button
+    // Main container styles - keeping white/very light gray background
+    background: '#F8F8FA',
     borderRadius: isMobile ? '12px' : '15px', // Smaller radius on mobile
-    border: '1px solid rgba(0,0,0,0.08)',
-    // Apply the 5-layer exponential shadow from the 3D Button style
-    boxShadow: `${shadowStyles.light}, inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)`,
+    border: '1px solid rgba(0,0,0,0.08)', // Subtle border matching buttons
+    // Use more subtle shadow (30-40% reduced from button shadow)
+    boxShadow: '0 1px 2px rgba(0,0,0,0.03), 0 2px 4px rgba(0,0,0,0.03), 0 4px 8px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)',
     // Balanced padding - slightly more compact than original but not too tight
     padding: isMobile ? '6px 12px' : '7px 14px',
     // Add subtle animation on hover to match 3D button behavior
@@ -40,8 +40,8 @@ export function SocialProof({ className, style }: SocialProofProps) {
     borderRadius: '50%',
     // Keep the existing gradient background
     background: 'linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 30%), linear-gradient(180deg, #8A42F5 0%, #7837DB 100%)',
-    // Match the 3D Button icon container border style
-    border: '1px solid rgba(255,255,255,0.2)',
+    // Add subtle white outline for better definition
+    border: '1px solid rgba(255,255,255,0.8)',
     // Match the 3D Button icon container shadow effect
     boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15)',
     color: 'white',
@@ -119,7 +119,7 @@ export function SocialProof({ className, style }: SocialProofProps) {
               ...avatarCircle3DStyle,
               zIndex: 2,
               // Smaller offset on mobile for better spacing
-              transform: isMobile ? 'translateX(-6px)' : 'translateX(-8px)',
+              transform: isMobile ? 'translateX(-5px)' : 'translateX(-8px)',
               // Slightly different shade for visual interest
               background: 'linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 50%), linear-gradient(180deg, #9953FF 10%, #7837DB 100%)'
             } as React.CSSProperties}
@@ -129,7 +129,7 @@ export function SocialProof({ className, style }: SocialProofProps) {
               ...avatarCircle3DStyle,
               zIndex: 1,
               // Smaller offset on mobile for better spacing
-              transform: isMobile ? 'translateX(-12px)' : 'translateX(-16px)',
+              transform: isMobile ? 'translateX(-10px)' : 'translateX(-16px)',
               // Third slight variation
               background: 'linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%), linear-gradient(180deg, #8A42F5 0%, #6C31C3 100%)'
             } as React.CSSProperties}

@@ -301,7 +301,9 @@ export function Hero() {
                         borderRadius: '12px',
                         padding: '5px 10px',
                         fontSize: '12px',
-                        boxShadow: '0 1px 2px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.05), 0 4px 8px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)'
+                        background: '#F8F8FA',
+                        border: '1px solid rgba(0,0,0,0.08)',
+                        boxShadow: '0 1px 2px rgba(0,0,0,0.03), 0 2px 4px rgba(0,0,0,0.03), 0 4px 8px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)'
                       }}
                     />
                   </div>
