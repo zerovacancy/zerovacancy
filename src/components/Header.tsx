@@ -3,22 +3,22 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { GlowDialog } from '@/components/ui/glow-dialog';
 import { menuItems } from '@/data/menuItems';
 import DesktopNavigation from '@/components/navigation/DesktopNavigation';
 import MobileMenu from '@/components/navigation/MobileMenu';
 import UserMenu from '@/components/navigation/UserMenu';
 import AuthButtons from '@/components/navigation/AuthButtons';
-import { useAuthState } from '@/hooks/use-auth-state';
+import AuthForms from '@/components/auth/AuthForms';
+import { useAuth } from '@/components/auth/AuthContext';
 import { cn } from '@/lib/utils';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [showSignInModal, setShowSignInModal] = useState(false);
   const {
     user,
-    handleSignOut
-  } = useAuthState();
+    isAuthenticated,
+    openAuthDialog
+  } = useAuth();
   
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/95 backdrop-blur-sm">
@@ -29,12 +29,12 @@ const Header = () => {
           </Link>
         </div>
 
-        <DesktopNavigation menuItems={menuItems} onPrelaunchLinkClick={() => setShowSignInModal(true)} />
+        <DesktopNavigation menuItems={menuItems} onPrelaunchLinkClick={openAuthDialog} />
 
         <div className="flex items-center space-x-3 md:space-x-4">
-          {user ? <UserMenu onSignOut={handleSignOut} /> : null}
+          {isAuthenticated ? <UserMenu /> : null}
           
-          <AuthButtons user={user} onSignInClick={() => setShowSignInModal(true)} />
+          <AuthButtons />
 
           {/* Mobile menu button - improved touch target */}
           <button 
@@ -56,10 +56,10 @@ const Header = () => {
       </div>
 
       {/* Mobile menu */}
-      {isMenuOpen && <MobileMenu menuItems={menuItems} user={user} onSignInClick={() => setShowSignInModal(true)} onSignOut={handleSignOut} onClose={() => setIsMenuOpen(false)} />}
+      {isMenuOpen && <MobileMenu menuItems={menuItems} onClose={() => setIsMenuOpen(false)} />}
       
-      {/* Sign In Dialog */}
-      <GlowDialog open={showSignInModal} onOpenChange={setShowSignInModal} />
+      {/* Auth Forms Dialog */}
+      <AuthForms />
     </header>
   );
 };

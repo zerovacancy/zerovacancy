@@ -1,60 +1,32 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Header from '@/components/Header';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
 import Footer from '@/components/Footer';
 import { CreditCard, LogOut, User } from 'lucide-react';
+import { useAuth } from '@/components/auth/AuthContext';
 
 const Account = () => {
-  const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const { user, isLoading, isAuthenticated, signOut } = useAuth();
   const navigate = useNavigate();
-  const { toast } = useToast();
 
   useEffect(() => {
-    const checkUser = async () => {
-      const { data } = await supabase.auth.getUser();
-      if (data?.user) {
-        setUser(data.user);
-      } else {
-        navigate('/');
-      }
-      setLoading(false);
-    };
-
-    checkUser();
-  }, [navigate]);
-
-  const handleSignOut = async () => {
-    try {
-      await supabase.auth.signOut();
-      toast({
-        title: "Signed out successfully",
-        description: "You have been signed out of your account.",
-      });
+    // Redirect to home if not authenticated
+    if (!isLoading && !isAuthenticated) {
       navigate('/');
-    } catch (error) {
-      console.error("Error signing out:", error);
-      toast({
-        title: "Error",
-        description: "There was a problem signing out. Please try again.",
-        variant: "destructive",
-      });
     }
-  };
+  }, [isAuthenticated, isLoading, navigate]);
 
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {loading ? (
+        {isLoading ? (
           <div className="flex justify-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
           </div>
-        ) : (
+        ) : isAuthenticated ? (
           <div className="bg-white rounded-lg shadow p-6 md:p-8">
             <h1 className="text-2xl font-bold mb-6">My Account</h1>
             
@@ -82,12 +54,18 @@ const Account = () => {
                   <User className="mr-2 h-4 w-4" />
                   Profile
                 </Button>
-                <Button variant="outline" onClick={handleSignOut}>
+                <Button variant="outline" onClick={signOut}>
                   <LogOut className="mr-2 h-4 w-4" />
                   Sign Out
                 </Button>
               </div>
             </div>
+          </div>
+        ) : (
+          <div className="text-center py-12">
+            <h2 className="text-xl font-semibold mb-4">Authentication Required</h2>
+            <p className="mb-6">You need to be signed in to access this page.</p>
+            <Button onClick={() => navigate('/')}>Return to Home</Button>
           </div>
         )}
       </main>

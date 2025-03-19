@@ -50,15 +50,22 @@ serve(async (req) => {
     
     // Determine price amount based on package name
     let priceAmount = 0;
+    // Determine product ID based on package name
+    let productId = '';
+    
     switch (packageName.toLowerCase()) {
       case "basic":
         priceAmount = 13900; // $139.00
+        productId = 'prod_basic';
         break;
+      case "pro":
       case "professional":
         priceAmount = 49900; // $499.00
+        productId = 'prod_pro';
         break;
       case "premium":
         priceAmount = 79900; // $799.00
+        productId = 'prod_premium';
         break;
       default:
         throw new Error(`Invalid package name: ${packageName}`);
@@ -103,7 +110,7 @@ serve(async (req) => {
             id: currentSubscription.items.data[0].id,
             price_data: {
               currency: "usd",
-              product: `prod_${packageName.toLowerCase()}`,
+              product: productId,
               unit_amount: priceAmount,
               recurring: {
                 interval: "month",
@@ -142,7 +149,7 @@ serve(async (req) => {
           {
             price_data: {
               currency: "usd",
-              product: `prod_${packageName.toLowerCase()}`,
+              product: productId,
               unit_amount: priceAmount,
               recurring: {
                 interval: "month",

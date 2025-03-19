@@ -3,24 +3,21 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LogIn } from 'lucide-react';
 import { Button3DPhysical } from '@/components/ui/button-3d-physical';
+import { useAuth } from '@/components/auth/AuthContext';
 
-type AuthButtonsProps = {
-  user: any;
-  onSignInClick: () => void;
-};
-
-const AuthButtons = ({ user, onSignInClick }: AuthButtonsProps) => {
+const AuthButtons = () => {
   const navigate = useNavigate();
+  const { user, isAuthenticated, openAuthDialog } = useAuth();
   
   return (
     <>
-      {!user && (
+      {!isAuthenticated && (
         <Button3DPhysical
           variant="white"
           size="sm"
           icon={<LogIn className="h-3.5 w-3.5" />}
           iconPosition="left"
-          onClick={onSignInClick}
+          onClick={openAuthDialog}
           className="hidden sm:flex"
         >
           Sign In
@@ -31,9 +28,9 @@ const AuthButtons = ({ user, onSignInClick }: AuthButtonsProps) => {
         variant="primary"
         size="sm"
         className="hidden sm:flex"
-        onClick={() => user ? navigate('/account') : onSignInClick()}
+        onClick={() => isAuthenticated ? navigate('/account') : openAuthDialog()}
       >
-        {user ? 'My Dashboard' : 'Get Started'}
+        {isAuthenticated ? 'My Dashboard' : 'Get Started'}
       </Button3DPhysical>
     </>
   );

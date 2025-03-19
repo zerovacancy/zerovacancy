@@ -12,11 +12,13 @@ import { SEOProvider } from '@/components/SEO';
 import { ScrollToTop } from '@/components/ui/scroll-to-top';
 import { ScrollProgress } from '@/components/ui/scroll-progress';
 import { CookieConsent } from '@/components/ui/cookie-consent';
+import { AuthProvider } from '@/components/auth/AuthContext';
 
 const Index = lazy(() => import('./pages/index'));
 const PaymentConfirmation = lazy(() => import('./pages/PaymentConfirmation'));
 const Terms = lazy(() => import('./pages/Terms'));
 const Account = lazy(() => import('./pages/Account'));
+const AuthCallback = lazy(() => import('./pages/AuthCallback'));
 const ConnectSuccess = lazy(() => import('./pages/ConnectSuccess'));
 const ConnectRefresh = lazy(() => import('./pages/ConnectRefresh'));
 const ConnectOnboarding = lazy(() => import('./pages/ConnectOnboarding'));
@@ -120,37 +122,40 @@ function App() {
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       <SEOProvider>
         <Router>
-          <ScrollToTop />
-          <ScrollProgress />
-          {React.createElement(ScrollToTop)}
-          <div className="relative landscape-container">
-          <Suspense fallback={<PageLoader />}>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/payment-confirmation" element={<PaymentConfirmation />} />
-              <Route path="/terms" element={<Terms />} />
-              <Route path="/account" element={<Account />} />
-              <Route path="/connect/success" element={<ConnectSuccess />} />
-              <Route path="/connect/refresh" element={<ConnectRefresh />} />
-              <Route path="/connect/onboarding" element={<ConnectOnboarding />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Suspense>
-          <ConditionalBottomNav />
-        </div>
-        <CookieConsent />
-        <Toaster />
-        {/* Only use SonnerToaster for error notifications, not for success */}
-        <SonnerToaster 
-          position="top-right" 
-          closeButton 
-          richColors
-          toastOptions={{
-            duration: 3000
-          }} 
-        />
-        <Analytics />
-      </Router>
+          <AuthProvider>
+            <ScrollToTop />
+            <ScrollProgress />
+            <ScrollToTopComponent />
+            <div className="relative landscape-container">
+              <Suspense fallback={<PageLoader />}>
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/payment-confirmation" element={<PaymentConfirmation />} />
+                  <Route path="/terms" element={<Terms />} />
+                  <Route path="/account" element={<Account />} />
+                  <Route path="/auth/callback" element={<AuthCallback />} />
+                  <Route path="/connect/success" element={<ConnectSuccess />} />
+                  <Route path="/connect/refresh" element={<ConnectRefresh />} />
+                  <Route path="/connect/onboarding" element={<ConnectOnboarding />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Suspense>
+              <ConditionalBottomNav />
+            </div>
+            <CookieConsent />
+            <Toaster />
+            {/* Only use SonnerToaster for error notifications, not for success */}
+            <SonnerToaster 
+              position="top-right" 
+              closeButton 
+              richColors
+              toastOptions={{
+                duration: 3000
+              }} 
+            />
+            <Analytics />
+          </AuthProvider>
+        </Router>
       </SEOProvider>
     </ErrorBoundary>
   );

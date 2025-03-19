@@ -12,6 +12,8 @@ import { mobileOptimizationClasses } from "@/utils/mobile-optimization";
 import { ScrollArea } from "../ui/scroll-area";
 import { PricingService } from "@/services/PricingService";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/components/auth/AuthContext";
 import {
   Dialog,
   DialogContent,
@@ -59,6 +61,8 @@ export const PricingContainer = () => {
     }));
   };
   
+  const { isAuthenticated, user, openAuthDialog } = useAuth();
+
   // Handle plan selection
   const handlePlanSelect = async (planName: string) => {
     if (isProcessingPayment) return;
@@ -77,27 +81,38 @@ export const PricingContainer = () => {
         return;
       }
       
-      // Normalize the package name for the backend according to the formats in create-subscription
-      let packageName;
-      if (planName.toLowerCase().includes("professional")) {
-        packageName = "pro";  // Match the name expected by create-subscription ("price_pro")
-      } else if (planName.toLowerCase().includes("premium")) {
-        packageName = "premium";  // Match the name expected by create-subscription ("price_premium")
-      } else {
-        packageName = planName.toLowerCase().replace(/[^a-z0-9]/g, "_");
+      console.log(`Starting checkout process for ${planName} plan`);
+      
+      // Check if user is authenticated using our auth context
+      if (!isAuthenticated || !user) {
+        toast.error("You need to be signed in to purchase a subscription");
+        setIsProcessingPayment(false);
+        setProcessingPlan(null);
+        
+        // Open the auth dialog
+        openAuthDialog();
+        return;
       }
       
-      console.log(`Starting checkout process for ${packageName} plan`);
+      // Call Supabase Edge Function to create a Stripe checkout session
+      const { data, error } = await supabase.functions.invoke('create-checkout-session', {
+        body: {
+          planName: planName.toLowerCase().includes("professional") ? "pro" : planName.toLowerCase().includes("premium") ? "premium" : "basic",
+          userId: user.id,
+        }
+      });
       
-      // Create the subscription 
-      const { clientSecret, subscriptionId } = await PricingService.createOrUpdateSubscription(packageName);
+      if (error) {
+        console.error("Error creating checkout session:", error);
+        throw new Error(`Failed to create checkout session: ${error.message}`);
+      }
       
-      // Use the PricingService directly to handle the redirect
-      await PricingService.processPayment(clientSecret);
+      const { url } = data;
       
-      // The processPayment method will handle the redirect automatically
+      // Redirect to the checkout URL
+      window.location.href = url;
       
-      // The redirect happens automatically, but in case it doesn't:
+      // If the redirect doesn't happen within 5 seconds, reset the state
       setTimeout(() => {
         setIsProcessingPayment(false);
         setProcessingPlan(null);

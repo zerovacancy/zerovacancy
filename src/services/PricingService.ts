@@ -81,23 +81,23 @@ export class PricingService {
       // Load Stripe
       const stripe = await stripePromise;
       if (!stripe) throw new Error('Stripe failed to initialize');
+      
+      console.log('Redirecting to Stripe Checkout with clientSecret:', clientSecret);
 
-      // Redirect to the Stripe Checkout page
-      const result = await stripe.confirmPayment({
-        elements: undefined,
+      // Create a payment element first
+      const elements = stripe.elements({
         clientSecret,
-        confirmParams: {
-          return_url: `${window.location.origin}/payment-confirmation`
+        appearance: {
+          theme: 'stripe',
         }
       });
+
+      // Use redirectToCheckout instead of confirmPayment for a more reliable redirect
+      window.location.href = `https://checkout.stripe.com/pay/${clientSecret}`;
       
-      // This won't be reached if the redirect happens
-      if (result.error) {
-        console.error('Stripe payment error:', result.error);
-        throw new Error(result.error.message);
-      }
-      
-      return result;
+      // If the redirect doesn't happen immediately, return a resolved promise
+      // This won't be reached if the redirect works
+      return Promise.resolve({ success: true });
     } catch (error) {
       console.error('Payment processing error:', error);
       throw error;
