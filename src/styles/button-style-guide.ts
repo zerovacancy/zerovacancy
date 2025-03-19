@@ -1,4 +1,3 @@
-
 /**
  * ZERO VACANCY BUTTON STYLE GUIDE
  * 
@@ -23,17 +22,33 @@ export const buttonColors = {
     highlightTop: 'rgba(255,255,255,0.35)',
     highlightBottom: 'rgba(0,0,0,0.15)',
   },
-  // White variant
+  // White variant with refined styling - Primary "RESERVE EARLY ACCESS" button
   white: {
-    base: '#FFFFFF',
-    dark: '#F8F8FA',
+    base: '#F5F5F7',
+    dark: '#F0F0F2',
     light: '#FFFFFF',
-    text: '#7837DB',
-    iconBackground: 'rgba(134,65,245,0.02)',
-    iconBorder: 'rgba(0,0,0,0.08)',
-    border: 'rgba(0,0,0,0.08)',
+    text: '#7633DC',
+    iconBackground: 'rgba(118,51,220,0.05)',
+    iconBorder: 'rgba(118,51,220,0.18)',
+    border: 'rgba(118,51,220,0.18)',
     highlightTop: 'rgba(255,255,255,0.8)',
     highlightBottom: 'rgba(0,0,0,0.05)',
+    gradient: 'linear-gradient(180deg, rgba(118,51,220,0.08) 0%, rgba(118,51,220,0.12) 100%)',
+    hoverGradient: 'linear-gradient(180deg, rgba(118,51,220,0.13) 0%, rgba(118,51,220,0.17) 100%)',
+  },
+  // Secondary "JOIN AS CREATOR" button with reduced purple tint
+  secondary: {
+    base: '#F8F8FA',
+    dark: '#F3F3F5',
+    light: '#FFFFFF',
+    text: '#8345E6',
+    iconBackground: 'rgba(118,51,220,0.03)',
+    iconBorder: 'rgba(118,51,220,0.12)',
+    border: 'rgba(118,51,220,0.12)',
+    highlightTop: 'rgba(255,255,255,0.85)',
+    highlightBottom: 'rgba(0,0,0,0.04)',
+    gradient: 'linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(248,248,250,1) 100%)',
+    hoverGradient: 'linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(243,240,255,0.5) 100%)',
   },
   // Blue variant
   blue: {
@@ -69,16 +84,16 @@ export const buttonSizes = {
     borderRadius: '9px',
     padding: '0 16px',
     iconContainerSize: {
-      width: '24px',
-      height: '22px',
+      width: 24,
+      height: 22,
     },
     iconSize: {
-      width: '16px',
-      height: '16px',
+      width: 16,
+      height: 16,
     },
     spacing: {
-      iconMargin: '10px',
-      iconOffset: '9px',
+      iconMargin: 10,
+      iconOffset: 9,
     },
   },
   md: {
@@ -87,16 +102,16 @@ export const buttonSizes = {
     borderRadius: '12px',
     padding: '0 20px',
     iconContainerSize: {
-      width: '28px',
-      height: '28px',
+      width: 28,
+      height: 28,
     },
     iconSize: {
-      width: '18px',
-      height: '18px',
+      width: 18,
+      height: 18,
     },
     spacing: {
-      iconMargin: '12px',
-      iconOffset: '12px',
+      iconMargin: 12,
+      iconOffset: 12,
     },
   },
   lg: {
@@ -105,35 +120,34 @@ export const buttonSizes = {
     borderRadius: '15px',
     padding: '0 24px',
     iconContainerSize: {
-      width: '40px',
-      height: '40px',
+      width: 40,
+      height: 40,
     },
     iconSize: {
-      width: '20px',
-      height: '20px',
+      width: 20,
+      height: 20,
     },
     spacing: {
-      iconMargin: '14px',
-      iconOffset: '14px',
+      iconMargin: 14,
+      iconOffset: 14,
     },
   },
-  // Special mobile optimized size
   mobile: {
     height: '50px',
     fontSize: '14px',
     borderRadius: '12px',
     padding: '0 20px',
     iconContainerSize: {
-      width: '32px',
-      height: '32px',
+      width: 32,
+      height: 32,
     },
     iconSize: {
-      width: '18px',
-      height: '18px',
+      width: 18,
+      height: 18,
     },
     spacing: {
-      iconMargin: '12px',
-      iconOffset: '12px',
+      iconMargin: 12,
+      iconOffset: 12,
     },
   },
 };
@@ -181,6 +195,7 @@ export function createButtonStyle(
     customShadow?: string;
     customBorder?: string;
     isPressed?: boolean;
+    isHovered?: boolean;
   }
 ): CSSProperties {
   const colors = buttonColors[colorVariant];
@@ -195,10 +210,18 @@ export function createButtonStyle(
     ? shadowStyles.pressed
     : `${shadow}, ${insetHighlight}`;
   
-  // Gradient background based on color variant
+  // Gradient background based on color variant and hover state
   let background: string;
   if (colorVariant === 'white') {
-    background = `linear-gradient(180deg, ${colors.light} 0%, ${colors.dark} 100%)`;
+    // Primary button with purple tint gradient
+    background = options?.isHovered 
+      ? `${colors.hoverGradient}, linear-gradient(180deg, ${colors.light} 0%, ${colors.dark} 100%)`
+      : `${colors.gradient}, linear-gradient(180deg, ${colors.light} 0%, ${colors.dark} 100%)`;
+  } else if (colorVariant === 'secondary') {
+    // Secondary button with subtle gradient
+    background = options?.isHovered 
+      ? colors.hoverGradient
+      : colors.gradient;
   } else {
     background = `linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 30%), linear-gradient(180deg, ${colors.base} 0%, ${colors.dark} 100%)`;
   }
@@ -276,6 +299,7 @@ export function getCompleteButtonStyles(
   options?: {
     iconPosition?: 'left' | 'right';
     isPressed?: boolean;
+    isHovered?: boolean;
     customShadow?: string;
     customBorder?: string;
   }
@@ -299,12 +323,12 @@ export function getCompleteButtonStyles(
 
 // Helper functions for specific button styles used in the hero section
 
-// "RESERVE EARLY ACCESS" button style (primary - purple with 3D effect)
+// "RESERVE EARLY ACCESS" button style (primary with refined styling)
 export const reserveEarlyAccessStyle = () => getCompleteButtonStyles('white', 'lg', { iconPosition: 'left' });
 
-// "JOIN AS CREATOR" button style (white variant with 3D effect)
-export const joinAsCreatorStyle = () => getCompleteButtonStyles('white', 'lg', { iconPosition: 'left' });
+// "JOIN AS CREATOR" button style (secondary variant with refined styling)
+export const joinAsCreatorStyle = () => getCompleteButtonStyles('secondary', 'lg', { iconPosition: 'left' });
 
 // Mobile-optimized button styles
 export const mobileReserveEarlyAccessStyle = () => getCompleteButtonStyles('white', 'mobile', { iconPosition: 'left' });
-export const mobileJoinAsCreatorStyle = () => getCompleteButtonStyles('white', 'mobile', { iconPosition: 'left' });
+export const mobileJoinAsCreatorStyle = () => getCompleteButtonStyles('secondary', 'mobile', { iconPosition: 'left' });

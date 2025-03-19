@@ -1,4 +1,5 @@
-import React, { ButtonHTMLAttributes, useRef, useEffect } from "react";
+
+import React, { ButtonHTMLAttributes, useRef, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 
 interface Button3DPhysicalProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -29,6 +30,10 @@ export function Button3DPhysical({
   // Refs for icon elements to apply container styles
   const leftIconRef = useRef<HTMLDivElement>(null);
   const rightIconRef = useRef<HTMLDivElement>(null);
+  
+  // State for hover and pressed states to apply refined color transitions
+  const [isHovered, setIsHovered] = useState(false);
+  const [isPressed, setIsPressed] = useState(false);
   
   // Effect to apply custom icon container styles from data-container-style attribute
   useEffect(() => {
@@ -68,7 +73,7 @@ export function Button3DPhysical({
     secondary: "text-white border border-[rgba(134,65,245,0.5)]",
     outline: "text-purple-700 border border-purple-300",
     // White button with enhanced styling for more sophisticated appearance
-    white: "text-purple-700 font-medium", // Border will be handled by the style
+    white: "text-[#7633DC] font-medium", // Updated text color to match refined palette
   };
 
   // Refined button styles with precise interaction physics
@@ -132,20 +137,29 @@ export function Button3DPhysical({
     // Combine all shadows
     const fullShadow = `${commonShadow}, ${insetEffect}`;
     
-    // Match the icon container's exact styling for the entire button
+    // Match the icon container's exact styling for the entire button with refined colors
     const backgroundStyle = isDark ? {
       background: 'linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 30%), linear-gradient(180deg, #8A42F5 0%, #7837DB 100%)',
       border: '1px solid rgba(255,255,255,0.2)'
     } : isWhite ? {
-      // Pure white gradient for white variant
-      background: 'linear-gradient(180deg, #FFFFFF 0%, #F8F8FA 100%)',
-      border: '1px solid rgba(0,0,0,0.08)', // Same subtle border
+      // Primary button with purple tint gradient
+      background: isHovered ?
+        'linear-gradient(180deg, rgba(118,51,220,0.13) 0%, rgba(118,51,220,0.17) 100%), linear-gradient(180deg, #FFFFFF 0%, #F5F5F7 100%)' :
+        'linear-gradient(180deg, rgba(118,51,220,0.08) 0%, rgba(118,51,220,0.12) 100%), linear-gradient(180deg, #FFFFFF 0%, #F5F5F7 100%)',
+      border: '1px solid rgba(118,51,220,0.18)', // Subtle purple border
       borderRadius: size === "sm" ? "9px" : size === "md" ? "12px" : "15px" // Match icon container border radius
-    } : {};
+    } : {
+      // Secondary button with refined styling
+      background: isHovered ?
+        'linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(243,240,255,0.5) 100%)' :
+        'linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(248,248,250,1) 100%)',
+      border: '1px solid rgba(118,51,220,0.12)', // Lightened border
+      borderRadius: size === "sm" ? "9px" : size === "md" ? "12px" : "15px" // Match icon container border radius
+    };
     
     // Enhanced styles for premium 3D effect
     return {
-      boxShadow: fullShadow,
+      boxShadow: isPressed ? shadowStyles.pressed : fullShadow,
       transition: 'all 0.15s ease-out', // Refined timing for better interaction physics
       ...backgroundStyle
     };
@@ -158,6 +172,12 @@ export function Button3DPhysical({
         ...getShadowStyle(),
         ...(props.style || {})
       }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onMouseDown={() => setIsPressed(true)}
+      onMouseUp={() => setIsPressed(false)}
+      onTouchStart={() => setIsPressed(true)}
+      onTouchEnd={() => setIsPressed(false)}
       {...props}
     >
       {/* Icon container that matches the example button - left position */}
@@ -181,14 +201,18 @@ export function Button3DPhysical({
             )}
             style={{
               borderRadius: size === "sm" ? "9px" : size === "md" ? "12px" : "15px",
-              // Enhanced border and shadow for premium 3D effect
+              // Enhanced border and shadow for premium 3D effect with refined colors
               border: variant === 'primary' || variant === 'secondary' 
                 ? '1px solid rgba(255,255,255,0.2)' 
-                : '1px solid rgba(0,0,0,0.08)',
-              // Very subtle background differentiation for depth
+                : variant === 'white'
+                  ? '1px solid rgba(118,51,220,0.18)' // Matching primary button border
+                  : '1px solid rgba(118,51,220,0.12)', // Matching secondary button border
+              // Very subtle background differentiation for depth with refined colors
               background: variant === 'primary' || variant === 'secondary' 
                 ? 'rgba(255,255,255,0.05)' 
-                : 'rgba(134,65,245,0.02)',
+                : variant === 'white'
+                  ? 'rgba(118,51,220,0.05)' // Slightly more saturated with purple (2-3% more)
+                  : 'rgba(118,51,220,0.03)', // Lighter background for secondary
               // Enhanced inner shadow for refined 3D appearance
               boxShadow: variant === 'primary' || variant === 'secondary' 
                 ? 'inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.1)' 
@@ -198,7 +222,11 @@ export function Button3DPhysical({
             }}
           >
             <span className={cn(
-              variant === 'primary' || variant === 'secondary' ? "text-white" : "text-[#7837DB]",
+              variant === 'primary' || variant === 'secondary' 
+                ? "text-white" 
+                : variant === 'white' 
+                  ? "text-[#7633DC]" // Exactly match primary button text color 
+                  : "text-[#8345E6]", // Exactly match secondary button text color
               "flex items-center justify-center w-full h-full",
               "opacity-95" // Better visibility while maintaining integration
             )}>
@@ -251,14 +279,18 @@ export function Button3DPhysical({
             )}
             style={{
               borderRadius: size === "sm" ? "9px" : size === "md" ? "12px" : "15px",
-              // Enhanced border and shadow for premium 3D effect
+              // Enhanced border and shadow for premium 3D effect with refined colors
               border: variant === 'primary' || variant === 'secondary' 
                 ? '1px solid rgba(255,255,255,0.2)' 
-                : '1px solid rgba(0,0,0,0.08)',
-              // Very subtle background differentiation for depth
+                : variant === 'white'
+                  ? '1px solid rgba(118,51,220,0.18)' // Matching primary button border
+                  : '1px solid rgba(118,51,220,0.12)', // Matching secondary button border
+              // Very subtle background differentiation for depth with refined colors
               background: variant === 'primary' || variant === 'secondary' 
                 ? 'rgba(255,255,255,0.05)' 
-                : 'rgba(134,65,245,0.02)',
+                : variant === 'white'
+                  ? 'rgba(118,51,220,0.05)' // Slightly more saturated with purple (2-3% more)
+                  : 'rgba(118,51,220,0.03)', // Lighter background for secondary
               // Enhanced inner shadow for refined 3D appearance
               boxShadow: variant === 'primary' || variant === 'secondary' 
                 ? 'inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.1)' 
@@ -268,7 +300,11 @@ export function Button3DPhysical({
             }}
           >
             <span className={cn(
-              variant === 'primary' || variant === 'secondary' ? "text-white" : "text-[#7837DB]",
+              variant === 'primary' || variant === 'secondary' 
+                ? "text-white" 
+                : variant === 'white' 
+                  ? "text-[#7633DC]" // Exactly match primary button text color 
+                  : "text-[#8345E6]", // Exactly match secondary button text color
               "flex items-center justify-center w-full h-full",
               "opacity-95" // Better visibility while maintaining integration
             )}>
