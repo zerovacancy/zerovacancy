@@ -1,7 +1,7 @@
 
 import React, { useEffect } from "react"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
-import { CheckCircle } from "lucide-react"
+import { CheckCircle, X } from "lucide-react"
 import { Confetti } from "@/components/ui/confetti"
 import confetti from "canvas-confetti"
 import { useIsMobile } from "@/hooks/use-mobile"
