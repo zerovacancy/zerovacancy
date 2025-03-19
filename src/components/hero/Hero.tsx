@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
@@ -6,7 +5,6 @@ import { WaitlistCTA } from "../ui/waitlist-cta";
 import { WaitlistCreatorCTA } from "../ui/waitlist-creator-cta";
 import { TextRotate } from "../ui/text-rotate";
 import { SocialProof } from "../ui/waitlist/social-proof";
-import { mobileButtonStyle } from "../ui/button-styles";
 
 const TITLES = ["CONVERTS", "CAPTIVATES", "CLOSES"];
 
@@ -16,11 +14,9 @@ export function Hero() {
   const [isInView, setIsInView] = useState(false);
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
 
-  // Track which rotation word is currently displayed
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isInView) {
-      // Standard interval for word rotation
       const intervalTime = isMobile ? 3500 : 3000;
       
       interval = setInterval(() => {
@@ -81,8 +77,6 @@ export function Hero() {
         </>
       )}
       
-      {/* Background is now handled in the parent component */}
-
       <div 
         className={cn(
           "flex flex-col max-w-6xl mx-auto w-full",
@@ -111,7 +105,6 @@ export function Hero() {
                 "w-full mx-auto text-center"
               )}
             >
-              {/* Add subtle pattern behind text on mobile */}
               {isMobile && (
                 <div className="absolute inset-0 -z-10 opacity-10 bg-[radial-gradient(#8A57DE_1px,transparent_1px)] [background-size:20px_20px] blur-[0.5px]"></div>
               )}
@@ -131,19 +124,14 @@ export function Hero() {
                 isMobile && "mobile-optimize"
               )}
             >
-              {/* No background glow effect for cleaner design */}
-              
               <TextRotate
                 texts={TITLES}
                 mainClassName="flex justify-center items-center overflow-visible"
                 staggerFrom="last"
-                // Simpler, more direct animations for mobile
                 initial={isMobile ? { y: 30, opacity: 0 } : { y: "40%", opacity: 0, scale: 0.95 }}
                 animate={isMobile ? { y: 0, opacity: 1 } : { y: 0, opacity: 1, scale: 1 }}
                 exit={isMobile ? { y: -30, opacity: 0 } : { y: "-40%", opacity: 0, scale: 0.95 }}
-                // Disable staggering completely on mobile
                 staggerDuration={isMobile ? 0 : 0}
-                // Standard rotation interval
                 rotationInterval={isMobile ? 3500 : 3000}
                 splitLevelClassName="overflow-visible"
                 elementLevelClassName={cn(
@@ -221,12 +209,9 @@ export function Hero() {
           isMobile && "relative"
         )}
       >
-        {/* Desktop CTA layout with audience labels and side-by-side buttons */}
         {!isMobile && (
           <div className="w-full max-w-4xl mx-auto relative" id="hero-cta-section">
-            {/* Buttons container - removed "For Property Owners" and "For Content Creators" labels */}
             <div className="flex flex-row justify-center gap-[8%] mb-8 relative items-start">
-              {/* Property Owner CTA */}
               <div className="flex flex-col w-[45%] max-w-[280px]">
                 <WaitlistCTA 
                   buttonText="RESERVE EARLY ACCESS" 
@@ -234,7 +219,6 @@ export function Hero() {
                 />
               </div>
               
-              {/* Creator CTA */}
               <div className="flex flex-col w-[45%] max-w-[280px] relative">
                 <div className="relative">
                   <WaitlistCreatorCTA 
@@ -246,144 +230,45 @@ export function Hero() {
               </div>
             </div>
             
-            {/* Social proof centered below both buttons */}
             <div className="w-full flex justify-center">
               <SocialProof className="mt-3" />
             </div>
           </div>
         )}
         
-        {/* Mobile CTA layout with consistent 3D styling from desktop */}
         {isMobile && (
           <>
-            {/* Container with entrance animation */}
             <div className="w-full flex flex-col items-center animate-fade-in-up">
-              {/* CTA button container - optimized width for mobile */}
               <div className="w-[85%] max-w-[300px] mx-auto flex flex-col items-center gap-5">
-                {/* Primary CTA with social proof grouped closely */}
                 <div className="flex flex-col mb-0 w-full">
-                  {/* Main waitlist CTA with identical styling to desktop but optimized for mobile */}
                   <WaitlistCTA 
                     className="mb-0 w-full mx-auto" 
                     buttonText="RESERVE EARLY ACCESS" 
                     showSocialProof={false}
-                    style={{
-                      // Apply the mobile-optimized styles with !IMPORTANT background
-                      button: {
-                        // Purple gradient background for primary CTA
-                        background: 'linear-gradient(180deg, #8A42F5 0%, #7837DB 100%) !important',
-                        // White text for contrast
-                        color: '#FFFFFF !important',
-                        // Subtle border that works with purple
-                        border: '1px solid rgba(255,255,255,0.2)',
-                        // Exact shadow style from the style guide
-                        boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(0,0,0,0.05), 0 16px 32px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15)',
-                        // Use the mobile size from button style guide
-                        height: '50px',
-                        // Match border radius to style guide mobile size
-                        borderRadius: '12px',
-                        fontSize: '14px',
-                        fontWeight: 600,
-                        // Remove any preset minimum width to let container control width
-                        width: '100%',
-                        minWidth: 'unset'
-                      },
-                      // White icon for contrast on purple
-                      icon: {
-                        color: 'white',
-                        stroke: 'white',
-                        width: '18px',
-                        height: '18px'
-                      },
-                      // Translucent background for icon container on purple button
-                      iconContainer: {
-                        width: '32px', 
-                        height: '32px',
-                        background: 'rgba(255,255,255,0.12)',
-                        border: '1px solid rgba(255,255,255,0.2)',
-                        borderRadius: '12px',
-                        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15)'
-                      }
-                    }}
                   />
                   
-                  {/* Social proof directly beneath primary CTA with tight spacing */}
                   <div className="w-full flex justify-center mt-3 mb-3 relative z-10">
-                    {/* Subtle connecting line between button and social proof */}
                     <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-[50%] w-[1px] h-4 bg-gradient-to-b from-transparent via-purple-300/20 to-purple-300/40"></div>
                     <SocialProof 
                       className="mt-0 transform -translate-y-0"
                       style={{
-                        // Match the button styling with proper scale for mobile
                         borderRadius: '12px',
                         padding: '5px 10px',
-                        // Smaller font size for better mobile fit
                         fontSize: '13px',
-                        // Make shadow more subtle than buttons to create visual hierarchy
                         boxShadow: '0 1px 2px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.05), 0 4px 8px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)'
                       }}
                     />
                   </div>
                 </div>
                 
-                {/* Creator CTA with explicit inline styling for mobile */}
-                                <div 
-                  onClick={(e) => {
-                    // Find the button and click it
-                    const button = e.currentTarget.querySelector('button');
-                    if (button) {
-                      button.click();
-                    }
-                  }}
-                  className="w-full cursor-pointer"
-                >
-                  <button
-                    className="w-full min-w-full h-[50px] font-medium rounded-[12px] text-[#7633DC] relative flex items-center justify-center"
-                    style={{
-                      background: '#F5F5F7', // Light gray background as requested
-                      color: '#7633DC', // Purple text color
-                      border: '1px solid rgba(0,0,0,0.08)', // Subtle light gray border
-                      boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(0,0,0,0.05), 0 16px 32px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)',
-                      fontSize: '14px',
-                      fontWeight: 600,
-                      paddingLeft: '52px',
-                    }}
-                  >
-                    {/* Icon container */}
-                    <div 
-                      className="absolute left-0 top-1/2 -translate-y-1/2 ml-6 flex items-center justify-center"
-                      style={{
-                        width: '32px',
-                        height: '32px',
-                        background: '#F8F8FA', // Very light gray for icon container
-                        border: '1px solid rgba(118,51,220,0.1)', // Subtle purple-tinted border
-                        borderRadius: '12px',
-                        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)'
-                      }}
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7633DC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="9" cy="7" r="4"></circle>
-                        <line x1="19" x2="19" y1="8" y2="14"></line>
-                        <line x1="22" x2="16" y1="11" y2="11"></line>
-                      </svg>
-                    </div>
-                    JOIN AS CREATOR
-                  </button>
-                  
-                  {/* Hidden original component for functionality */}
-                  <div className="hidden">
-                    <WaitlistCreatorCTA 
-                      buttonText="JOIN AS CREATOR" 
-                      showSocialProof={false}
-                      className="w-full"
-                    />
-                  </div>
-                </div>
+                <WaitlistCreatorCTA 
+                  buttonText="JOIN AS CREATOR" 
+                  showSocialProof={false}
+                  className="w-full"
+                />
               </div>
             </div>
             
-            {/* Scroll indicator for mobile */}
             <div className="w-full flex justify-center mt-6">
               <div className="flex flex-col items-center opacity-70">
                 <div className="text-xs text-purple-600">Scroll to explore</div>
