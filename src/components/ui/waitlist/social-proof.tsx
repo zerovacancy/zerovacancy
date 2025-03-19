@@ -48,7 +48,7 @@ export function SocialProof({ className, style }: SocialProofProps) {
     // Proper font size for the initials
     fontSize: isMobile ? '7px' : '9px',
     fontWeight: 'bold',
-    position: 'relative',
+    position: 'relative' as const, // Use 'as const' to fix TypeScript error
     zIndex: 1,
     textAlign: 'center',
     lineHeight: '1',
@@ -112,7 +112,7 @@ export function SocialProof({ className, style }: SocialProofProps) {
               transform: 'translateX(0px)',
               // Small shine reflection like 3D button icon container
               backgroundImage: 'linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 50%), linear-gradient(180deg, #8A42F5 0%, #7837DB 100%)'
-            }}
+            } as React.CSSProperties}
           >JT</div>
           <div 
             style={{
@@ -122,7 +122,7 @@ export function SocialProof({ className, style }: SocialProofProps) {
               transform: isMobile ? 'translateX(-6px)' : 'translateX(-8px)',
               // Slightly different shade for visual interest
               backgroundImage: 'linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 50%), linear-gradient(180deg, #9953FF 10%, #7837DB 100%)'
-            }}
+            } as React.CSSProperties}
           >MI</div>
           <div 
             style={{
@@ -132,7 +132,7 @@ export function SocialProof({ className, style }: SocialProofProps) {
               transform: isMobile ? 'translateX(-12px)' : 'translateX(-16px)',
               // Third slight variation
               backgroundImage: 'linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%), linear-gradient(180deg, #8A42F5 0%, #6C31C3 100%)'
-            }}
+            } as React.CSSProperties}
           >AS</div>
         </div>
         

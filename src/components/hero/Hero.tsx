@@ -6,7 +6,7 @@ import { WaitlistCTA } from "../ui/waitlist-cta";
 import { WaitlistCreatorCTA } from "../ui/waitlist-creator-cta";
 import { TextRotate } from "../ui/text-rotate";
 import { SocialProof } from "../ui/waitlist/social-proof";
-import { mobileButtonStyle } from "../ui/button-styles";
+// Remove the incorrect import: import { mobileButtonStyle } from "../ui/button-styles";
 
 const TITLES = ["CONVERTS", "CAPTIVATES", "CLOSES"];
 
