@@ -82,14 +82,22 @@ export class PricingService {
       const stripe = await stripePromise;
       if (!stripe) throw new Error('Stripe failed to initialize');
 
-      // Confirm payment
-      return await stripe.confirmPayment({
+      // Redirect to the Stripe Checkout page
+      const result = await stripe.confirmPayment({
         elements: undefined,
         clientSecret,
         confirmParams: {
           return_url: `${window.location.origin}/payment-confirmation`
         }
       });
+      
+      // This won't be reached if the redirect happens
+      if (result.error) {
+        console.error('Stripe payment error:', result.error);
+        throw new Error(result.error.message);
+      }
+      
+      return result;
     } catch (error) {
       console.error('Payment processing error:', error);
       throw error;

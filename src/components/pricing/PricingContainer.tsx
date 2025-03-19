@@ -5,11 +5,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { usePricing } from "./PricingContext";
 import PricingHeader from "./PricingHeader";
 import { PLAN_DESCRIPTIONS, VALUE_PROPOSITIONS, PLAN_CTAS, FEATURES } from "./pricingData";
-import { ChevronDown, Check, X, ChevronRight, Sparkles } from "lucide-react";
+import { ChevronDown, Check, X, ChevronRight, Sparkles, Loader2 } from "lucide-react";
 import { PricingFeature } from "./types";
 import { Button } from "../ui/button";
 import { mobileOptimizationClasses } from "@/utils/mobile-optimization";
 import { ScrollArea } from "../ui/scroll-area";
+import { PricingService } from "@/services/PricingService";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -23,6 +25,8 @@ export const PricingContainer = () => {
   const [expandedFeatures, setExpandedFeatures] = useState<{[key: number]: boolean}>({});
   const [expandedDescriptions, setExpandedDescriptions] = useState<{[key: number]: boolean}>({});
   const [showStickyHeader, setShowStickyHeader] = useState(false);
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  const [processingPlan, setProcessingPlan] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
@@ -53,6 +57,58 @@ export const PricingContainer = () => {
       ...prev,
       [index]: !prev[index]
     }));
+  };
+  
+  // Handle plan selection
+  const handlePlanSelect = async (planName: string) => {
+    if (isProcessingPayment) return;
+    
+    try {
+      setIsProcessingPayment(true);
+      setProcessingPlan(planName);
+      
+      // Handle free tier differently
+      if (planName.toLowerCase() === "basic (free)") {
+        toast.success("You've selected the Free tier!");
+        setTimeout(() => {
+          setIsProcessingPayment(false);
+          setProcessingPlan(null);
+        }, 1000);
+        return;
+      }
+      
+      // Normalize the package name for the backend according to the formats in create-subscription
+      let packageName;
+      if (planName.toLowerCase().includes("professional")) {
+        packageName = "pro";  // Match the name expected by create-subscription ("price_pro")
+      } else if (planName.toLowerCase().includes("premium")) {
+        packageName = "premium";  // Match the name expected by create-subscription ("price_premium")
+      } else {
+        packageName = planName.toLowerCase().replace(/[^a-z0-9]/g, "_");
+      }
+      
+      console.log(`Starting checkout process for ${packageName} plan`);
+      
+      // Create the subscription 
+      const { clientSecret, subscriptionId } = await PricingService.createOrUpdateSubscription(packageName);
+      
+      // Use the PricingService directly to handle the redirect
+      await PricingService.processPayment(clientSecret);
+      
+      // The processPayment method will handle the redirect automatically
+      
+      // The redirect happens automatically, but in case it doesn't:
+      setTimeout(() => {
+        setIsProcessingPayment(false);
+        setProcessingPlan(null);
+      }, 5000);
+      
+    } catch (error) {
+      console.error("Error redirecting to Stripe checkout:", error);
+      toast.error("Failed to redirect to checkout. Please try again.");
+      setIsProcessingPayment(false);
+      setProcessingPlan(null);
+    }
   };
   
   const groupFeaturesByCategory = (features: PricingFeature[]) => {
@@ -285,10 +341,20 @@ export const PricingContainer = () => {
                       "w-full py-2 rounded-xl font-medium text-sm transition-all h-auto min-h-10",
                       "px-4",
                       colorScheme.button,
-                      tier.popularPlan && "ring-2 ring-brand-purple/30 ring-offset-1"
+                      tier.popularPlan && "ring-2 ring-brand-purple/30 ring-offset-1",
+                      (isProcessingPayment && processingPlan === tier.title) && "opacity-80 cursor-not-allowed"
                     )}
+                    disabled={isProcessingPayment}
+                    onClick={() => handlePlanSelect(tier.title)}
                   >
-                    {tier.cta}
+                    {(isProcessingPayment && processingPlan === tier.title) ? (
+                      <div className="flex items-center justify-center gap-2">
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <span>Processing...</span>
+                      </div>
+                    ) : (
+                      tier.cta
+                    )}
                   </Button>
                 </div>
                 
@@ -564,10 +630,20 @@ export const PricingContainer = () => {
                       className={cn(
                         "w-full py-3 px-5 rounded-lg text-white font-medium transition-all h-11",
                         colorScheme.button,
-                        tier.popularPlan && "ring-2 ring-brand-purple/30 ring-offset-2"
+                        tier.popularPlan && "ring-2 ring-brand-purple/30 ring-offset-2",
+                        (isProcessingPayment && processingPlan === tier.title) && "opacity-80 cursor-not-allowed"
                       )}
+                      disabled={isProcessingPayment}
+                      onClick={() => handlePlanSelect(tier.title)}
                     >
-                      {tier.cta}
+                      {(isProcessingPayment && processingPlan === tier.title) ? (
+                        <div className="flex items-center justify-center gap-2">
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          <span>Processing...</span>
+                        </div>
+                      ) : (
+                        tier.cta
+                      )}
                     </Button>
                     
                     <div className="mt-8 border-t border-slate-100 pt-4">
