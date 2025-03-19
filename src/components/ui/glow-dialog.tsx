@@ -172,12 +172,24 @@ export function GlowDialog({
       <Dialog open={isOpen} onOpenChange={handleOpenChange}>
         <DialogContent className={dialogContentClassName}>
           <DialogTitle className="sr-only">Join Waitlist - Enter Your Email</DialogTitle>
-          <div className="absolute top-4 right-4 z-50">
+          <div className="absolute top-4 right-4 z-[1000]">
             <button 
-              onClick={() => handleOpenChange(false)}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleOpenChange(false);
+              }}
               className="text-white hover:text-white transition-colors duration-200 rounded-full p-2.5 hover:bg-white/20 bg-black/30 shadow-md"
               aria-label="Close dialog"
-              style={{ minHeight: '44px', minWidth: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              style={{ 
+                minHeight: '44px', 
+                minWidth: '44px', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                touchAction: 'manipulation' 
+              }}
+              type="button"
             >
               <X className="h-6 w-6" />
             </button>

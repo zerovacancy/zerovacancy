@@ -179,6 +179,30 @@ export function SuccessConfirmation({
             "z-[1000]" // Ensure dialog is visible but below confetti
           )}
         >
+          {/* Custom Close Button for better mobile interaction */}
+          <div className="absolute top-2 right-2 z-[1000]">
+            <button 
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onOpenChange(false);
+              }}
+              className="text-purple-700 hover:text-purple-900 transition-colors duration-200 rounded-full p-1.5 hover:bg-purple-100/60 bg-white/90 shadow-sm"
+              aria-label="Close dialog"
+              style={{ 
+                minHeight: '36px', 
+                minWidth: '36px', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                touchAction: 'manipulation' 
+              }}
+              type="button"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+          
           <div className="p-6 flex flex-col items-center justify-center space-y-4">
             <div className="h-24 w-24 bg-purple-50 rounded-full flex items-center justify-center mb-2">
               <CheckCircle className="h-12 w-12 text-purple-600" />
