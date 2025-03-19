@@ -107,7 +107,7 @@ export function SocialProof({ className, style }: SocialProofProps) {
               transform: 'translateX(0px)',
               // Small shine reflection like 3D button icon container
               backgroundImage: 'linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 50%), linear-gradient(180deg, #8A42F5 0%, #7837DB 100%)'
-            }}
+            } as React.CSSProperties}
           >
             JT
           </div>
@@ -119,7 +119,7 @@ export function SocialProof({ className, style }: SocialProofProps) {
               transform: isMobile ? 'translateX(-6px)' : 'translateX(-8px)',
               // Slightly different shade for visual interest
               backgroundImage: 'linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 50%), linear-gradient(180deg, #9953FF 10%, #7837DB 100%)'
-            }}
+            } as React.CSSProperties}
           >
             MI
           </div>
@@ -131,7 +131,7 @@ export function SocialProof({ className, style }: SocialProofProps) {
               transform: isMobile ? 'translateX(-12px)' : 'translateX(-16px)',
               // Third slight variation
               backgroundImage: 'linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%), linear-gradient(180deg, #8A42F5 0%, #6C31C3 100%)'
-            }}
+            } as React.CSSProperties}
           >
             AS
           </div>

@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
@@ -240,7 +239,6 @@ export function Hero() {
                   <WaitlistCreatorCTA 
                     buttonText="JOIN AS CREATOR" 
                     showSocialProof={false}
-                    className=""
                   />
                 </div>
               </div>
@@ -267,61 +265,14 @@ export function Hero() {
                     className="mb-0 w-full mx-auto" 
                     buttonText="RESERVE EARLY ACCESS" 
                     showSocialProof={false}
-                    style={{
-                      // Apply the mobile-optimized styles with !IMPORTANT background
-                      button: {
-                        // Explicit white background with !important to force override
-                        background: '#FFFFFF !important',
-                        // Same purple text color as icons
-                        color: '#4e43ac !important',
-                        // Same subtle border
-                        border: '1px solid rgba(0,0,0,0.08)',
-                        // Exact shadow style from the style guide
-                        boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(0,0,0,0.05), 0 16px 32px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)',
-                        // Use the mobile size from button style guide
-                        height: '50px',
-                        // Match border radius to style guide mobile size
-                        borderRadius: '12px',
-                        fontSize: '14px',
-                        fontWeight: 600,
-                        // Remove any preset minimum width to let container control width
-                        width: '100%',
-                        minWidth: 'unset'
-                      },
-                      // White icon
-                      icon: {
-                        color: 'white',
-                        stroke: 'white',
-                        width: '18px',
-                        height: '18px'
-                      },
-                      // Light background for icon container (same as JOIN AS CREATOR)
-                      iconContainer: {
-                        width: '32px', 
-                        height: '32px',
-                        background: 'rgba(134,65,245,0.02)',
-                        border: '1px solid rgba(0,0,0,0.08)',
-                        borderRadius: '12px',
-                        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)'
-                      }
-                    }}
                   />
                   
-                  {/* Social proof directly beneath primary CTA with tight spacing */}
+                  {/* Social proof directly beneath primary CTA with tighter spacing */}
                   <div className="w-full flex justify-center mt-3 mb-3 relative z-10">
                     {/* Subtle connecting line between button and social proof */}
                     <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-[50%] w-[1px] h-4 bg-gradient-to-b from-transparent via-purple-300/20 to-purple-300/40"></div>
                     <SocialProof 
                       className="mt-0 transform -translate-y-0"
-                      style={{
-                        // Match the button styling with proper scale for mobile
-                        borderRadius: '12px',
-                        padding: '5px 10px',
-                        // Smaller font size for better mobile fit
-                        fontSize: '13px',
-                        // Make shadow more subtle than buttons to create visual hierarchy
-                        boxShadow: '0 1px 2px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.05), 0 4px 8px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)'
-                      }}
                     />
                   </div>
                 </div>
@@ -331,44 +282,6 @@ export function Hero() {
                   buttonText="JOIN AS CREATOR" 
                   showSocialProof={false}
                   className="w-full"
-                  style={{
-                    // Apply the mobile-optimized styles with !IMPORTANT background
-                    button: {
-                      // Explicit white background with !important to force override
-                      background: '#FFFFFF !important',
-                      // Same purple text color as icons with !important
-                      color: '#4e43ac !important',
-                      // Same subtle border
-                      border: '1px solid rgba(0,0,0,0.08)',
-                      // Exact shadow style from the style guide
-                      boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(0,0,0,0.05), 0 16px 32px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)',
-                      // Use the mobile size from button style guide
-                      height: '50px',
-                      // Match border radius to style guide mobile size
-                      borderRadius: '12px',
-                      fontSize: '14px',
-                      fontWeight: 600,
-                      // Remove any preset minimum width to let container control width
-                      width: '100%',
-                      minWidth: 'unset'
-                    },
-                    // White icon
-                    icon: {
-                      color: 'white',
-                      stroke: 'white',
-                      width: '18px',
-                      height: '18px'
-                    },
-                    // Original background for JOIN AS CREATOR icon container
-                    iconContainer: {
-                      width: '32px', 
-                      height: '32px',
-                      background: 'rgba(134,65,245,0.02)',
-                      border: '1px solid rgba(0,0,0,0.08)',
-                      borderRadius: '12px',
-                      boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)'
-                    }
-                  }}
                 />
               </div>
             </div>

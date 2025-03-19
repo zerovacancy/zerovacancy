@@ -1,4 +1,3 @@
-
 /**
  * ZERO VACANCY BUTTON STYLE GUIDE
  * 
@@ -334,17 +333,17 @@ export function getCompleteButtonStyles(
   const position = options?.iconPosition || 'left';
   const sizeData = buttonSizes[size];
   
+  // Fix type issues with string operations by using template literals
+  const leftPadding = `calc(${sizeData.iconContainerSize.width}px + ${sizeData.spacing.iconMargin * 2}px)`;
+  const rightPadding = `calc(${sizeData.iconContainerSize.width}px + ${sizeData.spacing.iconMargin * 2}px)`;
+  
   return {
     button: createButtonStyle(colorVariant, size, options),
     iconContainer: createIconContainerStyle(colorVariant, size, position),
     icon: createIconStyle(colorVariant, size),
     textPadding: position === 'left'
-      ? { 
-          paddingLeft: `calc(${sizeData.iconContainerSize.width}px + ${sizeData.spacing.iconMargin * 2}px)` 
-        }
-      : { 
-          paddingRight: `calc(${sizeData.iconContainerSize.width}px + ${sizeData.spacing.iconMargin * 2}px)` 
-        }
+      ? { paddingLeft: leftPadding }
+      : { paddingRight: rightPadding }
   };
 }
 
