@@ -236,18 +236,12 @@ export function createButtonStyle(
   
   // Gradient background based on color variant and hover state
   let background: string;
-  if (colorVariant === 'white') {
-    // Primary button with purple tint gradient
-    const whiteColors = colors as GradientButtonColor;
+  if ('gradient' in colors) {
+    // For buttons with gradient properties (white and secondary)
+    const gradientColors = colors as GradientButtonColor;
     background = options?.isHovered 
-      ? `${whiteColors.hoverGradient}, linear-gradient(180deg, ${colors.light} 0%, ${colors.dark} 100%)`
-      : `${whiteColors.gradient}, linear-gradient(180deg, ${colors.light} 0%, ${colors.dark} 100%)`;
-  } else if (colorVariant === 'secondary') {
-    // Secondary button with subtle gradient
-    const secondaryColors = colors as GradientButtonColor;
-    background = options?.isHovered 
-      ? secondaryColors.hoverGradient
-      : secondaryColors.gradient;
+      ? `${gradientColors.hoverGradient}, linear-gradient(180deg, ${colors.light} 0%, ${colors.dark} 100%)`
+      : `${gradientColors.gradient}, linear-gradient(180deg, ${colors.light} 0%, ${colors.dark} 100%)`;
   } else {
     background = `linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 30%), linear-gradient(180deg, ${colors.base} 0%, ${colors.dark} 100%)`;
   }

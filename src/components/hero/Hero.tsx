@@ -5,7 +5,6 @@ import { WaitlistCTA } from "../ui/waitlist-cta";
 import { WaitlistCreatorCTA } from "../ui/waitlist-creator-cta";
 import { TextRotate } from "../ui/text-rotate";
 import { SocialProof } from "../ui/waitlist/social-proof";
-// Remove the incorrect import: import { mobileButtonStyle } from "../ui/button-styles";
 
 const TITLES = ["CONVERTS", "CAPTIVATES", "CLOSES"];
 
@@ -15,11 +14,9 @@ export function Hero() {
   const [isInView, setIsInView] = useState(false);
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
 
-  // Track which rotation word is currently displayed
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isInView) {
-      // Standard interval for word rotation
       const intervalTime = isMobile ? 3500 : 3000;
       
       interval = setInterval(() => {
@@ -80,8 +77,6 @@ export function Hero() {
         </>
       )}
       
-      {/* Background is now handled in the parent component */}
-
       <div 
         className={cn(
           "flex flex-col max-w-6xl mx-auto w-full",
@@ -110,7 +105,6 @@ export function Hero() {
                 "w-full mx-auto text-center"
               )}
             >
-              {/* Add subtle pattern behind text on mobile */}
               {isMobile && (
                 <div className="absolute inset-0 -z-10 opacity-10 bg-[radial-gradient(#8A57DE_1px,transparent_1px)] [background-size:20px_20px] blur-[0.5px]"></div>
               )}
@@ -130,19 +124,14 @@ export function Hero() {
                 isMobile && "mobile-optimize"
               )}
             >
-              {/* No background glow effect for cleaner design */}
-              
               <TextRotate
                 texts={TITLES}
                 mainClassName="flex justify-center items-center overflow-visible"
                 staggerFrom="last"
-                // Simpler, more direct animations for mobile
                 initial={isMobile ? { y: 30, opacity: 0 } : { y: "40%", opacity: 0, scale: 0.95 }}
                 animate={isMobile ? { y: 0, opacity: 1 } : { y: 0, opacity: 1, scale: 1 }}
                 exit={isMobile ? { y: -30, opacity: 0 } : { y: "-40%", opacity: 0, scale: 0.95 }}
-                // Disable staggering completely on mobile
                 staggerDuration={isMobile ? 0 : 0}
-                // Standard rotation interval
                 rotationInterval={isMobile ? 3500 : 3000}
                 splitLevelClassName="overflow-visible"
                 elementLevelClassName={cn(
@@ -220,12 +209,9 @@ export function Hero() {
           isMobile && "relative"
         )}
       >
-        {/* Desktop CTA layout with audience labels and side-by-side buttons */}
         {!isMobile && (
           <div className="w-full max-w-4xl mx-auto relative" id="hero-cta-section">
-            {/* Buttons container - removed "For Property Owners" and "For Content Creators" labels */}
             <div className="flex flex-row justify-center gap-[8%] mb-8 relative items-start">
-              {/* Property Owner CTA */}
               <div className="flex flex-col w-[45%] max-w-[280px]">
                 <WaitlistCTA 
                   buttonText="RESERVE EARLY ACCESS" 
@@ -233,7 +219,6 @@ export function Hero() {
                 />
               </div>
               
-              {/* Creator CTA */}
               <div className="flex flex-col w-[45%] max-w-[280px] relative">
                 <div className="relative">
                   <WaitlistCreatorCTA 
@@ -244,58 +229,37 @@ export function Hero() {
               </div>
             </div>
             
-            {/* Social proof centered below both buttons */}
             <div className="w-full flex justify-center">
               <SocialProof className="mt-3" />
             </div>
           </div>
         )}
         
-        {/* Mobile CTA layout with consistent 3D styling from desktop */}
         {isMobile && (
-          <>
-            {/* Container with entrance animation */}
-            <div className="w-full flex flex-col items-center animate-fade-in-up">
-              {/* CTA button container - optimized width for mobile */}
-              <div className="w-[85%] max-w-[300px] mx-auto flex flex-col items-center gap-5">
-                {/* Primary CTA with social proof grouped closely */}
-                <div className="flex flex-col mb-0 w-full">
-                  {/* Main waitlist CTA with identical styling to desktop but optimized for mobile */}
-                  <WaitlistCTA 
-                    className="mb-0 w-full mx-auto" 
-                    buttonText="RESERVE EARLY ACCESS" 
-                    showSocialProof={false}
-                  />
-                  
-                  {/* Social proof directly beneath primary CTA with tighter spacing */}
-                  <div className="w-full flex justify-center mt-3 mb-3 relative z-10">
-                    {/* Subtle connecting line between button and social proof */}
-                    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-[50%] w-[1px] h-4 bg-gradient-to-b from-transparent via-purple-300/20 to-purple-300/40"></div>
-                    <SocialProof 
-                      className="mt-0 transform -translate-y-0"
-                    />
-                  </div>
-                </div>
-                
-                {/* Creator CTA with identical styling to desktop but mobile optimized */}
-                <WaitlistCreatorCTA 
-                  buttonText="JOIN AS CREATOR" 
+          <div className="w-full flex flex-col items-center animate-fade-in-up">
+            <div className="w-[85%] max-w-[300px] mx-auto flex flex-col items-center gap-5">
+              <div className="flex flex-col mb-0 w-full">
+                <WaitlistCTA 
+                  className="mb-0 w-full mx-auto" 
+                  buttonText="RESERVE EARLY ACCESS" 
                   showSocialProof={false}
-                  className="w-full"
                 />
+                
+                <div className="w-full flex justify-center mt-3 mb-3 relative z-10">
+                  <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-[50%] w-[1px] h-4 bg-gradient-to-b from-transparent via-purple-300/20 to-purple-300/40"></div>
+                  <SocialProof 
+                    className="mt-0 transform -translate-y-0"
+                  />
+                </div>
               </div>
+              
+              <WaitlistCreatorCTA 
+                buttonText="JOIN AS CREATOR" 
+                showSocialProof={false}
+                className="w-full"
+              />
             </div>
-            
-            {/* Scroll indicator for mobile */}
-            <div className="w-full flex justify-center mt-6">
-              <div className="flex flex-col items-center opacity-70">
-                <div className="text-xs text-purple-600">Scroll to explore</div>
-                <svg width="20" height="8" viewBox="0 0 20 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M1 1L10 9L19 1" stroke="#8A2BE2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </div>
-            </div>
-          </>
+          </div>
         )}
       </div>
     </section>
