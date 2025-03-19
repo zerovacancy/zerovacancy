@@ -169,31 +169,35 @@ export function GlowDialog({
 
   return (
     <>
-      <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+      <Dialog 
+        open={isOpen} 
+        onOpenChange={handleOpenChange}
+      >
         <DialogContent className={dialogContentClassName}>
           <DialogTitle className="sr-only">Join Waitlist - Enter Your Email</DialogTitle>
-          <div className="absolute top-4 right-4 z-[1000]">
-            <button 
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                handleOpenChange(false);
-              }}
-              className="text-white hover:text-white transition-colors duration-200 rounded-full p-2.5 hover:bg-white/20 bg-black/30 shadow-md"
-              aria-label="Close dialog"
-              style={{ 
-                minHeight: '44px', 
-                minWidth: '44px', 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center',
-                touchAction: 'manipulation' 
-              }}
-              type="button"
-            >
-              <X className="h-6 w-6" />
-            </button>
-          </div>
+          {/* Custom close button with increased size for mobile */}
+          <button 
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleOpenChange(false);
+            }}
+            className="absolute top-4 right-4 z-[1000] text-white hover:text-white transition-colors duration-200 rounded-full p-2.5 hover:bg-white/20 bg-black/30 shadow-md active:bg-white/30 active:scale-95"
+            aria-label="Close dialog"
+            style={{ 
+              minHeight: '50px', 
+              minWidth: '50px', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              touchAction: 'manipulation',
+              cursor: 'pointer',
+              WebkitTapHighlightColor: 'rgba(0,0,0,0)'
+            }}
+            type="button"
+          >
+            <X className="h-6 w-6" strokeWidth={2.5} />
+          </button>
           <style>
             {`
             .svg-crisp {

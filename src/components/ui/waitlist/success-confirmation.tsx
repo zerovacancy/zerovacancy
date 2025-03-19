@@ -170,7 +170,10 @@ export function SuccessConfirmation({
   return (
     <>
       {/* Remove the Confetti component since we're using direct calls */}
-      <Dialog open={open} onOpenChange={onOpenChange}>
+      <Dialog 
+        open={open} 
+        onOpenChange={onOpenChange}
+      >
         <DialogContent
           className={cn(
             "sm:max-w-[425px] rounded-2xl p-0 gap-0 text-center",
@@ -180,28 +183,28 @@ export function SuccessConfirmation({
           )}
         >
           {/* Custom Close Button for better mobile interaction */}
-          <div className="absolute top-2 right-2 z-[1000]">
-            <button 
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                onOpenChange(false);
-              }}
-              className="text-purple-700 hover:text-purple-900 transition-colors duration-200 rounded-full p-1.5 hover:bg-purple-100/60 bg-white/90 shadow-sm"
-              aria-label="Close dialog"
-              style={{ 
-                minHeight: '36px', 
-                minWidth: '36px', 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center',
-                touchAction: 'manipulation' 
-              }}
-              type="button"
-            >
-              <X className="h-5 w-5" />
-            </button>
-          </div>
+          <button 
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onOpenChange(false);
+            }}
+            className="absolute top-2 right-2 z-[1000] text-purple-700 hover:text-purple-900 transition-colors duration-200 rounded-full p-1.5 hover:bg-purple-100/60 bg-white/90 shadow-sm active:bg-purple-100 active:scale-95"
+            aria-label="Close dialog"
+            style={{ 
+              minHeight: '44px', 
+              minWidth: '44px', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              touchAction: 'manipulation',
+              cursor: 'pointer',
+              WebkitTapHighlightColor: 'rgba(0,0,0,0)'
+            }}
+            type="button"
+          >
+            <X className="h-5 w-5" strokeWidth={2.5} />
+          </button>
           
           <div className="p-6 flex flex-col items-center justify-center space-y-4">
             <div className="h-24 w-24 bg-purple-50 rounded-full flex items-center justify-center mb-2">
