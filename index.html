@@ -28,23 +28,7 @@
   </head>
   <body>
     <div id="root"></div>
-    <script>
-      // Inline script to defer non-critical resources
-      function loadDeferred(url, type) {
-        const script = document.createElement('script');
-        script.src = url;
-        script.type = type || '';
-        script.defer = true;
-        document.body.appendChild(script);
-      }
-
-      // Load critical resources immediately
-      loadDeferred("/src/main.tsx", "module");
-      
-      // Defer non-critical third-party scripts
-      window.addEventListener('load', function() {
-        loadDeferred("https://cdn.gpteng.co/gptengineer.js", "module");
-      });
-    </script>
+    <script type="module" src="/src/main.tsx"></script>
+    <script type="module" src="https://cdn.gpteng.co/gptengineer.js"></script>
   </body>
 </html>
