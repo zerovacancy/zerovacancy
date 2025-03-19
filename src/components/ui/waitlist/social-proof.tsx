@@ -35,14 +35,17 @@ export function SocialProof({ className, style }: SocialProofProps) {
   const isMobile = useIsMobile();
   const [activeAvatarSet, setActiveAvatarSet] = useState(0);
   
-  // Animated carousel transition for avatars
+  // Animated carousel transition for avatars - slower on mobile to reduce flickering
   useEffect(() => {
+    // On mobile, we rotate avatars less frequently to reduce flickering
+    const rotationInterval = isMobile ? 8000 : 5000;
+    
     const interval = setInterval(() => {
       setActiveAvatarSet((current) => (current + 1) % avatarSets.length);
-    }, 5000); // Change avatars every 5 seconds
+    }, rotationInterval);
     
     return () => clearInterval(interval);
-  }, []);
+  }, [isMobile]);
   
   // Enhanced 3D Button styling for the social proof container with deeper shadows
   const socialProof3DStyle = {
@@ -129,19 +132,22 @@ export function SocialProof({ className, style }: SocialProofProps) {
         onMouseEnter={handleHover}
         onMouseLeave={handleLeave}
       >
-        {/* Animated avatar carousel with framer-motion transitions */}
+        {/* Animated avatar carousel with framer-motion transitions - simplified for mobile */}
         <div className="flex items-center mr-0.5 relative"> 
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode={isMobile ? "sync" : "wait"}>
             <motion.div 
               key={activeAvatarSet}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.7, ease: "easeInOut" }}
+              transition={{ 
+                duration: isMobile ? 1.2 : 0.7, 
+                ease: isMobile ? "linear" : "easeInOut" 
+              }}
               className="flex items-center"
             >
-              {/* First avatar */}
-              <motion.div 
+              {/* First avatar - simplified transitions on mobile */}
+              <div
                 style={{
                   ...avatarCircle3DStyle,
                   zIndex: 3,
@@ -149,13 +155,10 @@ export function SocialProof({ className, style }: SocialProofProps) {
                   background: `linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 50%), 
                                linear-gradient(180deg, ${avatarSets[activeAvatarSet][0].color} 0%, #7837DB 100%)`
                 } as React.CSSProperties}
-                initial={{ y: 5, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.3, delay: 0 }}
-              >{avatarSets[activeAvatarSet][0].initials}</motion.div>
+              >{avatarSets[activeAvatarSet][0].initials}</div>
               
-              {/* Second avatar */}
-              <motion.div 
+              {/* Second avatar - simplified transitions on mobile */}
+              <div
                 style={{
                   ...avatarCircle3DStyle,
                   zIndex: 2,
@@ -163,13 +166,10 @@ export function SocialProof({ className, style }: SocialProofProps) {
                   background: `linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 50%), 
                                linear-gradient(180deg, ${avatarSets[activeAvatarSet][1].color} 10%, #7837DB 100%)`
                 } as React.CSSProperties}
-                initial={{ y: 5, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.3, delay: 0.1 }}
-              >{avatarSets[activeAvatarSet][1].initials}</motion.div>
+              >{avatarSets[activeAvatarSet][1].initials}</div>
               
-              {/* Third avatar */}
-              <motion.div 
+              {/* Third avatar - simplified transitions on mobile */}
+              <div
                 style={{
                   ...avatarCircle3DStyle,
                   zIndex: 1,
@@ -177,27 +177,37 @@ export function SocialProof({ className, style }: SocialProofProps) {
                   background: `linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%), 
                                linear-gradient(180deg, ${avatarSets[activeAvatarSet][2].color} 0%, #6C31C3 100%)`
                 } as React.CSSProperties}
-                initial={{ y: 5, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.3, delay: 0.2 }}
-              >{avatarSets[activeAvatarSet][2].initials}</motion.div>
+              >{avatarSets[activeAvatarSet][2].initials}</div>
             </motion.div>
           </AnimatePresence>
         </div>
         
-        {/* Enhanced counter and text with subtle animation */}
+        {/* Enhanced counter and text - static on mobile to prevent flickering */}
         <div className="flex items-center ml-0.5">
-          <motion.span 
-            className={cn(
-              "font-jakarta font-bold text-purple-700 mr-1.5",
-              isMobile ? "text-[14px]" : "text-[15px]"
-            )}
-            initial={{ opacity: 0.7 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, repeat: Infinity, repeatType: "reverse", repeatDelay: 2 }}
-          >
-            2,165+
-          </motion.span>
+          {isMobile ? (
+            // Static version for mobile (no animation)
+            <span 
+              className={cn(
+                "font-jakarta font-bold text-purple-700 mr-1.5",
+                "text-[14px]"
+              )}
+            >
+              2,165+
+            </span>
+          ) : (
+            // Animated version for desktop
+            <motion.span 
+              className={cn(
+                "font-jakarta font-bold text-purple-700 mr-1.5",
+                "text-[15px]"
+              )}
+              initial={{ opacity: 0.7 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, repeat: Infinity, repeatType: "reverse", repeatDelay: 2 }}
+            >
+              2,165+
+            </motion.span>
+          )}
           <span className={cn(
             "font-inter text-gray-700 whitespace-nowrap font-medium leading-tight",
             isMobile ? "text-[12px]" : "text-[13px]"
