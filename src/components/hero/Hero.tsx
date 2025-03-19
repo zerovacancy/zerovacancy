@@ -239,40 +239,134 @@ export function Hero() {
         {isMobile && (
           <>
             <div className="w-full flex flex-col items-center animate-fade-in-up">
-              <div className="w-[85%] max-w-[300px] mx-auto flex flex-col items-center gap-5">
+              <div className="w-[92%] max-w-[320px] mx-auto flex flex-col items-center gap-4">
                 <div className="flex flex-col mb-0 w-full">
-                  <WaitlistCTA 
-                    className="mb-0 w-full mx-auto" 
-                    buttonText="RESERVE EARLY ACCESS" 
-                    showSocialProof={false}
-                  />
+                  <div 
+                    onClick={(e) => {
+                      // Find the hidden button and click it
+                      const hiddenButton = e.currentTarget.querySelector('.hidden button');
+                      if (hiddenButton) {
+                        (hiddenButton as HTMLButtonElement).click();
+                      }
+                    }}
+                    className="w-full cursor-pointer"
+                  >
+                    <button
+                      className="w-full min-w-full h-[56px] font-medium rounded-[12px] text-white relative flex items-center justify-center"
+                      style={{
+                        background: 'linear-gradient(180deg, #8A42F5 0%, #7837DB 100%)',
+                        color: 'white',
+                        border: '1px solid rgba(255,255,255,0.2)',
+                        boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(0,0,0,0.05), 0 16px 32px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15)',
+                        fontSize: '14px',
+                        fontWeight: 600,
+                        paddingLeft: '52px',
+                      }}
+                    >
+                      {/* Icon container */}
+                      <div 
+                        className="absolute left-0 top-1/2 -translate-y-1/2 ml-6 flex items-center justify-center"
+                        style={{
+                          width: '32px',
+                          height: '32px',
+                          background: 'rgba(255,255,255,0.12)',
+                          border: '1px solid rgba(255,255,255,0.2)',
+                          borderRadius: '12px',
+                          boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15)'
+                        }}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"></path>
+                          <path d="M20 12v4H6a2 2 0 0 0-2 2c0 1.1.9 2 2 2h12v-4"></path>
+                        </svg>
+                      </div>
+                      RESERVE EARLY ACCESS
+                    </button>
+                    
+                    {/* Hidden original component for functionality */}
+                    <div className="hidden">
+                      <WaitlistCTA 
+                        buttonText="RESERVE EARLY ACCESS" 
+                        showSocialProof={false}
+                        className="w-full mx-auto"
+                      />
+                    </div>
+                  </div>
                   
-                  <div className="w-full flex justify-center mt-3 mb-3 relative z-10">
-                    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-[50%] w-[1px] h-4 bg-gradient-to-b from-transparent via-purple-300/20 to-purple-300/40"></div>
+                  <div className="w-full flex justify-center mt-2.5 mb-2.5 relative z-10">
+                    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-[50%] w-[1px] h-3 bg-gradient-to-b from-transparent via-purple-300/20 to-purple-300/40"></div>
                     <SocialProof 
-                      className="mt-0 transform -translate-y-0"
+                      className="mt-0 transform scale-[0.95]"
                       style={{
                         borderRadius: '12px',
                         padding: '5px 10px',
-                        fontSize: '13px',
+                        fontSize: '12px',
                         boxShadow: '0 1px 2px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.05), 0 4px 8px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)'
                       }}
                     />
                   </div>
                 </div>
                 
-                <WaitlistCreatorCTA 
-                  buttonText="JOIN AS CREATOR" 
-                  showSocialProof={false}
-                  className="w-full"
-                />
+                <div 
+                  onClick={(e) => {
+                    // Find the hidden button and click it
+                    const hiddenButton = e.currentTarget.querySelector('.hidden button');
+                    if (hiddenButton) {
+                      (hiddenButton as HTMLButtonElement).click();
+                    }
+                  }}
+                  className="w-full cursor-pointer"
+                >
+                  <button
+                    className="w-full min-w-full h-[56px] font-medium rounded-[12px] text-[#7633DC] relative flex items-center justify-center"
+                    style={{
+                      background: '#F5F5F7', // Light gray background
+                      color: '#7633DC', // Purple text color
+                      border: '1px solid rgba(0,0,0,0.08)', // Subtle light gray border
+                      boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(0,0,0,0.05), 0 16px 32px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)',
+                      fontSize: '14px',
+                      fontWeight: 600,
+                      paddingLeft: '52px',
+                    }}
+                  >
+                    {/* Icon container */}
+                    <div 
+                      className="absolute left-0 top-1/2 -translate-y-1/2 ml-6 flex items-center justify-center"
+                      style={{
+                        width: '32px',
+                        height: '32px',
+                        background: '#F8F8FA', // Very light gray for icon container
+                        border: '1px solid rgba(118,51,220,0.1)', // Subtle purple-tinted border
+                        borderRadius: '12px',
+                        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)'
+                      }}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7633DC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <line x1="19" x2="19" y1="8" y2="14"></line>
+                        <line x1="22" x2="16" y1="11" y2="11"></line>
+                      </svg>
+                    </div>
+                    JOIN AS CREATOR
+                  </button>
+                  
+                  {/* Hidden original component for functionality */}
+                  <div className="hidden">
+                    <WaitlistCreatorCTA 
+                      buttonText="JOIN AS CREATOR" 
+                      showSocialProof={false}
+                      className="w-full"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
             
-            <div className="w-full flex justify-center mt-6">
-              <div className="flex flex-col items-center opacity-70">
-                <div className="text-xs text-purple-600">Scroll to explore</div>
-                <svg width="20" height="8" viewBox="0 0 20 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <div className="w-full flex justify-center mt-7">
+              <div className="flex flex-col items-center opacity-60">
+                <div className="text-xs text-purple-600 mb-1 font-medium">Scroll to explore</div>
+                <svg width="18" height="8" viewBox="0 0 20 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M1 1L10 9L19 1" stroke="#8A2BE2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </div>
