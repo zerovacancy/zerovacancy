@@ -3,7 +3,7 @@
 
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { shadowStyles } from "@/styles/button-style-guide";
+import { shadowStyles } from "@/styles/button-style-guide.ts";
 
 interface SocialProofProps {
   className?: string;
