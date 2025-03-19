@@ -2,7 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LogIn } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button3DPhysical } from '@/components/ui/button-3d-physical';
 
 type AuthButtonsProps = {
   user: any;
@@ -15,24 +15,26 @@ const AuthButtons = ({ user, onSignInClick }: AuthButtonsProps) => {
   return (
     <>
       {!user && (
-        <Button
-          variant="ghost"
+        <Button3DPhysical
+          variant="white"
           size="sm"
+          icon={<LogIn className="h-3.5 w-3.5" />}
+          iconPosition="left"
           onClick={onSignInClick}
           className="hidden sm:flex"
         >
-          <LogIn className="h-4 w-4 mr-2" />
           Sign In
-        </Button>
+        </Button3DPhysical>
       )}
       
-      <Button
+      <Button3DPhysical
+        variant="primary"
         size="sm"
         className="hidden sm:flex"
         onClick={() => user ? navigate('/account') : onSignInClick()}
       >
         {user ? 'My Dashboard' : 'Get Started'}
-      </Button>
+      </Button3DPhysical>
     </>
   );
 };
