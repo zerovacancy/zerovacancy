@@ -87,7 +87,7 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
   return (
     <div className="w-full relative pb-2 px-0 mx-0 translate-z-0">
       {isFirstVisit && (
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 bg-white text-gray-700 px-4 py-2 rounded-full text-sm flex items-center gap-2 shadow-sm border border-gray-200">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-4 py-2 rounded-full text-sm flex items-center gap-2 shadow-[0_8px_12px_-3px_rgba(138,79,255,0.2),_0_4px_6px_-4px_rgba(138,79,255,0.25)] backdrop-blur-sm">
           <Grip className="w-4 h-4" />
           <span>Swipe to explore</span>
         </div>
@@ -114,10 +114,9 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
       </div>
       
       {/* Glass effect gradient edges */}
-      <div className="absolute top-0 bottom-0 right-0 w-10 z-10 pointer-events-none bg-gradient-to-r from-transparent to-white/80"></div>
-      <div className="absolute top-0 bottom-0 left-0 w-3 z-10 pointer-events-none bg-gradient-to-l from-transparent to-white/80"></div>
+      <div className="absolute top-0 bottom-0 right-0 w-10 z-10 pointer-events-none bg-gradient-to-r from-transparent to-white/30 backdrop-blur-[3px]"></div>
+      <div className="absolute top-0 bottom-0 left-0 w-3 z-10 pointer-events-none bg-gradient-to-l from-transparent to-white/20 backdrop-blur-[3px]"></div>
       
-      {/* Navigation dots */}
       <div className="absolute bottom-1 left-0 right-0 flex justify-center gap-1.5 z-20">
         {creators.map((_, index) => (
           <div 
@@ -126,18 +125,17 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
               "h-1.5 rounded-full transition-all duration-300",
               selectedIndex === index 
                 ? "w-4 bg-purple-600" 
-                : "w-1.5 bg-gray-300"
+                : "w-1.5 bg-purple-300/50"
             )}
           />
         ))}
       </div>
 
-      {/* Navigation buttons */}
       <button 
         onClick={scrollPrev} 
         className={cn(
-          "absolute left-1 top-[40%] -translate-y-1/2 z-10 rounded-full p-2 bg-white text-gray-600 border border-gray-200", 
-          "touch-manipulation h-[36px] w-[36px] flex items-center justify-center shadow-sm transition-opacity duration-300", 
+          "absolute left-1 top-[40%] -translate-y-1/2 z-10 rounded-full p-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white", 
+          "touch-manipulation h-[36px] w-[36px] flex items-center justify-center shadow-[0_6px_10px_-2px_rgba(138,79,255,0.25),_0_3px_4px_-2px_rgba(138,79,255,0.3)] backdrop-blur-sm transition-opacity duration-300", 
           !prevBtnEnabled && "opacity-25 cursor-not-allowed"
         )} 
         disabled={!prevBtnEnabled}
@@ -149,8 +147,8 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
       <button 
         onClick={scrollNext} 
         className={cn(
-          "absolute right-4 top-[40%] -translate-y-1/2 z-10 rounded-full p-2 bg-white text-gray-600 border border-gray-200", 
-          "touch-manipulation h-[36px] w-[36px] flex items-center justify-center shadow-sm transition-opacity duration-300", 
+          "absolute right-4 top-[40%] -translate-y-1/2 z-10 rounded-full p-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white", 
+          "touch-manipulation h-[36px] w-[36px] flex items-center justify-center shadow-[0_6px_10px_-2px_rgba(138,79,255,0.25),_0_3px_4px_-2px_rgba(138,79,255,0.3)] backdrop-blur-sm transition-opacity duration-300", 
           !nextBtnEnabled && "opacity-0 pointer-events-none"
         )} 
         disabled={!nextBtnEnabled}

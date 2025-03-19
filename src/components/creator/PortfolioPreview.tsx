@@ -42,12 +42,10 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
               <div 
                 key={index}
                 className={cn(
-                  "relative rounded-lg overflow-hidden cursor-pointer group", // Increased border-radius to 8px
+                  "relative rounded-md overflow-hidden cursor-pointer group",
                   "border border-purple-100/80",
-                  "shadow-sm active:shadow-md", // Enhanced shadow on active state for tactile feedback
-                  "aspect-square", // Fixed aspect ratio for consistency
-                  "bg-gray-50",
-                  "transition-shadow duration-200" // Added transition for shadow change
+                  "shadow-sm aspect-square", // Fixed aspect ratio for consistency
+                  "bg-gray-50"
                 )}
                 onClick={() => onPreviewClick ? onPreviewClick(example) : setSelectedImage(example)}
               >
@@ -76,9 +74,9 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
               <div 
                 key={index}
                 className={cn(
-                  "relative rounded-lg overflow-hidden cursor-pointer group", // Increased border-radius to 8px
+                  "relative rounded-md overflow-hidden cursor-pointer group",
                   "border border-purple-100/80",
-                  "shadow-sm hover:shadow-md transition-all duration-300", // Added transition for shadow
+                  "shadow-sm hover:shadow-md transition-shadow duration-200",
                   "aspect-square", 
                   "bg-gray-50"
                 )}
@@ -87,7 +85,7 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
                 <img 
                   src={example}
                   alt={`${creatorName}'s property photography - portfolio example ${index + 1}${index === 0 ? ' featuring real estate interior' : index === 1 ? ' showcasing property exterior' : ' highlighting architectural details'}`}
-                  className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-[1.04]" // Added scale transform on hover
+                  className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.onerror = null;

@@ -1,4 +1,3 @@
-
 import React, { useRef, useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { PreviewCard } from './PreviewCard';
@@ -86,7 +85,7 @@ const PreviewSearch = () => {
       className={cn(
         "w-full px-2 sm:px-4 md:px-6 lg:px-8 xl:px-10 content-visibility-auto",
         isMobile ? "py-6 pb-4" : "py-6 sm:py-6 md:py-8", /* Reduced bottom padding on mobile */
-        isMobile ? "relative mt-3 rounded-2xl border border-gray-200 bg-gray-50" : "bg-[#f9f9f9]"
+        isMobile ? "relative mt-3 rounded-2xl border border-purple-100/70 bg-[#F5F0FF]" : "bg-[#F5F0FF]/60"
       )} 
       ref={containerRef}
     >
@@ -94,7 +93,7 @@ const PreviewSearch = () => {
       <div className={cn(
         "text-center relative z-20",
         "pb-4 mb-4",
-        isMobile && "border-b border-gray-200"
+        isMobile && "border-b border-purple-100"
       )}>
         {/* Section label for better organization */}
         {isMobile && (
@@ -131,22 +130,32 @@ const PreviewSearch = () => {
               Because extraordinary spaces deserve extraordinary storytellers
             </motion.p>
           </div>
+          
+          {/* Removed CTA button */}
         </div>
 
         {/* Visual separator for mobile */}
         {isMobile && (
-          <div className="w-12 h-1 bg-gray-300 rounded-full mx-auto mt-4"></div>
+          <div className="w-12 h-1 bg-gradient-to-r from-purple-200 via-purple-300 to-purple-200 rounded-full mx-auto mt-4 opacity-60"></div>
         )}
       </div>
 
       <div className="mx-auto relative group max-w-7xl">
+        {!isMobile && (
+          <div className={cn(
+            "absolute -inset-0.5 sm:-inset-1 rounded-xl sm:rounded-2xl bg-gradient-to-r from-purple-800/25 via-indigo-700/30 to-purple-900/25 blur-[2px] sm:blur-sm transition-all duration-500",
+            isVisible ? "opacity-70 sm:opacity-80" : "opacity-0",
+            "group-hover:opacity-90 group-hover:blur-md"
+          )}></div>
+        )}
+
         <PreviewCard isVisible={isVisible}>
           <PreviewContent />
         </PreviewCard>
       </div>
       
       {isMobile && (
-        <div className="h-px w-1/3 bg-gray-200 mx-auto mt-6 mb-1"></div>
+        <div className="mobile-section-divider mt-6 mb-1"></div>
       )}
     </div>
   );
