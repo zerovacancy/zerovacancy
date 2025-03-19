@@ -6,6 +6,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { PricingPeriodToggle } from "./PricingPeriodToggle";
 import { PricingTier } from "./PricingTier";
 import { PricingPlanProps } from "./types";
+import { PricingService } from "@/services/PricingService";
 
 export interface PricingInteractionProps {
   starterMonth: number;
@@ -27,6 +28,7 @@ export function PricingInteraction({
   const [showSwipeHint, setShowSwipeHint] = useState(true);
   const [animatePriceChange, setAnimatePriceChange] = useState(false);
   const [activeCardIndex, setActiveCardIndex] = useState(1); // Default to middle card (Professional)
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const isMobile = useIsMobile();
   
   // Initialize price states based on the initial period
@@ -84,9 +86,29 @@ export function PricingInteraction({
   }, [period, starterMonth, starterAnnual, proMonth, proAnnual]);
 
   // Handle checkout process
-  const handleGetStarted = (planName: string) => {
-    console.log(`Starting checkout process for ${planName} plan`);
-    // Add checkout process logic here
+  const handleGetStarted = async (planName: string) => {
+    if (isProcessingPayment) return; // Prevent multiple clicks during processing
+    
+    try {
+      setIsProcessingPayment(true);
+      console.log(`Starting checkout process for ${planName} plan`);
+      
+      // Convert plan name to the package name expected by the backend
+      const packageName = planName.toLowerCase();
+      
+      // Create the subscription using the service
+      const { clientSecret, subscriptionId } = await PricingService.createOrUpdateSubscription(packageName);
+      
+      // Process the payment with Stripe
+      await PricingService.processPayment(clientSecret);
+      
+      // The redirect happens automatically in the processPayment method
+      // which redirects to /payment-confirmation
+    } catch (error) {
+      console.error("Error during checkout:", error);
+      alert("There was an error processing your payment. Please try again.");
+      setIsProcessingPayment(false);
+    }
   };
 
   return (
@@ -170,6 +192,7 @@ export function PricingInteraction({
                 handleGetStarted={handleGetStarted}
                 calculateSavings={calculateSavings}
                 isActive={index === activeCardIndex}
+                isProcessingPayment={isProcessingPayment}
               />
             </div>
           ))}
