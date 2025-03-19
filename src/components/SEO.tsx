@@ -20,7 +20,7 @@ export const SEOProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 };
 
 const SEO: React.FC<SEOProps> = ({
-  title = 'Property Content Creators',
+  title = 'ZeroVacancy: Elite Creator Marketplace Redefining Property Marketing',
   description = 'Connect with elite content creators who transform your spaces into compelling visual stories',
   canonicalPath = '',
   ogImage = 'https://www.zerovacancy.ai/og-image-new.png',
