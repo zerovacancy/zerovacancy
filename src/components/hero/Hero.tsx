@@ -309,59 +309,7 @@ export function Hero() {
                   </div>
                 </div>
                 
-                <div 
-                  onClick={(e) => {
-                    // Find the hidden button and click it
-                    const hiddenButton = e.currentTarget.querySelector('.hidden button');
-                    if (hiddenButton) {
-                      (hiddenButton as HTMLButtonElement).click();
-                    }
-                  }}
-                  className="w-full cursor-pointer"
-                >
-                  <button
-                    className="w-full min-w-full h-[56px] font-medium rounded-[12px] text-[#7633DC] relative flex items-center justify-center"
-                    style={{
-                      background: '#F5F5F7', // Light gray background
-                      color: '#7633DC', // Purple text color
-                      border: '1px solid rgba(0,0,0,0.08)', // Subtle light gray border
-                      boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(0,0,0,0.05), 0 16px 32px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)',
-                      fontSize: '14px',
-                      fontWeight: 600,
-                      paddingLeft: '52px',
-                    }}
-                  >
-                    {/* Icon container */}
-                    <div 
-                      className="absolute left-0 top-1/2 -translate-y-1/2 ml-6 flex items-center justify-center"
-                      style={{
-                        width: '32px',
-                        height: '32px',
-                        background: '#F8F8FA', // Very light gray for icon container
-                        border: '1px solid rgba(118,51,220,0.1)', // Subtle purple-tinted border
-                        borderRadius: '12px',
-                        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)'
-                      }}
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7633DC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="9" cy="7" r="4"></circle>
-                        <line x1="19" x2="19" y1="8" y2="14"></line>
-                        <line x1="22" x2="16" y1="11" y2="11"></line>
-                      </svg>
-                    </div>
-                    JOIN AS CREATOR
-                  </button>
-                  
-                  {/* Hidden original component for functionality */}
-                  <div className="hidden">
-                    <WaitlistCreatorCTA 
-                      buttonText="JOIN AS CREATOR" 
-                      showSocialProof={false}
-                      className="w-full"
-                    />
-                  </div>
-                </div>
+                {/* JOIN AS CREATOR button hidden on mobile */}
               </div>
             </div>
             
