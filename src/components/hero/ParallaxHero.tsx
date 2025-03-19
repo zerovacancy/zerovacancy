@@ -326,12 +326,8 @@ export function ParallaxHero() {
                     </div>
                   </div>
                   
-                  {/* Creator CTA as separate alternative option */}
-                  <WaitlistCreatorCTA 
-                    buttonText="JOIN AS CREATOR" 
-                    showSocialProof={false}
-                    className="[&_button]:py-[1.1rem] [&_button]:h-[48px] [&_button]:transition-all [&_button]:duration-300 [&_button]:active:scale-[1.02] [&_button]:active:brightness-105 [&_button]:border-purple-700/70 [&_button]:text-purple-700"
-                  />
+                  {/* Creator CTA hidden on mobile */}
+                  {/* Removed JOIN AS CREATOR CTA for mobile view */}
                 </div>
               </div>
             </>
