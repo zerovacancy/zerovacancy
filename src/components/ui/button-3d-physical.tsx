@@ -11,12 +11,13 @@ interface Button3DPhysicalProps extends ButtonHTMLAttributes<HTMLButtonElement> 
   iconPosition?: "left" | "right";
   className?: string;
   iconContainerStyle?: React.CSSProperties;
+  ref?: React.RefObject<HTMLButtonElement>;
 }
 
 /**
  * Clean 3D Button with simple, unified shadow approach
  */
-export function Button3DPhysical({
+export const Button3DPhysical = React.forwardRef<HTMLButtonElement, Button3DPhysicalProps>(({
   children,
   variant = "primary",
   size = "md",
@@ -26,14 +27,17 @@ export function Button3DPhysical({
   className,
   iconContainerStyle,
   ...props
-}: Button3DPhysicalProps) {
+}, forwardedRef) => {
   // State for hover tracking
   const [isHovered, setIsHovered] = useState(false);
   
   // Refs for icon elements to apply container styles
   const leftIconRef = useRef<HTMLDivElement>(null);
   const rightIconRef = useRef<HTMLDivElement>(null);
-  const buttonRef = useRef<HTMLButtonElement>(null);
+  const innerButtonRef = useRef<HTMLButtonElement>(null);
+  
+  // Use the forwarded ref if provided, otherwise fall back to our internal ref
+  const buttonRef = forwardedRef || innerButtonRef;
   
   // Effect to apply custom icon container styles from data-container-style attribute
   useEffect(() => {
@@ -379,4 +383,7 @@ export function Button3DPhysical({
       )}
     </button>
   );
-}
+});
+
+// Add display name for better debugging
+Button3DPhysical.displayName = 'Button3DPhysical';
