@@ -1,9 +1,10 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
+import { UserPlus } from 'lucide-react'; // Added user-plus icon for creator signup
+import { Button3DPhysical } from './button-3d-physical';
 import { WaitlistCreatorButton } from './waitlist/waitlist-creator-button';
 import { SocialProof } from './waitlist/social-proof';
-import { Button } from './button';
 
 interface WaitlistCreatorCTAProps {
   className?: string;
@@ -11,6 +12,11 @@ interface WaitlistCreatorCTAProps {
   buttonText?: string;
   showSocialProof?: boolean;
   showEmailInputDirectly?: boolean;
+  style?: {
+    button?: React.CSSProperties;
+    icon?: React.CSSProperties;
+    iconContainer?: React.CSSProperties;
+  };
 }
 
 export const WaitlistCreatorCTA: React.FC<WaitlistCreatorCTAProps> = ({ 
@@ -18,7 +24,8 @@ export const WaitlistCreatorCTA: React.FC<WaitlistCreatorCTAProps> = ({
   source = "creator_waitlist", 
   buttonText = "JOIN AS CREATOR",
   showSocialProof = false,
-  showEmailInputDirectly = false
+  showEmailInputDirectly = false,
+  style
 }) => {
   return (
     <div className={cn(
@@ -31,29 +38,32 @@ export const WaitlistCreatorCTA: React.FC<WaitlistCreatorCTAProps> = ({
         className="w-full py-4"
         showEmailInputDirectly={showEmailInputDirectly}
       >
-        <Button
-          variant="outline"
-          style={{borderWidth: '2px'}}
-          className={cn(
-            "w-full",
-            "shadow-[0_2px_6px_rgba(88,41,217,0.12)]", 
-            "h-12 sm:h-14 text-sm sm:text-base", 
-            "transition-all duration-300 ease-in-out",
-            "bg-gradient-to-r from-[#FCF7FF] via-[#F9F0FF] to-[#F5EAFF]",
-            "hover:bg-gradient-to-r hover:from-[#F8F0FF] hover:via-[#F3E8FF] hover:to-[#F0E4FF]",
-            "hover:shadow-[0_2px_10px_rgba(88,41,217,0.18)]",
-            "border-0 border-2 sm:border-2 border-[#7B3DFF]",
-            "text-[#5829D9] font-bold font-jakarta tracking-tight",
-            "relative overflow-hidden",
-            // Add subtle glimmer effect
-            "after:absolute after:content-[''] after:top-0 after:left-[-100%] after:w-full after:h-full",
-            "after:bg-gradient-to-r after:from-transparent after:via-white/30 after:to-transparent",
-            "after:transition-all after:duration-1000 after:ease-in-out",
-            "hover:after:left-[100%]"
-          )}
+        <Button3DPhysical
+          variant="white"
+          size="lg"
+          icon={<UserPlus 
+            className="w-[20px] h-[20px] text-[#7837DB]" 
+            style={{
+              color: '#7837DB',
+              stroke: '#7837DB',
+              ...style?.icon
+            }}
+            data-container-style={JSON.stringify(style?.iconContainer)}
+          />}
+          iconPosition="left"
+          className="w-full min-w-[320px] font-medium text-[#4e43ac]"
+          style={{
+            // Default styling for the button
+            height: '56px',
+            background: 'rgba(134,65,245,0.02)', // Light background from icon container
+            border: '1px solid rgba(0,0,0,0.08)',
+            boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(0,0,0,0.05), 0 16px 32px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)',
+            // Apply any custom styles passed from parent
+            ...style?.button
+          }}
         >
           {buttonText}
-        </Button>
+        </Button3DPhysical>
       </WaitlistCreatorButton>
       
       {/* Only show social proof when explicitly requested */}

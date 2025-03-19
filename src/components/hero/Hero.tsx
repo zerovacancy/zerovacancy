@@ -6,6 +6,7 @@ import { WaitlistCTA } from "../ui/waitlist-cta";
 import { WaitlistCreatorCTA } from "../ui/waitlist-creator-cta";
 import { TextRotate } from "../ui/text-rotate";
 import { SocialProof } from "../ui/waitlist/social-proof";
+import { mobileButtonStyle } from "../ui/button-styles";
 
 const TITLES = ["CONVERTS", "CAPTIVATES", "CLOSES"];
 
@@ -223,15 +224,10 @@ export function Hero() {
         {/* Desktop CTA layout with audience labels and side-by-side buttons */}
         {!isMobile && (
           <div className="w-full max-w-4xl mx-auto relative" id="hero-cta-section">
-            {/* Buttons container */}
-            <div className="flex flex-row justify-center gap-[10%] mb-6 relative items-start">
+            {/* Buttons container - removed "For Property Owners" and "For Content Creators" labels */}
+            <div className="flex flex-row justify-center gap-[8%] mb-8 relative items-start">
               {/* Property Owner CTA */}
               <div className="flex flex-col w-[45%] max-w-[280px]">
-                <div className="flex items-center justify-center mb-3">
-                  <div className="h-[0.5px] w-5 bg-purple-300/80 mr-2"></div>
-                  <span className="text-sm font-bold text-purple-700 tracking-wide font-jakarta">For Property Owners</span>
-                  <div className="h-[0.5px] w-5 bg-purple-300/80 ml-2"></div>
-                </div>
                 <WaitlistCTA 
                   buttonText="RESERVE EARLY ACCESS" 
                   showSocialProof={false}
@@ -240,16 +236,11 @@ export function Hero() {
               
               {/* Creator CTA */}
               <div className="flex flex-col w-[45%] max-w-[280px] relative">
-                <div className="flex items-center justify-center mb-3">
-                  <div className="h-[0.5px] w-5 bg-purple-300/80 mr-2"></div>
-                  <span className="text-sm font-bold text-purple-700 tracking-wide font-jakarta">For Content Creators</span>
-                  <div className="h-[0.5px] w-5 bg-purple-300/80 ml-2"></div>
-                </div>
                 <div className="relative">
                   <WaitlistCreatorCTA 
                     buttonText="JOIN AS CREATOR" 
                     showSocialProof={false}
-                    className="[&_button]:border-[3px]"
+                    className=""
                   />
                 </div>
               </div>
@@ -257,39 +248,127 @@ export function Hero() {
             
             {/* Social proof centered below both buttons */}
             <div className="w-full flex justify-center">
-              <SocialProof className="mt-2.5" />
+              <SocialProof className="mt-3" />
             </div>
           </div>
         )}
         
-        {/* Mobile CTA layout (stacked with reduced spacing) */}
+        {/* Mobile CTA layout with consistent 3D styling from desktop */}
         {isMobile && (
           <>
             {/* Container with entrance animation */}
             <div className="w-full flex flex-col items-center animate-fade-in-up">
-              {/* CTA button container - consistent width */}
-              <div className="w-full max-w-[300px] mx-auto flex flex-col">
+              {/* CTA button container - optimized width for mobile */}
+              <div className="w-[85%] max-w-[300px] mx-auto flex flex-col items-center gap-5">
                 {/* Primary CTA with social proof grouped closely */}
-                <div className="flex flex-col mb-0">
-                  {/* Main waitlist CTA */}
+                <div className="flex flex-col mb-0 w-full">
+                  {/* Main waitlist CTA with identical styling to desktop but optimized for mobile */}
                   <WaitlistCTA 
-                    className="mb-0 w-[95%] mx-auto origin-center transform [&_button]:rounded-2xl [&_button]:border-none [&_button]:bg-gradient-to-r [&_button]:from-purple-500 [&_button]:via-purple-600 [&_button]:to-purple-700 [&_button]:shadow-[0_3px_8px_rgba(124,58,237,0.3)] [&_button]:transition-all [&_button]:py-3.5 [&_button]:px-8 [&_button]:text-white hover:[&_button]:shadow-[0_5px_15px_rgba(124,58,237,0.4)]" 
+                    className="mb-0 w-full mx-auto" 
                     buttonText="RESERVE EARLY ACCESS" 
                     showSocialProof={false}
+                    style={{
+                      // Apply the mobile-optimized styles with !IMPORTANT background
+                      button: {
+                        // Explicit white background with !important to force override
+                        background: '#FFFFFF !important',
+                        // Same purple text color as icons
+                        color: '#4e43ac !important',
+                        // Same subtle border
+                        border: '1px solid rgba(0,0,0,0.08)',
+                        // Exact shadow style from the style guide
+                        boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(0,0,0,0.05), 0 16px 32px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)',
+                        // Use the mobile size from button style guide
+                        height: '50px',
+                        // Match border radius to style guide mobile size
+                        borderRadius: '12px',
+                        fontSize: '14px',
+                        fontWeight: 600,
+                        // Remove any preset minimum width to let container control width
+                        width: '100%',
+                        minWidth: 'unset'
+                      },
+                      // White icon
+                      icon: {
+                        color: 'white',
+                        stroke: 'white',
+                        width: '18px',
+                        height: '18px'
+                      },
+                      // Light background for icon container (same as JOIN AS CREATOR)
+                      iconContainer: {
+                        width: '32px', 
+                        height: '32px',
+                        background: 'rgba(134,65,245,0.02)',
+                        border: '1px solid rgba(0,0,0,0.08)',
+                        borderRadius: '12px',
+                        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)'
+                      }
+                    }}
                   />
                   
                   {/* Social proof directly beneath primary CTA with tight spacing */}
-                  <div className="w-full flex justify-center mt-0 mb-4 -translate-y-2 relative z-10">
-                    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-[40%] w-[1px] h-5 bg-gradient-to-b from-transparent via-purple-300/30 to-purple-300/60"></div>
-                    <SocialProof className="mt-0" />
+                  <div className="w-full flex justify-center mt-3 mb-3 relative z-10">
+                    {/* Subtle connecting line between button and social proof */}
+                    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-[50%] w-[1px] h-4 bg-gradient-to-b from-transparent via-purple-300/20 to-purple-300/40"></div>
+                    <SocialProof 
+                      className="mt-0 transform -translate-y-0"
+                      style={{
+                        // Match the button styling with proper scale for mobile
+                        borderRadius: '12px',
+                        padding: '5px 10px',
+                        // Smaller font size for better mobile fit
+                        fontSize: '13px',
+                        // Make shadow more subtle than buttons to create visual hierarchy
+                        boxShadow: '0 1px 2px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.05), 0 4px 8px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)'
+                      }}
+                    />
                   </div>
                 </div>
                 
-                {/* Creator CTA as separate alternative option */}
+                {/* Creator CTA with identical styling to desktop but mobile optimized */}
                 <WaitlistCreatorCTA 
                   buttonText="JOIN AS CREATOR" 
                   showSocialProof={false}
-                  className="[&_button]:border-[0.5px] [&_button]:rounded-2xl [&_button]:border-purple-400 [&_button]:bg-purple-50/40 [&_button]:text-purple-700 [&_button]:py-3.5 [&_button]:px-8 [&_button]:shadow-sm hover:[&_button]:shadow-md [&_button]:transition-all" 
+                  className="w-full"
+                  style={{
+                    // Apply the mobile-optimized styles with !IMPORTANT background
+                    button: {
+                      // Explicit white background with !important to force override
+                      background: '#FFFFFF !important',
+                      // Same purple text color as icons with !important
+                      color: '#4e43ac !important',
+                      // Same subtle border
+                      border: '1px solid rgba(0,0,0,0.08)',
+                      // Exact shadow style from the style guide
+                      boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(0,0,0,0.05), 0 16px 32px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)',
+                      // Use the mobile size from button style guide
+                      height: '50px',
+                      // Match border radius to style guide mobile size
+                      borderRadius: '12px',
+                      fontSize: '14px',
+                      fontWeight: 600,
+                      // Remove any preset minimum width to let container control width
+                      width: '100%',
+                      minWidth: 'unset'
+                    },
+                    // White icon
+                    icon: {
+                      color: 'white',
+                      stroke: 'white',
+                      width: '18px',
+                      height: '18px'
+                    },
+                    // Original background for JOIN AS CREATOR icon container
+                    iconContainer: {
+                      width: '32px', 
+                      height: '32px',
+                      background: 'rgba(134,65,245,0.02)',
+                      border: '1px solid rgba(0,0,0,0.08)',
+                      borderRadius: '12px',
+                      boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)'
+                    }
+                  }}
                 />
               </div>
             </div>
