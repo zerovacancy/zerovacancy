@@ -1,9 +1,10 @@
-import React, { ButtonHTMLAttributes, useRef, useEffect } from "react";
+import React, { ButtonHTMLAttributes, useRef, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
+import { buttonColors } from "@/styles/button-style-guide";
 
 interface Button3DPhysicalProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
-  variant?: "primary" | "secondary" | "outline" | "white";
+  variant?: "primary" | "secondary" | "outline" | "white" | "primaryCta" | "secondaryCta";
   size?: "sm" | "md" | "lg";
   fullWidth?: boolean;
   icon?: React.ReactNode;
@@ -26,9 +27,13 @@ export function Button3DPhysical({
   iconContainerStyle,
   ...props
 }: Button3DPhysicalProps) {
+  // State for hover tracking
+  const [isHovered, setIsHovered] = useState(false);
+  
   // Refs for icon elements to apply container styles
   const leftIconRef = useRef<HTMLDivElement>(null);
   const rightIconRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
   
   // Effect to apply custom icon container styles from data-container-style attribute
   useEffect(() => {
@@ -54,6 +59,35 @@ export function Button3DPhysical({
     }
   }, [icon, iconPosition]);
   
+  // Effect to apply hover gradient for CTA buttons
+  useEffect(() => {
+    if (!buttonRef.current) return;
+    
+    // Only apply hover effects for our CTA buttons
+    if (variant !== 'primaryCta' && variant !== 'secondaryCta') return;
+    
+    // Get the gradient for the current state
+    const colors = buttonColors[variant as 'primaryCta' | 'secondaryCta'];
+    if (!colors) return;
+    
+    // Get current gradient based on hover state
+    const gradient = isHovered ? colors.hoverGradient : colors.gradient;
+    
+    // Apply the gradient to the button background
+    if (variant === 'secondaryCta') {
+      // For the secondary CTA, we need special handling:
+      // - Use buttonBackground when not hovered
+      // - Apply hover gradient when hovered
+      buttonRef.current.style.background = isHovered 
+        ? `${colors.hoverGradient}, ${colors.buttonBackground}`
+        : colors.buttonBackground;
+    } else if (gradient !== 'transparent') {
+      buttonRef.current.style.background = `${gradient}, linear-gradient(180deg, ${colors.light} 0%, ${colors.dark} 100%)`;
+    } else {
+      buttonRef.current.style.background = `linear-gradient(180deg, ${colors.light} 0%, ${colors.dark} 100%)`;
+    }
+  }, [isHovered, variant]);
+  
   // Size variations with more subtle border radius to match icon container
   // Adjust border radius to match icon container styling
   const sizeStyles = {
@@ -69,6 +103,9 @@ export function Button3DPhysical({
     outline: "text-purple-700 border border-purple-300",
     // White button with enhanced styling for more sophisticated appearance
     white: "text-purple-700 font-medium", // Border will be handled by the style
+    // New styled variants
+    primaryCta: `text-[${buttonColors.primaryCta.text}] font-medium`, // Border will be handled by the style
+    secondaryCta: `text-[${buttonColors.secondaryCta.text}] font-medium`, // Border will be handled by the style
   };
 
   // Refined button styles with precise interaction physics
@@ -153,11 +190,14 @@ export function Button3DPhysical({
 
   return (
     <button 
+      ref={buttonRef}
       className={buttonStyles}
       style={{
         ...getShadowStyle(),
         ...(props.style || {})
       }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       {...props}
     >
       {/* Icon container that matches the example button - left position */}

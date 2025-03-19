@@ -5,6 +5,7 @@ import { ShieldCheck } from 'lucide-react'; // Changed to shield/lock icon for s
 import { Button3DPhysical } from './button-3d-physical';
 import { WaitlistButton } from './waitlist/waitlist-button';
 import { SocialProof } from './waitlist/social-proof';
+import { buttonColors } from '@/styles/button-style-guide';
 
 interface WaitlistCTAProps {
   className?: string;
@@ -39,25 +40,28 @@ export const WaitlistCTA: React.FC<WaitlistCTAProps> = ({
         showEmailInputDirectly={showEmailInputDirectly}
       >
         <Button3DPhysical 
-          variant="white" // White variant with lighter styling
+          variant="primaryCta" // Using the new primary CTA variant
           size="lg"
           icon={<ShieldCheck 
-            className="w-[20px] h-[20px] text-[#7837DB]" 
+            className="w-[20px] h-[20px]"
             style={{
-              color: '#7837DB',
-              stroke: '#7837DB',
+              color: buttonColors.primaryCta.text,
+              stroke: buttonColors.primaryCta.text,
               ...style?.icon
             }}
             data-container-style={JSON.stringify(style?.iconContainer)}
-          />} // Purple shield icon
+          />}
           iconPosition="left"
-          className="w-full min-w-[320px] font-medium text-[#4e43ac]" // Text color set to match icon
+          className="w-full min-w-[320px] font-medium"
           style={{
-            // Default styling for the button
+            // Apply the new styling for the primary CTA button
             height: '56px',
-            background: 'rgba(134,65,245,0.02)', // Light background from icon container
-            border: '1px solid rgba(0,0,0,0.08)', // Same subtle border as icon container
-            boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(0,0,0,0.05), 0 16px 32px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)',
+            background: `${buttonColors.primaryCta.gradient}, linear-gradient(180deg, ${buttonColors.primaryCta.light} 0%, ${buttonColors.primaryCta.dark} 100%)`,
+            border: `1px solid ${buttonColors.primaryCta.border}`,
+            boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(0,0,0,0.05), 0 16px 32px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 0 rgba(0,0,0,0.05)',
+            color: buttonColors.primaryCta.text,
+            // Applied on hover:
+            // background: `${buttonColors.primaryCta.hoverGradient}, linear-gradient(180deg, ${buttonColors.primaryCta.light} 0%, ${buttonColors.primaryCta.dark} 100%)`,
             // Apply any custom styles passed from parent
             ...style?.button
           }}

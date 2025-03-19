@@ -5,6 +5,7 @@ import { UserPlus } from 'lucide-react'; // Added user-plus icon for creator sig
 import { Button3DPhysical } from './button-3d-physical';
 import { WaitlistCreatorButton } from './waitlist/waitlist-creator-button';
 import { SocialProof } from './waitlist/social-proof';
+import { buttonColors } from '@/styles/button-style-guide';
 
 interface WaitlistCreatorCTAProps {
   className?: string;
@@ -39,25 +40,31 @@ export const WaitlistCreatorCTA: React.FC<WaitlistCreatorCTAProps> = ({
         showEmailInputDirectly={showEmailInputDirectly}
       >
         <Button3DPhysical
-          variant="white"
+          variant="secondaryCta" // Using the new secondary CTA variant
           size="lg"
           icon={<UserPlus 
-            className="w-[20px] h-[20px] text-[#7837DB]" 
+            className="w-[20px] h-[20px]"
             style={{
-              color: '#7837DB',
-              stroke: '#7837DB',
+              color: buttonColors.secondaryCta.text,
+              stroke: buttonColors.secondaryCta.text,
               ...style?.icon
             }}
-            data-container-style={JSON.stringify(style?.iconContainer)}
+            data-container-style={JSON.stringify({
+              background: buttonColors.secondaryCta.iconBackground,
+              ...style?.iconContainer
+            })}
           />}
           iconPosition="left"
-          className="w-full min-w-[320px] font-medium text-[#4e43ac]"
+          className="w-full min-w-[320px] font-medium"
           style={{
-            // Default styling for the button
+            // Apply the new styling for the secondary CTA button
             height: '56px',
-            background: 'rgba(134,65,245,0.02)', // Light background from icon container
-            border: '1px solid rgba(0,0,0,0.08)',
-            boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(0,0,0,0.05), 0 16px 32px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)',
+            background: buttonColors.secondaryCta.buttonBackground,
+            border: `1px solid ${buttonColors.secondaryCta.border}`,
+            boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(0,0,0,0.05), 0 16px 32px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 0 rgba(0,0,0,0.04)',
+            color: buttonColors.secondaryCta.text,
+            // Applied on hover:
+            // background: `${buttonColors.secondaryCta.hoverGradient}, linear-gradient(180deg, ${buttonColors.secondaryCta.light} 0%, ${buttonColors.secondaryCta.dark} 100%)`,
             // Apply any custom styles passed from parent
             ...style?.button
           }}

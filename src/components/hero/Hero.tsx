@@ -270,14 +270,14 @@ export function Hero() {
                     style={{
                       // Apply the mobile-optimized styles with !IMPORTANT background
                       button: {
-                        // Explicit white background with !important to force override
-                        background: '#FFFFFF !important',
-                        // Same purple text color as icons
-                        color: '#4e43ac !important',
-                        // Same subtle border
-                        border: '1px solid rgba(0,0,0,0.08)',
+                        // Purple gradient background for primary CTA
+                        background: 'linear-gradient(180deg, #8A42F5 0%, #7837DB 100%) !important',
+                        // White text for contrast
+                        color: '#FFFFFF !important',
+                        // Subtle border that works with purple
+                        border: '1px solid rgba(255,255,255,0.2)',
                         // Exact shadow style from the style guide
-                        boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(0,0,0,0.05), 0 16px 32px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)',
+                        boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(0,0,0,0.05), 0 16px 32px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15)',
                         // Use the mobile size from button style guide
                         height: '50px',
                         // Match border radius to style guide mobile size
@@ -288,21 +288,21 @@ export function Hero() {
                         width: '100%',
                         minWidth: 'unset'
                       },
-                      // White icon
+                      // White icon for contrast on purple
                       icon: {
                         color: 'white',
                         stroke: 'white',
                         width: '18px',
                         height: '18px'
                       },
-                      // Light background for icon container (same as JOIN AS CREATOR)
+                      // Translucent background for icon container on purple button
                       iconContainer: {
                         width: '32px', 
                         height: '32px',
-                        background: 'rgba(134,65,245,0.02)',
-                        border: '1px solid rgba(0,0,0,0.08)',
+                        background: 'rgba(255,255,255,0.12)',
+                        border: '1px solid rgba(255,255,255,0.2)',
                         borderRadius: '12px',
-                        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)'
+                        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15)'
                       }
                     }}
                   />
@@ -326,50 +326,60 @@ export function Hero() {
                   </div>
                 </div>
                 
-                {/* Creator CTA with identical styling to desktop but mobile optimized */}
-                <WaitlistCreatorCTA 
-                  buttonText="JOIN AS CREATOR" 
-                  showSocialProof={false}
-                  className="w-full"
-                  style={{
-                    // Apply the mobile-optimized styles with !IMPORTANT background
-                    button: {
-                      // Explicit white background with !important to force override
-                      background: '#FFFFFF !important',
-                      // Same purple text color as icons with !important
-                      color: '#4e43ac !important',
-                      // Same subtle border
-                      border: '1px solid rgba(0,0,0,0.08)',
-                      // Exact shadow style from the style guide
-                      boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(0,0,0,0.05), 0 16px 32px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)',
-                      // Use the mobile size from button style guide
-                      height: '50px',
-                      // Match border radius to style guide mobile size
-                      borderRadius: '12px',
-                      fontSize: '14px',
-                      fontWeight: 600,
-                      // Remove any preset minimum width to let container control width
-                      width: '100%',
-                      minWidth: 'unset'
-                    },
-                    // White icon
-                    icon: {
-                      color: 'white',
-                      stroke: 'white',
-                      width: '18px',
-                      height: '18px'
-                    },
-                    // Original background for JOIN AS CREATOR icon container
-                    iconContainer: {
-                      width: '32px', 
-                      height: '32px',
-                      background: 'rgba(134,65,245,0.02)',
-                      border: '1px solid rgba(0,0,0,0.08)',
-                      borderRadius: '12px',
-                      boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)'
+                {/* Creator CTA with explicit inline styling for mobile */}
+                                <div 
+                  onClick={(e) => {
+                    // Find the button and click it
+                    const button = e.currentTarget.querySelector('button');
+                    if (button) {
+                      button.click();
                     }
                   }}
-                />
+                  className="w-full cursor-pointer"
+                >
+                  <button
+                    className="w-full min-w-full h-[50px] font-medium rounded-[12px] text-[#7633DC] relative flex items-center justify-center"
+                    style={{
+                      background: '#F5F5F7', // Light gray background as requested
+                      color: '#7633DC', // Purple text color
+                      border: '1px solid rgba(0,0,0,0.08)', // Subtle light gray border
+                      boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(0,0,0,0.05), 0 16px 32px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)',
+                      fontSize: '14px',
+                      fontWeight: 600,
+                      paddingLeft: '52px',
+                    }}
+                  >
+                    {/* Icon container */}
+                    <div 
+                      className="absolute left-0 top-1/2 -translate-y-1/2 ml-6 flex items-center justify-center"
+                      style={{
+                        width: '32px',
+                        height: '32px',
+                        background: '#F8F8FA', // Very light gray for icon container
+                        border: '1px solid rgba(118,51,220,0.1)', // Subtle purple-tinted border
+                        borderRadius: '12px',
+                        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)'
+                      }}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7633DC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <line x1="19" x2="19" y1="8" y2="14"></line>
+                        <line x1="22" x2="16" y1="11" y2="11"></line>
+                      </svg>
+                    </div>
+                    JOIN AS CREATOR
+                  </button>
+                  
+                  {/* Hidden original component for functionality */}
+                  <div className="hidden">
+                    <WaitlistCreatorCTA 
+                      buttonText="JOIN AS CREATOR" 
+                      showSocialProof={false}
+                      className="w-full"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
             

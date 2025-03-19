@@ -22,7 +22,7 @@ export const buttonColors = {
     highlightTop: 'rgba(255,255,255,0.35)',
     highlightBottom: 'rgba(0,0,0,0.15)',
   },
-  // White variant
+  // White variant (used for both buttons, but with different overlays)
   white: {
     base: '#FFFFFF',
     dark: '#F8F8FA',
@@ -33,6 +33,36 @@ export const buttonColors = {
     border: 'rgba(0,0,0,0.08)',
     highlightTop: 'rgba(255,255,255,0.8)',
     highlightBottom: 'rgba(0,0,0,0.05)',
+  },
+  // Primary CTA variant (RESERVE EARLY ACCESS)
+  primaryCta: {
+    base: '#F5F5F7',
+    dark: '#F5F5F7',
+    light: '#F5F5F7',
+    text: '#7633DC',  // More saturated purple
+    iconBackground: 'rgba(118,51,220,0.05)', // Slightly more saturated with purple
+    iconBorder: 'rgba(118,51,220,0.15)',
+    border: 'rgba(118,51,220,0.18)', // Subtle 1px border
+    gradient: 'linear-gradient(180deg, rgba(118,51,220,0.08) 0%, rgba(118,51,220,0.12) 100%)',
+    hoverGradient: 'linear-gradient(180deg, rgba(118,51,220,0.13) 0%, rgba(118,51,220,0.17) 100%)', // +5% on hover
+    highlightTop: 'rgba(255,255,255,0.9)',
+    highlightBottom: 'rgba(0,0,0,0.05)',
+  },
+  // Secondary CTA variant (JOIN AS CREATOR)
+  secondaryCta: {
+    base: '#F8F8FA',
+    dark: '#F8F8FA',
+    light: '#F8F8FA',
+    text: '#8345E6',  // Slightly reduced intensity
+    iconBackground: 'rgba(134,65,245,0.015)', // 15% less purple tint 
+    iconBorder: 'rgba(118,51,220,0.1)', // Lighter border
+    border: 'rgba(118,51,220,0.12)', // More subtle border
+    // Match the icon background for the button background
+    buttonBackground: 'rgba(134,65,245,0.015)', // Same as iconBackground
+    gradient: 'transparent', // No gradient initially
+    hoverGradient: 'linear-gradient(180deg, rgba(118,51,220,0.02) 0%, rgba(118,51,220,0.03) 100%)', // Very subtle purple on hover
+    highlightTop: 'rgba(255,255,255,0.9)',
+    highlightBottom: 'rgba(0,0,0,0.04)',
   },
   // Blue variant
   blue: {
@@ -180,6 +210,7 @@ export function createButtonStyle(
     customShadow?: string;
     customBorder?: string;
     isPressed?: boolean;
+    isHovered?: boolean;
   }
 ): CSSProperties {
   const colors = buttonColors[colorVariant];
@@ -196,7 +227,23 @@ export function createButtonStyle(
   
   // Gradient background based on color variant
   let background: string;
-  if (colorVariant === 'white') {
+  
+  // Special handling for our new CTA variants
+  if (colorVariant === 'primaryCta') {
+    // For primary CTA, use the base color with gradient overlay
+    const gradient = options?.isHovered ? colors.hoverGradient : colors.gradient;
+    background = `${gradient}, linear-gradient(180deg, ${colors.light} 0%, ${colors.dark} 100%)`;
+  } 
+  else if (colorVariant === 'secondaryCta') {
+    // For secondary CTA, use the base color with optional hover gradient
+    const gradient = options?.isHovered ? colors.hoverGradient : colors.gradient;
+    if (gradient !== 'transparent') {
+      background = `${gradient}, linear-gradient(180deg, ${colors.light} 0%, ${colors.dark} 100%)`;
+    } else {
+      background = `linear-gradient(180deg, ${colors.light} 0%, ${colors.dark} 100%)`;
+    }
+  }
+  else if (colorVariant === 'white') {
     background = `linear-gradient(180deg, ${colors.light} 0%, ${colors.dark} 100%)`;
   } else {
     background = `linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 30%), linear-gradient(180deg, ${colors.base} 0%, ${colors.dark} 100%)`;
@@ -263,6 +310,9 @@ export function createIconStyle(
     width: sizeData.iconSize.width,
     height: sizeData.iconSize.height,
     color: colors.text,
+    // Ensure consistent stroke width and precise color matching
+    stroke: colors.text,
+    strokeWidth: 2,
   };
 }
 
@@ -293,12 +343,20 @@ export function getCompleteButtonStyles(
 
 // Helper functions for specific button styles used in the hero section
 
-// "RESERVE EARLY ACCESS" button style (primary - purple with 3D effect)
-export const reserveEarlyAccessStyle = () => getCompleteButtonStyles('white', 'lg', { iconPosition: 'left' });
+// "RESERVE EARLY ACCESS" button style (primary CTA with purple tint)
+export const reserveEarlyAccessStyle = () => getCompleteButtonStyles('primaryCta', 'lg', { iconPosition: 'left' });
 
-// "JOIN AS CREATOR" button style (white variant with 3D effect)
-export const joinAsCreatorStyle = () => getCompleteButtonStyles('white', 'lg', { iconPosition: 'left' });
+// "JOIN AS CREATOR" button style (secondary CTA with subtle styling)
+export const joinAsCreatorStyle = () => getCompleteButtonStyles('secondaryCta', 'lg', { iconPosition: 'left' });
 
 // Mobile-optimized button styles
-export const mobileReserveEarlyAccessStyle = () => getCompleteButtonStyles('white', 'mobile', { iconPosition: 'left' });
-export const mobileJoinAsCreatorStyle = () => getCompleteButtonStyles('white', 'mobile', { iconPosition: 'left' });
+export const mobileReserveEarlyAccessStyle = () => getCompleteButtonStyles('primaryCta', 'mobile', { iconPosition: 'left' });
+export const mobileJoinAsCreatorStyle = () => getCompleteButtonStyles('secondaryCta', 'mobile', { iconPosition: 'left' });
+
+// Hover states for the buttons
+export const reserveEarlyAccessHoverStyle = () => getCompleteButtonStyles('primaryCta', 'lg', { iconPosition: 'left', isHovered: true });
+export const joinAsCreatorHoverStyle = () => getCompleteButtonStyles('secondaryCta', 'lg', { iconPosition: 'left', isHovered: true });
+
+// Mobile hover states
+export const mobileReserveEarlyAccessHoverStyle = () => getCompleteButtonStyles('primaryCta', 'mobile', { iconPosition: 'left', isHovered: true });
+export const mobileJoinAsCreatorHoverStyle = () => getCompleteButtonStyles('secondaryCta', 'mobile', { iconPosition: 'left', isHovered: true });
