@@ -115,11 +115,11 @@ export const PreviewContent = () => {
         </div>
       )}
 
-      {/* Image preview dialog with glass morphism */}
+      {/* Image preview dialog */}
       {selectedImage && (
         <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
-          <DialogContent className="p-0 bg-transparent border-0 max-w-[90vw] sm:max-w-[80vw]">
-            <div className="relative bg-black/30 p-1 rounded-lg shadow-[0_10px_15px_-3px_rgba(0,0,0,0.2),_0_4px_6px_-4px_rgba(0,0,0,0.15)]">
+          <DialogContent className="p-0 bg-black/90 border-0 max-w-[90vw] sm:max-w-[80vw]">
+            <div className="relative p-1 rounded-lg">
               <img
                 src={selectedImage}
                 alt="Portfolio work"
@@ -127,7 +127,7 @@ export const PreviewContent = () => {
               />
               <button
                 onClick={() => setSelectedImage(null)}
-                className="absolute right-3 top-3 bg-black/50 rounded-full p-1.5 text-white shadow-[0_2px_4px_rgba(0,0,0,0.2)]"
+                className="absolute right-3 top-3 bg-black/80 rounded-full p-1.5 text-white shadow-[0_2px_4px_rgba(0,0,0,0.2)]"
               >
                 <X className="h-4 w-4" />
               </button>

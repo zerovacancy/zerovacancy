@@ -1,10 +1,10 @@
+
 import React, { useCallback, useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight, Grip } from 'lucide-react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { cn } from '@/lib/utils';
 import { CreatorCard } from '../creator/CreatorCard';
 import type { Creator } from '../creator/types';
-import { mobileOptimizationClasses } from '@/utils/mobile-optimization';
 
 interface MobileCreatorCarouselProps {
   creators: Creator[];
@@ -75,16 +75,9 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
       emblaApi.off('reInit', onSelect);
     };
   }, [emblaApi, onSelect]);
-  
-  const { 
-    gradientBgMobile, 
-    improvedShadowMobile, 
-    coloredBorderMobile, 
-    cardBgMobile 
-  } = mobileOptimizationClasses;
 
   return (
-    <div className="w-full relative pb-2 px-0 mx-0 translate-z-0">
+    <div className="w-full relative pb-2 px-0 mx-0">
       {isFirstVisit && (
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-4 py-2 rounded-full text-sm flex items-center gap-2 shadow-[0_8px_12px_-3px_rgba(138,79,255,0.2),_0_4px_6px_-4px_rgba(138,79,255,0.25)]">
           <Grip className="w-4 h-4" />
@@ -92,13 +85,13 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
         </div>
       )}
       
-      <div className="w-full overflow-hidden rounded-xl will-change-transform" ref={emblaRef}>
+      <div className="w-full overflow-hidden rounded-xl" ref={emblaRef}>
         <div className="flex flex-nowrap">
           {creators.map((creator) => (
             <div 
               key={creator.name} 
               style={{ touchAction: 'pan-y' }} 
-              className="min-w-[90%] w-[90%] py-1 px-1 flex-shrink-0 flex-grow-0 translate-z-0"
+              className="min-w-[90%] w-[90%] py-1 px-1 flex-shrink-0 flex-grow-0"
             >
               <CreatorCard 
                 creator={creator} 

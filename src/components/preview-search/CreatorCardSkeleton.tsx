@@ -10,16 +10,16 @@ export const CreatorCardSkeleton = () => {
   return (
     <Card className={cn(
       "overflow-hidden w-full h-full", 
-      "bg-white border-2 border-[#8860E6]/40", // Enhanced border with reduced opacity for skeleton state
+      "bg-white border-2 border-[#8860E6]/40",
       "animate-pulse flex flex-col",
-      "rounded-xl relative transition-all duration-200",
+      "rounded-xl relative",
       isMobile 
-        ? "shadow-[0_8px_12px_-3px_rgba(138,79,255,0.1),_0_4px_6px_-4px_rgba(138,79,255,0.15),_inset_0_1px_3px_rgba(255,255,255,0.3)]" 
-        : "shadow-[0_10px_15px_-3px_rgba(138,79,255,0.1),_0_4px_6px_-4px_rgba(138,79,255,0.15),_inset_0_1px_3px_rgba(255,255,255,0.3)]"
+        ? "shadow-[0_8px_12px_-3px_rgba(138,79,255,0.1),_0_4px_6px_-4px_rgba(138,79,255,0.15)]" 
+        : "shadow-[0_10px_15px_-3px_rgba(138,79,255,0.1),_0_4px_6px_-4px_rgba(138,79,255,0.15)]"
     )}>
       {/* Media section */}
       <div className={cn(
-        "relative w-full overflow-hidden flex-shrink-0",
+        "w-full flex-shrink-0",
         "bg-gradient-to-r from-purple-100/80 to-indigo-100/80",
         isMobile ? "aspect-[4/3]" : "aspect-[4/3]"
       )}></div>
