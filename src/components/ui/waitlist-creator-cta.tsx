@@ -5,7 +5,7 @@ import { UserPlus } from 'lucide-react'; // Added user-plus icon for creator sig
 import { Button3DPhysical } from './button-3d-physical';
 import { WaitlistCreatorButton } from './waitlist/waitlist-creator-button';
 import { SocialProof } from './waitlist/social-proof';
-import { buttonColors } from '@/styles/button-style-guide';
+import { buttonColors, shadowStyles } from '@/styles/button-style-guide';
 
 interface WaitlistCreatorCTAProps {
   className?: string;
@@ -40,34 +40,45 @@ export const WaitlistCreatorCTA: React.FC<WaitlistCreatorCTAProps> = ({
         showEmailInputDirectly={showEmailInputDirectly}
       >
         <Button3DPhysical
-          variant="secondaryCta" // Using the new secondary CTA variant
+          variant="secondaryCta" // Using the enhanced secondary CTA variant
           size="lg"
           icon={<UserPlus 
             className="w-[20px] h-[20px]"
             style={{
               color: buttonColors.secondaryCta.text,
               stroke: buttonColors.secondaryCta.text,
+              textShadow: '0 0 1px rgba(118,51,220,0.1)', // Very subtle text shadow for improved legibility
               ...style?.icon
             }}
             data-container-style={JSON.stringify({
               background: buttonColors.secondaryCta.iconBackground,
+              border: '1px solid rgba(0,0,0,0.1)', // Matching social proof card border
+              boxShadow: 'inset 0 1px 0 rgba(255,255,255,1), inset 0 -1px 0 rgba(0,0,0,0.04)', // Enhanced highlight on top edge
               ...style?.iconContainer
             })}
           />}
           iconPosition="left"
           className="w-full min-w-[320px] font-medium"
           style={{
-            // Apply the new styling for the secondary CTA button
+            // Apply the enhanced styling for the secondary CTA button
             height: '56px',
-            background: buttonColors.secondaryCta.buttonBackground,
-            border: `1px solid ${buttonColors.secondaryCta.border}`,
-            boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(0,0,0,0.05), 0 16px 32px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 0 rgba(0,0,0,0.04)',
+            background: 'linear-gradient(180deg, #FFFFFF 0%, #F8F8FA 100%)', // Matching social proof card background
+            border: '1px solid rgba(0,0,0,0.1)', // Matching social proof card border
+            boxShadow: `${shadowStyles.standard}, inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 0 rgba(0,0,0,0.07)`, // Matching social proof card shadow
             color: buttonColors.secondaryCta.text,
-            // Applied on hover:
-            // background: `${buttonColors.secondaryCta.hoverGradient}, linear-gradient(180deg, ${buttonColors.secondaryCta.light} 0%, ${buttonColors.secondaryCta.dark} 100%)`,
+            transition: 'all 0.3s ease-out',
+            // Interactive elements
+            cursor: 'pointer',
+            // Enhanced hover state will be applied via CSS class in the Button3DPhysical component
+            transform: 'translate3d(0, 0, 0)', // Ensure hardware acceleration
             // Apply any custom styles passed from parent
             ...style?.button
           }}
+          // Add additional properties that pass the enhanced shadows to the component
+          data-hover-box-shadow={shadowStyles.standard}
+          data-hover-transform="translateX(-8px) translateY(-3px)" // Match social proof card hover
+          data-hover-transition="all 0.2s ease-out"
+          data-hover-background="linear-gradient(180deg, #FFFFFF 0%, #F8F8FA 100%)"
         >
           {buttonText}
         </Button3DPhysical>

@@ -65,34 +65,34 @@ export const buttonColors: {
     highlightTop: 'rgba(255,255,255,0.8)',
     highlightBottom: 'rgba(0,0,0,0.05)',
   },
-  // Primary CTA variant (RESERVE EARLY ACCESS)
+  // Enhanced Primary CTA variant (RESERVE EARLY ACCESS) - removed blue elements
   primaryCta: {
-    base: '#F5F5F7',
-    dark: '#F5F5F7',
-    light: '#F5F5F7',
-    text: '#7633DC',  // More saturated purple
-    iconBackground: 'rgba(118,51,220,0.05)', // Slightly more saturated with purple
-    iconBorder: 'rgba(118,51,220,0.15)',
-    border: 'rgba(118,51,220,0.18)', // Subtle 1px border
-    gradient: 'linear-gradient(180deg, rgba(118,51,220,0.08) 0%, rgba(118,51,220,0.12) 100%)',
-    hoverGradient: 'linear-gradient(180deg, rgba(118,51,220,0.13) 0%, rgba(118,51,220,0.17) 100%)', // +5% on hover
-    highlightTop: 'rgba(255,255,255,0.9)',
+    base: '#F8F5FF',
+    dark: '#F1ECFF',
+    light: '#F8F5FF',
+    text: '#6C2CDB',  // Deeper purple for better contrast
+    iconBackground: 'rgba(118,51,220,0.07)', // Slightly more saturated with purple
+    iconBorder: 'rgba(118,51,220,0.18)',
+    border: 'rgba(118,51,220,0.2)', // More defined 1.5px border (applied in component)
+    gradient: 'linear-gradient(180deg, #F8F5FF 0%, #F1ECFF 100%)', // Subtle purple gradient
+    hoverGradient: 'linear-gradient(180deg, #F5F0FF 0%, #EDE5FF 100%)', // Slightly deeper on hover
+    highlightTop: 'rgba(255,255,255,0.8)', // Inner highlight at top
     highlightBottom: 'rgba(0,0,0,0.05)',
   },
-  // Secondary CTA variant (JOIN AS CREATOR)
+  // Enhanced Secondary CTA variant (JOIN AS CREATOR)
   secondaryCta: {
-    base: '#F8F8FA',
-    dark: '#F8F8FA',
-    light: '#F8F8FA',
-    text: '#8345E6',  // Slightly reduced intensity
-    iconBackground: 'rgba(134,65,245,0.015)', // 15% less purple tint 
-    iconBorder: 'rgba(118,51,220,0.1)', // Lighter border
-    border: 'rgba(118,51,220,0.12)', // More subtle border
-    // Match the icon background for the button background
-    buttonBackground: 'rgba(134,65,245,0.015)', // Same as iconBackground
+    base: '#FFFFFF',
+    dark: '#F9F9FC',
+    light: '#FFFFFF',
+    text: '#7B42E6',  // Slightly brighter purple
+    iconBackground: 'rgba(134,65,245,0.02)', // Very light purple tint
+    iconBorder: 'rgba(118,51,220,0.12)', // More defined border
+    border: 'rgba(118,51,220,0.15)', // More defined border
+    // Enhanced background with subtle off-white gradient
+    buttonBackground: 'linear-gradient(180deg, #FFFFFF 0%, #F9F9FC 100%)', 
     gradient: 'transparent', // No gradient initially
-    hoverGradient: 'linear-gradient(180deg, rgba(118,51,220,0.02) 0%, rgba(118,51,220,0.03) 100%)', // Very subtle purple on hover
-    highlightTop: 'rgba(255,255,255,0.9)',
+    hoverGradient: 'linear-gradient(180deg, #F5F0FF 0%, #F3EDFF 100%)', // Purple tint on hover
+    highlightTop: 'rgba(255,255,255,0.95)', // Enhanced top highlight
     highlightBottom: 'rgba(0,0,0,0.04)',
   },
   // Blue variant
@@ -229,6 +229,43 @@ export const shadowStyles = {
   
   // Pressed state shadow (compressed)
   pressed: '0 1px 2px rgba(0,0,0,0.15)',
+  
+  // Enhanced primary CTA shadow with purple glow and deeper profile
+  primaryCTA: [
+    '0 1px 2px rgba(0,0,0,0.07)',
+    '0 2px 4px rgba(0,0,0,0.07)',
+    '0 4px 8px rgba(0,0,0,0.07)',
+    '0 8px 16px rgba(0,0,0,0.05)',
+    '0 12px 20px rgba(118,51,220,0.06)',
+    '0 0 15px rgba(118,51,220,0.04)', // Subtle purple glow
+  ].join(', '),
+  
+  // Enhanced primary CTA hover shadow with expanded purple glow
+  primaryCTAHover: [
+    '0 1px 2px rgba(0,0,0,0.07)',
+    '0 2px 4px rgba(0,0,0,0.07)',
+    '0 4px 8px rgba(0,0,0,0.07)',
+    '0 8px 16px rgba(0,0,0,0.05)',
+    '0 12px 24px rgba(118,51,220,0.08)',
+    '0 2px 20px rgba(118,51,220,0.06)', // Expanded purple glow on hover
+  ].join(', '),
+  
+  // Enhanced secondary CTA shadow with improved visibility
+  secondaryCTA: [
+    '0 1px 2px rgba(0,0,0,0.05)',
+    '0 2px 4px rgba(0,0,0,0.04)',
+    '0 4px 8px rgba(0,0,0,0.03)',
+    '0 6px 12px rgba(0,0,0,0.06)', // Added depth for better visibility
+  ].join(', '),
+  
+  // Enhanced secondary CTA hover shadow
+  secondaryCTAHover: [
+    '0 1px 2px rgba(0,0,0,0.05)',
+    '0 2px 4px rgba(0,0,0,0.04)',
+    '0 4px 8px rgba(0,0,0,0.03)',
+    '0 6px 12px rgba(0,0,0,0.08)',
+    '0 0 15px rgba(118,51,220,0.02)', // Very subtle purple glow on hover
+  ].join(', '),
 };
 
 /**

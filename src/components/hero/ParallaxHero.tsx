@@ -13,7 +13,7 @@ import { SocialProof } from "../ui/waitlist/social-proof";
 // Add CSS for radial gradient only - no mobile overrides
 const radialGradientStyle = `
   .bg-radial-gradient {
-    background: radial-gradient(circle at center, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 70%);
+    background: radial-gradient(circle at center, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0) 75%);
   }
 `;
 
@@ -86,19 +86,19 @@ export function ParallaxHero() {
         "flex items-center justify-center",
         "py-12 px-4 sm:px-6",
         isMobile ? 
-          "bg-gradient-to-br from-[#f5eeff] via-[#f8f5ff] to-[#eef5ff]" : 
-          "bg-gradient-to-b from-[#f0e6ff] via-[#f8f5ff] to-[#e6f0ff]",
-        "shadow-[inset_0_5px_15px_rgba(138,92,249,0.07),inset_0_-5px_15px_rgba(102,153,255,0.07)]",
+          "bg-gradient-to-br from-[#F0EBFF] via-[#ECE6FF] to-[#E8E2FF]" : 
+          "bg-gradient-to-b from-[#F0EBFF] to-[#E8E2FF]",
+        "shadow-[inset_0_5px_15px_rgba(138,92,249,0.09),inset_0_-5px_15px_rgba(102,153,255,0.09)]",
         isInView ? "animate-fade-in" : "opacity-0"
       )}
     >
-      {/* Subtle dot grid pattern */}
+      {/* Enhanced dot grid pattern for increased definition */}
       <div className={cn(
         "absolute inset-0 z-0 mix-blend-overlay",
-        isMobile ? "opacity-[0.03]" : "opacity-[0.04]"
+        isMobile ? "opacity-[0.045]" : "opacity-[0.055]"
       )} 
            style={{ 
-             backgroundImage: `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%236633FF' fill-opacity='0.3'%3E%3Ccircle cx='1' cy='1' r='1'/%3E%3C/g%3E%3C/svg%3E")`,
+             backgroundImage: `url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%236633FF' fill-opacity='0.35'%3E%3Ccircle cx='1' cy='1' r='1'/%3E%3C/g%3E%3C/svg%3E")`,
              backgroundSize: isMobile ? '16px 16px' : '20px 20px',
              width: '100%',
              height: '100%'
@@ -108,13 +108,13 @@ export function ParallaxHero() {
       {/* Radial gradient for focal point */}
       <div className="absolute inset-0 z-0 bg-radial-gradient opacity-80 pointer-events-none"></div>
       
-      {/* Soft color accents */}
-      <div className="absolute top-[10%] left-[5%] w-[30vw] h-[30vh] rounded-full bg-[#6633FF]/[0.06] blur-[80px] z-0"></div>
-      <div className="absolute bottom-[15%] right-[10%] w-[25vw] h-[25vh] rounded-full bg-[#4169E1]/[0.05] blur-[60px] z-0"></div>
-      <div className="absolute top-[40%] right-[8%] w-[15vw] h-[20vh] rounded-full bg-[#8A5CF9]/[0.06] blur-[70px] z-0"></div>
+      {/* Enhanced soft color accents for darker background */}
+      <div className="absolute top-[10%] left-[5%] w-[30vw] h-[30vh] rounded-full bg-[#6633FF]/[0.08] blur-[80px] z-0"></div>
+      <div className="absolute bottom-[15%] right-[10%] w-[25vw] h-[25vh] rounded-full bg-[#4169E1]/[0.07] blur-[60px] z-0"></div>
+      <div className="absolute top-[40%] right-[8%] w-[15vw] h-[20vh] rounded-full bg-[#8A5CF9]/[0.08] blur-[70px] z-0"></div>
 
-      {/* Clean minimal background overlay */}
-      <div className="absolute inset-0 z-5 bg-gradient-to-t from-white/20 to-transparent pointer-events-none"></div>
+      {/* Clean minimal background overlay with a bit more opacity for depth */}
+      <div className="absolute inset-0 z-5 bg-gradient-to-t from-white/25 to-transparent pointer-events-none"></div>
       
       {/* Content overlay */}
       <div className="z-10 flex flex-col items-center justify-center max-w-4xl mx-auto text-center relative px-4">
@@ -290,7 +290,6 @@ export function ParallaxHero() {
                     <WaitlistCreatorCTA 
                       buttonText="JOIN AS CREATOR" 
                       showSocialProof={false}
-                      className="[&_button]:border-[3px]"
                     />
                   </div>
                 </div>

@@ -4,49 +4,81 @@
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { shadowStyles } from "@/styles/button-style-guide";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 
 interface SocialProofProps {
   className?: string;
   style?: React.CSSProperties;
 }
 
+// Avatar data with initials and animations
+const avatarSets = [
+  [
+    { initials: "JT", color: "#8A42F5" },
+    { initials: "MI", color: "#9953FF" },
+    { initials: "AS", color: "#7837DB" },
+  ],
+  [
+    { initials: "RK", color: "#7633DC" }, 
+    { initials: "LM", color: "#9042F0" },
+    { initials: "ZP", color: "#8345E6" },
+  ],
+  [
+    { initials: "TW", color: "#7C38E2" },
+    { initials: "CM", color: "#8A42F5" },
+    { initials: "DH", color: "#9249ED" },
+  ]
+];
+
 export function SocialProof({ className, style }: SocialProofProps) {
   const isMobile = useIsMobile();
+  const [activeAvatarSet, setActiveAvatarSet] = useState(0);
   
-  // 3D Button styling for the social proof container with mobile adjustment
+  // Animated carousel transition for avatars
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveAvatarSet((current) => (current + 1) % avatarSets.length);
+    }, 5000); // Change avatars every 5 seconds
+    
+    return () => clearInterval(interval);
+  }, []);
+  
+  // Enhanced 3D Button styling for the social proof container with deeper shadows
   const socialProof3DStyle = {
-    // Main container styles - keeping white/very light gray background
-    background: '#F8F8FA',
-    borderRadius: isMobile ? '12px' : '15px', // Smaller radius on mobile
-    border: '1px solid rgba(0,0,0,0.08)', // Subtle border matching buttons
-    // Use more subtle shadow (30-40% reduced from button shadow)
-    boxShadow: '0 1px 2px rgba(0,0,0,0.03), 0 2px 4px rgba(0,0,0,0.03), 0 4px 8px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)',
-    // Balanced padding - slightly more compact than original but not too tight
-    padding: isMobile ? '6px 12px' : '7px 14px',
+    // Keep the light background but with slightly higher contrast
+    background: 'linear-gradient(180deg, #FFFFFF 0%, #F8F8FA 100%)',
+    borderRadius: isMobile ? '12px' : '15px',
+    // Enhanced border with subtle gradient shine
+    border: '1px solid rgba(0,0,0,0.1)',
+    // Use more sophisticated shadow matching the button shadow system
+    boxShadow: `${shadowStyles.standard}, inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 0 rgba(0,0,0,0.07)`,
+    // Slightly increased padding for better visual impact
+    padding: isMobile ? '7px 14px' : '8px 16px',
     // Add subtle animation on hover to match 3D button behavior
-    transition: 'all 0.15s ease-out',
+    transition: 'all 0.2s ease-out',
     // Allow custom style overrides from props
     ...(style || {})
   };
   
-  // 3D Button styling for the avatar circles - matching icon container style from 3D Button
+  // Enhanced 3D styling for avatar circles with improved depth
   const avatarCircle3DStyle: React.CSSProperties = {
-    // Proper avatar size that looks balanced with the text
-    width: isMobile ? '18px' : '22px',
-    height: isMobile ? '18px' : '22px',
+    // Increased size by 10-15% as requested
+    width: isMobile ? '21px' : '25px',
+    height: isMobile ? '21px' : '25px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: '50%',
-    // Keep the existing gradient background
-    background: 'linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 30%), linear-gradient(180deg, #8A42F5 0%, #7837DB 100%)',
-    // Add subtle white outline for better definition
-    border: '1px solid rgba(255,255,255,0.8)',
-    // Match the 3D Button icon container shadow effect
-    boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15)',
+    // Enhanced gradient with more distinct top highlight
+    background: 'linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 30%), linear-gradient(180deg, #8A42F5 0%, #7837DB 100%)',
+    // Stronger white border to make avatars pop
+    border: '2px solid rgba(255,255,255,0.95)',
+    // Enhanced 3D Button icon container shadow effect
+    boxShadow: `${shadowStyles.light}, inset 0 1px 0 rgba(255,255,255,0.4), inset 0 -1px 0 rgba(0,0,0,0.18)`,
     color: 'white',
-    // Proper font size for the initials
-    fontSize: isMobile ? '7px' : '9px',
+    // Properly sized font for the larger avatars
+    fontSize: isMobile ? '8px' : '10px',
     fontWeight: 'bold',
     position: 'relative',
     zIndex: 1,
@@ -55,100 +87,121 @@ export function SocialProof({ className, style }: SocialProofProps) {
     userSelect: 'none'
   };
   
-  // Create a hover handler for subtle 3D effect that preserves horizontal position
+  // Enhanced hover handler for more sophisticated 3D effect
   const handleHover = (e: React.MouseEvent<HTMLDivElement>) => {
-    // Skip hover effects on mobile for better performance
     if (isMobile) return;
     
     const target = e.currentTarget;
     
-    // Apply subtle lift effect like 3D buttons while maintaining horizontal position
-    target.style.transform = 'translateX(-8px) translateY(-2px)';
-    target.style.boxShadow = `${shadowStyles.standard}, inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)`;
+    // Apply stronger lift effect like premium 3D buttons
+    target.style.transform = 'translateX(-8px) translateY(-3px)';
+    target.style.boxShadow = `${shadowStyles.deep}, inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 0 rgba(0,0,0,0.07)`;
   };
   
-  // Reset on mouse leave while maintaining horizontal position
+  // Enhanced reset on mouse leave
   const handleLeave = (e: React.MouseEvent<HTMLDivElement>) => {
-    // Skip hover effects on mobile for better performance
     if (isMobile) return;
     
     const target = e.currentTarget;
     
-    // Return to default state while preserving horizontal adjustment
     target.style.transform = 'translateX(-8px)';
-    target.style.boxShadow = `${shadowStyles.light}, inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)`;
+    target.style.boxShadow = `${shadowStyles.standard}, inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 0 rgba(0,0,0,0.07)`;
   };
 
   return (
     <div className={cn("flex items-center justify-center w-full", className)}> 
-      {/* Enhanced social proof pill with 3D Button styling */}
+      {/* Enhanced social proof pill with sophisticated 3D styling */}
       <div 
         className={cn(
-          "flex items-center", // Horizontal layout without justify-center to allow manual positioning
+          "flex items-center",
           "animate-fade-in",
-          "w-fit", // Fit content width
-          "backdrop-blur-sm", // Subtle blur effect
-          "relative", // For positioning the accent element
-          "cursor-default", // Default cursor on hover
-          "mx-auto", // Basic centering
-          isMobile ? "mobile-center" : "" // Mobile specific centering
+          "w-fit",
+          "backdrop-blur-sm",
+          "relative",
+          "cursor-default",
+          "mx-auto",
+          isMobile ? "mobile-center" : ""
         )}
         style={{
           ...socialProof3DStyle,
-          // Add position adjustment to perfectly center between CTAs
-          // Slightly shift left by 8px to visually center
           transform: 'translateX(-8px)'
         }}
         onMouseEnter={handleHover}
         onMouseLeave={handleLeave}
       >
-        {/* Avatar initials with 3D Button icon container styling */}
-        <div className="flex items-center mr-0"> {/* No margin between avatars and text */}
-          {/* Each avatar has individual 3D styling but maintains staggered effect */}
-          <div 
-            style={{
-              ...avatarCircle3DStyle,
-              zIndex: 3,
-              transform: 'translateX(0px)',
-              // Small shine reflection like 3D button icon container
-              background: 'linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 50%), linear-gradient(180deg, #8A42F5 0%, #7837DB 100%)'
-            } as React.CSSProperties}
-          >JT</div>
-          <div 
-            style={{
-              ...avatarCircle3DStyle,
-              zIndex: 2,
-              // Smaller offset on mobile for better spacing
-              transform: isMobile ? 'translateX(-5px)' : 'translateX(-8px)',
-              // Slightly different shade for visual interest
-              background: 'linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 50%), linear-gradient(180deg, #9953FF 10%, #7837DB 100%)'
-            } as React.CSSProperties}
-          >MI</div>
-          <div 
-            style={{
-              ...avatarCircle3DStyle,
-              zIndex: 1,
-              // Smaller offset on mobile for better spacing
-              transform: isMobile ? 'translateX(-10px)' : 'translateX(-16px)',
-              // Third slight variation
-              background: 'linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%), linear-gradient(180deg, #8A42F5 0%, #6C31C3 100%)'
-            } as React.CSSProperties}
-          >AS</div>
+        {/* Animated avatar carousel with framer-motion transitions */}
+        <div className="flex items-center mr-0.5 relative"> 
+          <AnimatePresence mode="wait">
+            <motion.div 
+              key={activeAvatarSet}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.7, ease: "easeInOut" }}
+              className="flex items-center"
+            >
+              {/* First avatar */}
+              <motion.div 
+                style={{
+                  ...avatarCircle3DStyle,
+                  zIndex: 3,
+                  transform: 'translateX(0px)',
+                  background: `linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 50%), 
+                               linear-gradient(180deg, ${avatarSets[activeAvatarSet][0].color} 0%, #7837DB 100%)`
+                } as React.CSSProperties}
+                initial={{ y: 5, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.3, delay: 0 }}
+              >{avatarSets[activeAvatarSet][0].initials}</motion.div>
+              
+              {/* Second avatar */}
+              <motion.div 
+                style={{
+                  ...avatarCircle3DStyle,
+                  zIndex: 2,
+                  transform: isMobile ? 'translateX(-7px)' : 'translateX(-10px)',
+                  background: `linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 50%), 
+                               linear-gradient(180deg, ${avatarSets[activeAvatarSet][1].color} 10%, #7837DB 100%)`
+                } as React.CSSProperties}
+                initial={{ y: 5, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.3, delay: 0.1 }}
+              >{avatarSets[activeAvatarSet][1].initials}</motion.div>
+              
+              {/* Third avatar */}
+              <motion.div 
+                style={{
+                  ...avatarCircle3DStyle,
+                  zIndex: 1,
+                  transform: isMobile ? 'translateX(-14px)' : 'translateX(-20px)',
+                  background: `linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%), 
+                               linear-gradient(180deg, ${avatarSets[activeAvatarSet][2].color} 0%, #6C31C3 100%)`
+                } as React.CSSProperties}
+                initial={{ y: 5, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.3, delay: 0.2 }}
+              >{avatarSets[activeAvatarSet][2].initials}</motion.div>
+            </motion.div>
+          </AnimatePresence>
         </div>
         
-        {/* Counter and text with consistent styling */}
-        <div className="flex items-center ml-0"> {/* No left margin for tighter spacing */}
-          <span className={cn(
-            "font-jakarta font-bold text-purple-700 mr-1.5",
-            isMobile ? "text-[14px]" : "text-[15px]"
-          )}>
+        {/* Enhanced counter and text with subtle animation */}
+        <div className="flex items-center ml-0.5">
+          <motion.span 
+            className={cn(
+              "font-jakarta font-bold text-purple-700 mr-1.5",
+              isMobile ? "text-[14px]" : "text-[15px]"
+            )}
+            initial={{ opacity: 0.7 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, repeat: Infinity, repeatType: "reverse", repeatDelay: 2 }}
+          >
             2,165+
-          </span>
+          </motion.span>
           <span className={cn(
             "font-inter text-gray-700 whitespace-nowrap font-medium leading-tight",
             isMobile ? "text-[12px]" : "text-[13px]"
           )}>
-            {/* Closer text size to the counter for better visual sync */}
             members joined
           </span>
         </div>

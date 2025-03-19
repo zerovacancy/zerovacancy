@@ -59,35 +59,92 @@ export function Button3DPhysical({
     }
   }, [icon, iconPosition]);
   
-  // Effect to apply hover gradient for CTA buttons
+  // Enhanced effect to apply hover gradient, transform, and shadow for CTA buttons
   useEffect(() => {
     if (!buttonRef.current) return;
     
-    // Only apply hover effects for our CTA buttons
-    if (variant !== 'primaryCta' && variant !== 'secondaryCta') return;
+    // Process any data attributes for hover effects
+    const hoverBoxShadow = buttonRef.current.getAttribute('data-hover-box-shadow');
+    const hoverTransform = buttonRef.current.getAttribute('data-hover-transform');
+    const hoverTransition = buttonRef.current.getAttribute('data-hover-transition');
+    const hoverBackground = buttonRef.current.getAttribute('data-hover-background');
     
-    // Get the gradient for the current state
-    const colors = buttonColors[variant as 'primaryCta' | 'secondaryCta'];
-    if (!colors) return;
-    
-    // Get current gradient based on hover state
-    const gradient = isHovered ? colors.hoverGradient : colors.gradient;
-    
-    // Apply the gradient to the button background
-    if (variant === 'secondaryCta') {
-      // For the secondary CTA, we need special handling:
-      // - Use buttonBackground when not hovered
-      // - Apply hover gradient when hovered
-      const secondaryCTAColors = colors as typeof buttonColors.secondaryCta;
-      buttonRef.current.style.background = isHovered 
-        ? `${secondaryCTAColors.hoverGradient}, ${secondaryCTAColors.buttonBackground}`
-        : secondaryCTAColors.buttonBackground;
-    } else if (gradient !== 'transparent') {
-      buttonRef.current.style.background = `${gradient}, linear-gradient(180deg, ${colors.light} 0%, ${colors.dark} 100%)`;
+    // Apply hover effects if we have data attributes or it's a CTA button
+    if (isHovered) {
+      // Apply custom transform if provided
+      if (hoverTransform) {
+        buttonRef.current.style.transform = hoverTransform;
+      }
+      
+      // Apply custom shadow if provided
+      if (hoverBoxShadow) {
+        // Extract inset parts to preserve them
+        const currentShadow = buttonRef.current.style.boxShadow || '';
+        const insetMatch = currentShadow.match(/inset[^,]+(,|$)/g);
+        const insetParts = insetMatch ? insetMatch.join(' ') : '';
+        
+        // Apply the new shadow while preserving inset parts
+        buttonRef.current.style.boxShadow = `${hoverBoxShadow}, ${insetParts}`;
+      }
+      
+      // Apply custom background if provided
+      if (hoverBackground) {
+        buttonRef.current.style.background = hoverBackground;
+      }
+      
+      // Apply custom transition if provided
+      if (hoverTransition) {
+        buttonRef.current.style.transition = hoverTransition;
+      }
     } else {
-      buttonRef.current.style.background = `linear-gradient(180deg, ${colors.light} 0%, ${colors.dark} 100%)`;
+      // Reset to original styles when not hovered
+      // This relies on the style prop being applied to the button
+      
+      // Reset transform (keeping any translate3d for hardware accel)
+      const baseTransform = props.style?.transform || 'translate3d(0, 0, 0)';
+      buttonRef.current.style.transform = baseTransform;
+      
+      // Reset box-shadow to original
+      if (props.style?.boxShadow && hoverBoxShadow) {
+        buttonRef.current.style.boxShadow = props.style.boxShadow as string;
+      }
+      
+      // Reset background to original
+      if (props.style?.background && hoverBackground) {
+        buttonRef.current.style.background = props.style.background as string;
+      }
+      
+      // Reset transition to original
+      if (props.style?.transition && hoverTransition) {
+        buttonRef.current.style.transition = props.style.transition as string;
+      }
     }
-  }, [isHovered, variant]);
+    
+    // If no data attributes but it's a CTA button, fall back to default behavior
+    if (!hoverBackground && (variant === 'primaryCta' || variant === 'secondaryCta')) {
+      // Get the gradient for the current state
+      const colors = buttonColors[variant as 'primaryCta' | 'secondaryCta'];
+      if (!colors) return;
+      
+      // Get current gradient based on hover state
+      const gradient = isHovered ? colors.hoverGradient : colors.gradient;
+      
+      // Apply the gradient to the button background
+      if (variant === 'secondaryCta') {
+        // For the secondary CTA, we need special handling:
+        // - Use buttonBackground when not hovered
+        // - Apply hover gradient when hovered
+        const secondaryCTAColors = colors as typeof buttonColors.secondaryCta;
+        buttonRef.current.style.background = isHovered 
+          ? `${secondaryCTAColors.hoverGradient}, ${secondaryCTAColors.buttonBackground}`
+          : secondaryCTAColors.buttonBackground;
+      } else if (gradient !== 'transparent') {
+        buttonRef.current.style.background = `${gradient}, linear-gradient(180deg, ${colors.light} 0%, ${colors.dark} 100%)`;
+      } else {
+        buttonRef.current.style.background = `linear-gradient(180deg, ${colors.light} 0%, ${colors.dark} 100%)`;
+      }
+    }
+  }, [isHovered, variant, props.style]);
   
   // Size variations with more subtle border radius to match icon container
   // Adjust border radius to match icon container styling

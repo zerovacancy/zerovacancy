@@ -125,11 +125,21 @@ const Index = () => {
                   variant="secondary" 
                   size="sm" 
                   className={cn(
-                    "bg-gradient-to-r from-[#9C6FFF] to-[#00C2A8] text-white font-bold",
-                    "border border-white/20", 
-                    "backdrop-blur-sm",
-                    "shadow-[0_2px_10px_rgba(0,194,168,0.2)] hover:shadow-[0_4px_20px_rgba(0,194,168,0.3)]",
-                    "hover:opacity-90"
+                    // Light background with subtle gradient from white to light purple
+                    "bg-gradient-to-b from-white to-[#F8F5FF]",
+                    // Using brand purple for text to match other CTAs
+                    "text-[#7633DC] font-semibold",
+                    // Refined border for definition
+                    "border border-[rgba(255,255,255,0.2)]", 
+                    // Sophisticated 3D shadow effect matching other CTAs
+                    "shadow-[0_1px_2px_rgba(0,0,0,0.07),_0_2px_4px_rgba(0,0,0,0.07),_0_4px_8px_rgba(0,0,0,0.07),_0_8px_16px_rgba(0,0,0,0.05),_0_0_8px_rgba(118,51,220,0.03)]",
+                    // Enhanced hover effects
+                    "hover:bg-gradient-to-b hover:from-white hover:to-[#F5F0FF]",
+                    "hover:shadow-[0_1px_2px_rgba(0,0,0,0.07),_0_2px_4px_rgba(0,0,0,0.07),_0_4px_8px_rgba(0,0,0,0.07),_0_8px_16px_rgba(0,0,0,0.06),_0_0_12px_rgba(118,51,220,0.04)]",
+                    "hover:scale-[1.02]",
+                    // Adding transition for all properties
+                    "transition-all duration-300 ease-out"
+                    // Removed backdrop blur
                   )} 
                   onClick={handleTryNowClick}
                 >
