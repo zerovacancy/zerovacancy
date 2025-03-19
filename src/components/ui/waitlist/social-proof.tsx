@@ -1,9 +1,10 @@
 
 "use client";
 
+import React from 'react';
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { shadowStyles } from "@/styles/button-style-guide.ts";
+import { shadowStyles } from "@/styles/button-style-guide";
 
 interface SocialProofProps {
   className?: string;
@@ -12,12 +13,12 @@ interface SocialProofProps {
 
 export function SocialProof({ className, style }: SocialProofProps) {
   const isMobile = useIsMobile();
-  
+
   // 3D Button styling for the social proof container with mobile adjustment
-  const socialProof3DStyle = {
+  const socialProof3DStyle: React.CSSProperties = {
     // Main container styles
-    background: 'linear-gradient(180deg, #FFFFFF 0%, #F8F8FA 100%)', // Same gradient as white 3D button
-    borderRadius: isMobile ? '12px' : '15px', // Smaller radius on mobile
+    background: 'linear-gradient(180deg, #FFFFFF 0%, #F8F8FA 100%)',
+    borderRadius: isMobile ? '12px' : '15px',
     border: '1px solid rgba(0,0,0,0.08)',
     // Apply the 5-layer exponential shadow from the 3D Button style
     boxShadow: `${shadowStyles.light}, inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)`,
@@ -26,11 +27,11 @@ export function SocialProof({ className, style }: SocialProofProps) {
     // Add subtle animation on hover to match 3D button behavior
     transition: 'all 0.15s ease-out',
     // Allow custom style overrides from props
-    ...(style || {})
+    ...style || {}
   };
-  
+
   // 3D Button styling for the avatar circles - matching icon container style from 3D Button
-  const avatarCircle3DStyle = {
+  const avatarCircle3DStyle: React.CSSProperties = {
     // Proper avatar size that looks balanced with the text
     width: isMobile ? '18px' : '22px',
     height: isMobile ? '18px' : '22px',
@@ -48,49 +49,44 @@ export function SocialProof({ className, style }: SocialProofProps) {
     // Proper font size for the initials
     fontSize: isMobile ? '7px' : '9px',
     fontWeight: 'bold',
-    position: 'relative' as const, // Use 'as const' to fix TypeScript error
+    position: 'relative',
     zIndex: 1,
     textAlign: 'center',
     lineHeight: '1',
     userSelect: 'none'
   };
-  
+
   // Create a hover handler for subtle 3D effect that preserves horizontal position
   const handleHover = (e: React.MouseEvent<HTMLDivElement>) => {
     // Skip hover effects on mobile for better performance
     if (isMobile) return;
-    
     const target = e.currentTarget;
-    
     // Apply subtle lift effect like 3D buttons while maintaining horizontal position
     target.style.transform = 'translateX(-8px) translateY(-2px)';
     target.style.boxShadow = `${shadowStyles.standard}, inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)`;
   };
-  
+
   // Reset on mouse leave while maintaining horizontal position
   const handleLeave = (e: React.MouseEvent<HTMLDivElement>) => {
     // Skip hover effects on mobile for better performance
     if (isMobile) return;
-    
     const target = e.currentTarget;
-    
     // Return to default state while preserving horizontal adjustment
     target.style.transform = 'translateX(-8px)';
     target.style.boxShadow = `${shadowStyles.light}, inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)`;
   };
 
   return (
-    <div className={cn("flex items-center justify-center w-full", className)}> 
-      {/* Enhanced social proof pill with 3D Button styling */}
-      <div 
+    <div className={cn("flex items-center justify-center w-full", className)}>
+      <div
         className={cn(
-          "flex items-center", // Horizontal layout without justify-center to allow manual positioning
+          "flex items-center",
           "animate-fade-in",
-          "w-fit", // Fit content width
-          "backdrop-blur-sm", // Subtle blur effect
-          "relative", // For positioning the accent element
-          "cursor-default", // Default cursor on hover
-          "mx-auto", // Basic centering
+          "w-fit",
+          "backdrop-blur-sm",
+          "relative",
+          "cursor-default",
+          "mx-auto",
           isMobile ? "mobile-center" : "" // Mobile specific centering
         )}
         style={{
@@ -102,19 +98,20 @@ export function SocialProof({ className, style }: SocialProofProps) {
         onMouseEnter={handleHover}
         onMouseLeave={handleLeave}
       >
-        {/* Avatar initials with 3D Button icon container styling */}
-        <div className="flex items-center mr-0"> {/* No margin between avatars and text */}
-          {/* Each avatar has individual 3D styling but maintains staggered effect */}
-          <div 
+        <div className="flex items-center mr-0">
+          {" "}
+          <div
             style={{
               ...avatarCircle3DStyle,
               zIndex: 3,
               transform: 'translateX(0px)',
               // Small shine reflection like 3D button icon container
               backgroundImage: 'linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 50%), linear-gradient(180deg, #8A42F5 0%, #7837DB 100%)'
-            } as React.CSSProperties}
-          >JT</div>
-          <div 
+            }}
+          >
+            JT
+          </div>
+          <div
             style={{
               ...avatarCircle3DStyle,
               zIndex: 2,
@@ -122,9 +119,11 @@ export function SocialProof({ className, style }: SocialProofProps) {
               transform: isMobile ? 'translateX(-6px)' : 'translateX(-8px)',
               // Slightly different shade for visual interest
               backgroundImage: 'linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 50%), linear-gradient(180deg, #9953FF 10%, #7837DB 100%)'
-            } as React.CSSProperties}
-          >MI</div>
-          <div 
+            }}
+          >
+            MI
+          </div>
+          <div
             style={{
               ...avatarCircle3DStyle,
               zIndex: 1,
@@ -132,23 +131,28 @@ export function SocialProof({ className, style }: SocialProofProps) {
               transform: isMobile ? 'translateX(-12px)' : 'translateX(-16px)',
               // Third slight variation
               backgroundImage: 'linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%), linear-gradient(180deg, #8A42F5 0%, #6C31C3 100%)'
-            } as React.CSSProperties}
-          >AS</div>
+            }}
+          >
+            AS
+          </div>
         </div>
-        
-        {/* Counter and text with consistent styling */}
-        <div className="flex items-center ml-0"> {/* No left margin for tighter spacing */}
-          <span className={cn(
-            "font-jakarta font-bold text-purple-700 mr-1.5",
-            isMobile ? "text-[14px]" : "text-[15px]"
-          )}>
+
+        <div className="flex items-center ml-0">
+          {" "}
+          <span
+            className={cn(
+              "font-jakarta font-bold text-purple-700 mr-1.5",
+              isMobile ? "text-[14px]" : "text-[15px]"
+            )}
+          >
             2,165+
           </span>
-          <span className={cn(
-            "font-inter text-gray-700 whitespace-nowrap font-medium leading-tight",
-            isMobile ? "text-[12px]" : "text-[13px]"
-          )}>
-            {/* Closer text size to the counter for better visual sync */}
+          <span
+            className={cn(
+              "font-inter text-gray-700 whitespace-nowrap font-medium leading-tight",
+              isMobile ? "text-[12px]" : "text-[13px]"
+            )}
+          >
             members joined
           </span>
         </div>

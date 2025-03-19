@@ -1,3 +1,4 @@
+
 /**
  * ZERO VACANCY BUTTON STYLE GUIDE
  * 
@@ -8,8 +9,32 @@
 
 import { CSSProperties } from 'react';
 
+// Define color variant interfaces to fix TypeScript errors
+interface BaseButtonColor {
+  base: string;
+  dark: string;
+  light: string;
+  text: string;
+  iconBackground: string;
+  iconBorder: string;
+  border: string;
+  highlightTop: string;
+  highlightBottom: string;
+}
+
+interface GradientButtonColor extends BaseButtonColor {
+  gradient: string;
+  hoverGradient: string;
+}
+
 // Color palette for button variants
-export const buttonColors = {
+export const buttonColors: {
+  purple: BaseButtonColor;
+  white: GradientButtonColor;
+  secondary: GradientButtonColor;
+  blue: BaseButtonColor;
+  gray: BaseButtonColor;
+} = {
   // Primary purple variant
   purple: {
     base: '#8A42F5',
@@ -214,14 +239,16 @@ export function createButtonStyle(
   let background: string;
   if (colorVariant === 'white') {
     // Primary button with purple tint gradient
+    const whiteColors = colors as GradientButtonColor;
     background = options?.isHovered 
-      ? `${colors.hoverGradient}, linear-gradient(180deg, ${colors.light} 0%, ${colors.dark} 100%)`
-      : `${colors.gradient}, linear-gradient(180deg, ${colors.light} 0%, ${colors.dark} 100%)`;
+      ? `${whiteColors.hoverGradient}, linear-gradient(180deg, ${colors.light} 0%, ${colors.dark} 100%)`
+      : `${whiteColors.gradient}, linear-gradient(180deg, ${colors.light} 0%, ${colors.dark} 100%)`;
   } else if (colorVariant === 'secondary') {
     // Secondary button with subtle gradient
+    const secondaryColors = colors as GradientButtonColor;
     background = options?.isHovered 
-      ? colors.hoverGradient
-      : colors.gradient;
+      ? secondaryColors.hoverGradient
+      : secondaryColors.gradient;
   } else {
     background = `linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 30%), linear-gradient(180deg, ${colors.base} 0%, ${colors.dark} 100%)`;
   }
@@ -253,12 +280,12 @@ export function createIconContainerStyle(
   
   // Position based on left/right placement
   const positionStyle = position === 'left'
-    ? { left: sizeData.spacing.iconOffset }
-    : { right: sizeData.spacing.iconOffset };
+    ? { left: `${sizeData.spacing.iconOffset}px` }
+    : { right: `${sizeData.spacing.iconOffset}px` };
   
   return {
-    width: sizeData.iconContainerSize.width,
-    height: sizeData.iconContainerSize.height,
+    width: `${sizeData.iconContainerSize.width}px`,
+    height: `${sizeData.iconContainerSize.height}px`,
     borderRadius: sizeData.borderRadius,
     background: colors.iconBackground,
     border: `1px solid ${colors.iconBorder}`,
@@ -284,8 +311,8 @@ export function createIconStyle(
   const sizeData = buttonSizes[size];
   
   return {
-    width: sizeData.iconSize.width,
-    height: sizeData.iconSize.height,
+    width: `${sizeData.iconSize.width}px`,
+    height: `${sizeData.iconSize.height}px`,
     color: colors.text,
   };
 }
