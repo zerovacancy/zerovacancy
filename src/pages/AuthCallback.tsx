@@ -13,28 +13,71 @@ const AuthCallback = () => {
     const handleCallback = async () => {
       try {
         setLoading(true);
+        console.log("Auth callback page loaded");
         
-        // Get the URL hash (including the #)
-        const hashParams = window.location.hash;
+        // Get the URL parameters
+        const url = new URL(window.location.href);
+        const hashParams = url.hash;
+        const queryParams = url.search;
         
-        if (hashParams) {
-          // Process the hash params for email confirmation
-          const { data, error } = await supabase.auth.onAuthStateChange((event) => {
-            if (event === 'SIGNED_IN') {
-              toast({
-                title: "Email confirmed!",
-                description: "Your email has been confirmed and you are now signed in.",
-              });
-              navigate('/');
-            }
+        console.log("URL params:", { 
+          url: window.location.href, 
+          hash: hashParams, 
+          query: queryParams 
+        });
+        
+        // Process the callback - this will handle both hash fragments and query params
+        const { data, error } = await supabase.auth.getSession();
+        
+        console.log("Current session data:", data);
+        
+        if (error) {
+          throw error;
+        }
+        
+        if (data?.session) {
+          console.log("User is authenticated:", data.session.user);
+          
+          toast({
+            title: "Email confirmed!",
+            description: "Your email has been confirmed and you are now signed in.",
           });
           
-          if (error) {
-            throw error;
-          }
+          // Navigate back to the home page after successful verification
+          setTimeout(() => {
+            navigate('/');
+          }, 1500);
         } else {
-          // No hash params found, can't process the callback
-          setError('No authentication parameters found.');
+          // Try to explicitly exchange the token in the URL
+          // This handles the case where we have a token in the URL but no session yet
+          if (hashParams || queryParams) {
+            console.log("Attempting to set auth session from URL");
+            
+            // Set up auth state change listener
+            const { data: authData } = supabase.auth.onAuthStateChange((event, session) => {
+              console.log("Auth state changed:", event, session);
+              
+              if (event === 'SIGNED_IN') {
+                toast({
+                  title: "Email confirmed!",
+                  description: "Your email has been confirmed and you are now signed in.",
+                });
+                
+                // Navigate back to the home page after successful verification
+                setTimeout(() => {
+                  navigate('/');
+                }, 1500);
+              }
+            });
+            
+            // Cleanup listener
+            setTimeout(() => {
+              authData.subscription.unsubscribe();
+            }, 5000);
+          } else {
+            // No hash params found, can't process the callback
+            setError('No authentication parameters found.');
+          }
         }
       } catch (err: any) {
         console.error('Error during auth callback:', err);
@@ -44,12 +87,13 @@ const AuthCallback = () => {
           description: err.message || "An error occurred during authentication.",
           variant: "destructive",
         });
-      } finally {
-        setLoading(false);
-        // Navigate back to home page after a delay regardless of outcome
+        
+        // Navigate back to home page after a delay on error
         setTimeout(() => {
           navigate('/');
         }, 3000);
+      } finally {
+        setLoading(false);
       }
     };
 

@@ -142,7 +142,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         email: cleanEmail,
         password: cleanPassword,
         options: {
+          // Ensure we have the full URL with protocol for proper redirect
           emailRedirectTo: `${window.location.origin}/auth/callback`,
+          // To handle various Supabase redirect formats
+          redirectTo: `${window.location.origin}/auth/callback`,
         },
       });
       
