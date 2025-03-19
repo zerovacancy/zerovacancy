@@ -65,8 +65,8 @@ export function SocialProof({ className, style }: SocialProofProps) {
     border: '1px solid rgba(0,0,0,0.1)',
     // Use more sophisticated shadow matching the button shadow system
     boxShadow: `${shadowStyles.standard}, inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 0 rgba(0,0,0,0.07)`,
-    // Slightly increased padding for better visual impact
-    padding: isMobile ? '7px 14px' : '8px 16px',
+    // Reduced horizontal padding on mobile for tighter spacing between avatars and text
+    padding: isMobile ? '7px 8px 7px 12px' : '8px 16px',
     // Add subtle animation on hover to match 3D button behavior
     transition: 'all 0.2s ease-out',
     // Allow custom style overrides from props
@@ -141,8 +141,11 @@ export function SocialProof({ className, style }: SocialProofProps) {
         onMouseEnter={handleHover}
         onMouseLeave={handleLeave}
       >
-        {/* Avatar display - static on mobile, animated on desktop */}
-        <div className="flex items-center mr-0.5 relative"> 
+        {/* Avatar display - static on mobile with no right margin, animated on desktop */}
+        <div className={cn(
+          "flex items-center relative",
+          isMobile ? "mr-0" : "mr-0.5" // No right margin on mobile
+        )}> 
           {isMobile ? (
             // Static row of 4 avatars for mobile - no animation
             <div className="flex items-center">
@@ -259,14 +262,17 @@ export function SocialProof({ className, style }: SocialProofProps) {
           )}
         </div>
         
-        {/* Enhanced counter and text - static on mobile to prevent flickering */}
-        <div className="flex items-center ml-0.5">
+        {/* Enhanced counter and text - with minimal spacing on mobile */}
+        <div className={cn(
+          "flex items-center", 
+          isMobile ? "ml-[-4px]" : "ml-0.5" // Further reduced spacing on mobile
+        )}>
           {isMobile ? (
             // Static version for mobile (no animation)
             <span 
               className={cn(
-                "font-jakarta font-bold text-purple-700 mr-1.5",
-                "text-[14px]"
+                "font-jakarta font-bold text-purple-700",
+                "text-[14px] mr-1" // Reduced right margin on mobile
               )}
             >
               2,165+
