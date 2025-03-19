@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback } from 'react';
 import { Card } from '../ui/card';
 import { ArrowRight, Star, X, Clock, Crown } from 'lucide-react';
@@ -52,8 +51,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
           {isMobile ? (
             <Card className={cn(
               "overflow-hidden flex flex-col w-full",
-              "bg-white/80", // Semi-transparent background for glass effect
-              "backdrop-blur-[5px]", // Reduced blur for mobile
+              "bg-white", // Solid background to remove blurriness
               "border-2 border-[#8860E6]/70", // Enhanced border: thicker and brand-aligned purple at 70% opacity
               "shadow-[0_8px_12px_-3px_rgba(138,79,255,0.1),_0_4px_6px_-4px_rgba(138,79,255,0.15),_inset_0_1px_3px_rgba(255,255,255,0.3)]",
               "hover:shadow-[0_10px_15px_-3px_rgba(138,79,255,0.15),_0_4px_6px_-4px_rgba(138,79,255,0.2),_inset_0_1px_3px_rgba(255,255,255,0.4)]",
@@ -62,9 +60,6 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               "translate-z-0 backface-visibility-hidden", // Hardware acceleration for mobile
               "will-change-transform" // Performance optimization
             )}>
-              {/* Glass morphism subtle overlay */}
-              <div className="absolute inset-0 bg-gradient-to-b from-white/40 to-white/10 opacity-40 pointer-events-none z-[1] rounded-xl"></div>
-              
               {/* Very subtle pattern effect */}
               <div className="absolute inset-0 opacity-[0.02] bg-[radial-gradient(#8A4FFF_1px,transparent_1px)] bg-[length:16px_16px] z-0 pointer-events-none"></div>
               
@@ -81,7 +76,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 
                 {/* Price tag - repositioned for better visibility */}
                 <div className="absolute top-3 right-3 z-20">
-                  <span className="px-2.5 py-1 text-xs font-semibold bg-purple-50/90 backdrop-blur-sm shadow-sm border border-purple-200/70 text-purple-800 rounded-full transition-all duration-200 group-hover:bg-purple-100/90">
+                  <span className="px-2.5 py-1 text-xs font-semibold bg-purple-50 shadow-sm border border-purple-200/70 text-purple-800 rounded-full transition-all duration-200 group-hover:bg-purple-100">
                     ${creator.price}/session
                   </span>
                 </div>
@@ -104,7 +99,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   </div>
                   
                   {/* Ratings and availability grouped together */}
-                  <div className="flex justify-between items-center mb-3 py-2 px-3 bg-gray-50/90 backdrop-blur-sm rounded-lg border border-gray-100/90 shadow-sm">
+                  <div className="flex justify-between items-center mb-3 py-2 px-3 bg-gray-50 rounded-lg border border-gray-100/90 shadow-sm">
                     <div className="flex items-center">
                       <Star className="w-4 h-4 text-yellow-400 fill-yellow-400 mr-1.5" />
                       <span className="text-sm font-semibold font-space text-gray-700">{creator.rating.toFixed(1)}</span>
@@ -117,7 +112,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     
                     {/* Availability indicator with improved styling */}
                     {creator.availabilityStatus && (
-                      <div className="flex items-center py-1 px-2.5 rounded-full text-xs font-medium bg-white/80 backdrop-blur-sm shadow-sm border border-gray-100/90">
+                      <div className="flex items-center py-1 px-2.5 rounded-full text-xs font-medium bg-white/80 shadow-sm border border-gray-100/90">
                         {creator.availabilityStatus === 'available-now' && (
                           <span className="flex items-center text-emerald-700">
                             <div className="w-2 h-2 rounded-full bg-emerald-500 mr-1.5 animate-pulse shadow-[0_0_4px_rgba(16,185,129,0.6)]"></div>
@@ -141,7 +136,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   </div>
                   
                   {/* Services with organized tag styling */}
-                  <div className="flex flex-wrap gap-x-1.5 gap-y-1 mt-2 px-2 py-2 bg-purple-50/60 backdrop-blur-sm rounded-lg border border-purple-100/50 max-w-full">
+                  <div className="flex flex-wrap gap-x-1.5 gap-y-1 mt-2 px-2 py-2 bg-purple-50/60 rounded-lg border border-purple-100/50 max-w-full">
                     {creator.services.map((service, index) => {
                       // Force specific line wrapping for Emily Johnson on mobile
                       const forceWrap = isMobile && 
@@ -193,7 +188,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                       <div className="text-xs text-gray-700 font-medium font-space uppercase tracking-wide">Recent Work</div>
                     </div>
                     <button 
-                      className="text-xs text-purple-600 font-medium px-2 py-1 rounded-md bg-purple-50/80 backdrop-blur-sm hover:bg-purple-100/80 transition-colors"
+                      className="text-xs text-purple-600 font-medium px-2 py-1 rounded-md bg-purple-50/80 hover:bg-purple-100/80 transition-colors"
                       onClick={() => onPreviewClick ? onPreviewClick(creator.workExamples[0]) : setSelectedImage(creator.workExamples[0])}
                     >
                       View All →
@@ -221,7 +216,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                           </span>
                         </div>
                         {/* Tap indicator with glass effect */}
-                        <div className="absolute inset-0 bg-purple-600/10 backdrop-blur-[2px] opacity-0 active:opacity-100 transition-opacity flex items-center justify-center">
+                        <div className="absolute inset-0 bg-purple-600/10 opacity-0 active:opacity-100 transition-opacity flex items-center justify-center">
                           <div className="w-7 h-7 rounded-full bg-white/80 shadow-sm flex items-center justify-center">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                               <path d="M15 3H21V9" stroke="#6D28D9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -278,7 +273,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 "overflow-hidden flex flex-col w-full",
                 "will-change-transform transition-all duration-300",
                 "hover:translate-y-[-2px]",
-                "bg-white/70 backdrop-blur-[8px]", // Premium glass effect for desktop
+                "bg-white", // Solid white background to remove blurriness
                 "border-2 border-[#8860E6]/60", // Enhanced border: thicker and brand-aligned purple at 60% opacity
                 "shadow-[0_10px_15px_-3px_rgba(138,79,255,0.1),_0_4px_6px_-4px_rgba(138,79,255,0.15),_inset_0_1px_3px_rgba(255,255,255,0.3)]",
                 "hover:shadow-[0_14px_20px_-3px_rgba(138,79,255,0.15),_0_6px_8px_-4px_rgba(138,79,255,0.2),_inset_0_1px_3px_rgba(255,255,255,0.4)]",
@@ -292,19 +287,12 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 flexDirection: 'column',
                 position: 'relative'
               }}>
-                {/* Enhanced glass morphism effects */}
-                <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-purple-50/20 to-indigo-50/10 opacity-70 pointer-events-none z-[1] rounded-xl"></div>
-                
                 {/* Subtle pattern overlay */}
                 <div className="absolute inset-0 opacity-[0.01] bg-[radial-gradient(#8A4FFF_1px,transparent_1px)] bg-[length:20px_20px] z-0 pointer-events-none"></div>
-                
-                {/* Subtle border effect - more minimal */}
-                <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden rounded-xl">
-                </div>
 
                 {/* Optimized price tag - compact and visually distinct */}
                 <div className="absolute top-3.5 right-3.5 z-20">
-                  <div className="px-3 py-1 text-sm font-semibold bg-purple-50/80 backdrop-blur-sm shadow-sm border border-purple-200/60 text-purple-800 rounded-full transition-all duration-200 group-hover:bg-purple-100/80">
+                  <div className="px-3 py-1 text-sm font-semibold bg-purple-50 shadow-sm border border-purple-200/60 text-purple-800 rounded-full transition-all duration-200 group-hover:bg-purple-100">
                     ${creator.price}/session
                   </div>
                 </div>
@@ -322,7 +310,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 <div className="px-5 pt-4 pb-2 flex flex-col relative z-10 flex-grow" style={{ minHeight: "250px" }}>
                   {/* Enhanced creator info section with improved visual hierarchy */}
                   <div className="mb-3 pb-3 border-b border-purple-100/40">
-                    <div className="py-2 px-3 -mx-2 mb-2 bg-purple-50/60 backdrop-blur-sm border-l-2 border-purple-400 rounded-r-md">
+                    <div className="py-2 px-3 -mx-2 mb-2 bg-purple-50 border-l-2 border-purple-400 rounded-r-md">
                       <h3 className="text-title leading-tight font-semibold text-purple-800">{creator.name}</h3>
                     </div>
                     
@@ -336,7 +324,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     </p>
                     
                     {/* Services with color-coded tag styling */}
-                    <div className="flex flex-wrap gap-1.5 mt-2 bg-purple-50/30 backdrop-blur-sm p-1.5 rounded-md -mx-1">
+                    <div className="flex flex-wrap gap-1.5 mt-2 bg-purple-50/30 p-1.5 rounded-md -mx-1">
                       {creator.services.map((service, index) => {
                         // Determine tag color based on service type
                         const isPlatform = service.includes('TikTok') || service.includes('Instagram') || service.includes('YouTube');
@@ -369,7 +357,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   </div>
 
                   {/* Refined rating section with reduced spacing */}
-                  <div className="mb-2 p-2 rounded-md bg-white/60 backdrop-blur-sm border border-purple-100/40 shadow-sm">
+                  <div className="mb-2 p-2 rounded-md bg-white/60 border border-purple-100/40 shadow-sm">
                     <div className="mb-1.5 pb-1 border-b border-gray-100 flex justify-between items-center">
                       <div className="flex items-center">
                         <div className="w-0.5 h-3.5 bg-gradient-to-b from-indigo-400/80 to-purple-400/80 rounded-full mr-1.5"></div>
