@@ -251,7 +251,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                       style={{
                         width: '32px',
                         height: '32px',
-                        background: '#F8F8FA', // Very light gray for icon container to match hero
+                        background: '#F5F5F7', // Exact same light gray as the button background
                         border: '1px solid rgba(118,51,220,0.1)', // Subtle purple-tinted border to match hero
                         borderRadius: '12px',
                         boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)'
@@ -329,7 +329,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     style={{
                       width: '32px',
                       height: '32px',
-                      background: '#F8F8FA', // Very light gray for icon container to match hero
+                      background: '#F5F5F7', // Exact same light gray as the button background
                       border: '1px solid rgba(118,51,220,0.1)', // Subtle purple-tinted border to match hero
                       borderRadius: '12px',
                       boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)'
