@@ -10,6 +10,7 @@ import { SocialProof } from "./social-proof";
 import { SuccessConfirmation } from "./success-confirmation";
 import { supabase } from "@/integrations/supabase/client";
 import { optimizeMobileViewport } from "@/utils/mobile-optimization";
+import { GlowDialog } from "@/components/ui/glow-dialog";
 
 export function WaitlistButton({
   source = "unknown",
@@ -28,6 +29,7 @@ export function WaitlistButton({
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showGlowDialog, setShowGlowDialog] = useState(false);
   const [submittedEmail, setSubmittedEmail] = useState("");
   const [alreadySubscribed, setAlreadySubscribed] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -160,27 +162,35 @@ export function WaitlistButton({
     }
   };
 
+  // Handle showing the glow dialog on mobile
+  const handleButtonClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (isMobile) {
+      // On mobile, show the glow dialog popup instead of expanding the form
+      setShowGlowDialog(true);
+    } else {
+      // On desktop, maintain the original behavior
+      setOpen(true);
+      
+      // Ensure focus after state update
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.focus();
+          inputRef.current.click();
+        }
+      }, 50);
+    }
+  };
+
   return (
     <div className={cn("flex flex-col gap-2", className)}>
       {!open ? (
         // Only show the CTA button when not open
         <div className="w-full">
           {children ? React.cloneElement(children as React.ReactElement, {
-            onClick: (e: React.MouseEvent) => {
-              e.preventDefault();
-              e.stopPropagation();
-              
-              // Set open state to show the email form
-              setOpen(true);
-              
-              // Ensure focus after state update
-              setTimeout(() => {
-                if (inputRef.current) {
-                  inputRef.current.focus();
-                  inputRef.current.click();
-                }
-              }, 50);
-            }
+            onClick: handleButtonClick
           }) : (
             <Button 
               className={cn(
@@ -188,21 +198,7 @@ export function WaitlistButton({
                 "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700",
                 isMobile ? "text-sm" : "text-base"
               )}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                // Set open state to show the email form
-                setOpen(true);
-                
-                // Ensure focus after state update
-                setTimeout(() => {
-                  if (inputRef.current) {
-                    inputRef.current.focus();
-                    inputRef.current.click();
-                  }
-                }, 50);
-              }}
+              onClick={handleButtonClick}
             >
               {buttonText}
             </Button>
@@ -282,6 +278,12 @@ export function WaitlistButton({
         onOpenChange={setShowSuccess}
         email={submittedEmail}
         alreadySubscribed={alreadySubscribed}
+      />
+
+      {/* GlowDialog popup for mobile */}
+      <GlowDialog
+        open={showGlowDialog}
+        onOpenChange={setShowGlowDialog}
       />
     </div>
   );
