@@ -234,7 +234,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   <button 
                     onClick={handleCTAClick}
                     aria-label={`Join as creator with ${creator.name}`}
-                    className="w-full flex items-center justify-center text-sm px-5 py-3 text-[#7633DC] rounded-[12px] font-medium font-jakarta h-[46px] transition-all duration-200 relative animate-subtle-pulse hover:scale-[1.02]"
+                    className="w-full flex items-center justify-center text-sm px-5 py-3 text-[#7633DC] rounded-[12px] font-bold font-jakarta h-[46px] transition-all duration-200 relative animate-subtle-pulse hover:scale-[1.02]"
                     style={{
                       background: 'linear-gradient(180deg, #F5F0FF 0%, #F8F5FF 100%)', // Light purple gradient
                       color: '#7633DC', // Purple text color
@@ -249,7 +249,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                       style={{
                         width: '32px',
                         height: '32px',
-                        background: '#F8F8FA', // Very light gray for icon container
+                        background: 'linear-gradient(180deg, #F5F0FF 0%, #F8F5FF 100%)', // Match button background
                         border: '1px solid rgba(118,51,220,0.15)', // More visible purple-tinted border
                         borderRadius: '10px',
                         boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)'
@@ -308,7 +308,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 
                 <button 
                   onClick={handleCTAClick}
-                  className="w-full flex items-center justify-center text-[#7633DC] font-medium font-jakarta rounded-[12px] py-3 relative hover:scale-[1.02] animate-subtle-pulse"
+                  className="w-full flex items-center justify-center text-[#7633DC] font-bold font-jakarta rounded-[12px] py-3 relative hover:scale-[1.02] animate-subtle-pulse"
                   style={{
                     background: 'linear-gradient(180deg, #F5F0FF 0%, #F8F5FF 100%)', // Light purple gradient
                     color: '#7633DC', // Purple text color
@@ -325,7 +325,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     style={{
                       width: '36px',
                       height: '36px',
-                      background: '#F8F8FA', // Very light gray for icon container
+                      background: 'linear-gradient(180deg, #F5F0FF 0%, #F8F5FF 100%)', // Match button background
                       border: '1px solid rgba(118,51,220,0.15)', // More visible purple-tinted border
                       borderRadius: '12px',
                       boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)'
