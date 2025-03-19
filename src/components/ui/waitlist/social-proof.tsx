@@ -30,7 +30,7 @@ export function SocialProof({ className, style }: SocialProofProps) {
   };
   
   // 3D Button styling for the avatar circles - matching icon container style from 3D Button
-  const avatarCircle3DStyle = {
+  const avatarCircle3DStyle: React.CSSProperties = {
     // Proper avatar size that looks balanced with the text
     width: isMobile ? '18px' : '22px',
     height: isMobile ? '18px' : '22px',
@@ -111,8 +111,8 @@ export function SocialProof({ className, style }: SocialProofProps) {
               zIndex: 3,
               transform: 'translateX(0px)',
               // Small shine reflection like 3D button icon container
-              backgroundImage: 'linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 50%), linear-gradient(180deg, #8A42F5 0%, #7837DB 100%)'
-            }}
+              background: 'linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 50%), linear-gradient(180deg, #8A42F5 0%, #7837DB 100%)'
+            } as React.CSSProperties}
           >JT</div>
           <div 
             style={{
@@ -121,8 +121,8 @@ export function SocialProof({ className, style }: SocialProofProps) {
               // Smaller offset on mobile for better spacing
               transform: isMobile ? 'translateX(-6px)' : 'translateX(-8px)',
               // Slightly different shade for visual interest
-              backgroundImage: 'linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 50%), linear-gradient(180deg, #9953FF 10%, #7837DB 100%)'
-            }}
+              background: 'linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 50%), linear-gradient(180deg, #9953FF 10%, #7837DB 100%)'
+            } as React.CSSProperties}
           >MI</div>
           <div 
             style={{
@@ -131,8 +131,8 @@ export function SocialProof({ className, style }: SocialProofProps) {
               // Smaller offset on mobile for better spacing
               transform: isMobile ? 'translateX(-12px)' : 'translateX(-16px)',
               // Third slight variation
-              backgroundImage: 'linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%), linear-gradient(180deg, #8A42F5 0%, #6C31C3 100%)'
-            }}
+              background: 'linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%), linear-gradient(180deg, #8A42F5 0%, #6C31C3 100%)'
+            } as React.CSSProperties}
           >AS</div>
         </div>
         

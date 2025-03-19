@@ -8,8 +8,39 @@
 
 import { CSSProperties } from 'react';
 
+// Define common button color properties
+interface BaseButtonColors {
+  base: string;
+  dark: string;
+  light: string;
+  text: string;
+  iconBackground: string;
+  iconBorder: string;
+  border: string;
+  highlightTop: string;
+  highlightBottom: string;
+}
+
+// Define additional properties for CTA buttons
+interface CTAButtonColors extends BaseButtonColors {
+  gradient: string;
+  hoverGradient: string;
+}
+
+// Define secondary CTA specific properties
+interface SecondaryCTAButtonColors extends CTAButtonColors {
+  buttonBackground: string;
+}
+
 // Color palette for button variants
-export const buttonColors = {
+export const buttonColors: {
+  purple: BaseButtonColors;
+  white: BaseButtonColors;
+  blue: BaseButtonColors;
+  gray: BaseButtonColors;
+  primaryCta: CTAButtonColors;
+  secondaryCta: SecondaryCTAButtonColors;
+} = {
   // Primary purple variant
   purple: {
     base: '#8A42F5',
@@ -319,15 +350,19 @@ export function createIconStyle(
 /**
  * Helper function to create complete button styles with icon
  */
+// Interface for button style options
+interface ButtonStyleOptions {
+  iconPosition?: 'left' | 'right';
+  isPressed?: boolean;
+  isHovered?: boolean;
+  customShadow?: string;
+  customBorder?: string;
+}
+
 export function getCompleteButtonStyles(
   colorVariant: keyof typeof buttonColors = 'purple',
   size: keyof typeof buttonSizes = 'lg',
-  options?: {
-    iconPosition?: 'left' | 'right';
-    isPressed?: boolean;
-    customShadow?: string;
-    customBorder?: string;
-  }
+  options?: ButtonStyleOptions
 ) {
   const position = options?.iconPosition || 'left';
   
@@ -336,8 +371,8 @@ export function getCompleteButtonStyles(
     iconContainer: createIconContainerStyle(colorVariant, size, position),
     icon: createIconStyle(colorVariant, size),
     textPadding: position === 'left'
-      ? { paddingLeft: `calc(${buttonSizes[size].iconContainerSize.width}px + ${buttonSizes[size].spacing.iconMargin * 2}px)` }
-      : { paddingRight: `calc(${buttonSizes[size].iconContainerSize.width}px + ${buttonSizes[size].spacing.iconMargin * 2}px)` }
+      ? { paddingLeft: `calc(${buttonSizes[size].iconContainerSize.width}px + ${parseInt(buttonSizes[size].spacing.iconMargin) * 2}px)` }
+      : { paddingRight: `calc(${buttonSizes[size].iconContainerSize.width}px + ${parseInt(buttonSizes[size].spacing.iconMargin) * 2}px)` }
   };
 }
 

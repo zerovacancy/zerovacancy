@@ -78,9 +78,10 @@ export function Button3DPhysical({
       // For the secondary CTA, we need special handling:
       // - Use buttonBackground when not hovered
       // - Apply hover gradient when hovered
+      const secondaryCTAColors = colors as typeof buttonColors.secondaryCta;
       buttonRef.current.style.background = isHovered 
-        ? `${colors.hoverGradient}, ${colors.buttonBackground}`
-        : colors.buttonBackground;
+        ? `${secondaryCTAColors.hoverGradient}, ${secondaryCTAColors.buttonBackground}`
+        : secondaryCTAColors.buttonBackground;
     } else if (gradient !== 'transparent') {
       buttonRef.current.style.background = `${gradient}, linear-gradient(180deg, ${colors.light} 0%, ${colors.dark} 100%)`;
     } else {
