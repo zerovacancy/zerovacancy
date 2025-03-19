@@ -65,8 +65,8 @@ export function SocialProof({ className, style }: SocialProofProps) {
     border: '1px solid rgba(0,0,0,0.1)',
     // Use more sophisticated shadow matching the button shadow system
     boxShadow: `${shadowStyles.standard}, inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 0 rgba(0,0,0,0.07)`,
-    // Reduced horizontal padding on mobile for tighter spacing between avatars and text
-    padding: isMobile ? '7px 8px 7px 12px' : '8px 16px',
+    // Extremely compact padding on mobile for minimal spacing
+    padding: isMobile ? '7px 6px 7px 8px' : '8px 16px',
     // Add subtle animation on hover to match 3D button behavior
     transition: 'all 0.2s ease-out',
     // Allow custom style overrides from props
@@ -262,10 +262,10 @@ export function SocialProof({ className, style }: SocialProofProps) {
           )}
         </div>
         
-        {/* Enhanced counter and text - with minimal spacing on mobile */}
+        {/* Enhanced counter and text - with extremely tight spacing on mobile */}
         <div className={cn(
           "flex items-center", 
-          isMobile ? "ml-[-4px]" : "ml-0.5" // Further reduced spacing on mobile
+          isMobile ? "ml-[-8px]" : "ml-0.5" // Maximum reduction of spacing on mobile
         )}>
           {isMobile ? (
             // Static version for mobile (no animation)
