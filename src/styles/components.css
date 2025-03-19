@@ -124,6 +124,26 @@
     background: #eaeaea;
   }
 
+  /* Enhanced gradient dividers */
+  .gradient-divider-desktop {
+    position: relative;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(107, 114, 128, 0.15), transparent);
+    margin: 1rem 0;
+  }
+  
+  .gradient-divider-mobile {
+    position: relative;
+    height: 1.5px;
+    background: linear-gradient(to right, rgba(107, 114, 128, 0.1), rgba(107, 114, 128, 0.2), rgba(107, 114, 128, 0.1));
+    margin: 0.75rem 0;
+  }
+  
+  /* Text shadow utility for refined typography */
+  .text-shadow-sm {
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.03);
+  }
+
   @keyframes subtle-bounce {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-2px); }

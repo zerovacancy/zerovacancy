@@ -81,10 +81,13 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               {/* Content sections with proper organization */}
               <div className="w-full px-4 pt-3 pb-3 flex flex-col relative z-10 flex-grow flex-shrink-0">
                 {/* Creator info section */}
-                <div className="pb-3 mb-3 border-b border-gray-100">
+                <div className="pb-3 mb-3">
+                  {/* MOBILE: Enhanced gradient divider instead of solid border */}
+                  <div className="gradient-divider-mobile mb-3"></div>
+                  
                   {/* Creator name and location with proper styling */}
                   <div className="flex justify-between items-center mb-2.5">
-                    <h3 className="text-base leading-tight font-semibold text-gray-800 border-l-2 border-purple-600 pl-2">{creator.name}</h3>
+                    <h3 className="text-[1.15rem] leading-snug font-semibold text-gray-800 border-l-2 border-purple-600 pl-2">{creator.name}</h3>
                     <p className="text-gray-500 text-xs flex items-center">
                       <svg className="w-3.5 h-3.5 mr-1 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
@@ -170,6 +173,9 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     })}
                   </div>
                 </div>
+                
+                {/* Another enhanced mobile gradient divider */}
+                <div className="gradient-divider-mobile my-1"></div>
                 
                 {/* Recent Work section with proper header */}
                 <div className="mb-14"> {/* Adjusted to provide just enough space for CTA */}
@@ -290,9 +296,9 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 {/* Content section with reduced spacing */}
                 <div className="px-5 pt-4 pb-2 flex flex-col relative z-10 flex-grow" style={{ minHeight: "250px" }}>
                   {/* Enhanced creator info section with improved visual hierarchy */}
-                  <div className="mb-3 pb-3 border-b border-gray-200">
+                  <div className="mb-3">
                     <div className="py-2 px-3 -mx-2 mb-2 bg-gray-50 border-l-2 border-purple-600 rounded-r-md">
-                      <h3 className="text-title leading-tight font-semibold text-gray-800">{creator.name}</h3>
+                      <h3 className="text-title leading-tight font-semibold tracking-[-0.01em] text-shadow-sm text-gray-800">{creator.name}</h3>
                     </div>
                     
                     {/* Location with enhanced icon */}
@@ -319,6 +325,9 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     </div>
                   </div>
 
+                  {/* DESKTOP: Gradient divider instead of solid border */}
+                  <div className="gradient-divider-desktop my-2"></div>
+
                   {/* Refined rating section with reduced spacing */}
                   <div className="mb-2 p-2 rounded-md bg-gray-50 border border-gray-100 shadow-sm">
                     <div className="mb-1.5 pb-1 border-b border-gray-200 flex justify-between items-center">
@@ -337,6 +346,9 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                       />
                     </div>
                   </div>
+
+                  {/* DESKTOP: Another gradient divider */}
+                  <div className="gradient-divider-desktop my-2"></div>
 
                   {/* Portfolio preview with reduced spacing */}
                   <div className="mb-14 rounded-md overflow-hidden"> {/* Adjusted to provide just enough space for CTA */}

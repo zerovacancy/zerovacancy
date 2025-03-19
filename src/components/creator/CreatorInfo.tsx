@@ -34,7 +34,10 @@ export const CreatorInfo: React.FC<CreatorInfoProps> = ({ creator }) => {
         <div className="flex items-center gap-2.5">
           <h3 className={cn(
             "font-bold text-white",
-            isMobile ? "text-xl" : "text-lg sm:text-xl" // Larger text size on mobile
+            // Enhanced typography treatments for different device sizes
+            isMobile 
+              ? "text-[1.15rem] leading-snug" // 10% larger on mobile with proper line height
+              : "text-lg sm:text-xl tracking-[-0.01em] text-shadow-sm" // Letter spacing and subtle text shadow on desktop
           )}>
             {creator.name}
           </h3>
