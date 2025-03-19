@@ -4,8 +4,8 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/favicon.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, height=device-height" />
-    <title>Property Content Creators</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, height=device-height" />
+    <title>ZeroVacancy - AI-Driven Property Marketing & Content Creator Marketplace</title>
     <meta name="description" content="Connect with elite content creators who transform your spaces into compelling visual stories">
     
     <!-- Open Graph / Facebook -->
@@ -28,7 +28,23 @@
   </head>
   <body>
     <div id="root"></div>
-    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
-    <script type="module" src="/src/main.tsx"></script>
+    <script>
+      // Inline script to defer non-critical resources
+      function loadDeferred(url, type) {
+        const script = document.createElement('script');
+        script.src = url;
+        script.type = type || '';
+        script.defer = true;
+        document.body.appendChild(script);
+      }
+
+      // Load critical resources immediately
+      loadDeferred("/src/main.tsx", "module");
+      
+      // Defer non-critical third-party scripts
+      window.addEventListener('load', function() {
+        loadDeferred("https://cdn.gpteng.co/gptengineer.js", "module");
+      });
+    </script>
   </body>
 </html>
