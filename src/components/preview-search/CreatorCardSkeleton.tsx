@@ -10,7 +10,7 @@ export const CreatorCardSkeleton = () => {
   return (
     <Card className={cn(
       "overflow-hidden w-full h-full", 
-      "bg-white border border-purple-100/50",
+      "bg-white border-2 border-[#8860E6]/40", // Enhanced border with reduced opacity for skeleton state
       "animate-pulse flex flex-col",
       "rounded-xl relative transition-all duration-200",
       isMobile 

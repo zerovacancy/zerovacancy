@@ -29,7 +29,7 @@ export const PreviewCard: React.FC<PreviewCardProps> = ({ isVisible, children })
       }}
       viewport={{ once: true, margin: "-50px" }}
       className={cn(
-        isMobile ? "relative" : "relative rounded-lg sm:rounded-xl overflow-hidden shadow-lg sm:shadow-xl border border-zinc-200/70 bg-white/95 will-change-transform backdrop-blur-sm"
+        isMobile ? "relative" : "relative rounded-lg sm:rounded-xl overflow-hidden shadow-lg sm:shadow-xl border-2 border-[#8860E6]/60 bg-white/95 will-change-transform backdrop-blur-sm"
       )}
     >
       {/* Only render effects on desktop */}
