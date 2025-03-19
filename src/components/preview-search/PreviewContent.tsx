@@ -80,7 +80,7 @@ export const PreviewContent = () => {
             ))}
           </div>
         ) : (
-          <div className="backdrop-blur-[3px] bg-gradient-to-b from-white/30 to-purple-50/10 p-2 rounded-xl shadow-[0_8px_12px_-3px_rgba(138,79,255,0.1),_0_4px_6px_-4px_rgba(138,79,255,0.15)]">
+          <div className="bg-white p-2 rounded-xl shadow-[0_8px_12px_-3px_rgba(138,79,255,0.1),_0_4px_6px_-4px_rgba(138,79,255,0.15)]">
             <MobileCreatorCarousel 
               creators={creatorData}
               onImageLoad={handleImageLoad}
@@ -91,7 +91,7 @@ export const PreviewContent = () => {
           </div>
         )
       ) : (
-        <div className="backdrop-blur-[5px] bg-white/40 p-4 rounded-xl border border-purple-100/30 shadow-[0_10px_15px_-3px_rgba(138,79,255,0.1),_0_4px_6px_-4px_rgba(138,79,255,0.15),_inset_0_1px_3px_rgba(255,255,255,0.3)]">
+        <div className="bg-white p-4 rounded-xl border border-purple-100/30 shadow-[0_10px_15px_-3px_rgba(138,79,255,0.1),_0_4px_6px_-4px_rgba(138,79,255,0.15),_inset_0_1px_3px_rgba(255,255,255,0.3)]">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-5">
             {isLoading ? (
               <>
@@ -119,7 +119,7 @@ export const PreviewContent = () => {
       {selectedImage && (
         <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
           <DialogContent className="p-0 bg-transparent border-0 max-w-[90vw] sm:max-w-[80vw]">
-            <div className="relative backdrop-blur-md bg-black/30 p-1 rounded-lg shadow-[0_10px_15px_-3px_rgba(0,0,0,0.2),_0_4px_6px_-4px_rgba(0,0,0,0.15)]">
+            <div className="relative bg-black/30 p-1 rounded-lg shadow-[0_10px_15px_-3px_rgba(0,0,0,0.2),_0_4px_6px_-4px_rgba(0,0,0,0.15)]">
               <img
                 src={selectedImage}
                 alt="Portfolio work"
@@ -127,7 +127,7 @@ export const PreviewContent = () => {
               />
               <button
                 onClick={() => setSelectedImage(null)}
-                className="absolute right-3 top-3 bg-black/50 backdrop-blur-sm rounded-full p-1.5 text-white shadow-[0_2px_4px_rgba(0,0,0,0.2)]"
+                className="absolute right-3 top-3 bg-black/50 rounded-full p-1.5 text-white shadow-[0_2px_4px_rgba(0,0,0,0.2)]"
               >
                 <X className="h-4 w-4" />
               </button>

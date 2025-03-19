@@ -54,9 +54,11 @@ export const PreviewCard: React.FC<PreviewCardProps> = ({ isVisible, children })
         </div>
       )}
 
-      {/* Simple transparent background on mobile, gradient blob on desktop */}
+      {/* Simple solid background on mobile, gradient blob on desktop */}
       {isMobile ? (
-        <>{children}</>
+        <div className="bg-white">
+          {children}
+        </div>
       ) : (
         <GradientBlobBackground 
           className="min-h-0 w-full" 
