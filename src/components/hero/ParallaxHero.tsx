@@ -206,13 +206,16 @@ export function ParallaxHero() {
             >
               <TextRotate
                 texts={TITLES}
-                mainClassName="flex justify-center items-center overflow-visible"
+                mainClassName="flex justify-center items-center"
                 staggerFrom="last"
-                initial={{ y: 30, opacity: 0, scale: 0.95 }}
-                animate={{ y: 0, opacity: 1, scale: 1 }}
-                exit={{ y: -30, opacity: 0, scale: 0.95 }}
-                staggerDuration={0.03}
-                rotationInterval={3500}
+                // Simplified transitions for mobile
+                initial={isMobile ? { opacity: 0 } : { y: 30, opacity: 0, scale: 0.95 }}
+                animate={isMobile ? { opacity: 1 } : { y: 0, opacity: 1, scale: 1 }}
+                exit={isMobile ? { opacity: 0 } : { y: -30, opacity: 0, scale: 0.95 }}
+                // No staggering on mobile
+                staggerDuration={isMobile ? 0 : 0.03}
+                // Slower rotation on mobile
+                rotationInterval={isMobile ? 4500 : 3500}
                 elementLevelClassName={cn(
                   isMobile ? "text-[2.8rem] leading-tight pb-1" : "text-5xl sm:text-6xl lg:text-7xl",
                   "font-bold font-jakarta tracking-tight",
@@ -220,11 +223,17 @@ export function ParallaxHero() {
                   "drop-shadow-[0_2px_1px_rgba(102,51,255,0.3)]",
                   isMobile ? "border-b-[1px] border-[#6633FF]/10 pb-1" : "border-b-2 border-[#6633FF]/10 pb-1"
                 )}
-                transition={{ 
-                  type: "spring",
-                  damping: 24,
-                  stiffness: 240,
-                  mass: 0.8
+                // Simpler tween animation for mobile
+                transition={isMobile ? 
+                  { 
+                    type: "tween", 
+                    duration: 0.3,
+                    ease: "easeInOut"
+                  } : { 
+                    type: "spring",
+                    damping: 24,
+                    stiffness: 240,
+                    mass: 0.8
                 }}
                 auto={true}
               />

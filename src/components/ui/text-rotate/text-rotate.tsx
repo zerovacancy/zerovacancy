@@ -32,18 +32,18 @@ const TextRotate = forwardRef<TextRotateRef, TextRotateProps>(
   ) => {
     const isMobile = useIsMobile();
     
-    // Adapt transitions for mobile
+    // Simplified mobile transitions to prevent animation bugs
     const adaptedTransition = isMobile ? 
       { 
         type: "tween", 
-        duration: 0.4,
-        ease: "easeOut" 
+        duration: 0.35, // Shorter duration
+        ease: "easeInOut" // Smoother easing
       } : transition;
     
-    // Simplify initial/animate/exit for mobile
-    const adaptedInitial = isMobile ? { y: 30, opacity: 0 } : initial;
-    const adaptedAnimate = isMobile ? { y: 0, opacity: 1 } : animate;
-    const adaptedExit = isMobile ? { y: -30, opacity: 0 } : exit;
+    // Simple fade transitions for mobile without vertical movement
+    const adaptedInitial = isMobile ? { opacity: 0 } : initial;
+    const adaptedAnimate = isMobile ? { opacity: 1 } : animate;
+    const adaptedExit = isMobile ? { opacity: 0 } : exit;
 
     const {
       currentTextIndex,
@@ -81,12 +81,12 @@ const TextRotate = forwardRef<TextRotateRef, TextRotateProps>(
       <motion.span
         className={cn(
           "flex flex-wrap whitespace-pre-wrap", 
-          "gpu-accelerated will-change-transform", // Enhanced GPU acceleration
-          "translate-z-0", // Force GPU rendering
+          "transform-gpu will-change-transform", // Enhanced GPU acceleration
+          "translate-z-0 backface-visibility-hidden", // Force GPU rendering
           mainClassName
         )}
         {...props}
-        layout="position"
+        layout={isMobile ? false : "position"} // Disable layout animations on mobile
         transition={adaptedTransition}
       >
         <span className="sr-only">{texts[currentTextIndex]}</span>
@@ -99,14 +99,14 @@ const TextRotate = forwardRef<TextRotateRef, TextRotateProps>(
             key={currentTextIndex}
             className={cn(
               "flex flex-wrap",
-              "gpu-accelerated will-change-transform", // Enhanced GPU acceleration
-              "translate-z-0", // Force GPU rendering 
+              "transform-gpu will-change-transform", // Enhanced GPU acceleration
+              "translate-z-0 backface-visibility-hidden", // Force GPU rendering 
               splitBy === "lines" && "flex-col w-full"
             )}
-            layout="position"
+            layout={isMobile ? false : "position"} // Disable layout animations on mobile
             aria-hidden="true"
           >
-            {/* Handle mobile differently - render as a single animated unit */}
+            {/* Simplified mobile rendering for stability */}
             {isMobile ? (
               <motion.span
                 initial={adaptedInitial}
@@ -114,11 +114,15 @@ const TextRotate = forwardRef<TextRotateRef, TextRotateProps>(
                 exit={adaptedExit}
                 transition={adaptedTransition}
                 className={cn(
-                  "inline-block overflow-visible",
-                  "gpu-accelerated will-change-transform", 
+                  "inline-block",
+                  "transform-gpu will-change-transform", 
                   "translate-z-0 backface-visibility-hidden",
                   elementLevelClassName
                 )}
+                style={{ 
+                  display: 'block',
+                  position: 'relative'
+                }}
               >
                 {texts[currentTextIndex]}
               </motion.span>

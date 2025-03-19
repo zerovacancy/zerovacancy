@@ -126,35 +126,33 @@ export function Hero() {
             >
               <TextRotate
                 texts={TITLES}
-                mainClassName="flex justify-center items-center overflow-visible"
+                mainClassName="flex justify-center items-center"
                 staggerFrom="last"
-                initial={isMobile ? { y: 30, opacity: 0 } : { y: "40%", opacity: 0, scale: 0.95 }}
-                animate={isMobile ? { y: 0, opacity: 1 } : { y: 0, opacity: 1, scale: 1 }}
-                exit={isMobile ? { y: -30, opacity: 0 } : { y: "-40%", opacity: 0, scale: 0.95 }}
-                staggerDuration={isMobile ? 0 : 0}
-                rotationInterval={isMobile ? 3500 : 3000}
-                splitLevelClassName="overflow-visible"
+                // Simplified transitions for mobile
+                initial={isMobile ? { opacity: 0 } : { y: "40%", opacity: 0, scale: 0.95 }}
+                animate={isMobile ? { opacity: 1 } : { y: 0, opacity: 1, scale: 1 }}
+                exit={isMobile ? { opacity: 0 } : { y: "-40%", opacity: 0, scale: 0.95 }}
+                // No staggering on mobile
+                staggerDuration={0}
+                // Slower rotation on mobile
+                rotationInterval={isMobile ? 4500 : 3000}
+                splitLevelClassName={isMobile ? "" : "overflow-visible"}
                 elementLevelClassName={cn(
                   isMobile ? "text-[3.5rem]" : "text-4xl sm:text-5xl lg:text-7xl",
                   "font-bold font-jakarta tracking-[-0.02em]",
                   "bg-clip-text text-transparent", 
-                  isMobile 
-                    ? "bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1]" 
-                    : "bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1]",
-                  isMobile ? "bg-size-200" : "animate-shimmer-slide bg-size-200",
-                  "overflow-visible",
+                  "bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1]",
+                  isMobile ? "" : "animate-shimmer-slide bg-size-200",
+                  isMobile ? "" : "overflow-visible",
                   "drop-shadow-[0_1px_2px_rgba(74,45,217,0.2)]",
-                  "filter brightness-110",
-                  ""
+                  "filter brightness-110"
                 )}
+                // Simpler tween animation for mobile
                 transition={isMobile ? 
                   { 
-                    type: "spring", 
-                    damping: 25,
-                    stiffness: 200,
-                    mass: 0.6,
-                    duration: 0.5,
-                    ease: "easeOut"
+                    type: "tween", 
+                    duration: 0.3,
+                    ease: "easeInOut"
                   } : { 
                     type: "spring",
                     damping: 30,

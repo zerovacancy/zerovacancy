@@ -27,8 +27,9 @@ export const optimizeMobileViewport = () => {
   // Find existing viewport meta tag
   const viewport = document.querySelector('meta[name="viewport"]');
   if (viewport) {
-    // Handle both portrait and landscape orientations with proper scaling
-    const viewportContent = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, height=device-height';
+    // Use a more stable viewport setting that maintains accessibility
+    // Allow user scaling for accessibility but set initial scale
+    const viewportContent = 'width=device-width, initial-scale=1.0, viewport-fit=cover';
     viewport.setAttribute('content', viewportContent);
     
     // Add orientation change listener to fix scaling issues
@@ -53,6 +54,30 @@ export const optimizeMobileViewport = () => {
       window.addEventListener('resize', () => {
         document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
       }, { passive: true });
+      
+      // Additional iOS fixes for animations
+      document.documentElement.style.setProperty('--safe-area-inset-bottom', 'env(safe-area-inset-bottom)');
+      document.documentElement.style.setProperty('--safe-area-inset-top', 'env(safe-area-inset-top)');
+      
+      // Force hardware acceleration for all animations
+      const style = document.createElement('style');
+      style.innerHTML = `
+        .gpu-accelerated, 
+        .animated, 
+        .animate-fade-in, 
+        .animate-fade-in-up,
+        .animate-slide-in,
+        .transform-gpu {
+          -webkit-transform: translateZ(0);
+          transform: translateZ(0);
+          -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+          -webkit-perspective: 1000;
+          perspective: 1000;
+          will-change: transform, opacity;
+        }
+      `;
+      document.head.appendChild(style);
     }
   }
   
