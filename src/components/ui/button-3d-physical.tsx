@@ -1,6 +1,5 @@
-import React, { ButtonHTMLAttributes, useRef, useEffect, useState } from "react";
+import React, { ButtonHTMLAttributes, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { shadowStyles } from "@/styles/button-style-guide";
 
 interface Button3DPhysicalProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
@@ -30,10 +29,6 @@ export function Button3DPhysical({
   // Refs for icon elements to apply container styles
   const leftIconRef = useRef<HTMLDivElement>(null);
   const rightIconRef = useRef<HTMLDivElement>(null);
-  
-  // State for hover and pressed states to apply refined color transitions
-  const [isHovered, setIsHovered] = useState(false);
-  const [isPressed, setIsPressed] = useState(false);
   
   // Effect to apply custom icon container styles from data-container-style attribute
   useEffect(() => {
@@ -70,9 +65,10 @@ export function Button3DPhysical({
   // Enhanced variant styles for premium physical button appearance
   const variantStyles = {
     primary: "text-white border border-[rgba(134,65,245,0.5)]",
-    secondary: "text-[#8345E6] border border-[rgba(118,51,220,0.12)]", // Match secondary color spec
+    secondary: "text-white border border-[rgba(134,65,245,0.5)]",
     outline: "text-purple-700 border border-purple-300",
-    white: "text-[#7633DC] font-medium", // Updated to match refined color spec
+    // White button with enhanced styling for more sophisticated appearance
+    white: "text-purple-700 font-medium", // Border will be handled by the style
   };
 
   // Refined button styles with precise interaction physics
@@ -114,48 +110,42 @@ export function Button3DPhysical({
 
   // Enhanced 3D shadow implementation with precise exponential falloff
   const getShadowStyle = () => {
-    const isDark = variant === 'primary';
+    const isDark = variant === 'primary' || variant === 'secondary';
     const isWhite = variant === 'white';
-    const isSecondary = variant === 'secondary';
     
     // Exact shadow values from example - creates perfect exponential falloff
-    const commonShadow = shadowStyles.standard;
+    const commonShadow = [
+      '0 1px 2px rgba(0,0,0,0.07)', 
+      '0 2px 4px rgba(0,0,0,0.07)', 
+      '0 4px 8px rgba(0,0,0,0.07)', 
+      '0 8px 16px rgba(0,0,0,0.05)', 
+      '0 16px 32px rgba(0,0,0,0.03)'
+    ].join(', ');
     
     // Enhanced edge treatment with light source from above
     // This creates the impression of a physical surface with proper edge highlights
     const insetEffect = isWhite ? 
       // Exactly match the icon container inset shadow
       'inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)' : 
-      isSecondary ?
-        'inset 0 1px 0 rgba(255,255,255,0.85), inset 0 -1px 0 rgba(0,0,0,0.04)' :
-        'inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15)';
+      'inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15)';
     
     // Combine all shadows
     const fullShadow = `${commonShadow}, ${insetEffect}`;
     
-    // Match the icon container's exact styling for the entire button with refined colors
+    // Match the icon container's exact styling for the entire button
     const backgroundStyle = isDark ? {
       background: 'linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 30%), linear-gradient(180deg, #8A42F5 0%, #7837DB 100%)',
       border: '1px solid rgba(255,255,255,0.2)'
     } : isWhite ? {
-      // Primary button with purple tint gradient
-      background: isHovered ?
-        'linear-gradient(180deg, rgba(118,51,220,0.13) 0%, rgba(118,51,220,0.17) 100%), linear-gradient(180deg, #FFFFFF 0%, #F5F5F7 100%)' :
-        'linear-gradient(180deg, rgba(118,51,220,0.08) 0%, rgba(118,51,220,0.12) 100%), linear-gradient(180deg, #FFFFFF 0%, #F5F5F7 100%)',
-      border: '1px solid rgba(118,51,220,0.18)', // Subtle purple border
+      // Pure white gradient for white variant
+      background: 'linear-gradient(180deg, #FFFFFF 0%, #F8F8FA 100%)',
+      border: '1px solid rgba(0,0,0,0.08)', // Same subtle border
       borderRadius: size === "sm" ? "9px" : size === "md" ? "12px" : "15px" // Match icon container border radius
-    } : {
-      // Secondary button with refined styling
-      background: isHovered ?
-        'linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(243,240,255,0.5) 100%)' : // Subtle purple tint on hover
-        'linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(248,248,250,1) 100%)',     // Minimal purple tint
-      border: '1px solid rgba(118,51,220,0.12)', // Lightened border
-      borderRadius: size === "sm" ? "9px" : size === "md" ? "12px" : "15px" // Match icon container border radius
-    };
+    } : {};
     
     // Enhanced styles for premium 3D effect
     return {
-      boxShadow: isPressed ? shadowStyles.pressed : fullShadow,
+      boxShadow: fullShadow,
       transition: 'all 0.15s ease-out', // Refined timing for better interaction physics
       ...backgroundStyle
     };
@@ -168,12 +158,6 @@ export function Button3DPhysical({
         ...getShadowStyle(),
         ...(props.style || {})
       }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onMouseDown={() => setIsPressed(true)}
-      onMouseUp={() => setIsPressed(false)}
-      onTouchStart={() => setIsPressed(true)}
-      onTouchEnd={() => setIsPressed(false)}
       {...props}
     >
       {/* Icon container that matches the example button - left position */}
@@ -191,38 +175,30 @@ export function Button3DPhysical({
               size === "md" ? "w-10 h-[28px] ml-5 mr-5 my-auto" : 
               "w-[40px] h-[40px] ml-6 mr-5 my-auto", // Keep original size for large buttons
               "after:content-[''] after:absolute after:right-[-8px] after:top-[25%] after:h-[50%] after:w-[1px] after:opacity-15",
-              variant === 'primary' ? "after:bg-white" : "after:bg-black"
+              variant === 'primary' || variant === 'secondary' 
+                ? "after:bg-white" 
+                : "after:bg-black"
             )}
             style={{
               borderRadius: size === "sm" ? "9px" : size === "md" ? "12px" : "15px",
-              // Enhanced border and shadow for premium 3D effect with refined colors
-              border: variant === 'primary' 
+              // Enhanced border and shadow for premium 3D effect
+              border: variant === 'primary' || variant === 'secondary' 
                 ? '1px solid rgba(255,255,255,0.2)' 
-                : variant === 'white'
-                  ? '1px solid rgba(118,51,220,0.18)' // Matching primary button border
-                  : '1px solid rgba(118,51,220,0.12)', // Matching secondary button border
-              // Very subtle background differentiation for depth with refined colors
-              background: variant === 'primary' 
+                : '1px solid rgba(0,0,0,0.08)',
+              // Very subtle background differentiation for depth
+              background: variant === 'primary' || variant === 'secondary' 
                 ? 'rgba(255,255,255,0.05)' 
-                : variant === 'white'
-                  ? 'rgba(118,51,220,0.05)' // Slightly more saturated with purple (2-3% more)
-                  : 'rgba(118,51,220,0.03)', // Lighter background for secondary
+                : 'rgba(134,65,245,0.02)',
               // Enhanced inner shadow for refined 3D appearance
-              boxShadow: variant === 'primary' 
+              boxShadow: variant === 'primary' || variant === 'secondary' 
                 ? 'inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.1)' 
-                : variant === 'white'
-                  ? 'inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)'
-                  : 'inset 0 1px 0 rgba(255,255,255,0.85), inset 0 -1px 0 rgba(0,0,0,0.04)',
+                : 'inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)',
               // Apply custom iconContainerStyle if provided via props
               ...iconContainerStyle
             }}
           >
             <span className={cn(
-              variant === 'primary' 
-                ? "text-white" 
-                : variant === 'white' 
-                  ? "text-[#7633DC]" // Exactly match primary button text color 
-                  : "text-[#8345E6]", // Exactly match secondary button text color
+              variant === 'primary' || variant === 'secondary' ? "text-white" : "text-[#7837DB]",
               "flex items-center justify-center w-full h-full",
               "opacity-95" // Better visibility while maintaining integration
             )}>
@@ -269,38 +245,30 @@ export function Button3DPhysical({
               size === "md" ? "w-10 h-[28px] mr-5 ml-5 my-auto" : 
               "w-[40px] h-[40px] mr-6 ml-5 my-auto", // Keep original size for large buttons
               "after:content-[''] after:absolute after:left-[-8px] after:top-[25%] after:h-[50%] after:w-[1px] after:opacity-15",
-              variant === 'primary' ? "after:bg-white" : "after:bg-black"
+              variant === 'primary' || variant === 'secondary' 
+                ? "after:bg-white" 
+                : "after:bg-black"
             )}
             style={{
               borderRadius: size === "sm" ? "9px" : size === "md" ? "12px" : "15px",
-              // Enhanced border and shadow for premium 3D effect with refined colors
-              border: variant === 'primary' 
+              // Enhanced border and shadow for premium 3D effect
+              border: variant === 'primary' || variant === 'secondary' 
                 ? '1px solid rgba(255,255,255,0.2)' 
-                : variant === 'white'
-                  ? '1px solid rgba(118,51,220,0.18)' // Matching primary button border
-                  : '1px solid rgba(118,51,220,0.12)', // Matching secondary button border
-              // Very subtle background differentiation for depth with refined colors
-              background: variant === 'primary' 
+                : '1px solid rgba(0,0,0,0.08)',
+              // Very subtle background differentiation for depth
+              background: variant === 'primary' || variant === 'secondary' 
                 ? 'rgba(255,255,255,0.05)' 
-                : variant === 'white'
-                  ? 'rgba(118,51,220,0.05)' // Slightly more saturated with purple (2-3% more)
-                  : 'rgba(118,51,220,0.03)', // Lighter background for secondary
+                : 'rgba(134,65,245,0.02)',
               // Enhanced inner shadow for refined 3D appearance
-              boxShadow: variant === 'primary' 
-                ? 'inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.1)'
-                : variant === 'white'
-                  ? 'inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)'
-                  : 'inset 0 1px 0 rgba(255,255,255,0.85), inset 0 -1px 0 rgba(0,0,0,0.04)',
+              boxShadow: variant === 'primary' || variant === 'secondary' 
+                ? 'inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.1)' 
+                : 'inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)',
               // Apply custom iconContainerStyle if provided via props
               ...iconContainerStyle
             }}
           >
             <span className={cn(
-              variant === 'primary' 
-                ? "text-white" 
-                : variant === 'white' 
-                  ? "text-[#7633DC]" // Exactly match primary button text color 
-                  : "text-[#8345E6]", // Exactly match secondary button text color
+              variant === 'primary' || variant === 'secondary' ? "text-white" : "text-[#7837DB]",
               "flex items-center justify-center w-full h-full",
               "opacity-95" // Better visibility while maintaining integration
             )}>

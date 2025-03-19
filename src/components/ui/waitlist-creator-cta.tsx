@@ -39,22 +39,25 @@ export const WaitlistCreatorCTA: React.FC<WaitlistCreatorCTAProps> = ({
         showEmailInputDirectly={showEmailInputDirectly}
       >
         <Button3DPhysical
-          variant="secondary" // Updated to use the new secondary variant
+          variant="white"
           size="lg"
           icon={<UserPlus 
-            className="w-[20px] h-[20px]" 
+            className="w-[20px] h-[20px] text-[#7837DB]" 
             style={{
-              color: '#8345E6', // Updated to match secondary button text color
-              stroke: '#8345E6',
+              color: '#7837DB',
+              stroke: '#7837DB',
               ...style?.icon
             }}
             data-container-style={JSON.stringify(style?.iconContainer)}
           />}
           iconPosition="left"
-          className="w-full min-w-[320px] font-medium" // Text color set in button component
+          className="w-full min-w-[320px] font-medium text-[#4e43ac]"
           style={{
-            // Default styling for the button - button-3d-physical now handles the new styling
+            // Default styling for the button
             height: '56px',
+            background: 'rgba(134,65,245,0.02)', // Light background from icon container
+            border: '1px solid rgba(0,0,0,0.08)',
+            boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(0,0,0,0.05), 0 16px 32px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)',
             // Apply any custom styles passed from parent
             ...style?.button
           }}
