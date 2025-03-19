@@ -12,8 +12,9 @@ interface SocialProofProps {
   style?: React.CSSProperties;
 }
 
-// Avatar data with initials and animations
-const avatarSets = [
+// Avatar data for desktop animation and mobile static display
+// Desktop: 3 avatars per set with animation between sets
+const desktopAvatarSets = [
   [
     { initials: "JT", color: "#8A42F5" },
     { initials: "MI", color: "#9953FF" },
@@ -31,18 +32,26 @@ const avatarSets = [
   ]
 ];
 
+// Mobile: Static set of 4 avatars - no animation
+const mobileAvatars = [
+  { initials: "JT", color: "#8A42F5" },
+  { initials: "MI", color: "#9953FF" },
+  { initials: "AS", color: "#7837DB" },
+  { initials: "RK", color: "#7633DC" }
+];
+
 export function SocialProof({ className, style }: SocialProofProps) {
   const isMobile = useIsMobile();
   const [activeAvatarSet, setActiveAvatarSet] = useState(0);
   
-  // Animated carousel transition for avatars - slower on mobile to reduce flickering
+  // Animated carousel transition for desktop only
   useEffect(() => {
-    // On mobile, we rotate avatars less frequently to reduce flickering
-    const rotationInterval = isMobile ? 8000 : 5000;
+    // Skip animation on mobile - using static avatars instead
+    if (isMobile) return;
     
     const interval = setInterval(() => {
-      setActiveAvatarSet((current) => (current + 1) % avatarSets.length);
-    }, rotationInterval);
+      setActiveAvatarSet((current) => (current + 1) % desktopAvatarSets.length);
+    }, 5000);
     
     return () => clearInterval(interval);
   }, [isMobile]);
@@ -132,54 +141,122 @@ export function SocialProof({ className, style }: SocialProofProps) {
         onMouseEnter={handleHover}
         onMouseLeave={handleLeave}
       >
-        {/* Animated avatar carousel with framer-motion transitions - simplified for mobile */}
+        {/* Avatar display - static on mobile, animated on desktop */}
         <div className="flex items-center mr-0.5 relative"> 
-          <AnimatePresence mode={isMobile ? "sync" : "wait"}>
-            <motion.div 
-              key={activeAvatarSet}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ 
-                duration: isMobile ? 1.2 : 0.7, 
-                ease: isMobile ? "linear" : "easeInOut" 
-              }}
-              className="flex items-center"
-            >
-              {/* First avatar - simplified transitions on mobile */}
+          {isMobile ? (
+            // Static row of 4 avatars for mobile - no animation
+            <div className="flex items-center">
+              {/* First avatar */}
+              <div
+                style={{
+                  ...avatarCircle3DStyle,
+                  zIndex: 4,
+                  transform: 'translateX(0px)',
+                  width: '19px', // Slightly smaller for 4 avatars
+                  height: '19px', // Slightly smaller for 4 avatars
+                  fontSize: '7.5px', // Adjusted font size
+                  background: `linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 50%), 
+                               linear-gradient(180deg, ${mobileAvatars[0].color} 0%, #7837DB 100%)`
+                } as React.CSSProperties}
+              >{mobileAvatars[0].initials}</div>
+              
+              {/* Second avatar */}
               <div
                 style={{
                   ...avatarCircle3DStyle,
                   zIndex: 3,
-                  transform: 'translateX(0px)',
-                  background: `linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 50%), 
-                               linear-gradient(180deg, ${avatarSets[activeAvatarSet][0].color} 0%, #7837DB 100%)`
+                  transform: 'translateX(-6px)',
+                  width: '19px', // Slightly smaller for 4 avatars
+                  height: '19px', // Slightly smaller for 4 avatars
+                  fontSize: '7.5px', // Adjusted font size
+                  background: `linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 50%), 
+                               linear-gradient(180deg, ${mobileAvatars[1].color} 10%, #7837DB 100%)`
                 } as React.CSSProperties}
-              >{avatarSets[activeAvatarSet][0].initials}</div>
+              >{mobileAvatars[1].initials}</div>
               
-              {/* Second avatar - simplified transitions on mobile */}
+              {/* Third avatar */}
               <div
                 style={{
                   ...avatarCircle3DStyle,
                   zIndex: 2,
-                  transform: isMobile ? 'translateX(-7px)' : 'translateX(-10px)',
-                  background: `linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 50%), 
-                               linear-gradient(180deg, ${avatarSets[activeAvatarSet][1].color} 10%, #7837DB 100%)`
+                  transform: 'translateX(-12px)',
+                  width: '19px', // Slightly smaller for 4 avatars
+                  height: '19px', // Slightly smaller for 4 avatars
+                  fontSize: '7.5px', // Adjusted font size
+                  background: `linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%), 
+                               linear-gradient(180deg, ${mobileAvatars[2].color} 0%, #6C31C3 100%)`
                 } as React.CSSProperties}
-              >{avatarSets[activeAvatarSet][1].initials}</div>
+              >{mobileAvatars[2].initials}</div>
               
-              {/* Third avatar - simplified transitions on mobile */}
+              {/* Fourth avatar */}
               <div
                 style={{
                   ...avatarCircle3DStyle,
                   zIndex: 1,
-                  transform: isMobile ? 'translateX(-14px)' : 'translateX(-20px)',
-                  background: `linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%), 
-                               linear-gradient(180deg, ${avatarSets[activeAvatarSet][2].color} 0%, #6C31C3 100%)`
+                  transform: 'translateX(-18px)',
+                  width: '19px', // Slightly smaller for 4 avatars
+                  height: '19px', // Slightly smaller for 4 avatars
+                  fontSize: '7.5px', // Adjusted font size
+                  background: `linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 50%), 
+                               linear-gradient(180deg, ${mobileAvatars[3].color} 0%, #6C31C3 100%)`
                 } as React.CSSProperties}
-              >{avatarSets[activeAvatarSet][2].initials}</div>
-            </motion.div>
-          </AnimatePresence>
+              >{mobileAvatars[3].initials}</div>
+            </div>
+          ) : (
+            // Animated avatar set for desktop
+            <AnimatePresence mode="wait">
+              <motion.div 
+                key={activeAvatarSet}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.7, ease: "easeInOut" }}
+                className="flex items-center"
+              >
+                {/* First avatar */}
+                <motion.div 
+                  style={{
+                    ...avatarCircle3DStyle,
+                    zIndex: 3,
+                    transform: 'translateX(0px)',
+                    background: `linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0) 50%), 
+                                 linear-gradient(180deg, ${desktopAvatarSets[activeAvatarSet][0].color} 0%, #7837DB 100%)`
+                  } as React.CSSProperties}
+                  initial={{ y: 5, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ duration: 0.3, delay: 0 }}
+                >{desktopAvatarSets[activeAvatarSet][0].initials}</motion.div>
+                
+                {/* Second avatar */}
+                <motion.div 
+                  style={{
+                    ...avatarCircle3DStyle,
+                    zIndex: 2,
+                    transform: 'translateX(-10px)',
+                    background: `linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 50%), 
+                                 linear-gradient(180deg, ${desktopAvatarSets[activeAvatarSet][1].color} 10%, #7837DB 100%)`
+                  } as React.CSSProperties}
+                  initial={{ y: 5, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ duration: 0.3, delay: 0.1 }}
+                >{desktopAvatarSets[activeAvatarSet][1].initials}</motion.div>
+                
+                {/* Third avatar */}
+                <motion.div 
+                  style={{
+                    ...avatarCircle3DStyle,
+                    zIndex: 1,
+                    transform: 'translateX(-20px)',
+                    background: `linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%), 
+                                 linear-gradient(180deg, ${desktopAvatarSets[activeAvatarSet][2].color} 0%, #6C31C3 100%)`
+                  } as React.CSSProperties}
+                  initial={{ y: 5, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ duration: 0.3, delay: 0.2 }}
+                >{desktopAvatarSets[activeAvatarSet][2].initials}</motion.div>
+              </motion.div>
+            </AnimatePresence>
+          )}
         </div>
         
         {/* Enhanced counter and text - static on mobile to prevent flickering */}
