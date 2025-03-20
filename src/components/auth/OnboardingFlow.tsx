@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, ArrowRight, Loader2, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -17,7 +17,7 @@ enum OnboardingStep {
   COMPLETED = 2,
 }
 
-const OnboardingFlow = () => {
+const OnboardingFlow: React.FC = () => {
   const [step, setStep] = useState<OnboardingStep>(OnboardingStep.TYPE_SELECTION);
   const [userType, setUserType] = useState<UserType>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -258,7 +258,7 @@ const OnboardingFlow = () => {
               Back
             </Button>
           ) : (
-            <div></div> {/* Empty div for flex layout */}
+            <div></div> /* Empty div for flex layout */
           )}
 
           {step === OnboardingStep.TYPE_SELECTION && (
