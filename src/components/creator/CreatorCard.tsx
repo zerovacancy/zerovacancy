@@ -51,7 +51,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
             {/* Main container without border - to be replaced with custom border implementation */}
             <Card className={cn(
               "overflow-hidden flex flex-col w-full h-full",
-              "bg-gradient-to-b from-white to-[#FCFCFC]", // Subtle background gradient for 3D effect
+              "bg-gradient-to-b from-[#F9F7FF] to-[#F8F6FF]", // Match section background with subtle gradient
               "border-0", // Remove default border - we'll use custom border below
               "shadow-none", // Remove default shadow - we'll add custom shadow
               "hover:scale-[1.01]", // Subtle scale transform on hover
@@ -391,7 +391,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 "overflow-hidden flex flex-col w-full",
                 "will-change-transform transition-all duration-300",
                 "hover:translate-y-[-2px] hover:scale-[1.01]", // Added subtle scale transform
-                "bg-gradient-to-b from-white to-[#FCFCFC]", // Subtle background gradient for 3D effect
+                "bg-gradient-to-b from-[#F9F7FF] to-[#F8F6FF]", // Match section background with subtle gradient
                 "border border-[rgba(0,0,0,0.06)]", // Subtle 1px light gray border
                 "shadow-[0_1px_3px_rgba(0,0,0,0.05),_0_4px_6px_rgba(0,0,0,0.05),_0_10px_20px_rgba(0,0,0,0.04)]", // Sophisticated 3D shadow
                 "hover:shadow-[0_2px_4px_rgba(0,0,0,0.05),_0_6px_10px_rgba(0,0,0,0.05),_0_12px_24px_rgba(0,0,0,0.06)]", // Enhanced shadow on hover
