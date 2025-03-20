@@ -46,23 +46,19 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
 
   return (
     <>
-      <article className="group select-text h-full w-full">
-        <div className="relative h-full w-full">
-          {isMobile ? (
-            <Card className={cn(
-              "overflow-hidden flex flex-col w-full",
-              "bg-gradient-to-b from-white to-[#FCFCFC]", // Subtle background gradient for 3D effect
-              "border border-[rgba(0,0,0,0.06)]", // Subtle 1px light gray border
-              "shadow-[0_1px_3px_rgba(0,0,0,0.05),_0_4px_6px_rgba(0,0,0,0.05),_0_10px_20px_rgba(0,0,0,0.04)]", // Sophisticated 3D shadow
-              "hover:shadow-[0_2px_4px_rgba(0,0,0,0.05),_0_6px_10px_rgba(0,0,0,0.05),_0_12px_24px_rgba(0,0,0,0.06)]", // Enhanced shadow on hover
-              "hover:scale-[1.01]", // Subtle scale transform on hover
-              "rounded-xl relative transition-all duration-300",
-              "h-full", // Allow card to adapt to content
-              "translate-z-0 backface-visibility-hidden", // Hardware acceleration for mobile
-              "will-change-transform" // Performance optimization
-            )}>
-              {/* Very subtle pattern effect */}
-              <div className="absolute inset-0 opacity-[0.02] bg-[radial-gradient(#8A4FFF_1px,transparent_1px)] bg-[length:16px_16px] z-0 pointer-events-none"></div>
+      {isMobile ? (
+          <Card className={cn(
+            "overflow-hidden flex flex-col w-full h-full",
+            "bg-gradient-to-b from-white to-[#FCFCFC]", // Subtle background gradient for 3D effect
+            "border border-[rgba(0,0,0,0.06)]", // Subtle 1px light gray border
+            "shadow-[0_1px_3px_rgba(0,0,0,0.05),_0_4px_6px_rgba(0,0,0,0.05),_0_10px_20px_rgba(0,0,0,0.04)]", // 3D shadow
+            "hover:shadow-[0_2px_4px_rgba(0,0,0,0.05),_0_6px_10px_rgba(0,0,0,0.05),_0_12px_24px_rgba(0,0,0,0.06)]", // Enhanced shadow on hover
+            "hover:scale-[1.01]", // Subtle scale transform on hover
+            "rounded-xl relative transition-all duration-300",
+            "translate-z-0 backface-visibility-hidden", // Hardware acceleration for mobile
+            "will-change-transform" // Performance optimization
+          )}>
+            {/* Pattern effect - simplified */}
               
               {/* Media section with properly positioned price tag */}
               <div className="relative">
@@ -92,7 +88,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               </div>
 
               {/* Content sections with proper organization */}
-              <div className="w-full px-4 pt-3 pb-3 flex flex-col relative z-10 flex-grow flex-shrink-0">
+              <div className="w-full px-4 pt-3 pb-4 flex flex-col relative z-10 flex-grow flex-shrink-0">
                 {/* Creator info section */}
                 <div className="pb-3 mb-3 border-b border-purple-100/80">
                   {/* Creator name and location with proper styling */}
@@ -239,7 +235,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 </div>
 
                 {/* CTA button with fixed height - Updated with light background and purple text */}
-                <div className="mt-3">
+                <div className="mt-3 mb-0">
                   <button 
                     onClick={handleCTAClick}
                     aria-label={`Join as creator with ${creator.name}`}
@@ -307,8 +303,9 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 </div>
               </div>
             </Card>
-          ) : (
-            <>
+      ) : (
+          <article className="group select-text h-full w-full">
+            <div className="relative h-full w-full">
               {/* Enhanced glass morphism glow effect behind card */}
               <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-r from-purple-800/20 via-indigo-700/20 to-purple-900/20 opacity-50 blur-[3px] sm:blur-sm group-hover:opacity-80 transition duration-500"></div>
               
@@ -502,10 +499,9 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   <div className="mt-1 mb-1 pt-1"></div>
                 </div>
               </Card>
-            </>
-          )}
-        </div>
-      </article>
+            </div>
+          </article>
+      )}
       
       {/* Email waitlist dialog with fixed positioning for mobile rendering */}
       {showEmailDialog && (
