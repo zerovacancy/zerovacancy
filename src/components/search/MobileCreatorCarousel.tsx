@@ -76,7 +76,7 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
   }, [emblaApi, onSelect]);
 
   return (
-    <div className="w-full relative pb-4 px-0 mx-0">
+    <div className="w-full relative pb-8 px-0 mx-0">
       {isFirstVisit && (
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-4 py-2 rounded-full text-sm flex items-center gap-2 shadow-[0_8px_12px_-3px_rgba(138,79,255,0.2),_0_4px_6px_-4px_rgba(138,79,255,0.25)]">
           <Grip className="w-4 h-4" />
@@ -104,7 +104,7 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
         </div>
       </div>
       
-      <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-1.5 z-20 pb-1 mt-3">
+      <div className="absolute -bottom-4 left-0 right-0 flex justify-center gap-1.5 z-10 pb-1 mt-3">
         {creators.map((_, index) => (
           <div 
             key={index} 
