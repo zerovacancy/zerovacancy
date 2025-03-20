@@ -47,7 +47,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
   return (
     <>
       {isMobile ? (
-          <div className="relative w-full h-full">
+          <div className="relative w-[80vw] mr-0 h-full">
             {/* Main container without border - to be replaced with custom border implementation */}
             <Card className={cn(
               "overflow-hidden flex flex-col w-full h-full",
@@ -69,7 +69,8 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                        0 2px 4px rgba(118, 51, 220, 0.1),
                        0 4px 8px rgba(118, 51, 220, 0.07), 
                        inset 0 1px 0 rgba(255, 255, 255, 0.9)
-                     `
+                     `,
+                     zIndex: 10
                    }}
               ></div>
             {/* Pattern effect - simplified */}
@@ -102,7 +103,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               </div>
 
               {/* Content sections with proper organization */}
-              <div className="w-full px-4 pt-3 pb-4 flex flex-col relative z-10 flex-grow flex-shrink-0">
+              <div className="w-full px-4 pt-3 pb-2 flex flex-col relative z-10 flex-grow flex-shrink-0">
                 {/* Creator info section */}
                 <div className="pb-3 mb-3 border-b border-purple-100/80">
                   {/* Creator name and location with proper styling */}
@@ -249,11 +250,11 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 </div>
 
                 {/* CTA button with fixed height - Updated with light background and purple text */}
-                <div className="mt-4 mb-0">
+                <div className="mt-3 mb-0 pb-0">
                   <button 
                     onClick={handleCTAClick}
                     aria-label={`Join as creator with ${creator.name}`}
-                    className="w-full flex items-center justify-center rounded-[12px] font-medium font-jakarta h-[46px] transition-all duration-200 relative hover:scale-[1.02] bg-creator-cta"
+                    className="w-full flex items-center justify-center rounded-[12px] font-medium font-jakarta h-[44px] transition-all duration-200 relative hover:scale-[1.02] bg-creator-cta"
                     style={{
                       background: '#F5F5F7 !important', // Light background as requested with !important to override global style
                       color: '#7633DC !important', // Purple text color with !important to override global style

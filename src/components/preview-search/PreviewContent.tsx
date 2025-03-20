@@ -68,7 +68,7 @@ export const PreviewContent = () => {
   return (
     <div className={cn(
       "relative w-full",
-      isMobile && "pb-6"
+      isMobile && "pb-6 bg-[#F9F7FF]"
     )}>
       {isMobile ? (
         isLoading ? (

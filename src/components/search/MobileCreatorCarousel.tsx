@@ -28,7 +28,7 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
     loop: false,
     dragFree: false,
     skipSnaps: false,
-    inViewThreshold: 0.85,
+    inViewThreshold: 0.9,
     startIndex: 0,
     watchDrag: false
   });
@@ -76,7 +76,12 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
   }, [emblaApi, onSelect]);
 
   return (
-    <div className="w-full relative pb-8 px-0">
+    <div className="w-full relative pb-6 pt-2 px-5 -mx-0 overflow-visible bg-[#F9F7FF]"
+      style={{
+        boxShadow: 'none',
+        border: 'none'
+      }}
+    >
       {isFirstVisit && (
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-4 py-2 rounded-full text-sm flex items-center gap-2 shadow-[0_8px_12px_-3px_rgba(138,79,255,0.2),_0_4px_6px_-4px_rgba(138,79,255,0.25)]">
           <Grip className="w-4 h-4" />
@@ -84,13 +89,13 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
         </div>
       )}
       
-      <div className="w-full overflow-hidden rounded-lg" ref={emblaRef}>
+      <div className="w-full overflow-visible rounded-lg" ref={emblaRef}>
         <div className="flex flex-nowrap">
           {creators.map((creator) => (
             <div 
               key={creator.name} 
               style={{ touchAction: 'pan-y' }} 
-              className="min-w-[82%] w-[82%] py-0 px-2 flex-shrink-0"
+              className="min-w-[80vw] w-[80vw] py-0 px-3 flex-shrink-0"
             >
               <CreatorCard 
                 creator={creator} 
@@ -104,7 +109,7 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
         </div>
       </div>
       
-      <div className="absolute -bottom-4 left-0 right-0 flex justify-center gap-1.5 z-10 pb-1 mt-3">
+      <div className="absolute bottom-0 left-0 right-0 flex justify-center space-x-1.5 z-10 pt-1 pb-0">
         {creators.map((_, index) => (
           <div 
             key={index} 
@@ -121,7 +126,7 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
       <button 
         onClick={scrollPrev} 
         className={cn(
-          "absolute left-1 top-[40%] -translate-y-1/2 z-10 rounded-full p-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white", 
+          "absolute left-2 top-[40%] -translate-y-1/2 z-10 rounded-full p-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white", 
           "touch-manipulation h-[36px] w-[36px] flex items-center justify-center shadow-[0_6px_10px_-2px_rgba(138,79,255,0.25),_0_3px_4px_-2px_rgba(138,79,255,0.3)] transition-opacity duration-300", 
           !prevBtnEnabled && "opacity-25 cursor-not-allowed"
         )} 
@@ -134,7 +139,7 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
       <button 
         onClick={scrollNext} 
         className={cn(
-          "absolute right-4 top-[40%] -translate-y-1/2 z-10 rounded-full p-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white", 
+          "absolute right-2 top-[40%] -translate-y-1/2 z-10 rounded-full p-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white", 
           "touch-manipulation h-[36px] w-[36px] flex items-center justify-center shadow-[0_6px_10px_-2px_rgba(138,79,255,0.25),_0_3px_4px_-2px_rgba(138,79,255,0.3)] transition-opacity duration-300", 
           !nextBtnEnabled && "opacity-0 pointer-events-none"
         )} 
