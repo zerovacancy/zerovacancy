@@ -20,7 +20,7 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
   imageRef,
   onPreviewClick
 }) => {
-  const [isFirstVisit, setIsFirstVisit] = useState(true);
+  // No longer need first visit state since we removed the indicator
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: 'start',
@@ -61,12 +61,9 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
     emblaApi.on('select', onSelect);
     emblaApi.on('reInit', onSelect);
 
-    // Keep the swipe hint visible for longer to ensure users notice it
+    // Just reinit the carousel after a short delay
     const timer = setTimeout(() => {
       emblaApi.reInit();
-      setTimeout(() => {
-        setIsFirstVisit(false);
-      }, 8000); // Show for 8 seconds instead of 5
     }, 500);
 
     return () => {
@@ -83,18 +80,6 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
         border: 'none'
       }}
     >
-      {isFirstVisit && (
-        <div 
-          className="absolute bottom-14 left-1/2 -translate-x-1/2 z-30 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-4 py-2 rounded-full text-sm flex items-center gap-2 shadow-[0_8px_12px_-3px_rgba(138,79,255,0.2),_0_4px_6px_-4px_rgba(138,79,255,0.25)] animate-bounce-slow"
-          style={{
-            animation: 'bounce 2s ease-in-out infinite'
-          }}
-        >
-          <Grip className="w-4 h-4" />
-          <span>Swipe to explore</span>
-        </div>
-      )}
-      
       <div className="w-full overflow-visible rounded-lg relative" ref={emblaRef}>
         <div className="flex flex-nowrap pl-1">
           {creators.map((creator, index) => (
@@ -140,8 +125,8 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
       <button 
         onClick={scrollPrev} 
         className={cn(
-          "absolute left-1 top-[40%] -translate-y-1/2 z-20 rounded-full p-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white", 
-          "touch-manipulation h-[40px] w-[40px] flex items-center justify-center shadow-[0_6px_10px_-2px_rgba(138,79,255,0.3),_0_3px_4px_-2px_rgba(138,79,255,0.4)] transition-opacity duration-300", 
+          "absolute left-1 top-[22%] -translate-y-1/2 z-20 rounded-full p-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white", 
+          "touch-manipulation h-[40px] w-[40px] flex items-center justify-center shadow-[0_6px_10px_-2px_rgba(138,79,255,0.3),_0_3px_4px_-2px_rgba(138,79,255,0.4)] transition-all duration-300 opacity-90 hover:opacity-70", 
           !prevBtnEnabled && "pointer-events-none"
         )} 
         disabled={!prevBtnEnabled}
@@ -153,8 +138,8 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
       <button 
         onClick={scrollNext} 
         className={cn(
-          "absolute right-1 top-[40%] -translate-y-1/2 z-20 rounded-full p-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white", 
-          "touch-manipulation h-[40px] w-[40px] flex items-center justify-center shadow-[0_6px_10px_-2px_rgba(138,79,255,0.3),_0_3px_4px_-2px_rgba(138,79,255,0.4)] transition-opacity duration-300", 
+          "absolute right-1 top-[22%] -translate-y-1/2 z-20 rounded-full p-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white", 
+          "touch-manipulation h-[40px] w-[40px] flex items-center justify-center shadow-[0_6px_10px_-2px_rgba(138,79,255,0.3),_0_3px_4px_-2px_rgba(138,79,255,0.4)] transition-all duration-300 opacity-90 hover:opacity-70", 
           !nextBtnEnabled && "pointer-events-none"
         )} 
         disabled={!nextBtnEnabled}

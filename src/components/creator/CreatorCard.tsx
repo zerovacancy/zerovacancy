@@ -51,9 +51,9 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
             {/* Main container without border - to be replaced with custom border implementation */}
             <Card className={cn(
               "overflow-hidden flex flex-col w-full h-full",
-              "bg-[#F9F7FF]", // Consistent background color 
+              "bg-white", // Pure white background for better contrast with border
               "border-0", // Remove default border - we'll use custom border below
-              "shadow-none", // Remove default shadow - we'll add custom shadow
+              "shadow-[0_2px_8px_rgba(0,0,0,0.08),_0_4px_12px_rgba(118,51,220,0.06)]", // Enhanced shadow for depth
               "hover:scale-[1.01]", // Subtle scale transform on hover
               "rounded-xl relative transition-all duration-300",
               "translate-z-0 backface-visibility-hidden", // Hardware acceleration for mobile
@@ -63,17 +63,16 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               {/* Custom border container - wraps the entire card including the button */}
               <div className="absolute inset-0 rounded-[14px] pointer-events-none" 
                    style={{
-                     border: '2px solid rgba(118, 51, 220, 0.25)', // Thicker, more visible border
+                     border: '2px solid rgba(118, 51, 220, 0.35)', // Deeper, more distinctive purple border
                      // Layered shadows for depth:
                      boxShadow: `
-                       0 2px 4px rgba(118, 51, 220, 0.1),
-                       0 4px 8px rgba(118, 51, 220, 0.07), 
-                       inset 0 1px 0 rgba(255, 255, 255, 0.9)
+                       0 2px 6px rgba(118, 51, 220, 0.09),
+                       0 6px 16px rgba(118, 51, 220, 0.06), 
+                       inset 0 1px 0 rgba(255, 255, 255, 1)
                      `,
                      zIndex: 10
                    }}
               ></div>
-            {/* Pattern effect - simplified */}
               
               {/* Media section with properly positioned price tag */}
               <div className="relative">
@@ -105,10 +104,10 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               {/* Content sections with proper organization */}
               <div className="w-full px-4 pt-3 pb-6 flex flex-col relative z-10 flex-grow flex-shrink-0">
                 {/* Creator info section */}
-                <div className="pb-3 mb-3 border-b border-purple-100/80">
+                <div className="pb-3 mb-3 border-b border-purple-200/30">
                   {/* Creator name and location with proper styling */}
                   <div className="flex justify-between items-center mb-2.5">
-                    <h3 className="text-base leading-tight font-semibold text-gray-800">{creator.name}</h3>
+                    <h3 className="text-base leading-tight font-semibold text-gray-800 px-6">{creator.name}</h3>
                     <p className="text-gray-500 text-xs flex items-center">
                       <svg className="w-3.5 h-3.5 mr-1 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
@@ -119,7 +118,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   </div>
                   
                   {/* Ratings and availability grouped together */}
-                  <div className="flex justify-between items-center mb-3 py-2 px-3 bg-gray-50 rounded-lg border border-gray-100/90 shadow-sm">
+                  <div className="flex justify-between items-center mb-3 py-2 px-3 bg-gray-50/70 rounded-lg border border-gray-100 shadow-sm">
                     <div className="flex items-center">
                       <Star className="w-4 h-4 text-yellow-400 fill-yellow-400 mr-1.5" />
                       <span className="text-sm font-semibold font-space text-gray-700">{creator.rating.toFixed(1)}</span>
@@ -156,7 +155,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   </div>
                   
                   {/* Services with organized tag styling */}
-                  <div className="flex flex-wrap gap-x-1.5 gap-y-1 mt-2 px-2 py-2 bg-purple-50/60 rounded-lg border border-purple-100/50 max-w-full">
+                  <div className="flex flex-wrap gap-x-1.5 gap-y-1 mt-2 px-2 py-2 bg-purple-50/80 rounded-lg border border-purple-100/70 shadow-inner shadow-purple-50/50 max-w-full">
                     {creator.services.map((service, index) => {
                       // Force specific line wrapping for Emily Johnson on mobile
                       const forceWrap = isMobile && 
@@ -201,11 +200,11 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 
                 {/* Recent Work section with proper header */}
                 <div className="mb-3">
-                  {/* Section header */}
+                  {/* Section header with enhanced styling */}
                   <div className="mb-3 flex justify-between items-center">
                     <div className="flex items-center">
-                      <div className="w-1 h-4 bg-gradient-to-b from-indigo-400/80 to-purple-400/80 rounded-full mr-2"></div>
-                      <div className="text-xs text-gray-700 font-medium font-space uppercase tracking-wide">Recent Work</div>
+                      <div className="w-1 h-4 bg-gradient-to-b from-indigo-500 to-purple-500 rounded-full mr-2 shadow-sm"></div>
+                      <div className="text-xs text-gray-800 font-semibold font-space uppercase tracking-wide">Recent Work</div>
                     </div>
                     <button 
                       className="text-xs text-purple-600 font-medium px-2 py-1 rounded-md bg-purple-50/80 hover:bg-purple-100/80 transition-colors"
@@ -248,9 +247,12 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     ))}
                   </div>
                 </div>
+                
+                {/* Visual divider before CTA */}
+                <div className="w-full h-px bg-purple-100/40 my-4"></div>
 
                 {/* CTA button with fixed height - Updated with light background and purple text */}
-                <div className="mt-4 mb-4">
+                <div className="mt-0 mb-4">
                   <button 
                     onClick={handleCTAClick}
                     aria-label={`Join as creator with ${creator.name}`}
