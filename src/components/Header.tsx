@@ -32,9 +32,9 @@ const Header = () => {
         <DesktopNavigation menuItems={menuItems} onPrelaunchLinkClick={openAuthDialog} />
 
         <div className="flex items-center space-x-3 md:space-x-4">
-          {isAuthenticated ? <UserMenu /> : null}
-          
-          <AuthButtons />
+          {/* Auth functionality temporarily hidden */}
+          {/* {isAuthenticated ? <UserMenu /> : null}
+          <AuthButtons /> */}
 
           {/* Mobile menu button - improved touch target */}
           <button 
@@ -58,8 +58,8 @@ const Header = () => {
       {/* Mobile menu */}
       {isMenuOpen && <MobileMenu menuItems={menuItems} onClose={() => setIsMenuOpen(false)} />}
       
-      {/* Auth Forms Dialog */}
-      <AuthForms />
+      {/* Auth Forms Dialog - temporarily hidden */}
+      {/* <AuthForms /> */}
     </header>
   );
 };
