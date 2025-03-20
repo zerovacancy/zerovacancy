@@ -222,42 +222,45 @@ export const PricingCard = ({
         )}
       </motion.button>
       
-      {/* Features section with enhanced mobile-friendly styling */}
+      {/* Features section with improved styling and categories */}
       <div className="mt-8 space-y-5 flex-grow">
         <div className={cn(
           "border-b border-slate-100 pb-2",
-          isMobile ? "flex items-center justify-between" : "flex justify-between items-center"
+          isMobile ? "flex flex-col items-center" : "flex justify-between items-center"
         )}>
           <h4 className={cn(
             "text-sm font-semibold text-slate-700 font-inter",
-            isMobile && "text-base"
+            isMobile && "mb-1"
           )}>
-            {isExpanded ? "All Features" : "Key Features"}
+            {isExpanded ? "What's included:" : "Top features:"}
           </h4>
-          
-          {/* Enhanced mobile-friendly toggle button */}
-          <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className={cn(
-              "text-xs flex items-center focus:outline-none font-medium transition-colors touch-manipulation py-1 px-2 rounded-full",
-              isMobile && "text-white bg-brand-purple/90 hover:bg-brand-purple shadow-sm"
-            )}
-          >
-            {isExpanded ? "Show Less" : "See All"}
-            <ChevronDown className={cn(
-              "ml-1 h-3 w-3 transition-transform",
-              isExpanded && "rotate-180"
-            )} />
-          </button>
+          {isMobile ? (
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="text-xs text-slate-500 flex items-center focus:outline-none font-inter hover:text-brand-purple transition-colors touch-manipulation bg-transparent mx-auto"
+            >
+              {isExpanded ? "Less" : "See all"}
+              <ChevronDown className={cn(
+                "ml-1 h-3 w-3 transition-transform",
+                isExpanded && "rotate-180"
+              )} />
+            </button>
+          ) : (
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="text-xs text-slate-500 flex items-center focus:outline-none font-inter hover:text-brand-purple transition-colors touch-manipulation"
+            >
+              {isExpanded ? "Less" : "See all"}
+              <ChevronDown className={cn(
+                "ml-1 h-3 w-3 transition-transform",
+                isExpanded && "rotate-180"
+              )} />
+            </button>
+          )}
         </div>
         
-        {/* Mobile-optimized feature display with better visual hierarchy */}
-        <div className={cn(
-          "space-y-4",
-          isMobile && !isExpanded && "max-h-[280px] overflow-hidden relative"
-        )}>
-          {/* Feature grouping with improved visual separation */}
-          {(isExpanded ? features : features.slice(0, 3)).map((feature, index) => {
+        <div className="space-y-4">
+          {(isExpanded ? features : features.slice(0, 4)).map((feature, index) => {
             // Check if this feature has a category heading (starts with **)
             const isHeading = feature.startsWith("**") && feature.endsWith("**");
             const featureText = isHeading ? feature.slice(2, -2) : feature;
@@ -266,7 +269,7 @@ export const PricingCard = ({
               return (
                 <div key={index} className="pt-2 first:pt-0">
                   <h5 className={cn(
-                    "text-sm font-semibold mb-2 pb-1 border-b border-slate-100",
+                    "text-sm font-semibold mb-2",
                     colorStyles.accent
                   )}>
                     {featureText}
@@ -280,8 +283,7 @@ export const PricingCard = ({
                 key={index}
                 className={cn(
                   "flex items-start group",
-                  feature.includes("plus:") && "font-medium",
-                  isMobile && "bg-slate-50/80 p-2 rounded-lg shadow-sm"
+                  feature.includes("plus:") && "font-medium"
                 )}
               >
                 <span className={cn(
@@ -290,30 +292,21 @@ export const PricingCard = ({
                   "group-hover:bg-opacity-100"
                 )}>
                   <Check className={cn(
-                    "h-4 w-4",
+                    "h-3.5 w-3.5",
                     colorStyles.accent
                   )} />
                 </span>
                 
                 <div className="flex items-start flex-1">
-                  <span className={cn(
-                    "text-sm text-slate-700 font-inter",
-                    isMobile && "font-medium"
-                  )}>
+                  <span className="text-sm text-slate-700 font-inter">
                     {featureText.replace("plus:", "")}
                   </span>
                   
-                  {/* Enhanced tooltips for mobile */}
+                  {/* Add tooltip for select features that need explanation */}
                   {(featureText.includes("SEO-Optimized") || featureText.includes("Geo-Targeted")) && (
-                    <div className={cn(
-                      "group relative ml-1.5 mt-0.5",
-                      isMobile && "touch-manipulation"
-                    )}>
-                      <Info className="h-3.5 w-3.5 text-brand-purple cursor-help" />
-                      <div className={cn(
-                        "absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-48 rounded-md bg-slate-800 text-white text-xs p-2 opacity-0 group-hover:opacity-100 transition-opacity z-10",
-                        isMobile && "w-64 p-3 text-sm"
-                      )}>
+                    <div className="group relative ml-1.5 mt-0.5">
+                      <Info className="h-3.5 w-3.5 text-slate-400 cursor-help" />
+                      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-48 rounded-md bg-slate-800 text-white text-xs p-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
                         {featureText.includes("SEO-Optimized") ? 
                           "Content optimized to rank higher in search results for property listings." : 
                           "Content targeted to specific geographic regions relevant to your properties."}
@@ -325,20 +318,11 @@ export const PricingCard = ({
               </div>
             );
           })}
-          
-          {/* Gradient fade effect for collapsed view on mobile */}
-          {!isExpanded && features.length > 3 && isMobile && (
-            <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white to-transparent pointer-events-none"></div>
-          )}
         </div>
         
-        {/* Feature count indicator with improved visibility */}
-        {!isExpanded && features.length > 3 && (
-          <p className={cn(
-            "text-xs text-slate-500 font-inter",
-            isMobile && "text-sm font-medium text-brand-purple text-center pb-2 pt-1"
-          )}>
-            +{features.length - 3} more features
+        {!isExpanded && features.length > 4 && (
+          <p className="text-xs text-slate-500 font-inter">
+            +{features.length - 4} more features
           </p>
         )}
       </div>

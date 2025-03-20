@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { PricingInteraction } from "./PricingInteraction";
 import { PricingCardList } from "./PricingCardList";
 import { PricingToggle } from "./PricingToggle";
 import { ColorVariant } from "./PricingCardColors";
@@ -15,6 +16,26 @@ interface PricingContentProps {
 export const PricingContent = ({ subscription, isLoading }: PricingContentProps) => {
   const [isYearly, setIsYearly] = useState(true);
   const isMobile = useIsMobile();
+
+  // Plans data for the interaction component
+  const pricingPlans = [
+    {
+      title: "Basic (Free)",
+      price: 0,
+      features: FEATURES.free
+    },
+    {
+      title: "Professional",
+      price: isYearly ? PRICING.proAnnual : PRICING.proMonthly,
+      showPopular: true,
+      features: FEATURES.pro
+    },
+    {
+      title: "Premium",
+      price: isYearly ? PRICING.premiumAnnual : PRICING.premiumMonthly,
+      features: FEATURES.premium
+    }
+  ];
 
   // Pricing cards data with enhanced details for better conversion and categorized features
   const pricingCards = [
@@ -84,33 +105,38 @@ export const PricingContent = ({ subscription, isLoading }: PricingContentProps)
 
   return (
     <>
-      {/* TEST CHANGE */}
-      <div className="bg-red-500 text-white p-4 text-center font-bold mb-4">
-        TEST - MOBILE VIEW PRICING UPDATE
-      </div>
-      
-      {/* Pricing Toggle - For both Desktop and Mobile */}
-      <div className={cn(
-        "flex justify-center",
-        isMobile ? "mt-4 mb-6" : "mt-10 mb-12" 
-      )}>
-        <PricingToggle 
-          isYearly={isYearly} 
-          setIsYearly={setIsYearly}
-        />
-      </div>
+      {/* Pricing Toggle - Desktop Only */}
+      {!isMobile && (
+        <div className="flex justify-center mt-10 mb-12">
+          <PricingToggle 
+            isYearly={isYearly} 
+            setIsYearly={setIsYearly}
+          />
+        </div>
+      )}
       
       {/* Pricing Cards with increased vertical spacing */}
       <div className="mt-8 sm:mt-10">
-        {/* Use PricingCardList for both mobile and desktop */}
-        <PricingCardList 
-          cards={pricingCards.map(card => ({
-            ...card,
-            interval: isYearly ? "mo, billed annually" : "mo"
-          }))} 
-          subscription={subscription}
-          isLoading={isLoading}
-        />
+        {isMobile ? (
+          <div className="flex justify-center">
+            <PricingInteraction 
+              starterMonth={PRICING.starterMonthly}
+              starterAnnual={PRICING.starterAnnual}
+              proMonth={PRICING.proMonthly}
+              proAnnual={PRICING.proAnnual}
+              plans={pricingPlans}
+            />
+          </div>
+        ) : (
+          <PricingCardList 
+            cards={pricingCards.map(card => ({
+              ...card,
+              interval: isYearly ? "mo, billed annually" : "mo"
+            }))} 
+            subscription={subscription}
+            isLoading={isLoading}
+          />
+        )}
       </div>
     </>
   );
