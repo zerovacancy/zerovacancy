@@ -238,20 +238,20 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   </div>
                 </div>
 
-                {/* CTA button with fixed height */}
+                {/* CTA button with fixed height - Updated with light background and purple text */}
                 <div className="mt-3">
                   <button 
                     onClick={handleCTAClick}
                     aria-label={`Join as creator with ${creator.name}`}
-                    className="w-full flex items-center justify-center text-[#7633DC] rounded-[12px] font-medium font-jakarta h-[46px] transition-all duration-200 relative animate-subtle-pulse hover:scale-[1.02]"
+                    className="w-full flex items-center justify-center rounded-[12px] font-medium font-jakarta h-[46px] transition-all duration-200 relative animate-subtle-pulse hover:scale-[1.02]"
                     style={{
-                      background: 'linear-gradient(180deg, #FFFFFF 0%, #F8F8FA 100%)', // Gradient background to match hero
+                      background: '#F5F5F7', // Light background as requested
                       color: '#7633DC', // Purple text color
-                      border: '1px solid rgba(0,0,0,0.1)', // Darker border to match hero
-                      boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(0,0,0,0.05), 0 16px 32px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 0 rgba(0,0,0,0.07)',
+                      border: '1px solid rgba(0,0,0,0.1)', // Subtle border
+                      boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07)',
                       fontSize: '14px',
-                      fontWeight: 600, // Medium weight to match hero
-                      paddingLeft: '42px', // Match hero spacing
+                      fontWeight: 600, // Medium weight
+                      paddingLeft: '42px', // Space for icon
                     }}
                   >
                     {/* Icon container */}
@@ -260,10 +260,10 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                       style={{
                         width: '32px',
                         height: '32px',
-                        background: 'rgba(134,65,245,0.02)', // Very light purple tint to match hero
+                        background: 'rgba(134,65,245,0.02)', // Very light purple tint
                         border: '1px solid rgba(0,0,0,0.1)', // Match button border
                         borderRadius: '12px',
-                        boxShadow: 'inset 0 1px 0 rgba(255,255,255,1), inset 0 -1px 0 rgba(0,0,0,0.04)' // Match hero shadow
+                        boxShadow: 'inset 0 1px 0 rgba(255,255,255,1), inset 0 -1px 0 rgba(0,0,0,0.04)'
                       }}
                     >
                       {creator.name === "Emily Johnson" ? (
