@@ -47,7 +47,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
   return (
     <>
       {isMobile ? (
-          <div className="relative w-[80vw] mr-0 h-full">
+          <div className="relative w-full h-full">
             {/* Main container without border - to be replaced with custom border implementation */}
             <Card className={cn(
               "overflow-hidden flex flex-col w-full h-full",
@@ -63,7 +63,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               {/* Custom border container - wraps the entire card including the button */}
               <div className="absolute inset-0 rounded-[14px] pointer-events-none" 
                    style={{
-                     border: '1.5px solid rgba(118, 51, 220, 0.18)', // #7633DC at 18% opacity
+                     border: '2px solid rgba(118, 51, 220, 0.25)', // Thicker, more visible border
                      // Layered shadows for depth:
                      boxShadow: `
                        0 2px 4px rgba(118, 51, 220, 0.1),

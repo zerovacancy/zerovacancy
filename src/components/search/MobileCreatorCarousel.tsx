@@ -95,7 +95,7 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
             <div 
               key={creator.name} 
               style={{ touchAction: 'pan-y' }} 
-              className="min-w-[80vw] w-[80vw] py-0 px-3 flex-shrink-0"
+              className="min-w-[83vw] w-[83vw] py-0 px-2 flex-shrink-0"
             >
               <CreatorCard 
                 creator={creator} 
@@ -141,7 +141,7 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
         className={cn(
           "absolute right-2 top-[40%] -translate-y-1/2 z-10 rounded-full p-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white", 
           "touch-manipulation h-[36px] w-[36px] flex items-center justify-center shadow-[0_6px_10px_-2px_rgba(138,79,255,0.25),_0_3px_4px_-2px_rgba(138,79,255,0.3)] transition-opacity duration-300", 
-          !nextBtnEnabled && "opacity-0 pointer-events-none"
+          !nextBtnEnabled && "opacity-40 pointer-events-none"
         )} 
         disabled={!nextBtnEnabled}
         aria-label="Next creator"
