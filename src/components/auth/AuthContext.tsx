@@ -18,6 +18,7 @@ type AuthContextType = {
   openAuthDialog: () => void;
   closeAuthDialog: () => void;
   isAuthDialogOpen: boolean;
+  navigate: (path: string) => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -215,6 +216,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     openAuthDialog,
     closeAuthDialog,
     isAuthDialogOpen,
+    navigate,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
