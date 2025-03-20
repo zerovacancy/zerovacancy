@@ -19,6 +19,9 @@ const PaymentConfirmation = lazy(() => import('./pages/PaymentConfirmation'));
 const Terms = lazy(() => import('./pages/Terms'));
 const Account = lazy(() => import('./pages/Account'));
 const AuthCallback = lazy(() => import('./pages/AuthCallback'));
+const Onboarding = lazy(() => import('./pages/Onboarding'));
+const CreatorDashboard = lazy(() => import('./pages/creator/Dashboard'));
+const PropertyDashboard = lazy(() => import('./pages/property/Dashboard'));
 const ConnectSuccess = lazy(() => import('./pages/ConnectSuccess'));
 const ConnectRefresh = lazy(() => import('./pages/ConnectRefresh'));
 const ConnectOnboarding = lazy(() => import('./pages/ConnectOnboarding'));
@@ -134,6 +137,9 @@ function App() {
                   <Route path="/terms" element={<Terms />} />
                   <Route path="/account" element={<Account />} />
                   <Route path="/auth/callback" element={<AuthCallback />} />
+                  <Route path="/onboarding" element={<Onboarding />} />
+                  <Route path="/creator/dashboard" element={<CreatorDashboard />} />
+                  <Route path="/property/dashboard" element={<PropertyDashboard />} />
                   <Route path="/connect/success" element={<ConnectSuccess />} />
                   <Route path="/connect/refresh" element={<ConnectRefresh />} />
                   <Route path="/connect/onboarding" element={<ConnectOnboarding />} />

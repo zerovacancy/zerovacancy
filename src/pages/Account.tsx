@@ -6,17 +6,45 @@ import { useNavigate } from 'react-router-dom';
 import Footer from '@/components/Footer';
 import { CreditCard, LogOut, User } from 'lucide-react';
 import { useAuth } from '@/components/auth/AuthContext';
+import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 const Account = () => {
   const { user, isLoading, isAuthenticated, signOut } = useAuth();
+  const { toast } = useToast();
   const navigate = useNavigate();
 
   useEffect(() => {
     // Redirect to home if not authenticated
     if (!isLoading && !isAuthenticated) {
       navigate('/');
+    } else if (isAuthenticated && !isLoading) {
+      // Check if user has a profile, if not redirect to onboarding
+      const checkUserProfile = async () => {
+        try {
+          // Check profiles table
+          const { data: profileData, error: profileError } = await supabase
+            .from('profiles')
+            .select('user_type')
+            .eq('id', user?.id)
+            .single();
+            
+          if (profileError || !profileData?.user_type) {
+            // No profile found, redirect to onboarding
+            toast({
+              title: "Profile Setup Required",
+              description: "Please complete your profile setup first.",
+            });
+            navigate('/onboarding');
+          }
+        } catch (error) {
+          console.error('Error checking user profile:', error);
+        }
+      };
+      
+      checkUserProfile();
     }
-  }, [isAuthenticated, isLoading, navigate]);
+  }, [isAuthenticated, isLoading, navigate, user, toast]);
 
   return (
     <div className="min-h-screen bg-gray-50">

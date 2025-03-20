@@ -43,9 +43,9 @@ const AuthCallback = () => {
             description: "Your email has been confirmed and you are now signed in.",
           });
           
-          // Navigate back to the home page after successful verification
+          // Navigate to the onboarding page after successful verification
           setTimeout(() => {
-            navigate('/');
+            navigate('/onboarding');
           }, 1500);
         } else {
           // Try to explicitly exchange the token in the URL
@@ -63,9 +63,9 @@ const AuthCallback = () => {
                   description: "Your email has been confirmed and you are now signed in.",
                 });
                 
-                // Navigate back to the home page after successful verification
+                // Navigate to the onboarding page after successful verification
                 setTimeout(() => {
-                  navigate('/');
+                  navigate('/onboarding');
                 }, 1500);
               }
             });

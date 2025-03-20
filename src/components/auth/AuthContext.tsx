@@ -157,6 +157,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         title: "Registration successful!",
         description: "Please check your email to verify your account.",
       });
+      
+      // Close the auth dialog and redirect to onboarding
+      setIsAuthDialogOpen(false);
+      
+      // Navigate to onboarding page if we have a user session already
+      // This can happen if email verification is not required
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        navigate('/onboarding');
+      }
     } catch (error: any) {
       console.error('SignUp error:', error);
       toast({
