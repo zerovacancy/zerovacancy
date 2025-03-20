@@ -256,8 +256,72 @@ export const PricingContainer = () => {
         )}
       </AnimatePresence>
       
+      {/* Add year/month toggle for mobile */}
+      {isMobile && (
+        <div className="flex justify-center mb-6 bg-white py-3 rounded-xl shadow-sm">
+          <div className="bg-slate-100 p-1 rounded-full inline-flex">
+            <button 
+              onClick={() => setIsYearly(false)}
+              className={cn(
+                "px-4 py-1.5 rounded-full text-sm font-medium",
+                !isYearly 
+                  ? "bg-white text-brand-purple shadow-sm" 
+                  : "text-slate-600"
+              )}
+            >
+              Monthly
+            </button>
+            <button 
+              onClick={() => setIsYearly(true)}
+              className={cn(
+                "px-4 py-1.5 rounded-full text-sm font-medium",
+                isYearly 
+                  ? "bg-white text-brand-purple shadow-sm" 
+                  : "text-slate-600"
+              )}
+            >
+              Yearly
+              {isYearly && (
+                <span className="ml-1 text-xs font-normal bg-green-100 text-green-600 px-1.5 py-0.5 rounded-full">
+                  Save 20%
+                </span>
+              )}
+            </button>
+          </div>
+        </div>
+      )}
+      
       {isMobile ? (
         <div className="px-4">
+          {/* Mobile plan selection tabs */}
+          <div className="flex justify-center mb-6 space-x-3 overflow-x-auto py-2 px-1 no-scrollbar">
+            {pricingTiers.map((t, i) => (
+              <button
+                key={`tab-${i}`}
+                onClick={() => {
+                  // Toggle expanded feature for this plan
+                  setExpandedFeatures({
+                    ...expandedFeatures,
+                    [i]: true
+                  });
+                  
+                  // Scroll to plan's card
+                  const planElement = document.getElementById(`plan-${i}`);
+                  if (planElement) {
+                    planElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  }
+                }}
+                className={cn(
+                  "transition-all duration-300 px-4 py-1.5 rounded-full text-sm font-medium touch-manipulation",
+                  expandedFeatures[i] 
+                    ? "bg-brand-purple text-white shadow-md" 
+                    : "bg-white/90 text-slate-600 shadow-sm border border-slate-200/70"
+                )}
+              >
+                {t.title.replace(" (Free)", "")}
+              </button>
+            ))}
+          </div>
           {pricingTiers.map((tier, index) => {
             const colorScheme = getColorScheme(tier.color);
             const isExpanded = !!expandedFeatures[index];
@@ -266,17 +330,20 @@ export const PricingContainer = () => {
             return (
               <motion.div
                 key={tier.title}
+                id={`plan-${index}`}
                 className={cn(
-                  "rounded-xl overflow-visible transition-all mt-10 relative group mx-auto max-w-[280px] w-full",
+                  "rounded-xl overflow-visible transition-all mt-10 relative group mx-auto w-full",
                   tier.popularPlan ? (isMobile ? "shadow-lg" : "border-brand-purple shadow-lg") : (isMobile ? "" : "border-slate-200"),
                   tier.popularPlan && "relative",
                   colorScheme.cardBg,
                   "shadow-sm hover:shadow-md",
-                  isMobile && "mobile-optimize",
+                  isMobile && "mobile-optimize border border-slate-200/80",
                   "before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:rounded-l-xl",
                   `before:bg-gradient-to-b ${colorScheme.gradient.split(' ')[0]} ${colorScheme.gradient.split(' ')[1]} before:opacity-0 group-hover:before:opacity-100 before:transition-opacity`,
                   // Add glowing border for Professional plan on mobile
-                  tier.title === "Professional" && "ring-3 ring-purple-400/20 ring-offset-0 shadow-[0_0_12px_rgba(139,92,246,0.3)]"
+                  tier.title === "Professional" && "ring-3 ring-purple-400/20 ring-offset-0 shadow-[0_0_12px_rgba(139,92,246,0.3)]",
+                  // Make mobile cards larger
+                  isMobile && "max-w-full"
                 )}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -374,6 +441,33 @@ export const PricingContainer = () => {
                 </div>
                 
                 <div className="px-4 pb-4">
+                  {/* Feature tabs */}
+                  <div className="mt-4 mb-2">
+                    <h4 className="text-sm font-semibold mb-3 text-center">Plan Features</h4>
+                    <div className="flex overflow-x-auto gap-2 py-2 px-1 no-scrollbar">
+                      {Object.keys(tier.features).map((category, catIndex) => (
+                        <button
+                          key={`${tier.title}-${category}-tab`}
+                          onClick={() => {
+                            // Toggle this category
+                            toggleFeatures(index);
+                            setExpandedDescriptions({
+                              ...expandedDescriptions,
+                              [`${index}-${category}`]: true
+                            });
+                          }}
+                          className={cn(
+                            "px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap",
+                            "bg-slate-50 text-slate-600 border border-slate-200 shadow-sm",
+                            expandedDescriptions[`${index}-${category}`] && "bg-brand-purple text-white"
+                          )}
+                        >
+                          {category}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  
                   <button
                     onClick={() => toggleFeatures(index)}
                     className={cn(
@@ -384,7 +478,7 @@ export const PricingContainer = () => {
                     )}
                   >
                     <span className="font-inter whitespace-nowrap">
-                      {isExpanded ? "Hide features" : "Show features"}
+                      {isExpanded ? "Hide all features" : "Show all features"}
                     </span>
                     <ChevronDown className={cn(
                       "h-3 w-3 ml-1 text-brand-text-light transition-transform",
@@ -405,34 +499,49 @@ export const PricingContainer = () => {
                           "pt-4 pb-2 space-y-4",
                           isMobile && "px-0.5"
                         )}>
-                          {Object.entries(tier.features).map(([category, features], catIndex) => (
-                            <div key={`${tier.title}-${category}`} className="space-y-2">
-                              {category !== "Core Features" && (
-                                <h4 className={cn(
-                                  "text-xs font-medium font-jakarta px-2 py-1 rounded inline-block",
-                                  isMobile && "ml-0.5",
-                                  colorScheme.bg
-                                )}>
-                                  {category}
-                                </h4>
-                              )}
-                              
-                              <div className="space-y-2">
-                                {features.map((feature, featIndex) => (
-                                  <div 
-                                    key={`${tier.title}-${category}-${featIndex}`}
-                                    className="flex items-start gap-2"
-                                  >
-                                    <Check className={cn(
-                                      isMobile ? "h-3.5 w-3.5 mt-0.5 ml-0.5 flex-shrink-0" : "h-4 w-4 mt-0.5 flex-shrink-0", 
-                                      colorScheme.text
-                                    )} />
-                                    <span className="text-xs leading-snug text-brand-text-primary font-inter">{feature.text}</span>
-                                  </div>
-                                ))}
+                          {Object.entries(tier.features).map(([category, features], catIndex) => {
+                            // Check if this category is the active one
+                            const isCategoryActive = expandedDescriptions[`${index}-${category}`];
+                            
+                            // If there's an active category and this isn't it, don't show
+                            if (Object.keys(expandedDescriptions).some(k => k.startsWith(`${index}-`)) && !isCategoryActive) {
+                              return null;
+                            }
+                            
+                            return (
+                              <div key={`${tier.title}-${category}`} className="space-y-3 bg-slate-50/60 p-3 rounded-lg">
+                                {category !== "Core Features" && (
+                                  <h4 className={cn(
+                                    "text-xs font-medium font-jakarta px-3 py-1.5 rounded-lg inline-block",
+                                    colorScheme.bg,
+                                    "shadow-sm border border-slate-200/60"
+                                  )}>
+                                    {category}
+                                  </h4>
+                                )}
+                                
+                                <div className="space-y-2">
+                                  {features.map((feature, featIndex) => (
+                                    <div 
+                                      key={`${tier.title}-${category}-${featIndex}`}
+                                      className="flex items-start gap-2 bg-white p-2 rounded-lg shadow-sm border border-slate-100"
+                                    >
+                                      <span className={cn(
+                                        "p-0.5 rounded-full mt-0.5 flex-shrink-0",
+                                        colorScheme.bg
+                                      )}>
+                                        <Check className={cn(
+                                          "h-3.5 w-3.5", 
+                                          colorScheme.text
+                                        )} />
+                                      </span>
+                                      <span className="text-sm text-slate-700 font-medium font-inter">{feature.text}</span>
+                                    </div>
+                                  ))}
+                                </div>
                               </div>
-                            </div>
-                          ))}
+                            );
+                          })}
                         </div>
                       </motion.div>
                     )}
@@ -442,7 +551,50 @@ export const PricingContainer = () => {
             );
           })}
           
-          <div className="mt-6 pt-2 relative flex flex-col items-center">
+          <div className="mt-8 pt-4 relative flex flex-col items-center">
+            {/* Enhanced global CTA button for mobile */}
+            <div className="w-full px-4 mb-6">
+              <button 
+                onClick={() => {
+                  // Find the active plan (or use Professional as default)
+                  const activePlanIndex = Object.keys(expandedFeatures)
+                    .filter(k => !k.includes('-'))
+                    .map(Number)
+                    .find(idx => expandedFeatures[idx]);
+                
+                  const planIndex = activePlanIndex !== undefined ? activePlanIndex : 1;
+                  const plan = pricingTiers[planIndex];
+                  
+                  handlePlanSelect(plan.title);
+                }}
+                className={cn(
+                  "w-full py-4 rounded-xl font-bold text-white text-lg",
+                  "bg-gradient-to-r from-brand-purple to-indigo-600",
+                  "border border-brand-purple/30",
+                  "shadow-[0_4px_15px_rgba(118,51,220,0.25)]",
+                  "transition-all duration-200 touch-manipulation",
+                  "hover:shadow-lg active:translate-y-0.5",
+                )}
+              >
+                {isProcessingPayment ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                    <span>Processing...</span>
+                  </div>
+                ) : (
+                  <>Get Started</>
+                )}
+              </button>
+              
+              {/* Security badge */}
+              <div className="flex items-center justify-center mt-4">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-slate-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                </svg>
+                <span className="text-xs text-slate-500 ml-1.5">Secure payment processing</span>
+              </div>
+            </div>
+            
             <Dialog>
               <DialogTrigger asChild>
                 <button
@@ -453,7 +605,7 @@ export const PricingContainer = () => {
                     "border border-slate-200/80 transition-all duration-200",
                     "hover:bg-slate-100 active:bg-slate-200",
                     "w-[70%] max-w-[280px]",
-                    "mb-6"
+                    "mb-2"
                   )}
                 >
                   <span>Compare all features</span>
