@@ -107,7 +107,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 <div className="pb-3 mb-3 border-b border-purple-200/30">
                   {/* Creator name and location with proper styling */}
                   <div className="flex justify-between items-center mb-2.5">
-                    <h3 className="text-base leading-tight font-semibold text-gray-800 px-6">{creator.name}</h3>
+                    <h3 className="text-base leading-tight font-semibold text-gray-800">{creator.name}</h3>
                     <p className="text-gray-500 text-xs flex items-center">
                       <svg className="w-3.5 h-3.5 mr-1 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
@@ -248,11 +248,8 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   </div>
                 </div>
                 
-                {/* Visual divider before CTA */}
-                <div className="w-full h-px bg-purple-100/40 my-4"></div>
-
                 {/* CTA button with fixed height - Updated with light background and purple text */}
-                <div className="mt-0 mb-4">
+                <div className="mt-2 mb-4">
                   <button 
                     onClick={handleCTAClick}
                     aria-label={`Join as creator with ${creator.name}`}
