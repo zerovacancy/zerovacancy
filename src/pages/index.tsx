@@ -219,7 +219,7 @@ const Index = () => {
           className={cn(
             "relative w-full",
             !isMobile && "bg-[#F5F0FF]/60 py-10",
-            isMobile && "bg-white relative"
+            isMobile && "bg-[#FCFAFF]/80 relative"
           )}
         >
           <div className="max-w-7xl mx-auto relative z-10 py-10 sm:py-16 lg:py-20">
