@@ -60,6 +60,50 @@ export type Database = {
         }
         Relationships: []
       }
+      creators: {
+        Row: {
+          user_id: string
+          email: string
+          fullName: string
+          phone: string | null
+          specialty: string
+          experience: string
+          portfolioUrl: string | null
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          user_id: string
+          email: string
+          fullName: string
+          phone?: string | null
+          specialty: string
+          experience: string
+          portfolioUrl?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          user_id?: string
+          email?: string
+          fullName?: string
+          phone?: string | null
+          specialty?: string
+          experience?: string
+          portfolioUrl?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "creators_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       customer_subscriptions: {
         Row: {
           cancel_at: string | null
@@ -149,6 +193,88 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      profiles: {
+        Row: {
+          id: string
+          user_type: string
+          email: string
+          full_name: string | null
+          phone: string | null
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id: string
+          user_type: string
+          email: string
+          full_name?: string | null
+          phone?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_type?: string
+          email?: string
+          full_name?: string | null
+          phone?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      property_teams: {
+        Row: {
+          user_id: string
+          email: string
+          fullName: string
+          phone: string | null
+          company: string
+          role: string
+          propertyCount: string | null
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          user_id: string
+          email: string
+          fullName: string
+          phone?: string | null
+          company: string
+          role: string
+          propertyCount?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          user_id?: string
+          email?: string
+          fullName?: string
+          phone?: string | null
+          company?: string
+          role?: string
+          propertyCount?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "property_teams_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       stripe_connect_accounts: {
         Row: {

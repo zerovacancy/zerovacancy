@@ -83,17 +83,29 @@ const OnboardingFlow: React.FC = () => {
       const tableName = userType === 'property_team' ? 'property_teams' : 'creators';
 
       // Insert the profile data into the appropriate table
+      console.log(`Inserting into table ${tableName} with data:`, userData);
       const { data, error } = await supabase
         .from(tableName)
         .upsert([userData])
         .select();
 
       if (error) {
+        console.error(`Error upserting to ${tableName}:`, error);
+        console.error(`Error status:`, error.code, error.message, error.details);
         throw error;
       }
+      
+      console.log(`Successfully inserted into ${tableName}:`, data);
 
       // Also save the user type in the profiles table for easier querying
-      await supabase
+      console.log("Inserting into profiles table with data:", {
+        id: user.id,
+        user_type: userType,
+        email: user.email,
+        full_name: profileData.fullName,
+      });
+      
+      const { data: profileData2, error: profileError } = await supabase
         .from('profiles')
         .upsert([{
           id: user.id,
@@ -101,7 +113,16 @@ const OnboardingFlow: React.FC = () => {
           email: user.email,
           full_name: profileData.fullName,
           updated_at: new Date().toISOString(),
-        }]);
+        }])
+        .select();
+        
+      if (profileError) {
+        console.error("Error upserting to profiles:", profileError);
+        console.error("Error status:", profileError.code, profileError.message, profileError.details);
+        // We're not throwing here to allow the flow to continue even if this fails
+      } else {
+        console.log("Successfully inserted into profiles:", profileData2);
+      }
 
       toast({
         title: "Profile Saved",
