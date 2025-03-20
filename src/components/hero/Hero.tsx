@@ -267,8 +267,8 @@ export function Hero() {
                         style={{
                           width: '32px',
                           height: '32px',
-                          background: 'rgba(255,255,255,0.12)',
-                          border: '1px solid rgba(255,255,255,0.2)',
+                          background: '#8A42F5', // Match the purple button color
+                          border: '1px solid rgba(255,255,255,0.3)',
                           borderRadius: '12px',
                           boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15)'
                         }}
