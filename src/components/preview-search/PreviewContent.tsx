@@ -80,15 +80,14 @@ export const PreviewContent = () => {
             ))}
           </div>
         ) : (
-          <div className="bg-[#F5F0FF]/60 p-2 rounded-xl shadow-[0_8px_12px_-3px_rgba(138,79,255,0.1),_0_4px_6px_-4px_rgba(138,79,255,0.15)]">
-            <MobileCreatorCarousel 
-              creators={creatorData}
-              onImageLoad={handleImageLoad}
-              loadedImages={loadedImages}
-              imageRef={(node) => { imageRef.current = node; }}
-              onPreviewClick={setSelectedImage}
-            />
-          </div>
+          // Removed unnecessary wrapper div - directly render the carousel
+          <MobileCreatorCarousel 
+            creators={creatorData}
+            onImageLoad={handleImageLoad}
+            loadedImages={loadedImages}
+            imageRef={(node) => { imageRef.current = node; }}
+            onPreviewClick={setSelectedImage}
+          />
         )
       ) : (
         <div className="bg-white p-4 rounded-xl border border-purple-100/30 shadow-[0_10px_15px_-3px_rgba(138,79,255,0.1),_0_4px_6px_-4px_rgba(138,79,255,0.15),_inset_0_1px_3px_rgba(255,255,255,0.3)]">

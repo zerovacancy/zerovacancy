@@ -84,8 +84,8 @@ const PreviewSearch = () => {
     <div 
       className={cn(
         "w-full px-2 sm:px-4 md:px-6 lg:px-8 xl:px-10 content-visibility-auto",
-        isMobile ? "py-6 pb-4" : "py-6 sm:py-6 md:py-8", /* Reduced bottom padding on mobile */
-        isMobile ? "relative mt-3 rounded-2xl border border-purple-100/70 bg-[#F5F0FF]" : "bg-[#F5F0FF]/60"
+        isMobile ? "py-6 pb-8" : "py-6 sm:py-6 md:py-8", /* Increased bottom padding on mobile for carousel dots */
+        isMobile ? "relative mt-3 rounded-2xl border border-purple-100/70 bg-[#F5F0FF] shadow-[0_8px_15px_-3px_rgba(138,79,255,0.1),_0_4px_6px_-4px_rgba(138,79,255,0.15)]" : "bg-[#F5F0FF]/60"
       )} 
       ref={containerRef}
     >
