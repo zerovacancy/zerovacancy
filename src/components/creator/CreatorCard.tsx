@@ -47,17 +47,31 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
   return (
     <>
       {isMobile ? (
-          <Card className={cn(
-            "overflow-hidden flex flex-col w-full h-full",
-            "bg-gradient-to-b from-white to-[#FCFCFC]", // Subtle background gradient for 3D effect
-            "border border-[rgba(0,0,0,0.06)]", // Subtle 1px light gray border
-            "shadow-[0_1px_3px_rgba(0,0,0,0.05),_0_4px_6px_rgba(0,0,0,0.05),_0_10px_20px_rgba(0,0,0,0.04)]", // 3D shadow
-            "hover:shadow-[0_2px_4px_rgba(0,0,0,0.05),_0_6px_10px_rgba(0,0,0,0.05),_0_12px_24px_rgba(0,0,0,0.06)]", // Enhanced shadow on hover
-            "hover:scale-[1.01]", // Subtle scale transform on hover
-            "rounded-xl relative transition-all duration-300",
-            "translate-z-0 backface-visibility-hidden", // Hardware acceleration for mobile
-            "will-change-transform" // Performance optimization
-          )}>
+          <div className="relative w-full h-full">
+            {/* Main container without border - to be replaced with custom border implementation */}
+            <Card className={cn(
+              "overflow-hidden flex flex-col w-full h-full",
+              "bg-gradient-to-b from-white to-[#FCFCFC]", // Subtle background gradient for 3D effect
+              "border-0", // Remove default border - we'll use custom border below
+              "shadow-none", // Remove default shadow - we'll add custom shadow
+              "hover:scale-[1.01]", // Subtle scale transform on hover
+              "rounded-xl relative transition-all duration-300",
+              "translate-z-0 backface-visibility-hidden", // Hardware acceleration for mobile
+              "will-change-transform" // Performance optimization
+            )}>
+              
+              {/* Custom border container - wraps the entire card including the button */}
+              <div className="absolute inset-0 rounded-[14px] pointer-events-none" 
+                   style={{
+                     border: '1.5px solid rgba(118, 51, 220, 0.18)', // #7633DC at 18% opacity
+                     // Layered shadows for depth:
+                     boxShadow: `
+                       0 2px 4px rgba(118, 51, 220, 0.1),
+                       0 4px 8px rgba(118, 51, 220, 0.07), 
+                       inset 0 1px 0 rgba(255, 255, 255, 0.9)
+                     `
+                   }}
+              ></div>
             {/* Pattern effect - simplified */}
               
               {/* Media section with properly positioned price tag */}
@@ -235,7 +249,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 </div>
 
                 {/* CTA button with fixed height - Updated with light background and purple text */}
-                <div className="mt-3 mb-0">
+                <div className="mt-4 mb-0">
                   <button 
                     onClick={handleCTAClick}
                     aria-label={`Join as creator with ${creator.name}`}
@@ -303,6 +317,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 </div>
               </div>
             </Card>
+          </div>
       ) : (
           <article className="group select-text h-full w-full">
             <div className="relative h-full w-full">
