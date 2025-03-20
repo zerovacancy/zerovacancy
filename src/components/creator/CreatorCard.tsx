@@ -248,17 +248,17 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   </div>
                 </div>
                 
-                {/* CTA button with fixed height - Updated with light background and purple text */}
-                <div className="mt-2 mb-4">
+                {/* Enhanced CTA button with more prominence for mobile */}
+                <div className="mt-3 mb-4">
                   <button 
                     onClick={handleCTAClick}
                     aria-label={`Join as creator with ${creator.name}`}
-                    className="w-full flex items-center justify-center rounded-[12px] font-medium font-jakarta h-[44px] transition-all duration-200 relative hover:scale-[1.02] bg-creator-cta"
+                    className="w-full flex items-center justify-center rounded-[12px] font-medium font-jakarta h-[48px] transition-all duration-200 relative hover:scale-[1.02] bg-creator-cta"
                     style={{
-                      background: '#F5F5F7 !important', // Light background as requested with !important to override global style
-                      color: '#7633DC !important', // Purple text color with !important to override global style
-                      border: '1px solid rgba(0,0,0,0.1)', // Subtle border
-                      boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07)',
+                      background: 'linear-gradient(180deg, #F5F5F7 0%, #EEEEF2 100%)', // Subtle gradient for depth
+                      color: '#7633DC', // Purple text color
+                      border: '1px solid rgba(118,51,220,0.2)', // Purple-tinted border for emphasis
+                      boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(118,51,220,0.05)', // Enhanced shadow with purple tint
                       fontSize: '14px',
                       fontWeight: 600, // Medium weight
                       paddingLeft: '42px', // Space for icon
@@ -270,8 +270,8 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                       style={{
                         width: '32px',
                         height: '32px',
-                        background: 'rgba(134,65,245,0.02)', // Very light purple tint
-                        border: '1px solid rgba(0,0,0,0.1)', // Match button border
+                        background: 'rgba(134,65,245,0.05)', // Slightly stronger purple tint
+                        border: '1px solid rgba(118,51,220,0.15)', // Subtle purple border
                         borderRadius: '12px',
                         boxShadow: 'inset 0 1px 0 rgba(255,255,255,1), inset 0 -1px 0 rgba(0,0,0,0.04)'
                       }}
@@ -306,7 +306,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     {stage === 'initial' ? (
                       <>
                         <span>JOIN AS CREATOR</span>
-                        <ArrowRight className="w-4 h-4 ml-2 text-[#7633DC]" aria-hidden="true" />
+                        <ArrowRight className="w-4 h-4 ml-2 text-[#7633DC] animate-pulse-subtle" aria-hidden="true" />
                       </>
                     ) : stage === 'input' ? (
                       <span>JOIN AS CREATOR</span>
