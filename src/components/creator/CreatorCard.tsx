@@ -239,7 +239,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   <button 
                     onClick={handleCTAClick}
                     aria-label={`Join as creator with ${creator.name}`}
-                    className="w-full flex items-center justify-center rounded-[12px] font-medium font-jakarta h-[46px] transition-all duration-200 relative animate-subtle-pulse hover:scale-[1.02] bg-creator-cta"
+                    className="w-full flex items-center justify-center rounded-[12px] font-medium font-jakarta h-[46px] transition-all duration-200 relative hover:scale-[1.02] bg-creator-cta"
                     style={{
                       background: '#F5F5F7 !important', // Light background as requested with !important to override global style
                       color: '#7633DC !important', // Purple text color with !important to override global style
