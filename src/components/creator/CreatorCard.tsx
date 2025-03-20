@@ -51,7 +51,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
             {/* Main container without border - to be replaced with custom border implementation */}
             <Card className={cn(
               "overflow-hidden flex flex-col w-full h-full",
-              "bg-gradient-to-b from-[#F9F7FF] to-[#F8F6FF]", // Match section background with subtle gradient
+              "bg-[#F9F7FF]", // Consistent background color 
               "border-0", // Remove default border - we'll use custom border below
               "shadow-none", // Remove default shadow - we'll add custom shadow
               "hover:scale-[1.01]", // Subtle scale transform on hover
@@ -103,7 +103,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               </div>
 
               {/* Content sections with proper organization */}
-              <div className="w-full px-4 pt-3 pb-2 flex flex-col relative z-10 flex-grow flex-shrink-0">
+              <div className="w-full px-4 pt-3 pb-4 flex flex-col relative z-10 flex-grow flex-shrink-0">
                 {/* Creator info section */}
                 <div className="pb-3 mb-3 border-b border-purple-100/80">
                   {/* Creator name and location with proper styling */}
@@ -200,7 +200,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 </div>
                 
                 {/* Recent Work section with proper header */}
-                <div className="mb-1.5">
+                <div className="mb-3">
                   {/* Section header */}
                   <div className="mb-3 flex justify-between items-center">
                     <div className="flex items-center">
@@ -250,7 +250,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 </div>
 
                 {/* CTA button with fixed height - Updated with light background and purple text */}
-                <div className="mt-3 mb-0 pb-0">
+                <div className="mt-3 mb-3">
                   <button 
                     onClick={handleCTAClick}
                     aria-label={`Join as creator with ${creator.name}`}

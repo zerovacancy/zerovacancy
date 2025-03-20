@@ -77,7 +77,7 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
   }, [emblaApi, onSelect]);
 
   return (
-    <div className="w-full relative pb-6 pt-2 px-4 overflow-visible bg-[#F9F7FF]"
+    <div className="w-full relative pb-6 pt-2 px-0 overflow-visible bg-[#F9F7FF]"
       style={{
         boxShadow: 'none',
         border: 'none'
@@ -96,9 +96,7 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
       )}
       
       <div className="w-full overflow-visible rounded-lg relative" ref={emblaRef}>
-        {/* Visual boundary for left edge */}
-        <div className="absolute left-0 top-0 bottom-0 w-1 z-10 pointer-events-none bg-gradient-to-r from-gray-200/50 to-transparent"></div>
-        <div className="flex flex-nowrap pl-0">
+        <div className="flex flex-nowrap pl-1">
           {creators.map((creator, index) => (
             <div 
               key={creator.name} 
@@ -108,9 +106,9 @@ export const MobileCreatorCarousel: React.FC<MobileCreatorCarouselProps> = ({
                 boxShadow: index < creators.length - 1 ? '8px 0 12px -6px rgba(118, 51, 220, 0.08)' : 'none'
               }} 
               className={cn(
-                "min-w-[82vw] w-[82vw] py-0 flex-shrink-0",
-                "mr-5", // Consistent margin between cards
-                index === 0 ? "pl-0" : "pl-0" // No left padding on first card
+                "min-w-[85vw] w-[85vw] py-0 flex-shrink-0",
+                "mr-4", // Consistent margin between cards
+                index === 0 ? "ml-0" : "ml-0" // No left margin on first card
               )}
             >
               <CreatorCard 
