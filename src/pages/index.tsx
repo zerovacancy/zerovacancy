@@ -128,30 +128,13 @@ const Index = () => {
     hiddenButton.style.borderRadius = '4px';
     hiddenButton.onclick = (window as any).adminLogin;
     
-    // Create another button for user creation
-    const createUserButton = document.createElement('button');
-    createUserButton.id = 'create-admin-button';
-    createUserButton.textContent = 'Create Admin';
-    createUserButton.style.position = 'fixed';
-    createUserButton.style.bottom = '10px';
-    createUserButton.style.right = '110px';
-    createUserButton.style.zIndex = '9999';
-    createUserButton.style.opacity = '0.1'; // Nearly invisible
-    createUserButton.style.padding = '8px 12px';
-    createUserButton.style.background = '#f0f0f0';
-    createUserButton.style.border = '1px solid #ccc';
-    createUserButton.style.borderRadius = '4px';
-    createUserButton.onclick = (window as any).createAdminUser;
-    
     document.body.appendChild(hiddenButton);
-    document.body.appendChild(createUserButton);
     
     return () => {
       // Clean up
       document.body.removeChild(hiddenButton);
-      document.body.removeChild(createUserButton);
       delete (window as any).adminLogin;
-      delete (window as any).createAdminUser;
+      delete (window as any).createAdminUser; // Still remove from window object
     };
   }, [navigate]);
   
