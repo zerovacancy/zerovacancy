@@ -28,7 +28,7 @@ export default defineConfig(({ mode }) => ({
   },
   build: {
     sourcemap: mode === 'development', // Only generate sourcemaps in development
-    minify: 'esbuild',
+    minify: 'esbuild', // Use esbuild for minification
     chunkSizeWarningLimit: 1000, // Increase chunk size limit
     target: ['es2020', 'edge88', 'firefox78', 'chrome87', 'safari14'], // Modern browsers only for smaller bundles
     cssMinify: true,
@@ -61,7 +61,8 @@ export default defineConfig(({ mode }) => ({
           ],
           'animations': [
             '@/components/ui/animated-grid.tsx',
-            '@/components/ui/spotlights.tsx',
+            '@/components/ui/spotlight.tsx',
+            '@/components/ui/optimized-spotlight.tsx',
             '@/components/ui/moving-border.tsx',
           ],
         },
@@ -71,13 +72,11 @@ export default defineConfig(({ mode }) => ({
         assetFileNames: 'assets/[ext]/[name]-[hash].[ext]',
       },
     },
-    // Compression options
-    terserOptions: {
-      compress: {
-        drop_console: mode === 'production', // Remove console.log in production
-        drop_debugger: mode === 'production',
-        pure_funcs: mode === 'production' ? ['console.log', 'console.info', 'console.debug'] : [],
-      },
+    // Use esbuild for compression/minification
+    esbuildOptions: {
+      drop: mode === 'production' ? ['console', 'debugger'] : [],
+      legalComments: 'none',
+      pure: mode === 'production' ? ['console.log', 'console.info', 'console.debug'] : [],
     },
   },
   // Improve file system case sensitivity handling and dependency optimization
