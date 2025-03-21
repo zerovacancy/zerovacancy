@@ -82,7 +82,7 @@ export const WaitlistCreatorCTA: React.FC<WaitlistCreatorCTAProps> = ({
           data-hover-transition="all 0.15s ease-out"
           data-hover-background={buttonColors.secondaryCta.buttonBackground}
           data-active-transform="translateY(2px)" // Click animation - push down
-          data-active-box-shadow="0px 1px 0px rgba(0,0,0,0.05), 0px 2px 5px rgba(0,0,0,0.03), 0px 0px 0px 3px rgba(118,51,220,0.3), inset 0px 1px 1px rgba(255,255,255,0.7)"
+          data-active-box-shadow="0px 1px 0px rgba(0,0,0,0.08), 0px 2px 5px rgba(0,0,0,0.03), 0px 4px 8px rgba(118,51,220,0.05), 0px 0px 0px 2.5px rgba(118,51,220,0.3), inset 0px 1px 1px rgba(255,255,255,0.8), inset 0px -1px 0px rgba(0,0,0,0.03), inset 0px 0px 1px rgba(255,255,255,0.5)"
         >
           {buttonText}
         </Button3DPhysical>

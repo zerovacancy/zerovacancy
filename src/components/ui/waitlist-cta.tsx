@@ -140,7 +140,7 @@ export const WaitlistCTA: React.FC<WaitlistCTAProps> = ({
             data-hover-transform="translateY(-2px)" // Slightly more lift for 3D effect
             data-hover-transition="all 0.15s ease-out"
             data-active-transform="translateY(2px)" // Click animation - push down
-            data-active-box-shadow="0px 1px 0px rgba(0,0,0,0.2), 0px 2px 5px rgba(0,0,0,0.1), 0px 0px 0px 2px rgba(146,96,255,0.9), 0px 0px 0px 4px rgba(255,255,255,0.25), inset 0px 1px 1px rgba(255,255,255,0.4)"
+            data-active-box-shadow="0px 1px 0px rgba(0,0,0,0.25), 0px 2px 5px rgba(0,0,0,0.1), 0px 4px 8px rgba(118,51,220,0.1), 0px 0px 0px 2px rgba(146,96,255,0.9), 0px 0px 0px 4px rgba(255,255,255,0.2), inset 0px 1px 1px rgba(255,255,255,0.4), inset 0px -1px 0px rgba(0,0,0,0.2)"
           >
             {buttonText}
           </Button3DPhysical>

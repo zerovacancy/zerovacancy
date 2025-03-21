@@ -115,19 +115,39 @@ export const Button3DPhysical = React.forwardRef<HTMLButtonElement, Button3DPhys
       // Reset filter
       buttonRef.current.style.filter = '';
       
-      // Add subtle bounce-back effect on release
+      // Add enhanced bounce-back effect with micro-movements
       if (hoverTransform && activeTransform) {
+        // Apply to button itself
         const bounceKeyframes = [
-          { transform: activeTransform, offset: 0 },
-          { transform: `translateY(-3px)`, offset: 0.6 },
-          { transform: hoverTransform, offset: 1 }
+          { transform: activeTransform, filter: 'brightness(0.95)', offset: 0 },
+          { transform: 'translateY(-4px)', filter: 'brightness(1.02)', offset: 0.5 },
+          { transform: hoverTransform, filter: 'brightness(1.01)', offset: 0.7 },
+          { transform: 'translateY(-1.5px)', filter: 'brightness(1.0)', offset: 0.85 },
+          { transform: hoverTransform, filter: 'brightness(1.0)', offset: 1 }
         ];
         
+        // More refined spring animation
         buttonRef.current.animate(bounceKeyframes, {
-          duration: 150,
-          easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)', // Spring-like easing
+          duration: 350, // Slightly longer for better perception
+          easing: 'cubic-bezier(0.2, 0.9, 0.3, 1.2)', // Enhanced spring-like easing
           fill: 'forwards'
         });
+        
+        // Also animate the text and icon for more realism
+        const textElement = buttonRef.current.querySelector('span');
+        if (textElement) {
+          const textKeyframes = [
+            { transform: 'translateY(1px)', offset: 0 },
+            { transform: 'translateY(-1px)', offset: 0.5 },
+            { transform: 'translateY(0px)', offset: 1 }
+          ];
+          
+          textElement.animate(textKeyframes, {
+            duration: 350,
+            easing: 'cubic-bezier(0.2, 0.9, 0.3, 1.1)',
+            fill: 'forwards'
+          });
+        }
       }
     };
     

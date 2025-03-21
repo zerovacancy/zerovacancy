@@ -65,38 +65,56 @@ export const buttonColors: {
     highlightTop: 'rgba(255,255,255,0.8)',
     highlightBottom: 'rgba(0,0,0,0.05)',
   },
-  // Enhanced Primary CTA variant (RESERVE EARLY ACCESS) - precisely matching 3D reference
+  // Enhanced Primary CTA variant with refined 3D dimensionality
   primaryCta: {
     base: '#8A4FFF',  // Proper purple from reference
     dark: '#7837DB',
-    light: '#9953FF', 
+    light: '#9F65FF', // Slightly lighter for better contrast
     text: '#FFFFFF',  // White text
-    iconBackground: 'rgba(255,255,255,0.15)', // Light icon background for 3D effect
-    iconBorder: 'rgba(255,255,255,0.3)',
-    border: 'rgba(255,255,255,0.4)', // White border like reference image
-    // Subtle gradient with light top-left to enhance 3D effect
-    gradient: 'linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.1) 100%), linear-gradient(180deg, #9966FF 0%, #7540D8 100%)',
-    // Slightly lighter on hover with enhanced top-left light source
-    hoverGradient: 'linear-gradient(145deg, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.1) 100%), linear-gradient(180deg, #A373FF 0%, #7F46E6 100%)', 
-    highlightTop: 'rgba(255,255,255,0.6)', // Stronger light highlight on top edge
-    highlightBottom: 'rgba(0,0,0,0.4)', // Stronger shadow at bottom edge for 3D
+    iconBackground: 'rgba(255,255,255,0.2)', // Enhanced icon background for better depth
+    iconBorder: 'rgba(255,255,255,0.35)',
+    border: 'rgba(255,255,255,0.45)', // More pronounced white border
+    // Enhanced gradient with radial component for dimensional surface
+    gradient: `
+      radial-gradient(circle at 30% 30%, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 60%),
+      linear-gradient(145deg, rgba(255,255,255,0.14) 0%, rgba(0,0,0,0.12) 100%),
+      linear-gradient(180deg, #9966FF 0%, #7540D8 100%)
+    `,
+    // Enhanced hover gradient with better dimensionality
+    hoverGradient: `
+      radial-gradient(circle at 30% 30%, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.02) 60%),
+      linear-gradient(145deg, rgba(255,255,255,0.18) 0%, rgba(0,0,0,0.12) 100%),
+      linear-gradient(180deg, #A373FF 0%, #7F46E6 100%)
+    `, 
+    highlightTop: 'rgba(255,255,255,0.9)', // Sharper light highlight on top edge
+    highlightBottom: 'rgba(0,0,0,0.6)', // More defined shadow at bottom edge for 3D depth
   },
-  // Enhanced Secondary CTA variant (JOIN AS CREATOR) - precisely matching 3D reference
+  // Enhanced Secondary CTA variant with refined 3D dimensionality
   secondaryCta: {
-    base: '#F5F5F7',  // Light gray base from reference
-    dark: '#E8E8EC',
+    base: '#F7F7FA',  // Very light lavender base
+    dark: '#EAEAEF',
     light: '#FFFFFF',
     text: '#7837DB',  // Purple text like reference
-    iconBackground: 'rgba(134,65,245,0.07)', // Light purple tint for 3D icon effect
-    iconBorder: 'rgba(118,51,220,0.2)', // More visible border for icon
-    border: 'rgba(118,51,220,0.3)', // Substantial border as specified
-    // Subtle lavender gradient as specified
-    buttonBackground: 'linear-gradient(145deg, rgba(255,255,255,0.5) 0%, rgba(0,0,0,0.03) 100%), linear-gradient(180deg, #F9F7FF 0%, #F0F0F7 100%)', 
+    iconBackground: 'rgba(134,65,245,0.09)', // Enhanced icon background
+    iconBorder: 'rgba(118,51,220,0.25)', // More defined border for icon
+    border: 'rgba(118,51,220,0.35)', // More substantial border as specified
+    // Enhanced lavender gradient with bevel and texture effects
+    buttonBackground: `
+      radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.3) 70%),
+      linear-gradient(145deg, rgba(255,255,255,0.7) 0%, rgba(0,0,0,0.04) 100%),
+      linear-gradient(180deg, #FAF8FF 0%, #F0EFF7 100%),
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.015'/%3E%3C/svg%3E")
+    `, 
     gradient: 'transparent', // No additional gradient initially
-    // Enhanced hover effect with stronger purple tint
-    hoverGradient: 'linear-gradient(145deg, rgba(255,255,255,0.7) 0%, rgba(0,0,0,0.03) 100%), linear-gradient(180deg, #FAF8FF 0%, #F3EFF9 100%)',
-    highlightTop: 'rgba(255,255,255,1)', // Strong light highlight at top edge
-    highlightBottom: 'rgba(0,0,0,0.15)', // More visible shadow at bottom edge for 3D depth
+    // Enhanced hover effect with even more refined texture and lighting
+    hoverGradient: `
+      radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.4) 70%),
+      linear-gradient(145deg, rgba(255,255,255,0.8) 0%, rgba(0,0,0,0.03) 100%),
+      linear-gradient(180deg, #FCF9FF 0%, #F5F2FA 100%),
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.01'/%3E%3C/svg%3E")
+    `,
+    highlightTop: 'rgba(255,255,255,1)', // Crisp highlight on top edge
+    highlightBottom: 'rgba(0,0,0,0.2)', // More defined shadow at bottom edge for 3D depth
   },
   // Blue variant
   blue: {
@@ -233,42 +251,52 @@ export const shadowStyles = {
   // Pressed state shadow (compressed)
   pressed: '0 1px 2px rgba(0,0,0,0.15)',
   
-  // Primary CTA shadow precisely matching 3D reference
+  // Primary CTA shadow with refined 3D effects and sharper edges
   primaryCTA: [
-    '0px 3px 0px rgba(0,0,0,0.2)',   // Bottom edge shadow for 3D depth
-    '0px 5px 12px rgba(0,0,0,0.15)', // Soft drop shadow for elevation
-    '0px 10px 20px rgba(118,51,220,0.15)', // Outer glow
+    '0px 3px 0px rgba(0,0,0,0.25)',  // Sharper bottom edge shadow for 3D depth
+    '0px 2px 0px rgba(0,0,0,0.1)',   // Secondary bottom edge for more dimension
+    '0px 5px 10px rgba(0,0,0,0.12)', // Close drop shadow with less blur
+    '0px 10px 20px rgba(118,51,220,0.18)', // Outer purple glow
     '0px 0px 0px 2px rgba(146,96,255,0.9)', // Inner button border
-    '0px 0px 0px 4px rgba(255,255,255,0.2)', // White outer border glow
-    'inset 0px 1px 2px rgba(255,255,255,0.5)' // Top inner highlight
+    '0px 0px 0px 4px rgba(255,255,255,0.25)', // White outer border glow
+    'inset 0px 1px 1px rgba(255,255,255,0.7)', // Sharper top highlight
+    'inset 0px -1px 2px rgba(0,0,0,0.15)' // Inner bottom shadow for concave effect
   ].join(', '),
   
-  // Primary CTA hover shadow with enhanced 3D effect
+  // Primary CTA hover shadow with enhanced dimensionality
   primaryCTAHover: [
-    '0px 4px 0px rgba(0,0,0,0.2)',   // Enhanced bottom edge for hover
-    '0px 7px 15px rgba(0,0,0,0.15)', // Expanded drop shadow on hover
-    '0px 12px 25px rgba(118,51,220,0.2)', // Expanded outer glow
+    '0px 4px 0px rgba(0,0,0,0.25)',  // Enhanced bottom edge for hover
+    '0px 3px 0px rgba(0,0,0,0.1)',   // Enhanced secondary bottom edge
+    '0px 7px 12px rgba(0,0,0,0.12)', // Expanded close drop shadow
+    '0px 14px 24px rgba(118,51,220,0.2)', // Expanded outer glow
     '0px 0px 0px 2px rgba(146,96,255,0.9)', // Inner button border
-    '0px 0px 0px 4px rgba(255,255,255,0.25)', // Enhanced white outer border glow
-    'inset 0px 1px 2px rgba(255,255,255,0.6)' // Stronger top inner highlight
+    '0px 0px 0px 4px rgba(255,255,255,0.3)', // Enhanced white outer border glow
+    'inset 0px 1px 1px rgba(255,255,255,0.8)', // Stronger top highlight
+    'inset 0px -1px 2px rgba(0,0,0,0.1)' // Subtler inner bottom shadow for hover
   ].join(', '),
   
-  // Secondary CTA shadow precisely matching 3D reference
+  // Secondary CTA shadow with refined bevel and edge definition
   secondaryCTA: [
-    '0px 3px 0px rgba(0,0,0,0.07)',   // Bottom edge shadow for 3D depth
-    '0px 5px 12px rgba(0,0,0,0.05)',  // Soft drop shadow for elevation
-    '0px 8px 15px rgba(118,51,220,0.05)', // Subtle purple outer glow
-    '0px 0px 0px 3px rgba(118,51,220,0.25)', // Purple border
-    'inset 0px 1px 2px rgba(255,255,255,0.8)' // Top inner highlight
+    '0px 3px 0px rgba(0,0,0,0.08)',   // Sharper bottom edge shadow
+    '0px 2px 0px rgba(0,0,0,0.04)',   // Secondary bottom edge for layered dimension
+    '0px 5px 10px rgba(0,0,0,0.05)',  // Close drop shadow with less blur
+    '0px 8px 15px rgba(118,51,220,0.07)', // Subtle purple outer glow
+    '0px 0px 0px 2.5px rgba(118,51,220,0.3)', // More defined purple border
+    'inset 0px 1px 1px rgba(255,255,255,1)', // Crisp top highlight
+    'inset 0px -1px 2px rgba(0,0,0,0.03)', // Subtle inner bottom shadow for bevel effect
+    'inset 0px 0px 1px rgba(255,255,255,0.8)' // Overall inner light for convex effect
   ].join(', '),
   
-  // Secondary CTA hover shadow with enhanced 3D effect
+  // Secondary CTA hover shadow with enhanced dimensionality
   secondaryCTAHover: [
-    '0px 4px 0px rgba(0,0,0,0.07)',   // Enhanced bottom edge for hover
-    '0px 6px 15px rgba(0,0,0,0.05)',  // Expanded drop shadow on hover
-    '0px 10px 20px rgba(118,51,220,0.07)', // Enhanced outer glow
-    '0px 0px 0px 3px rgba(118,51,220,0.3)', // Enhanced purple border
-    'inset 0px 1px 3px rgba(255,255,255,0.9)' // Stronger top inner highlight
+    '0px 4px 0px rgba(0,0,0,0.08)',   // Enhanced bottom edge for hover
+    '0px 3px 0px rgba(0,0,0,0.04)',   // Enhanced secondary edge
+    '0px 7px 12px rgba(0,0,0,0.05)',  // Expanded close drop shadow
+    '0px 12px 20px rgba(118,51,220,0.09)', // Enhanced outer glow
+    '0px 0px 0px 2.5px rgba(118,51,220,0.35)', // More vibrant purple border on hover
+    'inset 0px 1px 1px rgba(255,255,255,1)', // Maintained crisp top highlight
+    'inset 0px -1px 2px rgba(0,0,0,0.02)', // Reduced inner bottom shadow for hover
+    'inset 0px 0px 1px rgba(255,255,255,0.9)' // Enhanced inner light for hover
   ].join(', '),
 };
 
