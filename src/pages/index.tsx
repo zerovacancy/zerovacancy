@@ -47,7 +47,7 @@ const Index = () => {
   
   // Add a hidden admin login method
   useEffect(() => {
-    // Add a global function to the window object that can be called from browser console
+    // Add global functions to the window object that can be called from browser console
     (window as any).adminLogin = async () => {
       try {
         const email = prompt('Email:');
@@ -77,6 +77,42 @@ const Index = () => {
       }
     };
     
+    // Add a function to create an admin user (for initial setup)
+    (window as any).createAdminUser = async () => {
+      try {
+        const email = prompt('Create admin email:');
+        const password = prompt('Create admin password (min 6 chars):');
+        
+        if (!email || !password || password.length < 6) {
+          alert('Invalid input. Password must be at least 6 characters.');
+          return;
+        }
+        
+        console.log('Creating admin user...');
+        const { data, error } = await supabase.auth.signUp({ 
+          email, 
+          password,
+          options: {
+            data: {
+              role: 'admin'
+            }
+          }
+        });
+        
+        if (error) {
+          console.error('User creation failed:', error.message);
+          alert('User creation failed: ' + error.message);
+          return;
+        }
+        
+        console.log('User creation response:', data);
+        alert('Admin user created! Check your email for verification if required.');
+      } catch (err: any) {
+        console.error('Unexpected error:', err);
+        alert('Error: ' + (err.message || 'Unknown error'));
+      }
+    };
+    
     // Create a hidden button that will only be visible to the user if they know about it
     const hiddenButton = document.createElement('button');
     hiddenButton.id = 'admin-login-button';
@@ -92,12 +128,30 @@ const Index = () => {
     hiddenButton.style.borderRadius = '4px';
     hiddenButton.onclick = (window as any).adminLogin;
     
+    // Create another button for user creation
+    const createUserButton = document.createElement('button');
+    createUserButton.id = 'create-admin-button';
+    createUserButton.textContent = 'Create Admin';
+    createUserButton.style.position = 'fixed';
+    createUserButton.style.bottom = '10px';
+    createUserButton.style.right = '110px';
+    createUserButton.style.zIndex = '9999';
+    createUserButton.style.opacity = '0.1'; // Nearly invisible
+    createUserButton.style.padding = '8px 12px';
+    createUserButton.style.background = '#f0f0f0';
+    createUserButton.style.border = '1px solid #ccc';
+    createUserButton.style.borderRadius = '4px';
+    createUserButton.onclick = (window as any).createAdminUser;
+    
     document.body.appendChild(hiddenButton);
+    document.body.appendChild(createUserButton);
     
     return () => {
       // Clean up
       document.body.removeChild(hiddenButton);
+      document.body.removeChild(createUserButton);
       delete (window as any).adminLogin;
+      delete (window as any).createAdminUser;
     };
   }, [navigate]);
   
