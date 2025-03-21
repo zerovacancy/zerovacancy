@@ -47,13 +47,10 @@ export const WaitlistCreatorCTA: React.FC<WaitlistCreatorCTAProps> = ({
             style={{
               color: buttonColors.secondaryCta.text,
               stroke: buttonColors.secondaryCta.text,
-              textShadow: '0 0 1px rgba(118,51,220,0.1)', // Very subtle text shadow for improved legibility
               ...style?.icon
             }}
             data-container-style={JSON.stringify({
-              background: buttonColors.secondaryCta.iconBackground,
-              border: '1px solid rgba(0,0,0,0.1)', // Matching social proof card border
-              boxShadow: 'inset 0 1px 0 rgba(255,255,255,1), inset 0 -1px 0 rgba(0,0,0,0.04)', // Enhanced highlight on top edge
+              // Don't specify anything - let it inherit from the button component's styling
               ...style?.iconContainer
             })}
           />}

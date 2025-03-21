@@ -375,24 +375,25 @@ export const Button3DPhysical = React.forwardRef<HTMLButtonElement, Button3DPhys
             )}
             style={{
               borderRadius: variant === 'secondaryCta' ? "23px" : // Perfect circle for secondary CTA
-                            size === "sm" ? "9px" : size === "md" ? "12px" : "15px",
-              // Enhanced border and shadow for premium 3D effect
-              border: variant === 'primary' || variant === 'secondary' 
-                ? '1px solid rgba(255,255,255,0.2)'
-                : variant === 'secondaryCta'
-                  ? '1px solid rgba(0,0,0,0.1)' // Specific border for secondary CTA
+                          variant === 'primaryCta' ? "23px" : // Perfect circle for primary CTA too
+                          size === "sm" ? "9px" : size === "md" ? "12px" : "15px",
+              // Make both CTA button icons match with no borders/shadows
+              border: (variant === 'primaryCta' || variant === 'secondaryCta') 
+                ? 'none' // No border for either CTA button
+                : variant === 'primary' || variant === 'secondary'
+                  ? '1px solid rgba(255,255,255,0.2)'
                   : '1px solid rgba(0,0,0,0.08)',
-              // Background differentiation for each variant
-              background: variant === 'primary' || variant === 'secondary' 
-                ? 'rgba(255,255,255,0.05)'
-                : variant === 'secondaryCta'
-                  ? 'rgba(245,245,250,0.9)' // Subtle tint matching button
+              // Background matches the button for both CTAs
+              background: (variant === 'primaryCta' || variant === 'secondaryCta')
+                ? 'transparent' // Transparent for both CTA variants to match button
+                : variant === 'primary' || variant === 'secondary'
+                  ? 'rgba(255,255,255,0.05)'
                   : 'rgba(134,65,245,0.02)',
-              // Enhanced inner shadow for refined 3D appearance
-              boxShadow: variant === 'primary' || variant === 'secondary' 
-                ? 'inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.1)'
-                : variant === 'secondaryCta'
-                  ? 'inset 0 1px 0 rgba(255,255,255,1), inset 0 -1px 0 rgba(0,0,0,0.03), 0 0 0 1px rgba(255,255,255,0.5)'
+              // No inner shadows for CTA buttons
+              boxShadow: (variant === 'primaryCta' || variant === 'secondaryCta')
+                ? 'none' // No shadow for CTAs
+                : variant === 'primary' || variant === 'secondary'
+                  ? 'inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.1)'
                   : 'inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)',
               // Apply custom iconContainerStyle if provided via props
               ...iconContainerStyle
@@ -458,24 +459,25 @@ export const Button3DPhysical = React.forwardRef<HTMLButtonElement, Button3DPhys
             )}
             style={{
               borderRadius: variant === 'secondaryCta' ? "23px" : // Perfect circle for secondary CTA
+                          variant === 'primaryCta' ? "23px" : // Perfect circle for primary CTA too
                           size === "sm" ? "9px" : size === "md" ? "12px" : "15px",
-              // Enhanced border and shadow for premium 3D effect
-              border: variant === 'primary' || variant === 'secondary' 
-                ? '1px solid rgba(255,255,255,0.2)'
-                : variant === 'secondaryCta'
-                  ? '1px solid rgba(0,0,0,0.1)' // Specific border for secondary CTA
+              // Make both CTA button icons match with no borders/shadows
+              border: (variant === 'primaryCta' || variant === 'secondaryCta') 
+                ? 'none' // No border for either CTA button
+                : variant === 'primary' || variant === 'secondary'
+                  ? '1px solid rgba(255,255,255,0.2)'
                   : '1px solid rgba(0,0,0,0.08)',
-              // Background differentiation for each variant
-              background: variant === 'primary' || variant === 'secondary' 
-                ? 'rgba(255,255,255,0.05)'
-                : variant === 'secondaryCta'
-                  ? 'rgba(245,245,250,0.9)' // Subtle tint matching button
+              // Background matches the button for both CTAs
+              background: (variant === 'primaryCta' || variant === 'secondaryCta')
+                ? 'transparent' // Transparent for both CTA variants to match button
+                : variant === 'primary' || variant === 'secondary'
+                  ? 'rgba(255,255,255,0.05)'
                   : 'rgba(134,65,245,0.02)',
-              // Enhanced inner shadow for refined 3D appearance
-              boxShadow: variant === 'primary' || variant === 'secondary' 
-                ? 'inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.1)'
-                : variant === 'secondaryCta'
-                  ? 'inset 0 1px 0 rgba(255,255,255,1), inset 0 -1px 0 rgba(0,0,0,0.03), 0 0 0 1px rgba(255,255,255,0.5)'
+              // No inner shadows for CTA buttons
+              boxShadow: (variant === 'primaryCta' || variant === 'secondaryCta')
+                ? 'none' // No shadow for CTAs
+                : variant === 'primary' || variant === 'secondary'
+                  ? 'inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.1)'
                   : 'inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)',
               // Apply custom iconContainerStyle if provided via props
               ...iconContainerStyle
