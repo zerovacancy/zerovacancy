@@ -222,7 +222,8 @@ const MobileHeroCTA = () => {
 
 const TITLES = ["CONVERTS", "CAPTIVATES", "CLOSES"];
 
-const Hero = () => {
+// Export with both default and named export for compatibility
+export const Hero = () => {
   const isMobile = useIsMobile();
   const sectionRef = useRef<HTMLElement>(null);
   const [isInView, setIsInView] = useState(false);

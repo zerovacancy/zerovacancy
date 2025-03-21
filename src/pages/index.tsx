@@ -17,6 +17,7 @@ const OptimizedHowItWorks = lazy(() => import('../components/how-it-works/Optimi
 const FeaturesSectionWithHoverEffects = lazy(() => import('@/components/features/Features'));
 const Pricing = lazy(() => import('@/components/Pricing'));
 const PreviewSearch = lazy(() => import('../components/preview-search'));
+const FeaturedBlogPosts = lazy(() => import('@/components/blog/FeaturedBlogPosts'));
 
 const SectionLoader = () => (
   <div className="w-full py-16 flex items-center justify-center">
@@ -37,7 +38,8 @@ const Index = () => {
     1: true, 
     2: true,
     3: true,
-    4: true
+    4: true,
+    5: true
   });
   
   const observerCallback = useCallback((entries: IntersectionObserverEntry[]) => {
@@ -84,7 +86,8 @@ const Index = () => {
           1: true,
           2: true,
           3: true,
-          4: true
+          4: true,
+          5: true
         });
       }
     } else {
@@ -94,7 +97,8 @@ const Index = () => {
         1: true,
         2: true,
         3: true,
-        4: true
+        4: true,
+        5: true
       });
     }
 
@@ -106,7 +110,8 @@ const Index = () => {
         1: true,
         2: true,
         3: true,
-        4: true
+        4: true,
+        5: true
       });
     }, 1000);
     
@@ -282,9 +287,22 @@ const Index = () => {
           </Suspense>
         </section>
 
+        <section 
+          ref={addSectionRef(5)}
+          id="blog" 
+          className={cn(
+            "w-full",
+            isMobile && "bg-gradient-to-b from-indigo-50/30 via-transparent to-transparent"
+          )}
+        >
+          <Suspense fallback={<SectionLoader />}>
+            <FeaturedBlogPosts />
+          </Suspense>
+        </section>
+
         {!isMobile && (
           <div className="fixed right-6 top-1/2 transform -translate-y-1/2 z-40 hidden lg:flex flex-col items-center gap-3">
-            {['how-it-works', 'find-creators', 'features', 'pricing'].map((section, index) => {
+            {['how-it-works', 'find-creators', 'features', 'pricing', 'blog'].map((section, index) => {
               const isActive = visibleSections[index + 1];
               return (
                 <button
