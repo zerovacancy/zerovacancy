@@ -1,5 +1,6 @@
 
-import React, { useEffect } from "react"
+import * as React from "react"
+import { useEffect } from "react"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { CheckCircle, X } from "lucide-react"
 import { Confetti } from "@/components/ui/confetti"
