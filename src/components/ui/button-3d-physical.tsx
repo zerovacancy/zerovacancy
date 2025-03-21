@@ -63,17 +63,75 @@ export const Button3DPhysical = React.forwardRef<HTMLButtonElement, Button3DPhys
     }
   }, [icon, iconPosition]);
   
-  // Enhanced effect to apply hover gradient, transform, and shadow for CTA buttons
+  // Enhanced effect to apply hover/active gradients, transforms, and shadows for 3D buttons
   useEffect(() => {
     if (!buttonRef.current) return;
     
-    // Process any data attributes for hover effects
+    // Process data attributes for all interactive effects
     const hoverBoxShadow = buttonRef.current.getAttribute('data-hover-box-shadow');
     const hoverTransform = buttonRef.current.getAttribute('data-hover-transform');
     const hoverTransition = buttonRef.current.getAttribute('data-hover-transition');
     const hoverBackground = buttonRef.current.getAttribute('data-hover-background');
     
-    // Apply hover effects if we have data attributes or it's a CTA button
+    // Process active state data attributes for click effects
+    const activeTransform = buttonRef.current.getAttribute('data-active-transform');
+    const activeBoxShadow = buttonRef.current.getAttribute('data-active-box-shadow');
+    
+    // Set up active state handling
+    const handleMouseDown = () => {
+      if (!buttonRef.current) return;
+      
+      // Apply active transform if provided
+      if (activeTransform) {
+        buttonRef.current.style.transform = activeTransform;
+      }
+      
+      // Apply active shadow if provided
+      if (activeBoxShadow) {
+        buttonRef.current.style.boxShadow = activeBoxShadow;
+      }
+      
+      // Add subtle visual feedback on press
+      buttonRef.current.style.filter = 'brightness(0.95)';
+    };
+    
+    const handleMouseUp = () => {
+      // Reset to hover or base state after click
+      if (!buttonRef.current) return;
+      
+      if (isHovered && hoverTransform) {
+        buttonRef.current.style.transform = hoverTransform;
+      } else {
+        const baseTransform = props.style?.transform || 'translate3d(0, 0, 0)';
+        buttonRef.current.style.transform = baseTransform;
+      }
+      
+      if (isHovered && hoverBoxShadow) {
+        buttonRef.current.style.boxShadow = hoverBoxShadow;
+      } else if (props.style?.boxShadow) {
+        buttonRef.current.style.boxShadow = props.style.boxShadow as string;
+      }
+      
+      // Reset filter
+      buttonRef.current.style.filter = '';
+      
+      // Add subtle bounce-back effect on release
+      if (hoverTransform && activeTransform) {
+        const bounceKeyframes = [
+          { transform: activeTransform, offset: 0 },
+          { transform: `translateY(-3px)`, offset: 0.6 },
+          { transform: hoverTransform, offset: 1 }
+        ];
+        
+        buttonRef.current.animate(bounceKeyframes, {
+          duration: 150,
+          easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)', // Spring-like easing
+          fill: 'forwards'
+        });
+      }
+    };
+    
+    // Apply hover effects
     if (isHovered) {
       // Apply custom transform if provided
       if (hoverTransform) {
@@ -82,13 +140,7 @@ export const Button3DPhysical = React.forwardRef<HTMLButtonElement, Button3DPhys
       
       // Apply custom shadow if provided
       if (hoverBoxShadow) {
-        // Extract inset parts to preserve them
-        const currentShadow = buttonRef.current.style.boxShadow || '';
-        const insetMatch = currentShadow.match(/inset[^,]+(,|$)/g);
-        const insetParts = insetMatch ? insetMatch.join(' ') : '';
-        
-        // Apply the new shadow while preserving inset parts
-        buttonRef.current.style.boxShadow = `${hoverBoxShadow}, ${insetParts}`;
+        buttonRef.current.style.boxShadow = hoverBoxShadow;
       }
       
       // Apply custom background if provided
@@ -100,10 +152,15 @@ export const Button3DPhysical = React.forwardRef<HTMLButtonElement, Button3DPhys
       if (hoverTransition) {
         buttonRef.current.style.transition = hoverTransition;
       }
+      
+      // Add event listeners for active state
+      if (activeTransform || activeBoxShadow) {
+        buttonRef.current.addEventListener('mousedown', handleMouseDown);
+        buttonRef.current.addEventListener('mouseup', handleMouseUp);
+        buttonRef.current.addEventListener('mouseleave', handleMouseUp);
+      }
     } else {
       // Reset to original styles when not hovered
-      // This relies on the style prop being applied to the button
-      
       // Reset transform (keeping any translate3d for hardware accel)
       const baseTransform = props.style?.transform || 'translate3d(0, 0, 0)';
       buttonRef.current.style.transform = baseTransform;
@@ -122,7 +179,23 @@ export const Button3DPhysical = React.forwardRef<HTMLButtonElement, Button3DPhys
       if (props.style?.transition && hoverTransition) {
         buttonRef.current.style.transition = props.style.transition as string;
       }
+      
+      // Remove event listeners for active state
+      if (activeTransform || activeBoxShadow) {
+        buttonRef.current.removeEventListener('mousedown', handleMouseDown);
+        buttonRef.current.removeEventListener('mouseup', handleMouseUp);
+        buttonRef.current.removeEventListener('mouseleave', handleMouseUp);
+      }
     }
+    
+    // Cleanup function to remove event listeners
+    return () => {
+      if (buttonRef.current) {
+        buttonRef.current.removeEventListener('mousedown', handleMouseDown);
+        buttonRef.current.removeEventListener('mouseup', handleMouseUp);
+        buttonRef.current.removeEventListener('mouseleave', handleMouseUp);
+      }
+    };
     
     // If no data attributes but it's a CTA button, fall back to default behavior
     if (!hoverBackground && (variant === 'primaryCta' || variant === 'secondaryCta')) {
@@ -189,9 +262,7 @@ export const Button3DPhysical = React.forwardRef<HTMLButtonElement, Button3DPhys
       ? "hover:brightness-[1.05]" 
       : "hover:brightness-[1.02]",
     
-    // Precise active state with realistic depression effect
-    "active:translate-y-[1px] active:scale-[0.99]", 
-    "active:shadow-[0_1px_2px_rgba(0,0,0,0.15)]", // Compressed shadow when pressed
+    // Active state is now handled by data-active attributes for more precise control
     "active:brightness-95", // Subtle darkening when pressed
     
     // Hardware acceleration for smoother transitions

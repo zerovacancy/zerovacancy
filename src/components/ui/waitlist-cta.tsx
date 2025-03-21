@@ -119,13 +119,15 @@ export const WaitlistCTA: React.FC<WaitlistCTAProps> = ({
             iconPosition="left"
             className="w-full min-w-[320px] font-semibold tracking-[0.02em]"
             style={{
-              // Apply styling that matches reference image exactly
-              height: '56px',
+              // Apply styling to match 3D reference precisely
+              height: '64px',  // Taller button as specified
               background: buttonColors.primaryCta.gradient,
               border: 'none',  // No standard border - using outline in box-shadow
-              boxShadow: shadowStyles.primaryCTA, // Using precise shadow from reference
+              borderRadius: '32px', // Pill shape as specified (half of height)
+              boxShadow: shadowStyles.primaryCTA, // Using precise 3D shadow stack
               color: buttonColors.primaryCta.text,
-              transition: 'all 0.25s ease-out',
+              fontWeight: '600', // Slightly bolder text
+              transition: 'all 0.15s ease-out', // Quicker transition for better click feel
               // Interactive elements
               cursor: 'pointer',
               // Enhanced hover state will be applied via CSS class in the Button3DPhysical component
@@ -133,10 +135,12 @@ export const WaitlistCTA: React.FC<WaitlistCTAProps> = ({
               // Apply any custom styles passed from parent
               ...style?.button
             }}
-            // Add additional properties that pass the exact reference-matching hover effect
+            // Add additional properties that pass the exact 3D reference-matching hover effect
             data-hover-box-shadow={shadowStyles.primaryCTAHover}
-            data-hover-transform="translateY(-1px)" 
-            data-hover-transition="all 0.25s ease-out"
+            data-hover-transform="translateY(-2px)" // Slightly more lift for 3D effect
+            data-hover-transition="all 0.15s ease-out"
+            data-active-transform="translateY(2px)" // Click animation - push down
+            data-active-box-shadow="0px 1px 0px rgba(0,0,0,0.2), 0px 2px 5px rgba(0,0,0,0.1), 0px 0px 0px 2px rgba(146,96,255,0.9), 0px 0px 0px 4px rgba(255,255,255,0.25), inset 0px 1px 1px rgba(255,255,255,0.4)"
           >
             {buttonText}
           </Button3DPhysical>
