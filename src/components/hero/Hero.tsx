@@ -11,7 +11,7 @@ import { CheckCircle, ShieldCheck, ArrowRight, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 // Hero CTA with email form for mobile that transitions from button to form
-// Uses exact same SuccessConfirmation as desktop for consistency
+// Uses an inline success message instead of a modal dialog for better mobile compatibility
 const MobileHeroCTA = () => {
   const [showForm, setShowForm] = useState(false);
   const [email, setEmail] = useState("");
@@ -22,6 +22,14 @@ const MobileHeroCTA = () => {
   const [alreadySubscribed, setAlreadySubscribed] = useState(false);
   const [submittedEmail, setSubmittedEmail] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  
+  // Import confetti directly in component
+  useEffect(() => {
+    // Add confetti to window to ensure it's available
+    if (typeof window !== 'undefined' && !window.hasOwnProperty('confetti')) {
+      window.confetti = confetti;
+    }
+  }, []);
   
   // Validate email as user types
   useEffect(() => {
@@ -94,12 +102,32 @@ const MobileHeroCTA = () => {
       
       // On mobile, we'll use an inline success message instead of a dialog
       // This avoids all the issues with dialog rendering on mobile browsers
-      setShowConfetti(true);
+      setShowInlineSuccess(true);
       
-      // Add a slight delay before showing the success message
-      setTimeout(() => {
-        setShowInlineSuccess(true);
-      }, 300);
+      // Fire confetti immediately
+      if (typeof window !== 'undefined' && window.celebrateSuccess) {
+        try {
+          window.celebrateSuccess(true);
+        } catch (err) {
+          console.error("Error triggering confetti:", err);
+          try {
+            // Fallback
+            confetti();
+          } catch (e) {
+            console.error("Fallback confetti also failed:", e);
+          }
+        }
+      } else {
+        try {
+          // Direct call if global method not available
+          confetti();
+        } catch (err) {
+          console.error("Direct confetti call failed:", err);
+        }
+      }
+      
+      // Set state to true for conditional rendering
+      setShowConfetti(true);
       
     } catch (error) {
       console.error("Error submitting email:", error);
@@ -109,20 +137,43 @@ const MobileHeroCTA = () => {
     }
   };
   
+  // Direct trigger for confetti when showing success message
+  useEffect(() => {
+    if (showInlineSuccess) {
+      console.log("Firing confetti for mobile success");
+      
+      // Set a timeout to ensure the UI is rendered first
+      setTimeout(() => {
+        try {
+          // Try using the global function first
+          if (typeof window !== 'undefined' && window.celebrateSuccess) {
+            window.celebrateSuccess(true);
+          } else if (typeof window !== 'undefined' && window.confetti) {
+            // Use direct window.confetti as fallback
+            window.confetti({
+              particleCount: 100,
+              spread: 70,
+              origin: { y: 0.3 }
+            });
+          } else {
+            // Use imported confetti as last resort
+            confetti({
+              particleCount: 100,
+              spread: 70,
+              origin: { y: 0.3 }
+            });
+          }
+        } catch (err) {
+          console.error("All confetti attempts failed:", err);
+        }
+      }, 100);
+    }
+  }, [showInlineSuccess]);
+  
   // Render success state after submission
   if (showInlineSuccess) {
     return (
       <>
-        {showConfetti && (
-          <div className="fixed inset-0 pointer-events-none z-[5000]" style={{ position: 'fixed' }}>
-            {typeof window !== 'undefined' && window.celebrateSuccess && (
-              <script dangerouslySetInnerHTML={{ 
-                __html: `setTimeout(function() { window.celebrateSuccess(true); }, 0);` 
-              }} />
-            )}
-          </div>
-        )}
-        
         <div className="w-full min-w-full py-5 px-4 font-medium rounded-[12px] text-white relative flex flex-col items-center justify-center animate-fade-in"
           style={{
             background: 'linear-gradient(180deg, #8A42F5 0%, #7837DB 100%)',
