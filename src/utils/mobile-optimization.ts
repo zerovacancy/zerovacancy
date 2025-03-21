@@ -81,25 +81,31 @@ export const optimizeMobileViewport = () => {
     }
   }
   
-  // Prevent double-tap zoom on mobile, but exclude buttons and links
-  document.addEventListener('touchend', (e) => {
-    // Don't prevent default on interactive elements
-    const target = e.target as HTMLElement;
-    const isInteractiveElement = 
-      target.tagName === 'BUTTON' || 
-      target.tagName === 'A' ||
-      target.closest('button') || 
-      target.closest('a');
-    
-    if (isInteractiveElement) return;
-    
-    const now = Date.now();
-    const DOUBLE_TAP_THRESHOLD = 300;
-    if (now - (window.lastTap || 0) < DOUBLE_TAP_THRESHOLD) {
-      e.preventDefault();
-    }
-    window.lastTap = now;
-  }, { passive: false });
+  // Check if it's actually a mobile device before adding the double-tap zoom prevention
+  // This prevents issues on laptops with touchpads
+  const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  
+  if (isMobileDevice) {
+    // Prevent double-tap zoom on mobile, but exclude buttons and links
+    document.addEventListener('touchend', (e) => {
+      // Don't prevent default on interactive elements
+      const target = e.target as HTMLElement;
+      const isInteractiveElement = 
+        target.tagName === 'BUTTON' || 
+        target.tagName === 'A' ||
+        target.closest('button') || 
+        target.closest('a');
+      
+      if (isInteractiveElement) return;
+      
+      const now = Date.now();
+      const DOUBLE_TAP_THRESHOLD = 300;
+      if (now - (window.lastTap || 0) < DOUBLE_TAP_THRESHOLD) {
+        e.preventDefault();
+      }
+      window.lastTap = now;
+    }, { passive: false });
+  }
 };
 
 // Helper classes to conditionally apply to components

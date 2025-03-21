@@ -53,20 +53,32 @@ const Index = () => {
   }, []);
   
   useEffect(() => {
-    try {
-      const observer = new IntersectionObserver(
-        observerCallback,
-        { threshold: 0.1, rootMargin: '200px' }
-      );
-      
-      sectionsRef.current.forEach((section, index) => {
-        if (!section) return;
+    let observer: IntersectionObserver | null = null;
+    let safetyTimeout: NodeJS.Timeout | null = null;
+    
+    // Only create intersection observer on desktop devices
+    // This avoids performance issues on mobile/weaker devices
+    if (!isMobile) {
+      try {
+        observer = new IntersectionObserver(
+          observerCallback,
+          { 
+            threshold: 0.1, 
+            rootMargin: '200px',
+            // Only track sections that are in or near the viewport
+            root: null 
+          }
+        );
         
-        section.setAttribute('data-section-index', index.toString());
-        observer.observe(section);
-      });
-
-      const safetyTimeout = setTimeout(() => {
+        sectionsRef.current.forEach((section, index) => {
+          if (!section) return;
+          
+          section.setAttribute('data-section-index', index.toString());
+          observer.observe(section);
+        });
+      } catch (error) {
+        console.error("Error in intersection observer:", error);
+        // Fall back to showing all sections if observer fails
         setVisibleSections({
           0: true,
           1: true,
@@ -74,14 +86,9 @@ const Index = () => {
           3: true,
           4: true
         });
-      }, 1000);
-      
-      return () => {
-        observer.disconnect();
-        clearTimeout(safetyTimeout);
-      };
-    } catch (error) {
-      console.error("Error in intersection observer:", error);
+      }
+    } else {
+      // On mobile, just show all sections without observer
       setVisibleSections({
         0: true,
         1: true,
@@ -89,9 +96,29 @@ const Index = () => {
         3: true,
         4: true
       });
-      return () => {};
     }
-  }, [observerCallback]);
+
+    // Safety timeout to ensure sections become visible
+    // even if observer has issues
+    safetyTimeout = setTimeout(() => {
+      setVisibleSections({
+        0: true,
+        1: true,
+        2: true,
+        3: true,
+        4: true
+      });
+    }, 1000);
+    
+    return () => {
+      if (observer) {
+        observer.disconnect();
+      }
+      if (safetyTimeout) {
+        clearTimeout(safetyTimeout);
+      }
+    };
+  }, [observerCallback, isMobile]);
   
   const handleTryNowClick = () => {
     setShowGlowDialog(true);

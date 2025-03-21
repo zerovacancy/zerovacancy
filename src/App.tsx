@@ -84,10 +84,13 @@ function App() {
       import('./pages/index');
     }, 200);
     
-    const passiveOption = { passive: true };
-    document.addEventListener('touchstart', passiveEventHandler, passiveOption);
-    document.addEventListener('touchmove', passiveEventHandler, passiveOption);
-    document.addEventListener('wheel', passiveEventHandler, passiveOption);
+    // Only add passive touch events if needed for mobile
+    // This prevents unnecessary event listeners on desktop browsers
+    if (isMobile) {
+      const passiveOption = { passive: true };
+      document.addEventListener('touchstart', passiveEventHandler, passiveOption);
+      document.addEventListener('touchmove', passiveEventHandler, passiveOption);
+    }
     
     if (isMobile) {
       document.body.classList.add('optimize-animations-mobile');
@@ -107,9 +110,11 @@ function App() {
     
     return () => {
       clearTimeout(timer);
-      document.removeEventListener('touchstart', passiveEventHandler);
-      document.removeEventListener('touchmove', passiveEventHandler);
-      document.removeEventListener('wheel', passiveEventHandler);
+      // Only remove events that were added
+      if (isMobile) {
+        document.removeEventListener('touchstart', passiveEventHandler);
+        document.removeEventListener('touchmove', passiveEventHandler);
+      }
       
       document.body.classList.remove('color-white-bg-mobile');
       document.body.classList.remove('optimize-animations-mobile');
