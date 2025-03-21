@@ -1,6 +1,6 @@
 
-import * as React from "react"
-import { useEffect } from "react"
+import * as React from "react" 
+const { useEffect, useState } = React
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { CheckCircle, X } from "lucide-react"
 import { Confetti } from "@/components/ui/confetti"
