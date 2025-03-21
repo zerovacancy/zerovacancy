@@ -258,7 +258,7 @@ const BlogAdmin = () => {
                         <div className="flex items-center text-sm text-gray-500">
                           <Calendar size={16} className="mr-1 text-gray-400" />
                           {post.publishedAt 
-                            ? formatDate(post.publishedAt)
+                            ? formatDate(post.publishedAt, { format: 'short' })
                             : 'Not published'
                           }
                         </div>

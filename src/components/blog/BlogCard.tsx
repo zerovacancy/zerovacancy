@@ -21,7 +21,7 @@ const BlogCard = ({ post, variant = 'default' }: BlogCardProps) => {
     readingTime
   } = post;
 
-  const formattedDate = formatDate(publishedAt);
+  const formattedDate = publishedAt ? formatDate(publishedAt, { format: 'short' }) : 'Not published';
 
   if (variant === 'featured') {
     return (

@@ -191,7 +191,7 @@ const BlogEditor = () => {
           <span className="mx-2">•</span>
           <span>
             {isPublished 
-              ? formatDate(publishedAt || new Date().toISOString()) 
+              ? formatDate(publishedAt || new Date().toISOString(), { format: 'long' }) 
               : 'Draft'
             }
           </span>

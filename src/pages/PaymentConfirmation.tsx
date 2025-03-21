@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { loadStripe } from "@stripe/stripe-js";
+import { formatDate } from "@/lib/utils";
 
 const PaymentConfirmation = () => {
   const [status, setStatus] = useState<'processing' | 'success' | 'failed'>('processing');
@@ -165,7 +166,7 @@ const PaymentConfirmation = () => {
                     <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                       <dt className="text-sm font-medium text-gray-500">Current Period</dt>
                       <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                        {formatDate(subscriptionDetails.current_period_start)} - {formatDate(subscriptionDetails.current_period_end)}
+                        {formatDate(subscriptionDetails.current_period_start, { format: 'short' })} - {formatDate(subscriptionDetails.current_period_end, { format: 'short' })}
                       </dd>
                     </div>
                   </dl>
