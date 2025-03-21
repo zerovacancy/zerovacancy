@@ -62,43 +62,20 @@ export function GlowDialog({
   };
   
   useEffect(() => {
-    if (isOpen && emailInputRef.current && isMobileView) {
-      const focusInput = () => {
-        if (!emailInputRef.current) return;
-        
-        const input = emailInputRef.current;
-        input.readOnly = false;
-        input.inputMode = 'email';
-        input.setAttribute('autocorrect', 'off');
-        input.setAttribute('autocapitalize', 'off');
-        input.setAttribute('spellcheck', 'false');
-        
-        input.focus();
-        input.click();
-        
-        if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+    // Simpler approach to focus handling that's less likely to cause issues
+    if (isOpen && emailInputRef.current) {
+      // Just set a simple timeout for focus, less aggressive approach
+      setTimeout(() => {
+        if (emailInputRef.current) {
           try {
-            input.dispatchEvent(new MouseEvent('mousedown'));
-            input.dispatchEvent(new MouseEvent('mouseup'));
-            input.dispatchEvent(new MouseEvent('click'));
-            
-            setTimeout(() => {
-              if (emailInputRef.current) {
-                emailInputRef.current.focus();
-                emailInputRef.current.click();
-              }
-            }, 300);
+            emailInputRef.current.focus();
           } catch (err) {
-            console.error("Error forcing mobile keyboard:", err);
+            console.error("Error focusing input:", err);
           }
         }
-      };
-      
-      focusInput();
-      setTimeout(focusInput, 100);
-      setTimeout(focusInput, 400);
+      }, 300);
     }
-  }, [isOpen, isMobileView]);
+  }, [isOpen]);
 
   useEffect(() => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -163,9 +140,8 @@ export function GlowDialog({
     }
   }, [email, handleOpenChange, isCreator]);
 
-  const dialogContentClassName = isMobileView 
-    ? "max-w-[95vw] md:max-w-3xl overflow-hidden border-none bg-transparent" 
-    : "sm:max-w-2xl md:max-w-3xl overflow-hidden border-none bg-transparent";
+  // Simplified class for dialog content with better sizing for mobile
+  const dialogContentClassName = "p-0 border-0 max-w-[90vw] sm:max-w-2xl md:max-w-3xl bg-transparent";
 
   return (
     <>
@@ -175,31 +151,21 @@ export function GlowDialog({
       >
         <DialogContent className={dialogContentClassName}>
           <DialogTitle className="sr-only">Join Waitlist - Enter Your Email</DialogTitle>
-          {/* Custom close button with increased size for mobile */}
+          {/* Simpler close button that's easier to tap */}
           <button 
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              handleOpenChange(false);
-            }}
-            className="absolute top-4 right-4 z-[1000] text-white hover:text-white transition-colors duration-200 rounded-full p-2.5 hover:bg-white/20 bg-black/30 shadow-md active:bg-white/30 active:scale-95"
+            onClick={() => handleOpenChange(false)}
+            className="absolute top-4 right-4 z-[1000] text-white bg-black/40 rounded-full p-4 shadow-md"
             aria-label="Close dialog"
-            style={{ 
-              minHeight: '50px', 
-              minWidth: '50px', 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center',
-              touchAction: 'manipulation',
-              cursor: 'pointer',
-              WebkitTapHighlightColor: 'rgba(0,0,0,0)'
-            }}
             type="button"
+            style={{
+              width: '44px',
+              height: '44px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
+            <X size={24} />
           </button>
           <style>
             {`
@@ -237,11 +203,8 @@ export function GlowDialog({
             }
             `}
           </style>
-          <motion.div 
-            className="relative rounded-lg overflow-hidden bg-gradient-to-r from-[#5425B3] via-[#6933E8] to-[#3151D3] p-7 sm:p-9 md:p-12 shadow-[0_10px_40px_rgba(0,0,0,0.4)]"
-            initial={{ scale: 0.95, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1, transition: { duration: 0.4, ease: "easeOut" } }}
-            exit={{ scale: 0.95, opacity: 0, transition: { duration: 0.2, ease: "easeIn" } }}
+          <div 
+            className="relative rounded-lg overflow-hidden bg-gradient-to-r from-[#5425B3] via-[#6933E8] to-[#3151D3] p-5 sm:p-7 md:p-10 shadow-[0_10px_40px_rgba(0,0,0,0.4)]"
           >
             <div className="absolute inset-0 bg-[radial-gradient(#ffffff20_1px,transparent_1px)] [background-size:18px_18px] opacity-25"></div>
             
@@ -272,23 +235,11 @@ export function GlowDialog({
                     className="w-full px-4 py-3 h-12 text-black border border-gray-300 rounded-md"
                     style={{
                       backgroundColor: "white",
-                      opacity: 1
+                      opacity: 1,
+                      fontSize: '16px' // Prevent iOS zoom on focus
                     }}
                     inputMode="email"
-                    autoCorrect="off"
-                    autoCapitalize="off"
-                    spellCheck="false"
                     autoComplete="email"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      e.currentTarget.focus();
-                      setIsEmailFocused(true);
-                    }}
-                    onTouchStart={(e) => {
-                      e.stopPropagation();
-                      e.currentTarget.focus();
-                      setIsEmailFocused(true);
-                    }}
                     onFocus={() => setIsEmailFocused(true)}
                     onBlur={() => setIsEmailFocused(false)}
                     required
@@ -373,7 +324,7 @@ export function GlowDialog({
                 </div>
               </form>
             </div>
-          </motion.div>
+          </div>
         </DialogContent>
       </Dialog>
       

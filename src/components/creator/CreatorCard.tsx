@@ -25,12 +25,19 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
 
   const firstName = creator.name.split(' ')[0];
 
-  // Use useCallback to memoize the click handler with a more direct approach
-  const handleCTAClick = useCallback(() => {
-    // First set the stage
-    setStage('input');
-    // Then show the dialog immediately
+  // Simplified click handler for better mobile compatibility
+  const handleCTAClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    // Prevent any default behavior
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Simple approach - just show dialog
     setShowEmailDialog(true);
+    
+    // Set stage after a short delay to ensure dialog is ready
+    setTimeout(() => {
+      setStage('input');
+    }, 100);
   }, []);
 
   // Use useCallback to memoize the dialog state change handler
@@ -433,7 +440,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 </div>
 
                 {/* Content section with reduced spacing */}
-                <div className="px-5 pt-4 pb-2 flex flex-col relative z-10 flex-grow" style={{ minHeight: "250px" }}>
+                <div className="px-5 pt-4 pb-2 flex flex-col relative z-10 flex-grow">
                   {/* Enhanced creator info section with improved visual hierarchy */}
                   <div className="mb-3 pb-3 border-b border-purple-100/40">
                     <div className="py-2 px-3 -mx-2 mb-2 bg-purple-50 border-l-2 border-purple-400 rounded-r-md">
@@ -518,13 +525,12 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
           </article>
       )}
       
-      {/* Email waitlist dialog with fixed positioning for mobile rendering */}
-      {showEmailDialog && (
-        <GlowDialog 
-          open={showEmailDialog} 
-          onOpenChange={handleDialogOpenChange}
-        />
-      )}
+      {/* Always render dialog but control visibility with open prop */}
+      <GlowDialog 
+        open={showEmailDialog} 
+        onOpenChange={handleDialogOpenChange}
+        forceOpen={false} // Ensure it only opens via our explicit controls
+      />
       
       {/* Image preview dialog - only shown if onPreviewClick is not provided */}
       {selectedImage && !onPreviewClick && (

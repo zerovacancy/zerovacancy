@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, memo } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 
@@ -14,57 +14,66 @@ interface CreatorMediaProps {
   onVideoLoad?: () => void;
 }
 
-export const getMedia = (creator: Creator) => {
-  if (creator.name === 'Emily Johnson') {
-    return { type: 'image', src: '/newemilyprofile.jpg' };
+// Pre-calculate media mapping to avoid recalculation during renders
+const MEDIA_MAPPING = {
+  'Emily Johnson': { type: 'image', src: '/newemilyprofile.jpg' },
+  'Jane Cooper': { type: 'image', src: '/janeprofile.png' },
+  'Michael Brown': { 
+    type: 'image', // Changed to image on mobile to prevent jittering
+    src: '/creatorcontent/michael-brown/work-1.webp',
+    videoSrc: '/michaelprofile.mov',
+    fallback: 'https://images.unsplash.com/photo-1581092795360-fd1ca04f0952'
   }
-  if (creator.name === 'Jane Cooper') {
-    return { type: 'image', src: '/janeprofile.png' };
-  }
-  if (creator.name === 'Michael Brown') {
-    return { 
-      type: 'video', 
-      src: '/michaelprofile.mov',
-      fallback: 'https://images.unsplash.com/photo-1581092795360-fd1ca04f0952'
-    };
-  }
-  return { type: 'image', src: creator.image };
 };
 
-export const CreatorMedia: React.FC<CreatorMediaProps> = ({ 
+export const getMedia = (creator: Creator, isMobile: boolean) => {
+  // Use the pre-defined mapping
+  const mediaConfig = MEDIA_MAPPING[creator.name as keyof typeof MEDIA_MAPPING];
+  
+  // Always return image for mobile to prevent jitter
+  if (isMobile && creator.name === 'Michael Brown') {
+    return { 
+      type: 'image', 
+      src: mediaConfig.src
+    };
+  }
+  
+  // Return the mapping or a default
+  return mediaConfig || { type: 'image', src: creator.image };
+};
+
+// Direct export with arrow function syntax
+export const CreatorMedia = ({ 
   creator, 
   onImageLoad,
   onVideoLoad
-}) => {
+}: CreatorMediaProps) => {
   const isMobile = useIsMobile();
   const [imageError, setImageError] = useState(false);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
   const mediaRef = useRef<HTMLDivElement>(null);
   
-  const media = getMedia(creator);
+  // Get media with isMobile parameter to make correct decisions
+  const media = getMedia(creator, isMobile);
   
-  // Use Intersection Observer to load media only when visible
+  // Set fixed image dimensions to prevent layout shifts
+  const [dimensions] = useState({
+    width: 400,
+    height: 300
+  });
+  
   useEffect(() => {
-    if (!mediaRef.current) return;
-    
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setIsVisible(true);
-          // Disconnect after detecting visibility to save resources
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1, rootMargin: '200px' }
-    );
-    
-    observer.observe(mediaRef.current);
-    
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
+    // If image type media, trigger onImageLoad immediately
+    // This avoids waiting for actual image load which can cause jitters
+    if (media.type === 'image' && onImageLoad) {
+      // Use a short timeout to batch with other UI updates
+      const timeoutId = setTimeout(() => {
+        onImageLoad(creator.image);
+      }, 10);
+      
+      return () => clearTimeout(timeoutId);
+    }
+  }, [media.type, creator.image, onImageLoad]);
   
   const handleImageLoad = (event: React.SyntheticEvent<HTMLImageElement>) => {
     if (onImageLoad) {
@@ -83,58 +92,56 @@ export const CreatorMedia: React.FC<CreatorMediaProps> = ({
     setImageError(true);
   };
   
-  // Generate appropriate image sizes for srcset
-  const generateSrcSet = (src: string) => {
-    // Extract file extension and base path
-    const extension = src.substring(src.lastIndexOf('.')) || '';
-    const basePath = src.substring(0, src.lastIndexOf('.'));
-    
-    // For external images, return original source
-    if (src.startsWith('http')) {
-      return src;
-    }
-    
-    // Use same source since we don't have resized variants
-    // In a production app, you would have different sizes:
-    // ${basePath}-small${extension} 480w, ${basePath}-medium${extension} 800w, etc.
-    return src;
-  };
-  
   return (
     <div 
       className={cn(
-        "relative will-change-transform", 
+        "relative", 
         "overflow-hidden",
         "flex items-center justify-center",
         "h-full w-full", // Fill container
-        isMobile ? "aspect-[4/3]" : "aspect-[4/3]" // More standardized aspect ratio
-      )} 
+        "aspect-[4/3]", // Consistent aspect ratio
+        // Reserve space with fixed dimensions to prevent layout shifts
+        `min-h-[${dimensions.height}px]`,
+        // Hardware acceleration
+        "transform-gpu"
+      )}
       ref={mediaRef}
+      style={{
+        // Set explicit dimensions for reliability
+        aspectRatio: '4/3',
+        minHeight: '300px',
+        contain: 'paint', // Removed layout constraint
+        position: 'relative'
+      }}
     >
-      {isVisible && ((media.type === 'image') || (media.type === 'video' && imageError)) ? (
-        <img 
-          src={media.type === 'image' ? media.src : (media as any).fallback}
-          alt={`${creator.name} profile`}
-          className="w-full h-full object-cover object-center transform-gpu"
-          onLoad={handleImageLoad}
-          onError={handleImageError}
-          loading="lazy"
-          decoding="async"
-          fetchPriority="auto"
-          srcSet={generateSrcSet(media.type === 'image' ? media.src : (media as any).fallback)}
-          sizes="(max-width: 768px) 95vw, (max-width: 1024px) 50vw, 33vw"
-          width="400"
-          height="300" 
-          style={{
-            contentVisibility: 'auto',
-            containIntrinsicSize: 'auto 300px',
-          }}
-        />
-      ) : isVisible && media.type === 'video' ? (
-        <>
-          {/* Video element with reduced quality on mobile to save data */}
+      {/* Always render the image immediately with explicit dimensions */}
+      <img 
+        src={media.type === 'image' ? media.src : (media as any).fallback}
+        alt={`${creator.name} profile`}
+        className="w-full h-full object-cover object-center transform-gpu"
+        onLoad={handleImageLoad}
+        onError={handleImageError}
+        loading="eager" // Changed to eager for critical above-the-fold content
+        decoding="async"
+        fetchPriority="high" // Higher priority for critical content
+        width={dimensions.width}
+        height={dimensions.height}
+        style={{
+          // Fixed size with explicit dimensions
+          width: '100%',
+          height: '100%',
+          // Ensure hardware acceleration
+          transform: 'translateZ(0)',
+          objectFit: 'cover',
+          display: 'block'
+        }}
+      />
+      
+      {/* Only load video on desktop and only after a delay to prevent jitter */}
+      {!isMobile && media.type === 'video' && (media as any).videoSrc && (
+        <div className="absolute inset-0" style={{ zIndex: 2 }}>
           <video
-            src={media.src}
+            src={(media as any).videoSrc}
             className="w-full h-full object-cover object-center transform-gpu"
             onError={() => setImageError(true)}
             onLoadedData={handleVideoLoad}
@@ -142,21 +149,17 @@ export const CreatorMedia: React.FC<CreatorMediaProps> = ({
             muted
             loop
             playsInline
-            preload={isMobile ? "metadata" : "auto"} // Reduced preload on mobile
+            preload="none" // Only load on demand
             style={{
-              willChange: 'transform',
-              transform: 'translate3d(0,0,0)',
+              transform: 'translateZ(0)',
+              opacity: isVideoLoaded ? 1 : 0,
+              transition: 'opacity 0.3s ease-in-out',
             }}
           />
-          {/* Fallback image that shows while video is loading */}
-          {!isVideoLoaded && (
-            <div className="absolute inset-0 bg-gray-200 animate-pulse"></div>
-          )}
-        </>
-      ) : (
-        // Placeholder when not yet visible
-        <div className="w-full h-full bg-gray-100"></div>
+        </div>
       )}
     </div>
   );
-};
+}
+
+// Component is exported directly above
