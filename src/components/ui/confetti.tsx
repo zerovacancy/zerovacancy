@@ -129,14 +129,14 @@ const Confetti = forwardRef<ConfettiRef, Props>((props, ref) => {
     <ConfettiContext.Provider value={api}>
       <canvas 
         ref={canvasRef} 
-        className="fixed inset-0 pointer-events-none"
+        className="fixed inset-0 pointer-events-none touch-none"
         style={{
           width: "100vw",
           height: "100vh",
           position: "fixed",
           top: 0,
           left: 0,
-          zIndex: 9999, // Ensure it's on top of everything
+          zIndex: 9999, // Ensure it's on top of everything but below dialog (z-index 10000)
         }}
         {...rest} 
       />

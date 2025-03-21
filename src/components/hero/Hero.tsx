@@ -96,6 +96,11 @@ const MobileHeroCTA = () => {
         setShowSuccessDialog(true);
       }, 300);
       
+      // Set a backup timer to ensure dialog stays visible
+      setTimeout(() => {
+        setShowSuccessDialog(true);
+      }, 600);
+      
     } catch (error) {
       console.error("Error submitting email:", error);
       toast.error("Failed to join waitlist. Please try again.");

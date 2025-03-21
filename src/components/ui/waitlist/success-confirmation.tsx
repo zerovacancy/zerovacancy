@@ -179,7 +179,7 @@ export function SuccessConfirmation({
             "sm:max-w-[425px] rounded-2xl p-0 gap-0 text-center",
             "border-0 shadow-[0_0_20px_rgba(139,92,246,0.3)]",
             "bg-gradient-to-b from-white to-indigo-50/50",
-            "z-[1000]" // Ensure dialog is visible but below confetti
+            "z-[10000]" // Ensure dialog is visible above confetti (z-index 9999)
           )}
         >
           {/* Custom Close Button for better mobile interaction */}
