@@ -14,6 +14,12 @@
     <link rel="preload" href="/logo.png" as="image" fetchpriority="high" />
     <link rel="preload" href="/heroparallax/heroparallax1.jpg" as="image" fetchpriority="high" />
     
+    <!-- Module preloads for critical JavaScript -->
+    <link rel="modulepreload" href="/src/main.tsx" />
+    <link rel="modulepreload" href="/src/App.tsx" />
+    <link rel="modulepreload" href="/src/components/hero/ParallaxHero.tsx" />
+    <link rel="modulepreload" href="/src/components/ui/optimized-spotlight.tsx" />
+    
     <!-- Resource hints -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -41,7 +47,7 @@
     <meta name="twitter:image" content="https://www.zerovacancy.ai/og-image-new.png">
     <meta name="twitter:image:alt" content="ZeroVacancy - The premium marketplace for real estate content creators">
     
-    <!-- Inline critical CSS -->
+    <!-- Inline critical CSS - enhanced for desktop -->
     <style>
       /* Critical styles to avoid FOUC */
       body {
@@ -50,24 +56,67 @@
         background-color: #fff;
         font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       }
+      
+      /* Layout optimization with content-visibility */
+      .below-fold {
+        content-visibility: auto;
+        contain-intrinsic-size: 1px 5000px;
+      }
+      
+      /* Hero section sizing with explicit dimensions to prevent CLS */
       .hero, section[class*="hero"] {
         min-height: 70vh;
+        position: relative;
+        contain: layout style;
       }
+      
+      /* Desktop-specific hero sizing */
       @media (min-width: 768px) {
         .hero, section[class*="hero"] {
           min-height: 90vh;
+          height: auto;
+          aspect-ratio: auto;
         }
       }
+      
+      /* Image aspect ratio containers to prevent layout shift */
+      .img-container {
+        position: relative;
+        overflow: hidden;
+        height: 0;
+        contain: strict;
+      }
+      
+      /* Common responsive image aspect ratios */
+      .aspect-16-9 { padding-bottom: 56.25%; }
+      .aspect-4-3 { padding-bottom: 75%; }
+      .aspect-1-1 { padding-bottom: 100%; }
+      
+      /* Properly position images in their containers */
+      .img-container img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      
       /* Avoid layout shifts with font loading */
       h1, h2, h3, h4, h5, h6, p, span, a, button {
         font-family: system-ui, -apple-system, sans-serif;
       }
+      
       /* Enable hardware acceleration for critical animations */
-      .animated, .transform-gpu, .will-change {
+      .animated, .transform-gpu, .will-change,
+      [class*="hover"], [class*="animation"] {
         transform: translateZ(0);
         will-change: transform, opacity;
         backface-visibility: hidden;
+        transform-style: preserve-3d;
+        isolation: isolate;
       }
+      
       /* Loading spinner */
       .page-loader {
         position: fixed;
@@ -78,6 +127,7 @@
         background-color: #fff;
         z-index: 9999;
       }
+      
       .spinner {
         width: 40px;
         height: 40px;
@@ -86,6 +136,7 @@
         border-top-color: #6633ff;
         animation: spin 1s linear infinite;
       }
+      
       @keyframes spin {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
@@ -103,24 +154,89 @@
     
     <div id="root"></div>
     
-    <!-- Immediately hide loader after app starts loading -->
+    <!-- Critical initialization JavaScript -->
     <script>
       // Measure performance
       performance.mark('app-init-start');
       
-      // Hide loader once DOM is ready or after a timeout
-      document.addEventListener('DOMContentLoaded', () => {
-        const loader = document.getElementById('page-loader');
-        if (loader) {
-          setTimeout(() => {
-            loader.style.opacity = '0';
-            loader.style.transition = 'opacity 0.3s ease';
-            setTimeout(() => {
-              loader.style.display = 'none';
-            }, 300);
-          }, 100);
+      // Early DOM optimization for desktop
+      (function() {
+        // Browser capability detection
+        const supportsIntersectionObserver = 'IntersectionObserver' in window;
+        const supportsContentVisibility = 'contentVisibility' in document.body.style;
+        const isDesktop = window.innerWidth >= 768;
+        
+        // Set optimization flags on HTML element
+        document.documentElement.dataset.device = isDesktop ? 'desktop' : 'mobile';
+        document.documentElement.dataset.supportsIO = supportsIntersectionObserver ? 'true' : 'false';
+        document.documentElement.dataset.supportsCV = supportsContentVisibility ? 'true' : 'false';
+        
+        // Apply desktop optimizations
+        if (isDesktop) {
+          // Add below-fold class to sections after the hero
+          const markBelowFoldContent = () => {
+            const sections = document.querySelectorAll('section:not([class*="hero"])');
+            let firstSectionAfterHero = false;
+            sections.forEach(section => {
+              if (firstSectionAfterHero) {
+                section.classList.add('below-fold');
+              }
+              if (section.classList.contains('hero') || section.classList.contains('parallax-hero')) {
+                firstSectionAfterHero = true;
+              }
+            });
+          };
+          
+          // Schedule content marking
+          if (document.readyState !== 'loading') {
+            setTimeout(markBelowFoldContent, 100);
+          } else {
+            document.addEventListener('DOMContentLoaded', () => setTimeout(markBelowFoldContent, 100));
+          }
+          
+          // Add passive listeners for scroll and resize events
+          window.addEventListener('scroll', () => {}, { passive: true });
+          window.addEventListener('resize', () => {}, { passive: true });
+          
+          // Preconnect to additional resources based on viewport
+          const additionalPreconnects = [
+            'https://www.googletagmanager.com',
+            'https://www.google-analytics.com'
+          ];
+          
+          additionalPreconnects.forEach(domain => {
+            const link = document.createElement('link');
+            link.rel = 'preconnect';
+            link.href = domain;
+            link.crossOrigin = 'anonymous';
+            document.head.appendChild(link);
+          });
         }
-      });
+      })();
+      
+      // Hide loader with optimized animation
+      const hideLoader = () => {
+        const loader = document.getElementById('page-loader');
+        if (!loader) return;
+        
+        // Use requestAnimationFrame for smoother transition
+        requestAnimationFrame(() => {
+          loader.style.opacity = '0';
+          loader.style.transition = 'opacity 0.3s ease';
+          
+          // Clean up after animation completes
+          loader.addEventListener('transitionend', () => {
+            loader.style.display = 'none';
+          }, { once: true });
+        });
+      };
+      
+      // Hide loader once DOM is ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', hideLoader);
+      } else {
+        hideLoader();
+      }
       
       // Fallback timeout in case DOMContentLoaded doesn't fire
       setTimeout(() => {
@@ -134,13 +250,80 @@
     <!-- Efficiently load the main script -->
     <script type="module" src="/src/main.tsx"></script>
     
-    <!-- Register service worker for better performance -->
+    <!-- Enhanced service worker registration with desktop optimization -->
     <script>
+      // Service worker with improved cache control
       if ('serviceWorker' in navigator) {
+        // Detect if desktop for enhanced caching
+        const isDesktop = window.innerWidth >= 768 && 
+                        !(/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+        
         window.addEventListener('load', () => {
+          // Register the service worker
           navigator.serviceWorker.register('/service-worker.js')
             .then(registration => {
               console.log('ServiceWorker registration successful');
+              
+              // Detect service worker updates
+              registration.addEventListener('updatefound', () => {
+                const newWorker = registration.installing;
+                
+                // When the new service worker is installed
+                newWorker.addEventListener('statechange', () => {
+                  if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                    // New version is available - handle based on device type
+                    if (isDesktop) {
+                      // Desktop can delay updates until idle
+                      if ('requestIdleCallback' in window) {
+                        window.requestIdleCallback(() => {
+                          newWorker.postMessage({ type: 'SKIP_WAITING' });
+                        }, { timeout: 5000 });
+                      } else {
+                        setTimeout(() => {
+                          newWorker.postMessage({ type: 'SKIP_WAITING' });
+                        }, 3000);
+                      }
+                    } else {
+                      // Mobile updates immediately
+                      newWorker.postMessage({ type: 'SKIP_WAITING' });
+                    }
+                  }
+                });
+              });
+              
+              // Desktop-specific resource prefetching
+              if (isDesktop && registration.active) {
+                // Wait till page is almost loaded
+                setTimeout(() => {
+                  // Find resources to prefetch based on visible viewport
+                  const prefetchResources = [];
+                  
+                  // Find all images that aren't in the viewport but close
+                  document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+                    if (img.src && !img.complete) {
+                      prefetchResources.push(img.src);
+                    }
+                  });
+                  
+                  // Find critical desktop CSS and JS
+                  document.querySelectorAll('link[rel="stylesheet"], script[src]').forEach(resource => {
+                    const src = resource.href || resource.src;
+                    if (src && !resource.dataset.prefetched) {
+                      prefetchResources.push(src);
+                      resource.dataset.prefetched = 'true';
+                    }
+                  });
+                  
+                  // Send the list to service worker for prefetching
+                  if (prefetchResources.length > 0) {
+                    const msgChan = new MessageChannel();
+                    registration.active.postMessage({
+                      type: 'PREFETCH_RESOURCES',
+                      resources: prefetchResources
+                    }, [msgChan.port2]);
+                  }
+                }, 2000);
+              }
             })
             .catch(error => {
               console.log('ServiceWorker registration failed:', error);
