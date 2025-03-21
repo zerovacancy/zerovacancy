@@ -60,15 +60,16 @@ export const WaitlistCreatorCTA: React.FC<WaitlistCreatorCTAProps> = ({
           iconPosition="left"
           className="w-full min-w-[320px] font-medium"
           style={{
-            // Apply styling to match 3D reference precisely
-            height: '64px',  // Taller button as specified
+            // Apply styling precisely matching reference design button
+            height: '68px',  // Increased height for perfect proportions
             background: buttonColors.secondaryCta.buttonBackground,
             border: 'none', // No standard border - using outline in box-shadow
-            borderRadius: '32px', // Pill shape as specified (half of height)
-            boxShadow: shadowStyles.secondaryCTA, // Using precise 3D shadow stack
+            borderRadius: '34px', // Perfect pill shape (half of height)
+            boxShadow: shadowStyles.secondaryCTA, // Using precise shadow structure from reference
             color: buttonColors.secondaryCta.text,
-            fontWeight: '600', // Slightly bolder text
-            transition: 'all 0.15s ease-out', // Quicker transition for better click feel
+            fontWeight: '590', // Slightly heavier weight as specified
+            letterSpacing: '-0.2px', // Adjusted letter spacing as specified
+            transition: 'all 0.15s ease-out', // Responsive transition
             // Interactive elements
             cursor: 'pointer',
             // Enhanced hover state will be applied via CSS class in the Button3DPhysical component
@@ -82,7 +83,7 @@ export const WaitlistCreatorCTA: React.FC<WaitlistCreatorCTAProps> = ({
           data-hover-transition="all 0.15s ease-out"
           data-hover-background={buttonColors.secondaryCta.buttonBackground}
           data-active-transform="translateY(2px)" // Click animation - push down
-          data-active-box-shadow="0px 1px 0px rgba(0,0,0,0.08), 0px 2px 5px rgba(0,0,0,0.03), 0px 4px 8px rgba(118,51,220,0.05), 0px 0px 0px 2.5px rgba(118,51,220,0.3), inset 0px 1px 1px rgba(255,255,255,0.8), inset 0px -1px 0px rgba(0,0,0,0.03), inset 0px 0px 1px rgba(255,255,255,0.5)"
+          data-active-box-shadow="0px 0px 0px 1px rgba(0,0,0,0.08), 0px 1px 0px rgba(0,0,0,0.2), 0px 2px 0px rgba(0,0,0,0.03), 0px 3px 5px rgba(0,0,0,0.08), 0px 5px 8px rgba(0,0,0,0.03), inset 0px 1px 0px rgba(255,255,255,0.3), inset 0px -1px 0px rgba(0,0,0,0.08), inset 0px 0px 0px 1px rgba(255,255,255,0.15)"
         >
           {buttonText}
         </Button3DPhysical>

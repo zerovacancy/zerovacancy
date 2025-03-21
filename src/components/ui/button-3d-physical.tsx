@@ -362,35 +362,48 @@ export const Button3DPhysical = React.forwardRef<HTMLButtonElement, Button3DPhys
             ref={leftIconRef}
             className={cn(
               "flex items-center justify-center overflow-hidden relative",
-              // Smaller heights for the container to create breathing room from top/bottom edges
-              size === "sm" ? "w-8 h-[22px] ml-4 mr-3.5 my-auto" : 
-              size === "md" ? "w-10 h-[28px] ml-5 mr-5 my-auto" : 
-              "w-[40px] h-[40px] ml-6 mr-5 my-auto", // Keep original size for large buttons
+              // Enhanced container size for secondary CTA button
+              variant === 'secondaryCta' 
+                ? "w-[46px] h-[46px] ml-6 mr-5 my-auto" // Larger icon area as specified
+                : size === "sm" ? "w-8 h-[22px] ml-4 mr-3.5 my-auto" : 
+                  size === "md" ? "w-10 h-[28px] ml-5 mr-5 my-auto" : 
+                  "w-[40px] h-[40px] ml-6 mr-5 my-auto", // Keep original size for other buttons
               "after:content-[''] after:absolute after:right-[-8px] after:top-[25%] after:h-[50%] after:w-[1px] after:opacity-15",
               variant === 'primary' || variant === 'secondary' 
                 ? "after:bg-white" 
                 : "after:bg-black"
             )}
             style={{
-              borderRadius: size === "sm" ? "9px" : size === "md" ? "12px" : "15px",
+              borderRadius: variant === 'secondaryCta' ? "23px" : // Perfect circle for secondary CTA
+                            size === "sm" ? "9px" : size === "md" ? "12px" : "15px",
               // Enhanced border and shadow for premium 3D effect
               border: variant === 'primary' || variant === 'secondary' 
-                ? '1px solid rgba(255,255,255,0.2)' 
-                : '1px solid rgba(0,0,0,0.08)',
-              // Very subtle background differentiation for depth
+                ? '1px solid rgba(255,255,255,0.2)'
+                : variant === 'secondaryCta'
+                  ? '1px solid rgba(0,0,0,0.1)' // Specific border for secondary CTA
+                  : '1px solid rgba(0,0,0,0.08)',
+              // Background differentiation for each variant
               background: variant === 'primary' || variant === 'secondary' 
-                ? 'rgba(255,255,255,0.05)' 
-                : 'rgba(134,65,245,0.02)',
+                ? 'rgba(255,255,255,0.05)'
+                : variant === 'secondaryCta'
+                  ? 'rgba(245,245,250,0.9)' // Subtle tint matching button
+                  : 'rgba(134,65,245,0.02)',
               // Enhanced inner shadow for refined 3D appearance
               boxShadow: variant === 'primary' || variant === 'secondary' 
-                ? 'inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.1)' 
-                : 'inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)',
+                ? 'inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.1)'
+                : variant === 'secondaryCta'
+                  ? 'inset 0 1px 0 rgba(255,255,255,1), inset 0 -1px 0 rgba(0,0,0,0.03), 0 0 0 1px rgba(255,255,255,0.5)'
+                  : 'inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)',
               // Apply custom iconContainerStyle if provided via props
               ...iconContainerStyle
             }}
           >
             <span className={cn(
-              variant === 'primary' || variant === 'secondary' ? "text-white" : "text-[#7837DB]",
+              variant === 'primary' || variant === 'secondary' 
+                ? "text-white" 
+                : variant === 'secondaryCta' 
+                  ? "text-[#222222]" // Dark gray text for secondary CTA matching reference
+                  : "text-[#7837DB]",
               "flex items-center justify-center w-full h-full",
               "opacity-95" // Better visibility while maintaining integration
             )}>
@@ -432,35 +445,48 @@ export const Button3DPhysical = React.forwardRef<HTMLButtonElement, Button3DPhys
             ref={rightIconRef}
             className={cn(
               "flex items-center justify-center overflow-hidden relative",
-              // Smaller heights for the container to create breathing room from top/bottom edges
-              size === "sm" ? "w-8 h-[22px] mr-4 ml-3.5 my-auto" : 
-              size === "md" ? "w-10 h-[28px] mr-5 ml-5 my-auto" : 
-              "w-[40px] h-[40px] mr-6 ml-5 my-auto", // Keep original size for large buttons
+              // Enhanced container size for secondary CTA button
+              variant === 'secondaryCta' 
+                ? "w-[46px] h-[46px] mr-6 ml-5 my-auto" // Larger icon area as specified
+                : size === "sm" ? "w-8 h-[22px] mr-4 ml-3.5 my-auto" : 
+                  size === "md" ? "w-10 h-[28px] mr-5 ml-5 my-auto" : 
+                  "w-[40px] h-[40px] mr-6 ml-5 my-auto", // Keep original size for other buttons
               "after:content-[''] after:absolute after:left-[-8px] after:top-[25%] after:h-[50%] after:w-[1px] after:opacity-15",
               variant === 'primary' || variant === 'secondary' 
                 ? "after:bg-white" 
                 : "after:bg-black"
             )}
             style={{
-              borderRadius: size === "sm" ? "9px" : size === "md" ? "12px" : "15px",
+              borderRadius: variant === 'secondaryCta' ? "23px" : // Perfect circle for secondary CTA
+                          size === "sm" ? "9px" : size === "md" ? "12px" : "15px",
               // Enhanced border and shadow for premium 3D effect
               border: variant === 'primary' || variant === 'secondary' 
-                ? '1px solid rgba(255,255,255,0.2)' 
-                : '1px solid rgba(0,0,0,0.08)',
-              // Very subtle background differentiation for depth
+                ? '1px solid rgba(255,255,255,0.2)'
+                : variant === 'secondaryCta'
+                  ? '1px solid rgba(0,0,0,0.1)' // Specific border for secondary CTA
+                  : '1px solid rgba(0,0,0,0.08)',
+              // Background differentiation for each variant
               background: variant === 'primary' || variant === 'secondary' 
-                ? 'rgba(255,255,255,0.05)' 
-                : 'rgba(134,65,245,0.02)',
+                ? 'rgba(255,255,255,0.05)'
+                : variant === 'secondaryCta'
+                  ? 'rgba(245,245,250,0.9)' // Subtle tint matching button
+                  : 'rgba(134,65,245,0.02)',
               // Enhanced inner shadow for refined 3D appearance
               boxShadow: variant === 'primary' || variant === 'secondary' 
-                ? 'inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.1)' 
-                : 'inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)',
+                ? 'inset 0 1px 0 rgba(255,255,255,0.15), inset 0 -1px 0 rgba(0,0,0,0.1)'
+                : variant === 'secondaryCta'
+                  ? 'inset 0 1px 0 rgba(255,255,255,1), inset 0 -1px 0 rgba(0,0,0,0.03), 0 0 0 1px rgba(255,255,255,0.5)'
+                  : 'inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)',
               // Apply custom iconContainerStyle if provided via props
               ...iconContainerStyle
             }}
           >
             <span className={cn(
-              variant === 'primary' || variant === 'secondary' ? "text-white" : "text-[#7837DB]",
+              variant === 'primary' || variant === 'secondary' 
+                ? "text-white" 
+                : variant === 'secondaryCta' 
+                  ? "text-[#222222]" // Dark gray text for secondary CTA matching reference
+                  : "text-[#7837DB]",
               "flex items-center justify-center w-full h-full",
               "opacity-95" // Better visibility while maintaining integration
             )}>
