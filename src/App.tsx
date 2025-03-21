@@ -31,6 +31,7 @@ const Blog = lazy(() => import('./pages/Blog'));
 const BlogPost = lazy(() => import('./pages/BlogPost'));
 const BlogAdmin = lazy(() => import('./pages/admin/BlogAdmin'));
 const BlogEditor = lazy(() => import('./pages/admin/BlogEditor'));
+const AdminLogin = lazy(() => import('./pages/admin/AdminLogin'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 const PageLoader = () => {
@@ -162,6 +163,7 @@ function App() {
                   <Route path="/admin/blog" element={<BlogAdmin />} />
                   <Route path="/admin/blog/new" element={<BlogEditor />} />
                   <Route path="/admin/blog/edit/:id" element={<BlogEditor />} />
+                  <Route path="/hidden-admin-login" element={<AdminLogin />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>

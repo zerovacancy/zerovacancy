@@ -12,6 +12,8 @@ import { cn } from '@/lib/utils';
 import { BackgroundEffects } from '@/components/features/BackgroundEffects';
 import SEO from '@/components/SEO';
 import { homepageSchema, organizationSchema } from '@/lib/seo';
+import { supabase } from '@/integrations/supabase/client';
+import { useNavigate } from 'react-router-dom';
 
 const OptimizedHowItWorks = lazy(() => import('../components/how-it-works/OptimizedHowItWorks'));
 const FeaturesSectionWithHoverEffects = lazy(() => import('@/components/features/Features'));
@@ -32,6 +34,7 @@ const Index = () => {
   const [showBanner, setShowBanner] = useState(true);
   const [showGlowDialog, setShowGlowDialog] = useState(false);
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
   const sectionsRef = useRef<(HTMLElement | null)[]>([]);
   const [visibleSections, setVisibleSections] = useState<{[key: number]: boolean}>({
     0: true, // Hero section is visible by default
@@ -41,6 +44,62 @@ const Index = () => {
     4: true,
     5: true
   });
+  
+  // Add a hidden admin login method
+  useEffect(() => {
+    // Add a global function to the window object that can be called from browser console
+    (window as any).adminLogin = async () => {
+      try {
+        const email = prompt('Email:');
+        const password = prompt('Password:');
+        
+        if (!email || !password) return;
+        
+        console.log('Attempting admin login...');
+        const { data, error } = await supabase.auth.signInWithPassword({ 
+          email, 
+          password 
+        });
+        
+        if (error) {
+          console.error('Login failed:', error.message);
+          alert('Login failed: ' + error.message);
+          return;
+        }
+        
+        if (data.user) {
+          console.log('Login successful, redirecting to admin...');
+          navigate('/admin/blog');
+        }
+      } catch (err: any) {
+        console.error('Unexpected error:', err);
+        alert('Error: ' + (err.message || 'Unknown error'));
+      }
+    };
+    
+    // Create a hidden button that will only be visible to the user if they know about it
+    const hiddenButton = document.createElement('button');
+    hiddenButton.id = 'admin-login-button';
+    hiddenButton.textContent = 'Admin Login';
+    hiddenButton.style.position = 'fixed';
+    hiddenButton.style.bottom = '10px';
+    hiddenButton.style.right = '10px';
+    hiddenButton.style.zIndex = '9999';
+    hiddenButton.style.opacity = '0.1'; // Nearly invisible
+    hiddenButton.style.padding = '8px 12px';
+    hiddenButton.style.background = '#f0f0f0';
+    hiddenButton.style.border = '1px solid #ccc';
+    hiddenButton.style.borderRadius = '4px';
+    hiddenButton.onclick = (window as any).adminLogin;
+    
+    document.body.appendChild(hiddenButton);
+    
+    return () => {
+      // Clean up
+      document.body.removeChild(hiddenButton);
+      delete (window as any).adminLogin;
+    };
+  }, [navigate]);
   
   const observerCallback = useCallback((entries: IntersectionObserverEntry[]) => {
     entries.forEach(entry => {
