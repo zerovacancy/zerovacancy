@@ -9,6 +9,7 @@ import { SuccessConfirmation } from "../ui/waitlist/success-confirmation";
 import { toast } from "sonner";
 import { CheckCircle, ShieldCheck, ArrowRight, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import confetti from "canvas-confetti";
 
 // Hero CTA with email form for mobile that transitions from button to form
 // Uses an inline success message instead of a modal dialog for better mobile compatibility
