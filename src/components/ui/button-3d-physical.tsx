@@ -362,9 +362,9 @@ export const Button3DPhysical = React.forwardRef<HTMLButtonElement, Button3DPhys
             ref={leftIconRef}
             className={cn(
               "flex items-center justify-center overflow-hidden relative",
-              // Enhanced container size for secondary CTA button
-              variant === 'secondaryCta' 
-                ? "w-[46px] h-[46px] ml-6 mr-5 my-auto" // Larger icon area as specified
+              // Icon container size - specific size for CTA buttons
+              variant === 'primaryCta' || variant === 'secondaryCta'
+                ? "w-[40px] h-[40px] ml-6 mr-5 my-auto" // Standard size for CTAs
                 : size === "sm" ? "w-8 h-[22px] ml-4 mr-3.5 my-auto" : 
                   size === "md" ? "w-10 h-[28px] ml-5 mr-5 my-auto" : 
                   "w-[40px] h-[40px] ml-6 mr-5 my-auto", // Keep original size for other buttons
@@ -374,9 +374,8 @@ export const Button3DPhysical = React.forwardRef<HTMLButtonElement, Button3DPhys
                 : "after:bg-black"
             )}
             style={{
-              borderRadius: variant === 'secondaryCta' ? "23px" : // Perfect circle for secondary CTA
-                          variant === 'primaryCta' ? "23px" : // Perfect circle for primary CTA too
-                          size === "sm" ? "9px" : size === "md" ? "12px" : "15px",
+              // Use rounded rectangle for icon containers
+              borderRadius: "12px", // Rounded rectangle for all buttons
               // Make both CTA button icons match with no borders/shadows
               border: (variant === 'primaryCta' || variant === 'secondaryCta') 
                 ? 'none' // No border for either CTA button
@@ -446,9 +445,9 @@ export const Button3DPhysical = React.forwardRef<HTMLButtonElement, Button3DPhys
             ref={rightIconRef}
             className={cn(
               "flex items-center justify-center overflow-hidden relative",
-              // Enhanced container size for secondary CTA button
-              variant === 'secondaryCta' 
-                ? "w-[46px] h-[46px] mr-6 ml-5 my-auto" // Larger icon area as specified
+              // Icon container size - specific size for CTA buttons
+              variant === 'primaryCta' || variant === 'secondaryCta'
+                ? "w-[40px] h-[40px] mr-6 ml-5 my-auto" // Standard size for CTAs
                 : size === "sm" ? "w-8 h-[22px] mr-4 ml-3.5 my-auto" : 
                   size === "md" ? "w-10 h-[28px] mr-5 ml-5 my-auto" : 
                   "w-[40px] h-[40px] mr-6 ml-5 my-auto", // Keep original size for other buttons
@@ -458,9 +457,8 @@ export const Button3DPhysical = React.forwardRef<HTMLButtonElement, Button3DPhys
                 : "after:bg-black"
             )}
             style={{
-              borderRadius: variant === 'secondaryCta' ? "23px" : // Perfect circle for secondary CTA
-                          variant === 'primaryCta' ? "23px" : // Perfect circle for primary CTA too
-                          size === "sm" ? "9px" : size === "md" ? "12px" : "15px",
+              // Use rounded rectangle for icon containers
+              borderRadius: "12px", // Rounded rectangle for all buttons
               // Make both CTA button icons match with no borders/shadows
               border: (variant === 'primaryCta' || variant === 'secondaryCta') 
                 ? 'none' // No border for either CTA button

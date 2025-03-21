@@ -50,7 +50,11 @@ export const WaitlistCreatorCTA: React.FC<WaitlistCreatorCTAProps> = ({
               ...style?.icon
             }}
             data-container-style={JSON.stringify({
-              // Don't specify anything - let it inherit from the button component's styling
+              // Add same rounded rectangle border as primary button
+              borderRadius: '12px',
+              background: 'rgba(0,0,0,0.02)',
+              border: '1px solid rgba(0,0,0,0.1)',
+              boxShadow: 'inset 0 1px 0 rgba(255,255,255,1), inset 0 -1px 0 rgba(0,0,0,0.03)',
               ...style?.iconContainer
             })}
           />}

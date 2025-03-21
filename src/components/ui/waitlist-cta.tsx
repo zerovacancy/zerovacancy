@@ -114,7 +114,14 @@ export const WaitlistCTA: React.FC<WaitlistCTAProps> = ({
                 stroke: buttonColors.primaryCta.text,
                 ...style?.icon
               }}
-              data-container-style={JSON.stringify(style?.iconContainer)}
+              data-container-style={JSON.stringify({
+                // Add rounded rectangle border with subtle white outline
+                borderRadius: '12px',
+                background: 'rgba(255,255,255,0.1)',
+                border: '1px solid rgba(255,255,255,0.3)',
+                boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.3), inset 0 -1px 0 rgba(0,0,0,0.1)',
+                ...style?.iconContainer
+              })}
             />}
             iconPosition="left"
             className="w-full min-w-[320px] font-semibold tracking-[0.02em]"
