@@ -96,3 +96,44 @@ export function calculateEngagementScore(timeSpentMs: number, interactions: numb
 export function compareFeatures(a: any, b: any) {
   return a;
 }
+
+/**
+ * Format date to readable format
+ * @param dateString ISO date string
+ * @param options Formatting options
+ * @returns Formatted date string
+ */
+export function formatDate(
+  dateString: string,
+  options: {
+    format?: 'short' | 'long';
+    includeTime?: boolean;
+  } = {}
+): string {
+  const { format = 'short', includeTime = false } = options;
+  
+  const date = new Date(dateString);
+  
+  if (format === 'long') {
+    const formatter = new Intl.DateTimeFormat('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: includeTime ? 'numeric' : undefined,
+      minute: includeTime ? 'numeric' : undefined,
+    });
+    
+    return formatter.format(date);
+  }
+  
+  // Short format (default)
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: includeTime ? 'numeric' : undefined,
+    minute: includeTime ? 'numeric' : undefined,
+  });
+  
+  return formatter.format(date);
+}
