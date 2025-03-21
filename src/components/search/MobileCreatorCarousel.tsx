@@ -102,7 +102,7 @@ export const MobileCreatorCarousel = ({
           boxShadow: index < creators.length - 1 ? '8px 0 12px -6px rgba(118, 51, 220, 0.08)' : 'none'
         }} 
         className={cn(
-          "min-w-[85vw] w-[85vw] py-0 flex-shrink-0",
+          "min-w-[85vw] w-[85vw] py-2 pb-4 flex-shrink-0", // Added vertical padding
           "mr-4", // Consistent margin between cards
           "transform-gpu" // Force GPU rendering
         )}
@@ -154,7 +154,7 @@ export const MobileCreatorCarousel = ({
         style={{
           contain: 'paint', // Removed layout and size constraints
           width: '100%',
-          minHeight: '450px' // Set minimum height
+          minHeight: '510px' // Increased minimum height to prevent cut-off
         }}
       >
         <div className="flex flex-nowrap pl-1 transform-gpu">
