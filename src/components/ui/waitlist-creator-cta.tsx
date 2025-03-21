@@ -60,11 +60,11 @@ export const WaitlistCreatorCTA: React.FC<WaitlistCreatorCTAProps> = ({
           iconPosition="left"
           className="w-full min-w-[320px] font-medium"
           style={{
-            // Apply the enhanced styling for the secondary CTA button
+            // Apply enhanced styling with thicker border for more 3D effect
             height: '56px',
             background: 'linear-gradient(180deg, #FFFFFF 0%, #F8F8FA 100%)', // Matching social proof card background
-            border: '1px solid rgba(0,0,0,0.1)', // Matching social proof card border
-            boxShadow: `${shadowStyles.standard}, inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 0 rgba(0,0,0,0.07)`, // Matching social proof card shadow
+            border: '3px solid rgba(118,51,220,0.25)', // Thicker, more visible border for 3D effect
+            boxShadow: `${shadowStyles.secondaryCTA}, inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 0 rgba(0,0,0,0.1)`, // Enhanced shadow
             color: buttonColors.secondaryCta.text,
             transition: 'all 0.3s ease-out',
             // Interactive elements
@@ -75,10 +75,10 @@ export const WaitlistCreatorCTA: React.FC<WaitlistCreatorCTAProps> = ({
             ...style?.button
           }}
           // Add additional properties that pass the enhanced shadows to the component
-          data-hover-box-shadow={shadowStyles.standard}
-          data-hover-transform="translateX(-8px) translateY(-3px)" // Match social proof card hover
-          data-hover-transition="all 0.2s ease-out"
-          data-hover-background="linear-gradient(180deg, #FFFFFF 0%, #F8F8FA 100%)"
+          data-hover-box-shadow={shadowStyles.secondaryCTAHover}
+          data-hover-transform="scale(1.03) translateY(-2px)" // Enhanced 3D hover effect
+          data-hover-transition="all 0.3s ease-out"
+          data-hover-background="linear-gradient(180deg, #FFFFFF 0%, #F5F0FF 100%)"
         >
           {buttonText}
         </Button3DPhysical>
