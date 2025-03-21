@@ -25,8 +25,21 @@ export function ParallaxHero() {
   const [isInView, setIsInView] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   
+  // Performance optimization - detect if we should use reduced animations
+  const shouldReduceAnimations = React.useMemo(() => {
+    // Always reduce animations on mobile for better performance
+    if (isMobile) return true;
+    return prefersReducedMotion;
+  }, [isMobile, prefersReducedMotion]);
+  
   // Check for reduced motion preference
   useEffect(() => {
+    // Skip on mobile to avoid unnecessary work
+    if (isMobile) {
+      setPrefersReducedMotion(true);
+      return;
+    }
+    
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     setPrefersReducedMotion(mediaQuery.matches);
     
@@ -49,12 +62,22 @@ export function ParallaxHero() {
         mediaQuery.removeListener(handleChange);
       }
     };
-  }, []);
+  }, [isMobile]);
 
-  // Track visibility
+  // Track visibility - uses more efficient strategy on mobile
   useEffect(() => {
     if (!sectionRef.current) return;
 
+    // On mobile, we don't need precise intersection tracking
+    // Just set as visible after a short delay to skip unnecessary work
+    if (isMobile) {
+      const timer = setTimeout(() => {
+        setIsInView(true);
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+
+    // Normal intersection observer for desktop
     const observer = new IntersectionObserver(
       (entries) => {
         const [entry] = entries;
@@ -74,7 +97,7 @@ export function ParallaxHero() {
     return () => {
       observer.disconnect();
     };
-  }, []);
+  }, [isMobile]);
 
   return (
     <>
@@ -180,9 +203,15 @@ export function ParallaxHero() {
               isMobile ? "text-2xl" : "text-4xl sm:text-5xl lg:text-6xl",
               isMobile ? "w-full mb-3" : "w-full mb-5 sm:mb-7"
             )}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : 20 }}
-            transition={{ duration: 0.4, delay: 0.2 }}
+            initial={shouldReduceAnimations ? { opacity: 0.5 } : { opacity: 0, y: 20 }}
+            animate={shouldReduceAnimations 
+              ? { opacity: isInView ? 1 : 0.5 } 
+              : { opacity: isInView ? 1 : 0, y: isInView ? 0 : 20 }
+            }
+            transition={{ 
+              duration: shouldReduceAnimations ? 0.3 : 0.4, 
+              delay: shouldReduceAnimations ? 0.1 : 0.2
+            }}
           >
             <span 
               className={cn(
@@ -208,14 +237,14 @@ export function ParallaxHero() {
                 texts={TITLES}
                 mainClassName="flex justify-center items-center"
                 staggerFrom="last"
-                // Simplified transitions for mobile
-                initial={isMobile ? { opacity: 0 } : { y: 30, opacity: 0, scale: 0.95 }}
-                animate={isMobile ? { opacity: 1 } : { y: 0, opacity: 1, scale: 1 }}
-                exit={isMobile ? { opacity: 0 } : { y: -30, opacity: 0, scale: 0.95 }}
-                // No staggering on mobile
-                staggerDuration={isMobile ? 0 : 0.03}
-                // Slower rotation on mobile
-                rotationInterval={isMobile ? 4500 : 3500}
+                // Even more optimized animations based on device capability
+                initial={shouldReduceAnimations ? { opacity: 0 } : { y: 30, opacity: 0, scale: 0.95 }}
+                animate={shouldReduceAnimations ? { opacity: 1 } : { y: 0, opacity: 1, scale: 1 }}
+                exit={shouldReduceAnimations ? { opacity: 0 } : { y: -30, opacity: 0, scale: 0.95 }}
+                // No staggering on mobile or reduced animations
+                staggerDuration={shouldReduceAnimations ? 0 : 0.03}
+                // Slower rotation on mobile, even slower with reduced animations
+                rotationInterval={shouldReduceAnimations ? 6000 : 3500}
                 elementLevelClassName={cn(
                   isMobile ? "text-[2.8rem] leading-tight pb-1" : "text-5xl sm:text-6xl lg:text-7xl",
                   "font-bold font-jakarta tracking-tight",
@@ -223,12 +252,12 @@ export function ParallaxHero() {
                   "drop-shadow-[0_2px_1px_rgba(102,51,255,0.3)]",
                   isMobile ? "border-b-[1px] border-[#6633FF]/10 pb-1" : "border-b-2 border-[#6633FF]/10 pb-1"
                 )}
-                // Simpler tween animation for mobile
-                transition={isMobile ? 
+                // Simpler, more efficient animations for reduced motion
+                transition={shouldReduceAnimations ? 
                   { 
                     type: "tween", 
-                    duration: 0.3,
-                    ease: "easeInOut"
+                    duration: 0.2,
+                    ease: "linear"
                   } : { 
                     type: "spring",
                     damping: 24,
@@ -253,9 +282,15 @@ export function ParallaxHero() {
               "font-medium",
               isMobile ? "text-[0.95rem] leading-[1.65] mb-6" : "text-base sm:text-lg mb-10"
             )}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : 20 }}
-            transition={{ duration: 0.4, delay: 0.4 }}
+            initial={shouldReduceAnimations ? { opacity: 0.5 } : { opacity: 0, y: 20 }}
+            animate={shouldReduceAnimations 
+              ? { opacity: isInView ? 1 : 0.5 } 
+              : { opacity: isInView ? 1 : 0, y: isInView ? 0 : 20 }
+            }
+            transition={{ 
+              duration: shouldReduceAnimations ? 0.3 : 0.4, 
+              delay: shouldReduceAnimations ? 0.15 : 0.4 
+            }}
           >
             {isMobile ? (
               "Connect with elite content creators who transform your spaces into compelling visual stories."
@@ -267,9 +302,15 @@ export function ParallaxHero() {
         {/* CTA Buttons */}
         <motion.div
           className="w-full relative z-10"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: isInView ? 1 : 0, y: isInView ? 0 : 20 }}
-          transition={{ duration: 0.4, delay: 0.6 }}
+          initial={shouldReduceAnimations ? { opacity: 0.5 } : { opacity: 0, y: 20 }}
+          animate={shouldReduceAnimations 
+            ? { opacity: isInView ? 1 : 0.5 } 
+            : { opacity: isInView ? 1 : 0, y: isInView ? 0 : 20 }
+          }
+          transition={{ 
+            duration: shouldReduceAnimations ? 0.3 : 0.4, 
+            delay: shouldReduceAnimations ? 0.2 : 0.6
+          }}
         >
           {/* Desktop CTA layout */}
           {!isMobile && (
