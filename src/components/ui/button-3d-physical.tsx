@@ -183,12 +183,11 @@ export const Button3DPhysical = React.forwardRef<HTMLButtonElement, Button3DPhys
     // Improved horizontal padding for better text space
     icon ? (iconPosition === "left" ? "pl-6 pr-10" : "pl-10 pr-6") : "px-10",
     
-    // Enhanced hover state with premium 3D elevation effect
-    "hover:-translate-y-[3px] hover:scale-[1.01]", 
+    // No default hover state - controlled entirely by data attributes for reference match
     // Refined color enhancement on hover for physical look
     variant === 'primary' || variant === 'secondary' 
-      ? "hover:brightness-[1.07]" 
-      : "hover:brightness-[1.03]",
+      ? "hover:brightness-[1.05]" 
+      : "hover:brightness-[1.02]",
     
     // Precise active state with realistic depression effect
     "active:translate-y-[1px] active:scale-[0.99]", 

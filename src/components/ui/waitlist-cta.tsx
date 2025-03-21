@@ -119,13 +119,13 @@ export const WaitlistCTA: React.FC<WaitlistCTAProps> = ({
             iconPosition="left"
             className="w-full min-w-[320px] font-semibold tracking-[0.02em]"
             style={{
-              // Apply enhanced styling with thicker border for more 3D effect
+              // Apply styling that matches reference image exactly
               height: '56px',
               background: buttonColors.primaryCta.gradient,
-              border: `3px solid ${buttonColors.primaryCta.border}`,
-              boxShadow: `${shadowStyles.primaryCTA}, inset 0 1px 0 ${buttonColors.primaryCta.highlightTop}, inset 0 -1px 0 ${buttonColors.primaryCta.highlightBottom}`,
+              border: 'none',  // No standard border - using outline in box-shadow
+              boxShadow: shadowStyles.primaryCTA, // Using precise shadow from reference
               color: buttonColors.primaryCta.text,
-              transition: 'all 0.3s ease-out',
+              transition: 'all 0.25s ease-out',
               // Interactive elements
               cursor: 'pointer',
               // Enhanced hover state will be applied via CSS class in the Button3DPhysical component
@@ -133,10 +133,10 @@ export const WaitlistCTA: React.FC<WaitlistCTAProps> = ({
               // Apply any custom styles passed from parent
               ...style?.button
             }}
-            // Add additional properties that pass the enhanced shadows to the component
+            // Add additional properties that pass the exact reference-matching hover effect
             data-hover-box-shadow={shadowStyles.primaryCTAHover}
-            data-hover-transform="scale(1.03) translateY(-2px)" 
-            data-hover-transition="all 0.3s ease-out"
+            data-hover-transform="translateY(-1px)" 
+            data-hover-transition="all 0.25s ease-out"
           >
             {buttonText}
           </Button3DPhysical>

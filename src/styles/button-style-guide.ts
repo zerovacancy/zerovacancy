@@ -65,35 +65,35 @@ export const buttonColors: {
     highlightTop: 'rgba(255,255,255,0.8)',
     highlightBottom: 'rgba(0,0,0,0.05)',
   },
-  // Enhanced Primary CTA variant (RESERVE EARLY ACCESS) - thicker border and 3D effect
+  // Enhanced Primary CTA variant (RESERVE EARLY ACCESS) - matching reference image
   primaryCta: {
-    base: '#F8F5FF',
-    dark: '#F1ECFF',
-    light: '#F8F5FF',
-    text: '#6C2CDB',  // Deeper purple for better contrast
-    iconBackground: 'rgba(118,51,220,0.07)', // Slightly more saturated with purple
-    iconBorder: 'rgba(118,51,220,0.18)',
-    border: 'rgba(118,51,220,0.35)', // Enhanced border color for thicker 3D effect
-    gradient: 'linear-gradient(180deg, #F8F5FF 0%, #F1ECFF 100%)', // Subtle purple gradient
-    hoverGradient: 'linear-gradient(180deg, #F5F0FF 0%, #EDE5FF 100%)', // Slightly deeper on hover
-    highlightTop: 'rgba(255,255,255,0.9)', // Enhanced inner highlight at top
-    highlightBottom: 'rgba(0,0,0,0.1)', // Stronger shadow at bottom for 3D effect
+    base: '#8A42F5',  // Proper purple from reference
+    dark: '#7837DB',
+    light: '#9953FF', 
+    text: '#FFFFFF',  // White text
+    iconBackground: 'rgba(255,255,255,0.1)', // Light icon background
+    iconBorder: 'rgba(255,255,255,0.2)',
+    border: 'rgba(255,255,255,0.3)', // White border like reference image
+    gradient: 'linear-gradient(180deg, #9953FF 0%, #7837DB 100%)', // Purple gradient like ref
+    hoverGradient: 'linear-gradient(180deg, #A165FF 0%, #8843F1 100%)', // Slightly lighter on hover
+    highlightTop: 'rgba(255,255,255,0.3)', // Light highlight on top edge
+    highlightBottom: 'rgba(0,0,0,0.2)', // Shadow at bottom edge
   },
-  // Enhanced Secondary CTA variant (JOIN AS CREATOR) - thicker border and 3D effect
+  // Enhanced Secondary CTA variant (JOIN AS CREATOR) - matching reference image
   secondaryCta: {
     base: '#FFFFFF',
-    dark: '#F9F9FC',
+    dark: '#F0F0F4',
     light: '#FFFFFF',
-    text: '#7B42E6',  // Slightly brighter purple
-    iconBackground: 'rgba(134,65,245,0.02)', // Very light purple tint
-    iconBorder: 'rgba(118,51,220,0.12)', // More defined border
-    border: 'rgba(118,51,220,0.25)', // Thicker, more defined border for 3D effect
-    // Enhanced background with subtle off-white gradient
-    buttonBackground: 'linear-gradient(180deg, #FFFFFF 0%, #F9F9FC 100%)', 
+    text: '#7837DB',  // Purple text like reference
+    iconBackground: 'rgba(134,65,245,0.05)', // Very light purple tint
+    iconBorder: 'rgba(118,51,220,0.15)', // More visible border
+    border: 'rgba(118,51,220,0.25)', // Border similar to reference
+    // White background with slight gradient
+    buttonBackground: 'linear-gradient(180deg, #FFFFFF 0%, #F5F5F9 100%)', 
     gradient: 'transparent', // No gradient initially
-    hoverGradient: 'linear-gradient(180deg, #F5F0FF 0%, #F3EDFF 100%)', // Purple tint on hover
-    highlightTop: 'rgba(255,255,255,0.95)', // Enhanced top highlight
-    highlightBottom: 'rgba(0,0,0,0.08)', // Stronger shadow at bottom for 3D effect
+    hoverGradient: 'linear-gradient(180deg, #F9F6FF 0%, #F3EDFF 100%)', // Purple tint on hover
+    highlightTop: 'rgba(255,255,255,1)', // Strong light highlight at top edge
+    highlightBottom: 'rgba(0,0,0,0.1)', // More visible shadow at bottom edge
   },
   // Blue variant
   blue: {
@@ -230,43 +230,36 @@ export const shadowStyles = {
   // Pressed state shadow (compressed)
   pressed: '0 1px 2px rgba(0,0,0,0.15)',
   
-  // Enhanced primary CTA shadow with stronger purple glow and deeper 3D profile
+  // Primary CTA shadow matching reference image
   primaryCTA: [
-    '0 1px 2px rgba(0,0,0,0.09)',
-    '0 2px 4px rgba(0,0,0,0.09)',
-    '0 4px 8px rgba(0,0,0,0.09)',
-    '0 8px 16px rgba(0,0,0,0.07)',
-    '0 12px 24px rgba(118,51,220,0.1)',
-    '0 0 20px rgba(118,51,220,0.08)', // Stronger purple glow
+    '0px 2px 0px rgba(0,0,0,0.1)',   // Bottom edge shadow
+    '0px 3px 0px rgba(0,0,0,0.1)',   // Stronger bottom shadow for 3D effect
+    '0px 8px 15px rgba(0,0,0,0.1)',  // Soft drop shadow like reference
+    '0px 0px 0px 3px rgba(255,255,255,0.3)', // White border outline like reference
   ].join(', '),
   
-  // Enhanced primary CTA hover shadow with expanded purple glow
+  // Primary CTA hover shadow matching reference image
   primaryCTAHover: [
-    '0 1px 2px rgba(0,0,0,0.09)',
-    '0 2px 4px rgba(0,0,0,0.09)',
-    '0 4px 8px rgba(0,0,0,0.09)',
-    '0 12px 24px rgba(0,0,0,0.08)',
-    '0 16px 32px rgba(118,51,220,0.15)',
-    '0 2px 24px rgba(118,51,220,0.1)', // Stronger expanded purple glow on hover
+    '0px 2px 0px rgba(0,0,0,0.1)',   // Bottom edge shadow 
+    '0px 4px 0px rgba(0,0,0,0.1)',   // Stronger bottom shadow for hover
+    '0px 10px 20px rgba(0,0,0,0.15)', // Enhanced drop shadow on hover
+    '0px 0px 0px 3px rgba(255,255,255,0.4)', // Brighter white border on hover
   ].join(', '),
   
-  // Enhanced secondary CTA shadow with improved 3D effect
+  // Secondary CTA shadow matching reference image
   secondaryCTA: [
-    '0 1px 2px rgba(0,0,0,0.07)',
-    '0 2px 4px rgba(0,0,0,0.07)',
-    '0 4px 8px rgba(0,0,0,0.05)',
-    '0 8px 16px rgba(0,0,0,0.05)',
-    '0 0 15px rgba(118,51,220,0.03)', // Subtle purple glow
+    '0px 2px 0px rgba(0,0,0,0.05)',  // Light bottom edge shadow
+    '0px 3px 0px rgba(0,0,0,0.03)',  // Subtle 3D bottom shadow
+    '0px 8px 15px rgba(0,0,0,0.05)', // Soft drop shadow
+    '0px 0px 0px 2px rgba(118,51,220,0.2)', // Purple border outline like reference
   ].join(', '),
   
-  // Enhanced secondary CTA hover shadow with stronger 3D effect
+  // Secondary CTA hover shadow matching reference image
   secondaryCTAHover: [
-    '0 1px 2px rgba(0,0,0,0.07)',
-    '0 2px 4px rgba(0,0,0,0.07)',
-    '0 4px 8px rgba(0,0,0,0.07)',
-    '0 8px 16px rgba(0,0,0,0.08)',
-    '0 12px 24px rgba(0,0,0,0.05)',
-    '0 0 20px rgba(118,51,220,0.04)', // More noticeable purple glow on hover
+    '0px 2px 0px rgba(0,0,0,0.05)',  // Light bottom edge shadow
+    '0px 4px 0px rgba(0,0,0,0.03)',  // Stronger bottom shadow on hover
+    '0px 10px 20px rgba(0,0,0,0.1)', // Enhanced drop shadow on hover
+    '0px 0px 0px 2px rgba(118,51,220,0.25)', // More vivid purple border on hover
   ].join(', '),
 };
 
