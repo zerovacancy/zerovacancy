@@ -17,7 +17,7 @@ const CREATOR_DATA = [
     rating: 4.9,
     reviews: 127,
     location: "Chicago, IL",
-    image: "/newemilyprofile.jpg",
+    image: "/emilyprofilephoto.webp",
     workExamples: ["/creatorcontent/emily-johnson/work-1.webp", "/creatorcontent/emily-johnson/work-2.jpg", "/creatorcontent/emily-johnson/work-3.jpg"],
     availabilityStatus: "available-now" as const
   }, 

@@ -16,7 +16,7 @@ interface CreatorMediaProps {
 
 // Pre-calculate media mapping to avoid recalculation during renders
 const MEDIA_MAPPING = {
-  'Emily Johnson': { type: 'image', src: '/newemilyprofile.jpg' },
+  'Emily Johnson': { type: 'image', src: '/emilyprofilephoto.webp' },
   'Jane Cooper': { type: 'image', src: '/janeprofile.png' },
   'Michael Brown': { 
     type: 'image', // Changed to image on mobile to prevent jittering

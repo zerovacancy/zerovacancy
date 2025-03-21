@@ -21,7 +21,7 @@ export const CreatorsList: React.FC = () => {
       rating: 4.9,
       reviews: 127,
       location: "Chicago, IL",
-      image: "/newemilyprofile.jpg",
+      image: "/emilyprofilephoto.webp",
       workExamples: [
         "/creatorcontent/emily-johnson/work-1.webp",
         "/creatorcontent/emily-johnson/work-2.jpg",
