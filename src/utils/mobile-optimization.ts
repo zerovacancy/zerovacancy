@@ -20,6 +20,12 @@ export const prefersReducedMotion = () => {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 };
 
+// Check if the user prefers dark mode
+export const prefersDarkMode = () => {
+  if (typeof window === "undefined") return false;
+  return window.matchMedia("(prefers-color-scheme: dark)").matches;
+};
+
 // Optimized mobile viewport settings that maintain accessibility
 export const optimizeMobileViewport = () => {
   if (typeof window === "undefined") return;
@@ -27,9 +33,14 @@ export const optimizeMobileViewport = () => {
   // Find existing viewport meta tag
   const viewport = document.querySelector('meta[name="viewport"]');
   if (viewport) {
-    // Use a more stable viewport setting that maintains accessibility
-    // Allow user scaling for accessibility but set initial scale
-    const viewportContent = 'width=device-width, initial-scale=1.0, viewport-fit=cover';
+    // Enhanced viewport setting that maintains accessibility while optimizing mobile display
+    // - width=device-width: Uses device width for responsive design
+    // - initial-scale=1.0: Sets initial zoom level
+    // - viewport-fit=cover: Ensures content extends to the edges on notched devices
+    // - minimum-scale=1.0: Prevents zooming out too much
+    // - maximum-scale=5.0: Allows zooming for accessibility but limits extreme zooming
+    // - user-scalable=yes: Always allow scaling for accessibility
+    const viewportContent = 'width=device-width, initial-scale=1.0, viewport-fit=cover, minimum-scale=1.0, maximum-scale=5.0, user-scalable=yes';
     viewport.setAttribute('content', viewportContent);
     
     // Add orientation change listener to fix scaling issues
@@ -55,9 +66,27 @@ export const optimizeMobileViewport = () => {
         document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
       }, { passive: true });
       
-      // Additional iOS fixes for animations
-      document.documentElement.style.setProperty('--safe-area-inset-bottom', 'env(safe-area-inset-bottom)');
+      // Comprehensive safe area insets for notched devices
       document.documentElement.style.setProperty('--safe-area-inset-top', 'env(safe-area-inset-top)');
+      document.documentElement.style.setProperty('--safe-area-inset-right', 'env(safe-area-inset-right)');
+      document.documentElement.style.setProperty('--safe-area-inset-bottom', 'env(safe-area-inset-bottom)');
+      document.documentElement.style.setProperty('--safe-area-inset-left', 'env(safe-area-inset-left)');
+      
+      // Apply padding to key UI containers to respect safe areas
+      const safeAreaStyle = document.createElement('style');
+      safeAreaStyle.innerHTML = `
+        header, footer, .fixed-bottom {
+          padding-top: var(--safe-area-inset-top);
+          padding-right: var(--safe-area-inset-right);
+          padding-bottom: var(--safe-area-inset-bottom);
+          padding-left: var(--safe-area-inset-left);
+        }
+        
+        body {
+          padding-bottom: calc(var(--safe-area-inset-bottom) + 0.5rem);
+        }
+      `;
+      document.head.appendChild(safeAreaStyle);
       
       // Force hardware acceleration for all animations
       const style = document.createElement('style');
@@ -81,11 +110,35 @@ export const optimizeMobileViewport = () => {
     }
   }
   
-  // Check if it's actually a mobile device before adding the double-tap zoom prevention
-  // This prevents issues on laptops with touchpads
-  const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  // Enhanced mobile device detection with browser and version detection
+  const userAgent = navigator.userAgent;
+  const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
+  const isOldAndroid = /Android/.test(userAgent) && parseFloat(userAgent.slice(userAgent.indexOf("Android")+8)) < 8;
+  const isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
   
   if (isMobileDevice) {
+    // Apply touch optimizations only to real mobile devices
+    
+    // Fix for 300ms tap delay on some older mobile browsers
+    // No longer needed for most modern mobile browsers, but kept for backward compatibility
+    const style = document.createElement('style');
+    style.innerHTML = `
+      html {
+        touch-action: manipulation;
+      }
+      
+      a, button, input, select, textarea, [role="button"], [tabindex]:not([tabindex="-1"]) {
+        touch-action: manipulation;
+      }
+    `;
+    document.head.appendChild(style);
+    
+    // More comprehensive tap optimizations for old Android devices
+    if (isOldAndroid) {
+      // Add FastClick-like functionality for old Android browsers
+      document.addEventListener('touchstart', function() {}, { passive: true });
+    }
+    
     // Prevent double-tap zoom on mobile, but exclude buttons and links
     document.addEventListener('touchend', (e) => {
       // Don't prevent default on interactive elements
@@ -93,8 +146,16 @@ export const optimizeMobileViewport = () => {
       const isInteractiveElement = 
         target.tagName === 'BUTTON' || 
         target.tagName === 'A' ||
+        target.tagName === 'INPUT' ||
+        target.tagName === 'TEXTAREA' ||
+        target.tagName === 'SELECT' ||
+        target.tagName === 'LABEL' ||
         target.closest('button') || 
-        target.closest('a');
+        target.closest('a') ||
+        target.closest('input') ||
+        target.closest('label') ||
+        target.getAttribute('role') === 'button' ||
+        (target.getAttribute('tabindex') && target.getAttribute('tabindex') !== '-1');
       
       if (isInteractiveElement) return;
       
@@ -105,6 +166,23 @@ export const optimizeMobileViewport = () => {
       }
       window.lastTap = now;
     }, { passive: false });
+    
+    // Add momentum scrolling on iOS
+    if (isIOS) {
+      const scrollStyle = document.createElement('style');
+      scrollStyle.innerHTML = `
+        .scroll-container {
+          -webkit-overflow-scrolling: touch;
+          overflow-scrolling: touch;
+        }
+      `;
+      document.head.appendChild(scrollStyle);
+      
+      // Add class to scrollable containers
+      document.querySelectorAll('.overflow-auto, .overflow-y-auto, .overflow-x-auto').forEach(el => {
+        el.classList.add('scroll-container');
+      });
+    }
   }
 };
 
@@ -143,17 +221,61 @@ export const mobileOptimizationClasses = {
   // Clean border with subtle color
   cleanBorderMobile: "border border-gray-100 sm:border-gray-200",
   
-  // New: Landscape orientation specific classes
+  // Enhanced landscape orientation specific classes
   landscapeOrientationFix: "landscape:max-h-screen landscape:overflow-auto",
   landscapeContentFix: "landscape:py-2 landscape:px-2",
   landscapeHeightFix: "landscape:h-auto",
   landscapeFlexFix: "landscape:flex-row",
+  compactLandscape: "compact-landscape:gap-1 compact-landscape:p-2",
+  
+  // Safe area inset classes
+  safeTop: "pt-[var(--safe-area-inset-top)]",
+  safeRight: "pr-[var(--safe-area-inset-right)]",
+  safeBottom: "pb-[var(--safe-area-inset-bottom)]",
+  safeLeft: "pl-[var(--safe-area-inset-left)]",
+  safeInset: "pt-[var(--safe-area-inset-top)] pr-[var(--safe-area-inset-right)] pb-[var(--safe-area-inset-bottom)] pl-[var(--safe-area-inset-left)]",
+  
+  // Touch optimization classes
+  touchOptimized: "touch-manipulation",
+  noUserSelect: "select-none",
+  
+  // Mobile-focused visual and interaction improvements
+  tapTargetLarge: "min-h-[44px] min-w-[44px]", // Recommended minimum tap target size
+  tapTargetExtraLarge: "min-h-[48px] min-w-[48px]", // Extra large for primary actions
+  textLegible: "text-[16px] leading-[1.5]", // Minimum recommended text size for mobile
+  inputEnhanced: "text-[16px] h-[48px] px-4", // Prevent zoom on focus in iOS
+  
+  // New classes for form elements on mobile
+  mobileFriendlyInput: "text-[16px] h-[44px] px-4 py-2 rounded-xl",
+  mobileFriendlyButton: "h-[48px] min-w-[44px] px-5 rounded-xl",
 };
 
-// Check if device is in landscape mode
+// Enhanced landscape mode detection that also considers device type
 export const isLandscapeMode = () => {
   if (typeof window === "undefined") return false;
-  return window.matchMedia("(orientation: landscape)").matches;
+  
+  // Get window dimensions
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+  
+  // Check for landscape orientation
+  const isLandscape = window.matchMedia("(orientation: landscape)").matches;
+  
+  // Define height threshold for tablets vs phones
+  // If the device is in landscape but has a very short height, it's likely a phone
+  // and should use landscape optimizations
+  const isPhoneLandscape = isLandscape && height < 500;
+  
+  // Check if the device is very narrow in any orientation - likely a phone
+  const isNarrowDevice = Math.min(width, height) < 450;
+  
+  // For phones or other narrow devices, use landscape mode when appropriate
+  if (isNarrowDevice || isPhoneLandscape) {
+    return isLandscape;
+  }
+  
+  // For larger devices (tablets/desktops), only return true for very extreme aspect ratios
+  return isLandscape && (width / height) > 1.8;
 };
 
 // Apply landscape-specific fixes
@@ -161,19 +283,55 @@ export const applyLandscapeOrientationFixes = () => {
   if (typeof window === "undefined") return;
   
   const handleOrientationChange = () => {
-    const isLandscape = window.matchMedia("(orientation: landscape)").matches;
+    const isLandscape = isLandscapeMode();
     
+    // Prevent content jump by locking dimensions briefly during transition
+    document.body.style.minHeight = `${window.innerHeight}px`;
+    
+    // Apply landscape specific classes and styles
     if (isLandscape) {
       document.documentElement.classList.add('landscape-mode');
       document.body.classList.add('landscape-mode');
+      
+      // Apply specific landscape optimizations for small screens
+      if (window.innerHeight < 500) {
+        document.body.classList.add('compact-landscape');
+        document.documentElement.style.setProperty('--compact-spacing', '0.5rem');
+      } else {
+        document.body.classList.remove('compact-landscape');
+        document.documentElement.style.removeProperty('--compact-spacing');
+      }
+      
+      // Allow scrolling in landscape mode
       document.body.style.height = 'auto';
       document.body.style.overflowY = 'auto';
+      
+      // Disable transitions during orientation change to prevent animation glitches
+      const tempStyle = document.createElement('style');
+      tempStyle.id = 'temp-transition-disable';
+      tempStyle.innerHTML = '* { transition: none !important; }';
+      document.head.appendChild(tempStyle);
+      
+      // Re-enable transitions after the orientation change is complete
+      setTimeout(() => {
+        const disableStyle = document.getElementById('temp-transition-disable');
+        if (disableStyle) {
+          disableStyle.remove();
+        }
+      }, 100);
     } else {
       document.documentElement.classList.remove('landscape-mode');
       document.body.classList.remove('landscape-mode');
+      document.body.classList.remove('compact-landscape');
       document.body.style.height = '';
       document.body.style.overflowY = '';
+      document.documentElement.style.removeProperty('--compact-spacing');
     }
+    
+    // Reset the min-height after orientation change completes
+    setTimeout(() => {
+      document.body.style.minHeight = '';
+    }, 250);
   };
   
   // Check immediately
