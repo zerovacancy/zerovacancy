@@ -25,6 +25,10 @@ const PropertyDashboard = lazy(() => import('./pages/property/Dashboard'));
 const ConnectSuccess = lazy(() => import('./pages/ConnectSuccess'));
 const ConnectRefresh = lazy(() => import('./pages/ConnectRefresh'));
 const ConnectOnboarding = lazy(() => import('./pages/ConnectOnboarding'));
+const Blog = lazy(() => import('./pages/Blog'));
+const BlogPost = lazy(() => import('./pages/BlogPost'));
+const BlogAdmin = lazy(() => import('./pages/admin/BlogAdmin'));
+const BlogEditor = lazy(() => import('./pages/admin/BlogEditor'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 const PageLoader = () => {
@@ -148,6 +152,11 @@ function App() {
                   <Route path="/connect/success" element={<ConnectSuccess />} />
                   <Route path="/connect/refresh" element={<ConnectRefresh />} />
                   <Route path="/connect/onboarding" element={<ConnectOnboarding />} />
+                  <Route path="/blog" element={<Blog />} />
+                  <Route path="/blog/:slug" element={<BlogPost />} />
+                  <Route path="/admin/blog" element={<BlogAdmin />} />
+                  <Route path="/admin/blog/new" element={<BlogEditor />} />
+                  <Route path="/admin/blog/edit/:id" element={<BlogEditor />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
