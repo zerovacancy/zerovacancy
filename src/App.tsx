@@ -12,6 +12,8 @@ import { SEOProvider } from '@/components/SEO';
 import { ScrollToTop } from '@/components/ui/scroll-to-top';
 import { ScrollProgress } from '@/components/ui/scroll-progress';
 import { CookieConsent } from '@/components/ui/cookie-consent';
+import FontLoader from '@/components/FontLoader';
+import CriticalPreload from '@/components/CriticalPreload';
 import { AuthProvider } from '@/components/auth/AuthContext';
 
 const Index = lazy(() => import('./pages/index'));
@@ -135,6 +137,9 @@ function App() {
       <SEOProvider>
         <Router>
           <AuthProvider>
+            {/* Critical performance components */}
+            <FontLoader />
+            <CriticalPreload />
             <ScrollToTop />
             <ScrollProgress />
             <ScrollToTopComponent />

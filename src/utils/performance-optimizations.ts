@@ -277,8 +277,12 @@ export function mobilePerformanceEnhancements(isMobile: boolean): void {
   }
 }
 
-// Web Vitals measurement
+// Web Vitals measurement - commented out until web-vitals package is installed
 export function measureWebVitals() {
+  // Implementation will be added once web-vitals package is installed
+  console.log('Web Vitals measurement available after installing the package');
+  
+  /* 
   // Check if the web vitals API is available
   if ('web-vitals' in window) {
     import('web-vitals').then(({ onCLS, onFID, onLCP, onTTFB, onINP }) => {
@@ -308,4 +312,5 @@ export function measureWebVitals() {
       });
     });
   }
+  */
 }
