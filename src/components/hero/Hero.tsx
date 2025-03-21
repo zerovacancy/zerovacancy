@@ -17,7 +17,8 @@ const MobileHeroCTA = () => {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isValid, setIsValid] = useState(false);
-  const [showSuccessDialog, setShowSuccessDialog] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [showInlineSuccess, setShowInlineSuccess] = useState(false);
   const [alreadySubscribed, setAlreadySubscribed] = useState(false);
   const [submittedEmail, setSubmittedEmail] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -91,16 +92,14 @@ const MobileHeroCTA = () => {
       setEmail("");
       setShowForm(false);
       
-      // For mobile, we need to directly show the dialog without animation delay
-      // to ensure it appears properly with the confetti
-      setShowSuccessDialog(true);
+      // On mobile, we'll use an inline success message instead of a dialog
+      // This avoids all the issues with dialog rendering on mobile browsers
+      setShowConfetti(true);
       
-      // Set multiple backup timers to ensure dialog stays visible
-      // This handles potential race conditions with animation frames
-      setTimeout(() => { setShowSuccessDialog(true); }, 100);
-      setTimeout(() => { setShowSuccessDialog(true); }, 300);
-      setTimeout(() => { setShowSuccessDialog(true); }, 600);
-      setTimeout(() => { setShowSuccessDialog(true); }, 1000);
+      // Add a slight delay before showing the success message
+      setTimeout(() => {
+        setShowInlineSuccess(true);
+      }, 300);
       
     } catch (error) {
       console.error("Error submitting email:", error);
@@ -110,52 +109,83 @@ const MobileHeroCTA = () => {
     }
   };
   
-  // Render initial button if form isn't shown
-  if (!showForm) {
+  // Render success state after submission
+  if (showInlineSuccess) {
     return (
       <>
-        <button
-          onClick={handleButtonClick}
-          className="w-full min-w-full h-[56px] font-medium rounded-[12px] text-white relative flex items-center justify-center"
+        {showConfetti && (
+          <div className="fixed inset-0 pointer-events-none z-[5000]" style={{ position: 'fixed' }}>
+            {typeof window !== 'undefined' && window.celebrateSuccess && (
+              <script dangerouslySetInnerHTML={{ 
+                __html: `setTimeout(function() { window.celebrateSuccess(true); }, 0);` 
+              }} />
+            )}
+          </div>
+        )}
+        
+        <div className="w-full min-w-full py-5 px-4 font-medium rounded-[12px] text-white relative flex flex-col items-center justify-center animate-fade-in"
           style={{
             background: 'linear-gradient(180deg, #8A42F5 0%, #7837DB 100%)',
             color: 'white',
             border: '1px solid rgba(255,255,255,0.2)',
             boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(0,0,0,0.05), 0 16px 32px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15)',
-            fontSize: '14px',
-            fontWeight: 600,
-            paddingLeft: '52px',
           }}
         >
-          {/* Icon container */}
-          <div 
-            className="absolute left-0 top-1/2 -translate-y-1/2 ml-6 flex items-center justify-center"
-            style={{
-              width: '32px',
-              height: '32px',
-              background: '#8A42F5', // Match the purple button color
-              border: '1px solid rgba(255,255,255,0.3)',
-              borderRadius: '12px',
-              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15)'
-            }}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"></path>
-              <path d="M20 12v4H6a2 2 0 0 0-2 2c0 1.1.9 2 2 2h12v-4"></path>
-            </svg>
+          <div className="h-16 w-16 bg-purple-50/20 rounded-full flex items-center justify-center mb-2">
+            <CheckCircle className="h-8 w-8 text-white" />
           </div>
-          RESERVE EARLY ACCESS
-        </button>
-        
-        {/* Success Dialog - EXACTLY same as desktop version */}
-        <SuccessConfirmation
-          open={showSuccessDialog}
-          onOpenChange={setShowSuccessDialog}
-          email={submittedEmail}
-          alreadySubscribed={alreadySubscribed}
-          isCreator={false}
-        />
+          <h3 className="text-lg font-bold text-white mb-1">
+            {alreadySubscribed ? "Already Subscribed" : "Success!"}
+          </h3>
+          <p className="text-white/90 text-center text-sm max-w-[24rem] mb-1">
+            {alreadySubscribed 
+              ? `${submittedEmail} is already on our waitlist.`
+              : `We've added ${submittedEmail} to our waitlist.`
+            }
+          </p>
+          <p className="text-white/80 text-xs">
+            We'll notify you as soon as we launch.
+          </p>
+        </div>
       </>
+    );
+  }
+
+  // Render initial button if form isn't shown
+  if (!showForm) {
+    return (
+      <button
+        onClick={handleButtonClick}
+        className="w-full min-w-full h-[56px] font-medium rounded-[12px] text-white relative flex items-center justify-center"
+        style={{
+          background: 'linear-gradient(180deg, #8A42F5 0%, #7837DB 100%)',
+          color: 'white',
+          border: '1px solid rgba(255,255,255,0.2)',
+          boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(0,0,0,0.05), 0 16px 32px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15)',
+          fontSize: '14px',
+          fontWeight: 600,
+          paddingLeft: '52px',
+        }}
+      >
+        {/* Icon container */}
+        <div 
+          className="absolute left-0 top-1/2 -translate-y-1/2 ml-6 flex items-center justify-center"
+          style={{
+            width: '32px',
+            height: '32px',
+            background: '#8A42F5', // Match the purple button color
+            border: '1px solid rgba(255,255,255,0.3)',
+            borderRadius: '12px',
+            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15)'
+          }}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"></path>
+            <path d="M20 12v4H6a2 2 0 0 0-2 2c0 1.1.9 2 2 2h12v-4"></path>
+          </svg>
+        </div>
+        RESERVE EARLY ACCESS
+      </button>
     );
   }
   
@@ -214,14 +244,16 @@ const MobileHeroCTA = () => {
         </div>
       </form>
       
-      {/* Success Dialog - EXACTLY same as desktop version */}
-      <SuccessConfirmation
-        open={showSuccessDialog}
-        onOpenChange={setShowSuccessDialog}
-        email={submittedEmail}
-        alreadySubscribed={alreadySubscribed}
-        isCreator={false}
-      />
+      {/* Fire confetti when showConfetti is true */}
+      {showConfetti && (
+        <div className="fixed inset-0 pointer-events-none z-[5000]" style={{ position: 'fixed' }}>
+          {typeof window !== 'undefined' && window.celebrateSuccess && (
+            <script dangerouslySetInnerHTML={{ 
+              __html: `setTimeout(function() { window.celebrateSuccess(true); }, 0);` 
+            }} />
+          )}
+        </div>
+      )}
     </>
   );
 };
