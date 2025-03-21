@@ -11,7 +11,14 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
   },
   plugins: [
-    react(),
+    react({
+      // More aggressive optimizations in production
+      transformOptions: {
+        newDecorators: true, 
+        typescript: true,
+        development: mode === 'development',
+      },
+    }),
     mode === 'development' && componentTagger(),
   ].filter(Boolean),
   resolve: {
@@ -20,20 +27,72 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
-    sourcemap: true,
+    sourcemap: mode === 'development', // Only generate sourcemaps in development
     minify: 'esbuild',
     chunkSizeWarningLimit: 1000, // Increase chunk size limit
+    target: ['es2020', 'edge88', 'firefox78', 'chrome87', 'safari14'], // Modern browsers only for smaller bundles
+    cssMinify: true,
+    cssCodeSplit: true,
+    assetsInlineLimit: 4096, // Inline small assets to reduce HTTP requests
     rollupOptions: {
       output: {
+        // Improved code splitting strategy
         manualChunks: {
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'ui-vendor': ['framer-motion', '@radix-ui/react-dialog', '@radix-ui/react-toast'],
+          'react-core': ['react', 'react-dom'],
+          'react-router': ['react-router-dom'],
+          'ui-core': ['framer-motion'],
+          'ui-radix': [
+            '@radix-ui/react-dialog', 
+            '@radix-ui/react-toast',
+            '@radix-ui/react-accordion', 
+            '@radix-ui/react-alert-dialog',
+            '@radix-ui/react-avatar',
+            '@radix-ui/react-checkbox',
+            '@radix-ui/react-dropdown-menu',
+            '@radix-ui/react-label',
+            '@radix-ui/react-popover',
+            '@radix-ui/react-slot',
+          ],
+          'ui-components': [
+            '@/components/ui/button.tsx',
+            '@/components/ui/toast.tsx',
+            '@/components/ui/dialog.tsx',
+            '@/components/ui/tabs.tsx',
+          ],
+          'animations': [
+            '@/components/ui/animated-grid.tsx',
+            '@/components/ui/spotlights.tsx',
+            '@/components/ui/moving-border.tsx',
+          ],
         },
+        // Optimize chunk creation
+        chunkFileNames: 'assets/js/[name]-[hash].js',
+        entryFileNames: 'assets/js/[name]-[hash].js',
+        assetFileNames: 'assets/[ext]/[name]-[hash].[ext]',
+      },
+    },
+    // Compression options
+    terserOptions: {
+      compress: {
+        drop_console: mode === 'production', // Remove console.log in production
+        drop_debugger: mode === 'production',
+        pure_funcs: mode === 'production' ? ['console.log', 'console.info', 'console.debug'] : [],
       },
     },
   },
-  // Improve file system case sensitivity handling
+  // Improve file system case sensitivity handling and dependency optimization
   optimizeDeps: {
     force: true, // Re-bundle dependencies to ensure case sensitivity is correct
+    esbuildOptions: {
+      target: 'es2020', // Modern JavaScript features for smaller output
+      treeShaking: true,
+      legalComments: 'none',
+    },
+  },
+  // Additional performance optimizations
+  esbuild: {
+    legalComments: 'none',
+    target: 'es2020',
+    treeShaking: true,
   },
 }));

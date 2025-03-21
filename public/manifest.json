@@ -1,0 +1,22 @@
+{
+  "name": "ZeroVacancy",
+  "short_name": "ZeroVacancy",
+  "description": "AI-Driven Property Marketing & Content Creator Marketplace",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#6633FF",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

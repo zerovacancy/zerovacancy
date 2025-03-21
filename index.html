@@ -4,9 +4,24 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/favicon.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, height=device-height" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#6633FF" />
+    <link rel="manifest" href="/manifest.json" />
     <title>ZeroVacancy - AI-Driven Property Marketing & Content Creator Marketplace</title>
     <meta name="description" content="Connect with elite content creators who transform your spaces into compelling visual stories">
+    
+    <!-- Critical preloads -->
+    <link rel="preload" href="/logo.png" as="image" fetchpriority="high" />
+    <link rel="preload" href="/heroparallax/heroparallax1.jpg" as="image" fetchpriority="high" />
+    
+    <!-- Resource hints -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://pozblfzhjqlsxkakhowp.supabase.co" crossorigin />
+    <link rel="preconnect" href="https://js.stripe.com" crossorigin />
+    
+    <!-- Ultra-fast mobile optimization script - runs immediately -->
+    <script src="/quick-perf.js"></script>
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -26,12 +41,112 @@
     <meta name="twitter:image" content="https://www.zerovacancy.ai/og-image-new.png">
     <meta name="twitter:image:alt" content="ZeroVacancy - The premium marketplace for real estate content creators">
     
-    <!-- Stripe JavaScript SDK -->
-    <script src="https://js.stripe.com/v3/"></script>
+    <!-- Inline critical CSS -->
+    <style>
+      /* Critical styles to avoid FOUC */
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #fff;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      }
+      .hero, section[class*="hero"] {
+        min-height: 70vh;
+      }
+      @media (min-width: 768px) {
+        .hero, section[class*="hero"] {
+          min-height: 90vh;
+        }
+      }
+      /* Avoid layout shifts with font loading */
+      h1, h2, h3, h4, h5, h6, p, span, a, button {
+        font-family: system-ui, -apple-system, sans-serif;
+      }
+      /* Enable hardware acceleration for critical animations */
+      .animated, .transform-gpu, .will-change {
+        transform: translateZ(0);
+        will-change: transform, opacity;
+        backface-visibility: hidden;
+      }
+      /* Loading spinner */
+      .page-loader {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #fff;
+        z-index: 9999;
+      }
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 4px solid #f5f5f5;
+        border-top-color: #6633ff;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    </style>
+    
+    <!-- Stripe JavaScript SDK - load after page content -->
+    <script defer src="https://js.stripe.com/v3/"></script>
   </head>
   <body>
+    <!-- Initial loading state -->
+    <div id="page-loader" class="page-loader">
+      <div class="spinner"></div>
+    </div>
+    
     <div id="root"></div>
-    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+    
+    <!-- Immediately hide loader after app starts loading -->
+    <script>
+      // Measure performance
+      performance.mark('app-init-start');
+      
+      // Hide loader once DOM is ready or after a timeout
+      document.addEventListener('DOMContentLoaded', () => {
+        const loader = document.getElementById('page-loader');
+        if (loader) {
+          setTimeout(() => {
+            loader.style.opacity = '0';
+            loader.style.transition = 'opacity 0.3s ease';
+            setTimeout(() => {
+              loader.style.display = 'none';
+            }, 300);
+          }, 100);
+        }
+      });
+      
+      // Fallback timeout in case DOMContentLoaded doesn't fire
+      setTimeout(() => {
+        const loader = document.getElementById('page-loader');
+        if (loader && loader.style.display !== 'none') {
+          loader.style.display = 'none';
+        }
+      }, 3000);
+    </script>
+    
+    <!-- Efficiently load the main script -->
     <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Register service worker for better performance -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then(registration => {
+              console.log('ServiceWorker registration successful');
+            })
+            .catch(error => {
+              console.log('ServiceWorker registration failed:', error);
+            });
+        });
+      }
+    </script>
   </body>
 </html>
