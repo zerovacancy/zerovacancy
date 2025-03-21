@@ -35,15 +35,8 @@ const DialogContent = React.forwardRef<
   <DialogPortal>
     <DialogOverlay 
       className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0"
-      onClick={() => {
-        // Allow clicking overlay to close dialog
-        if (props.onEscapeKeyDown) {
-          props.onEscapeKeyDown({} as any);
-        }
-        if (props.onPointerDownOutside) {
-          props.onPointerDownOutside({} as any);
-        }
-      }} 
+      // Remove the click handler that was closing the dialog on mobile 
+      // This prevents accidental dialog closing when tapping outside
     />
     <DialogPrimitive.Content
       ref={ref}

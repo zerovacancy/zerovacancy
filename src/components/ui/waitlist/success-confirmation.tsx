@@ -90,6 +90,21 @@ export function SuccessConfirmation({
   isCreator = false
 }: SuccessConfirmationProps) {
   const isMobile = useIsMobile()
+  
+  // Force open state to be maintained on mobile
+  React.useEffect(() => {
+    if (open && isMobile) {
+      // Set a series of timers to ensure the dialog stays open
+      const timers = [
+        setTimeout(() => onOpenChange(true), 200),
+        setTimeout(() => onOpenChange(true), 500),
+        setTimeout(() => onOpenChange(true), 1000),
+        setTimeout(() => onOpenChange(true), 2000)
+      ];
+      
+      return () => timers.forEach(timer => clearTimeout(timer));
+    }
+  }, [open, isMobile, onOpenChange]);
 
   // Auto-close dialog after delay and fire confetti
   useEffect(() => {
@@ -122,10 +137,13 @@ export function SuccessConfirmation({
         }
       }, 150);
       
-      // Auto-close after 5 seconds
+      // For mobile: longer display time and no auto-close to ensure visibility
       const closeTimer = setTimeout(() => {
-        onOpenChange(false);
-      }, 5000);
+        // Only auto-close on desktop - keep open on mobile to ensure user sees it
+        if (!isMobile) {
+          onOpenChange(false);
+        }
+      }, 8000);
       
       // Clean up timeouts
       return () => {

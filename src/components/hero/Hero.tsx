@@ -91,15 +91,16 @@ const MobileHeroCTA = () => {
       setEmail("");
       setShowForm(false);
       
-      // Show success dialog - SAME as desktop
-      setTimeout(() => {
-        setShowSuccessDialog(true);
-      }, 300);
+      // For mobile, we need to directly show the dialog without animation delay
+      // to ensure it appears properly with the confetti
+      setShowSuccessDialog(true);
       
-      // Set a backup timer to ensure dialog stays visible
-      setTimeout(() => {
-        setShowSuccessDialog(true);
-      }, 600);
+      // Set multiple backup timers to ensure dialog stays visible
+      // This handles potential race conditions with animation frames
+      setTimeout(() => { setShowSuccessDialog(true); }, 100);
+      setTimeout(() => { setShowSuccessDialog(true); }, 300);
+      setTimeout(() => { setShowSuccessDialog(true); }, 600);
+      setTimeout(() => { setShowSuccessDialog(true); }, 1000);
       
     } catch (error) {
       console.error("Error submitting email:", error);
