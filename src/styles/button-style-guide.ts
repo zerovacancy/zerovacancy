@@ -65,64 +65,68 @@ export const buttonColors: {
     highlightTop: 'rgba(255,255,255,0.8)',
     highlightBottom: 'rgba(0,0,0,0.05)',
   },
-  // Enhanced Primary CTA variant with refined 3D dimensionality
+  // Primary CTA with precise gradient and inner highlight
   primaryCta: {
     base: '#8A4FFF',  // Proper purple from reference
-    dark: '#7837DB',
+    dark: '#6D30C9',  // Darker purple for bottom edge section
     light: '#9F65FF', // Slightly lighter for better contrast
     text: '#FFFFFF',  // White text
-    iconBackground: 'rgba(255,255,255,0.2)', // Enhanced icon background for better depth
-    iconBorder: 'rgba(255,255,255,0.35)',
-    border: 'rgba(255,255,255,0.45)', // More pronounced white border
-    // Enhanced gradient with radial component for dimensional surface
+    iconBackground: 'rgba(255,255,255,0.15)', // Refined icon background
+    iconBorder: 'transparent', // Removed icon border
+    border: 'transparent', // Removed button border
+    // Perfect gradient with top-to-bottom treatment and subtle light from top-left
     gradient: `
-      radial-gradient(circle at 30% 30%, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0) 60%),
-      linear-gradient(145deg, rgba(255,255,255,0.14) 0%, rgba(0,0,0,0.12) 100%),
-      linear-gradient(180deg, #9966FF 0%, #7540D8 100%)
+      radial-gradient(circle at 25% 25%, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 50%),
+      linear-gradient(to bottom, 
+        rgba(158,101,255,1) 0%, 
+        rgba(146,90,255,1) 70%,
+        rgba(119,51,219,1) 100%
+      )
     `,
-    // Enhanced hover gradient with better dimensionality
+    // Hover gradient with enhanced lighting
     hoverGradient: `
-      radial-gradient(circle at 30% 30%, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.02) 60%),
-      linear-gradient(145deg, rgba(255,255,255,0.18) 0%, rgba(0,0,0,0.12) 100%),
-      linear-gradient(180deg, #A373FF 0%, #7F46E6 100%)
+      radial-gradient(circle at 25% 25%, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%),
+      linear-gradient(to bottom, 
+        rgba(163,115,255,1) 0%, 
+        rgba(151,100,255,1) 70%,
+        rgba(127,70,230,1) 100%
+      )
     `, 
-    highlightTop: 'rgba(255,255,255,0.9)', // Sharper light highlight on top edge
-    highlightBottom: 'rgba(0,0,0,0.6)', // More defined shadow at bottom edge for 3D depth
+    highlightTop: 'rgba(255,255,255,0.8)', // Inner highlight (this is now applied via box-shadow)
+    highlightBottom: 'rgba(0,0,0,0.4)', // Bottom edge (this is now applied via box-shadow)
   },
-  // Secondary CTA variant precisely matching reference design button
+  // Secondary CTA with precise gradient and inner highlight
   secondaryCta: {
     base: '#F5F5F7',  // Very light gray base from reference
-    dark: '#E8E8EC',  // Slightly darker for bottom edge
+    dark: '#E5E5E7',  // Specific darker gray for bottom edge section
     light: '#FFFFFF',
     text: '#222222',  // Dark gray/black text as specified
     iconBackground: 'rgba(245,245,250,0.9)', // Very light background with slight tint
-    iconBorder: 'rgba(0,0,0,0.1)', // Subtle border for icon container
-    border: 'rgba(0,0,0,0.15)', // Border matching reference design
-    // Precise light gray gradient with subtle convex effect
+    iconBorder: 'transparent', // Removed icon border
+    border: 'transparent', // Removed button border
+    // Perfect light gray gradient with top-to-bottom treatment
     buttonBackground: `
-      radial-gradient(circle at center, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 70%),
+      radial-gradient(circle at 25% 25%, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 50%),
       linear-gradient(to bottom, 
-        rgba(255,255,255,0.9) 0%, 
-        rgba(245,245,247,1) 20%,
-        rgba(240,240,245,1) 60%,
-        rgba(235,235,240,1) 100%
+        rgba(252,252,254,1) 0%, 
+        rgba(245,245,247,1) 70%,
+        rgba(233,233,238,1) 100%
       ),
-      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.02'/%3E%3C/svg%3E")
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.015'/%3E%3C/svg%3E")
     `, 
     gradient: 'transparent', // No additional gradient initially
-    // Enhanced hover effect matching reference
+    // Hover gradient with enhanced lighting
     hoverGradient: `
-      radial-gradient(circle at center, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0) 70%),
+      radial-gradient(circle at 25% 25%, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0) 50%),
       linear-gradient(to bottom, 
-        rgba(255,255,255,0.95) 0%, 
-        rgba(247,247,249,1) 20%,
-        rgba(243,243,248,1) 60%,
+        rgba(253,253,255,1) 0%, 
+        rgba(248,248,250,1) 70%,
         rgba(238,238,243,1) 100%
       ),
-      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.015'/%3E%3C/svg%3E")
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.01'/%3E%3C/svg%3E")
     `,
-    highlightTop: 'rgba(255,255,255,0.7)', // Subtle highlight on top edge
-    highlightBottom: 'rgba(0,0,0,0.25)', // Defined shadow at bottom edge for precise 3D effect
+    highlightTop: 'rgba(255,255,255,0.7)', // Inner highlight (this is now applied via box-shadow)
+    highlightBottom: 'rgba(0,0,0,0.1)', // Bottom edge (this is now applied via box-shadow)
   },
   // Blue variant
   blue: {
@@ -259,52 +263,60 @@ export const shadowStyles = {
   // Pressed state shadow (compressed)
   pressed: '0 1px 2px rgba(0,0,0,0.15)',
   
-  // Primary CTA shadow with refined 3D effects and sharper edges
+  // Primary CTA shadow with precise inner highlight and separated shadow
   primaryCTA: [
-    '0px 3px 0px rgba(0,0,0,0.25)',  // Sharper bottom edge shadow for 3D depth
-    '0px 2px 0px rgba(0,0,0,0.1)',   // Secondary bottom edge for more dimension
-    '0px 5px 10px rgba(0,0,0,0.12)', // Close drop shadow with less blur
-    '0px 10px 20px rgba(118,51,220,0.18)', // Outer purple glow
-    '0px 0px 0px 2px rgba(146,96,255,0.9)', // Inner button border
-    '0px 0px 0px 4px rgba(255,255,255,0.25)', // White outer border glow
-    'inset 0px 1px 1px rgba(255,255,255,0.7)', // Sharper top highlight
-    'inset 0px -1px 2px rgba(0,0,0,0.15)' // Inner bottom shadow for concave effect
+    '0px 4px 0px rgba(0,0,0,0.3)',   // Distinct bottom edge shadow with clear separation
+    '0px 8px 15px rgba(0,0,0,0.15)', // Broader drop shadow with clear gap between button
+    '0px 15px 30px rgba(118,51,220,0.15)', // Distant purple glow
+    // Removed outer border/glow completely
+    'inset 0px -2px 0px rgba(0,0,0,0.2)', // Darker bottom section for depth/thickness
+    'inset 0px 0px 0px 1px rgba(0,0,0,0.1)', // Very subtle inner edge definition
+    'inset 0px 1px 2px rgba(0,0,0,0.08)', // Subtle inner shadow overall
+    'inset 0 -3px 6px rgba(0,0,0,0.1)', // Inner bottom shadow for 3D volume
+    // Inner top highlight that follows the curve
+    'inset 0 2px 1px -1px rgba(255,255,255,0.5)' // White highlight on inner top curve
   ].join(', '),
   
-  // Primary CTA hover shadow with enhanced dimensionality
+  // Primary CTA hover shadow with enhanced separation and inner highlight
   primaryCTAHover: [
-    '0px 4px 0px rgba(0,0,0,0.25)',  // Enhanced bottom edge for hover
-    '0px 3px 0px rgba(0,0,0,0.1)',   // Enhanced secondary bottom edge
-    '0px 7px 12px rgba(0,0,0,0.12)', // Expanded close drop shadow
-    '0px 14px 24px rgba(118,51,220,0.2)', // Expanded outer glow
-    '0px 0px 0px 2px rgba(146,96,255,0.9)', // Inner button border
-    '0px 0px 0px 4px rgba(255,255,255,0.3)', // Enhanced white outer border glow
-    'inset 0px 1px 1px rgba(255,255,255,0.8)', // Stronger top highlight
-    'inset 0px -1px 2px rgba(0,0,0,0.1)' // Subtler inner bottom shadow for hover
+    '0px 6px 0px rgba(0,0,0,0.3)',   // Elevated bottom edge for hover (more height)
+    '0px 10px 20px rgba(0,0,0,0.15)', // Elevated broader shadow
+    '0px 20px 35px rgba(118,51,220,0.15)', // Elevated distant glow
+    // Removed outer border/glow completely
+    'inset 0px -2px 0px rgba(0,0,0,0.18)', // Slightly lighter bottom section for hover
+    'inset 0px 0px 0px 1px rgba(0,0,0,0.08)', // Subtler inner edge on hover
+    'inset 0px 1px 2px rgba(0,0,0,0.05)', // Reduced inner shadow on hover
+    'inset 0 -3px 6px rgba(0,0,0,0.08)', // Reduced inner bottom shadow on hover
+    // Enhanced inner top highlight
+    'inset 0 2px 1px -1px rgba(255,255,255,0.6)' // Slightly brighter highlight on hover
   ].join(', '),
   
-  // Secondary CTA shadow precisely matching reference design
+  // Secondary CTA shadow with inner highlight and clear shadow separation
   secondaryCTA: [
-    '0px 0px 0px 1px rgba(0,0,0,0.08)',  // Thin border
-    '0px 2px 0px rgba(0,0,0,0.2)',    // Defined dark gray bottom edge shadow
-    '0px 3px 0px rgba(0,0,0,0.03)',   // Secondary bottom edge
-    '0px 6px 10px rgba(0,0,0,0.1)',   // First soft shadow, clearly separated
-    '0px 10px 20px rgba(0,0,0,0.05)', // Second larger soft shadow
-    'inset 0px 1px 0px rgba(255,255,255,0.4)', // Ultra thin top edge highlight
-    'inset 0px -1px 0px rgba(0,0,0,0.05)',     // Bottom inner shadow for depth
-    'inset 0px 0px 0px 1px rgba(255,255,255,0.2)' // Overall inner light for convex effect
+    // Removed outer border completely
+    '0px 4px 0px rgba(0,0,0,0.2)',    // Distinct bottom edge shadow with clear separation
+    '0px 8px 15px rgba(0,0,0,0.1)',   // Broader shadow with clear gap
+    '0px 12px 25px rgba(0,0,0,0.05)', // Distant soft shadow
+    'inset 0px -2px 0px rgba(0,0,0,0.03)', // Subtle darker bottom section (#E5E5E7) for thickness
+    'inset 0px 0px 0px 1px rgba(0,0,0,0.04)', // Very subtle inner edge definition
+    'inset 0px 1px 2px rgba(0,0,0,0.03)', // Subtle inner shadow
+    'inset 0 -3px 6px rgba(0,0,0,0.02)', // Inner bottom shadow for 3D volume
+    // Inner top highlight that follows the curve
+    'inset 0 2px 1px -1px rgba(255,255,255,0.5)' // White highlight on inner top curve
   ].join(', '),
   
-  // Secondary CTA hover shadow precisely matching reference design
+  // Secondary CTA hover shadow with enhanced separation and inner highlight
   secondaryCTAHover: [
-    '0px 0px 0px 1px rgba(0,0,0,0.08)',  // Maintained thin border
-    '0px 3px 0px rgba(0,0,0,0.2)',    // Enhanced bottom edge for hover
-    '0px 4px 0px rgba(0,0,0,0.03)',   // Enhanced secondary edge
-    '0px 8px 15px rgba(0,0,0,0.1)',   // Expanded first shadow
-    '0px 12px 25px rgba(0,0,0,0.05)', // Expanded second shadow
-    'inset 0px 1px 0px rgba(255,255,255,0.5)', // Enhanced top highlight
-    'inset 0px -1px 0px rgba(0,0,0,0.03)',    // Reduced bottom inner shadow
-    'inset 0px 0px 0px 1px rgba(255,255,255,0.25)' // Enhanced inner light
+    // Removed outer border completely
+    '0px 6px 0px rgba(0,0,0,0.2)',    // Elevated bottom edge for hover (more height)
+    '0px 10px 20px rgba(0,0,0,0.1)',  // Elevated broader shadow
+    '0px 16px 30px rgba(0,0,0,0.05)', // Elevated distant shadow
+    'inset 0px -2px 0px rgba(0,0,0,0.02)', // Slightly lighter bottom section for hover
+    'inset 0px 0px 0px 1px rgba(0,0,0,0.03)', // Subtler inner edge on hover
+    'inset 0px 1px 2px rgba(0,0,0,0.02)', // Reduced inner shadow on hover
+    'inset 0 -3px 6px rgba(0,0,0,0.01)', // Reduced inner bottom shadow on hover
+    // Enhanced inner top highlight
+    'inset 0 2px 1px -1px rgba(255,255,255,0.6)' // Slightly brighter highlight on hover
   ].join(', '),
 };
 
