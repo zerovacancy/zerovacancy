@@ -384,11 +384,9 @@ const Index = () => {
             isMobile && "bg-gradient-to-b from-purple-50/20 via-transparent to-transparent relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-6 after:bg-gradient-to-t after:from-purple-50/20 after:to-transparent"
           )}
         >
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <Suspense fallback={<SectionLoader />}>
-              <Pricing />
-            </Suspense>
-          </div>
+          <Suspense fallback={<SectionLoader />}>
+            <Pricing />
+          </Suspense>
         </section>
 
         <section 

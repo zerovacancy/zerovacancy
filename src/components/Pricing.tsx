@@ -107,14 +107,14 @@ const Pricing = () => {
   return (
     <PricingProvider>
       <div className={cn(
-        "relative w-full py-8 sm:py-12 lg:py-20 overflow-hidden",
+        "relative w-full py-0 overflow-visible",
         isLandscape && "landscape-pricing py-2 sm:py-4" // Apply landscape specific classes
       )}>
         {/* Background decorative elements - now showing on both mobile and desktop */}
         <BackgroundEffects />
         
         <div className={cn(
-          "max-w-7xl mx-auto relative z-10",
+          "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10",
           isLandscape && "px-2 sm:px-3" // Reduce padding in landscape mode
         )}>
           <PricingContent />
