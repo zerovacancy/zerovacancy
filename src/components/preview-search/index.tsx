@@ -60,7 +60,7 @@ const PreviewSearch = () => {
   
   // Precalculate container styles to avoid recalculation
   const containerClasses = useMemo(() => cn(
-    "w-full px-2 sm:px-4 md:px-6 lg:px-8 xl:px-10",
+    "w-full",
     // Remove content-visibility-auto which can cause jitter when combined with IntersectionObserver
     isMobile ? "py-6 pb-8" : "py-6 sm:py-6 md:py-8",
     isMobile ? "relative mt-3 rounded-2xl border border-purple-100/70 bg-[#F9F7FF] shadow-[0_8px_15px_-3px_rgba(138,79,255,0.1),_0_4px_6px_-4px_rgba(138,79,255,0.15)]" : ""

@@ -364,14 +364,14 @@ export const Hero = () => {
       className={cn(
         "flex items-center justify-center flex-col w-full", 
         "px-0", 
-        isMobile ? "py-6 my-0 pt-10 pb-16" : "pt-10 pb-10 sm:pt-16 sm:pb-16 lg:pt-20 lg:pb-20 my-0", 
-        "min-h-[550px] sm:min-h-[60vh]",
+        isMobile ? "py-6 my-0 pt-10 pb-16" : "pt-24 pb-0 sm:pt-28 sm:pb-0 lg:pt-32 lg:pb-0 mt-1", // Minimal bottom padding on desktop
+        "min-h-fit",
         "relative z-10", 
         "gap-3 sm:gap-4", 
         "touch-manipulation",
         isMobile 
           ? "bg-gradient-to-b from-[#f8f5ff] via-[#f5f1fe] to-[#f7f5ff]" 
-          : "bg-gradient-to-b from-purple-50/80 via-indigo-50/60 to-blue-50/30",
+          : "", // Remove gradient from classname - now applied to absolute elements
         "opacity-100", // Always visible to prevent layout shifts
       )}
       style={{
@@ -396,6 +396,8 @@ export const Hero = () => {
         </div>
       ) : (
         <>
+          {/* Optimized desktop background */}
+          <div className="absolute inset-0 bg-gradient-to-b from-purple-50/90 to-indigo-50/80"></div>
           <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOGE2NGZmIiBzdHJva2Utd2lkdGg9IjAuNSIgc3Ryb2tlLW9wYWNpdHk9IjAuMDYiPjxwYXRoIGQ9Ik0wIDBMNDAgNDAiLz48cGF0aCBkPSJNNDAgMEwwIDQwIi8+PC9nPjwvc3ZnPg==')] opacity-30"></div>
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(138,99,255,0.04)_0%,rgba(255,255,255,0)_70%)]"></div>
         </>
@@ -415,13 +417,13 @@ export const Hero = () => {
           {/* Visual heading for users */}
           <div aria-hidden="true" className={cn(
             "tracking-tight leading-[1.15] font-bold font-jakarta mx-auto",
-            isMobile ? "mb-3 mt-4 text-center" : "mb-4 sm:mb-8 text-center max-w-5xl"
+            isMobile ? "mb-3 mt-4 text-center" : "mb-0 sm:mb-0 text-center max-w-5xl"
           )}>
             <span 
               className={cn(
                 isMobile ? "text-[2rem]" : "text-3xl sm:text-5xl lg:text-6xl",
                 "tracking-[-0.02em]",
-                "block sm:inline-block mb-0 sm:mb-0 font-jakarta",
+                "block sm:inline-block mb-0 font-jakarta",
                 "bg-clip-text text-transparent",
                 "bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1]",
                 "font-bold",
@@ -430,7 +432,8 @@ export const Hero = () => {
                   : "drop-shadow-[0_1px_2px_rgba(74,45,217,0.05)]", 
                 isMobile && "relative",
                 isMobile && "mb-3",
-                "w-full mx-auto text-center"
+                "w-full mx-auto text-center",
+                !isMobile && "mb-3" // Added bottom margin
               )}
               style={{ height: isMobile ? "auto" : "auto", letterSpacing: isMobile ? "-0.03em" : "-0.02em" }}
             >
@@ -447,7 +450,7 @@ export const Hero = () => {
                 "relative flex w-full justify-center",
                 isMobile 
                   ? "h-[4em] mt-1" // Increased height for mobile
-                  : "h-[4.5em] sm:h-[3em] md:h-[2.5em] lg:h-[2.5em] mt-1 sm:mt-1",
+                  : "h-[4.5em] sm:h-[3em] md:h-[2.5em] lg:h-[2.5em] mt-0 mb-6", // Equal vertical spacing
                 "overflow-visible",
                 "gpu-accelerated will-change-auto",
                 isMobile && "mobile-optimize"
@@ -511,7 +514,7 @@ export const Hero = () => {
             "mx-auto", 
             "font-inter",
             "relative",
-            isMobile ? "mt-4 mb-10 text-sm px-4 py-2" : "mt-4 mb-8"
+            isMobile ? "mt-4 mb-10 text-sm px-4 py-2" : "mt-6 mb-8"
           )}
         >
           {isMobile ? (
@@ -544,7 +547,7 @@ export const Hero = () => {
       >
         {!isMobile && (
           <div className="w-full max-w-5xl mx-auto relative" id="hero-cta-section">
-            <div className="flex flex-row justify-center gap-[8%] mb-4 relative items-start">
+            <div className="flex flex-row justify-center gap-[8%] mb-3 relative items-start">
               <div className="flex flex-col w-[45%] max-w-[280px]">
                 <WaitlistCTA 
                   buttonText="RESERVE EARLY ACCESS" 
@@ -564,7 +567,7 @@ export const Hero = () => {
             </div>
             
             <div className="w-full flex justify-center">
-              <SocialProof className="mt-2" />
+              <SocialProof className="mt-1" />
             </div>
           </div>
         )}

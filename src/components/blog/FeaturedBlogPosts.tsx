@@ -26,9 +26,9 @@ const FeaturedBlogPosts = () => {
 
   if (loading) {
     return (
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl mx-auto text-center mb-12">
+      <section className="py-4 sm:py-6 lg:py-8 bg-gray-50/40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl mx-auto text-center mb-8">
             <h2 className="text-3xl font-bold text-brand-purple-dark mb-4">
               Loading Latest Insights...
             </h2>
@@ -43,9 +43,9 @@ const FeaturedBlogPosts = () => {
   }
 
   return (
-    <section className="py-16 bg-gray-50">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-3xl mx-auto text-center mb-12">
+    <section className="py-4 sm:py-6 lg:py-8 bg-gray-50/40">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-3xl mx-auto text-center mb-8">
           <h2 className="text-3xl font-bold text-brand-purple-dark mb-4">
             Latest Insights for Property Managers
           </h2>

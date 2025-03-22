@@ -249,8 +249,8 @@ const Index = () => {
         <section 
           ref={addSectionRef(0)} 
           className={cn(
-            "w-full py-2 sm:py-3 lg:py-4 -mt-1 sm:-mt-2 lg:-mt-3",
-            isMobile ? "bg-transparent" : "bg-gradient-to-b from-purple-50/80 via-indigo-50/60 to-blue-50/30"
+            "w-full py-0 mt-1", // Minimal vertical padding
+            isMobile ? "bg-transparent" : ""  // Remove gradient (now applied in components)
           )}
         >
           <div className="relative w-full">
@@ -263,7 +263,7 @@ const Index = () => {
           id="find-creators" 
           className={cn(
             "relative w-full",
-            !isMobile && "bg-[#F5F0FF]/40 py-4 sm:py-6 lg:py-8",
+            !isMobile && "bg-[#F5F0FF]/40 py-4 sm:py-6 lg:py-8 -mt-8", // Negative margin to pull up section
             isMobile && "bg-[#FCFAFF]/70 relative"
           )}
         >
@@ -278,7 +278,7 @@ const Index = () => {
           ref={addSectionRef(2)} 
           id="how-it-works" 
           className={cn(
-            "relative w-full py-4 sm:py-6 lg:py-8 -mt-2 sm:-mt-4 lg:-mt-6",
+            "relative w-full py-4 sm:py-6 lg:py-8 mt-1", // Use positive margin
             isMobile && "bg-gradient-to-b from-blue-50/20 via-transparent to-transparent relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-6 after:bg-gradient-to-t after:from-blue-50/20 after:to-transparent"
           )}
         >
@@ -293,7 +293,7 @@ const Index = () => {
           ref={addSectionRef(3)}
           id="features" 
           className={cn(
-            "w-full py-4 sm:py-6 lg:py-8 -mt-2 sm:-mt-4 lg:-mt-6",
+            "w-full py-4 sm:py-6 lg:py-8 mt-1", // Use positive margin
             isMobile && "bg-gradient-to-b from-violet-50/20 via-transparent to-transparent relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-6 after:bg-gradient-to-t after:from-indigo-50/20 after:to-transparent"
           )}
         >
@@ -308,20 +308,22 @@ const Index = () => {
           ref={addSectionRef(4)}
           id="pricing" 
           className={cn(
-            "w-full py-4 sm:py-6 lg:py-8 -mt-2 sm:-mt-4 lg:-mt-6",
+            "w-full py-4 sm:py-6 lg:py-8 mt-1", // Use positive margin
             isMobile && "bg-gradient-to-b from-purple-50/20 via-transparent to-transparent relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-6 after:bg-gradient-to-t after:from-purple-50/20 after:to-transparent"
           )}
         >
-          <Suspense fallback={<SectionLoader />}>
-            <Pricing />
-          </Suspense>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <Suspense fallback={<SectionLoader />}>
+              <Pricing />
+            </Suspense>
+          </div>
         </section>
 
         <section 
           ref={addSectionRef(5)}
           id="blog" 
           className={cn(
-            "w-full py-4 sm:py-6 lg:py-8 -mt-2 sm:-mt-4 lg:-mt-6",
+            "w-full py-4 sm:py-6 lg:py-8 mt-1", // Use positive margin
             isMobile && "bg-gradient-to-b from-indigo-50/20 via-transparent to-transparent"
           )}
         >
