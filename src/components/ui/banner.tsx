@@ -52,7 +52,7 @@ export function Banner({
     variant,
     size,
     layout
-  }), "min-h-[2.75rem] sm:min-h-[3rem]", "shadow-[0_3px_10px_rgba(0,0,0,0.1)]", "relative z-40", "mt-0.5",
+  }), "min-h-[2.75rem] sm:min-h-[3rem]", "shadow-[0_3px_10px_rgba(0,0,0,0.1)]", "relative z-40", "mt-0 mb-0",
   // Add a small margin to create visual separation from header
   className)} {...props}>
       {/* Enhanced pattern overlay for visual interest */}

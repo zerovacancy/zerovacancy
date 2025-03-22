@@ -248,7 +248,7 @@ const Index = () => {
       />
       <Header />
       {showBanner && !isMobile && (
-        <div className="relative">
+        <div className="relative mb-0">
           <Banner variant="purple" size="lg" action={
               <div className="relative">
                 <Button 
@@ -299,7 +299,7 @@ const Index = () => {
         </div>
       )}
 
-      <main className="flex-1 pb-16 sm:pb-0 w-full" id="main-content">
+      <main className="flex-1 pb-16 sm:pb-0 w-full mt-0" id="main-content">
         <BackgroundEffects 
           blobColors={{
             first: "bg-purple-100",
@@ -311,7 +311,7 @@ const Index = () => {
           spotlightClassName="from-purple-500/5 via-violet-500/5 to-blue-500/5"
           baseColor="bg-white/80" 
           pattern="none"
-          className="py-2 sm:py-3 lg:py-4"
+          className="py-2 sm:py-3 lg:py-4 -mt-1 sm:-mt-2 lg:-mt-3"
           animationSpeed="slow"
         >
           {isMobile ? (
