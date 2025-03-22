@@ -40,41 +40,11 @@ export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({
   const [isVisible, setIsVisible] = useState(true); // Default to visible to ensure content is shown
   const [hasError, setHasError] = useState(false);
 
-  // Only render heavy effects when the component is in view
+  // Simplified effect handling - always visible for better performance
   useEffect(() => {
-    if (!containerRef.current) return;
-    
-    try {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          const [entry] = entries;
-          if (entry.isIntersecting) {
-            setIsVisible(true);
-          }
-        },
-        { 
-          threshold: 0.1,
-          rootMargin: '200px' 
-        }
-      );
-      
-      observer.observe(containerRef.current);
-      
-      // Safety timeout to ensure visibility
-      const safetyTimeout = setTimeout(() => {
-        setIsVisible(true);
-      }, 500);
-      
-      return () => {
-        observer.disconnect();
-        clearTimeout(safetyTimeout);
-      };
-    } catch (error) {
-      console.error("Error in BackgroundEffects observer:", error);
-      setHasError(true);
-      setIsVisible(true); // Ensure content is visible even with error
-      return () => {};
-    }
+    // Just set visible immediately without using an observer
+    setIsVisible(true);
+    return () => {};
   }, []);
 
   // If there was an error setting up the observer, use a simple fallback

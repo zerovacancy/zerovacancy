@@ -74,25 +74,10 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
     }
   }, []);
   
-  // Track mouse position for interactive mode
+  // Disabled interactive mode for performance
   useEffect(() => {
-    if (!interactive || isMobile || !containerRef.current) return;
-    
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!containerRef.current) return;
-      
-      const { left, top } = containerRef.current.getBoundingClientRect();
-      setMousePosition({
-        x: e.clientX - left,
-        y: e.clientY - top
-      });
-    };
-    
-    window.addEventListener('mousemove', handleMouseMove);
-    
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-    };
+    // No-op - interactive effects disabled for performance
+    return () => {};
   }, [interactive, isMobile]);
   
   // Don't render animations for users with reduced motion preference or mobile
@@ -134,14 +119,9 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
   };
 
   // Animation duration based on speed or disabled for reduced motion
+  // Animation durations simplified since we're not using animations anymore
   const getAnimationDuration = (base: number) => {
-    if (!shouldAnimate) return '0s';
-    const multipliers = {
-      fast: 0.7,
-      medium: 1,
-      slow: 2.2
-    };
-    return `${base * multipliers[animationSpeed]}s`;
+    return '0s';
   };
   
   // Calculate interactive blob transformations
@@ -190,34 +170,26 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
       {/* Pattern background - only if pattern is not 'none' */}
       {renderPattern()}
       
-      {/* Render main blobs (always visible) */}
+      {/* Simplified static background elements - no animation, reduced blur */}
       <div 
-        className={cn(`absolute -top-10 -left-20 ${getBlobSizeClass('first')} ${blobColors.first} rounded-full mix-blend-multiply filter blur-3xl opacity-${Math.round(blobOpacity * 100)}`)} 
+        className={cn(`absolute -top-10 -left-20 ${getBlobSizeClass('first')} ${blobColors.first} rounded-full opacity-${Math.round(blobOpacity * 50)}`)} 
         style={{
-          ...(shouldAnimate ? {
-            animation: `blob ${getAnimationDuration(45)} infinite`
-          } : {}),
-          ...getInteractiveStyles(0)
+          filter: 'blur(20px)',
+          transform: 'translateZ(0)'
         }}
       ></div>
       <div 
-        className={cn(`absolute top-[40%] -right-20 ${getBlobSizeClass('second')} ${blobColors.second} rounded-full mix-blend-multiply filter blur-3xl opacity-${Math.round(blobOpacity * 100)}`)} 
+        className={cn(`absolute top-[40%] -right-20 ${getBlobSizeClass('second')} ${blobColors.second} rounded-full opacity-${Math.round(blobOpacity * 50)}`)} 
         style={{
-          ...(shouldAnimate ? {
-            animation: `blob ${getAnimationDuration(50)} infinite`,
-            animationDelay: `${getAnimationDuration(8)}`
-          } : {}),
-          ...getInteractiveStyles(1)
+          filter: 'blur(20px)',
+          transform: 'translateZ(0)'
         }}
       ></div>
       <div 
-        className={cn(`absolute -bottom-40 left-[20%] ${getBlobSizeClass('third')} ${blobColors.third} rounded-full mix-blend-multiply filter blur-3xl opacity-${Math.round(blobOpacity * 100)}`)} 
+        className={cn(`absolute -bottom-40 left-[20%] ${getBlobSizeClass('third')} ${blobColors.third} rounded-full opacity-${Math.round(blobOpacity * 50)}`)} 
         style={{
-          ...(shouldAnimate ? {
-            animation: `blob ${getAnimationDuration(40)} infinite`,
-            animationDelay: `${getAnimationDuration(15)}`
-          } : {}),
-          ...getInteractiveStyles(2)
+          filter: 'blur(20px)',
+          transform: 'translateZ(0)'
         }}
       ></div>
       

@@ -92,36 +92,10 @@ export function OptimizedSpotlight({
     }
   }, [parentElement, size]);
 
-  // Only set up event listeners if the element is visible
+  // Disabled event listeners for performance
   useEffect(() => {
-    if (!parentElement || !isVisible) return;
-
-    const handleEnter = () => setIsHovered(true);
-    const handleLeave = () => setIsHovered(false);
-
-    // Use passive event listeners for better performance
-    try {
-      parentElement.addEventListener('mousemove', handleMouseMove, { passive: true });
-      parentElement.addEventListener('mouseenter', handleEnter, { passive: true });
-      parentElement.addEventListener('mouseleave', handleLeave, { passive: true });
-    } catch (err) {
-      console.error("Error adding event listeners:", err);
-    }
-
-    return () => {
-      try {
-        parentElement.removeEventListener('mousemove', handleMouseMove);
-        parentElement.removeEventListener('mouseenter', handleEnter);
-        parentElement.removeEventListener('mouseleave', handleLeave);
-      } catch (err) {
-        console.error("Error removing event listeners:", err);
-      }
-      
-      if (frameRef.current) {
-        cancelAnimationFrame(frameRef.current);
-        frameRef.current = null;
-      }
-    };
+    // No-op - spotlight effects disabled for better performance
+    return () => {};
   }, [parentElement, isVisible, handleMouseMove]);
 
   // Improve performance by not rendering when not visible or on mobile

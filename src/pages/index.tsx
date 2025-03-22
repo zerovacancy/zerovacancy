@@ -153,73 +153,19 @@ const Index = () => {
   }, []);
   
   useEffect(() => {
-    let observer: IntersectionObserver | null = null;
-    let safetyTimeout: NodeJS.Timeout | null = null;
-    
-    // Only create intersection observer on desktop devices
-    // This avoids performance issues on mobile/weaker devices
-    if (!isMobile) {
-      try {
-        observer = new IntersectionObserver(
-          observerCallback,
-          { 
-            threshold: 0.1, 
-            rootMargin: '100px',
-            // Only track sections that are in or near the viewport
-            root: null 
-          }
-        );
-        
-        sectionsRef.current.forEach((section, index) => {
-          if (!section) return;
-          
-          section.setAttribute('data-section-index', index.toString());
-          observer.observe(section);
-        });
-      } catch (error) {
-        console.error("Error in intersection observer:", error);
-        // Fall back to showing all sections if observer fails
-        setVisibleSections({
-          0: true,
-          1: true,
-          2: true,
-          3: true,
-          4: true,
-          5: true
-        });
-      }
-    } else {
-      // On mobile, just show all sections without observer
-      setVisibleSections({
-        0: true,
-        1: true,
-        2: true,
-        3: true,
-        4: true,
-        5: true
-      });
-    }
-
-    // Safety timeout to ensure sections become visible
-    // even if observer has issues
-    safetyTimeout = setTimeout(() => {
-      setVisibleSections({
-        0: true,
-        1: true,
-        2: true,
-        3: true,
-        4: true,
-        5: true
-      });
-    }, 1000);
+    // Simplified section visibility - show all sections immediately
+    // This eliminates the performance overhead of multiple observers
+    setVisibleSections({
+      0: true,
+      1: true,
+      2: true,
+      3: true,
+      4: true,
+      5: true
+    });
     
     return () => {
-      if (observer) {
-        observer.disconnect();
-      }
-      if (safetyTimeout) {
-        clearTimeout(safetyTimeout);
-      }
+      // No cleanup needed
     };
   }, [observerCallback, isMobile]);
   
