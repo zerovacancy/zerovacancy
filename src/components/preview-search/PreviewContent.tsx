@@ -175,11 +175,11 @@ export const PreviewContent = () => {
       ) : (
         // Desktop view
         <div 
-          className="p-6 transform-gpu" 
+          className="p-2 transform-gpu" 
           style={wrapperStyle}
         >
           <div 
-            className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 transform-gpu"
+            className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 transform-gpu"
             style={{
               minHeight: 'auto', // Allow natural sizing
               contain: 'paint', // Removed size constraint

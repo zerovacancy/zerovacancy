@@ -401,7 +401,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 "shadow-none", // Remove the external shadow completely
                 "hover:shadow-none", // No shadow on hover either
                 "block", // Force block display
-                "pb-20" // Extra padding to ensure CTA is not cut off
+                "pb-16" // Reduced padding to ensure CTA is not cut off but not take too much space
               )}
               style={{
                 display: 'flex',
