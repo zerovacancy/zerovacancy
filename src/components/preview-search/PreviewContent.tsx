@@ -125,7 +125,7 @@ export const PreviewContent = () => {
     <div 
       className={cn(
         "relative w-full transform-gpu", 
-        isMobile && "pb-6 bg-[#F9F7FF]"
+        isMobile && "pb-6 bg-[#F9F7FF]", // Keep mobile background, desktop will use the section background
       )}
       style={{
         // Simple styles to ensure content displays properly

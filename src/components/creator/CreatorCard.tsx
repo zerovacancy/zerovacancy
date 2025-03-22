@@ -582,10 +582,10 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 "overflow-hidden flex flex-col w-full h-full",
                 "will-change-transform transition-all duration-300",
                 "hover:translate-y-[-2px] hover:scale-[1.01]", // Added subtle scale transform
-                "bg-[#FAF8FC]", // Pearl white background color
+                "bg-white", // Pure white background for maximum contrast with pearl gray section
                 "border-0 relative rounded-xl", // Remove default border for custom styling
-                "shadow-none", // Remove the external shadow completely
-                "hover:shadow-none", // No shadow on hover either
+                "shadow-[0_4px_12px_rgba(0,0,0,0.06),_0_2px_4px_rgba(118,51,220,0.04)]", // Add shadow for better contrast with pearl gray background
+                "hover:shadow-[0_8px_24px_rgba(0,0,0,0.08),_0_4px_8px_rgba(118,51,220,0.06)]", // Enhanced shadow on hover
                 "block", // Force block display
                 "pb-16" // Reduced padding to ensure CTA is not cut off but not take too much space
               )}
@@ -593,13 +593,13 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 display: 'flex',
                 flexDirection: 'column',
                 position: 'relative',
-                background: 'linear-gradient(180deg, #FFFFFF 0%, #FAF8FC 100%)', // Pearl white gradient
+                background: 'linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 100%)', // Pure white background
                 borderWidth: '1.5px',
                 borderStyle: 'solid',
                 borderColor: 'rgba(118,51,220,0.15)', // Consistent purple-tinted border 
                 borderTopWidth: '2px',
                 borderTopColor: 'rgba(255,255,255,0.8)', // Brighter top edge for highlight effect
-                boxShadow: 'inset 0 2px 4px rgba(255,255,255,0.9), inset 0 -3px 4px rgba(118,51,220,0.08), inset 2px 0 3px rgba(255,255,255,0.5), inset -2px 0 3px rgba(255,255,255,0.5), 0 1px 2px rgba(118,51,220,0.04)'
+                boxShadow: 'inset 0 2px 4px rgba(255,255,255,0.9), inset 0 -3px 4px rgba(118,51,220,0.08), inset 2px 0 3px rgba(255,255,255,0.5), inset -2px 0 3px rgba(255,255,255,0.5), 0 6px 16px rgba(0,0,0,0.04), 0 3px 6px rgba(118,51,220,0.03)'
               }}>
                 {/* Subtle pearl texture overlay for material quality */}
                 <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.15)_0.5px,transparent_1px)] bg-[length:10px_10px] opacity-[0.07] z-0 pointer-events-none"></div>

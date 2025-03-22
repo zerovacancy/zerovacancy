@@ -263,7 +263,7 @@ const Index = () => {
           id="find-creators" 
           className={cn(
             "relative w-full",
-            !isMobile && "bg-[#F5F0FF]/40 py-4 sm:py-6 lg:py-8 -mt-8", // Negative margin to pull up section
+            !isMobile && "bg-[#F6F7F9] py-4 sm:py-6 lg:py-8 -mt-8", // Light Pearl Gray background for better contrast
             isMobile && "bg-[#FCFAFF]/70 relative"
           )}
         >
