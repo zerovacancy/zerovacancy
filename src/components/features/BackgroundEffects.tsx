@@ -80,14 +80,14 @@ export const BackgroundEffects: React.FC<BackgroundEffectsProps> = ({
   // If there was an error setting up the observer, use a simple fallback
   if (hasError) {
     return (
-      <div id={id} className={cn("relative w-full overflow-hidden", baseColor, className)}>
+      <div id={id} className={cn("relative w-full overflow-visible", baseColor, className)}>
         {children}
       </div>
     );
   }
 
   return (
-    <div ref={containerRef} id={id} className={cn("relative w-full overflow-hidden", className)}>
+    <div ref={containerRef} id={id} className={cn("relative w-full overflow-visible", className)}>
       {isVisible ? (
         <GradientBlobBackground 
           className="overflow-visible"

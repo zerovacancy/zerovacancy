@@ -324,7 +324,7 @@ const Index = () => {
               </div>
             </section>
           ) : (
-            <section ref={addSectionRef(0)} className="w-full max-w-7xl mx-auto">
+            <section ref={addSectionRef(0)} className="w-full">
               <Hero />
             </section>
           )}
