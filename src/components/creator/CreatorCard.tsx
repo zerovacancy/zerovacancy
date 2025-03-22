@@ -1,6 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Card } from '../ui/card';
-import { ArrowRight, Star, X, Clock, Crown } from 'lucide-react';
+import { ArrowRight, Star, X, Clock, Crown, CheckCircle, ShieldCheck, Loader2 } from 'lucide-react';
 import { Dialog, DialogContent } from "../ui/dialog";
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -9,6 +9,9 @@ import { GlowDialog } from '../ui/glow-dialog';
 import { BorderBeam } from '../ui/border-beam';
 import { CreatorMedia } from './CreatorMedia';
 import { PortfolioPreview } from './PortfolioPreview';
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import confetti from "canvas-confetti";
 import type { CreatorCardProps } from './types';
 
 export const CreatorCard: React.FC<CreatorCardProps> = ({ 
@@ -22,8 +25,34 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
   const [showEmailDialog, setShowEmailDialog] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [stage, setStage] = useState<'initial' | 'input' | 'confirmed'>('initial');
+  const [showInlineForm, setShowInlineForm] = useState(false);
+  const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isValid, setIsValid] = useState(false);
+  const [showInlineSuccess, setShowInlineSuccess] = useState(false);
+  const [alreadySubscribed, setAlreadySubscribed] = useState(false);
+  const [submittedEmail, setSubmittedEmail] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const firstName = creator.name.split(' ')[0];
+
+  // Validate email as user types
+  useEffect(() => {
+    if (showInlineForm) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      setIsValid(email.length > 0 && emailRegex.test(email));
+    }
+  }, [email, showInlineForm]);
+  
+  // Focus input after showing form
+  useEffect(() => {
+    if (showInlineForm && inputRef.current) {
+      // Add small delay to ensure element is mounted and renderable
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 100);
+    }
+  }, [showInlineForm]);
 
   // Simplified click handler for better mobile compatibility
   const handleCTAClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
@@ -31,14 +60,98 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
     e.preventDefault();
     e.stopPropagation();
     
-    // Simple approach - just show dialog
-    setShowEmailDialog(true);
+    if (isMobile) {
+      // On mobile, show inline form
+      setShowInlineForm(true);
+    } else {
+      // On desktop, show dialog
+      setShowEmailDialog(true);
+      
+      // Set stage after a short delay to ensure dialog is ready
+      setTimeout(() => {
+        setStage('input');
+      }, 100);
+    }
+  }, [isMobile]);
+
+  // Handle inline form submission
+  const handleInlineSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     
-    // Set stage after a short delay to ensure dialog is ready
-    setTimeout(() => {
-      setStage('input');
-    }, 100);
-  }, []);
+    if (!email) {
+      toast.error("Please enter your email");
+      return;
+    }
+    
+    setIsLoading(true);
+    
+    try {
+      // Include metadata for tracking
+      const metadata = {
+        source: "creator_card",
+        creator: creator.name,
+        referrer: document.referrer,
+        url: window.location.href,
+        userAgent: navigator.userAgent,
+        timestamp: new Date().toISOString(),
+      };
+      
+      // Submit to waitlist API
+      const { data, error } = await supabase.functions.invoke('submit-waitlist-email', {
+        body: { 
+          email, 
+          source: "creator_card", 
+          marketingConsent: true,
+          metadata
+        }
+      });
+      
+      if (error) {
+        console.error("Error submitting email:", error);
+        toast.error("Failed to join waitlist. Please try again.");
+        return;
+      }
+      
+      // Store the email for the confirmation message
+      setSubmittedEmail(email);
+      
+      // Check if already subscribed
+      setAlreadySubscribed(data?.status === 'already_subscribed');
+      
+      // Clear form
+      setEmail("");
+      setShowInlineForm(false);
+      
+      // Show inline success message
+      setShowInlineSuccess(true);
+      
+      // Trigger confetti
+      try {
+        if (typeof window !== 'undefined' && window.confetti) {
+          window.confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.3 }
+          });
+        } else {
+          // Use imported confetti as fallback
+          confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.3 }
+          });
+        }
+      } catch (err) {
+        console.error("Confetti error:", err);
+      }
+      
+    } catch (error) {
+      console.error("Error submitting email:", error);
+      toast.error("Failed to join waitlist. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Use useCallback to memoize the dialog state change handler
   const handleDialogOpenChange = useCallback((open: boolean) => {
@@ -159,8 +272,8 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     )}
                   </div>
                   
-                  {/* Services with organized tag styling */}
-                  <div className="flex flex-wrap gap-x-1.5 gap-y-1 mt-2 px-2 py-2 bg-white/80 rounded-lg border border-purple-100/50 shadow-inner shadow-white/50 max-w-full">
+                  {/* Services with organized tag styling - optimized for mobile */}
+                  <div className="flex flex-wrap gap-x-1 gap-y-1 mt-2 px-2 py-1.5 bg-white/80 rounded-lg border border-purple-100/50 shadow-inner shadow-white/50 max-w-full">
                     {creator.services.map((service, index) => {
                       // Force specific line wrapping for Emily Johnson on mobile
                       const forceWrap = isMobile && 
@@ -178,23 +291,23 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                       if (isVisualStyle) bgColor = "bg-violet-100/80 border-violet-200/70 text-violet-700";
                       if (isSpecialty) bgColor = "bg-teal-100/80 border-teal-200/70 text-teal-700";
                       
-                      // Only show the first 4 services to save space
-                      if (index < 4) {
+                      // Only show the first 3 services to save more space on mobile
+                      if (index < 3) {
                         return (
                           <span 
                             key={index} 
-                            className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs border whitespace-nowrap touch-manipulation shadow-sm max-w-[120px] ${bgColor} ${forceWrap ? 'w-auto flex-shrink-0' : ''}`}
+                            className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs border whitespace-nowrap touch-manipulation shadow-sm max-w-[110px] ${bgColor} ${forceWrap ? 'w-auto flex-shrink-0' : ''}`}
                           >
                             <span className="truncate">{service}</span>
                           </span>
                         );
-                      } else if (index === 4) {
+                      } else if (index === 3) {
                         return (
                           <span 
                             key={index} 
-                            className="inline-flex items-center px-2.5 py-1 rounded-full text-xs text-gray-600 border border-gray-200 bg-white/90 shadow-sm"
+                            className="inline-flex items-center px-2 py-0.5 rounded-full text-xs text-gray-600 border border-gray-200 bg-white/90 shadow-sm"
                           >
-                            +{creator.services.length - 4} more
+                            +{creator.services.length - 3} more
                           </span>
                         );
                       }
@@ -219,12 +332,12 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     </button>
                   </div>
                   
-                  {/* Fixed height portfolio thumbnails */}
-                  <div className="grid grid-cols-3 gap-2.5">
+                  {/* Fixed height portfolio thumbnails - reduced height for mobile */}
+                  <div className="grid grid-cols-3 gap-2">
                     {creator.workExamples.slice(0, 3).map((example, index) => (
                       <button 
                         key={index}
-                        className="relative h-[70px] touch-manipulation rounded-lg overflow-hidden border border-purple-100/80 shadow-sm active:shadow-inner transition-all duration-150 active:scale-95 focus:outline-none focus:ring-2 focus:ring-purple-400/50"
+                        className="relative h-[60px] touch-manipulation rounded-lg overflow-hidden border border-purple-100/80 shadow-sm active:shadow-inner transition-all duration-150 active:scale-95 focus:outline-none focus:ring-2 focus:ring-purple-400/50"
                         onClick={() => onPreviewClick ? onPreviewClick(example) : setSelectedImage(example)}
                         aria-label={`View ${index === 0 ? 'interior' : index === 1 ? 'exterior' : 'detail'} image`}
                       >
@@ -255,70 +368,143 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 
                 {/* Enhanced CTA button with more prominence for mobile */}
                 <div className="mt-3 mb-4">
-                  <button 
-                    onClick={handleCTAClick}
-                    aria-label={`Join as creator with ${creator.name}`}
-                    className="w-full flex items-center justify-center rounded-[12px] font-medium font-sans h-[48px] transition-all duration-200 relative hover:scale-[1.02] bg-creator-cta"
-                    style={{
-                      background: 'linear-gradient(180deg, #F5F5F7 0%, #EEEEF2 100%)', // Subtle gradient for depth
-                      color: '#7633DC', // Purple text color
-                      border: '1px solid rgba(118,51,220,0.2)', // Purple-tinted border for emphasis
-                      boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(118,51,220,0.05)', // Enhanced shadow with purple tint
-                      fontSize: '14px',
-                      fontWeight: 600, // Medium weight
-                      paddingLeft: '42px', // Space for icon
-                    }}
-                  >
-                    {/* Icon container */}
-                    <div 
-                      className="absolute left-0 top-1/2 -translate-y-1/2 ml-5 flex items-center justify-center"
+                  {/* Success state */}
+                  {showInlineSuccess ? (
+                    <div className="w-full py-4 px-4 font-medium rounded-[12px] text-white relative flex flex-col items-center justify-center animate-fade-in"
                       style={{
-                        width: '32px',
-                        height: '32px',
-                        background: 'rgba(134,65,245,0.05)', // Slightly stronger purple tint
-                        border: '1px solid rgba(118,51,220,0.15)', // Subtle purple border
-                        borderRadius: '12px',
-                        boxShadow: 'inset 0 1px 0 rgba(255,255,255,1), inset 0 -1px 0 rgba(0,0,0,0.04)'
+                        background: 'linear-gradient(180deg, #8A42F5 0%, #7837DB 100%)',
+                        color: 'white',
+                        border: '1px solid rgba(255,255,255,0.2)',
+                        boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(0,0,0,0.05), 0 16px 32px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15)',
                       }}
                     >
-                      {creator.name === "Emily Johnson" ? (
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7633DC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M14.5 10A0.5 0.5 0 1 1 15 9.5A0.5 0.5 0 0 1 14.5 10Z"></path>
-                          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                          <path d="M9 3L9 21"></path>
-                        </svg>
-                      ) : creator.name === "Jane Cooper" ? (
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7633DC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                          <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                        </svg>
-                      ) : creator.name === "Michael Brown" ? (
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7633DC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M2 12A10 10 0 1 0 12 2m-9.87 4.5a14 14 0 0 0-0.13 1.8c0 7.5 5.5 14.4 13 14.7a10.8 10.8 0 0 0 2 .1"></path>
-                          <path d="M3.3 7.7A13.4 13.4 0 0 0 2.5 10a15 15 0 0 0 6 11.1A11 11 0 0 0 12 22"></path>
-                          <path d="M5 2.3A10 10 0 0 1 17.55 5"></path>
-                        </svg>
-                      ) : (
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7633DC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                          <circle cx="9" cy="7" r="4"></circle>
-                          <line x1="19" x2="19" y1="8" y2="14"></line>
-                          <line x1="22" x2="16" y1="11" y2="11"></line>
-                        </svg>
-                      )}
+                      <div className="h-12 w-12 bg-purple-50/20 rounded-full flex items-center justify-center mb-2">
+                        <CheckCircle className="h-6 w-6 text-white" />
+                      </div>
+                      <h3 className="text-lg font-bold text-white mb-1">
+                        {alreadySubscribed ? "Already Subscribed" : "Success!"}
+                      </h3>
+                      <p className="text-white/90 text-center text-sm max-w-[24rem] mb-1">
+                        {alreadySubscribed 
+                          ? `${submittedEmail} is already on our waitlist.`
+                          : `We've added ${submittedEmail} to our waitlist.`
+                        }
+                      </p>
+                      <p className="text-white/80 text-xs">
+                        We'll notify you as soon as we launch.
+                      </p>
                     </div>
-                    
-                    {stage === 'initial' ? (
-                      <>
-                        <span className="tracking-wide">JOIN AS CREATOR</span>
-                        <ArrowRight className="w-4 h-4 ml-2 text-[#7633DC] animate-pulse-subtle" aria-hidden="true" />
-                      </>
-                    ) : stage === 'input' ? (
+                  ) : showInlineForm ? (
+                    /* Form state */
+                    <form 
+                      onSubmit={handleInlineSubmit}
+                      className="w-full relative animate-fade-in"
+                    >
+                      <div className="flex flex-col gap-2 w-full">
+                        <div className="relative">
+                          {/* Email input */}
+                          <input
+                            ref={inputRef}
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="Enter your email"
+                            className="w-full h-[48px] px-4 py-3 rounded-t-[12px] rounded-b-none text-gray-800 border border-purple-200/70 border-b-0 focus:outline-none focus:ring-2 focus:ring-purple-400/40"
+                            style={{
+                              fontSize: '16px', // Prevent iOS zoom on focus
+                              backgroundColor: 'white'
+                            }}
+                            disabled={isLoading}
+                            required
+                          />
+                          
+                          {/* Check mark for valid email */}
+                          {isValid && (
+                            <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-500 z-10">
+                              <CheckCircle className="h-5 w-5" />
+                            </div>
+                          )}
+                        </div>
+                        
+                        {/* Submit button */}
+                        <button
+                          type="submit"
+                          disabled={isLoading}
+                          className="w-full h-[48px] bg-gradient-to-b from-purple-600 to-purple-700 text-white font-medium rounded-t-none rounded-b-[12px] flex items-center justify-center transition-all duration-200"
+                        >
+                          {isLoading ? (
+                            <>
+                              <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                              <span>Joining...</span>
+                            </>
+                          ) : (
+                            <>
+                              <ShieldCheck className="w-5 h-5 mr-2" />
+                              <span>JOIN WAITLIST</span>
+                              <ArrowRight className="w-4 h-4 ml-2" />
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </form>
+                  ) : (
+                    /* Initial button state */
+                    <button 
+                      onClick={handleCTAClick}
+                      aria-label={`Join as creator with ${creator.name}`}
+                      className="w-full flex items-center justify-center rounded-[12px] font-medium font-sans h-[48px] transition-all duration-200 relative hover:scale-[1.02] bg-creator-cta"
+                      style={{
+                        background: 'linear-gradient(180deg, #F5F5F7 0%, #EEEEF2 100%)', // Subtle gradient for depth
+                        color: '#7633DC', // Purple text color
+                        border: '1px solid rgba(118,51,220,0.2)', // Purple-tinted border for emphasis
+                        boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(118,51,220,0.05)', // Enhanced shadow with purple tint
+                        fontSize: '14px',
+                        fontWeight: 600, // Medium weight
+                        paddingLeft: '42px', // Space for icon
+                      }}
+                    >
+                      {/* Icon container */}
+                      <div 
+                        className="absolute left-0 top-1/2 -translate-y-1/2 ml-5 flex items-center justify-center"
+                        style={{
+                          width: '32px',
+                          height: '32px',
+                          background: 'rgba(134,65,245,0.05)', // Slightly stronger purple tint
+                          border: '1px solid rgba(118,51,220,0.15)', // Subtle purple border
+                          borderRadius: '12px',
+                          boxShadow: 'inset 0 1px 0 rgba(255,255,255,1), inset 0 -1px 0 rgba(0,0,0,0.04)'
+                        }}
+                      >
+                        {creator.name === "Emily Johnson" ? (
+                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7633DC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M14.5 10A0.5 0.5 0 1 1 15 9.5A0.5 0.5 0 0 1 14.5 10Z"></path>
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <path d="M9 3L9 21"></path>
+                          </svg>
+                        ) : creator.name === "Jane Cooper" ? (
+                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7633DC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                          </svg>
+                        ) : creator.name === "Michael Brown" ? (
+                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7633DC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M2 12A10 10 0 1 0 12 2m-9.87 4.5a14 14 0 0 0-0.13 1.8c0 7.5 5.5 14.4 13 14.7a10.8 10.8 0 0 0 2 .1"></path>
+                            <path d="M3.3 7.7A13.4 13.4 0 0 0 2.5 10a15 15 0 0 0 6 11.1A11 11 0 0 0 12 22"></path>
+                            <path d="M5 2.3A10 10 0 0 1 17.55 5"></path>
+                          </svg>
+                        ) : (
+                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7633DC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <line x1="19" x2="19" y1="8" y2="14"></line>
+                            <line x1="22" x2="16" y1="11" y2="11"></line>
+                          </svg>
+                        )}
+                      </div>
                       <span className="tracking-wide">JOIN AS CREATOR</span>
-                    ) : (
-                      <span className="tracking-wide">Waitlist Joined!</span>
-                    )}
-                  </button>
+                      <ArrowRight className="w-4 h-4 ml-2 text-[#7633DC] animate-pulse-subtle" aria-hidden="true" />
+                    </button>
+                  )}
                 </div>
               </div>
             </Card>
@@ -540,6 +726,13 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
         onOpenChange={handleDialogOpenChange}
         forceOpen={false} // Ensure it only opens via our explicit controls
       />
+      
+      {/* Confetti container - fixed position to ensure visibility */}
+      {showInlineSuccess && (
+        <div className="fixed inset-0 pointer-events-none z-[5000]">
+          {/* This div is just a placeholder for confetti */}
+        </div>
+      )}
       
       {/* Image preview dialog - only shown if onPreviewClick is not provided */}
       {selectedImage && !onPreviewClick && (

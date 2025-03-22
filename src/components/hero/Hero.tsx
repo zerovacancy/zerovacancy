@@ -364,18 +364,37 @@ export const Hero = () => {
       className={cn(
         "flex items-center justify-center flex-col w-full", 
         "px-0", 
-        isMobile ? "py-3 my-0 pt-7 pb-14" : "pt-10 pb-10 sm:pt-16 sm:pb-16 lg:pt-20 lg:pb-20 my-0", 
-        "min-h-fit sm:min-h-[60vh]",
+        isMobile ? "py-6 my-0 pt-10 pb-16" : "pt-10 pb-10 sm:pt-16 sm:pb-16 lg:pt-20 lg:pb-20 my-0", 
+        "min-h-[550px] sm:min-h-[60vh]",
         "relative z-10", 
         "gap-3 sm:gap-4", 
         "touch-manipulation",
         isMobile 
-          ? "bg-transparent" 
+          ? "bg-gradient-to-b from-[#f8f5ff] via-[#f5f1fe] to-[#f7f5ff]" 
           : "bg-gradient-to-b from-purple-50/80 via-indigo-50/60 to-blue-50/30",
-        isInView ? "animate-fade-in" : "opacity-0",
-      )} 
+        "opacity-100", // Always visible to prevent layout shifts
+      )}
+      style={{
+        contentVisibility: "auto",
+        containIntrinsicSize: isMobile ? "0 550px" : "0 600px"
+      }}
     >
-      {!isMobile && (
+      {isMobile ? (
+        // Static mobile background with subtle gradient and pattern
+        <div className="absolute inset-0 overflow-hidden">
+          {/* Base gradient */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#f9f7ff] via-[#f3efff] to-[#f0edff]"></div>
+          
+          {/* Subtle top highlight */}
+          <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-white/80 to-transparent"></div>
+          
+          {/* Subtle diagonal pattern */}
+          <div className="absolute inset-0 opacity-[0.03] bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjN2EzZGZmIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1vcGFjaXR5PSIwLjIiPjxwYXRoIGQ9Ik0wIDBMNjAgNjAiLz48cGF0aCBkPSJNNjAgMEwwIDYwIi8+PC9nPjwvc3ZnPg==')]"></div>
+          
+          {/* Subtle radial gradient */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(149,118,255,0.05)_0%,rgba(255,255,255,0)_60%)]"></div>
+        </div>
+      ) : (
         <>
           <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOGE2NGZmIiBzdHJva2Utd2lkdGg9IjAuNSIgc3Ryb2tlLW9wYWNpdHk9IjAuMDYiPjxwYXRoIGQ9Ik0wIDBMNDAgNDAiLz48cGF0aCBkPSJNNDAgMEwwIDQwIi8+PC9nPjwvc3ZnPg==')] opacity-30"></div>
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(138,99,255,0.04)_0%,rgba(255,255,255,0)_70%)]"></div>
@@ -396,23 +415,24 @@ export const Hero = () => {
           {/* Visual heading for users */}
           <div aria-hidden="true" className={cn(
             "tracking-tight leading-[1.15] font-bold font-jakarta mx-auto",
-            isMobile ? "mb-0 mt-2 text-center" : "mb-4 sm:mb-8 text-center max-w-5xl"
+            isMobile ? "mb-3 mt-4 text-center" : "mb-4 sm:mb-8 text-center max-w-5xl"
           )}>
             <span 
               className={cn(
-                isMobile ? "text-[1.7rem]" : "text-3xl sm:text-5xl lg:text-6xl",
+                isMobile ? "text-[2rem]" : "text-3xl sm:text-5xl lg:text-6xl",
                 "tracking-[-0.02em]",
-                "block sm:inline-block mb-[-0.2em] sm:mb-0 font-jakarta",
+                "block sm:inline-block mb-0 sm:mb-0 font-jakarta",
                 "bg-clip-text text-transparent",
                 "bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1]",
                 "font-bold",
                 isMobile 
-                  ? "drop-shadow-[0_2px_4px_rgba(74,45,217,0.15)]" 
+                  ? "drop-shadow-[0_1px_3px_rgba(74,45,217,0.2)]" 
                   : "drop-shadow-[0_1px_2px_rgba(74,45,217,0.05)]", 
                 isMobile && "relative",
                 isMobile && "mb-3",
                 "w-full mx-auto text-center"
               )}
+              style={{ height: isMobile ? "auto" : "auto", letterSpacing: isMobile ? "-0.03em" : "-0.02em" }}
             >
               {isMobile && (
                 <div className="absolute inset-0 -z-10 opacity-10 bg-[radial-gradient(#8A57DE_1px,transparent_1px)] [background-size:20px_20px] blur-[0.5px]"></div>
@@ -426,20 +446,25 @@ export const Hero = () => {
               className={cn(
                 "relative flex w-full justify-center",
                 isMobile 
-                  ? "h-[3.5em] mt-0" // No margin to keep text together
+                  ? "h-[4em] mt-1" // Increased height for mobile
                   : "h-[4.5em] sm:h-[3em] md:h-[2.5em] lg:h-[2.5em] mt-1 sm:mt-1",
                 "overflow-visible",
-                "gpu-accelerated",
+                "gpu-accelerated will-change-auto",
                 isMobile && "mobile-optimize"
               )}
+              style={{ 
+                width: isMobile ? "100%" : "100%",
+                height: isMobile ? "4em" : "auto",
+                minHeight: isMobile ? "90px" : "auto"
+              }}
             >
               <TextRotate
                 texts={TITLES}
                 mainClassName="flex justify-center items-center"
                 staggerFrom="last"
                 // Simplified transitions for mobile
-                initial={isMobile ? { opacity: 0 } : { y: "40%", opacity: 0, scale: 0.95 }}
-                animate={isMobile ? { opacity: 1 } : { y: 0, opacity: 1, scale: 1 }}
+                initial={{ opacity: 1 }} // Start visible to improve LCP
+                animate={{ opacity: 1 }} // Stay visible
                 exit={isMobile ? { opacity: 0 } : { y: "-40%", opacity: 0, scale: 0.95 }}
                 // No staggering on mobile
                 staggerDuration={0}
@@ -447,14 +472,15 @@ export const Hero = () => {
                 rotationInterval={isMobile ? 4500 : 3000}
                 splitLevelClassName={isMobile ? "" : "overflow-visible"}
                 elementLevelClassName={cn(
-                  isMobile ? "text-[3.5rem]" : "text-4xl sm:text-5xl lg:text-7xl",
-                  "font-bold font-jakarta tracking-[-0.02em]",
+                  isMobile ? "text-[4rem]" : "text-4xl sm:text-5xl lg:text-7xl",
+                  "font-bold font-jakarta tracking-[-0.03em]",
                   "bg-clip-text text-transparent", 
                   "bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1]",
                   isMobile ? "" : "animate-shimmer-slide bg-size-200",
                   isMobile ? "" : "overflow-visible",
                   "drop-shadow-[0_1px_2px_rgba(74,45,217,0.2)]",
-                  "filter brightness-110"
+                  "filter brightness-110",
+                  "leading-[1]"
                 )}
                 // Simpler tween animation for mobile
                 transition={isMobile ? 
@@ -480,24 +506,24 @@ export const Hero = () => {
           className={cn(
             "text-base leading-relaxed",
             "text-brand-text-primary", 
-            isMobile ? "text-left pl-1" : "text-center", 
+            isMobile ? "text-center" : "text-center", 
             "max-w-[95%] sm:max-w-[650px]",
             "mx-auto", 
             "font-inter",
             "relative",
-            isMobile ? "mt-1 mb-8 text-sm px-1 py-2" : "mt-4 mb-8"
+            isMobile ? "mt-4 mb-10 text-sm px-4 py-2" : "mt-4 mb-8"
           )}
         >
           {isMobile ? (
             <>
-              <div className="relative animate-fade-in delay-150 flex flex-col items-center text-center px-1">
-                <div className="relative mb-1">
+              <div className="relative flex flex-col items-center text-center">
+                <div className="relative mb-2">
                   <div className="absolute left-1/2 transform -translate-x-1/2 -top-[0.5px] w-16 h-[2px] bg-gradient-to-r from-transparent via-purple-400/50 to-transparent"></div>
-                  <h2 className="text-gray-800 font-bold text-[1.3rem] mt-0">Elite content that works</h2>
+                  <h2 className="text-gray-800 font-semibold text-[1.25rem] mt-0 font-jakarta tracking-tight">Elite content that works</h2>
                   <div className="h-[1px] w-10 bg-gradient-to-r from-transparent via-purple-400/30 to-transparent mx-auto mt-1"></div>
                 </div>
-                <p className="text-gray-600 font-normal text-[16px] max-w-[280px] leading-relaxed mb-0 mt-0.5">
-                  Transforms properties, delivers professional photos, showcases your property's full potential
+                <p className="text-gray-700 font-normal text-[15px] max-w-[300px] leading-relaxed mb-0 mt-1.5 font-sans">
+                  Connect with top creators who transform your spaces with professional photography, video, and 3D tours that showcase your property's potential.
                 </p>
               </div>
             </>
@@ -545,20 +571,20 @@ export const Hero = () => {
         
         {isMobile && (
           <>
-            <div className="w-full flex flex-col items-center animate-fade-in-up">
-              <div className="w-[92%] max-w-[320px] mx-auto flex flex-col items-center gap-4">
+            <div className="w-full flex flex-col items-center">
+              <div className="w-[92%] max-w-[320px] mx-auto flex flex-col items-center gap-5">
                 {/* Mobile CTA with inline email form expansion */}
                 <div className="w-full relative">
                   <MobileHeroCTA />
                 </div>
                 
-                <div className="w-full flex justify-center mt-2.5 mb-2.5 relative z-10">
+                <div className="w-full flex justify-center mt-3 mb-3 relative z-10">
                   <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-[50%] w-[1px] h-3 bg-gradient-to-b from-transparent via-purple-300/20 to-purple-300/40"></div>
                   <SocialProof 
                     className="mt-0 transform scale-[0.95]"
                     style={{
                       borderRadius: '12px',
-                      padding: '5px 10px',
+                      padding: '8px 12px',
                       fontSize: '12px',
                       background: '#F8F8FA',
                       border: '1px solid rgba(0,0,0,0.08)',
@@ -569,7 +595,7 @@ export const Hero = () => {
               </div>
             </div>
             
-            <div className="w-full flex justify-center mt-7">
+            <div className="w-full flex justify-center mt-10">
               <div className="flex flex-col items-center opacity-60">
                 <div className="text-xs text-purple-600 mb-1 font-medium">Scroll to explore</div>
                 <svg width="18" height="8" viewBox="0 0 20 10" fill="none" xmlns="http://www.w3.org/2000/svg">

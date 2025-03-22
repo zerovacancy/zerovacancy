@@ -29,11 +29,11 @@ export const MobileCreatorCarousel = ({
     align: 'start',
     containScroll: 'trimSnaps',
     loop: false,
-    dragFree: false,
+    dragFree: true, // Allow free dragging for smoother experience
     skipSnaps: false,
-    inViewThreshold: 0.9,
+    inViewThreshold: 0.7, // Lower threshold to make more cards visible
     startIndex: 0,
-    watchDrag: false
+    watchDrag: true // Better touch response
   }), []);
 
   // Initialize the carousel with stable options
@@ -102,7 +102,7 @@ export const MobileCreatorCarousel = ({
           boxShadow: index < creators.length - 1 ? '8px 0 12px -6px rgba(118, 51, 220, 0.08)' : 'none'
         }} 
         className={cn(
-          "min-w-[85vw] w-[85vw] py-2 pb-4 flex-shrink-0", // Added vertical padding
+          "min-w-[75vw] w-[75vw] py-2 pb-4 flex-shrink-0", // Reduced width to show more of next card
           "mr-4", // Consistent margin between cards
           "transform-gpu" // Force GPU rendering
         )}
@@ -140,11 +140,13 @@ export const MobileCreatorCarousel = ({
 
   return (
     <div 
-      className="w-full relative pb-6 pt-2 px-0 overflow-visible bg-[#F9F7FF]"
+      className="w-full relative pb-4 pt-2 px-0 overflow-visible bg-[#F9F7FF]"
       style={{
         boxShadow: 'none',
         border: 'none',
-        transform: 'translateZ(0)'
+        transform: 'translateZ(0)',
+        paddingLeft: '1px', // Ensure proper alignment
+        paddingRight: '1px'  // Ensure proper alignment
       }}
     >
       {/* Main carousel container with hardware acceleration */}
@@ -154,10 +156,10 @@ export const MobileCreatorCarousel = ({
         style={{
           contain: 'paint', // Removed layout and size constraints
           width: '100%',
-          minHeight: '510px' // Increased minimum height to prevent cut-off
+          minHeight: '480px' // Reduced height for mobile display
         }}
       >
-        <div className="flex flex-nowrap pl-1 transform-gpu">
+        <div className="flex flex-nowrap pl-2 transform-gpu">
           {carouselSlides}
         </div>
       </div>
