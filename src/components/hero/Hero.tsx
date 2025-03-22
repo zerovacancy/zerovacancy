@@ -364,7 +364,7 @@ export const Hero = () => {
       className={cn(
         "flex items-center justify-center flex-col w-full", 
         "px-0", 
-        isMobile ? "py-6 my-0 pt-10 pb-16" : "pt-24 pb-0 sm:pt-28 sm:pb-0 lg:pt-32 lg:pb-0 mt-1", // Minimal bottom padding on desktop
+        isMobile ? "py-6 my-0 pt-10 pb-16" : "pt-24 pb-20 sm:pt-28 sm:pb-24 lg:pt-32 lg:pb-32 mt-1", // Increased bottom padding on desktop
         "min-h-fit",
         "relative z-10", 
         "gap-3 sm:gap-4", 

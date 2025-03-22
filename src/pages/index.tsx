@@ -9,6 +9,7 @@ import { Star } from 'lucide-react';
 import { GlowDialog } from '@/components/ui/glow-dialog';
 import { AnimatedShinyText } from '@/components/ui/animated-shiny-text';
 import { cn } from '@/lib/utils';
+import { useSectionStyles, smoothScrollTo } from '@/utils/web-vitals';
 import { BackgroundEffects } from '@/components/features/BackgroundEffects';
 import SEO from '@/components/SEO';
 import { homepageSchema, organizationSchema } from '@/lib/seo';
@@ -16,6 +17,71 @@ import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 
 const { useState, useEffect, useRef, lazy, Suspense, useCallback } = React;
+
+// Section divider component with subtle fade-in effect
+// Section divider component with subtle fade-in effect
+const SectionDivider = () => {
+  const dividerRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+  
+  useEffect(() => {
+    if (!dividerRef.current) return;
+    
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { threshold: 0.1, rootMargin: '20px' }
+    );
+    
+    observer.observe(dividerRef.current);
+    
+    return () => {
+      if (dividerRef.current) {
+        observer.unobserve(dividerRef.current);
+      }
+    };
+  }, []);
+  
+  return (
+    <div className="w-full py-4 overflow-hidden">
+      <div 
+        ref={dividerRef}
+        className={cn(
+          "w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent max-w-7xl mx-auto",
+          "transition-opacity duration-700",
+          isVisible ? "opacity-100" : "opacity-0"
+        )}
+        style={{ willChange: 'opacity' }}
+      />
+    </div>
+  );
+};
+
+// Scroll target component with fixed height to prevent layout shifts
+interface ScrollTargetProps {
+  id: string;
+  height?: number;
+  className?: string;
+}
+
+const ScrollTarget: React.FC<ScrollTargetProps> = ({ id, height = 12, className }) => {
+  return (
+    <div 
+      id={id}
+      aria-hidden="true"
+      className={cn(
+        "w-full overflow-hidden invisible block",
+        className
+      )}
+      style={{ 
+        height: `${height}px`,
+        position: 'relative',
+        zIndex: 30 // Higher z-index to ensure visibility for scroll targeting
+      }}
+    />
+  );
+};
 
 const OptimizedHowItWorks = lazy(() => import('../components/how-it-works/OptimizedHowItWorks'));
 const FeaturesSectionWithHoverEffects = lazy(() => import('@/components/features/Features'));
@@ -33,6 +99,7 @@ const SectionLoader = () => (
  * Main landing page component with performance optimizations
  */
 const Index = () => {
+  const { getZIndex, getTransition, getBackgroundTransition } = useSectionStyles(6); // Total of 6 sections
   const [showBanner, setShowBanner] = useState(true);
   const [showGlowDialog, setShowGlowDialog] = useState(false);
   const isMobile = useIsMobile();
@@ -140,15 +207,21 @@ const Index = () => {
     };
   }, [navigate]);
   
+  // Observer that uses requestAnimationFrame for better performance
   const observerCallback = useCallback((entries: IntersectionObserverEntry[]) => {
-    entries.forEach(entry => {
-      const index = parseInt(entry.target.getAttribute('data-section-index') || '-1', 10);
-      if (index >= 0) {
-        setVisibleSections(prev => ({
-          ...prev,
-          [index]: entry.isIntersecting || prev[index] // Keep sections visible once they've been seen
-        }));
-      }
+    if (!entries.length) return;
+    
+    // Use requestAnimationFrame to batch DOM updates and avoid layout thrashing
+    requestAnimationFrame(() => {
+      entries.forEach(entry => {
+        const index = parseInt(entry.target.getAttribute('data-section-index') || '-1', 10);
+        if (index >= 0) {
+          setVisibleSections(prev => ({
+            ...prev,
+            [index]: entry.isIntersecting || prev[index] // Keep sections visible once they've been seen
+          }));
+        }
+      });
     });
   }, []);
   
@@ -167,7 +240,7 @@ const Index = () => {
     return () => {
       // No cleanup needed
     };
-  }, [observerCallback, isMobile]);
+  }, [isMobile]);
   
   const handleTryNowClick = () => {
     setShowGlowDialog(true);
@@ -177,11 +250,10 @@ const Index = () => {
     sectionsRef.current[index] = el;
   };
   
+  // Enhanced scroll with custom easing and offset
   const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    // Use 80px offset to account for header and provide some breathing room
+    smoothScrollTo(id, 80, 1000); // Longer duration (1000ms) for smoother scrolling
   };
   
   return (
@@ -246,10 +318,15 @@ const Index = () => {
       )}
 
       <main className="flex-1 pb-16 sm:pb-0 w-full mt-0" id="main-content">
+        {/* Hero Section */}
         <section 
           ref={addSectionRef(0)} 
+          style={{
+            ...getZIndex(0),
+            ...getBackgroundTransition(0)
+          }}
           className={cn(
-            "w-full py-0 mt-1", // Minimal vertical padding
+            "w-full relative", // No padding for hero section
             isMobile ? "bg-transparent" : ""  // Remove gradient (now applied in components)
           )}
         >
@@ -258,13 +335,23 @@ const Index = () => {
           </div>
         </section>
         
+        {/* Scroll Target for Find Creators */}
+        <ScrollTarget id="find-creators" height={12} />
+        
+        {/* Section Divider */}
+        {!isMobile && <SectionDivider />}
+        
+        {/* Find Creators Section */}
         <section 
           ref={addSectionRef(1)} 
-          id="find-creators" 
+          style={{
+            ...getZIndex(1),
+            ...getBackgroundTransition(1)
+          }}
           className={cn(
-            "relative w-full",
-            !isMobile && "bg-[#F6F7F9] py-4 sm:py-6 lg:py-8 -mt-8", // Light Pearl Gray background for better contrast
-            isMobile && "bg-[#FCFAFF]/70 relative"
+            "relative w-full pt-16 pb-20", // Standardized desktop spacing
+            !isMobile && "bg-[#F6F7F9]", // Light Pearl Gray background for better contrast
+            isMobile && "bg-[#FCFAFF]/70 py-8 relative"
           )}
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -274,12 +361,23 @@ const Index = () => {
           </div>
         </section>
         
+        {/* Scroll Target for How It Works */}
+        <ScrollTarget id="how-it-works" height={12} />
+        
+        {/* Section Divider */}
+        {!isMobile && <SectionDivider />}
+        
+        {/* How It Works Section */}
         <section 
           ref={addSectionRef(2)} 
-          id="how-it-works" 
+          style={{
+            ...getZIndex(2),
+            ...getBackgroundTransition(2)
+          }}
           className={cn(
-            "relative w-full py-4 sm:py-6 lg:py-8 mt-1", // Use positive margin
-            isMobile && "bg-gradient-to-b from-blue-50/20 via-transparent to-transparent relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-6 after:bg-gradient-to-t after:from-blue-50/20 after:to-transparent"
+            "relative w-full pt-16 pb-20", // Standardized desktop spacing
+            !isMobile && "bg-white",
+            isMobile && "py-8 relative"
           )}
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -289,12 +387,23 @@ const Index = () => {
           </div>
         </section>
         
+        {/* Section Divider */}
+        {!isMobile && <SectionDivider />}
+        
+        {/* Scroll Target for Features */}
+        <ScrollTarget id="features" height={12} />
+        
+        {/* Features Section */}
         <section 
           ref={addSectionRef(3)}
-          id="features" 
+          style={{
+            ...getZIndex(3),
+            ...getBackgroundTransition(3)
+          }}
           className={cn(
-            "w-full py-4 sm:py-6 lg:py-8 mt-1", // Use positive margin
-            isMobile && "bg-gradient-to-b from-violet-50/20 via-transparent to-transparent relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-6 after:bg-gradient-to-t after:from-indigo-50/20 after:to-transparent"
+            "relative w-full pt-16 pb-20", // Standardized desktop spacing
+            !isMobile && "bg-[#F8F7FB]", // Very light purple/gray
+            isMobile && "py-8 relative"
           )}
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -304,12 +413,23 @@ const Index = () => {
           </div>
         </section>
 
+        {/* Section Divider */}
+        {!isMobile && <SectionDivider />}
+
+        {/* Scroll Target for Pricing */}
+        <ScrollTarget id="pricing" height={12} />
+
+        {/* Pricing Section */}
         <section 
           ref={addSectionRef(4)}
-          id="pricing" 
+          style={{
+            ...getZIndex(4),
+            ...getBackgroundTransition(4)
+          }}
           className={cn(
-            "w-full py-4 sm:py-6 lg:py-8 mt-1", // Use positive margin
-            isMobile && "bg-gradient-to-b from-purple-50/20 via-transparent to-transparent relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-6 after:bg-gradient-to-t after:from-purple-50/20 after:to-transparent"
+            "relative w-full pt-16 pb-20", // Standardized desktop spacing
+            !isMobile && "bg-white",
+            isMobile && "py-8 relative"
           )}
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -319,12 +439,23 @@ const Index = () => {
           </div>
         </section>
 
+        {/* Section Divider */}
+        {!isMobile && <SectionDivider />}
+
+        {/* Scroll Target for Blog */}
+        <ScrollTarget id="blog" height={12} />
+
+        {/* Blog Section */}
         <section 
           ref={addSectionRef(5)}
-          id="blog" 
+          style={{
+            ...getZIndex(5),
+            ...getBackgroundTransition(5)
+          }}
           className={cn(
-            "w-full py-4 sm:py-6 lg:py-8 mt-1", // Use positive margin
-            isMobile && "bg-gradient-to-b from-indigo-50/20 via-transparent to-transparent"
+            "relative w-full pt-16 pb-20", // Standardized desktop spacing
+            !isMobile && "bg-[#F6F7F9]", // Light Pearl Gray background
+            isMobile && "py-8 relative"
           )}
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

@@ -41,18 +41,9 @@ const PricingHeader = ({
       >
         {!isSticky && (
           <>
-            {/* Decorative elements */}
-            <div className="flex justify-center mb-2">
-              <div className="relative">
-                <div className="absolute -top-6 -right-6 w-12 h-12 bg-purple-100 rounded-full blur-xl opacity-70" />
-                <div className="absolute -bottom-6 -left-6 w-12 h-12 bg-blue-100 rounded-full blur-xl opacity-70" />
-                {/* Removed the "Transform Your Spaces" text here */}
-              </div>
-            </div>
-            
-            {/* Main title */}
+            {/* Main title - decorative blurs removed */}
             <h2 className={cn(
-              "font-bold text-brand-purple-dark mb-2 tracking-tight font-jakarta",
+              "font-bold text-brand-purple-dark mb-2 mt-3 tracking-tight font-jakarta",
               isMobile ? "text-2xl" : "text-3xl sm:text-4xl"
             )}>
               {title}

@@ -325,20 +325,21 @@ import { cn } from '@/lib/utils';
 export const sectionStyles = (index: number, isActive = true): string => {
   const bgColors = [
     "", // Hero background
-    "bg-indigo-50/30", // Find creators
-    "bg-blue-50/30", // How it works
-    "bg-purple-50/20", // Features
-    "bg-indigo-50/20", // Pricing
-    "bg-blue-50/10", // Testimonials
-    "bg-purple-50/10", // Call to action
+    "bg-[#F6F7F9]", // Find creators - Light Pearl Gray
+    "bg-white", // How it works
+    "bg-[#F8F7FB]", // Features - Very light purple/gray
+    "bg-white", // Pricing
+    "bg-[#F6F7F9]", // Blog - Light Pearl Gray
+    "bg-white", // Call to action
   ];
 
+  // Use consistent fixed padding for all sections
   return cn(
     "relative w-full",
-    "py-16 sm:py-20 lg:py-24", // Increased vertical padding for better desktop spacing
-    "mt-1", // Positive margin instead of negative margin
+    index === 0 ? "" : "pt-16 pb-20", // No padding for hero, standardized for others
     bgColors[index] || "",
-    isActive ? "opacity-100" : "opacity-0 pointer-events-none"
+    isActive ? "opacity-100" : "opacity-0 pointer-events-none",
+    "transition-all duration-400 ease-out" // Apply transitions for all properties
   );
 };
 

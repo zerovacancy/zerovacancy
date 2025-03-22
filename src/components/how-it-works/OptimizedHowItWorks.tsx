@@ -49,34 +49,36 @@ const OptimizedHowItWorks: React.FC = () => {
   };
 
   return (
-    <BeamsBackground 
+    <div 
       id="how-it-works-section"
-      className="py-4 sm:py-6 lg:py-8"
-      intensity="subtle"
+      className="pt-16 pb-20 bg-white w-full" // Standardized desktop padding with plain white background
     >
-      <div className={`w-full mx-auto relative transition-all duration-700 ${isVisible ? 'opacity-100' : 'opacity-0 translate-y-10'}`}>
-        <div className="text-center mb-8 sm:mb-12 lg:mb-16">
-          <SectionHeaderSimple 
-            title="SIMPLE BY DESIGN" 
-            subtitle="From booking to delivery in four straightforward steps:"
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className={`w-full relative transition-all duration-700 ${isVisible ? 'opacity-100' : 'opacity-0 translate-y-10'}`} 
+             style={{ willChange: 'transform, opacity' }}>
+          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+            <SectionHeaderSimple 
+              title="SIMPLE BY DESIGN" 
+              subtitle="From booking to delivery in four straightforward steps:"
+            />
+          </div>
+
+          {/* Mobile grid layout */}
+          <MobileStepsGridSimple 
+            completedSteps={completedSteps} 
+            activeStep={activeStep}
+            onStepInteraction={handleStepInteraction}
+          />
+
+          {/* Desktop grid layout */}
+          <DesktopStepsGridSimple 
+            completedSteps={completedSteps} 
+            activeStep={activeStep}
+            onStepInteraction={handleStepInteraction}
           />
         </div>
-
-        {/* Mobile grid layout */}
-        <MobileStepsGridSimple 
-          completedSteps={completedSteps} 
-          activeStep={activeStep}
-          onStepInteraction={handleStepInteraction}
-        />
-
-        {/* Desktop grid layout */}
-        <DesktopStepsGridSimple 
-          completedSteps={completedSteps} 
-          activeStep={activeStep}
-          onStepInteraction={handleStepInteraction}
-        />
       </div>
-    </BeamsBackground>
+    </div>
   );
 };
 

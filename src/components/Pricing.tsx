@@ -2,7 +2,6 @@
 import { cn } from "@/lib/utils";
 import { useSubscription } from "@/hooks/use-subscription";
 import PricingHeader from "./pricing/PricingHeader";
-import { BackgroundEffects } from "./pricing/BackgroundEffects";
 import { PricingProvider, usePricing } from "./pricing/PricingContext";
 import { PricingContainer } from "./pricing/PricingContainer";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -107,16 +106,13 @@ const Pricing = () => {
   return (
     <PricingProvider>
       <div className={cn(
-        "relative w-full py-0 overflow-visible",
-        isLandscape && "landscape-pricing py-2 sm:py-4" // Apply landscape specific classes
+        "relative w-full overflow-visible",
+        isLandscape && "landscape-pricing sm:py-4" // Apply landscape specific classes
       )}>
-        {/* Background decorative elements - now showing on both mobile and desktop */}
-        <BackgroundEffects />
-        
         <div className={cn(
-          "relative z-10",
+          "relative z-10 transition-all duration-500",
           isLandscape && "px-2 sm:px-3" // Reduce padding in landscape mode
-        )}>
+        )} style={{ willChange: 'transform, opacity' }}>
           <PricingContent />
         </div>
       </div>
