@@ -314,3 +314,58 @@ export function measureWebVitals() {
   }
   */
 }
+
+/**
+ * Background optimization utilities for desktop
+ */
+import { ClassValue } from 'clsx';
+import { cn } from '@/lib/utils';
+
+// Helper function to optimize background performance for desktop sections
+export const sectionStyles = (index: number, isActive = true): string => {
+  const bgColors = [
+    "", // Hero background
+    "bg-indigo-50/30", // Find creators
+    "bg-blue-50/30", // How it works
+    "bg-purple-50/20", // Features
+    "bg-indigo-50/20", // Pricing
+    "bg-blue-50/10", // Testimonials
+    "bg-purple-50/10", // Call to action
+  ];
+
+  return cn(
+    "relative w-full",
+    "py-16 sm:py-20 lg:py-24", // Increased vertical padding for better desktop spacing
+    "mt-1", // Positive margin instead of negative margin
+    bgColors[index] || "",
+    isActive ? "opacity-100" : "opacity-0 pointer-events-none"
+  );
+};
+
+// Get background gradient for a section
+export const getSectionGradient = (index: number): string => {
+  const gradients = [
+    "bg-gradient-to-b from-purple-50/90 to-indigo-50/80", // Hero
+    "bg-gradient-to-b from-indigo-50/80 to-blue-50/70", // Find creators
+    "bg-gradient-to-b from-blue-50/80 to-indigo-50/70", // How it works
+    "bg-gradient-to-b from-purple-50/80 to-indigo-50/70", // Features
+    "bg-gradient-to-b from-indigo-50/80 to-blue-50/70", // Pricing
+    "bg-gradient-to-b from-blue-50/80 to-purple-50/70", // Testimonials
+    "bg-gradient-to-b from-purple-50/80 to-indigo-50/70", // Call to action
+  ];
+  
+  return gradients[index] || gradients[0];
+};
+
+type PatternType = 'diagonal' | 'dots' | 'grid';
+
+// Get background pattern based on type
+export const getBackgroundPattern = (pattern: PatternType = 'diagonal', opacity = 0.06): string => {
+  const patterns: Record<PatternType, string> = {
+    diagonal: "bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOGE2NGZmIiBzdHJva2Utd2lkdGg9IjAuNSIgc3Ryb2tlLW9wYWNpdHk9IjAuMDYiPjxwYXRoIGQ9Ik0wIDBMNDAgNDAiLz48cGF0aCBkPSJNNDAgMEwwIDQwIi8+PC9nPjwvc3ZnPg==')]",
+    dots: "bg-[radial-gradient(#8A57DE_1px,transparent_1px)] [background-size:20px_20px]",
+    grid: "bg-[linear-gradient(to_right,rgba(138,99,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(138,99,255,0.05)_1px,transparent_1px)] bg-[size:40px_40px]",
+  };
+  
+  return cn(patterns[pattern], `opacity-[${opacity}]`);
+};

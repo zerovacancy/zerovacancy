@@ -1,8 +1,80 @@
-
-import React, { useRef, useEffect, useState } from 'react';
+import React from 'react';
 import { cn } from '@/lib/utils';
 import { OptimizedSpotlight } from './optimized-spotlight';
+import { sectionStyles, getSectionGradient, getBackgroundPattern } from '@/utils/performance-optimizations';
 
+interface OptimizedGradientBlobBackgroundProps {
+  className?: string;
+  children?: React.ReactNode;
+  sectionIndex?: number;
+  pattern?: 'diagonal' | 'dots' | 'grid' | 'none';
+  patternOpacity?: number;
+  withSpotlight?: boolean;
+  spotlightClassName?: string;
+  spotlightSize?: number;
+  blobColor?: string;
+  blobOpacity?: number;
+  baseColor?: string;
+}
+
+export const OptimizedGradientBlobBackground: React.FC<OptimizedGradientBlobBackgroundProps> = ({
+  className = '',
+  children,
+  sectionIndex = 0,
+  pattern = 'diagonal',
+  patternOpacity = 0.06,
+  withSpotlight = false,
+  spotlightClassName = 'from-blue-500/20 via-cyan-500/20 to-teal-500/20',
+  spotlightSize = 350,
+  blobColor = 'bg-purple-100/40',
+  blobOpacity = 0.3,
+  baseColor = 'bg-white/80',
+}) => {
+  return (
+    <div className={cn(
+      "relative w-full overflow-hidden",
+      baseColor,
+      sectionStyles(sectionIndex),
+      className
+    )}>
+      {/* Base gradient background */}
+      <div className={cn("absolute inset-0", getSectionGradient(sectionIndex))}></div>
+      
+      {/* Pattern overlay if not 'none' */}
+      {pattern !== 'none' && (
+        <div className={cn(
+          "absolute inset-0",
+          getBackgroundPattern(pattern, patternOpacity)
+        )}></div>
+      )}
+      
+      {/* Single optimized blob with lighter blur */}
+      <div 
+        className={cn(
+          "absolute -top-10 left-[15%]",
+          "w-[600px] h-[600px]",
+          blobColor,
+          "rounded-full",
+          `opacity-${Math.round(blobOpacity * 100)}`
+        )}
+        style={{
+          filter: 'blur(80px)',
+          transform: 'translateZ(0)'
+        }}
+      ></div>
+      
+      {/* Spotlight effect - only if withSpotlight is true */}
+      {withSpotlight && <OptimizedSpotlight className={spotlightClassName} size={spotlightSize} />}
+      
+      {/* Content */}
+      <div className="relative z-10">
+        {children}
+      </div>
+    </div>
+  );
+};
+
+// For backwards compatibility with the old gradient blob component
 interface GradientBlobBackgroundProps {
   className?: string;
   children?: React.ReactNode;
@@ -42,163 +114,29 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
   animationSpeed = 'medium',
   interactive = false
 }) => {
-  const [isMounted, setIsMounted] = useState(false);
-  const isReducedMotion = useRef(false);
-  const [isMobile, setIsMobile] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-  
-  // Check if mobile and for reduced motion preference
-  useEffect(() => {
-    setIsMounted(true);
-    try {
-      isReducedMotion.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const checkMobile = () => {
-        setIsMobile(window.innerWidth < 768);
-        if (containerRef.current) {
-          const { width, height } = containerRef.current.getBoundingClientRect();
-          setDimensions({ width, height });
-        }
-      };
-      
-      checkMobile();
-      window.addEventListener('resize', checkMobile);
-      
-      return () => {
-        window.removeEventListener('resize', checkMobile);
-      };
-    } catch (err) {
-      console.error("Error setting up motion preferences:", err);
-      return () => {}; // Empty cleanup if error
-    }
-  }, []);
-  
-  // Disabled interactive mode for performance
-  useEffect(() => {
-    // No-op - interactive effects disabled for performance
-    return () => {};
-  }, [interactive, isMobile]);
-  
-  // Don't render animations for users with reduced motion preference or mobile
-  const shouldAnimate = isMounted && !isReducedMotion.current && !isMobile;
-
-  // For mobile, render simplified background without animations
-  if (isMobile) {
-    return <div ref={containerRef} className={cn(`relative w-full overflow-hidden ${baseColor}`, className)}>
-        {/* Simple gradient background for mobile */}
-        <div className="absolute inset-0 bg-gradient-to-b from-white/80 to-gray-100/80"></div>
-        
-        {/* Content */}
-        <div className="relative z-10">
-          {children}
-        </div>
-      </div>;
-  }
-
-  // Determine blob sizes based on the blobSize prop
-  const getBlobSizeClass = (position: 'first' | 'second' | 'third') => {
-    const sizes = {
-      small: {
-        first: 'w-64 h-64',
-        second: 'w-64 h-64',
-        third: 'w-64 h-64'
-      },
-      medium: {
-        first: 'w-96 h-96',
-        second: 'w-96 h-96',
-        third: 'w-96 h-96'
-      },
-      large: {
-        first: 'w-[45rem] h-[45rem]',
-        second: 'w-[42rem] h-[42rem]',
-        third: 'w-[48rem] h-[48rem]'
-      }
-    };
-    return sizes[blobSize][position];
-  };
-
-  // Animation duration based on speed or disabled for reduced motion
-  // Animation durations simplified since we're not using animations anymore
-  const getAnimationDuration = (base: number) => {
-    return '0s';
+  // Map pattern types from old props to new component
+  const patternMap = {
+    dots: 'dots' as const,
+    grid: 'grid' as const,
+    none: 'none' as const
   };
   
-  // Calculate interactive blob transformations
-  const getInteractiveStyles = (index: number) => {
-    if (!interactive || !dimensions.width || !dimensions.height) return {};
-    
-    // Create subtle movement based on mouse position
-    const xPercent = mousePosition.x / dimensions.width;
-    const yPercent = mousePosition.y / dimensions.height;
-    
-    const offsets = [
-      { x: -15 * xPercent, y: -15 * yPercent },
-      { x: 15 * xPercent, y: -10 * yPercent },
-      { x: -10 * xPercent, y: 15 * yPercent }
-    ];
-    
-    return {
-      transform: `translate(${offsets[index].x}px, ${offsets[index].y}px)`,
-      transition: 'transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)'
-    };
-  };
+  // Use simplified base color from the first blob
+  const simplifiedBlobColor = blobColors.first || 'bg-purple-100/40';
   
-  // Only render dot/grid patterns if specified
-  const renderPattern = () => {
-    if (pattern === 'dots') {
-      return <div className={`absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:20px_20px] opacity-${Math.round(dotOpacity * 100)}`}></div>;
-    }
-    
-    if (pattern === 'grid') {
-      return <div className={`absolute inset-0 opacity-${Math.round(dotOpacity * 10)}`}>
-        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <pattern id="smallGrid" width="20" height="20" patternUnits="userSpaceOnUse">
-              <path d="M 20 0 L 0 0 0 20" fill="none" stroke="currentColor" strokeWidth="0.5" className="text-gray-300" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#smallGrid)" />
-        </svg>
-      </div>;
-    }
-    
-    return null;
-  };
-  
-  return <div ref={containerRef} className={cn(`relative w-full overflow-hidden ${baseColor}`, className)}>
-      {/* Pattern background - only if pattern is not 'none' */}
-      {renderPattern()}
-      
-      {/* Simplified static background elements - no animation, reduced blur */}
-      <div 
-        className={cn(`absolute -top-10 -left-20 ${getBlobSizeClass('first')} ${blobColors.first} rounded-full opacity-${Math.round(blobOpacity * 50)}`)} 
-        style={{
-          filter: 'blur(20px)',
-          transform: 'translateZ(0)'
-        }}
-      ></div>
-      <div 
-        className={cn(`absolute top-[40%] -right-20 ${getBlobSizeClass('second')} ${blobColors.second} rounded-full opacity-${Math.round(blobOpacity * 50)}`)} 
-        style={{
-          filter: 'blur(20px)',
-          transform: 'translateZ(0)'
-        }}
-      ></div>
-      <div 
-        className={cn(`absolute -bottom-40 left-[20%] ${getBlobSizeClass('third')} ${blobColors.third} rounded-full opacity-${Math.round(blobOpacity * 50)}`)} 
-        style={{
-          filter: 'blur(20px)',
-          transform: 'translateZ(0)'
-        }}
-      ></div>
-      
-      {/* Spotlight effect - only if withSpotlight is true */}
-      {withSpotlight && <OptimizedSpotlight className={spotlightClassName} size={spotlightSize} />}
-      
-      {/* Content */}
-      <div className="relative z-10">
-        {children}
-      </div>
-    </div>;
+  return (
+    <OptimizedGradientBlobBackground
+      className={className}
+      pattern={patternMap[pattern]}
+      patternOpacity={dotOpacity * 0.2}
+      withSpotlight={withSpotlight}
+      spotlightClassName={spotlightClassName}
+      spotlightSize={spotlightSize}
+      blobColor={simplifiedBlobColor}
+      blobOpacity={blobOpacity * 2}
+      baseColor={baseColor}
+    >
+      {children}
+    </OptimizedGradientBlobBackground>
+  );
 };
