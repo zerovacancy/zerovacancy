@@ -51,10 +51,10 @@ const OptimizedHowItWorks: React.FC = () => {
   return (
     <BeamsBackground 
       id="how-it-works-section"
-      className="py-10 sm:py-16 lg:py-20"
+      className="py-4 sm:py-6 lg:py-8"
       intensity="subtle"
     >
-      <div className={`max-w-6xl mx-auto relative px-4 sm:px-6 lg:px-10 transition-all duration-700 ${isVisible ? 'opacity-100' : 'opacity-0 translate-y-10'}`}>
+      <div className={`w-full mx-auto relative transition-all duration-700 ${isVisible ? 'opacity-100' : 'opacity-0 translate-y-10'}`}>
         <div className="text-center mb-8 sm:mb-12 lg:mb-16">
           <SectionHeaderSimple 
             title="SIMPLE BY DESIGN" 

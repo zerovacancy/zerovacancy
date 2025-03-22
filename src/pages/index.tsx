@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, lazy, Suspense, useCallback } from 'react';
+import * as React from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import Header from '../components/Header';
 import { Hero } from '../components/hero/Hero';
@@ -14,6 +14,8 @@ import SEO from '@/components/SEO';
 import { homepageSchema, organizationSchema } from '@/lib/seo';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
+
+const { useState, useEffect, useRef, lazy, Suspense, useCallback } = React;
 
 const OptimizedHowItWorks = lazy(() => import('../components/how-it-works/OptimizedHowItWorks'));
 const FeaturesSectionWithHoverEffects = lazy(() => import('@/components/features/Features'));
@@ -162,7 +164,7 @@ const Index = () => {
           observerCallback,
           { 
             threshold: 0.1, 
-            rootMargin: '200px',
+            rootMargin: '100px',
             // Only track sections that are in or near the viewport
             root: null 
           }
@@ -309,7 +311,7 @@ const Index = () => {
           spotlightClassName="from-purple-500/5 via-violet-500/5 to-blue-500/5"
           baseColor="bg-white/80" 
           pattern="none"
-          className="py-0"
+          className="py-2 sm:py-4 lg:py-6"
           animationSpeed="slow"
         >
           {isMobile ? (
@@ -322,7 +324,7 @@ const Index = () => {
               </div>
             </section>
           ) : (
-            <section ref={addSectionRef(0)} className="w-full">
+            <section ref={addSectionRef(0)} className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <Hero />
             </section>
           )}
@@ -330,29 +332,31 @@ const Index = () => {
         
         <section 
           ref={addSectionRef(1)} 
-          id="how-it-works" 
+          id="find-creators" 
           className={cn(
             "relative w-full",
-            isMobile && "bg-gradient-to-b from-blue-50/30 via-transparent to-transparent relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-8 after:bg-gradient-to-t after:from-blue-50/30 after:to-transparent"
+            !isMobile && "bg-[#F5F0FF]/40 py-6 sm:py-10 lg:py-14",
+            isMobile && "bg-[#FCFAFF]/70 relative"
           )}
         >
-          <Suspense fallback={<SectionLoader />}>
-            <OptimizedHowItWorks />
-          </Suspense>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <Suspense fallback={<SectionLoader />}>
+              <PreviewSearch />
+            </Suspense>
+          </div>
         </section>
         
         <section 
           ref={addSectionRef(2)} 
-          id="find-creators" 
+          id="how-it-works" 
           className={cn(
-            "relative w-full",
-            !isMobile && "bg-[#F5F0FF]/60 py-10",
-            isMobile && "bg-[#FCFAFF]/80 relative"
+            "relative w-full py-6 sm:py-10 lg:py-14",
+            isMobile && "bg-gradient-to-b from-blue-50/20 via-transparent to-transparent relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-6 after:bg-gradient-to-t after:from-blue-50/20 after:to-transparent"
           )}
         >
-          <div className="max-w-7xl mx-auto relative z-10 py-10 sm:py-16 lg:py-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <Suspense fallback={<SectionLoader />}>
-              <PreviewSearch />
+              <OptimizedHowItWorks />
             </Suspense>
           </div>
         </section>
@@ -361,44 +365,50 @@ const Index = () => {
           ref={addSectionRef(3)}
           id="features" 
           className={cn(
-            "w-full",
-            isMobile && "bg-gradient-to-b from-violet-50/30 via-transparent to-transparent relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-8 after:bg-gradient-to-t after:from-indigo-50/30 after:to-transparent"
+            "w-full py-6 sm:py-10 lg:py-14",
+            isMobile && "bg-gradient-to-b from-violet-50/20 via-transparent to-transparent relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-6 after:bg-gradient-to-t after:from-indigo-50/20 after:to-transparent"
           )}
         >
-          <Suspense fallback={<SectionLoader />}>
-            <FeaturesSectionWithHoverEffects />
-          </Suspense>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <Suspense fallback={<SectionLoader />}>
+              <FeaturesSectionWithHoverEffects />
+            </Suspense>
+          </div>
         </section>
 
         <section 
           ref={addSectionRef(4)}
           id="pricing" 
           className={cn(
-            "w-full",
-            isMobile && "bg-gradient-to-b from-purple-50/30 via-transparent to-transparent relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-8 after:bg-gradient-to-t after:from-purple-50/30 after:to-transparent"
+            "w-full py-6 sm:py-10 lg:py-14",
+            isMobile && "bg-gradient-to-b from-purple-50/20 via-transparent to-transparent relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-6 after:bg-gradient-to-t after:from-purple-50/20 after:to-transparent"
           )}
         >
-          <Suspense fallback={<SectionLoader />}>
-            <Pricing />
-          </Suspense>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <Suspense fallback={<SectionLoader />}>
+              <Pricing />
+            </Suspense>
+          </div>
         </section>
 
         <section 
           ref={addSectionRef(5)}
           id="blog" 
           className={cn(
-            "w-full",
-            isMobile && "bg-gradient-to-b from-indigo-50/30 via-transparent to-transparent"
+            "w-full py-6 sm:py-10 lg:py-14",
+            isMobile && "bg-gradient-to-b from-indigo-50/20 via-transparent to-transparent"
           )}
         >
-          <Suspense fallback={<SectionLoader />}>
-            <FeaturedBlogPosts />
-          </Suspense>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <Suspense fallback={<SectionLoader />}>
+              <FeaturedBlogPosts />
+            </Suspense>
+          </div>
         </section>
 
         {!isMobile && (
           <div className="fixed right-6 top-1/2 transform -translate-y-1/2 z-40 hidden lg:flex flex-col items-center gap-3">
-            {['how-it-works', 'find-creators', 'features', 'pricing', 'blog'].map((section, index) => {
+            {['find-creators', 'how-it-works', 'features', 'pricing', 'blog'].map((section, index) => {
               const isActive = visibleSections[index + 1];
               return (
                 <button

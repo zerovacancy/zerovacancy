@@ -144,7 +144,7 @@ export function BeamsBackground({
 
   return (
     <div id={id}
-      className={cn("relative overflow-hidden bg-white", className)}>
+      className={cn("relative overflow-visible bg-white", className)}>
       {/* Only show canvas on larger screens */}
       <canvas ref={canvasRef} className="absolute inset-0 hidden sm:block" style={{
         filter: "blur(15px)"
