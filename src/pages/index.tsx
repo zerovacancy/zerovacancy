@@ -335,7 +335,7 @@ const Index = () => {
           id="find-creators" 
           className={cn(
             "relative w-full",
-            !isMobile && "bg-[#F5F0FF]/40 py-6 sm:py-10 lg:py-14",
+            !isMobile && "bg-[#F5F0FF]/40 py-4 sm:py-6 lg:py-8",
             isMobile && "bg-[#FCFAFF]/70 relative"
           )}
         >
@@ -350,7 +350,7 @@ const Index = () => {
           ref={addSectionRef(2)} 
           id="how-it-works" 
           className={cn(
-            "relative w-full py-6 sm:py-10 lg:py-14",
+            "relative w-full py-4 sm:py-6 lg:py-8 -mt-2 sm:-mt-4 lg:-mt-6",
             isMobile && "bg-gradient-to-b from-blue-50/20 via-transparent to-transparent relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-6 after:bg-gradient-to-t after:from-blue-50/20 after:to-transparent"
           )}
         >
@@ -365,7 +365,7 @@ const Index = () => {
           ref={addSectionRef(3)}
           id="features" 
           className={cn(
-            "w-full py-6 sm:py-10 lg:py-14",
+            "w-full py-4 sm:py-6 lg:py-8 -mt-2 sm:-mt-4 lg:-mt-6",
             isMobile && "bg-gradient-to-b from-violet-50/20 via-transparent to-transparent relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-6 after:bg-gradient-to-t after:from-indigo-50/20 after:to-transparent"
           )}
         >
@@ -380,7 +380,7 @@ const Index = () => {
           ref={addSectionRef(4)}
           id="pricing" 
           className={cn(
-            "w-full py-6 sm:py-10 lg:py-14",
+            "w-full py-4 sm:py-6 lg:py-8 -mt-2 sm:-mt-4 lg:-mt-6",
             isMobile && "bg-gradient-to-b from-purple-50/20 via-transparent to-transparent relative after:absolute after:bottom-0 after:left-0 after:w-full after:h-6 after:bg-gradient-to-t after:from-purple-50/20 after:to-transparent"
           )}
         >
@@ -395,7 +395,7 @@ const Index = () => {
           ref={addSectionRef(5)}
           id="blog" 
           className={cn(
-            "w-full py-6 sm:py-10 lg:py-14",
+            "w-full py-4 sm:py-6 lg:py-8 -mt-2 sm:-mt-4 lg:-mt-6",
             isMobile && "bg-gradient-to-b from-indigo-50/20 via-transparent to-transparent"
           )}
         >
