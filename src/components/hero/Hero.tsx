@@ -364,10 +364,10 @@ export const Hero = () => {
       className={cn(
         "flex items-center justify-center flex-col", 
         "px-5 sm:px-6", 
-        isMobile ? "py-3 my-0 pt-7 pb-14" : "py-6 sm:py-12 lg:py-16 my-2 sm:my-6 lg:my-8", 
-        "min-h-fit sm:min-h-[36vh]",
+        isMobile ? "py-3 my-0 pt-7 pb-14" : "py-6 sm:py-8 lg:py-10 my-0 sm:my-2 lg:my-4", 
+        "min-h-fit sm:min-h-[30vh]",
         "relative z-10", 
-        "gap-3 sm:gap-6", 
+        "gap-3 sm:gap-4", 
         "touch-manipulation",
         isMobile 
           ? "bg-transparent" 
@@ -485,7 +485,7 @@ export const Hero = () => {
             "mx-auto", 
             "font-inter",
             "relative",
-            isMobile ? "mt-1 mb-8 text-sm px-1 py-2" : ""
+            isMobile ? "mt-1 mb-8 text-sm px-1 py-2" : "mt-2 mb-4"
           )}
         >
           {isMobile ? (
@@ -510,7 +510,7 @@ export const Hero = () => {
       <div 
         className={cn(
           "w-full", 
-          isMobile ? "mt-[-8px]" : "mt-5 sm:mt-6",
+          isMobile ? "mt-[-8px]" : "mt-3 sm:mt-4",
           "px-4 sm:px-4",
           isInView ? "animate-fade-in delay-200" : "opacity-0",
           isMobile && "relative"
@@ -518,7 +518,7 @@ export const Hero = () => {
       >
         {!isMobile && (
           <div className="w-full max-w-4xl mx-auto relative" id="hero-cta-section">
-            <div className="flex flex-row justify-center gap-[8%] mb-8 relative items-start">
+            <div className="flex flex-row justify-center gap-[8%] mb-6 relative items-start">
               <div className="flex flex-col w-[45%] max-w-[280px]">
                 <WaitlistCTA 
                   buttonText="RESERVE EARLY ACCESS" 

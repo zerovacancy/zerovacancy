@@ -311,7 +311,7 @@ const Index = () => {
           spotlightClassName="from-purple-500/5 via-violet-500/5 to-blue-500/5"
           baseColor="bg-white/80" 
           pattern="none"
-          className="py-2 sm:py-4 lg:py-6"
+          className="py-2 sm:py-3 lg:py-4"
           animationSpeed="slow"
         >
           {isMobile ? (
