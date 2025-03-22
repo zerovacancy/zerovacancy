@@ -225,7 +225,7 @@ export const GradientBlobBackground: React.FC<GradientBlobBackgroundProps> = ({
       {withSpotlight && <OptimizedSpotlight className={spotlightClassName} size={spotlightSize} />}
       
       {/* Content */}
-      <div className="relative z-10 bg-neutral-50">
+      <div className="relative z-10">
         {children}
       </div>
     </div>;
