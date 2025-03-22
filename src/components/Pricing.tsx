@@ -114,7 +114,7 @@ const Pricing = () => {
         <BackgroundEffects />
         
         <div className={cn(
-          "max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10",
+          "max-w-7xl mx-auto relative z-10",
           isLandscape && "px-2 sm:px-3" // Reduce padding in landscape mode
         )}>
           <PricingContent />

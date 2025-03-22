@@ -363,7 +363,7 @@ export const Hero = () => {
       ref={sectionRef}
       className={cn(
         "flex items-center justify-center flex-col", 
-        "px-5 sm:px-6", 
+        "px-0", 
         isMobile ? "py-3 my-0 pt-7 pb-14" : "pt-6 pb-4 sm:pt-8 sm:pb-4 lg:pt-10 lg:pb-4 my-0", 
         "min-h-fit sm:min-h-[30vh]",
         "relative z-10", 
@@ -384,7 +384,7 @@ export const Hero = () => {
       
       <div 
         className={cn(
-          "flex flex-col max-w-6xl mx-auto w-full",
+          "flex flex-col max-w-6xl mx-auto w-full px-4 sm:px-6 lg:px-8",
           "gap-1 sm:gap-6", 
           isInView ? "animate-fade-in delay-100" : "opacity-0"
         )}
@@ -511,7 +511,7 @@ export const Hero = () => {
         className={cn(
           "w-full", 
           isMobile ? "mt-[-8px]" : "mt-3 sm:mt-4",
-          "px-4 sm:px-4",
+          isMobile ? "px-4" : "px-4 sm:px-6 lg:px-8",
           isInView ? "animate-fade-in delay-200" : "opacity-0",
           isMobile && "relative"
         )}
