@@ -133,7 +133,8 @@ export const CreatorMedia = ({
           // Ensure hardware acceleration
           transform: 'translateZ(0)',
           objectFit: 'cover',
-          display: 'block'
+          display: 'block',
+          border: '0'
         }}
       />
       

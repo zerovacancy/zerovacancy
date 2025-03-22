@@ -118,7 +118,6 @@ export const PreviewContent = () => {
   // Create wrapper style
   const wrapperStyle = useMemo(() => ({
     transform: 'translateZ(0)', // Force hardware acceleration
-    backfaceVisibility: 'hidden' as const,
     willChange: 'transform' // Hint for browser optimization
   }), []);
 
@@ -176,11 +175,11 @@ export const PreviewContent = () => {
       ) : (
         // Desktop view
         <div 
-          className="bg-white p-4 rounded-xl border border-purple-100/30 shadow-[0_10px_15px_-3px_rgba(138,79,255,0.1),_0_4px_6px_-4px_rgba(138,79,255,0.15),_inset_0_1px_3px_rgba(255,255,255,0.3)] transform-gpu"
+          className="p-6 transform-gpu" 
           style={wrapperStyle}
         >
           <div 
-            className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-5 transform-gpu"
+            className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 transform-gpu"
             style={{
               minHeight: 'auto', // Allow natural sizing
               contain: 'paint', // Removed size constraint
@@ -189,14 +188,14 @@ export const PreviewContent = () => {
             {isLoading ? (
               <>
                 {SKELETON_INDICES.map((item) => (
-                  <div key={item} className="transform-gpu">
+                  <div key={item} className="transform-gpu mb-4 sm:mb-0">
                     <CreatorCardSkeleton />
                   </div>
                 ))}
               </>
             ) : (
               CREATOR_DATA.map((creator, index) => (
-                <div key={index} className="transform-gpu">
+                <div key={index} className="transform-gpu mb-4 sm:mb-0">
                   <CreatorCard 
                     creator={creator}
                     onImageLoad={handleImageLoad}

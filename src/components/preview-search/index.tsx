@@ -161,16 +161,7 @@ const PreviewSearch = () => {
         className="mx-auto relative group max-w-7xl transform-gpu"
         style={{ transform: 'translateZ(0)' }}
       >
-        {/* Desktop-only glow effect - optimized with CSS */}
-        {!isMobile && (
-          <div 
-            className={cn(
-              "absolute -inset-0.5 sm:-inset-1 rounded-xl sm:rounded-2xl bg-gradient-to-r from-purple-800/25 via-indigo-700/30 to-purple-900/25 blur-[2px] sm:blur-sm",
-              "group-hover:opacity-90 group-hover:blur-md transform-gpu"
-            )}
-            style={cardGlowStyle}
-          ></div>
-        )}
+        {/* Removed desktop glow effect for a cleaner look */}
 
         {/* Main content card with optimized visibility prop */}
         <PreviewCard isVisible={isVisible || hasBeenSeen.current}>

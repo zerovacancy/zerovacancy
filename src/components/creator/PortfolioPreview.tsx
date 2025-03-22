@@ -34,6 +34,7 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
         <div className="flex items-center mb-2">
           <div className="w-0.5 h-3.5 bg-gradient-to-b from-indigo-500 to-purple-500 rounded-full mr-1.5"></div>
           <span className="text-xs text-gray-600 font-medium tracking-wide">{isMobile ? 'RECENT WORK' : 'RECENT WORK'}</span>
+          <span className="ml-auto text-[10px] text-purple-400/80 font-medium">View All →</span>
         </div>
 
         {isMobile ? (
@@ -43,8 +44,8 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
                 key={index}
                 className={cn(
                   "relative rounded-md overflow-hidden cursor-pointer group",
-                  "border border-purple-100/80",
-                  "shadow-sm aspect-square", // Fixed aspect ratio for consistency
+                  "border border-[rgba(118,51,220,0.15)]",
+                  "shadow-[inset_0_1px_2px_rgba(255,255,255,0.6),inset_0_-1px_1px_rgba(0,0,0,0.03)] aspect-square", // Fixed aspect ratio with internal shadows
                   "bg-gray-50"
                 )}
                 onClick={() => onPreviewClick ? onPreviewClick(example) : setSelectedImage(example)}
@@ -75,8 +76,8 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
                 key={index}
                 className={cn(
                   "relative rounded-md overflow-hidden cursor-pointer group",
-                  "border border-purple-100/80",
-                  "shadow-sm hover:shadow-md transition-shadow duration-200",
+                  "border border-[rgba(118,51,220,0.15)]",
+                  "shadow-[inset_0_1px_2px_rgba(255,255,255,0.6),inset_0_-1px_1px_rgba(0,0,0,0.03)] hover:shadow-[inset_0_1px_3px_rgba(255,255,255,0.8),inset_0_-1px_2px_rgba(0,0,0,0.05)] transition-shadow duration-200",
                   "aspect-square", 
                   "bg-gray-50"
                 )}

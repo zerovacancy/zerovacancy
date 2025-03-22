@@ -63,20 +63,18 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               "shadow-[0_2px_8px_rgba(0,0,0,0.08),_0_4px_12px_rgba(118,51,220,0.06)]", // Enhanced shadow for depth
               "hover:scale-[1.01]", // Subtle scale transform on hover
               "rounded-xl relative transition-all duration-300",
-              "translate-z-0 backface-visibility-hidden", // Hardware acceleration for mobile
+              "transform-gpu", // Hardware acceleration for mobile
               "will-change-transform" // Performance optimization
             )}>
               
               {/* Custom border container - wraps the entire card including the button */}
               <div className="absolute inset-0 rounded-[14px] pointer-events-none" 
                    style={{
-                     border: '2px solid rgba(118, 51, 220, 0.35)', // Deeper, more distinctive purple border
-                     // Layered shadows for depth:
-                     boxShadow: `
-                       0 2px 6px rgba(118, 51, 220, 0.09),
-                       0 6px 16px rgba(118, 51, 220, 0.06), 
-                       inset 0 1px 0 rgba(255, 255, 255, 1)
-                     `,
+                     borderWidth: '2px',
+                     borderStyle: 'solid',
+                     borderColor: 'rgba(118, 51, 220, 0.35)', // Deeper, more distinctive purple border
+                     // Layered shadows for depth using standard format:
+                     boxShadow: '0 2px 6px rgba(118, 51, 220, 0.09), 0 6px 16px rgba(118, 51, 220, 0.06), inset 0 1px 0 rgba(255, 255, 255, 1)',
                      zIndex: 10
                    }}
               ></div>
@@ -89,7 +87,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   <div className="absolute inset-0 w-full h-full 
                     shadow-[0_1px_3px_rgba(0,0,0,0.05),_0_4px_6px_rgba(0,0,0,0.05),_0_10px_20px_rgba(0,0,0,0.04)] 
                     group-hover:shadow-[0_2px_4px_rgba(0,0,0,0.05),_0_6px_10px_rgba(0,0,0,0.05),_0_12px_24px_rgba(0,0,0,0.06)]
-                    border border-[rgba(0,0,0,0.06)]
+                    border border-[rgba(118,51,220,0.15)]
                     transition-shadow duration-300
                     z-10">
                   </div>
@@ -162,7 +160,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   </div>
                   
                   {/* Services with organized tag styling */}
-                  <div className="flex flex-wrap gap-x-1.5 gap-y-1 mt-2 px-2 py-2 bg-purple-50/80 rounded-lg border border-purple-100/70 shadow-inner shadow-purple-50/50 max-w-full">
+                  <div className="flex flex-wrap gap-x-1.5 gap-y-1 mt-2 px-2 py-2 bg-white/80 rounded-lg border border-purple-100/50 shadow-inner shadow-white/50 max-w-full">
                     {creator.services.map((service, index) => {
                       // Force specific line wrapping for Emily Johnson on mobile
                       const forceWrap = isMobile && 
@@ -260,7 +258,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   <button 
                     onClick={handleCTAClick}
                     aria-label={`Join as creator with ${creator.name}`}
-                    className="w-full flex items-center justify-center rounded-[12px] font-medium font-jakarta h-[48px] transition-all duration-200 relative hover:scale-[1.02] bg-creator-cta"
+                    className="w-full flex items-center justify-center rounded-[12px] font-medium font-sans h-[48px] transition-all duration-200 relative hover:scale-[1.02] bg-creator-cta"
                     style={{
                       background: 'linear-gradient(180deg, #F5F5F7 0%, #EEEEF2 100%)', // Subtle gradient for depth
                       color: '#7633DC', // Purple text color
@@ -312,13 +310,13 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     
                     {stage === 'initial' ? (
                       <>
-                        <span>JOIN AS CREATOR</span>
+                        <span className="tracking-wide">JOIN AS CREATOR</span>
                         <ArrowRight className="w-4 h-4 ml-2 text-[#7633DC] animate-pulse-subtle" aria-hidden="true" />
                       </>
                     ) : stage === 'input' ? (
-                      <span>JOIN AS CREATOR</span>
+                      <span className="tracking-wide">JOIN AS CREATOR</span>
                     ) : (
-                      <span>Waitlist Joined!</span>
+                      <span className="tracking-wide">Waitlist Joined!</span>
                     )}
                   </button>
                 </div>
@@ -327,9 +325,8 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
           </div>
       ) : (
           <article className="group select-text h-full w-full">
-            <div className="relative h-full w-full">
-              {/* Enhanced glass morphism glow effect behind card */}
-              <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-r from-purple-800/20 via-indigo-700/20 to-purple-900/20 opacity-50 blur-[3px] sm:blur-sm group-hover:opacity-80 transition duration-500"></div>
+            <div className="relative h-full w-full rounded-xl overflow-hidden">
+              {/* Completely removed glass morphism glow effect */}
               
               {/* Desktop CTA with reduced spacing */}
               <div className="absolute bottom-3 left-0 right-0 z-50 px-5">
@@ -338,12 +335,13 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 
                 <button 
                   onClick={handleCTAClick}
-                  className="w-full flex items-center justify-center text-[#7633DC] font-medium font-jakarta rounded-[12px] py-3 relative hover:scale-[1.02] animate-subtle-pulse"
+                  className="w-full flex items-center justify-center text-[#7633DC] font-semibold font-sans rounded-[12px] py-3 relative hover:scale-[1.02]"
                   style={{
-                    background: 'linear-gradient(180deg, #FFFFFF 0%, #F8F8FA 100%)', // Gradient background to match hero
+                    background: 'linear-gradient(180deg, #FFFFFF 0%, #F5F5FA 100%)', // Enhanced gradient
                     color: '#7633DC', // Purple text color
-                    border: '1px solid rgba(0,0,0,0.1)', // Darker border to match hero
-                    boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(0,0,0,0.05), 0 16px 32px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 0 rgba(0,0,0,0.07)',
+                    border: '1.5px solid rgba(118,51,220,0.15)', // Purple-tinted border
+                    boxShadow: 'inset 0 1px 0 rgba(255,255,255,1), inset 0 -1px 0 rgba(118,51,220,0.05)',
+                    transform: 'translateY(-2px)', // Small lift above card but won't cause cutoff
                     height: '52px',
                     paddingLeft: '52px', // Make room for icon
                     fontSize: '14px',
@@ -389,31 +387,42 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                       </svg>
                     )}
                   </div>
-                  <span className="text-base">JOIN AS CREATOR</span>
+                  <span className="text-base tracking-wide font-sans">JOIN AS CREATOR</span>
                   <ArrowRight className="w-4 h-4 ml-2 text-[#7633DC]" />
                 </button>
               </div>
               
               <Card className={cn(
-                "overflow-hidden flex flex-col w-full",
+                "overflow-hidden flex flex-col w-full h-full",
                 "will-change-transform transition-all duration-300",
                 "hover:translate-y-[-2px] hover:scale-[1.01]", // Added subtle scale transform
-                "bg-gradient-to-b from-[#F9F7FF] to-[#F8F6FF]", // Match section background with subtle gradient
-                "border border-[rgba(0,0,0,0.06)]", // Subtle 1px light gray border
-                "shadow-[0_1px_3px_rgba(0,0,0,0.05),_0_4px_6px_rgba(0,0,0,0.05),_0_10px_20px_rgba(0,0,0,0.04)]", // Sophisticated 3D shadow
-                "hover:shadow-[0_2px_4px_rgba(0,0,0,0.05),_0_6px_10px_rgba(0,0,0,0.05),_0_12px_24px_rgba(0,0,0,0.06)]", // Enhanced shadow on hover
-                "rounded-xl",
-                "h-full", // Ensure consistent height for desktop
+                "bg-[#FAF8FC]", // Pearl white background color
+                "border-0 relative rounded-xl", // Remove default border for custom styling
+                "shadow-none", // Remove the external shadow completely
+                "hover:shadow-none", // No shadow on hover either
                 "block", // Force block display
-                "pb-16" // Moderate padding for CTA spacing
+                "pb-20" // Extra padding to ensure CTA is not cut off
               )}
               style={{
                 display: 'flex',
                 flexDirection: 'column',
-                position: 'relative'
+                position: 'relative',
+                background: 'linear-gradient(180deg, #FFFFFF 0%, #FAF8FC 100%)', // Pearl white gradient
+                borderWidth: '1.5px',
+                borderStyle: 'solid',
+                borderColor: 'rgba(118,51,220,0.15)', // Consistent purple-tinted border 
+                borderTopWidth: '2px',
+                borderTopColor: 'rgba(255,255,255,0.8)', // Brighter top edge for highlight effect
+                boxShadow: 'inset 0 2px 4px rgba(255,255,255,0.9), inset 0 -3px 4px rgba(118,51,220,0.08), inset 2px 0 3px rgba(255,255,255,0.5), inset -2px 0 3px rgba(255,255,255,0.5), 0 1px 2px rgba(118,51,220,0.04)'
               }}>
-                {/* Subtle pattern overlay */}
-                <div className="absolute inset-0 opacity-[0.01] bg-[radial-gradient(#8A4FFF_1px,transparent_1px)] bg-[length:20px_20px] z-0 pointer-events-none"></div>
+                {/* Subtle pearl texture overlay for material quality */}
+                <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.15)_0.5px,transparent_1px)] bg-[length:10px_10px] opacity-[0.07] z-0 pointer-events-none"></div>
+                
+                {/* Enhanced 3D border effect with subtle gradients */}
+                <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-b from-white to-transparent opacity-80 z-[1] pointer-events-none rounded-t-xl"></div>
+                <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-t from-purple-100/20 to-transparent z-[1] pointer-events-none rounded-b-xl"></div>
+                <div className="absolute inset-y-0 left-0 w-1 bg-gradient-to-r from-white/50 to-transparent z-[1] pointer-events-none"></div>
+                <div className="absolute inset-y-0 right-0 w-1 bg-gradient-to-l from-white/50 to-transparent z-[1] pointer-events-none"></div>
 
                 {/* Optimized price tag - compact and visually distinct */}
                 <div className="absolute top-3.5 right-3.5 z-20">
@@ -428,7 +437,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   <div className="absolute inset-0 w-full h-full 
                     shadow-[0_1px_3px_rgba(0,0,0,0.05),_0_4px_6px_rgba(0,0,0,0.05),_0_10px_20px_rgba(0,0,0,0.04)] 
                     group-hover:shadow-[0_2px_4px_rgba(0,0,0,0.05),_0_6px_10px_rgba(0,0,0,0.05),_0_12px_24px_rgba(0,0,0,0.06)]
-                    border border-[rgba(0,0,0,0.06)]
+                    border border-[rgba(118,51,220,0.15)]
                     transition-shadow duration-300
                     z-10">
                   </div>
@@ -439,11 +448,11 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   />
                 </div>
 
-                {/* Content section with reduced spacing */}
-                <div className="px-5 pt-4 pb-2 flex flex-col relative z-10 flex-grow">
+                {/* Content section integrated with section background */}
+                <div className="px-5 pt-4 pb-2 flex flex-col relative z-10 flex-grow rounded-b-xl overflow-hidden">
                   {/* Enhanced creator info section with improved visual hierarchy */}
                   <div className="mb-3 pb-3 border-b border-purple-100/40">
-                    <div className="py-2 px-3 -mx-2 mb-2 bg-purple-50 border-l-2 border-purple-400 rounded-r-md">
+                    <div className="py-2 px-3 -mx-2 mb-2 bg-white/90 border-l-2 border-purple-400 rounded-r-md shadow-[inset_1px_1px_2px_rgba(255,255,255,0.9)]">
                       <h3 className="text-title leading-tight font-semibold text-purple-800">{creator.name}</h3>
                     </div>
                     
@@ -457,7 +466,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     </p>
                     
                     {/* Services with color-coded tag styling */}
-                    <div className="flex flex-wrap gap-1.5 mt-2 bg-purple-50/30 p-1.5 rounded-md -mx-1">
+                    <div className="flex flex-wrap gap-1.5 mt-2 bg-white/70 p-1.5 rounded-md -mx-1 shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)]">
                       {creator.services.map((service, index) => {
                         // Determine tag color based on service type
                         const isPlatform = service.includes('TikTok') || service.includes('Instagram') || service.includes('YouTube');
@@ -490,7 +499,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   </div>
 
                   {/* Refined rating section with reduced spacing */}
-                  <div className="mb-2 p-2 rounded-md bg-white/60 border border-purple-100/40 shadow-sm">
+                  <div className="mb-2 p-2.5 rounded-md bg-white/70 shadow-[inset_0_1px_2px_rgba(255,255,255,0.7),inset_0_-1px_1px_rgba(0,0,0,0.02)]">
                     <div className="mb-1.5 pb-1 border-b border-gray-100 flex justify-between items-center">
                       <div className="flex items-center">
                         <div className="w-0.5 h-3.5 bg-gradient-to-b from-indigo-400/80 to-purple-400/80 rounded-full mr-1.5"></div>

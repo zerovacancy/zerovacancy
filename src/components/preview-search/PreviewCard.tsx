@@ -24,22 +24,9 @@ export const PreviewCard: React.FC<PreviewCardProps> = ({ isVisible, children })
         }
       }}
       viewport={{ once: true, margin: "-50px" }}
-      className={cn(
-        "will-change-transform",
-        isMobile 
-          ? "relative" 
-          : "relative rounded-lg sm:rounded-xl overflow-hidden shadow-lg sm:shadow-xl border-2 border-[#8860E6]/60 bg-white"
-      )}
+      className="will-change-transform relative"
     >
-      {isMobile ? (
-        <div className="bg-white">
-          {children}
-        </div>
-      ) : (
-        <div className="bg-white w-full">
-          {children}
-        </div>
-      )}
+      {children}
     </motion.div>
   );
 };
