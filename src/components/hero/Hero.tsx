@@ -364,7 +364,7 @@ export const Hero = () => {
       className={cn(
         "flex items-center justify-center flex-col", 
         "px-5 sm:px-6", 
-        isMobile ? "py-3 my-0 pt-7 pb-14" : "py-6 sm:py-8 lg:py-10 my-0 sm:my-2 lg:my-4", 
+        isMobile ? "py-3 my-0 pt-7 pb-14" : "pt-6 pb-4 sm:pt-8 sm:pb-4 lg:pt-10 lg:pb-4 my-0", 
         "min-h-fit sm:min-h-[30vh]",
         "relative z-10", 
         "gap-3 sm:gap-4", 
@@ -518,7 +518,7 @@ export const Hero = () => {
       >
         {!isMobile && (
           <div className="w-full max-w-4xl mx-auto relative" id="hero-cta-section">
-            <div className="flex flex-row justify-center gap-[8%] mb-6 relative items-start">
+            <div className="flex flex-row justify-center gap-[8%] mb-4 relative items-start">
               <div className="flex flex-col w-[45%] max-w-[280px]">
                 <WaitlistCTA 
                   buttonText="RESERVE EARLY ACCESS" 
@@ -538,7 +538,7 @@ export const Hero = () => {
             </div>
             
             <div className="w-full flex justify-center">
-              <SocialProof className="mt-3" />
+              <SocialProof className="mt-2" />
             </div>
           </div>
         )}
