@@ -364,8 +364,8 @@ export const Hero = () => {
       className={cn(
         "flex items-center justify-center flex-col w-full", 
         "px-0", 
-        isMobile ? "py-3 my-0 pt-7 pb-14" : "pt-6 pb-4 sm:pt-8 sm:pb-4 lg:pt-10 lg:pb-4 my-0", 
-        "min-h-fit sm:min-h-[30vh]",
+        isMobile ? "py-3 my-0 pt-7 pb-14" : "pt-10 pb-10 sm:pt-16 sm:pb-16 lg:pt-20 lg:pb-20 my-0", 
+        "min-h-fit sm:min-h-[60vh]",
         "relative z-10", 
         "gap-3 sm:gap-4", 
         "touch-manipulation",
@@ -384,7 +384,7 @@ export const Hero = () => {
       
       <div 
         className={cn(
-          "flex flex-col max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8",
+          "flex flex-col items-center justify-center max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8",
           "gap-1 sm:gap-6", 
           isInView ? "animate-fade-in delay-100" : "opacity-0"
         )}
@@ -395,8 +395,8 @@ export const Hero = () => {
           
           {/* Visual heading for users */}
           <div aria-hidden="true" className={cn(
-            "tracking-tight leading-[1.15] font-bold font-jakarta",
-            isMobile ? "mb-0 mt-2 text-center" : "mb-2 sm:mb-6 text-center"
+            "tracking-tight leading-[1.15] font-bold font-jakarta mx-auto",
+            isMobile ? "mb-0 mt-2 text-center" : "mb-4 sm:mb-8 text-center max-w-5xl"
           )}>
             <span 
               className={cn(
@@ -481,11 +481,11 @@ export const Hero = () => {
             "text-base leading-relaxed",
             "text-brand-text-primary", 
             isMobile ? "text-left pl-1" : "text-center", 
-            "max-w-[95%] sm:max-w-[500px]",
+            "max-w-[95%] sm:max-w-[650px]",
             "mx-auto", 
             "font-inter",
             "relative",
-            isMobile ? "mt-1 mb-8 text-sm px-1 py-2" : "mt-2 mb-4"
+            isMobile ? "mt-1 mb-8 text-sm px-1 py-2" : "mt-4 mb-8"
           )}
         >
           {isMobile ? (
@@ -517,7 +517,7 @@ export const Hero = () => {
         )}
       >
         {!isMobile && (
-          <div className="w-full max-w-4xl mx-auto relative" id="hero-cta-section">
+          <div className="w-full max-w-5xl mx-auto relative" id="hero-cta-section">
             <div className="flex flex-row justify-center gap-[8%] mb-4 relative items-start">
               <div className="flex flex-col w-[45%] max-w-[280px]">
                 <WaitlistCTA 
