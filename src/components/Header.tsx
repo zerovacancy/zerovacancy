@@ -21,7 +21,7 @@ const Header = () => {
   } = useAuth();
   
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/95 backdrop-blur-sm">
+    <header className="sticky top-0 z-[100] w-full border-b border-gray-200 bg-white/95 backdrop-blur-sm">
       <div className="mx-auto flex h-14 md:h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <div className="flex items-center">
           <Link to="/" className="flex items-center">

@@ -23,6 +23,7 @@ import {
   pricingPatternPaper,
   generateBackgroundWithPattern 
 } from '@/utils/background-patterns';
+import { mobileOptimizationClasses as moc } from '@/utils/mobile-optimization';
 
 const { useState, useEffect, useRef, lazy, Suspense, useCallback } = React;
 
@@ -70,6 +71,7 @@ interface ScrollTargetProps {
 }
 
 const ScrollTarget: React.FC<ScrollTargetProps> = ({ id, height = 12, className }) => {
+  const isMobile = useIsMobile();
   return (
     <div 
       id={id}
@@ -80,11 +82,12 @@ const ScrollTarget: React.FC<ScrollTargetProps> = ({ id, height = 12, className 
       )}
       style={{ 
         height: `${height}px`,
-        position: 'absolute',
-        zIndex: 30, // Higher z-index to ensure visibility for scroll targeting
+        position: isMobile ? 'relative' : 'absolute',
+        zIndex: isMobile ? '1' : '30', // Adjusted z-index for mobile
         background: 'transparent',
-        marginTop: '-24px', // Increased negative margin for better positioning
-        pointerEvents: 'none' // Prevent blocking clicks on other elements
+        marginTop: isMobile ? '0' : '-24px', // No negative margin on mobile
+        pointerEvents: 'none', // Prevent blocking clicks on other elements
+        transform: 'translateZ(0)'
       }}
     />
   );
@@ -328,16 +331,31 @@ const Index = () => {
         {/* Hero Section */}
         <section 
           ref={addSectionRef(0)} 
-          style={{
-            ...getZIndex(0),
-            ...getBackgroundTransition(0)
-          }}
-          className={cn(
-            "w-full relative", // No padding for hero section
-            isMobile ? "bg-transparent" : ""  // Remove gradient (now applied in components)
-          )}
+          style={isMobile ? 
+            { 
+              position: 'static', 
+              zIndex: 'auto',
+              contain: 'none',
+              willChange: 'auto',
+              transform: 'none',
+              overflow: 'visible',
+              isolation: 'auto'
+            } : 
+            { ...getZIndex(0), ...getBackgroundTransition(0) }
+          }
+          className="w-full"
         >
-          <div className="relative w-full">
+          <div 
+            style={isMobile ? 
+              { 
+                position: 'static',
+                contain: 'none',
+                willChange: 'auto' 
+              } : 
+              { position: 'relative' }
+            } 
+            className="w-full"
+          >
             <Hero />
           </div>
         </section>
@@ -363,7 +381,7 @@ const Index = () => {
           className={cn(
             "relative w-full pt-20 pb-24", // Increased vertical spacing
             !isMobile && "bg-[#F9F6EC]", // Soft champagne
-            isMobile && "bg-[#FCFAFF]/70 py-8 relative"
+            isMobile && cn("py-8 relative", moc.sectionPaddingMain) // Standardized mobile padding
           )}
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -394,10 +412,13 @@ const Index = () => {
           className={cn(
             "relative w-full pt-20 pb-24", // Increased vertical spacing
             !isMobile && "bg-[#EDF7F2]", // Pale mint
-            isMobile && "py-8 relative"
+            isMobile && cn("py-8 relative", moc.sectionPaddingMain) // Standardized mobile padding
           )}
         >
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className={cn(
+            "max-w-7xl mx-auto", 
+            moc.contentPadding // Standardized content padding
+          )}>
             <Suspense fallback={<SectionLoader />}>
               <OptimizedHowItWorks />
             </Suspense>
@@ -425,10 +446,13 @@ const Index = () => {
           className={cn(
             "relative w-full pt-20 pb-24", // Increased vertical spacing
             !isMobile && "bg-[#E7E9FF]", // Rich periwinkle
-            isMobile && "py-8 relative"
+            isMobile && cn("py-8 relative", moc.sectionPaddingMain) // Standardized mobile padding
           )}
         >
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className={cn(
+            "max-w-7xl mx-auto", 
+            moc.contentPadding // Standardized content padding
+          )}>
             <Suspense fallback={<SectionLoader />}>
               <FeaturesSectionWithHoverEffects />
             </Suspense>
@@ -456,10 +480,13 @@ const Index = () => {
           className={cn(
             "relative w-full pt-20 pb-24", // Increased vertical spacing
             !isMobile && "bg-[#EEF3F9]", // Soft blue-grey
-            isMobile && "py-8 relative"
+            isMobile && cn("py-8 relative", moc.sectionPaddingMain) // Standardized mobile padding
           )}
         >
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className={cn(
+            "max-w-7xl mx-auto", 
+            moc.contentPadding // Standardized content padding
+          )}>
             <Suspense fallback={<SectionLoader />}>
               <Pricing />
             </Suspense>
@@ -487,10 +514,13 @@ const Index = () => {
           className={cn(
             "relative w-full pt-20 pb-24", // Increased vertical spacing
             !isMobile && "bg-[#F9F6EC]", // Soft champagne (same as Find Creators)
-            isMobile && "py-8 relative"
+            isMobile && cn("py-8 relative", moc.sectionPaddingMain) // Standardized mobile padding
           )}
         >
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className={cn(
+            "max-w-7xl mx-auto", 
+            moc.contentPadding // Standardized content padding
+          )}>
             <Suspense fallback={<SectionLoader />}>
               <FeaturedBlogPosts />
             </Suspense>

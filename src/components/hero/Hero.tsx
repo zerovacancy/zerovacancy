@@ -11,6 +11,7 @@ import { CheckCircle, ShieldCheck, ArrowRight, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import confetti from "canvas-confetti";
 import { heroPatternDotMatrix } from "@/utils/background-patterns";
+import { mobileOptimizationClasses } from "@/utils/mobile-optimization";
 
 // Hero CTA with email form for mobile that transitions from button to form
 // Uses an inline success message instead of a modal dialog for better mobile compatibility
@@ -209,13 +210,16 @@ const MobileHeroCTA = () => {
     return (
       <button
         onClick={handleButtonClick}
-        className="w-full min-w-full h-[56px] font-medium rounded-[12px] text-white relative flex items-center justify-center"
+        className={cn(
+          "w-full min-w-full font-medium rounded-[12px] text-white relative flex items-center justify-center",
+          mobileOptimizationClasses.mobileFriendlyButton, // Standard mobile-friendly button
+          mobileOptimizationClasses.tapTargetExtraLarge // Ensure easy tapping
+        )}
         style={{
           background: 'linear-gradient(180deg, #8A42F5 0%, #7837DB 100%)',
           color: 'white',
           border: '1px solid rgba(255,255,255,0.2)',
           boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(0,0,0,0.05), 0 16px 32px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15)',
-          fontSize: '14px',
           fontWeight: 600,
           paddingLeft: '52px',
         }}
@@ -249,7 +253,10 @@ const MobileHeroCTA = () => {
         onSubmit={handleSubmit}
         className="w-full relative animate-fade-in"
       >
-        <div className="flex flex-col gap-2 w-full">
+        <div className={cn(
+          "flex flex-col w-full",
+          mobileOptimizationClasses.spacingInteractive // Standard spacing
+        )}>
           <div className="relative">
             {/* Email input */}
             <input
@@ -258,9 +265,11 @@ const MobileHeroCTA = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
-              className="w-full h-[52px] px-4 py-3 rounded-t-[12px] rounded-b-none text-gray-800 border border-purple-200/70 border-b-0 focus:outline-none focus:ring-2 focus:ring-purple-400/40"
+              className={cn(
+                "w-full rounded-t-[12px] rounded-b-none text-gray-800 border border-purple-200/70 border-b-0 focus:outline-none focus:ring-2 focus:ring-purple-400/40",
+                mobileOptimizationClasses.mobileFriendlyInput // Standard mobile input
+              )}
               style={{
-                fontSize: '16px', // Prevent iOS zoom on focus
                 backgroundColor: 'white'
               }}
               disabled={isLoading}
@@ -279,7 +288,11 @@ const MobileHeroCTA = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full h-[52px] bg-gradient-to-b from-purple-600 to-purple-700 text-white font-medium rounded-t-none rounded-b-[12px] flex items-center justify-center transition-all duration-200"
+            className={cn(
+              "w-full bg-gradient-to-b from-purple-600 to-purple-700 text-white font-medium rounded-t-none rounded-b-[12px] flex items-center justify-center transition-all duration-200",
+              mobileOptimizationClasses.mobileFriendlyButton, // Standard mobile button
+              mobileOptimizationClasses.tapTargetExtraLarge // Easy tap target
+            )}
           >
             {isLoading ? (
               <>
@@ -365,37 +378,29 @@ export const Hero = () => {
       className={cn(
         "flex items-center justify-center flex-col w-full", 
         "px-0", 
-        isMobile ? "py-6 my-0 pt-10 pb-16" : "pt-24 pb-24 sm:pt-28 sm:pb-28 lg:pt-32 lg:pb-36 mt-1", // Further increased bottom padding on desktop
+        isMobile ? "py-10 my-0" : "pt-24 pb-24 sm:pt-28 sm:pb-28 lg:pt-32 lg:pb-36 mt-1",
         "min-h-fit",
-        "relative z-10", 
+        !isMobile && "relative z-10",
         "gap-3 sm:gap-4", 
         "touch-manipulation",
-        isMobile 
-          ? "bg-gradient-to-b from-[#f8f5ff] via-[#f5f1fe] to-[#f7f5ff]" 
-          : "", // Remove gradient from classname - now applied to absolute elements
-        "opacity-100", // Always visible to prevent layout shifts
+        "opacity-100"
       )}
-      style={{
+      style={isMobile ? {
+        // For mobile: Complete removal of any positioning properties that could cause scrolling issues
+        position: 'static',
+        zIndex: 'auto',
+        marginTop: '0',
+        transform: 'none',
+        overflow: 'visible',
+        isolation: 'auto',
+        contain: 'none',
+        willChange: 'auto'
+      } : {
         contentVisibility: "auto",
-        containIntrinsicSize: isMobile ? "0 550px" : "0 600px"
+        containIntrinsicSize: "0 600px"
       }}
     >
-      {isMobile ? (
-        // Static mobile background with subtle gradient and pattern
-        <div className="absolute inset-0 overflow-hidden">
-          {/* Base gradient */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#f9f7ff] via-[#f3efff] to-[#f0edff]"></div>
-          
-          {/* Subtle top highlight */}
-          <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-white/80 to-transparent"></div>
-          
-          {/* Subtle diagonal pattern */}
-          <div className="absolute inset-0 opacity-[0.03] bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjN2EzZGZmIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1vcGFjaXR5PSIwLjIiPjxwYXRoIGQ9Ik0wIDBMNjAgNjAiLz48cGF0aCBkPSJNNjAgMEwwIDYwIi8+PC9nPjwvc3ZnPg==')]"></div>
-          
-          {/* Subtle radial gradient */}
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(149,118,255,0.05)_0%,rgba(255,255,255,0)_60%)]"></div>
-        </div>
-      ) : (
+      {!isMobile && (
         <>
           {/* Deep lavender background */}
           <div className="absolute inset-0 bg-[#EBE3FF]"></div>
@@ -409,8 +414,15 @@ export const Hero = () => {
           "gap-1 sm:gap-6", 
           isInView ? "animate-fade-in delay-100" : "opacity-0"
         )}
+        style={isMobile ? { 
+          position: 'static', 
+          zIndex: 'auto',
+          contain: 'none',
+          willChange: 'auto',
+          transform: 'none'
+        } : {}}
       >
-        <div className="relative">
+        <div style={isMobile ? { position: 'static' } : { position: 'relative' }}>
           {/* SEO-friendly text that is visually hidden but available to crawlers and screen readers */}
           <h1 className="sr-only">ZeroVacancy - Property Content That Converts, Captivates, and Closes</h1>
           
@@ -437,9 +449,7 @@ export const Hero = () => {
               )}
               style={{ height: isMobile ? "auto" : "auto", letterSpacing: isMobile ? "-0.03em" : "-0.02em" }}
             >
-              {isMobile && (
-                <div className="absolute inset-0 -z-10 opacity-10 bg-[radial-gradient(#8A57DE_1px,transparent_1px)] [background-size:20px_20px] blur-[0.5px]"></div>
-              )}
+              {/* Removed background pattern for mobile */}
               PROPERTY CONTENT THAT
             </span>
 
@@ -482,7 +492,7 @@ export const Hero = () => {
                   isMobile ? "" : "animate-shimmer-slide bg-size-200",
                   isMobile ? "" : "overflow-visible",
                   "drop-shadow-[0_1px_2px_rgba(74,45,217,0.2)]",
-                  "filter brightness-110",
+                  isMobile ? "" : "filter brightness-110",
                   "leading-[1]"
                 )}
                 // Simpler tween animation for mobile
@@ -520,12 +530,20 @@ export const Hero = () => {
           {isMobile ? (
             <>
               <div className="relative flex flex-col items-center text-center">
-                <div className="relative mb-2">
-                  <div className="absolute left-1/2 transform -translate-x-1/2 -top-[0.5px] w-16 h-[2px] bg-gradient-to-r from-transparent via-purple-400/50 to-transparent"></div>
-                  <h2 className="text-gray-800 font-semibold text-[1.25rem] mt-0 font-jakarta tracking-tight">Elite content that works</h2>
-                  <div className="h-[1px] w-10 bg-gradient-to-r from-transparent via-purple-400/30 to-transparent mx-auto mt-1"></div>
+                <div className="relative mb-4">
+                  <div className="absolute left-1/2 w-16 h-[2px] bg-purple-300/50" style={{ transform: 'translateX(-50%)', top: '-0.5px' }}></div>
+                  <h2 className={cn(
+                    mobileOptimizationClasses.headingMedium, // Standardized heading
+                    "text-gray-800 mt-0 font-jakarta"
+                  )}>
+                    Elite content that works
+                  </h2>
+                  <div className="h-[1px] w-10 bg-purple-300/30 mx-auto mt-2"></div>
                 </div>
-                <p className="text-gray-700 font-normal text-[15px] max-w-[300px] leading-relaxed mb-0 mt-1.5 font-sans">
+                <p className={cn(
+                  mobileOptimizationClasses.bodyText, // Standardized body text
+                  "text-gray-700 max-w-[300px] mb-0 mt-2 font-sans"
+                )}>
                   Connect with top creators who transform your spaces with professional photography, video, and 3D tours that showcase your property's potential.
                 </p>
               </div>
@@ -541,9 +559,16 @@ export const Hero = () => {
           "w-full", 
           isMobile ? "mt-[-8px]" : "mt-3 sm:mt-4",
           isMobile ? "px-4" : "px-4 sm:px-6 lg:px-8",
-          isInView ? "animate-fade-in delay-200" : "opacity-0",
-          isMobile && "relative"
+          isInView ? "animate-fade-in delay-200" : "opacity-0"
         )}
+        style={isMobile ? { 
+          position: 'static', 
+          zIndex: 'auto',
+          contain: 'none',
+          willChange: 'auto',
+          transform: 'none',
+          overflow: 'visible' 
+        } : {}}
       >
         {!isMobile && (
           <div className="w-full max-w-5xl mx-auto relative" id="hero-cta-section">
@@ -574,15 +599,15 @@ export const Hero = () => {
         
         {isMobile && (
           <>
-            <div className="w-full flex flex-col items-center">
-              <div className="w-[92%] max-w-[320px] mx-auto flex flex-col items-center gap-5">
+            <div className="w-full flex flex-col items-center" style={{ position: 'static' }}>
+              <div className="w-[92%] max-w-[320px] mx-auto flex flex-col items-center gap-5" style={{ position: 'static' }}>
                 {/* Mobile CTA with inline email form expansion */}
-                <div className="w-full relative">
+                <div className="w-full" style={{ position: 'static' }}>
                   <MobileHeroCTA />
                 </div>
                 
-                <div className="w-full flex justify-center mt-3 mb-3 relative z-10">
-                  <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-[50%] w-[1px] h-3 bg-gradient-to-b from-transparent via-purple-300/20 to-purple-300/40"></div>
+                <div className="w-full flex justify-center mt-3 mb-3">
+                  {/* Removed divider line */}
                   <SocialProof 
                     className="mt-0 transform scale-[0.95]"
                     style={{
@@ -598,10 +623,10 @@ export const Hero = () => {
               </div>
             </div>
             
-            <div className="w-full flex justify-center mt-10">
-              <div className="flex flex-col items-center opacity-60">
-                <div className="text-xs text-purple-600 mb-1 font-medium">Scroll to explore</div>
-                <svg width="18" height="8" viewBox="0 0 20 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <div className="w-full flex justify-center mt-10" style={{ position: 'static', transform: 'none' }}>
+              <div className="flex flex-col items-center opacity-60" style={{ position: 'static', transform: 'none' }}>
+                <span className="text-xs text-purple-600 mb-1 font-medium block" style={{ position: 'static', transform: 'none' }}>Scroll to explore</span>
+                <svg width="18" height="8" viewBox="0 0 20 10" fill="none" xmlns="http://www.w3.org/2000/svg" style={{display: 'block', overflow: 'visible', position: 'static', transform: 'none'}}>
                   <path d="M1 1L10 9L19 1" stroke="#8A2BE2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </div>
