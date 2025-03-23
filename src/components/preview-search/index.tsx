@@ -62,7 +62,7 @@ const PreviewSearch = () => {
   const containerClasses = useMemo(() => cn(
     "w-full",
     // Remove content-visibility-auto which can cause jitter when combined with IntersectionObserver
-    isMobile ? "py-6 pb-8 bg-transparent" : "py-6 sm:py-6 md:py-8",
+    isMobile ? "py-6 pb-8" : "py-6 sm:py-6 md:py-8",
     isMobile ? "relative mt-3" : ""
   ), [isMobile]);
   
@@ -113,6 +113,7 @@ const PreviewSearch = () => {
         contentVisibility: 'auto', // More efficient than content-visibility CSS class
         position: 'relative',
         transform: 'translateZ(0)', // Hardware acceleration
+        backgroundColor: isMobile ? '#F9F6EC' : undefined, // Explicitly set tan background on mobile
       }}
     >
       {/* Section header with optimized rendering */}

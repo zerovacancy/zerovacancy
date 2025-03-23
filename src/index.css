@@ -132,6 +132,18 @@ html, body {
     overscroll-behavior: none !important; /* Prevent scroll trapping */
     -webkit-user-select: none !important; /* Prevent text selection issues */
     user-select: none !important; /* Prevent text selection issues */
+    border-width: 0 !important; /* Remove all borders that might show as dividers */
+  }
+  
+  /* Fix section transitions on mobile */
+  section + section,
+  section + div,
+  div + section,
+  [style*="gradient"] {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    border-image: none !important;
   }
   
   /* Fix for passive event listeners with JS */
@@ -217,6 +229,18 @@ html, body {
     overflow-x: hidden !important;
   }
   
+  /* Specific fix for section transitions/dividers */
+  [style*="linear-gradient"], 
+  [style*="fromColor"], 
+  [style*="toColor"],
+  .w-full.overflow-hidden.relative.z-20 {
+    border: none !important;
+    border-top: none !important;
+    border-bottom: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+  
   .find-creators-section {
     width: 100vw !important;
     max-width: 100vw !important;
@@ -225,6 +249,21 @@ html, body {
     margin-left: 0 !important;
     margin-right: 0 !important;
     overflow-x: hidden !important;
+    background-color: #F9F6EC !important; /* Explicit tan background */
+    border: none !important;
+    border-top: none !important;
+    border-bottom: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+  
+  /* Only target section transitions - NOT content backgrounds */
+  section[style*="bg-[#F9F6EC]"].w-full.overflow-hidden.relative.z-20,
+  div[style*="gradient"].w-full.h-full,
+  .w-full.overflow-hidden.relative.z-20 {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
   }
   
   .mobile-px-adjust {

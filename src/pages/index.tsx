@@ -42,9 +42,9 @@ const SectionTransition = ({
   const isMobile = useIsMobile();
   
   // Adjust height and margins for mobile
-  const mobileHeight = Math.max(height / 2, 20); // Smaller on mobile but minimum 20px
+  const mobileHeight = Math.max(height / 2, 40); // Increased minimum height on mobile
   const actualHeight = isMobile ? mobileHeight : height;
-  const overlapMargin = isMobile ? '-10px' : '-20px';
+  const overlapMargin = isMobile ? '-20px' : '-20px'; // Increased negative margin for better overlap on mobile
 
   return (
     <div 
@@ -58,18 +58,30 @@ const SectionTransition = ({
         marginTop: withOverlap ? overlapMargin : '0',
         marginBottom: withOverlap ? overlapMargin : '0',
         // Create a fuller blend between sections
-        paddingTop: isMobile ? '5px' : '10px',
-        paddingBottom: isMobile ? '5px' : '10px',
+        padding: isMobile ? '0' : '10px', // Remove padding on mobile
         // Fix mobile scrolling
         touchAction: isMobile ? 'pan-y' : 'auto',
-        pointerEvents: 'none'
+        pointerEvents: 'none',
+        // Ensure no borders on mobile
+        borderTop: isMobile ? 'none' : undefined,
+        borderBottom: isMobile ? 'none' : undefined,
+        // Extra width on mobile to prevent edge issues
+        width: isMobile ? '102vw' : '100%',
+        marginLeft: isMobile ? '-1vw' : '0'
       }}
     >
       {/* Gradient background for smooth transition */}
       <div 
         className="w-full h-full"
         style={{
-          background: `linear-gradient(to bottom, ${fromColor} 0%, ${fromColor} 10%, ${toColor} 90%, ${toColor} 100%)`,
+          background: isMobile
+            ? `linear-gradient(to bottom, ${fromColor} 0%, ${toColor} 100%)`  // Smoother gradient on mobile
+            : `linear-gradient(to bottom, ${fromColor} 0%, ${fromColor} 10%, ${toColor} 90%, ${toColor} 100%)`,
+          borderTop: 'none',
+          borderBottom: 'none',
+          borderLeft: 'none',
+          borderRight: 'none',
+          boxShadow: 'none'
         }}
       />
     </div>
@@ -403,7 +415,7 @@ const Index = () => {
         <SectionTransition 
           fromColor="#EBE3FF" 
           toColor="#F9F6EC" 
-          height={80}
+          height={isMobile ? 100 : 80}
           withOverlap={true}
         />
         
@@ -423,7 +435,8 @@ const Index = () => {
               marginLeft: '0', // Remove any margin
               marginRight: '0', // Remove any margin
               paddingLeft: '0', // Remove horizontal padding
-              paddingRight: '0' // Remove horizontal padding
+              paddingRight: '0', // Remove horizontal padding
+              backgroundColor: '#F9F6EC' // Explicitly set tan background on mobile
             } : 
             {
               ...getZIndex(1),
@@ -433,7 +446,7 @@ const Index = () => {
           className={cn(
             "relative w-full pt-20 pb-24", // Increased vertical spacing
             "bg-[#F9F6EC]", // Soft champagne - now applied to both mobile and desktop
-            isMobile && cn("py-8 bg-transparent", moc.sectionPaddingMain), // Transparent background on mobile
+            isMobile && cn("py-8", moc.sectionPaddingMain), // Standardized mobile padding
             moc.sectionWrapper, // Standardized section wrapper
             isMobile && "px-0 mx-0 max-w-none find-creators-section" // Remove horizontal padding/margin on mobile
           )}
@@ -455,7 +468,7 @@ const Index = () => {
         <SectionTransition 
           fromColor="#F9F6EC" 
           toColor="#EDF7F2" 
-          height={80}
+          height={isMobile ? 100 : 80}
           withOverlap={true}
         />
         
@@ -628,13 +641,15 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Section Transition: Blog to Footer */}
-        <SectionTransition 
-          fromColor="#F9F6EC" 
-          toColor="#f8f8fb" 
-          height={80}
-          withOverlap={true}
-        />
+        {/* Section Transition: Blog to Footer - Hidden on mobile */}
+        {!isMobile && (
+          <SectionTransition 
+            fromColor="#F9F6EC" 
+            toColor="#f8f8fb" 
+            height={80}
+            withOverlap={true}
+          />
+        )}
 
         {!isMobile && (
           <div className="fixed right-6 top-1/2 transform -translate-y-1/2 z-[100] hidden lg:flex flex-col items-center gap-3">
