@@ -7,6 +7,7 @@ import { PricingContainer } from "./pricing/PricingContainer";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { isLandscapeMode } from "@/utils/mobile-optimization";
 import { useEffect, useState } from "react";
+import { pricingPatternPaper, generateBackgroundWithPattern } from "@/utils/background-patterns";
 
 // Wrapper component that uses the pricing context and passes values to PricingHeader
 const PricingContent = () => {
@@ -82,6 +83,9 @@ const Pricing = () => {
     isLoading
   } = useSubscription();
   
+  // Get mobile state
+  const isMobile = useIsMobile();
+  
   // Track landscape mode
   const [isLandscape, setIsLandscape] = useState(false);
   
@@ -107,8 +111,10 @@ const Pricing = () => {
     <PricingProvider>
       <div className={cn(
         "relative w-full overflow-visible",
+        !isMobile && "bg-[#EEF3F9]", // Soft blue-grey
         isLandscape && "landscape-pricing sm:py-4" // Apply landscape specific classes
-      )}>
+      )}
+      >
         <div className={cn(
           "relative z-10 transition-all duration-500",
           isLandscape && "px-2 sm:px-3" // Reduce padding in landscape mode

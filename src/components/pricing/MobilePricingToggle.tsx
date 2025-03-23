@@ -36,6 +36,7 @@ export const MobilePricingToggle = ({
           className={cn(
             "relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple focus-visible:ring-offset-2",
             isYearly ? "bg-brand-purple" : "bg-slate-200",
+            "border border-slate-300 shadow-sm",
           )}
           type="button"
           role="switch"

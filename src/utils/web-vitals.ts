@@ -160,9 +160,11 @@ export function useSectionStyles(sectionsCount: number) {
   const getBackgroundTransition = (index: number) => {
     return {
       transition: `background-color 0.8s ease-in-out, 
+                  background-image 0.8s ease-in-out,
                   opacity 0.5s ease-in-out, 
-                  transform 0.5s ease-out`,
-      willChange: 'transform, opacity'
+                  transform 0.5s ease-out,
+                  box-shadow 0.5s ease-in-out`,
+      willChange: 'transform, opacity, background-color, background-image, box-shadow'
     };
   };
   

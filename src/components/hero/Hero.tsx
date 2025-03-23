@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { CheckCircle, ShieldCheck, ArrowRight, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import confetti from "canvas-confetti";
+import { heroPatternDotMatrix } from "@/utils/background-patterns";
 
 // Hero CTA with email form for mobile that transitions from button to form
 // Uses an inline success message instead of a modal dialog for better mobile compatibility
@@ -364,7 +365,7 @@ export const Hero = () => {
       className={cn(
         "flex items-center justify-center flex-col w-full", 
         "px-0", 
-        isMobile ? "py-6 my-0 pt-10 pb-16" : "pt-24 pb-20 sm:pt-28 sm:pb-24 lg:pt-32 lg:pb-32 mt-1", // Increased bottom padding on desktop
+        isMobile ? "py-6 my-0 pt-10 pb-16" : "pt-24 pb-24 sm:pt-28 sm:pb-28 lg:pt-32 lg:pb-36 mt-1", // Further increased bottom padding on desktop
         "min-h-fit",
         "relative z-10", 
         "gap-3 sm:gap-4", 
@@ -396,9 +397,8 @@ export const Hero = () => {
         </div>
       ) : (
         <>
-          {/* Optimized desktop background */}
-          <div className="absolute inset-0 bg-gradient-to-b from-purple-50/90 to-indigo-50/80"></div>
-          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOGE2NGZmIiBzdHJva2Utd2lkdGg9IjAuNSIgc3Ryb2tlLW9wYWNpdHk9IjAuMDYiPjxwYXRoIGQ9Ik0wIDBMNDAgNDAiLz48cGF0aCBkPSJNNDAgMEwwIDQwIi8+PC9nPjwvc3ZnPg==')] opacity-30"></div>
+          {/* Deep lavender background */}
+          <div className="absolute inset-0 bg-[#EBE3FF]"></div>
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(138,99,255,0.04)_0%,rgba(255,255,255,0)_70%)]"></div>
         </>
       )}

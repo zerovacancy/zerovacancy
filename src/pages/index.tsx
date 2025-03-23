@@ -15,44 +15,48 @@ import SEO from '@/components/SEO';
 import { homepageSchema, organizationSchema } from '@/lib/seo';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
+import { 
+  heroPatternDotMatrix, 
+  findCreatorsPatternGrid, 
+  howItWorksPatternDiagonal,
+  featuresPatternHoneycomb,
+  pricingPatternPaper,
+  generateBackgroundWithPattern 
+} from '@/utils/background-patterns';
 
 const { useState, useEffect, useRef, lazy, Suspense, useCallback } = React;
 
-// Section divider component with subtle fade-in effect
-// Section divider component with subtle fade-in effect
-const SectionDivider = () => {
-  const dividerRef = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
-  
-  useEffect(() => {
-    if (!dividerRef.current) return;
-    
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsVisible(entry.isIntersecting);
-      },
-      { threshold: 0.1, rootMargin: '20px' }
-    );
-    
-    observer.observe(dividerRef.current);
-    
-    return () => {
-      if (dividerRef.current) {
-        observer.unobserve(dividerRef.current);
-      }
-    };
-  }, []);
-  
+// Section transition component with subtle gradient effect and optional curve
+const SectionTransition = ({ 
+  fromColor, 
+  toColor, 
+  height = 40,
+  withOverlap = true 
+}: { 
+  fromColor: string; 
+  toColor: string; 
+  height?: number;
+  withOverlap?: boolean;
+}) => {
   return (
-    <div className="w-full py-4 overflow-hidden">
+    <div 
+      className="w-full overflow-hidden relative z-20"
+      style={{ 
+        height: `${height}px`,
+        // Increase overlap to eliminate any white space and purple lines
+        marginTop: withOverlap ? '-20px' : '0',
+        marginBottom: withOverlap ? '-20px' : '0',
+        // Create a fuller blend between sections
+        paddingTop: '10px',
+        paddingBottom: '10px'
+      }}
+    >
+      {/* Gradient background for smooth transition */}
       <div 
-        ref={dividerRef}
-        className={cn(
-          "w-full h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent max-w-7xl mx-auto",
-          "transition-opacity duration-700",
-          isVisible ? "opacity-100" : "opacity-0"
-        )}
-        style={{ willChange: 'opacity' }}
+        className="w-full h-full"
+        style={{
+          background: `linear-gradient(to bottom, ${fromColor} 0%, ${fromColor} 10%, ${toColor} 90%, ${toColor} 100%)`,
+        }}
       />
     </div>
   );
@@ -76,8 +80,11 @@ const ScrollTarget: React.FC<ScrollTargetProps> = ({ id, height = 12, className 
       )}
       style={{ 
         height: `${height}px`,
-        position: 'relative',
-        zIndex: 30 // Higher z-index to ensure visibility for scroll targeting
+        position: 'absolute',
+        zIndex: 30, // Higher z-index to ensure visibility for scroll targeting
+        background: 'transparent',
+        marginTop: '-24px', // Increased negative margin for better positioning
+        pointerEvents: 'none' // Prevent blocking clicks on other elements
       }}
     />
   );
@@ -257,7 +264,7 @@ const Index = () => {
   };
   
   return (
-    <div className="flex flex-col min-h-screen w-full">
+    <div className="flex flex-col min-h-screen w-full bg-[#EBE3FF]">
       <SEO 
         title="Property Content Creators | ZeroVacancy" 
         description="Connect with elite content creators who transform your spaces into compelling visual stories. Find photographers, videographers, and more for your properties."
@@ -317,7 +324,7 @@ const Index = () => {
         </div>
       )}
 
-      <main className="flex-1 pb-16 sm:pb-0 w-full mt-0" id="main-content">
+      <main className="flex-1 pb-16 sm:pb-0 w-full mt-0 bg-[#EBE3FF]" id="main-content">
         {/* Hero Section */}
         <section 
           ref={addSectionRef(0)} 
@@ -338,8 +345,13 @@ const Index = () => {
         {/* Scroll Target for Find Creators */}
         <ScrollTarget id="find-creators" height={12} />
         
-        {/* Section Divider */}
-        {!isMobile && <SectionDivider />}
+        {/* Section Transition: Hero to Find Creators */}
+        {!isMobile && <SectionTransition 
+          fromColor="#EBE3FF" 
+          toColor="#F9F6EC" 
+          height={80}
+          withOverlap={true}
+        />}
         
         {/* Find Creators Section */}
         <section 
@@ -349,8 +361,8 @@ const Index = () => {
             ...getBackgroundTransition(1)
           }}
           className={cn(
-            "relative w-full pt-16 pb-20", // Standardized desktop spacing
-            !isMobile && "bg-[#F6F7F9]", // Light Pearl Gray background for better contrast
+            "relative w-full pt-20 pb-24", // Increased vertical spacing
+            !isMobile && "bg-[#F9F6EC]", // Soft champagne
             isMobile && "bg-[#FCFAFF]/70 py-8 relative"
           )}
         >
@@ -364,8 +376,13 @@ const Index = () => {
         {/* Scroll Target for How It Works */}
         <ScrollTarget id="how-it-works" height={12} />
         
-        {/* Section Divider */}
-        {!isMobile && <SectionDivider />}
+        {/* Section Transition: Find Creators to How It Works */}
+        {!isMobile && <SectionTransition 
+          fromColor="#F9F6EC" 
+          toColor="#EDF7F2" 
+          height={80}
+          withOverlap={true}
+        />}
         
         {/* How It Works Section */}
         <section 
@@ -375,8 +392,8 @@ const Index = () => {
             ...getBackgroundTransition(2)
           }}
           className={cn(
-            "relative w-full pt-16 pb-20", // Standardized desktop spacing
-            !isMobile && "bg-white",
+            "relative w-full pt-20 pb-24", // Increased vertical spacing
+            !isMobile && "bg-[#EDF7F2]", // Pale mint
             isMobile && "py-8 relative"
           )}
         >
@@ -387,8 +404,13 @@ const Index = () => {
           </div>
         </section>
         
-        {/* Section Divider */}
-        {!isMobile && <SectionDivider />}
+        {/* Section Transition: How It Works to Features */}
+        {!isMobile && <SectionTransition 
+          fromColor="#EDF7F2" 
+          toColor="#E7E9FF" 
+          height={80}
+          withOverlap={true}
+        />}
         
         {/* Scroll Target for Features */}
         <ScrollTarget id="features" height={12} />
@@ -401,8 +423,8 @@ const Index = () => {
             ...getBackgroundTransition(3)
           }}
           className={cn(
-            "relative w-full pt-16 pb-20", // Standardized desktop spacing
-            !isMobile && "bg-[#F8F7FB]", // Very light purple/gray
+            "relative w-full pt-20 pb-24", // Increased vertical spacing
+            !isMobile && "bg-[#E7E9FF]", // Rich periwinkle
             isMobile && "py-8 relative"
           )}
         >
@@ -413,8 +435,13 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Section Divider */}
-        {!isMobile && <SectionDivider />}
+        {/* Section Transition: Features to Pricing */}
+        {!isMobile && <SectionTransition 
+          fromColor="#E7E9FF" 
+          toColor="#EEF3F9" 
+          height={80}
+          withOverlap={true}
+        />}
 
         {/* Scroll Target for Pricing */}
         <ScrollTarget id="pricing" height={12} />
@@ -427,8 +454,8 @@ const Index = () => {
             ...getBackgroundTransition(4)
           }}
           className={cn(
-            "relative w-full pt-16 pb-20", // Standardized desktop spacing
-            !isMobile && "bg-white",
+            "relative w-full pt-20 pb-24", // Increased vertical spacing
+            !isMobile && "bg-[#EEF3F9]", // Soft blue-grey
             isMobile && "py-8 relative"
           )}
         >
@@ -439,8 +466,13 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Section Divider */}
-        {!isMobile && <SectionDivider />}
+        {/* Section Transition: Pricing to Blog */}
+        {!isMobile && <SectionTransition 
+          fromColor="#EEF3F9" 
+          toColor="#F9F6EC" 
+          height={80}
+          withOverlap={true}
+        />}
 
         {/* Scroll Target for Blog */}
         <ScrollTarget id="blog" height={12} />
@@ -453,8 +485,8 @@ const Index = () => {
             ...getBackgroundTransition(5)
           }}
           className={cn(
-            "relative w-full pt-16 pb-20", // Standardized desktop spacing
-            !isMobile && "bg-[#F6F7F9]", // Light Pearl Gray background
+            "relative w-full pt-20 pb-24", // Increased vertical spacing
+            !isMobile && "bg-[#F9F6EC]", // Soft champagne (same as Find Creators)
             isMobile && "py-8 relative"
           )}
         >
@@ -465,19 +497,34 @@ const Index = () => {
           </div>
         </section>
 
+        {/* Section Transition: Blog to Footer */}
+        {!isMobile && <SectionTransition 
+          fromColor="#F9F6EC" 
+          toColor="#f8f8fb" 
+          height={80}
+          withOverlap={true}
+        />}
+
         {!isMobile && (
-          <div className="fixed right-6 top-1/2 transform -translate-y-1/2 z-40 hidden lg:flex flex-col items-center gap-3">
+          <div className="fixed right-6 top-1/2 transform -translate-y-1/2 z-[100] hidden lg:flex flex-col items-center gap-3">
             {['find-creators', 'how-it-works', 'features', 'pricing', 'blog'].map((section, index) => {
               const isActive = visibleSections[index + 1];
               return (
                 <button
                   key={section}
                   onClick={() => scrollToSection(section)}
+                  style={{
+                    boxShadow: isActive 
+                      ? '0 0 0 2px rgba(255,255,255,0.15), 0 0 10px rgba(138,66,245,0.5)' 
+                      : '0 0 0 1px rgba(255,255,255,0.1)',
+                    position: 'relative',
+                    zIndex: 100
+                  }}
                   className={cn(
                     "w-3 h-3 rounded-full transition-all duration-200",
                     isActive 
-                      ? "bg-purple-600 scale-125 shadow-sm" 
-                      : "bg-purple-300/50 hover:bg-purple-400"
+                      ? "bg-purple-600 scale-125" 
+                      : "bg-purple-300/70 hover:bg-purple-400"
                   )}
                   aria-label={`Scroll to ${section.replace('-', ' ')}`}
                 />

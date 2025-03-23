@@ -73,7 +73,7 @@ const PricingHeader = ({
           <div className={cn(
             "flex items-center overflow-hidden rounded-full transition-all duration-300 w-full max-w-md mx-auto",
             isSticky ? "scale-90" : "",
-            "bg-slate-100 p-1"
+            "bg-slate-100 p-1 border border-slate-200 shadow-sm"
           )}>
             <button
               onClick={() => setIsYearly(false)}

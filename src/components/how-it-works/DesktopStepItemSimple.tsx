@@ -43,37 +43,38 @@ const DesktopStepItemSimple: React.FC<DesktopStepItemSimpleProps> = ({
         "transition-all duration-300 group cursor-pointer",
         "border hover:border-opacity-100 active:scale-[0.98]",
         "touch-manipulation",
-        "shadow-sm hover:shadow-md",
-        "flex flex-col items-center justify-start animate-fade-in",
-        `animation-delay-${index * 200}`,
+        "flex flex-col items-center justify-start",
         isActive && "ring-1 ring-offset-2",
-        isActive ? `ring-${step.gradientFrom?.replace('#', '')}` : ""
+        isActive ? `ring-${step.gradientFrom?.replace('#', '')}` : "",
+        "bg-white"
       )}
       style={{
-        // Dynamic styling for each card
+        // Dynamic styling for each card with 3D effect
         borderColor: getBorderColor(),
         borderWidth: isActive ? '2px' : '1px',
         borderLeftWidth: isActive ? '3px' : '1px',
         borderRadius: '12px',
-        backgroundColor: getBackgroundTint(),
-        boxShadow: isActive ? '0 4px 12px rgba(0,0,0,0.08)' : '0 2px 8px rgba(0,0,0,0.05)',
-        transform: isActive ? 'translateY(-5px)' : 'translateY(0)',
+        boxShadow: isActive 
+          ? '0 10px 15px -5px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)' 
+          : '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.05)',
+        transform: isActive ? 'translateY(-5px)' : 'translateY(0)'
       }}
       onMouseOver={(e) => {
-        e.currentTarget.style.boxShadow = '0 6px 16px rgba(0,0,0,0.1)';
+        e.currentTarget.style.boxShadow = '0 12px 20px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05)';
         e.currentTarget.style.transform = 'translateY(-5px)';
       }}
       onMouseOut={(e) => {
         if (!isActive) {
-          e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.05)';
+          e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.05)';
           e.currentTarget.style.transform = 'translateY(0)';
         } else {
-          e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)';
+          e.currentTarget.style.boxShadow = '0 10px 15px -5px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)';
           e.currentTarget.style.transform = 'translateY(-5px)';
         }
       }}
       aria-label={`Step ${index + 1}: ${step.title}`}
     >
+      
       {/* Step Number badge with gradient */}
       <div className={cn("absolute -top-3 left-5", "z-10")}>
         <span 
