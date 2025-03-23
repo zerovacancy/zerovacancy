@@ -62,8 +62,8 @@ const PreviewSearch = () => {
   const containerClasses = useMemo(() => cn(
     "w-full",
     // Remove content-visibility-auto which can cause jitter when combined with IntersectionObserver
-    isMobile ? "py-6 pb-8" : "py-6 sm:py-6 md:py-8",
-    isMobile ? "relative mt-3 rounded-2xl border border-purple-100/70 bg-[#F9F7FF] shadow-[0_8px_15px_-3px_rgba(138,79,255,0.1),_0_4px_6px_-4px_rgba(138,79,255,0.15)]" : ""
+    isMobile ? "py-6 pb-8 bg-transparent" : "py-6 sm:py-6 md:py-8",
+    isMobile ? "relative mt-3" : ""
   ), [isMobile]);
   
   // Optimize the Intersection Observer to use only when needed
@@ -130,9 +130,9 @@ const PreviewSearch = () => {
             className="mb-3 flex items-center justify-center transform-gpu"
             style={{ transform: 'translateZ(0)' }}
           >
-            <div className="h-px w-5 bg-gray-200 mr-2"></div>
+            <div className="h-px w-5 bg-gray-200/50 mr-2"></div>
             <span className="text-xs uppercase tracking-wider text-gray-700 font-semibold">Creator Network</span>
-            <div className="h-px w-5 bg-gray-200 ml-2"></div>
+            <div className="h-px w-5 bg-gray-200/50 ml-2"></div>
           </div>
         )}
         
@@ -146,13 +146,7 @@ const PreviewSearch = () => {
           <SectionTitle isVisible={isVisible} isMobile={isMobile} />
         </div>
 
-        {/* Visual separator for mobile - static element */}
-        {isMobile && (
-          <div 
-            className="w-12 h-1 bg-gradient-to-r from-purple-200 via-purple-300 to-purple-200 rounded-full mx-auto mt-4 opacity-60 transform-gpu"
-            style={{ transform: 'translateZ(0)' }}
-          ></div>
-        )}
+        {/* Visual separator for mobile removed for cleaner design */}
       </div>
 
       {/* Main content wrapper with optimized animations */}

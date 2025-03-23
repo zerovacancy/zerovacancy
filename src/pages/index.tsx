@@ -48,7 +48,10 @@ const SectionTransition = ({
 
   return (
     <div 
-      className="w-full overflow-hidden relative z-20"
+      className={cn(
+        "w-full overflow-hidden relative z-20",
+        isMobile && "touch-action-pan-y overscroll-behavior-none"
+      )}
       style={{ 
         height: `${actualHeight}px`,
         // Increase overlap to eliminate any white space and purple lines
@@ -56,7 +59,10 @@ const SectionTransition = ({
         marginBottom: withOverlap ? overlapMargin : '0',
         // Create a fuller blend between sections
         paddingTop: isMobile ? '5px' : '10px',
-        paddingBottom: isMobile ? '5px' : '10px'
+        paddingBottom: isMobile ? '5px' : '10px',
+        // Fix mobile scrolling
+        touchAction: isMobile ? 'pan-y' : 'auto',
+        pointerEvents: 'none'
       }}
     >
       {/* Gradient background for smooth transition */}
@@ -85,7 +91,8 @@ const ScrollTarget: React.FC<ScrollTargetProps> = ({ id, height = 12, className 
       aria-hidden="true"
       className={cn(
         "w-full overflow-hidden invisible block",
-        className
+        className,
+        isMobile && "touch-action-pan-y overscroll-behavior-none"
       )}
       style={{ 
         height: `${height}px`,
@@ -94,7 +101,8 @@ const ScrollTarget: React.FC<ScrollTargetProps> = ({ id, height = 12, className 
         background: 'transparent',
         marginTop: isMobile ? '0' : '-24px', // No negative margin on mobile
         pointerEvents: 'none', // Prevent blocking clicks on other elements
-        transform: 'translateZ(0)'
+        transform: 'translateZ(0)',
+        touchAction: isMobile ? 'pan-y' : 'auto' // Fix mobile scrolling
       }}
     />
   );
@@ -274,7 +282,14 @@ const Index = () => {
   };
   
   return (
-    <div className="flex flex-col min-h-screen w-full bg-[#EBE3FF]">
+    <div className="flex flex-col min-h-screen w-full bg-[#EBE3FF]" 
+         style={isMobile ? {
+           width: '100vw', 
+           maxWidth: '100vw', 
+           overflow: 'hidden',
+           margin: 0,
+           padding: 0
+         } : {}}>
       <SEO 
         title="Property Content Creators | ZeroVacancy" 
         description="Connect with elite content creators who transform your spaces into compelling visual stories. Find photographers, videographers, and more for your properties."
@@ -334,7 +349,15 @@ const Index = () => {
         </div>
       )}
 
-      <main className="flex-1 pb-16 sm:pb-0 w-full mt-0" id="main-content">
+      <main className="flex-1 pb-16 sm:pb-0 w-full mt-0" 
+             style={isMobile ? {
+               width: '100vw',
+               maxWidth: '100vw',
+               overflow: 'hidden',
+               margin: 0,
+               padding: 0
+             } : {}}
+             id="main-content">
         {/* Hero Section */}
         <section 
           ref={addSectionRef(0)} 
@@ -352,7 +375,8 @@ const Index = () => {
           }
           className={cn(
             "w-full bg-[#EBE3FF]", // Lavender background for hero section
-            moc.sectionWrapper // Standardized section wrapper
+            moc.sectionWrapper, // Standardized section wrapper
+            isMobile && "touch-action-pan-y overscroll-behavior-none" // Fix mobile scrolling
           )}
         >
           <div 
@@ -385,7 +409,7 @@ const Index = () => {
         
         {/* Find Creators Section */}
         <section 
-          ref={addSectionRef(1)} 
+          ref={addSectionRef(1)}
           style={isMobile ?
             {
               position: 'static',
@@ -393,7 +417,13 @@ const Index = () => {
               contain: 'none',
               willChange: 'auto',
               transform: 'none',
-              overflow: 'hidden'
+              overflow: 'hidden',
+              width: '100vw', // Ensure full viewport width on mobile
+              maxWidth: '100vw', // Prevent overflow
+              marginLeft: '0', // Remove any margin
+              marginRight: '0', // Remove any margin
+              paddingLeft: '0', // Remove horizontal padding
+              paddingRight: '0' // Remove horizontal padding
             } : 
             {
               ...getZIndex(1),
@@ -403,11 +433,15 @@ const Index = () => {
           className={cn(
             "relative w-full pt-20 pb-24", // Increased vertical spacing
             "bg-[#F9F6EC]", // Soft champagne - now applied to both mobile and desktop
-            isMobile && cn("py-8", moc.sectionPaddingMain), // Standardized mobile padding
-            moc.sectionWrapper // Standardized section wrapper
+            isMobile && cn("py-8 bg-transparent", moc.sectionPaddingMain), // Transparent background on mobile
+            moc.sectionWrapper, // Standardized section wrapper
+            isMobile && "px-0 mx-0 max-w-none find-creators-section" // Remove horizontal padding/margin on mobile
           )}
         >
-          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-hidden">
+          <div className={cn(
+            "w-full overflow-hidden",
+            isMobile ? "px-0 mx-0" : "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+          )}>
             <Suspense fallback={<SectionLoader />}>
               <PreviewSearch />
             </Suspense>
@@ -490,7 +524,7 @@ const Index = () => {
           className={cn(
             "relative w-full pt-20 pb-24", // Increased vertical spacing
             "bg-[#E7E9FF]", // Rich periwinkle - now applied to both mobile and desktop
-            isMobile && cn("py-8", moc.sectionPaddingMain), // Standardized mobile padding
+            isMobile && cn("py-8", moc.sectionPaddingMain, "touch-action-pan-y overscroll-behavior-none"), // Standardized mobile padding with scroll fix
             moc.sectionWrapper // Standardized section wrapper
           )}
         >
