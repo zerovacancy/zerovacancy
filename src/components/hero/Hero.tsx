@@ -400,13 +400,6 @@ export const Hero = () => {
         containIntrinsicSize: "0 600px"
       }}
     >
-      {!isMobile && (
-        <>
-          {/* Deep lavender background */}
-          <div className="absolute inset-0 bg-[#EBE3FF]"></div>
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(138,99,255,0.04)_0%,rgba(255,255,255,0)_70%)]"></div>
-        </>
-      )}
       
       <div 
         className={cn(

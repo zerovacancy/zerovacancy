@@ -327,7 +327,7 @@ const Index = () => {
         </div>
       )}
 
-      <main className="flex-1 pb-16 sm:pb-0 w-full mt-0 bg-[#EBE3FF]" id="main-content">
+      <main className="flex-1 pb-16 sm:pb-0 w-full mt-0" id="main-content">
         {/* Hero Section */}
         <section 
           ref={addSectionRef(0)} 
@@ -343,7 +343,7 @@ const Index = () => {
             } : 
             { ...getZIndex(0), ...getBackgroundTransition(0) }
           }
-          className="w-full"
+          className="w-full bg-[#EBE3FF]" // Added lavender background to hero section for mobile and desktop
         >
           <div 
             style={isMobile ? 
@@ -380,8 +380,8 @@ const Index = () => {
           }}
           className={cn(
             "relative w-full pt-20 pb-24", // Increased vertical spacing
-            !isMobile && "bg-[#F9F6EC]", // Soft champagne
-            isMobile && cn("py-8 relative", moc.sectionPaddingMain) // Standardized mobile padding
+            "bg-[#F9F6EC]", // Soft champagne - now applied to both mobile and desktop
+            isMobile && cn("py-8", moc.sectionPaddingMain) // Standardized mobile padding
           )}
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -411,8 +411,8 @@ const Index = () => {
           }}
           className={cn(
             "relative w-full pt-20 pb-24", // Increased vertical spacing
-            !isMobile && "bg-[#EDF7F2]", // Pale mint
-            isMobile && cn("py-8 relative", moc.sectionPaddingMain) // Standardized mobile padding
+            "bg-[#EDF7F2]", // Pale mint - now applied to both mobile and desktop
+            isMobile && cn("py-8", moc.sectionPaddingMain) // Standardized mobile padding
           )}
         >
           <div className={cn(
@@ -445,8 +445,8 @@ const Index = () => {
           }}
           className={cn(
             "relative w-full pt-20 pb-24", // Increased vertical spacing
-            !isMobile && "bg-[#E7E9FF]", // Rich periwinkle
-            isMobile && cn("py-8 relative", moc.sectionPaddingMain) // Standardized mobile padding
+            "bg-[#E7E9FF]", // Rich periwinkle - now applied to both mobile and desktop
+            isMobile && cn("py-8", moc.sectionPaddingMain) // Standardized mobile padding
           )}
         >
           <div className={cn(
@@ -479,8 +479,8 @@ const Index = () => {
           }}
           className={cn(
             "relative w-full pt-20 pb-24", // Increased vertical spacing
-            !isMobile && "bg-[#EEF3F9]", // Soft blue-grey
-            isMobile && cn("py-8 relative", moc.sectionPaddingMain) // Standardized mobile padding
+            "bg-[#EEF3F9]", // Soft blue-grey - now applied to both mobile and desktop
+            isMobile && cn("py-8", moc.sectionPaddingMain) // Standardized mobile padding
           )}
         >
           <div className={cn(
@@ -513,8 +513,8 @@ const Index = () => {
           }}
           className={cn(
             "relative w-full pt-20 pb-24", // Increased vertical spacing
-            !isMobile && "bg-[#F9F6EC]", // Soft champagne (same as Find Creators)
-            isMobile && cn("py-8 relative", moc.sectionPaddingMain) // Standardized mobile padding
+            "bg-[#F9F6EC]", // Soft champagne (same as Find Creators) - now applied to both mobile and desktop
+            isMobile && cn("py-8", moc.sectionPaddingMain) // Standardized mobile padding
           )}
         >
           <div className={cn(
