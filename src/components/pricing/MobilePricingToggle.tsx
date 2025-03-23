@@ -23,7 +23,8 @@ export const MobilePricingToggle = ({
   }, []);
   
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center touch-action-pan-y overscroll-behavior-none"
+      style={{ touchAction: 'pan-y', overscrollBehavior: 'none' }}>
       {/* Label text */}
       <div className="mb-2 flex items-center justify-center gap-6 text-sm font-medium">
         <span className={!isYearly ? "text-brand-purple-dark font-semibold" : "text-slate-600"}>

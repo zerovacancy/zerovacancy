@@ -235,14 +235,17 @@ export const PricingContainer = () => {
   };
   
   return (
-    <div className="w-full pb-10" ref={containerRef}>
+    <div className="w-full pb-10 touch-action-pan-y overscroll-behavior-none" 
+      ref={containerRef} 
+      style={{ touchAction: 'pan-y', overscrollBehavior: 'none' }}>
       <AnimatePresence>
         {isMobile && showStickyHeader && (
           <motion.div
             initial={{ y: -100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -100, opacity: 0 }}
-            className="fixed top-0 left-0 right-0 py-2 px-4 z-30"
+            className="fixed top-0 left-0 right-0 py-2 px-4 z-30 touch-action-pan-y overscroll-behavior-none"
+            style={{ touchAction: 'pan-y', overscrollBehavior: 'none' }}
           >
             <PricingHeader 
               title="Pricing" 
@@ -272,7 +275,7 @@ export const PricingContainer = () => {
                   tier.popularPlan && "relative",
                   colorScheme.cardBg,
                   "shadow-sm hover:shadow-md",
-                  isMobile && "mobile-optimize",
+                  isMobile && "mobile-optimize touch-action-pan-y overscroll-behavior-none",
                   "before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:rounded-l-xl",
                   `before:bg-gradient-to-b ${colorScheme.gradient.split(' ')[0]} ${colorScheme.gradient.split(' ')[1]} before:opacity-0 group-hover:before:opacity-100 before:transition-opacity`,
                   // Add glowing border for Professional plan on mobile
@@ -281,6 +284,7 @@ export const PricingContainer = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
+                style={{ touchAction: 'pan-y', overscrollBehavior: 'none' }}
               >
                 {tier.popularPlan && (
                   <div className="absolute -top-5 inset-x-0 flex justify-center z-20">
@@ -399,7 +403,8 @@ export const PricingContainer = () => {
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.3 }}
-                        className="overflow-hidden"
+                        className="overflow-hidden touch-action-pan-y overscroll-behavior-none"
+                        style={{ touchAction: 'pan-y', overscrollBehavior: 'none' }}
                       >
                         <div className={cn(
                           "pt-4 pb-2 space-y-4",
@@ -461,7 +466,7 @@ export const PricingContainer = () => {
                 </button>
               </DialogTrigger>
 
-              <DialogContent className="p-0 w-[92vw] max-w-[400px] rounded-xl border-slate-200 shadow-xl top-[15%] translate-y-0">
+              <DialogContent className="p-0 w-[92vw] max-w-[400px] rounded-xl border-slate-200 shadow-xl top-[15%] translate-y-0 touch-action-pan-y overscroll-behavior-none" style={{ touchAction: 'pan-y', overscrollBehavior: 'none' }}>
                 <div className="flex items-center justify-between p-4 border-b border-slate-200 sticky top-0 bg-white z-10">
                   <h3 className="text-lg font-bold text-brand-purple-dark font-jakarta">Feature Comparison</h3>
                   <DialogClose className="p-1 rounded-full hover:bg-slate-100 focus:outline-none">
@@ -469,8 +474,8 @@ export const PricingContainer = () => {
                   </DialogClose>
                 </div>
                 
-                <ScrollArea className="h-[60vh] rounded-b-xl">
-                  <div className="px-4 pb-6">
+                <ScrollArea className="h-[60vh] rounded-b-xl touch-action-pan-y overscroll-behavior-none" style={{ touchAction: 'pan-y', overscrollBehavior: 'none' }}>
+                  <div className="px-4 pb-6 touch-action-pan-y" style={{ touchAction: 'pan-y' }}>
                     <div className="grid grid-cols-4 border-b border-slate-200 py-3 sticky top-0 bg-white z-10">
                       <div className="col-span-1 text-sm font-bold text-gray-800 font-jakarta">Feature</div>
                       <div className="col-span-1 text-center text-xs font-bold text-blue-700 font-space">Basic</div>
@@ -736,7 +741,7 @@ export const PricingContainer = () => {
                   </button>
                 </DialogTrigger>
 
-                <DialogContent className="p-0 w-[90vw] max-w-[800px] rounded-xl border-slate-200 shadow-xl top-[15%] translate-y-0">
+                <DialogContent className="p-0 w-[90vw] max-w-[800px] rounded-xl border-slate-200 shadow-xl top-[15%] translate-y-0 touch-action-pan-y overscroll-behavior-none" style={{ touchAction: 'pan-y', overscrollBehavior: 'none' }}>
                   <div className="flex items-center justify-between p-4 border-b border-slate-200 sticky top-0 bg-white z-10">
                     <h3 className="text-lg font-bold text-brand-purple-dark font-jakarta">Feature Comparison</h3>
                     <DialogClose className="p-1 rounded-full hover:bg-slate-100 focus:outline-none">
@@ -744,8 +749,8 @@ export const PricingContainer = () => {
                     </DialogClose>
                   </div>
                   
-                  <ScrollArea className="h-[70vh] rounded-b-xl">
-                    <div className="px-4 pb-6">
+                  <ScrollArea className="h-[70vh] rounded-b-xl touch-action-pan-y overscroll-behavior-none" style={{ touchAction: 'pan-y', overscrollBehavior: 'none' }}>
+                    <div className="px-4 pb-6 touch-action-pan-y" style={{ touchAction: 'pan-y' }}>
                       <div className="grid grid-cols-4 border-b border-slate-200 py-3 sticky top-0 bg-white z-10">
                         <div className="col-span-1 text-sm font-bold text-gray-800 font-jakarta">Feature</div>
                         <div className="col-span-1 text-center text-xs font-bold text-blue-700 font-space">Basic</div>

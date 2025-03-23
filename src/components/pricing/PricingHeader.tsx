@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Calendar, CalendarDays } from "lucide-react";
 import { MobilePricingToggle } from "./MobilePricingToggle";
+import { mobileOptimizationClasses as moc } from "@/utils/mobile-optimization";
 
 interface PricingHeaderProps {
   title: string;
@@ -26,9 +27,10 @@ const PricingHeader = ({
 
   return (
     <div className={cn(
-      "text-center mx-auto transition-all duration-300",
+      "text-center mx-auto transition-all duration-300 touch-action-pan-y overscroll-behavior-none",
       isSticky ? "max-w-full py-3 bg-white/95 backdrop-blur-sm shadow-md z-20" : "max-w-3xl py-0"
-    )}>
+    )}
+    style={{ touchAction: 'pan-y', overscrollBehavior: 'none' }}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -43,19 +45,24 @@ const PricingHeader = ({
           <>
             {/* Main title - decorative blurs removed */}
             <h2 className={cn(
-              "font-bold text-brand-purple-dark mb-2 mt-3 tracking-tight font-jakarta",
-              isMobile ? "text-2xl" : "text-3xl sm:text-4xl"
+              "font-bold text-brand-purple-dark font-jakarta",
+              moc.headingLarge, // Standardized mobile heading
+              moc.spacingBetweenBlocks, // Standardized spacing
+              isMobile ? "mt-3" : "text-3xl sm:text-4xl mt-3"
             )}>
               {title}
             </h2>
             
             {/* Decorative element under the heading */}
-            <div className="w-20 h-1.5 bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1] rounded-full mx-auto mb-3" />
+            <div className="w-20 h-1.5 bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1] rounded-full mx-auto mb-4" />
             
             {/* Subtitle */}
             <p className={cn(
-              "mx-auto text-brand-text-secondary leading-relaxed mb-6 font-inter",
-              isMobile ? "text-sm px-4" : "text-base"
+              "mx-auto text-brand-text-secondary font-inter",
+              moc.bodyText, // Standardized body text
+              moc.textContainer, // Control max-width for readability
+              moc.spacingHeadingToContent, // Standardized spacing
+              isMobile ? "px-4" : "text-base"
             )}>
               {subtitle}
             </p>
