@@ -255,6 +255,7 @@ html, body {
     border-bottom: none !important;
     outline: none !important;
     box-shadow: none !important;
+    z-index: 1 !important; /* Ensure it's above any hidden dividers */
   }
   
   /* Only target section transitions - NOT content backgrounds */
@@ -264,6 +265,20 @@ html, body {
     border: none !important;
     outline: none !important;
     box-shadow: none !important;
+  }
+  
+  /* Specific fix for the tan divider above footer on mobile */
+  @media (max-width: 768px) {
+    section + section {
+      margin-top: 0 !important;
+      padding-top: 0 !important;
+      border-top: none !important;
+    }
+    
+    section:last-of-type {
+      margin-bottom: 0 !important;
+      padding-bottom: 0 !important;
+    }
   }
   
   .mobile-px-adjust {
