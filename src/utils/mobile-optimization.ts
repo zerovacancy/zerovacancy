@@ -242,12 +242,34 @@ export const mobileOptimizationClasses = {
   // Mobile-focused visual and interaction improvements
   tapTargetLarge: "min-h-[44px] min-w-[44px]", // Recommended minimum tap target size
   tapTargetExtraLarge: "min-h-[48px] min-w-[48px]", // Extra large for primary actions
-  textLegible: "text-[16px] leading-[1.5]", // Minimum recommended text size for mobile
+  
+  // New standardized typography system for mobile
+  headingLarge: "text-2xl font-bold leading-snug tracking-tight", // Section headings
+  headingMedium: "text-xl font-bold leading-snug tracking-tight", // Sub-section headings
+  headingSmall: "text-lg font-medium leading-normal", // Subheadings
+  bodyText: "text-base leading-relaxed", // Body text (min 16px)
+  bodyTextSmall: "text-sm leading-relaxed", // Small text (min 14px)
+  
+  // Text container max-width for readability (65-70 characters)
+  textContainer: "max-w-[65ch]",
+  textContainerNarrow: "max-w-[45ch]",
+  
+  // Input element optimization
   inputEnhanced: "text-[16px] h-[48px] px-4", // Prevent zoom on focus in iOS
   
   // New classes for form elements on mobile
   mobileFriendlyInput: "text-[16px] h-[44px] px-4 py-2 rounded-xl",
   mobileFriendlyButton: "h-[48px] min-w-[44px] px-5 rounded-xl",
+  
+  // Standardized spacing system
+  sectionPaddingMain: "py-10", // Main sections
+  sectionPaddingSecondary: "py-8", // Secondary sections
+  contentPadding: "px-4 sm:px-6", // Consistent content padding
+  sectionWrapper: "w-full max-w-none overflow-hidden", // Full-width section wrapper
+  spacingHeadingToContent: "mb-6", // Space between heading and content
+  spacingBetweenBlocks: "mb-4", // Space between content blocks
+  spacingBeforeCTA: "mt-6", // Space before call-to-actions
+  spacingInteractive: "gap-4", // Minimum spacing between interactive elements
 };
 
 // Enhanced landscape mode detection that also considers device type

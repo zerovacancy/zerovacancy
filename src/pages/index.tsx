@@ -39,17 +39,24 @@ const SectionTransition = ({
   height?: number;
   withOverlap?: boolean;
 }) => {
+  const isMobile = useIsMobile();
+  
+  // Adjust height and margins for mobile
+  const mobileHeight = Math.max(height / 2, 20); // Smaller on mobile but minimum 20px
+  const actualHeight = isMobile ? mobileHeight : height;
+  const overlapMargin = isMobile ? '-10px' : '-20px';
+
   return (
     <div 
       className="w-full overflow-hidden relative z-20"
       style={{ 
-        height: `${height}px`,
+        height: `${actualHeight}px`,
         // Increase overlap to eliminate any white space and purple lines
-        marginTop: withOverlap ? '-20px' : '0',
-        marginBottom: withOverlap ? '-20px' : '0',
+        marginTop: withOverlap ? overlapMargin : '0',
+        marginBottom: withOverlap ? overlapMargin : '0',
         // Create a fuller blend between sections
-        paddingTop: '10px',
-        paddingBottom: '10px'
+        paddingTop: isMobile ? '5px' : '10px',
+        paddingBottom: isMobile ? '5px' : '10px'
       }}
     >
       {/* Gradient background for smooth transition */}
@@ -338,23 +345,28 @@ const Index = () => {
               contain: 'none',
               willChange: 'auto',
               transform: 'none',
-              overflow: 'visible',
+              overflow: 'hidden',  // Changed to hidden to prevent content from flowing outside
               isolation: 'auto'
             } : 
             { ...getZIndex(0), ...getBackgroundTransition(0) }
           }
-          className="w-full bg-[#EBE3FF]" // Added lavender background to hero section for mobile and desktop
+          className={cn(
+            "w-full bg-[#EBE3FF]", // Lavender background for hero section
+            moc.sectionWrapper // Standardized section wrapper
+          )}
         >
           <div 
             style={isMobile ? 
               { 
                 position: 'static',
                 contain: 'none',
-                willChange: 'auto' 
+                willChange: 'auto',
+                width: '100%',
+                overflow: 'hidden'
               } : 
               { position: 'relative' }
             } 
-            className="w-full"
+            className="w-full max-w-none"
           >
             <Hero />
           </div>
@@ -364,27 +376,38 @@ const Index = () => {
         <ScrollTarget id="find-creators" height={12} />
         
         {/* Section Transition: Hero to Find Creators */}
-        {!isMobile && <SectionTransition 
+        <SectionTransition 
           fromColor="#EBE3FF" 
           toColor="#F9F6EC" 
           height={80}
           withOverlap={true}
-        />}
+        />
         
         {/* Find Creators Section */}
         <section 
           ref={addSectionRef(1)} 
-          style={{
-            ...getZIndex(1),
-            ...getBackgroundTransition(1)
-          }}
+          style={isMobile ?
+            {
+              position: 'static',
+              zIndex: 'auto',
+              contain: 'none',
+              willChange: 'auto',
+              transform: 'none',
+              overflow: 'hidden'
+            } : 
+            {
+              ...getZIndex(1),
+              ...getBackgroundTransition(1)
+            }
+          }
           className={cn(
             "relative w-full pt-20 pb-24", // Increased vertical spacing
             "bg-[#F9F6EC]", // Soft champagne - now applied to both mobile and desktop
-            isMobile && cn("py-8", moc.sectionPaddingMain) // Standardized mobile padding
+            isMobile && cn("py-8", moc.sectionPaddingMain), // Standardized mobile padding
+            moc.sectionWrapper // Standardized section wrapper
           )}
         >
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-hidden">
             <Suspense fallback={<SectionLoader />}>
               <PreviewSearch />
             </Suspense>
@@ -395,28 +418,39 @@ const Index = () => {
         <ScrollTarget id="how-it-works" height={12} />
         
         {/* Section Transition: Find Creators to How It Works */}
-        {!isMobile && <SectionTransition 
+        <SectionTransition 
           fromColor="#F9F6EC" 
           toColor="#EDF7F2" 
           height={80}
           withOverlap={true}
-        />}
+        />
         
         {/* How It Works Section */}
         <section 
           ref={addSectionRef(2)} 
-          style={{
-            ...getZIndex(2),
-            ...getBackgroundTransition(2)
-          }}
+          style={isMobile ?
+            {
+              position: 'static',
+              zIndex: 'auto',
+              contain: 'none',
+              willChange: 'auto',
+              transform: 'none',
+              overflow: 'hidden'
+            } : 
+            {
+              ...getZIndex(2),
+              ...getBackgroundTransition(2)
+            }
+          }
           className={cn(
             "relative w-full pt-20 pb-24", // Increased vertical spacing
             "bg-[#EDF7F2]", // Pale mint - now applied to both mobile and desktop
-            isMobile && cn("py-8", moc.sectionPaddingMain) // Standardized mobile padding
+            isMobile && cn("py-8", moc.sectionPaddingMain), // Standardized mobile padding
+            moc.sectionWrapper // Standardized section wrapper
           )}
         >
           <div className={cn(
-            "max-w-7xl mx-auto", 
+            "w-full max-w-7xl mx-auto overflow-hidden", 
             moc.contentPadding // Standardized content padding
           )}>
             <Suspense fallback={<SectionLoader />}>
@@ -426,12 +460,12 @@ const Index = () => {
         </section>
         
         {/* Section Transition: How It Works to Features */}
-        {!isMobile && <SectionTransition 
+        <SectionTransition 
           fromColor="#EDF7F2" 
           toColor="#E7E9FF" 
           height={80}
           withOverlap={true}
-        />}
+        />
         
         {/* Scroll Target for Features */}
         <ScrollTarget id="features" height={12} />
@@ -439,18 +473,29 @@ const Index = () => {
         {/* Features Section */}
         <section 
           ref={addSectionRef(3)}
-          style={{
-            ...getZIndex(3),
-            ...getBackgroundTransition(3)
-          }}
+          style={isMobile ?
+            {
+              position: 'static',
+              zIndex: 'auto',
+              contain: 'none',
+              willChange: 'auto',
+              transform: 'none',
+              overflow: 'hidden'
+            } : 
+            {
+              ...getZIndex(3),
+              ...getBackgroundTransition(3)
+            }
+          }
           className={cn(
             "relative w-full pt-20 pb-24", // Increased vertical spacing
             "bg-[#E7E9FF]", // Rich periwinkle - now applied to both mobile and desktop
-            isMobile && cn("py-8", moc.sectionPaddingMain) // Standardized mobile padding
+            isMobile && cn("py-8", moc.sectionPaddingMain), // Standardized mobile padding
+            moc.sectionWrapper // Standardized section wrapper
           )}
         >
           <div className={cn(
-            "max-w-7xl mx-auto", 
+            "w-full max-w-7xl mx-auto overflow-hidden", 
             moc.contentPadding // Standardized content padding
           )}>
             <Suspense fallback={<SectionLoader />}>
@@ -460,12 +505,12 @@ const Index = () => {
         </section>
 
         {/* Section Transition: Features to Pricing */}
-        {!isMobile && <SectionTransition 
+        <SectionTransition 
           fromColor="#E7E9FF" 
           toColor="#EEF3F9" 
           height={80}
           withOverlap={true}
-        />}
+        />
 
         {/* Scroll Target for Pricing */}
         <ScrollTarget id="pricing" height={12} />
@@ -473,18 +518,29 @@ const Index = () => {
         {/* Pricing Section */}
         <section 
           ref={addSectionRef(4)}
-          style={{
-            ...getZIndex(4),
-            ...getBackgroundTransition(4)
-          }}
+          style={isMobile ?
+            {
+              position: 'static',
+              zIndex: 'auto',
+              contain: 'none',
+              willChange: 'auto',
+              transform: 'none',
+              overflow: 'hidden'
+            } : 
+            {
+              ...getZIndex(4),
+              ...getBackgroundTransition(4)
+            }
+          }
           className={cn(
             "relative w-full pt-20 pb-24", // Increased vertical spacing
             "bg-[#EEF3F9]", // Soft blue-grey - now applied to both mobile and desktop
-            isMobile && cn("py-8", moc.sectionPaddingMain) // Standardized mobile padding
+            isMobile && cn("py-8", moc.sectionPaddingMain), // Standardized mobile padding
+            moc.sectionWrapper // Standardized section wrapper
           )}
         >
           <div className={cn(
-            "max-w-7xl mx-auto", 
+            "w-full max-w-7xl mx-auto overflow-hidden", 
             moc.contentPadding // Standardized content padding
           )}>
             <Suspense fallback={<SectionLoader />}>
@@ -494,12 +550,12 @@ const Index = () => {
         </section>
 
         {/* Section Transition: Pricing to Blog */}
-        {!isMobile && <SectionTransition 
+        <SectionTransition 
           fromColor="#EEF3F9" 
           toColor="#F9F6EC" 
           height={80}
           withOverlap={true}
-        />}
+        />
 
         {/* Scroll Target for Blog */}
         <ScrollTarget id="blog" height={12} />
@@ -507,18 +563,29 @@ const Index = () => {
         {/* Blog Section */}
         <section 
           ref={addSectionRef(5)}
-          style={{
-            ...getZIndex(5),
-            ...getBackgroundTransition(5)
-          }}
+          style={isMobile ?
+            {
+              position: 'static',
+              zIndex: 'auto',
+              contain: 'none',
+              willChange: 'auto',
+              transform: 'none',
+              overflow: 'hidden'
+            } : 
+            {
+              ...getZIndex(5),
+              ...getBackgroundTransition(5)
+            }
+          }
           className={cn(
             "relative w-full pt-20 pb-24", // Increased vertical spacing
             "bg-[#F9F6EC]", // Soft champagne (same as Find Creators) - now applied to both mobile and desktop
-            isMobile && cn("py-8", moc.sectionPaddingMain) // Standardized mobile padding
+            isMobile && cn("py-8", moc.sectionPaddingMain), // Standardized mobile padding
+            moc.sectionWrapper // Standardized section wrapper
           )}
         >
           <div className={cn(
-            "max-w-7xl mx-auto", 
+            "w-full max-w-7xl mx-auto overflow-hidden", 
             moc.contentPadding // Standardized content padding
           )}>
             <Suspense fallback={<SectionLoader />}>
@@ -528,12 +595,12 @@ const Index = () => {
         </section>
 
         {/* Section Transition: Blog to Footer */}
-        {!isMobile && <SectionTransition 
+        <SectionTransition 
           fromColor="#F9F6EC" 
           toColor="#f8f8fb" 
           height={80}
           withOverlap={true}
-        />}
+        />
 
         {!isMobile && (
           <div className="fixed right-6 top-1/2 transform -translate-y-1/2 z-[100] hidden lg:flex flex-col items-center gap-3">
