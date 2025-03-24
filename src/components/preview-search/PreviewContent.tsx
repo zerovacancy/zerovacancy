@@ -86,6 +86,12 @@ export const PreviewContent: React.FC<PreviewContentProps> = ({
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
   const contentRef = useRef<HTMLDivElement>(null);
   
+  // Create refs for all creator cards up front
+  const creatorRefs = useMemo(() => 
+    CREATOR_DATA.map(() => React.createRef<HTMLDivElement>()),
+    []
+  );
+  
   // Simulate a filter operation based on search term
   const filteredCreators = useMemo(() => {
     if (!searchTerm) return CREATOR_DATA;
@@ -157,7 +163,7 @@ export const PreviewContent: React.FC<PreviewContentProps> = ({
                   creator={creator}
                   onImageLoad={handleImageLoad}
                   loadedImages={loadedImages}
-                  imageRef={useRef(null)}
+                  imageRef={creatorRefs[index]}
                   onPreviewClick={handlePreviewClick}
                 />
               ))}
