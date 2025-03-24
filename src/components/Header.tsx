@@ -14,8 +14,9 @@ import { cn } from '@/lib/utils';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  // Use a ref instead of state for the timeout to avoid hook dependency issues
+  const logoClickTimeoutRef = React.useRef<number | null>(null);
   const [logoClickCount, setLogoClickCount] = useState(0);
-  const [logoClickTimeout, setLogoClickTimeout] = useState<number | null>(null);
   const {
     user,
     isAuthenticated,
@@ -27,11 +28,11 @@ const Header = () => {
     // Return a cleanup function that will be called when the component unmounts
     return () => {
       // Check if we have an active timeout and clear it
-      if (logoClickTimeout !== null) {
-        window.clearTimeout(logoClickTimeout);
+      if (logoClickTimeoutRef.current !== null) {
+        window.clearTimeout(logoClickTimeoutRef.current);
       }
     };
-  }, [logoClickTimeout]);
+  }, []); // Empty dependency array to run only on mount/unmount
   
   return (
     <header className="sticky top-0 z-[100] w-full border-b border-gray-200 bg-white/95 backdrop-blur-sm">
@@ -44,15 +45,14 @@ const Header = () => {
               className="h-8 md:h-9 w-auto"
               onTouchStart={(e) => {
                 // For mobile devices, use touch events
-                if (logoClickTimeout !== null) {
-                  window.clearTimeout(logoClickTimeout);
+                if (logoClickTimeoutRef.current !== null) {
+                  window.clearTimeout(logoClickTimeoutRef.current);
                 }
                 
-                const timeout = window.setTimeout(() => {
+                logoClickTimeoutRef.current = window.setTimeout(() => {
                   setLogoClickCount(0);
+                  logoClickTimeoutRef.current = null;
                 }, 3000);
-                
-                setLogoClickTimeout(timeout);
                 
                 setLogoClickCount(prev => {
                   const newCount = prev + 1;
@@ -73,16 +73,15 @@ const Header = () => {
                 e.stopPropagation();
                 
                 // Reset timeout if it exists
-                if (logoClickTimeout !== null) {
-                  window.clearTimeout(logoClickTimeout);
+                if (logoClickTimeoutRef.current !== null) {
+                  window.clearTimeout(logoClickTimeoutRef.current);
                 }
                 
                 // Set a new timeout to reset click count after 3 seconds of inactivity
-                const timeout = window.setTimeout(() => {
+                logoClickTimeoutRef.current = window.setTimeout(() => {
                   setLogoClickCount(0);
+                  logoClickTimeoutRef.current = null;
                 }, 3000);
-                
-                setLogoClickTimeout(timeout);
                 
                 setLogoClickCount(prev => {
                   const newCount = prev + 1;

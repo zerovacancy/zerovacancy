@@ -59,11 +59,12 @@ const AdminLogin = () => {
         return;
       }
       
-      // Otherwise they shouldn't be here
+      // Otherwise they shouldn't be here - redirect immediately
       console.log("Unauthorized admin access attempt - redirecting");
-      window.setTimeout(() => {
-        navigate('/');
-      }, 2000);
+      // Set a flag to show the unauthorized message briefly
+      setAccessGranted(false);
+      // Navigate directly without setTimeout
+      navigate('/');
     };
     
     // Run the check

@@ -151,12 +151,14 @@ const Index = () => {
     5: true
   });
   
+  // Store the Konami code sequence in a ref
+  const keySequenceRef = React.useRef<string[]>([]);
+  
   // Add a secure admin login method using key sequence
   useEffect(() => {
     // Secret passphrase as a Konami-style code
     const secretKeySequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
-    let keySequence: string[] = [];
-    let adminPasswordHash = 'ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f'; // SHA-256 of 'admin123' - this should be changed in production
+    const adminPasswordHash = 'ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f'; // SHA-256 of 'admin123' - this should be changed in production
 
     // Function to validate password
     const validatePassword = async (password: string): Promise<boolean> => {
@@ -202,18 +204,23 @@ const Index = () => {
     
     // Keyboard event handler for secret sequence
     const handleKeyDown = (event: KeyboardEvent) => {
+      // Get the current sequence from the ref
+      const currentSequence = [...keySequenceRef.current];
+      
       // Add the key to the sequence
-      keySequence.push(event.key);
+      currentSequence.push(event.key);
       
       // Keep only the last N keys where N is the length of the secret sequence
-      if (keySequence.length > secretKeySequence.length) {
-        keySequence = keySequence.slice(-secretKeySequence.length);
+      if (currentSequence.length > secretKeySequence.length) {
+        keySequenceRef.current = currentSequence.slice(-secretKeySequence.length);
+      } else {
+        keySequenceRef.current = currentSequence;
       }
       
       // Check if the current sequence matches the secret sequence
-      const isMatch = keySequence.every((key, index) => key === secretKeySequence[index]);
+      const isMatch = keySequenceRef.current.every((key, index) => key === secretKeySequence[index]);
       
-      if (isMatch && keySequence.length === secretKeySequence.length) {
+      if (isMatch && keySequenceRef.current.length === secretKeySequence.length) {
         // Secret sequence matched, prompt for admin password
         const password = prompt('Enter admin password:');
         if (password) {
@@ -226,7 +233,7 @@ const Index = () => {
           });
         }
         // Clear the sequence
-        keySequence = [];
+        keySequenceRef.current = [];
       }
     };
     
