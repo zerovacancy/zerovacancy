@@ -287,199 +287,278 @@ export class BlogService {
   
   // Create a new blog post
   static async createPost(postData: Partial<BlogPost>): Promise<BlogPost | null> {
-    // Ensure required fields
-    if (!postData.title || !postData.content) {
-      throw new Error('Title and content are required');
-    }
-    
-    // Generate slug if not provided
-    if (!postData.slug) {
-      postData.slug = postData.title
-        .toLowerCase()
-        .replace(/[^\w\s-]/g, '')
-        .replace(/[\s_-]+/g, '-')
-        .replace(/^-+|-+$/g, '');
-    }
-    
-    // Calculate reading time if not provided
-    if (!postData.readingTime && postData.content) {
-      postData.readingTime = calculateReadingTime(postData.content);
-    }
-    
-    // Extract tags before inserting
-    const tags = postData.tags || [];
-    delete (postData as any).tags;
-    
-    // Transform to Supabase format
-    const supabasePost = {
-      title: postData.title,
-      slug: postData.slug,
-      excerpt: postData.excerpt || null,
-      content: postData.content,
-      cover_image: postData.coverImage || null,
-      published_at: postData.publishedAt || null,
-      status: postData.publishedAt ? 'published' : 'draft',
-      category_id: postData.category?.id || null,
-      author_id: postData.author?.id || null,
-      reading_time: postData.readingTime || null
-    };
-    
-    // Insert the post
-    const { data, error } = await supabase
-      .from('blog_posts')
-      .insert(supabasePost)
-      .select()
-      .single();
-    
-    if (error) {
-      console.error('Error creating blog post:', error);
+    try {
+      // Ensure required fields
+      if (!postData.title || !postData.content) {
+        throw new Error('Title and content are required');
+      }
+      
+      // Generate slug if not provided
+      if (!postData.slug) {
+        postData.slug = postData.title
+          .toLowerCase()
+          .replace(/[^\w\s-]/g, '')
+          .replace(/[\s_-]+/g, '-')
+          .replace(/^-+|-+$/g, '');
+      }
+      
+      // Calculate reading time if not provided
+      if (!postData.readingTime && postData.content) {
+        postData.readingTime = calculateReadingTime(postData.content);
+      }
+      
+      // Validate required relationships
+      if (!postData.category?.id) {
+        throw new Error('Category is required');
+      }
+      
+      if (!postData.author?.id) {
+        throw new Error('Author is required');
+      }
+      
+      // Extract tags before inserting
+      const tags = postData.tags || [];
+      delete (postData as any).tags;
+      
+      // Transform to Supabase format
+      const supabasePost = {
+        title: postData.title,
+        slug: postData.slug,
+        excerpt: postData.excerpt || null,
+        content: postData.content,
+        cover_image: postData.coverImage || null,
+        published_at: postData.publishedAt || null,
+        status: postData.publishedAt ? 'published' : 'draft',
+        category_id: postData.category?.id,
+        author_id: postData.author?.id,
+        reading_time: postData.readingTime || null
+      };
+      
+      console.log('Creating blog post with data:', JSON.stringify(supabasePost, null, 2));
+      
+      // Insert the post
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .insert(supabasePost)
+        .select()
+        .single();
+      
+      if (error) {
+        console.error('Error creating blog post:', error);
+        throw error;
+      }
+      
+      if (!data || !data.id) {
+        throw new Error('Failed to get created post data');
+      }
+      
+      console.log('Blog post created successfully with ID:', data.id);
+      
+      // Add tags if provided
+      if (tags.length > 0) {
+        console.log('Adding tags to post:', tags);
+        // Get or create tags
+        for (const tagName of tags) {
+          try {
+            // Check if tag exists
+            let { data: existingTag, error: tagLookupError } = await supabase
+              .from('blog_tags')
+              .select('id')
+              .eq('name', tagName)
+              .single();
+            
+            if (tagLookupError && tagLookupError.code !== 'PGRST116') { // Not found error
+              console.error('Error looking up tag:', tagLookupError);
+              continue;
+            }
+            
+            let tagId;
+            
+            if (existingTag) {
+              tagId = existingTag.id;
+              console.log('Using existing tag:', tagName, tagId);
+            } else {
+              // Create new tag
+              const { data: newTag, error: tagError } = await supabase
+                .from('blog_tags')
+                .insert({ name: tagName })
+                .select()
+                .single();
+              
+              if (tagError) {
+                console.error('Error creating tag:', tagError);
+                continue;
+              }
+              
+              tagId = newTag.id;
+              console.log('Created new tag:', tagName, tagId);
+            }
+            
+            // Add relation
+            const { error: relationError } = await supabase
+              .from('blog_posts_tags')
+              .insert({ post_id: data.id, tag_id: tagId });
+              
+            if (relationError) {
+              console.error('Error creating tag relation:', relationError);
+            }
+          } catch (tagError) {
+            console.error('Error processing tag:', tagName, tagError);
+          }
+        }
+      }
+      
+      // Get the full post with relations
+      return this.getPostBySlug(data.slug)
+        .then(response => response?.post || null);
+    } catch (error) {
+      console.error('Error in createPost:', error);
       throw error;
     }
-    
-    // Add tags if provided
-    if (tags.length > 0) {
-      // Get or create tags
-      for (const tagName of tags) {
-        // Check if tag exists
-        let { data: existingTag } = await supabase
-          .from('blog_tags')
-          .select('id')
-          .eq('name', tagName)
-          .single();
-        
-        let tagId;
-        
-        if (existingTag) {
-          tagId = existingTag.id;
-        } else {
-          // Create new tag
-          const { data: newTag, error: tagError } = await supabase
-            .from('blog_tags')
-            .insert({ name: tagName })
-            .select()
-            .single();
-          
-          if (tagError) {
-            console.error('Error creating tag:', tagError);
-            continue;
-          }
-          
-          tagId = newTag.id;
-        }
-        
-        // Add relation
-        await supabase
-          .from('blog_posts_tags')
-          .insert({ post_id: data.id, tag_id: tagId });
-      }
-    }
-    
-    // Get the full post with relations
-    return this.getPostBySlug(data.slug)
-      .then(response => response?.post || null);
   }
   
   // Update an existing blog post
   static async updatePost(id: string, postData: Partial<BlogPost>): Promise<BlogPost | null> {
-    // Extract tags before updating
-    const tags = postData.tags;
-    delete (postData as any).tags;
-    delete (postData as any).category;
-    delete (postData as any).author;
-    
-    // Transform to Supabase format
-    const supabasePost: any = {
-      title: postData.title,
-      slug: postData.slug,
-      excerpt: postData.excerpt,
-      content: postData.content,
-      cover_image: postData.coverImage,
-      reading_time: postData.readingTime
-    };
-    
-    // Only update provided fields
-    Object.keys(supabasePost).forEach(key => {
-      if (supabasePost[key] === undefined) {
-        delete supabasePost[key];
-      }
-    });
-    
-    // Handle published status
-    if (postData.publishedAt !== undefined) {
-      supabasePost.published_at = postData.publishedAt;
-      supabasePost.status = postData.publishedAt ? 'published' : 'draft';
-    }
-    
-    // Update category if provided
-    if (postData.category?.id) {
-      supabasePost.category_id = postData.category.id;
-    }
-    
-    // Update author if provided
-    if (postData.author?.id) {
-      supabasePost.author_id = postData.author.id;
-    }
-    
-    // Update the post
-    const { data, error } = await supabase
-      .from('blog_posts')
-      .update(supabasePost)
-      .eq('id', id)
-      .select()
-      .single();
-    
-    if (error) {
-      console.error('Error updating blog post:', error);
-      throw error;
-    }
-    
-    // Update tags if provided
-    if (tags) {
-      // Remove existing tags
-      await supabase
-        .from('blog_posts_tags')
-        .delete()
-        .eq('post_id', id);
+    try {
+      // Extract tags before updating
+      const tags = postData.tags;
       
-      // Add new tags
-      for (const tagName of tags) {
-        // Check if tag exists
-        let { data: existingTag } = await supabase
-          .from('blog_tags')
-          .select('id')
-          .eq('name', tagName)
-          .single();
-        
-        let tagId;
-        
-        if (existingTag) {
-          tagId = existingTag.id;
-        } else {
-          // Create new tag
-          const { data: newTag, error: tagError } = await supabase
-            .from('blog_tags')
-            .insert({ name: tagName })
-            .select()
-            .single();
+      // Create a clean copy without complex objects
+      const cleanPostData = { ...postData };
+      delete cleanPostData.tags;
+      delete cleanPostData.category;
+      delete cleanPostData.author;
+      
+      // Transform to Supabase format
+      const supabasePost: any = {
+        title: cleanPostData.title,
+        slug: cleanPostData.slug,
+        excerpt: cleanPostData.excerpt,
+        content: cleanPostData.content,
+        cover_image: cleanPostData.coverImage,
+        reading_time: cleanPostData.readingTime
+      };
+      
+      // Only update provided fields
+      Object.keys(supabasePost).forEach(key => {
+        if (supabasePost[key] === undefined) {
+          delete supabasePost[key];
+        }
+      });
+      
+      // Handle published status
+      if (cleanPostData.publishedAt !== undefined) {
+        supabasePost.published_at = cleanPostData.publishedAt;
+        supabasePost.status = cleanPostData.publishedAt ? 'published' : 'draft';
+      }
+      
+      // Update category if provided
+      if (postData.category?.id) {
+        supabasePost.category_id = postData.category.id;
+      }
+      
+      // Update author if provided
+      if (postData.author?.id) {
+        supabasePost.author_id = postData.author.id;
+      }
+      
+      console.log('Updating blog post:', id, JSON.stringify(supabasePost, null, 2));
+      
+      // Update the post
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .update(supabasePost)
+        .eq('id', id)
+        .select()
+        .single();
+      
+      if (error) {
+        console.error('Error updating blog post:', error);
+        throw error;
+      }
+      
+      if (!data) {
+        throw new Error('No data returned from update operation');
+      }
+      
+      console.log('Blog post updated successfully');
+      
+      // Update tags if provided
+      if (tags) {
+        try {
+          console.log('Updating tags for post:', id, tags);
           
-          if (tagError) {
-            console.error('Error creating tag:', tagError);
-            continue;
+          // Remove existing tags
+          const { error: deleteError } = await supabase
+            .from('blog_posts_tags')
+            .delete()
+            .eq('post_id', id);
+            
+          if (deleteError) {
+            console.error('Error deleting existing tags:', deleteError);
           }
           
-          tagId = newTag.id;
+          // Add new tags
+          for (const tagName of tags) {
+            try {
+              // Check if tag exists
+              let { data: existingTag, error: tagLookupError } = await supabase
+                .from('blog_tags')
+                .select('id')
+                .eq('name', tagName)
+                .single();
+              
+              if (tagLookupError && tagLookupError.code !== 'PGRST116') { // Not found error
+                console.error('Error looking up tag:', tagLookupError);
+                continue;
+              }
+              
+              let tagId;
+              
+              if (existingTag) {
+                tagId = existingTag.id;
+                console.log('Using existing tag:', tagName, tagId);
+              } else {
+                // Create new tag
+                const { data: newTag, error: tagError } = await supabase
+                  .from('blog_tags')
+                  .insert({ name: tagName })
+                  .select()
+                  .single();
+                
+                if (tagError) {
+                  console.error('Error creating tag:', tagError);
+                  continue;
+                }
+                
+                tagId = newTag.id;
+                console.log('Created new tag:', tagName, tagId);
+              }
+              
+              // Add relation
+              const { error: relationError } = await supabase
+                .from('blog_posts_tags')
+                .insert({ post_id: id, tag_id: tagId });
+                
+              if (relationError) {
+                console.error('Error creating tag relation:', relationError);
+              }
+            } catch (tagError) {
+              console.error('Error processing tag:', tagName, tagError);
+            }
+          }
+        } catch (tagsError) {
+          console.error('Error handling tags update:', tagsError);
         }
-        
-        // Add relation
-        await supabase
-          .from('blog_posts_tags')
-          .insert({ post_id: id, tag_id: tagId });
       }
+      
+      // Get the full post with relations
+      return this.getPostBySlug(data.slug)
+        .then(response => response?.post || null);
+    } catch (error) {
+      console.error('Error in updatePost:', error);
+      throw error;
     }
-    
-    // Get the full post with relations
-    return this.getPostBySlug(data.slug)
-      .then(response => response?.post || null);
   }
   
   // Delete a blog post

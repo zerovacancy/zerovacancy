@@ -137,9 +137,49 @@ const BlogEditor = () => {
     setTags(tags.filter(tag => tag !== tagToRemove));
   };
   
+  // Form validation state
+  const [validationError, setValidationError] = useState('');
+  
+  // Validate form before submission
+  const validateForm = () => {
+    if (!title) {
+      setValidationError('Title is required');
+      return false;
+    }
+    
+    if (!slug) {
+      setValidationError('Slug is required');
+      return false;
+    }
+    
+    if (!content) {
+      setValidationError('Content is required');
+      return false;
+    }
+    
+    if (!categoryId) {
+      setValidationError('Category is required');
+      return false;
+    }
+    
+    if (!authorId) {
+      setValidationError('Author is required');
+      return false;
+    }
+    
+    return true;
+  };
+  
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setValidationError('');
+    
+    // Validate form before submission
+    if (!validateForm()) {
+      return;
+    }
+    
     setSaving(true);
     
     try {
@@ -156,16 +196,24 @@ const BlogEditor = () => {
         tags
       };
       
+      console.log('Submitting blog post:', postData);
+      
       if (isEditing && id) {
         await BlogService.updatePost(id, postData);
       } else {
         await BlogService.createPost(postData);
       }
       
+      // Success - go back to blog admin
       navigate('/admin/blog');
-    } catch (error) {
+    } catch (error: any) {
+      // Extract meaningful error message
+      const errorMessage = error.message || 'Failed to save post. Please try again.';
       console.error('Error saving post:', error);
-      alert('Failed to save post. Please try again.');
+      setValidationError(errorMessage);
+      
+      // Don't navigate away on error
+      window.scrollTo(0, 0); // Scroll to top to show error
     } finally {
       setSaving(false);
     }
@@ -305,6 +353,17 @@ const BlogEditor = () => {
           </button>
         </div>
       </div>
+      
+      {/* Validation error message */}
+      {validationError && (
+        <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-md flex items-start">
+          <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0 mt-0.5" />
+          <div>
+            <p className="font-medium">Error saving post</p>
+            <p className="text-sm">{validationError}</p>
+          </div>
+        </div>
+      )}
       
       <div className="bg-white rounded-lg shadow-sm p-6">
         {previewMode ? (
