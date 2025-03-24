@@ -1,10 +1,10 @@
-
 import React, { useState, useRef, useEffect, useMemo, memo } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { CreatorCard } from '../creator/CreatorCard';
 import { MobileCreatorCarousel } from '../search/MobileCreatorCarousel';
 import { cn } from '@/lib/utils';
-import { Dialog, DialogContent } from "../ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";
+import { VisuallyHidden } from "../ui/visually-hidden";
 import { X } from 'lucide-react';
 import { CreatorCardSkeleton } from './CreatorCardSkeleton';
 
@@ -13,200 +13,156 @@ const CREATOR_DATA = [
   {
     name: "Emily Johnson",
     services: ["TikTok", "POV Tour", "Content"],
-    price: 150,
-    rating: 4.9,
-    reviews: 127,
-    location: "Chicago, IL",
+    servicesTruncated: ["TikTok", "Tour", "Content"],
+    location: "LA",
+    price: 85,
+    rating: 4.7,
+    reviews: 72,
     image: "/emilyprofilephoto.webp",
-    workExamples: ["/creatorcontent/emily-johnson/work-1.webp", "/creatorcontent/emily-johnson/work-2.jpg", "/creatorcontent/emily-johnson/work-3.jpg"],
-    availabilityStatus: "available-now" as const
-  }, 
+    availability: true,
+    availabilityStatus: "available-now",
+    workExamples: [
+      "/creatorcontent/emily-johnson/work-1.webp",
+      "/creatorcontent/emily-johnson/work-2.jpg",
+      "/creatorcontent/emily-johnson/work-3.jpg"
+    ]
+  },
   {
     name: "Jane Cooper",
-    services: ["Interior", "Design", "Staging"],
-    price: 200,
-    rating: 4.8,
-    reviews: 98,
-    location: "Los Angeles, CA",
+    services: ["Instagram", "Real Estate", "Photo"],
+    servicesTruncated: ["Instagram", "Real Estate", "Photo"],
+    location: "NYC",
+    price: 120,
+    rating: 4.9,
+    reviews: 143,
     image: "/janeprofile.png",
-    workExamples: ["/creatorcontent/jane-cooper/work-1.jpg", "/creatorcontent/jane-cooper/work-2.jpg", "/creatorcontent/jane-cooper/work-3.jpg"],
-    availabilityStatus: "available-tomorrow" as const
-  }, 
+    availability: true,
+    availabilityStatus: "available-tomorrow",
+    workExamples: [
+      "/creatorcontent/jane-cooper/work-1.jpg",
+      "/creatorcontent/jane-cooper/work-2.jpg",
+      "/creatorcontent/jane-cooper/work-3.webp"
+    ]
+  },
   {
     name: "Michael Brown",
-    services: ["3D Tours", "Floor Plans", "Interactive"],
-    price: 175,
-    rating: 4.7,
-    reviews: 82,
-    location: "Chicago, IL",
+    services: ["YouTube", "Drone", "Video"],
+    servicesTruncated: ["YouTube", "Drone", "Video"],
+    location: "SF",
+    price: 150,
+    rating: 5.0,
+    reviews: 95,
     image: "/michaelprofile.mov",
-    workExamples: ["/creatorcontent/michael-brown/work-1.jpg", "/creatorcontent/michael-brown/work-2.jpg", "/creatorcontent/michael-brown/work-3.jpg"],
-    availabilityStatus: "premium-only" as const
+    availability: true,
+    availabilityStatus: "premium-only",
+    workExamples: [
+      "/creatorcontent/michael-brown/work-1.webp",
+      "/creatorcontent/michael-brown/work-2.jpg",
+      "/creatorcontent/michael-brown/work-3.webp"
+    ]
   }
 ];
 
-// Predefine skeleton array outside to prevent recreation
-const SKELETON_INDICES = [1, 2, 3];
+// Memoized component with stable props to preserve render identity
+const MemoizedCreatorCard = memo(CreatorCard);
 
-// Direct export with arrow function
-export const PreviewContent = () => {
-  const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const imageRef = useRef<HTMLImageElement | null>(null);
+interface PreviewContentProps {
+  className?: string;
+  searchTerm?: string;
+  isLoading?: boolean;
+  showSkeletons?: boolean;
+  loadingCount?: number;
+}
+
+export const PreviewContent: React.FC<PreviewContentProps> = ({
+  className,
+  searchTerm = '',
+  isLoading = false,
+  showSkeletons = false,
+  loadingCount = 3
+}) => {
   const isMobile = useIsMobile();
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
+  const contentRef = useRef<HTMLDivElement>(null);
   
-  // Track if component is mounted to prevent state updates after unmount
-  const isMounted = useRef(true);
-  
-  // Create an IntersectionObserver to detect when section is visible
-  const sectionRef = useRef<HTMLDivElement>(null);
-  
-  // Reduce loading time for better performance and less jitter
-  useEffect(() => {
-    // Short timeout for loading state to reduce jitter
-    const timer = setTimeout(() => {
-      if (isMounted.current) {
-        setIsLoading(false);
-      }
-    }, 800); // Reduced from 1200ms
+  // Simulate a filter operation based on search term
+  const filteredCreators = useMemo(() => {
+    if (!searchTerm) return CREATOR_DATA;
     
-    // Cleanup function
-    return () => {
-      clearTimeout(timer);
-      isMounted.current = false;
-    };
-  }, []);
-
-  // Memoized image load handler to prevent recreation on every render
-  const handleImageLoad = useMemo(() => (imagePath: string) => {
-    if (isMounted.current) {
-      setLoadedImages(prev => {
-        // Create a new set with the additional image
-        const newSet = new Set(prev);
-        newSet.add(imagePath);
-        return newSet;
-      });
-    }
-  }, []);
-
-  // Pre-load creator images in a single batch before rendering
-  useEffect(() => {
-    // Preload all creator profile images
-    CREATOR_DATA.forEach(creator => {
-      const img = new Image();
-      img.src = creator.image === '/michaelprofile.mov' 
-        ? '/creatorcontent/michael-brown/work-1.webp' 
-        : creator.image;
-      
-      img.onload = () => {
-        if (isMounted.current) {
-          handleImageLoad(creator.image);
-        }
-      };
+    const lowerSearchTerm = searchTerm.toLowerCase();
+    return CREATOR_DATA.filter(creator => {
+      return (
+        creator.name.toLowerCase().includes(lowerSearchTerm) ||
+        creator.location.toLowerCase().includes(lowerSearchTerm) ||
+        creator.services.some(s => s.toLowerCase().includes(lowerSearchTerm))
+      );
     });
-  }, [handleImageLoad]);
-
-  // Setup container style with hardware acceleration but without restricting size
-  const containerStyle = useMemo(() => ({
-    minHeight: isMobile ? '450px' : 'auto', // Allow auto height on desktop
-    transform: 'translateZ(0)', // Hardware acceleration
-    willChange: 'transform', // Hint browser about transform changes
-    contain: 'paint style', // Removed 'layout size' to allow natural sizing
-  }), [isMobile]);
-
-  // Create wrapper style
-  const wrapperStyle = useMemo(() => ({
-    transform: 'translateZ(0)', // Force hardware acceleration
-    willChange: 'transform' // Hint for browser optimization
-  }), []);
-
+  }, [searchTerm]);
+  
+  // Add an image to the loaded set when it loads
+  const handleImageLoad = (imageSrc: string) => {
+    setLoadedImages(prev => {
+      const updated = new Set(prev);
+      updated.add(imageSrc);
+      return updated;
+    });
+  };
+  
+  // Handle thumbnail clicks
+  const handlePreviewClick = (imageSrc: string) => {
+    setSelectedImage(imageSrc);
+  };
+  
+  // Render different views based on mobile status
   return (
-    <div 
-      className={cn(
-        "relative w-full transform-gpu", 
-        isMobile && "pb-6 bg-transparent", // Use transparent background
-      )}
-      style={{
-        // Simple styles to ensure content displays properly
-        width: '100%',
-        position: 'relative'
-      }}
-      ref={sectionRef}
+    <div className={cn(
+      "w-full transform-gpu will-change-transform", 
+      className
+    )} 
+      ref={contentRef}
     >
-      {isMobile ? (
-        <div className="transform-gpu" style={wrapperStyle}>
-          {isLoading ? (
-            // Mobile loading skeleton with explicit dimensions
-            <div 
-              className="flex space-x-2 overflow-x-auto py-2 px-1 scrollbar-hide"
-              style={{
-                minHeight: '380px', // Fixed height to prevent layout shifts
-                // Removed contain property that might cause content to be cut off
-              }}
-            >
-              {SKELETON_INDICES.map((item) => (
-                <div 
-                  key={item} 
-                  className="min-w-[90%] flex-shrink-0 px-1"
-                  style={{
-                    minHeight: '340px', // Fixed height to match content
-                    transform: 'translateZ(0)' // Hardware acceleration
-                  }}
-                >
-                  <CreatorCardSkeleton />
-                </div>
+      {/* Skeleton loader states */}
+      {(isLoading || showSkeletons) && (
+        <div className={cn(
+          "grid grid-cols-1 gap-4 md:gap-6",
+          isMobile 
+            ? "snap-x px-4 overflow-x-auto flex relative" 
+            : "md:grid-cols-3 lg:grid-cols-3"
+        )} style={{ 
+          opacity: isLoading ? 0.8 : 1,
+          paddingBottom: isMobile ? '12px' : '0'
+        }}>
+          {Array.from({ length: loadingCount }, (_, index) => (
+            <CreatorCardSkeleton key={`skeleton-${index}`} />
+          ))}
+        </div>
+      )}
+      
+      {/* Actual content */}
+      {!isLoading && !showSkeletons && (
+        <div className="w-full">
+          {isMobile ? (
+            <MobileCreatorCarousel 
+              creators={filteredCreators}
+              onImageLoad={handleImageLoad}
+              loadedImages={loadedImages}
+              onPreviewClick={handlePreviewClick}
+            />
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-5">
+              {filteredCreators.map((creator, index) => (
+                <MemoizedCreatorCard 
+                  key={`${creator.name}-${index}`}
+                  creator={creator}
+                  onImageLoad={handleImageLoad}
+                  loadedImages={loadedImages}
+                  imageRef={useRef(null)}
+                  onPreviewClick={handlePreviewClick}
+                />
               ))}
             </div>
-          ) : (
-            // Main carousel with hardware acceleration
-            <>
-              {/* Direct render without wrapping div */}
-              <MobileCreatorCarousel 
-                creators={CREATOR_DATA}
-                onImageLoad={handleImageLoad}
-                loadedImages={loadedImages}
-                imageRef={(node) => { imageRef.current = node; }}
-                onPreviewClick={setSelectedImage}
-              />
-            </>
           )}
-        </div>
-      ) : (
-        // Desktop view
-        <div 
-          className="p-2 transform-gpu" 
-          style={wrapperStyle}
-        >
-          <div 
-            className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 transform-gpu"
-            style={{
-              minHeight: 'auto', // Allow natural sizing
-              contain: 'paint', // Removed size constraint
-            }}
-          >
-            {isLoading ? (
-              <>
-                {SKELETON_INDICES.map((item) => (
-                  <div key={item} className="transform-gpu mb-4 sm:mb-0">
-                    <CreatorCardSkeleton />
-                  </div>
-                ))}
-              </>
-            ) : (
-              CREATOR_DATA.map((creator, index) => (
-                <div key={index} className="transform-gpu mb-4 sm:mb-0">
-                  <CreatorCard 
-                    creator={creator}
-                    onImageLoad={handleImageLoad}
-                    loadedImages={loadedImages}
-                    imageRef={(node) => { imageRef.current = node; }}
-                    onPreviewClick={setSelectedImage}
-                  />
-                </div>
-              ))
-            )}
-          </div>
         </div>
       )}
 
@@ -224,6 +180,9 @@ export const PreviewContent = () => {
               contain: 'layout paint style' // Optimization
             }}
           >
+            <DialogTitle>
+              <VisuallyHidden>Image Preview</VisuallyHidden>
+            </DialogTitle>
             <div className="relative p-1 rounded-lg transform-gpu">
               <img
                 src={selectedImage}
@@ -232,18 +191,13 @@ export const PreviewContent = () => {
                 style={{
                   transform: 'translateZ(0)', // Hardware acceleration
                   contain: 'layout paint',
-                  aspectRatio: '16/9'
                 }}
-                loading="eager"
-                decoding="async"
-                fetchPriority="high"
               />
-              <button
+              <button 
+                className="absolute top-2 right-2 p-2 bg-black/50 rounded-full z-10"
                 onClick={() => setSelectedImage(null)}
-                className="absolute right-3 top-3 bg-black/80 rounded-full p-1.5 text-white shadow-[0_2px_4px_rgba(0,0,0,0.2)] transform-gpu"
-                style={{ transform: 'translateZ(0)' }}
               >
-                <X className="h-4 w-4" />
+                <X className="h-6 w-6 text-white" />
               </button>
             </div>
           </DialogContent>
@@ -252,5 +206,3 @@ export const PreviewContent = () => {
     </div>
   );
 }
-
-// Component is exported directly above

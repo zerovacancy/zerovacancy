@@ -1,7 +1,8 @@
 
 import * as React from "react" 
 const { useEffect, useState } = React
-import { Dialog, DialogContent } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
+import { VisuallyHidden } from "@/components/ui/visually-hidden"
 import { CheckCircle, X } from "lucide-react"
 import { Confetti } from "@/components/ui/confetti"
 import confetti from "canvas-confetti"
@@ -192,6 +193,9 @@ export function SuccessConfirmation({
             "z-[10000]" // Ensure dialog is visible above confetti (z-index 9999)
           )}
         >
+          <DialogTitle>
+            <VisuallyHidden>{getSuccessTitle()} Confirmation</VisuallyHidden>
+          </DialogTitle>
           {/* Custom Close Button for better mobile interaction */}
           <button 
             onClick={(e) => {

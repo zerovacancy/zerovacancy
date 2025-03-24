@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ArrowRight, X, ExternalLink } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle } from '../ui/dialog';
+import { VisuallyHidden } from '../ui/visually-hidden';
 
 interface PortfolioPreviewProps {
   workExamples: string[];
@@ -59,8 +60,8 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
                     target.src = '/placeholder.svg';
                   }}
                 />
-                {/* Simple hover overlay without expand icon */}
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+                {/* Subtle hover effect without darken or blur */}
+                <div className="absolute inset-0 border-2 border-purple-200 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-md"></div>
               </div>
             ))}
           </div>
@@ -87,8 +88,8 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
                     target.src = '/placeholder.svg';
                   }}
                 />
-                {/* Simple hover overlay without expand icon */}
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                {/* Subtle hover effect without darken or blur */}
+                <div className="absolute inset-0 border-2 border-purple-200 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-md"></div>
               </div>
             ))}
           </div>
@@ -98,7 +99,9 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
       {/* Dialog for image preview - currently disabled */}
       <Dialog open={false}>
         <DialogContent className="p-0 border-0 bg-transparent max-w-5xl">
-          <DialogTitle className="sr-only">Image Preview</DialogTitle>
+          <DialogTitle>
+            <VisuallyHidden>Image Preview</VisuallyHidden>
+          </DialogTitle>
           <button className="absolute top-2 right-2 z-50 p-2 bg-black/50 rounded-full">
             <X className="h-6 w-6 text-white" />
           </button>
