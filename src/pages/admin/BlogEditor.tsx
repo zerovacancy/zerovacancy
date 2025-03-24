@@ -7,7 +7,8 @@ import {
   Eye, 
   ArrowLeft, 
   X, 
-  Plus 
+  Plus,
+  AlertCircle
 } from 'lucide-react';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { BlogService } from '@/services/BlogService';
