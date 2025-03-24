@@ -27,12 +27,12 @@ import { mobileOptimizationClasses as moc } from '@/utils/mobile-optimization';
 
 const { useState, useEffect, useRef, lazy, Suspense, useCallback } = React;
 
-// Section transition component with enhanced smooth blending and no visible dividers
+// Completely revised section transition component to eliminate all gaps on both mobile and desktop
 const SectionTransition = ({ 
   fromColor, 
   toColor, 
-  height = 40,
-  withOverlap = true 
+  height = 60, // Increased default height for better coverage
+  withOverlap = true // Parameter maintained for backward compatibility
 }: { 
   fromColor: string; 
   toColor: string; 
@@ -41,43 +41,44 @@ const SectionTransition = ({
 }) => {
   const isMobile = useIsMobile();
   
-  // Reduced height for a more subtle transition
-  const mobileHeight = Math.max(height / 3, 30); // Smaller transition height
-  const desktopHeight = Math.max(height / 2, 40); // Smaller transition height for desktop too
-  const actualHeight = isMobile ? mobileHeight : desktopHeight;
-
+  // Use much larger height for mobile to ensure complete coverage
+  const actualHeight = isMobile ? Math.max(height, 140) : Math.max(height, 80);
+  
   return (
     <div 
-      className={cn(
-        "w-full overflow-visible relative z-10", 
-        isMobile && "touch-action-pan-y overscroll-behavior-none"
-      )}
+      className="w-full overflow-visible relative z-30 section-transition"
+      aria-hidden="true"
       style={{ 
         height: `${actualHeight}px`,
-        marginTop: '0',
-        marginBottom: '0',
-        padding: '0',
-        touchAction: isMobile ? 'pan-y' : 'auto',
+        margin: '-5px 0', // Much larger negative margin for better overlap
+        padding: 0,
         pointerEvents: 'none',
-        width: '100%',
-        marginLeft: '0'
+        width: '100vw', // Full viewport width to prevent side gaps
+        maxWidth: '100vw',
+        position: 'relative',
+        backgroundColor: fromColor, // Solid background color matching the starting section
+        backgroundImage: 'none', // Prevent any default backgrounds
+        left: 0,
+        right: 0
       }}
     >
-      {/* Enhanced gradient with more stops for smoother blending */}
       <div 
-        className="w-full h-full"
+        className="absolute"
         style={{
           background: `linear-gradient(to bottom, 
             ${fromColor} 0%, 
-            ${fromColor}80 15%, 
-            ${modifyColorOpacity(fromColor, toColor, 0.6)} 35%,
-            ${modifyColorOpacity(fromColor, toColor, 0.4)} 65%,
-            ${toColor}80 85%, 
+            ${fromColor} 15%, 
+            ${modifyColorOpacity(fromColor, toColor, 0.7)} 35%,
+            ${modifyColorOpacity(fromColor, toColor, 0.3)} 65%,
+            ${toColor} 85%, 
             ${toColor} 100%)`,
-          borderTop: 'none',
-          borderBottom: 'none',
-          borderLeft: 'none',
-          borderRight: 'none',
+          position: 'absolute',
+          top: '-20px', // Doubled extension beyond container for mobile
+          left: 0,
+          right: 0,
+          bottom: '-20px', // Doubled extension beyond container for mobile
+          height: 'calc(100% + 40px)', // Much taller to prevent any gaps
+          width: '100%',
           boxShadow: 'none'
         }}
       />
@@ -123,7 +124,7 @@ interface ScrollTargetProps {
   className?: string;
 }
 
-const ScrollTarget: React.FC<ScrollTargetProps> = ({ id, height = 8, className }) => {
+const ScrollTarget: React.FC<ScrollTargetProps> = ({ id, height = 1, className }) => {
   const isMobile = useIsMobile();
   return (
     <div 
@@ -139,7 +140,8 @@ const ScrollTarget: React.FC<ScrollTargetProps> = ({ id, height = 8, className }
         position: 'relative',
         zIndex: 5, // Lower z-index to prevent interfering with transitions
         background: 'transparent',
-        marginTop: '0',
+        margin: 0,
+        padding: 0,
         pointerEvents: 'none',
         touchAction: isMobile ? 'pan-y' : 'auto'
       }}
@@ -332,7 +334,7 @@ const Index = () => {
   };
   
   return (
-    <div className="flex flex-col min-h-screen w-full bg-[#EBE3FF]" 
+    <div className="flex flex-col min-h-screen w-full" 
          style={isMobile ? {
            width: '100vw', 
            maxWidth: '100vw', 
@@ -447,14 +449,13 @@ const Index = () => {
         </section>
         
         {/* Scroll Target for Find Creators */}
-        <ScrollTarget id="find-creators" height={8} />
+        <ScrollTarget id="find-creators" height={1} />
         
         {/* Section Transition: Hero to Find Creators - Smoother blend */}
         <SectionTransition 
           fromColor="#EBE3FF" 
           toColor="#F9F6EC" 
-          height={isMobile ? 60 : 50}
-          withOverlap={false}
+          height={120}
         />
         
         {/* Find Creators Section */}
@@ -501,14 +502,13 @@ const Index = () => {
         </section>
         
         {/* Scroll Target for How It Works */}
-        <ScrollTarget id="how-it-works" height={8} />
+        <ScrollTarget id="how-it-works" height={1} />
         
         {/* Section Transition: Find Creators to How It Works - Unified flow */}
         <SectionTransition 
           fromColor="#F9F6EC" 
           toColor="#EDF7F2" 
-          height={isMobile ? 50 : 40}
-          withOverlap={false}
+          height={120}
         />
         
         {/* How It Works Section */}
@@ -549,12 +549,11 @@ const Index = () => {
         <SectionTransition 
           fromColor="#EDF7F2" 
           toColor="#E7E9FF" 
-          height={isMobile ? 50 : 40}
-          withOverlap={false}
+          height={120}
         />
         
         {/* Scroll Target for Features */}
-        <ScrollTarget id="features" height={8} />
+        <ScrollTarget id="features" height={1} />
         
         {/* Features Section */}
         <section 
@@ -594,12 +593,11 @@ const Index = () => {
         <SectionTransition 
           fromColor="#E7E9FF" 
           toColor="#EEF3F9" 
-          height={isMobile ? 50 : 40}
-          withOverlap={false}
+          height={120}
         />
 
         {/* Scroll Target for Pricing */}
-        <ScrollTarget id="pricing" height={8} />
+        <ScrollTarget id="pricing" height={1} />
 
         {/* Pricing Section */}
         <section 
@@ -639,12 +637,11 @@ const Index = () => {
         <SectionTransition 
           fromColor="#EEF3F9" 
           toColor="#F9F6EC" 
-          height={isMobile ? 50 : 40}
-          withOverlap={false}
+          height={120}
         />
 
         {/* Scroll Target for Blog */}
-        <ScrollTarget id="blog" height={8} />
+        <ScrollTarget id="blog" height={1} />
 
         {/* Blog Section */}
         <section 
@@ -684,8 +681,7 @@ const Index = () => {
         <SectionTransition 
           fromColor="#F9F6EC" 
           toColor="#f8f8fb" 
-          height={isMobile ? 40 : 30}
-          withOverlap={false}
+          height={120}
         />
 
         {!isMobile && (
