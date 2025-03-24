@@ -456,49 +456,50 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                       boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(118,51,220,0.05)', // Enhanced shadow with purple tint
                       fontSize: '14px',
                       fontWeight: 600, // Medium weight
-                      paddingLeft: '42px', // Space for icon
                     }}
                   >
-                    {/* Icon container */}
-                    <div 
-                      className="absolute left-0 top-1/2 -translate-y-1/2 ml-5 flex items-center justify-center"
-                      style={{
-                        width: '32px',
-                        height: '32px',
-                        background: 'rgba(134,65,245,0.05)', // Slightly stronger purple tint
-                        border: '1px solid rgba(118,51,220,0.15)', // Subtle purple border
-                        borderRadius: '12px',
-                        boxShadow: 'inset 0 1px 0 rgba(255,255,255,1), inset 0 -1px 0 rgba(0,0,0,0.04)'
-                      }}
-                    >
-                      {creator.name === "Emily Johnson" ? (
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7633DC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M14.5 10A0.5 0.5 0 1 1 15 9.5A0.5 0.5 0 0 1 14.5 10Z"></path>
-                          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                          <path d="M9 3L9 21"></path>
-                        </svg>
-                      ) : creator.name === "Jane Cooper" ? (
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7633DC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                          <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                        </svg>
-                      ) : creator.name === "Michael Brown" ? (
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7633DC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M2 12A10 10 0 1 0 12 2m-9.87 4.5a14 14 0 0 0-0.13 1.8c0 7.5 5.5 14.4 13 14.7a10.8 10.8 0 0 0 2 .1"></path>
-                          <path d="M3.3 7.7A13.4 13.4 0 0 0 2.5 10a15 15 0 0 0 6 11.1A11 11 0 0 0 12 22"></path>
-                          <path d="M5 2.3A10 10 0 0 1 17.55 5"></path>
-                        </svg>
-                      ) : (
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7633DC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                          <circle cx="9" cy="7" r="4"></circle>
-                          <line x1="19" x2="19" y1="8" y2="14"></line>
-                          <line x1="22" x2="16" y1="11" y2="11"></line>
-                        </svg>
-                      )}
+                    {/* Icon container - Now using flexbox for alignment instead of absolute positioning */}
+                    <div className="flex items-center justify-center h-full">
+                      <div 
+                        className="flex items-center justify-center mr-3"
+                        style={{
+                          width: '32px',
+                          height: '32px',
+                          background: 'rgba(134,65,245,0.05)', // Slightly stronger purple tint
+                          border: '1px solid rgba(118,51,220,0.15)', // Subtle purple border
+                          borderRadius: '12px',
+                          boxShadow: 'inset 0 1px 0 rgba(255,255,255,1), inset 0 -1px 0 rgba(0,0,0,0.04)'
+                        }}
+                      >
+                        {creator.name === "Emily Johnson" ? (
+                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7633DC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M14.5 10A0.5 0.5 0 1 1 15 9.5A0.5 0.5 0 0 1 14.5 10Z"></path>
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <path d="M9 3L9 21"></path>
+                          </svg>
+                        ) : creator.name === "Jane Cooper" ? (
+                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7633DC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                          </svg>
+                        ) : creator.name === "Michael Brown" ? (
+                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7633DC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M2 12A10 10 0 1 0 12 2m-9.87 4.5a14 14 0 0 0-0.13 1.8c0 7.5 5.5 14.4 13 14.7a10.8 10.8 0 0 0 2 .1"></path>
+                            <path d="M3.3 7.7A13.4 13.4 0 0 0 2.5 10a15 15 0 0 0 6 11.1A11 11 0 0 0 12 22"></path>
+                            <path d="M5 2.3A10 10 0 0 1 17.55 5"></path>
+                          </svg>
+                        ) : (
+                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7633DC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <line x1="19" x2="19" y1="8" y2="14"></line>
+                            <line x1="22" x2="16" y1="11" y2="11"></line>
+                          </svg>
+                        )}
+                      </div>
+                      <span className="tracking-wide">JOIN AS CREATOR</span>
+                      <ArrowRight className="w-4 h-4 ml-2 text-[#7633DC] animate-pulse-subtle" aria-hidden="true" />
                     </div>
-                    <span className="tracking-wide">JOIN AS CREATOR</span>
-                    <ArrowRight className="w-4 h-4 ml-2 text-[#7633DC] animate-pulse-subtle" aria-hidden="true" />
                   </button>
                 )}
               </div>
