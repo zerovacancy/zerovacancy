@@ -41,59 +41,19 @@ export function WaitlistCreatorButton({
     }
   }, [isMobile]);
 
-  // Focus input field when component mounts if showEmailInputDirectly is true
-  // or when email input is revealed after clicking the button
+  // Focus input field with a single, simpler approach to avoid jittering
   useEffect(() => {
     if (open && inputRef.current) {
-      // Create a function to ensure keyboard shows up
-      const focusAndShowKeyboard = () => {
-        if (!inputRef.current) return;
-        
-        try {
-          // Ensure input is ready for text entry
-          inputRef.current.readOnly = false;
-          
-          // Focus the input to make keyboard appear
-          inputRef.current.focus();
-          
-          // Force blur and refocus to reset any stuck states
-          inputRef.current.blur();
-          inputRef.current.focus();
-          
-          // Simulate clicks and touches to force keyboard on iOS
-          inputRef.current.click();
-          
-          if (isMobile) {
-            // Special handling for iOS Safari
-            if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-              // Create a touch event to help iOS show keyboard
-              try {
-                const touchEvent = new TouchEvent('touchstart', {
-                  bubbles: true,
-                  cancelable: true
-                });
-                inputRef.current.dispatchEvent(touchEvent);
-              } catch (e) {
-                console.log("Touch event simulation failed", e);
-                // Fallback to click
-                inputRef.current.click();
-              }
-            }
-          }
-        } catch (err) {
-          console.error("Error focusing input:", err);
-        }
-      };
-      
-      // Call immediately and with delays to ensure it works
-      focusAndShowKeyboard();
-      
-      // Try with increasing delays to catch any rendering or timing issues
-      setTimeout(focusAndShowKeyboard, 100);
-      setTimeout(focusAndShowKeyboard, 300);
-      setTimeout(focusAndShowKeyboard, 500);
+      // Simple focus - don't use multiple attempts that cause jittering
+      try {
+        // Single focus attempt
+        inputRef.current.readOnly = false;
+        inputRef.current.focus();
+      } catch (err) {
+        console.error("Error focusing input:", err);
+      }
     }
-  }, [open, isMobile]);
+  }, [open]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -223,8 +183,8 @@ export function WaitlistCreatorButton({
             "mx-auto",
             "rounded-lg overflow-hidden",
             "shadow-md",
-            "transform transition-all duration-300 animate-fade-in",
-            "flex flex-row items-stretch relative"
+            "flex flex-row items-stretch relative",
+            "bg-white"
           )}
           onClick={(e) => {
             // Ensure clicking anywhere in the form focuses the input

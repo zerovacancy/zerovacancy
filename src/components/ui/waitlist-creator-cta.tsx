@@ -30,7 +30,7 @@ export const WaitlistCreatorCTA: React.FC<WaitlistCreatorCTAProps> = ({
 }) => {
   return (
     <div className={cn(
-      "w-full max-w-md mx-auto", 
+      "w-full max-w-md mx-auto waitlist-creator-dialog", 
       className
     )}>
       <WaitlistCreatorButton 

@@ -19,6 +19,7 @@ import {
   DialogContent,
   DialogClose,
   DialogTrigger,
+  DialogTitle,
 } from "../ui/dialog";
 
 export const PricingContainer = () => {
@@ -446,146 +447,6 @@ export const PricingContainer = () => {
               </motion.div>
             );
           })}
-          
-          <div className="mt-6 pt-2 relative flex flex-col items-center">
-            <Dialog>
-              <DialogTrigger asChild>
-                <button
-                  className={cn(
-                    "touch-manipulation mx-auto flex items-center justify-center gap-1.5",
-                    "rounded-full py-3 px-5 min-h-[48px] shadow-sm",
-                    "bg-[#f5f5f7] text-brand-purple text-sm font-medium",
-                    "border border-slate-200/80 transition-all duration-200",
-                    "hover:bg-slate-100 active:bg-slate-200",
-                    "w-[70%] max-w-[280px]",
-                    "mb-6"
-                  )}
-                >
-                  <span>Compare all features</span>
-                  <ChevronDown className="h-4 w-4 opacity-80" />
-                </button>
-              </DialogTrigger>
-
-              <DialogContent className="p-0 w-[92vw] max-w-[400px] rounded-xl border-slate-200 shadow-xl top-[15%] translate-y-0 touch-action-pan-y overscroll-behavior-none" style={{ touchAction: 'pan-y', overscrollBehavior: 'none' }}>
-                <div className="flex items-center justify-between p-4 border-b border-slate-200 sticky top-0 bg-white z-10">
-                  <h3 className="text-lg font-bold text-brand-purple-dark font-jakarta">Feature Comparison</h3>
-                  <DialogClose className="p-1 rounded-full hover:bg-slate-100 focus:outline-none">
-                    <X className="h-5 w-5 text-gray-500" />
-                  </DialogClose>
-                </div>
-                
-                <ScrollArea className="h-[60vh] rounded-b-xl touch-action-pan-y overscroll-behavior-none" style={{ touchAction: 'pan-y', overscrollBehavior: 'none' }}>
-                  <div className="px-4 pb-6 touch-action-pan-y" style={{ touchAction: 'pan-y' }}>
-                    <div className="grid grid-cols-4 border-b border-slate-200 py-3 sticky top-0 bg-white z-10">
-                      <div className="col-span-1 text-sm font-bold text-gray-800 font-jakarta">Feature</div>
-                      <div className="col-span-1 text-center text-xs font-bold text-blue-700 font-space">Basic</div>
-                      <div className="col-span-1 text-center text-xs font-bold text-purple-700 font-space">Pro</div>
-                      <div className="col-span-1 text-center text-xs font-bold text-emerald-700 font-space">Premium</div>
-                    </div>
-                    
-                    <div className="pt-4 pb-2">
-                      <h4 className="text-xs font-bold text-brand-purple-dark bg-brand-purple/5 px-3 py-1.5 rounded-lg inline-block mb-3">
-                        Core Features
-                      </h4>
-                      
-                      <div className="space-y-3">
-                        <div className="grid grid-cols-4 items-center hover:bg-slate-50 rounded py-2 transition-colors">
-                          <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">Browse & Discover Content Creators</div>
-                          <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-blue-600" /></div>
-                          <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-purple-600" /></div>
-                          <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-emerald-600" /></div>
-                        </div>
-                        <div className="grid grid-cols-4 items-center hover:bg-slate-50 rounded py-2 transition-colors">
-                          <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">Access to Creator Profiles</div>
-                          <div className="col-span-1 text-center text-[9px] font-semibold text-gray-600">Limited</div>
-                          <div className="col-span-1 text-center text-[9px] font-semibold text-purple-600">Full</div>
-                          <div className="col-span-1 text-center text-[9px] font-semibold text-emerald-600">Full</div>
-                        </div>
-                        <div className="grid grid-cols-4 items-center hover:bg-slate-50 rounded py-2 transition-colors">
-                          <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">Preview Marketplace Features</div>
-                          <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-blue-600" /></div>
-                          <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-purple-600" /></div>
-                          <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-emerald-600" /></div>
-                        </div>
-                        <div className="grid grid-cols-4 items-center hover:bg-slate-50 rounded py-2 transition-colors">
-                          <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">Submit Request for Proposals</div>
-                          <div className="col-span-1 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
-                          <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-purple-600" /></div>
-                          <div className="col-span-1 text-center text-[9px] font-semibold text-emerald-600">Instantly</div>
-                        </div>
-                        <div className="grid grid-cols-4 items-center hover:bg-slate-50 rounded py-2 transition-colors">
-                          <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">Browse & Hire Premium Creators</div>
-                          <div className="col-span-1 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
-                          <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-purple-600" /></div>
-                          <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-emerald-600" /></div>
-                        </div>
-                        <div className="grid grid-cols-4 items-center hover:bg-slate-50 rounded py-2 transition-colors">
-                          <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">Revisions Included Per Project</div>
-                          <div className="col-span-1 text-center text-xs font-semibold text-gray-700 font-space">0</div>
-                          <div className="col-span-1 text-center text-xs font-semibold text-purple-700 font-space">1</div>
-                          <div className="col-span-1 text-center text-xs font-semibold text-emerald-700 font-space">3</div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="pt-4 pb-2 border-t border-slate-100">
-                      <h4 className="text-xs font-bold text-purple-700 bg-purple-50 px-3 py-1.5 rounded-lg inline-block mb-3">
-                        Content Optimization
-                      </h4>
-                      
-                      <div className="space-y-3">
-                        <div className="grid grid-cols-4 items-center hover:bg-slate-50 rounded py-2 transition-colors">
-                          <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">Social Media Optimized Content</div>
-                          <div className="col-span-1 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
-                          <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-purple-600" /></div>
-                          <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-emerald-600" /></div>
-                        </div>
-                        <div className="grid grid-cols-4 items-center hover:bg-slate-50 rounded py-2 transition-colors">
-                          <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">SEO-Optimized Content</div>
-                          <div className="col-span-1 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
-                          <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-purple-600" /></div>
-                          <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-emerald-600" /></div>
-                        </div>
-                        <div className="grid grid-cols-4 items-center hover:bg-slate-50 rounded py-2 transition-colors">
-                          <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">Geo-Targeted Content</div>
-                          <div className="col-span-1 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
-                          <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-purple-600" /></div>
-                          <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-emerald-600" /></div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="pt-4 pb-2 border-t border-slate-100">
-                      <h4 className="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-lg inline-block mb-3">
-                        Premium Features
-                      </h4>
-                      
-                      <div className="space-y-3">
-                        <div className="grid grid-cols-4 items-center hover:bg-slate-50 rounded py-2 transition-colors">
-                          <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">Marketing Channel Optimization</div>
-                          <div className="col-span-1 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
-                          <div className="col-span-1 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
-                          <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-emerald-600" /></div>
-                        </div>
-                        <div className="grid grid-cols-4 items-center hover:bg-slate-50 rounded py-2 transition-colors">
-                          <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">7-Day Money-Back Guarantee</div>
-                          <div className="col-span-1 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
-                          <div className="col-span-1 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
-                          <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-emerald-600" /></div>
-                        </div>
-                        <div className="grid grid-cols-4 items-center hover:bg-slate-50 rounded py-2 transition-colors">
-                          <div className="col-span-1 text-xs font-medium text-gray-700 font-inter">Performance Insights Dashboard</div>
-                          <div className="col-span-1 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
-                          <div className="col-span-1 text-center"><X className="h-4 w-4 mx-auto text-gray-400" /></div>
-                          <div className="col-span-1 text-center"><Check className="h-4 w-4 mx-auto text-emerald-600" /></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </ScrollArea>
-              </DialogContent>
-            </Dialog>
-          </div>
         </div>
       ) : (
         <div className="flex flex-col items-center">
@@ -741,16 +602,19 @@ export const PricingContainer = () => {
                   </button>
                 </DialogTrigger>
 
-                <DialogContent className="p-0 w-[90vw] max-w-[800px] rounded-xl border-slate-200 shadow-xl top-[15%] translate-y-0 touch-action-pan-y overscroll-behavior-none" style={{ touchAction: 'pan-y', overscrollBehavior: 'none' }}>
+                <DialogContent className="p-0 w-[90vw] max-w-[800px] rounded-xl border border-slate-200 shadow-xl bg-white overflow-hidden" data-desktop-dialog>
+                  <DialogTitle className="sr-only">Feature Comparison</DialogTitle>
                   <div className="flex items-center justify-between p-4 border-b border-slate-200 sticky top-0 bg-white z-10">
                     <h3 className="text-lg font-bold text-brand-purple-dark font-jakarta">Feature Comparison</h3>
-                    <DialogClose className="p-1 rounded-full hover:bg-slate-100 focus:outline-none">
-                      <X className="h-5 w-5 text-gray-500" />
+                    <DialogClose asChild>
+                      <button className="p-2 rounded-full hover:bg-slate-100 focus:outline-none active:bg-slate-200 touch-action-manipulation" style={{ touchAction: 'manipulation' }}>
+                        <X className="h-5 w-5 text-gray-500" />
+                      </button>
                     </DialogClose>
                   </div>
                   
-                  <ScrollArea className="h-[70vh] rounded-b-xl touch-action-pan-y overscroll-behavior-none" style={{ touchAction: 'pan-y', overscrollBehavior: 'none' }}>
-                    <div className="px-4 pb-6 touch-action-pan-y" style={{ touchAction: 'pan-y' }}>
+                  <ScrollArea className="max-h-[70vh] rounded-b-xl">
+                    <div className="px-4 pb-6">
                       <div className="grid grid-cols-4 border-b border-slate-200 py-3 sticky top-0 bg-white z-10">
                         <div className="col-span-1 text-sm font-bold text-gray-800 font-jakarta">Feature</div>
                         <div className="col-span-1 text-center text-xs font-bold text-blue-700 font-space">Basic</div>

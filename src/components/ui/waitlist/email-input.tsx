@@ -29,10 +29,10 @@ export const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
       setIsValid(email.length > 0 && emailRegex.test(email));
     }, [email]);
     
-    // Improve mobile input experience
+    // Simplified input experience to avoid jittering
     useEffect(() => {
       if (isMobile && internalRef.current) {
-        // Configure input for better mobile experience
+        // Configure input for better mobile experience without causing jittering
         const inputElement = internalRef.current;
         
         // Set mobile-friendly input attributes
@@ -41,74 +41,6 @@ export const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
         inputElement.setAttribute("spellcheck", "false");
         inputElement.setAttribute("autocomplete", "email");
         inputElement.setAttribute("autocapitalize", "off");
-        
-        // Special handling to ensure keyboard appears on iOS
-        setTimeout(() => {
-          if (internalRef.current) {
-            internalRef.current.focus();
-            
-            // Force input to be active and selectable
-            internalRef.current.readOnly = false;
-            
-            // Special handling for iOS
-            if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-              // Create and dispatch events that help trigger the keyboard
-              try {
-                // Simulate touch and click events
-                internalRef.current.click();
-                internalRef.current.dispatchEvent(new MouseEvent('mousedown'));
-                internalRef.current.dispatchEvent(new MouseEvent('mouseup'));
-                internalRef.current.dispatchEvent(new MouseEvent('click'));
-                
-                // Try to focus again after a delay
-                setTimeout(() => {
-                  if (internalRef.current) {
-                    internalRef.current.focus();
-                    internalRef.current.click();
-                  }
-                }, 300);
-                
-                // One more attempt with longer delay
-                setTimeout(() => {
-                  if (internalRef.current) {
-                    internalRef.current.focus();
-                    internalRef.current.click();
-                    
-                    // Dispatch blur and focus to reset any stuck states
-                    internalRef.current.dispatchEvent(new FocusEvent('blur'));
-                    internalRef.current.dispatchEvent(new FocusEvent('focus'));
-                  }
-                }, 600);
-              } catch (err) {
-                console.error("Error forcing focus on iOS:", err);
-              }
-            }
-          }
-        }, 100);
-      }
-    }, [isMobile]);
-
-    // Special useEffect to force keyboard on initial render
-    useEffect(() => {
-      // Handle the initial keyboard display
-      if (isMobile) {
-        // Force element to be ready for input immediately
-        const showKeyboard = () => {
-          if (internalRef.current) {
-            // Make sure the input is fully interactive
-            internalRef.current.readOnly = false;
-            internalRef.current.focus();
-            // Set selection range to help trigger keyboard
-            if (internalRef.current.value) {
-              internalRef.current.setSelectionRange(0, internalRef.current.value.length);
-            }
-          }
-        };
-        
-        // Try multiple times with increasing delays
-        showKeyboard();
-        setTimeout(showKeyboard, 250);
-        setTimeout(showKeyboard, 500);
       }
     }, [isMobile]);
 
@@ -161,7 +93,8 @@ export const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
             "text-sm sm:text-base font-inter",
             "placeholder:text-gray-400 placeholder:font-inter",
             "bg-white transition-all duration-200",
-            "rounded-none"
+            "rounded-none",
+            "z-[10010]" // Ensure input is top layer
           )} 
           value={email} 
           onChange={e => setEmail(e.target.value)} 

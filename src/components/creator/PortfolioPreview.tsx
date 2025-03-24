@@ -59,8 +59,8 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
                     target.src = '/placeholder.svg';
                   }}
                 />
-                {/* Glass morphism hover overlay */}
-                <div className="absolute inset-0 bg-black/40 backdrop-blur-[3px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+                {/* Simple hover overlay without blur */}
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
                   <div className="p-1.5 bg-white/20 rounded-full">
                     <ExternalLink className="w-3.5 h-3.5 text-white" />
                   </div>
@@ -91,9 +91,9 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
                     target.src = '/placeholder.svg';
                   }}
                 />
-                {/* Enhanced glass morphism hover overlay */}
-                <div className="absolute inset-0 bg-black/40 backdrop-blur-[6px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                  <div className="p-1.5 bg-white/20 rounded-full backdrop-blur-sm">
+                {/* Simple hover overlay without blur */}
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                  <div className="p-1.5 bg-white/20 rounded-full">
                     <ExternalLink className="w-3.5 h-3.5 text-white" />
                   </div>
                 </div>

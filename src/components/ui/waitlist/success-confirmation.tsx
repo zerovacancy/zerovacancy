@@ -92,19 +92,9 @@ export function SuccessConfirmation({
 }: SuccessConfirmationProps) {
   const isMobile = useIsMobile()
   
-  // Force open state to be maintained on mobile
+  // Simplified, without multiple timers to prevent jittering
   React.useEffect(() => {
-    if (open && isMobile) {
-      // Set a series of timers to ensure the dialog stays open
-      const timers = [
-        setTimeout(() => onOpenChange(true), 200),
-        setTimeout(() => onOpenChange(true), 500),
-        setTimeout(() => onOpenChange(true), 1000),
-        setTimeout(() => onOpenChange(true), 2000)
-      ];
-      
-      return () => timers.forEach(timer => clearTimeout(timer));
-    }
+    // No-op effect to avoid jittering
   }, [open, isMobile, onOpenChange]);
 
   // Auto-close dialog after delay and fire confetti
@@ -194,6 +184,7 @@ export function SuccessConfirmation({
         onOpenChange={onOpenChange}
       >
         <DialogContent
+          data-mobile-dialog
           className={cn(
             "sm:max-w-[425px] rounded-2xl p-0 gap-0 text-center",
             "border-0 shadow-[0_0_20px_rgba(139,92,246,0.3)]",
