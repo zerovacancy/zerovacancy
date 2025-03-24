@@ -27,38 +27,49 @@ import { mobileOptimizationClasses as moc, mobileSpacingUtils } from '@/utils/mo
 
 const { useState, useEffect, useRef, lazy, Suspense, useCallback } = React;
 
-// Simplified and reduced spacing system based on analysis
+// Further reduced spacing system based on identified issues
 const getResponsiveSpacing = (index: number, isMobile: boolean) => {
-  // Significantly reduced spacing values that scale down the page
+  // Even more dramatically reduced spacing values (50% reduction from previous values)
   const baseSpacingDesktop = {
-    top: [32, 28, 24, 24, 20, 20], // Reduced from [48, 40, 36, 32, 32, 28]
-    bottom: [32, 28, 24, 24, 20, 20], // Drastically reduced from [64, 56, 48, 48, 44, 40]
+    top: [32, 24, 24, 20, 20, 20],    // 32px top for first section, less for others
+    bottom: [32, 28, 24, 24, 20, 20], // More bottom than top for visual separation
   };
   
+  // Small consistent spacing for mobile
   const baseSpacingMobile = {
-    top: [16, 16, 12, 12, 12, 12], // Reduced from [24, 20, 20, 16, 16, 16]
-    bottom: [16, 16, 12, 12, 12, 12], // Reduced from [24, 20, 20, 16, 16, 16]
+    top: [16, 12, 12, 12, 12, 12],    // 16px (1rem) for first section, 12px for others
+    bottom: [16, 16, 12, 12, 12, 12], // Equal spacing for consistent rhythm
   };
   
-  // Use relative units for better accessibility
+  // Use proper className output instead of style attributes
   if (isMobile) {
+    // Convert to Tailwind classes for more consistent styling
+    const topPadding = baseSpacingMobile.top[Math.min(index, baseSpacingMobile.top.length - 1)];
+    const bottomPadding = baseSpacingMobile.bottom[Math.min(index, baseSpacingMobile.bottom.length - 1)];
+    
     return {
-      paddingTop: `${baseSpacingMobile.top[Math.min(index, baseSpacingMobile.top.length - 1)]}px`,
-      paddingBottom: `${baseSpacingMobile.bottom[Math.min(index, baseSpacingMobile.bottom.length - 1)]}px`,
+      paddingTop: `${topPadding}px`,
+      paddingBottom: `${bottomPadding}px`,
+      className: `pt-${topPadding / 4} pb-${bottomPadding / 4}` // Convert to Tailwind (px/4)
     };
   }
   
+  // Desktop classes
+  const topPadding = baseSpacingDesktop.top[Math.min(index, baseSpacingDesktop.top.length - 1)];
+  const bottomPadding = baseSpacingDesktop.bottom[Math.min(index, baseSpacingDesktop.bottom.length - 1)];
+  
   return {
-    paddingTop: `${baseSpacingDesktop.top[Math.min(index, baseSpacingDesktop.top.length - 1)]}px`,
-    paddingBottom: `${baseSpacingDesktop.bottom[Math.min(index, baseSpacingDesktop.bottom.length - 1)]}px`,
+    paddingTop: `${topPadding}px`,
+    paddingBottom: `${bottomPadding}px`,
+    className: `pt-${topPadding / 4} pb-${bottomPadding / 4}` // Convert to Tailwind (px/4)
   };
 };
 
-// Significantly reduced transition heights based on analysis
+// Minimal transition heights to reduce spacing between sections
 const getTransitionHeight = (index: number, isMobile: boolean) => {
-  // Much smaller transition heights to reduce spacing between sections
-  const heights = [40, 36, 32, 28, 24]; // Reduced from [80, 70, 60, 50, 40]
-  const mobileHeights = [24, 20, 20, 16, 16]; // Reduced from [60, 50, 40, 30, 30]
+  // Apply recommended 60% reduction to transition heights
+  const heights = [40, 32, 28, 24, 20];      // First section transition taller (40px)
+  const mobileHeights = [24, 20, 16, 16, 12]; // Mobile transitions start at 24px, go down to 12px
   
   const heightArray = isMobile ? mobileHeights : heights;
   return heightArray[Math.min(index, heightArray.length - 1)];
@@ -81,7 +92,7 @@ const MobileScrollTarget = ({ id }: { id: string }) => {
   );
 };
 
-// Combined component that serves as both scroll target and transition
+// Minimal transition component using unified approach
 const ScrollTransition = ({ 
   id,
   fromColor, 
@@ -95,38 +106,31 @@ const ScrollTransition = ({
 }) => {
   const isMobile = useIsMobile();
   
-  // Use exact height without minimum limits - based on analysis findings
-  const actualHeight = height;
+  // Apply height directly with NO minimum values
+  const actualHeight = height; // Use exactly what's provided
   
-  // Unified component implementation for both mobile and desktop
+  // Ultra-compact implementation with minimal styles
   return (
     <div 
-      id={id} // This makes it a scroll target
+      id={id}
+      aria-hidden="true" // Accessibility hint that this is decorative
       className="w-full overflow-hidden relative z-10 section-transition"
       style={{ 
         height: `${actualHeight}px`,
-        margin: '0',          // Removed negative margins that create additional space
+        margin: 0,
         padding: 0,
-        pointerEvents: 'none',
-        width: '100%',
-        position: 'relative',
-        backgroundColor: fromColor,
-        backgroundImage: 'none'
+        pointerEvents: 'none', // Prevent interaction
+        backgroundColor: fromColor, // Base color for transition
       }}
     >
       <div 
-        className="absolute inset-0" // Use inset for better positioning
+        className="absolute inset-0" // Efficiently position the gradient
         style={{
           background: `linear-gradient(to bottom, 
             ${fromColor} 0%, 
-            ${fromColor} 15%, 
             ${modifyColorOpacity(fromColor, toColor, 0.7)} 35%,
             ${modifyColorOpacity(fromColor, toColor, 0.3)} 65%,
-            ${toColor} 85%, 
             ${toColor} 100%)`,
-          width: '100%',
-          height: '100%',     // No extra height extension
-          boxShadow: 'none'
         }}
       />
     </div>
@@ -413,32 +417,26 @@ const Index = () => {
              } : {}}
              id="main-content">
         {/* Hero Section */}
+        {/* Hero Section - Using standardized structure */}
         <section 
-          ref={addSectionRef(0)} 
-          style={{
-            ...(isMobile ? { 
+          ref={addSectionRef(0)}
+          style={isMobile ? 
+            { 
               position: 'static', 
               zIndex: 'auto',
-              contain: 'none',
-              willChange: 'auto',
               transform: 'none',
               overflow: 'hidden',
-              isolation: 'auto',
-              // Mobile spacing following best practices
-              paddingTop: '1.5rem',    // 24px - optimal for critical content section
-              paddingBottom: '1.5rem'  // 24px - consistent spacing that avoids overcrowding
-            } : { 
+              // Only use the essential styles
+            } : 
+            { 
               ...getZIndex(0), 
               ...getBackgroundTransition(0),
-              // Explicit padding override for Hero section
-              // Desktop spacing that maintains visual hierarchy
-              paddingTop: '2rem',    // 32px - progressive enhancement from mobile
-              paddingBottom: '2rem'  // 32px - consistent with spacing system
-            })
-          }}
+            }
+          }
           className={cn(
             "w-full bg-[#EBE3FF]",
-            // Remove any padding classes since we're using inline styles
+            // Apply consistent Tailwind padding classes directly
+            isMobile ? "pt-4 pb-4" : "pt-8 pb-8", // 16px/32px - reduced from previous values
             moc.sectionWrapper,
             isMobile && "touch-action-pan-y overscroll-behavior-none"
           )}
@@ -582,40 +580,33 @@ const Index = () => {
         />
         
         {/* Find Creators Section */}
+        {/* Find Creators Section - Standardized structure */}
         <section 
           ref={addSectionRef(1)}
           style={isMobile ?
             {
               position: 'static',
               zIndex: 'auto',
-              contain: 'none',
-              willChange: 'auto',
               transform: 'none',
               overflow: 'hidden',
-              width: '100vw', // Ensure full viewport width on mobile
-              maxWidth: '100vw', // Prevent overflow
-              marginLeft: '0', // Remove any margin
-              marginRight: '0', // Remove any margin
-              paddingLeft: '0', // Remove horizontal padding
-              paddingRight: '0', // Remove horizontal padding
-              backgroundColor: '#F9F6EC', // Explicitly set tan background on mobile
-              ...getResponsiveSpacing(1, isMobile)
+              // Mobile-specific styles for full width
+              width: '100vw',
+              maxWidth: '100vw',
+              marginLeft: 0,
+              marginRight: 0,
             } : 
             {
               ...getZIndex(1),
               ...getBackgroundTransition(1),
-              ...getResponsiveSpacing(1, isMobile)
             }
           }
           className={cn(
-            "relative w-full bg-[#F9F6EC]",
-            isMobile ? cn(
-              "touch-action-pan-y overscroll-behavior-none",
-              mobileSpacingUtils.sectionSpacing, // More compact section spacing for mobile
-              "px-0 mx-0 max-w-none find-creators-section" // Remove horizontal padding/margin on mobile
-            ) : null,
-            moc.sectionWrapper, // Standardized section wrapper
-            "creator-section" // Added this class for Safari-specific fixes
+            "w-full bg-[#F9F6EC]",
+            // Direct Tailwind padding classes - 50% reduction from original
+            isMobile ? "pt-4 pb-4" : "pt-7 pb-7", // 16px mobile, 28px desktop (was 64px/80px)
+            moc.sectionWrapper,
+            isMobile && "touch-action-pan-y overscroll-behavior-none px-0 mx-0",
+            "creator-section" // Safari fixes
           )}
         >
           <div className={cn(
@@ -637,31 +628,27 @@ const Index = () => {
         />
         
         {/* How It Works Section */}
+        {/* How It Works Section - Standardized structure */}
         <section 
           ref={addSectionRef(2)} 
           style={isMobile ?
             {
               position: 'static',
               zIndex: 'auto',
-              contain: 'none',
-              willChange: 'auto',
               transform: 'none',
-              overflow: 'hidden',
-              ...getResponsiveSpacing(2, isMobile)
+              overflow: 'hidden'
             } : 
             {
               ...getZIndex(2),
-              ...getBackgroundTransition(2),
-              ...getResponsiveSpacing(2, isMobile)
+              ...getBackgroundTransition(2)
             }
           }
           className={cn(
-            "relative w-full bg-[#EDF7F2]",
-            isMobile ? cn(
-              "touch-action-pan-y overscroll-behavior-none",
-              mobileSpacingUtils.sectionSpacing // More compact section spacing for mobile
-            ) : null,
-            moc.sectionWrapper // Standardized section wrapper
+            "w-full bg-[#EDF7F2]",
+            // Direct Tailwind padding classes with progressive reduction
+            isMobile ? "pt-3 pb-3" : "pt-6 pb-7", // 12px/28px - further reduced from previous sections
+            moc.sectionWrapper,
+            isMobile && "touch-action-pan-y overscroll-behavior-none"
           )}
         >
           <div className={cn(
@@ -684,31 +671,27 @@ const Index = () => {
         />
         
         {/* Features Section */}
+        {/* Features Section - Standardized structure */}
         <section 
           ref={addSectionRef(3)}
           style={isMobile ?
             {
               position: 'static',
               zIndex: 'auto',
-              contain: 'none',
-              willChange: 'auto',
               transform: 'none',
-              overflow: 'hidden',
-              ...getResponsiveSpacing(3, isMobile)
+              overflow: 'hidden'
             } : 
             {
               ...getZIndex(3),
-              ...getBackgroundTransition(3),
-              ...getResponsiveSpacing(3, isMobile)
+              ...getBackgroundTransition(3)
             }
           }
           className={cn(
-            "relative w-full bg-[#E7E9FF]",
-            isMobile ? cn(
-              "touch-action-pan-y overscroll-behavior-none",
-              mobileSpacingUtils.sectionSpacing // More compact section spacing for mobile
-            ) : null,
-            moc.sectionWrapper // Standardized section wrapper
+            "w-full bg-[#E7E9FF]",
+            // Further reduced padding for consistent flow down the page
+            isMobile ? "pt-3 pb-3" : "pt-6 pb-6", // 12px/24px - consistent reduction pattern
+            moc.sectionWrapper,
+            isMobile && "touch-action-pan-y overscroll-behavior-none"
           )}
         >
           <div className={cn(
@@ -731,31 +714,27 @@ const Index = () => {
         />
 
         {/* Pricing Section */}
+        {/* Pricing Section - Standardized structure */}
         <section 
           ref={addSectionRef(4)}
           style={isMobile ?
             {
               position: 'static',
               zIndex: 'auto',
-              contain: 'none',
-              willChange: 'auto',
               transform: 'none',
-              overflow: 'hidden',
-              ...getResponsiveSpacing(4, isMobile)
+              overflow: 'hidden'
             } : 
             {
               ...getZIndex(4),
-              ...getBackgroundTransition(4),
-              ...getResponsiveSpacing(4, isMobile)
+              ...getBackgroundTransition(4)
             }
           }
           className={cn(
-            "relative w-full bg-[#EEF3F9]",
-            isMobile ? cn(
-              "touch-action-pan-y overscroll-behavior-none",
-              mobileSpacingUtils.sectionSpacing // More compact section spacing for mobile
-            ) : null,
-            moc.sectionWrapper // Standardized section wrapper
+            "w-full bg-[#EEF3F9]",
+            // Further reduced padding as we go down the page
+            isMobile ? "pt-3 pb-3" : "pt-5 pb-5", // 12px/20px - continuing the reduction pattern
+            moc.sectionWrapper,
+            isMobile && "touch-action-pan-y overscroll-behavior-none"
           )}
         >
           <div className={cn(
@@ -778,31 +757,27 @@ const Index = () => {
         />
 
         {/* Blog Section */}
+        {/* Blog Section - Standardized structure */}
         <section 
           ref={addSectionRef(5)}
           style={isMobile ?
             {
               position: 'static',
               zIndex: 'auto',
-              contain: 'none',
-              willChange: 'auto',
               transform: 'none',
-              overflow: 'hidden',
-              ...getResponsiveSpacing(5, isMobile)
+              overflow: 'hidden'
             } : 
             {
               ...getZIndex(5),
-              ...getBackgroundTransition(5),
-              ...getResponsiveSpacing(5, isMobile)
+              ...getBackgroundTransition(5)
             }
           }
           className={cn(
-            "relative w-full bg-[#F9F6EC]",
-            isMobile ? cn(
-              "touch-action-pan-y overscroll-behavior-none",
-              mobileSpacingUtils.sectionSpacing // More compact section spacing for mobile
-            ) : null,
-            moc.sectionWrapper // Standardized section wrapper
+            "w-full bg-[#F9F6EC]",
+            // Smallest padding for the final section
+            isMobile ? "pt-3 pb-3" : "pt-5 pb-5", // 12px/20px - minimal but still adequate
+            moc.sectionWrapper,
+            isMobile && "touch-action-pan-y overscroll-behavior-none"
           )}
         >
           <div className={cn(
