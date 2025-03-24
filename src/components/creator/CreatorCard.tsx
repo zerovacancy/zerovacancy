@@ -167,346 +167,342 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
   return (
     <>
       {isMobile ? (
-          <div className="relative w-full h-full">
-            {/* Main container without border - to be replaced with custom border implementation */}
-            <Card className={cn(
-              "overflow-hidden flex flex-col w-full h-full",
-              "bg-white", // Pure white background for better contrast with border
-              "border-0", // Remove default border - we'll use custom border below
-              "shadow-[0_2px_8px_rgba(0,0,0,0.08),_0_4px_12px_rgba(118,51,220,0.06)]", // Enhanced shadow for depth
-              "hover:scale-[1.01]", // Subtle scale transform on hover
-              "rounded-xl relative transition-all duration-300",
-              "transform-gpu", // Hardware acceleration for mobile
-              "will-change-transform" // Performance optimization
-            )}>
+        <div className="relative w-full h-full">
+          {/* Main container without border - to be replaced with custom border implementation */}
+          <Card className={cn(
+            "overflow-hidden flex flex-col w-full h-full",
+            "bg-white", // Pure white background for better contrast with border
+            "border-0", // Remove default border - we'll use custom border below
+            "shadow-[0_2px_8px_rgba(0,0,0,0.08),_0_4px_12px_rgba(0,0,0,0.06)]", // Neutral shadow without purple tint
+            "hover:scale-[1.01]", // Subtle scale transform on hover
+            "rounded-xl relative transition-all duration-300",
+            "transform-gpu", // Hardware acceleration for mobile
+            "will-change-transform" // Performance optimization
+          )}>
+            
+            {/* Custom border container - wraps the entire card including the button */}
+            <div className="absolute inset-0 rounded-[14px] pointer-events-none" 
+                 style={{
+                   borderWidth: '2px',
+                   borderStyle: 'solid',
+                   borderColor: 'rgba(204, 204, 204, 0.6)', // Light gray border instead of purple
+                   // Layered shadows for depth using standard format:
+                   boxShadow: '0 2px 6px rgba(0, 0, 0, 0.06), 0 6px 16px rgba(0, 0, 0, 0.03), inset 0 1px 0 rgba(255, 255, 255, 1)',
+                   zIndex: 10
+                 }}
+            ></div>
+            
+            {/* Media section with properly positioned price tag */}
+            <div className="relative">
+              {/* Fixed aspect ratio for all cards with 3D styling */}
+              <div className="aspect-[4/3] relative w-full overflow-hidden flex-shrink-0 rounded-t-md group-hover:scale-[1.01] transition-transform duration-300">
+                {/* Image container with shadow and subtle border */}
+                <div className="absolute inset-0 w-full h-full 
+                  shadow-[0_1px_3px_rgba(0,0,0,0.05),_0_4px_6px_rgba(0,0,0,0.05),_0_10px_20px_rgba(0,0,0,0.04)] 
+                  group-hover:shadow-[0_2px_4px_rgba(0,0,0,0.05),_0_6px_10px_rgba(0,0,0,0.05),_0_12px_24px_rgba(0,0,0,0.06)]
+                  border border-[rgba(118,51,220,0.15)]
+                  transition-shadow duration-300
+                  z-10">
+                </div>
+                <CreatorMedia 
+                  creator={creator}
+                  onImageLoad={onImageLoad}
+                  onVideoLoad={() => onImageLoad?.(creator.image)}
+                />
+              </div>
               
-              {/* Custom border container - wraps the entire card including the button */}
-              <div className="absolute inset-0 rounded-[14px] pointer-events-none" 
-                   style={{
-                     borderWidth: '2px',
-                     borderStyle: 'solid',
-                     borderColor: 'rgba(118, 51, 220, 0.35)', // Deeper, more distinctive purple border
-                     // Layered shadows for depth using standard format:
-                     boxShadow: '0 2px 6px rgba(118, 51, 220, 0.09), 0 6px 16px rgba(118, 51, 220, 0.06), inset 0 1px 0 rgba(255, 255, 255, 1)',
-                     zIndex: 10
-                   }}
-              ></div>
-              
-              {/* Media section with properly positioned price tag */}
-              <div className="relative">
-                {/* Fixed aspect ratio for all cards with 3D styling */}
-                <div className="aspect-[4/3] relative w-full overflow-hidden flex-shrink-0 rounded-t-md group-hover:scale-[1.01] transition-transform duration-300">
-                  {/* Image container with shadow and subtle border */}
-                  <div className="absolute inset-0 w-full h-full 
-                    shadow-[0_1px_3px_rgba(0,0,0,0.05),_0_4px_6px_rgba(0,0,0,0.05),_0_10px_20px_rgba(0,0,0,0.04)] 
-                    group-hover:shadow-[0_2px_4px_rgba(0,0,0,0.05),_0_6px_10px_rgba(0,0,0,0.05),_0_12px_24px_rgba(0,0,0,0.06)]
-                    border border-[rgba(118,51,220,0.15)]
-                    transition-shadow duration-300
-                    z-10">
-                  </div>
-                  <CreatorMedia 
-                    creator={creator}
-                    onImageLoad={onImageLoad}
-                    onVideoLoad={() => onImageLoad?.(creator.image)}
-                  />
+              {/* Price tag - repositioned for better visibility */}
+              <div className="absolute top-3 right-3 z-20">
+                <span className="px-2.5 py-1 text-xs font-semibold bg-purple-50 shadow-sm border border-purple-200/70 text-purple-800 rounded-full transition-all duration-200 group-hover:bg-purple-100">
+                  ${creator.price}/session
+                </span>
+              </div>
+            </div>
+
+            {/* Content sections with proper organization */}
+            <div className="w-full px-4 pt-3 pb-6 flex flex-col relative z-10 flex-grow flex-shrink-0">
+              {/* Creator info section */}
+              <div className="pb-3 mb-3 border-b border-purple-200/30">
+                {/* Creator name and location with proper styling */}
+                <div className="flex justify-between items-center mb-2.5">
+                  <h3 className="text-base leading-tight font-semibold text-gray-800">{creator.name}</h3>
+                  <p className="text-gray-500 text-xs flex items-center">
+                    <svg className="w-3.5 h-3.5 mr-1 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                      <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                    {creator.location}
+                  </p>
                 </div>
                 
-                {/* Price tag - repositioned for better visibility */}
-                <div className="absolute top-3 right-3 z-20">
-                  <span className="px-2.5 py-1 text-xs font-semibold bg-purple-50 shadow-sm border border-purple-200/70 text-purple-800 rounded-full transition-all duration-200 group-hover:bg-purple-100">
-                    ${creator.price}/session
-                  </span>
-                </div>
-              </div>
-
-              {/* Content sections with proper organization */}
-              <div className="w-full px-4 pt-3 pb-6 flex flex-col relative z-10 flex-grow flex-shrink-0">
-                {/* Creator info section */}
-                <div className="pb-3 mb-3 border-b border-purple-200/30">
-                  {/* Creator name and location with proper styling */}
-                  <div className="flex justify-between items-center mb-2.5">
-                    <h3 className="text-base leading-tight font-semibold text-gray-800">{creator.name}</h3>
-                    <p className="text-gray-500 text-xs flex items-center">
-                      <svg className="w-3.5 h-3.5 mr-1 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                        <circle cx="12" cy="10" r="3"></circle>
-                      </svg>
-                      {creator.location}
-                    </p>
-                  </div>
-                  
-                  {/* Ratings and availability grouped together */}
-                  <div className="flex justify-between items-center mb-3 py-2 px-3 bg-gray-50/70 rounded-lg border border-gray-100 shadow-sm">
-                    <div className="flex items-center">
-                      <Star className="w-4 h-4 text-yellow-400 fill-yellow-400 mr-1.5" />
-                      <span className="text-sm font-semibold font-space text-gray-700">{creator.rating.toFixed(1)}</span>
-                      {creator.reviews > 0 && (
-                        <span className="text-xs text-gray-500 ml-1.5 font-inter">
-                          ({creator.reviews})
-                        </span>
-                      )}
-                    </div>
-                    
-                    {/* Availability indicator with improved styling */}
-                    {creator.availabilityStatus && (
-                      <div className="flex items-center py-1 px-2.5 rounded-full text-xs font-medium bg-white/80 shadow-sm border border-gray-100/90">
-                        {creator.availabilityStatus === 'available-now' && (
-                          <span className="flex items-center text-emerald-700">
-                            <div className="w-2 h-2 rounded-full bg-emerald-500 mr-1.5 animate-pulse shadow-[0_0_4px_rgba(16,185,129,0.6)]"></div>
-                            Available Now
-                          </span>
-                        )}
-                        {creator.availabilityStatus === 'available-tomorrow' && (
-                          <span className="flex items-center text-amber-700">
-                            <Clock className="w-3.5 h-3.5 mr-1.5 text-amber-500" />
-                            Available Soon
-                          </span>
-                        )}
-                        {creator.availabilityStatus === 'premium-only' && (
-                          <span className="flex items-center text-purple-700">
-                            <Crown className="w-3.5 h-3.5 mr-1.5 text-purple-500" />
-                            Premium Only
-                          </span>
-                        )}
-                      </div>
+                {/* Ratings and availability grouped together */}
+                <div className="flex justify-between items-center mb-3 py-2 px-3 bg-gray-50/70 rounded-lg border border-gray-100 shadow-sm">
+                  <div className="flex items-center">
+                    <Star className="w-4 h-4 text-yellow-400 fill-yellow-400 mr-1.5" />
+                    <span className="text-sm font-semibold font-space text-gray-700">{creator.rating.toFixed(1)}</span>
+                    {creator.reviews > 0 && (
+                      <span className="text-xs text-gray-500 ml-1.5 font-inter">
+                        ({creator.reviews})
+                      </span>
                     )}
                   </div>
                   
-                  {/* Services with organized tag styling - optimized for mobile */}
-                  <div className="flex flex-wrap gap-x-1 gap-y-1 mt-2 px-2 py-1.5 bg-white/80 rounded-lg border border-purple-100/50 shadow-inner shadow-white/50 max-w-full">
-                    {creator.services.map((service, index) => {
-                      // Force specific line wrapping for Emily Johnson on mobile
-                      const forceWrap = isMobile && 
-                                      creator.name === "Emily Johnson" && 
-                                      (index === 2 || index === creator.services.length - 1);
-                      
-                      const isPlatform = service.includes('TikTok') || service.includes('Instagram') || service.includes('YouTube');
-                      const isHashtag = service.startsWith('#');
-                      const isVisualStyle = service.includes('Tour') || service.includes('POV') || service.includes('Photo') || service.includes('Video');
-                      const isSpecialty = service.includes('Staging') || service.includes('Design') || service.includes('Plan');
-                      
-                      let bgColor = "bg-purple-100/80 border-purple-200/70 text-purple-800";
-                      if (isPlatform) bgColor = "bg-purple-100/80 border-purple-200/70 text-purple-700"; // Changed from blue to purple
-                      if (isHashtag) bgColor = "bg-indigo-100/80 border-indigo-200/70 text-indigo-700";
-                      if (isVisualStyle) bgColor = "bg-violet-100/80 border-violet-200/70 text-violet-700";
-                      if (isSpecialty) bgColor = "bg-teal-100/80 border-teal-200/70 text-teal-700";
-                      
-                      // Only show the first 3 services to save more space on mobile
-                      if (index < 3) {
-                        return (
-                          <span 
-                            key={index} 
-                            className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs border whitespace-nowrap touch-manipulation shadow-sm max-w-[110px] ${bgColor} ${forceWrap ? 'w-auto flex-shrink-0' : ''}`}
-                          >
-                            <span className="truncate">{service}</span>
-                          </span>
-                        );
-                      } else if (index === 3) {
-                        return (
-                          <span 
-                            key={index} 
-                            className="inline-flex items-center px-2 py-0.5 rounded-full text-xs text-gray-600 border border-gray-200 bg-white/90 shadow-sm"
-                          >
-                            +{creator.services.length - 3} more
-                          </span>
-                        );
-                      }
-                      return null;
-                    })}
-                  </div>
-                </div>
-                
-                {/* Recent Work section with proper header */}
-                <div className="mb-3">
-                  {/* Section header with enhanced styling */}
-                  <div className="mb-3 flex justify-between items-center">
-                    <div className="flex items-center">
-                      <div className="w-1 h-4 bg-gradient-to-b from-indigo-500 to-purple-500 rounded-full mr-2 shadow-sm"></div>
-                      <div className="text-xs text-gray-800 font-semibold font-space uppercase tracking-wide">Recent Work</div>
+                  {/* Availability indicator with improved styling */}
+                  {creator.availabilityStatus && (
+                    <div className="flex items-center py-1 px-2.5 rounded-full text-xs font-medium bg-white/80 shadow-sm border border-gray-100/90">
+                      {creator.availabilityStatus === 'available-now' && (
+                        <span className="flex items-center text-emerald-700">
+                          <div className="w-2 h-2 rounded-full bg-emerald-500 mr-1.5 animate-pulse shadow-[0_0_4px_rgba(16,185,129,0.6)]"></div>
+                          Available Now
+                        </span>
+                      )}
+                      {creator.availabilityStatus === 'available-tomorrow' && (
+                        <span className="flex items-center text-amber-700">
+                          <Clock className="w-3.5 h-3.5 mr-1.5 text-amber-500" />
+                          Available Soon
+                        </span>
+                      )}
+                      {creator.availabilityStatus === 'premium-only' && (
+                        <span className="flex items-center text-purple-700">
+                          <Crown className="w-3.5 h-3.5 mr-1.5 text-purple-500" />
+                          Premium Only
+                        </span>
+                      )}
                     </div>
-                    <button 
-                      className="text-xs text-purple-600 font-medium px-2 py-1 rounded-md bg-purple-50/80 hover:bg-purple-100/80 transition-colors"
-                      onClick={() => onPreviewClick ? onPreviewClick(creator.workExamples[0]) : setSelectedImage(creator.workExamples[0])}
-                    >
-                      View All →
-                    </button>
-                  </div>
-                  
-                  {/* Fixed height portfolio thumbnails - reduced height for mobile */}
-                  <div className="grid grid-cols-3 gap-2">
-                    {creator.workExamples.slice(0, 3).map((example, index) => (
-                      <button 
-                        key={index}
-                        className="relative h-[60px] touch-manipulation rounded-lg overflow-hidden border border-purple-100/80 shadow-sm active:shadow-inner transition-all duration-150 active:scale-95 focus:outline-none focus:ring-2 focus:ring-purple-400/50"
-                        onClick={() => onPreviewClick ? onPreviewClick(example) : setSelectedImage(example)}
-                        aria-label={`View ${index === 0 ? 'interior' : index === 1 ? 'exterior' : 'detail'} image`}
-                      >
-                        <img 
-                          src={example}
-                          alt={`${creator.name}'s work ${index + 1}`}
-                          className="object-cover h-full w-full"
-                        />
-                        {/* Enhanced label overlay with gradient background */}
-                        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-black/5 py-1 text-center">
-                          <span className="text-[10px] text-white font-medium uppercase tracking-wide font-space">
-                            {index === 0 ? 'Interior' : index === 1 ? 'Exterior' : 'Detail'}
-                          </span>
-                        </div>
-                        {/* Tap indicator with glass effect */}
-                        <div className="absolute inset-0 bg-purple-600/10 opacity-0 active:opacity-100 transition-opacity flex items-center justify-center">
-                          <div className="w-7 h-7 rounded-full bg-white/80 shadow-sm flex items-center justify-center">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M15 3H21V9" stroke="#6D28D9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                              <path d="M21 3L9 15" stroke="#6D28D9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                            </svg>
-                          </div>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                
-                {/* Enhanced CTA button with more prominence for mobile */}
-                <div className="mt-3 mb-4">
-                  {/* Success state */}
-                  {showInlineSuccess ? (
-                    <div className="w-full py-4 px-4 font-medium rounded-[12px] text-white relative flex flex-col items-center justify-center animate-fade-in"
-                      style={{
-                        background: 'linear-gradient(180deg, #8A42F5 0%, #7837DB 100%)',
-                        color: 'white',
-                        border: '1px solid rgba(255,255,255,0.2)',
-                        boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(0,0,0,0.05), 0 16px 32px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15)',
-                      }}
-                    >
-                      <div className="h-12 w-12 bg-purple-50/20 rounded-full flex items-center justify-center mb-2">
-                        <CheckCircle className="h-6 w-6 text-white" />
-                      </div>
-                      <h3 className="text-lg font-bold text-white mb-1">
-                        {alreadySubscribed ? "Already Subscribed" : "Success!"}
-                      </h3>
-                      <p className="text-white/90 text-center text-sm max-w-[24rem] mb-1">
-                        {alreadySubscribed 
-                          ? `${submittedEmail} is already on our waitlist.`
-                          : `We've added ${submittedEmail} to our waitlist.`
-                        }
-                      </p>
-                      <p className="text-white/80 text-xs">
-                        We'll notify you as soon as we launch.
-                      </p>
-                    </div>
-                  ) : showInlineForm ? (
-                    /* Form state */
-                    <form 
-                      onSubmit={handleInlineSubmit}
-                      className="w-full relative animate-fade-in"
-                    >
-                      <div className="flex flex-col gap-2 w-full">
-                        <div className="relative">
-                          {/* Email input */}
-                          <input
-                            ref={inputRef}
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            placeholder="Enter your email"
-                            className="w-full h-[48px] px-4 py-3 rounded-t-[12px] rounded-b-none text-gray-800 border border-purple-200/70 border-b-0 focus:outline-none focus:ring-2 focus:ring-purple-400/40"
-                            style={{
-                              fontSize: '16px', // Prevent iOS zoom on focus
-                              backgroundColor: 'white'
-                            }}
-                            disabled={isLoading}
-                            required
-                          />
-                          
-                          {/* Check mark for valid email */}
-                          {isValid && (
-                            <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-500 z-10">
-                              <CheckCircle className="h-5 w-5" />
-                            </div>
-                          )}
-                        </div>
-                        
-                        {/* Submit button */}
-                        <button
-                          type="submit"
-                          disabled={isLoading}
-                          className="w-full h-[48px] bg-gradient-to-b from-purple-600 to-purple-700 text-white font-medium rounded-t-none rounded-b-[12px] flex items-center justify-center transition-all duration-200"
-                        >
-                          {isLoading ? (
-                            <>
-                              <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                              <span>Joining...</span>
-                            </>
-                          ) : (
-                            <>
-                              <ShieldCheck className="w-5 h-5 mr-2" />
-                              <span>JOIN WAITLIST</span>
-                              <ArrowRight className="w-4 h-4 ml-2" />
-                            </>
-                          )}
-                        </button>
-                      </div>
-                    </form>
-                  ) : (
-                    /* Initial button state */
-                    <button 
-                      onClick={handleCTAClick}
-                      aria-label={`Join as creator with ${creator.name}`}
-                      className="w-full flex items-center justify-center rounded-[12px] font-medium font-sans h-[48px] transition-all duration-200 relative hover:scale-[1.02] bg-creator-cta"
-                      style={{
-                        background: 'linear-gradient(180deg, #F5F5F7 0%, #EEEEF2 100%)', // Subtle gradient for depth
-                        color: '#7633DC', // Purple text color
-                        border: '1px solid rgba(118,51,220,0.2)', // Purple-tinted border for emphasis
-                        boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(118,51,220,0.05)', // Enhanced shadow with purple tint
-                        fontSize: '14px',
-                        fontWeight: 600, // Medium weight
-                        paddingLeft: '42px', // Space for icon
-                      }}
-                    >
-                      {/* Icon container */}
-                      <div 
-                        className="absolute left-0 top-1/2 -translate-y-1/2 ml-5 flex items-center justify-center"
-                        style={{
-                          width: '32px',
-                          height: '32px',
-                          background: 'rgba(134,65,245,0.05)', // Slightly stronger purple tint
-                          border: '1px solid rgba(118,51,220,0.15)', // Subtle purple border
-                          borderRadius: '12px',
-                          boxShadow: 'inset 0 1px 0 rgba(255,255,255,1), inset 0 -1px 0 rgba(0,0,0,0.04)'
-                        }}
-                      >
-                        {creator.name === "Emily Johnson" ? (
-                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7633DC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M14.5 10A0.5 0.5 0 1 1 15 9.5A0.5 0.5 0 0 1 14.5 10Z"></path>
-                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                            <path d="M9 3L9 21"></path>
-                          </svg>
-                        ) : creator.name === "Jane Cooper" ? (
-                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7633DC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                          </svg>
-                        ) : creator.name === "Michael Brown" ? (
-                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7633DC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M2 12A10 10 0 1 0 12 2m-9.87 4.5a14 14 0 0 0-0.13 1.8c0 7.5 5.5 14.4 13 14.7a10.8 10.8 0 0 0 2 .1"></path>
-                            <path d="M3.3 7.7A13.4 13.4 0 0 0 2.5 10a15 15 0 0 0 6 11.1A11 11 0 0 0 12 22"></path>
-                            <path d="M5 2.3A10 10 0 0 1 17.55 5"></path>
-                          </svg>
-                        ) : (
-                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7633DC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="9" cy="7" r="4"></circle>
-                            <line x1="19" x2="19" y1="8" y2="14"></line>
-                            <line x1="22" x2="16" y1="11" y2="11"></line>
-                          </svg>
-                        )}
-                      </div>
-                      <span className="tracking-wide">JOIN AS CREATOR</span>
-                      <ArrowRight className="w-4 h-4 ml-2 text-[#7633DC] animate-pulse-subtle" aria-hidden="true" />
-                    </button>
                   )}
                 </div>
+                
+                {/* Services with organized tag styling - optimized for mobile */}
+                <div className="flex flex-wrap gap-x-1 gap-y-1 mt-2 px-2 py-1.5 bg-white/80 rounded-lg border border-gray-200/50 shadow-inner shadow-white/50 max-w-full">
+                  {creator.services.map((service, index) => {
+                    // Force specific line wrapping for Emily Johnson on mobile
+                    const forceWrap = isMobile && 
+                                    creator.name === "Emily Johnson" && 
+                                    (index === 2 || index === creator.services.length - 1);
+                    
+                    const isPlatform = service.includes('TikTok') || service.includes('Instagram') || service.includes('YouTube');
+                    const isHashtag = service.startsWith('#');
+                    const isVisualStyle = service.includes('Tour') || service.includes('POV') || service.includes('Photo') || service.includes('Video');
+                    const isSpecialty = service.includes('Staging') || service.includes('Design') || service.includes('Plan');
+                    
+                    let bgColor = "bg-purple-100/80 border-purple-200/70 text-purple-800";
+                    if (isPlatform) bgColor = "bg-purple-100/80 border-purple-200/70 text-purple-700"; // Changed from blue to purple
+                    if (isHashtag) bgColor = "bg-indigo-100/80 border-indigo-200/70 text-indigo-700";
+                    if (isVisualStyle) bgColor = "bg-violet-100/80 border-violet-200/70 text-violet-700";
+                    if (isSpecialty) bgColor = "bg-teal-100/80 border-teal-200/70 text-teal-700";
+                    
+                    // Only show the first 3 services to save more space on mobile
+                    if (index < 3) {
+                      return (
+                        <span 
+                          key={index} 
+                          className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs border whitespace-nowrap touch-manipulation shadow-sm max-w-[110px] ${bgColor} ${forceWrap ? 'w-auto flex-shrink-0' : ''}`}
+                        >
+                          <span className="truncate">{service}</span>
+                        </span>
+                      );
+                    } else if (index === 3) {
+                      return (
+                        <span 
+                          key={index} 
+                          className="inline-flex items-center px-2 py-0.5 rounded-full text-xs text-gray-600 border border-gray-200 bg-white/90 shadow-sm"
+                        >
+                          +{creator.services.length - 3} more
+                        </span>
+                      );
+                    }
+                    return null;
+                  })}
+                </div>
               </div>
+              
+              {/* Recent Work section with proper header */}
+              <div className="mb-3">
+                {/* Section header with enhanced styling */}
+                <div className="mb-3 flex justify-between items-center">
+                  <div className="flex items-center">
+                    <div className="w-1 h-4 bg-gradient-to-b from-indigo-500 to-purple-500 rounded-full mr-2 shadow-sm"></div>
+                    <div className="text-xs text-gray-800 font-semibold font-space uppercase tracking-wide">Recent Work</div>
+                  </div>
+                  <span className="text-xs text-purple-600 font-medium px-2 py-1 rounded-md bg-purple-50/80 transition-colors">
+                    Recent Work
+                  </span>
+                </div>
+                
+                {/* Fixed height portfolio thumbnails - reduced height for mobile */}
+                <div className="grid grid-cols-3 gap-2">
+                  {creator.workExamples.slice(0, 3).map((example, index) => (
+                    <div 
+                      key={index}
+                      className="relative h-[60px] touch-manipulation rounded-lg overflow-hidden border border-purple-100/80 shadow-sm transition-all duration-150 focus:outline-none"
+                      aria-label={`${index === 0 ? 'Interior' : index === 1 ? 'Exterior' : 'Detail'} image`}
+                    >
+                      <img 
+                        src={example}
+                        alt={`${creator.name}'s work ${index + 1}`}
+                        className="object-cover h-full w-full"
+                      />
+                      {/* Enhanced label overlay with gradient background */}
+                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-black/5 py-1 text-center">
+                        <span className="text-[10px] text-white font-medium uppercase tracking-wide font-space">
+                          {index === 0 ? 'Interior' : index === 1 ? 'Exterior' : 'Detail'}
+                        </span>
+                      </div>
+                      {/* Tap indicator with glass effect */}
+                      <div className="absolute inset-0 bg-purple-600/10 opacity-0 active:opacity-100 transition-opacity flex items-center justify-center">
+                        <div className="w-7 h-7 rounded-full bg-white/80 shadow-sm flex items-center justify-center">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M15 3H21V9" stroke="#6D28D9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M21 3L9 15" stroke="#6D28D9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Enhanced CTA button with more prominence for mobile */}
+              <div className="mt-3 mb-4">
+                {/* Success state */}
+                {showInlineSuccess ? (
+                  <div className="w-full py-4 px-4 font-medium rounded-[12px] text-white relative flex flex-col items-center justify-center animate-fade-in"
+                    style={{
+                      background: 'linear-gradient(180deg, #8A42F5 0%, #7837DB 100%)',
+                      color: 'white',
+                      border: '1px solid rgba(255,255,255,0.2)',
+                      boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(0,0,0,0.05), 0 16px 32px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15)',
+                    }}
+                  >
+                    <div className="h-12 w-12 bg-purple-50/20 rounded-full flex items-center justify-center mb-2">
+                      <CheckCircle className="h-6 w-6 text-white" />
+                    </div>
+                    <h3 className="text-lg font-bold text-white mb-1">
+                      {alreadySubscribed ? "Already Subscribed" : "Success!"}
+                    </h3>
+                    <p className="text-white/90 text-center text-sm max-w-[24rem] mb-1">
+                      {alreadySubscribed 
+                        ? `${submittedEmail} is already on our waitlist.`
+                        : `We've added ${submittedEmail} to our waitlist.`
+                      }
+                    </p>
+                    <p className="text-white/80 text-xs">
+                      We'll notify you as soon as we launch.
+                    </p>
+                  </div>
+                ) : showInlineForm ? (
+                  /* Form state */
+                  <form 
+                    onSubmit={handleInlineSubmit}
+                    className="w-full relative animate-fade-in"
+                  >
+                    <div className="flex flex-col gap-2 w-full">
+                      <div className="relative">
+                        {/* Email input */}
+                        <input
+                          ref={inputRef}
+                          type="email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          placeholder="Enter your email"
+                          className="w-full h-[48px] px-4 py-3 rounded-t-[12px] rounded-b-none text-gray-800 border border-purple-200/70 border-b-0 focus:outline-none focus:ring-2 focus:ring-purple-400/40"
+                          style={{
+                            fontSize: '16px', // Prevent iOS zoom on focus
+                            backgroundColor: 'white'
+                          }}
+                          disabled={isLoading}
+                          required
+                        />
+                        
+                        {/* Check mark for valid email */}
+                        {isValid && (
+                          <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-500 z-10">
+                            <CheckCircle className="h-5 w-5" />
+                          </div>
+                        )}
+                      </div>
+                      
+                      {/* Submit button */}
+                      <button
+                        type="submit"
+                        disabled={isLoading}
+                        className="w-full h-[48px] bg-gradient-to-b from-purple-600 to-purple-700 text-white font-medium rounded-t-none rounded-b-[12px] flex items-center justify-center transition-all duration-200"
+                      >
+                        {isLoading ? (
+                          <>
+                            <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                            <span>Joining...</span>
+                          </>
+                        ) : (
+                          <>
+                            <ShieldCheck className="w-5 h-5 mr-2" />
+                            <span>JOIN WAITLIST</span>
+                            <ArrowRight className="w-4 h-4 ml-2" />
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </form>
+                ) : (
+                  /* Initial button state */
+                  <button 
+                    onClick={handleCTAClick}
+                    aria-label={`Join as creator with ${creator.name}`}
+                    className="w-full flex items-center justify-center rounded-[12px] font-medium font-sans h-[48px] transition-all duration-200 relative hover:scale-[1.02] bg-creator-cta"
+                    style={{
+                      background: 'linear-gradient(180deg, #F5F5F7 0%, #EEEEF2 100%)', // Subtle gradient for depth
+                      color: '#7633DC', // Purple text color
+                      border: '1px solid rgba(118,51,220,0.2)', // Purple-tinted border for emphasis
+                      boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(118,51,220,0.05)', // Enhanced shadow with purple tint
+                      fontSize: '14px',
+                      fontWeight: 600, // Medium weight
+                      paddingLeft: '42px', // Space for icon
+                    }}
+                  >
+                    {/* Icon container */}
+                    <div 
+                      className="absolute left-0 top-1/2 -translate-y-1/2 ml-5 flex items-center justify-center"
+                      style={{
+                        width: '32px',
+                        height: '32px',
+                        background: 'rgba(134,65,245,0.05)', // Slightly stronger purple tint
+                        border: '1px solid rgba(118,51,220,0.15)', // Subtle purple border
+                        borderRadius: '12px',
+                        boxShadow: 'inset 0 1px 0 rgba(255,255,255,1), inset 0 -1px 0 rgba(0,0,0,0.04)'
+                      }}
+                    >
+                      {creator.name === "Emily Johnson" ? (
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7633DC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M14.5 10A0.5 0.5 0 1 1 15 9.5A0.5 0.5 0 0 1 14.5 10Z"></path>
+                          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                          <path d="M9 3L9 21"></path>
+                        </svg>
+                      ) : creator.name === "Jane Cooper" ? (
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7633DC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                        </svg>
+                      ) : creator.name === "Michael Brown" ? (
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7633DC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M2 12A10 10 0 1 0 12 2m-9.87 4.5a14 14 0 0 0-0.13 1.8c0 7.5 5.5 14.4 13 14.7a10.8 10.8 0 0 0 2 .1"></path>
+                          <path d="M3.3 7.7A13.4 13.4 0 0 0 2.5 10a15 15 0 0 0 6 11.1A11 11 0 0 0 12 22"></path>
+                          <path d="M5 2.3A10 10 0 0 1 17.55 5"></path>
+                        </svg>
+                      ) : (
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7633DC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                          <circle cx="9" cy="7" r="4"></circle>
+                          <line x1="19" x2="19" y1="8" y2="14"></line>
+                          <line x1="22" x2="16" y1="11" y2="11"></line>
+                        </svg>
+                      )}
+                    </div>
+                    <span className="tracking-wide">JOIN AS CREATOR</span>
+                    <ArrowRight className="w-4 h-4 ml-2 text-[#7633DC] animate-pulse-subtle" aria-hidden="true" />
+                  </button>
+                )}
+              </div>
+            </div>
             </Card>
           </div>
       ) : (
@@ -734,27 +730,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
         </div>
       )}
       
-      {/* Image preview dialog - only shown if onPreviewClick is not provided */}
-      {selectedImage && !onPreviewClick && (
-        <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
-          <DialogContent className="p-0 bg-transparent border-0 max-w-[90vw] sm:max-w-[80vw]">
-            <div className="relative">
-              <img
-                src={selectedImage}
-                alt={`${creator.name}'s portfolio work`}
-                className="w-full object-contain max-h-[80vh] rounded-lg"
-              />
-              <button
-                onClick={() => setSelectedImage(null)}
-                className="absolute right-3 top-3 bg-black/50 rounded-full p-1.5 text-white"
-                aria-label="Close image preview"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-          </DialogContent>
-        </Dialog>
-      )}
+      {/* Image preview disabled */}
     </>
   );
 };

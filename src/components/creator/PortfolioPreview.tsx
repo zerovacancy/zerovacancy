@@ -43,12 +43,11 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
               <div 
                 key={index}
                 className={cn(
-                  "relative rounded-md overflow-hidden cursor-pointer group",
+                  "relative rounded-md overflow-hidden group",
                   "border border-[rgba(118,51,220,0.15)]",
                   "shadow-[inset_0_1px_2px_rgba(255,255,255,0.6),inset_0_-1px_1px_rgba(0,0,0,0.03)] aspect-square", // Fixed aspect ratio with internal shadows
                   "bg-gray-50"
                 )}
-                onClick={() => onPreviewClick ? onPreviewClick(example) : setSelectedImage(example)}
               >
                 <img 
                   src={example}
@@ -75,13 +74,12 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
               <div 
                 key={index}
                 className={cn(
-                  "relative rounded-md overflow-hidden cursor-pointer group",
+                  "relative rounded-md overflow-hidden group",
                   "border border-[rgba(118,51,220,0.15)]",
-                  "shadow-[inset_0_1px_2px_rgba(255,255,255,0.6),inset_0_-1px_1px_rgba(0,0,0,0.03)] hover:shadow-[inset_0_1px_3px_rgba(255,255,255,0.8),inset_0_-1px_2px_rgba(0,0,0,0.05)] transition-shadow duration-200",
+                  "shadow-[inset_0_1px_2px_rgba(255,255,255,0.6),inset_0_-1px_1px_rgba(0,0,0,0.03)]",
                   "aspect-square", 
                   "bg-gray-50"
                 )}
-                onClick={() => onPreviewClick ? onPreviewClick(example) : setSelectedImage(example)}
               >
                 <img 
                   src={example}
@@ -104,32 +102,25 @@ export const PortfolioPreview: React.FC<PortfolioPreviewProps> = ({
           </div>
         )}
       </div>
-
-      {/* Enhanced dialog with glass morphism for image preview */}
-      {!onPreviewClick && (
-        <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
-          <DialogContent className="sm:max-w-[80vw] p-0 bg-transparent border-0">
-            <DialogTitle className="sr-only">{`${creatorName}'s Portfolio Image`}</DialogTitle>
-            <button
-              onClick={() => setSelectedImage(null)}
-              className="absolute right-4 top-4 z-50 rounded-full bg-black/50 backdrop-blur-sm p-2 text-white hover:bg-black/70 transition-colors"
-              aria-label="Close preview"
-            >
-              <X className="h-4 w-4" />
-            </button>
+      
+      {/* Dialog for image preview - currently disabled */}
+      <Dialog open={false}>
+        <DialogContent className="p-0 border-0 bg-transparent max-w-5xl">
+          <DialogTitle className="sr-only">Image Preview</DialogTitle>
+          <button className="absolute top-2 right-2 z-50 p-2 bg-black/50 rounded-full">
+            <X className="h-6 w-6 text-white" />
+          </button>
+          <div className="relative w-full h-full overflow-hidden rounded-lg">
             {selectedImage && (
-              <div className="backdrop-blur-md bg-black/30 p-1 rounded-lg">
-                <img
-                  src={selectedImage}
-                  alt={`${creatorName}'s property photography - enlarged portfolio view showing detailed real estate photography`}
-                  className="w-full h-full object-contain rounded-lg"
-                  style={{ maxHeight: '80vh' }}
-                />
-              </div>
+              <img 
+                src={selectedImage} 
+                alt="Enlarged view" 
+                className="object-contain w-full h-full"
+              />
             )}
-          </DialogContent>
-        </Dialog>
-      )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

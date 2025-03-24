@@ -235,17 +235,17 @@ export const PricingContainer = () => {
   };
   
   return (
-    <div className="w-full pb-10 touch-action-pan-y overscroll-behavior-none" 
+    <div className="w-full pb-10" 
       ref={containerRef} 
-      style={{ touchAction: 'pan-y', overscrollBehavior: 'none' }}>
+      style={{ touchAction: 'auto' }}>
       <AnimatePresence>
         {isMobile && showStickyHeader && (
           <motion.div
             initial={{ y: -100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -100, opacity: 0 }}
-            className="fixed top-0 left-0 right-0 py-2 px-4 z-30 touch-action-pan-y overscroll-behavior-none"
-            style={{ touchAction: 'pan-y', overscrollBehavior: 'none' }}
+            className="fixed top-0 left-0 right-0 py-2 px-4 z-30"
+            style={{ touchAction: 'auto' }}
           >
             <PricingHeader 
               title="Pricing" 

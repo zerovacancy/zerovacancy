@@ -128,11 +128,9 @@ html, body {
   
   /* Global fix for all sections and containers */
   section, div, main, article, aside, nav {
-    touch-action: pan-y !important; /* Allow vertical scrolling */
-    overscroll-behavior: none !important; /* Prevent scroll trapping */
-    -webkit-user-select: none !important; /* Prevent text selection issues */
-    user-select: none !important; /* Prevent text selection issues */
-    border-width: 0 !important; /* Remove all borders that might show as dividers */
+    touch-action: auto !important; /* Allow all scrolling */
+    -webkit-user-select: text !important; /* Allow text selection */
+    user-select: text !important; /* Allow text selection */
   }
   
   /* Fix section transitions on mobile */

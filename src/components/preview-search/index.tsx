@@ -12,14 +12,18 @@ const SectionTitle = memo(({ isVisible, isMobile }: { isVisible: boolean; isMobi
     "text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight mb-2",
     // Use CSS classes for animation instead of JS-based motion
     "transition-all duration-500 transform-gpu", 
-    isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
-  ), [isVisible]);
+    isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2",
+    // Add padding for mobile to prevent text overflow
+    isMobile ? "px-2 w-full" : ""
+  ), [isVisible, isMobile]);
 
   const subtitleClass = useMemo(() => cn(
     "text-sm sm:text-base text-gray-600 max-w-md mx-auto",
     "transition-all duration-500 delay-200 transform-gpu",
-    isVisible ? "opacity-100" : "opacity-0"
-  ), [isVisible]);
+    isVisible ? "opacity-100" : "opacity-0",
+    // Add padding for mobile to prevent text overflow
+    isMobile ? "px-3 w-full" : ""
+  ), [isVisible, isMobile]);
 
   // Fixed content that won't change to reduce rerender overhead
   return (
@@ -31,20 +35,37 @@ const SectionTitle = memo(({ isVisible, isMobile }: { isVisible: boolean; isMobi
         className={titleClass}
         style={{ 
           willChange: 'opacity, transform',
-          transform: isVisible ? 'translateZ(0)' : 'translateZ(0) translateY(10px)'
+          transform: isVisible ? 'translateZ(0)' : 'translateZ(0) translateY(10px)',
+          wordBreak: 'break-word', // Ensures text wraps properly
+          maxWidth: '100%', // Constrains the text within its container
+          overflowWrap: 'break-word', // Additional support for long words
+          hyphens: 'auto' // Adds hyphens when breaking words if needed
         }}
       >
-        FIND YOUR CREATIVE COLLABORATOR
+        {isMobile ? (
+          <>
+            FIND YOUR<br />
+            CREATIVE COLLABORATOR
+          </>
+        ) : (
+          'FIND YOUR CREATIVE COLLABORATOR'
+        )}
       </h2>
       
       <p 
         className={subtitleClass}
         style={{ 
           willChange: 'opacity',
-          transitionDelay: '0.2s'
+          transitionDelay: '0.2s',
+          wordBreak: 'break-word',
+          maxWidth: '100%',
+          overflowWrap: 'break-word'
         }}
       >
-        Because extraordinary spaces deserve extraordinary storytellers
+        {isMobile ? 
+          "Extraordinary spaces deserve extraordinary storytellers" : 
+          "Because extraordinary spaces deserve extraordinary storytellers"
+        }
       </p>
     </div>
   );
@@ -119,11 +140,14 @@ const PreviewSearch = () => {
       {/* Section header with optimized rendering */}
       <div className={cn(
         "text-center relative z-20",
-        "pb-4 mb-4 transform-gpu" // Force GPU rendering
+        "pb-4 mb-4 transform-gpu", // Force GPU rendering
+        isMobile ? "px-2 w-full max-w-full" : "" // Add horizontal padding on mobile
       )}
       style={{
         transform: 'translateZ(0)', // Hardware acceleration
         willChange: 'transform', // Optimization hint
+        maxWidth: '100%', // Ensure content doesn't overflow
+        boxSizing: 'border-box' // Include padding in width calculations
       }}>
         {/* Section label for better organization - static element */}
         {isMobile && (

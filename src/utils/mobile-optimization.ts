@@ -139,33 +139,8 @@ export const optimizeMobileViewport = () => {
       document.addEventListener('touchstart', function() {}, { passive: true });
     }
     
-    // Prevent double-tap zoom on mobile, but exclude buttons and links
-    document.addEventListener('touchend', (e) => {
-      // Don't prevent default on interactive elements
-      const target = e.target as HTMLElement;
-      const isInteractiveElement = 
-        target.tagName === 'BUTTON' || 
-        target.tagName === 'A' ||
-        target.tagName === 'INPUT' ||
-        target.tagName === 'TEXTAREA' ||
-        target.tagName === 'SELECT' ||
-        target.tagName === 'LABEL' ||
-        target.closest('button') || 
-        target.closest('a') ||
-        target.closest('input') ||
-        target.closest('label') ||
-        target.getAttribute('role') === 'button' ||
-        (target.getAttribute('tabindex') && target.getAttribute('tabindex') !== '-1');
-      
-      if (isInteractiveElement) return;
-      
-      const now = Date.now();
-      const DOUBLE_TAP_THRESHOLD = 300;
-      if (now - (window.lastTap || 0) < DOUBLE_TAP_THRESHOLD) {
-        e.preventDefault();
-      }
-      window.lastTap = now;
-    }, { passive: false });
+    // We're removing the double-tap prevention as it could interfere with scrolling
+    // Instead, we'll use the built-in Safari/Chrome mechanisms for handling double-taps
     
     // Add momentum scrolling on iOS
     if (isIOS) {

@@ -27,10 +27,10 @@ const PricingHeader = ({
 
   return (
     <div className={cn(
-      "text-center mx-auto transition-all duration-300 touch-action-pan-y overscroll-behavior-none",
+      "text-center mx-auto transition-all duration-300",
       isSticky ? "max-w-full py-3 bg-white/95 backdrop-blur-sm shadow-md z-20" : "max-w-3xl py-0"
     )}
-    style={{ touchAction: 'pan-y', overscrollBehavior: 'none' }}>
+    style={{ touchAction: 'auto' }}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}

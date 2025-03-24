@@ -95,7 +95,6 @@ export const MobileCreatorCarousel = ({
       <div 
         key={creator.name} 
         style={{ 
-          touchAction: 'pan-y',
           transform: 'translateZ(0)', // Hardware acceleration
           willChange: 'transform', // Optimization hint
           // Consistent box shadow that won't cause reflow
@@ -140,7 +139,7 @@ export const MobileCreatorCarousel = ({
 
   return (
     <div 
-      className="w-full relative pb-4 pt-2 px-0 overflow-visible bg-[#F9F7FF]"
+      className="w-full relative pb-4 pt-2 px-0 overflow-visible bg-transparent"
       style={{
         boxShadow: 'none',
         border: 'none',
@@ -151,10 +150,9 @@ export const MobileCreatorCarousel = ({
     >
       {/* Main carousel container with hardware acceleration */}
       <div 
-        className="w-full overflow-visible rounded-lg relative transform-gpu"
+        className="w-full rounded-lg relative transform-gpu"
         ref={emblaRef}
         style={{
-          contain: 'paint', // Removed layout and size constraints
           width: '100%',
           minHeight: '480px' // Reduced height for mobile display
         }}
