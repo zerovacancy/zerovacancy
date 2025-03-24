@@ -151,8 +151,9 @@ const Index = () => {
     5: true
   });
   
-  // Store the Konami code sequence in a ref
+  // Store the Konami code sequence in a ref - define all refs before any hooks
   const keySequenceRef = React.useRef<string[]>([]);
+  const hasRedirectedRef = React.useRef(false);
   
   // Add a secure admin login method using key sequence
   useEffect(() => {
@@ -228,7 +229,12 @@ const Index = () => {
             if (isValid) {
               // Set the admin access token before navigating
               sessionStorage.setItem('adminAccessToken', 'granted');
-              navigate('/hidden-admin-login');
+              
+              // Only navigate if we haven't already
+              if (!hasRedirectedRef.current) {
+                hasRedirectedRef.current = true;
+                navigate('/hidden-admin-login');
+              }
             }
           });
         }

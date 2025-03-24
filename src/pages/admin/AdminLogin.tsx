@@ -7,15 +7,19 @@ import { supabase } from '@/integrations/supabase/client';
 import SEO from '@/components/SEO';
 
 const AdminLogin = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  // Declare all hooks at the top level, before any conditionals
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   
   // Track if the user came here through our secret methods
   const [accessGranted, setAccessGranted] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  
+  // Add a ref to track if we've redirected already
+  const hasRedirectedRef = React.useRef(false);
   
   // If already authenticated, redirect to admin dashboard
   React.useEffect(() => {
@@ -63,8 +67,15 @@ const AdminLogin = () => {
       console.log("Unauthorized admin access attempt - redirecting");
       // Set a flag to show the unauthorized message briefly
       setAccessGranted(false);
-      // Navigate directly without setTimeout
-      navigate('/');
+      
+      // Only redirect if we haven't already done so
+      if (!hasRedirectedRef.current) {
+        hasRedirectedRef.current = true;
+        // Use setTimeout to let React complete the current render cycle
+        setTimeout(() => {
+          navigate('/');
+        }, 100);
+      }
     };
     
     // Run the check
