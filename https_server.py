@@ -1,9 +1,38 @@
 import http.server
 import ssl
+import os
+import mimetypes
+
+# Custom request handler for SPA routing
+class SPAHandler(http.server.SimpleHTTPRequestHandler):
+    def do_GET(self):
+        # Try to serve the file as normal
+        try:
+            # For the root path, serve index.html
+            if self.path == '/':
+                self.path = '/index.html'
+                
+            return http.server.SimpleHTTPRequestHandler.do_GET(self)
+        except FileNotFoundError:
+            # For any unhandled route, serve index.html (SPA routing)
+            self.path = '/index.html'
+            return http.server.SimpleHTTPRequestHandler.do_GET(self)
+    
+    def guess_type(self, path):
+        # Add proper MIME types for modern web applications
+        mimetype = mimetypes.guess_type(path)[0]
+        if mimetype is None:
+            if path.endswith('.js'):
+                return 'application/javascript'
+            elif path.endswith('.css'):
+                return 'text/css'
+            else:
+                return 'application/octet-stream'
+        return mimetype
 
 # Set the server address and port (using 8443 for HTTPS)
 server_address = ('localhost', 8443)
-handler = http.server.SimpleHTTPRequestHandler
+handler = SPAHandler
 
 httpd = http.server.HTTPServer(server_address, handler)
 

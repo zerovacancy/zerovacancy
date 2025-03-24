@@ -9,6 +9,9 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    strictPort: true,
+    // This is critical for SPA routing - redirects all requests to index.html
+    historyApiFallback: true,
   },
   plugins: [
     react({
