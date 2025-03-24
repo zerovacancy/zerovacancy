@@ -349,9 +349,9 @@ const Index = () => {
         canonicalPath="/"
         structuredData={[homepageSchema, organizationSchema]}
       />
-      <Header />
-      {showBanner && !isMobile && (
-        <div className="relative mb-0">
+      {/* Banner displayed before header, and now visible on all devices */}
+      {showBanner && (
+        <div className="relative z-50">
           <Banner variant="purple" size="lg" action={
               <div className="relative">
                 <Button 
@@ -401,6 +401,7 @@ const Index = () => {
           </Banner>
         </div>
       )}
+      <Header />
 
       <main className="flex-1 pb-16 sm:pb-0 w-full mt-0" 
              style={isMobile ? {
