@@ -27,7 +27,7 @@ import { mobileOptimizationClasses as moc } from '@/utils/mobile-optimization';
 
 const { useState, useEffect, useRef, lazy, Suspense, useCallback } = React;
 
-// Section transition component with subtle gradient effect and optional curve
+// Section transition component with enhanced smooth blending and no visible dividers
 const SectionTransition = ({ 
   fromColor, 
   toColor, 
@@ -41,39 +41,39 @@ const SectionTransition = ({
 }) => {
   const isMobile = useIsMobile();
   
-  // Adjust height for mobile without negative margins
-  const mobileHeight = Math.max(height / 2, 40); // Increased minimum height on mobile
-  const actualHeight = isMobile ? mobileHeight : height;
+  // Reduced height for a more subtle transition
+  const mobileHeight = Math.max(height / 3, 30); // Smaller transition height
+  const desktopHeight = Math.max(height / 2, 40); // Smaller transition height for desktop too
+  const actualHeight = isMobile ? mobileHeight : desktopHeight;
 
   return (
     <div 
       className={cn(
-        "w-full overflow-visible relative z-10", // Changed to overflow-visible to prevent clipping
+        "w-full overflow-visible relative z-10", 
         isMobile && "touch-action-pan-y overscroll-behavior-none"
       )}
       style={{ 
         height: `${actualHeight}px`,
-        // No negative margins to prevent jittering
         marginTop: '0',
         marginBottom: '0',
-        // Create a fuller blend between sections
-        padding: isMobile ? '0' : '10px', // Remove padding on mobile
-        // Fix mobile scrolling
+        padding: '0',
         touchAction: isMobile ? 'pan-y' : 'auto',
         pointerEvents: 'none',
-        // Ensure no borders on mobile
-        borderTop: isMobile ? 'none' : undefined,
-        borderBottom: isMobile ? 'none' : undefined,
-        // Standard width without overflow
         width: '100%',
         marginLeft: '0'
       }}
     >
-      {/* Gradient background for smooth transition */}
+      {/* Enhanced gradient with more stops for smoother blending */}
       <div 
         className="w-full h-full"
         style={{
-          background: `linear-gradient(to bottom, ${fromColor} 0%, ${toColor} 100%)`, // Simpler gradient for all devices
+          background: `linear-gradient(to bottom, 
+            ${fromColor} 0%, 
+            ${fromColor}80 15%, 
+            ${modifyColorOpacity(fromColor, toColor, 0.6)} 35%,
+            ${modifyColorOpacity(fromColor, toColor, 0.4)} 65%,
+            ${toColor}80 85%, 
+            ${toColor} 100%)`,
           borderTop: 'none',
           borderBottom: 'none',
           borderLeft: 'none',
@@ -85,14 +85,45 @@ const SectionTransition = ({
   );
 };
 
-// Scroll target component with fixed height to prevent layout shifts
+// Helper function to create intermediate colors for smoother transitions
+const modifyColorOpacity = (fromColor: string, toColor: string, ratio: number) => {
+  // Simple implementation for hex colors
+  if (fromColor.startsWith('#') && toColor.startsWith('#')) {
+    try {
+      // Parse hex colors
+      const r1 = parseInt(fromColor.slice(1, 3), 16);
+      const g1 = parseInt(fromColor.slice(3, 5), 16);
+      const b1 = parseInt(fromColor.slice(5, 7), 16);
+      
+      const r2 = parseInt(toColor.slice(1, 3), 16);
+      const g2 = parseInt(toColor.slice(3, 5), 16);
+      const b2 = parseInt(toColor.slice(5, 7), 16);
+      
+      // Blend colors
+      const r = Math.round(r1 * ratio + r2 * (1 - ratio));
+      const g = Math.round(g1 * ratio + g2 * (1 - ratio));
+      const b = Math.round(b1 * ratio + b2 * (1 - ratio));
+      
+      // Convert back to hex
+      return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+    } catch (e) {
+      // Fallback if parsing fails
+      return ratio > 0.5 ? fromColor : toColor;
+    }
+  }
+  
+  // For other color formats like rgb, rgba, or named colors
+  return `color-mix(in srgb, ${fromColor} ${ratio * 100}%, ${toColor} ${(1 - ratio) * 100}%)`;
+};
+
+// Optimized scroll target component designed to work seamlessly with section transitions
 interface ScrollTargetProps {
   id: string;
   height?: number;
   className?: string;
 }
 
-const ScrollTarget: React.FC<ScrollTargetProps> = ({ id, height = 12, className }) => {
+const ScrollTarget: React.FC<ScrollTargetProps> = ({ id, height = 8, className }) => {
   const isMobile = useIsMobile();
   return (
     <div 
@@ -105,13 +136,12 @@ const ScrollTarget: React.FC<ScrollTargetProps> = ({ id, height = 12, className 
       )}
       style={{ 
         height: `${height}px`,
-        position: 'relative', // Changed to always be relative instead of absolute
-        zIndex: 10, // Consistent z-index
+        position: 'relative',
+        zIndex: 5, // Lower z-index to prevent interfering with transitions
         background: 'transparent',
-        marginTop: '0', // Removed negative margin completely
-        pointerEvents: 'none', // Prevent blocking clicks on other elements
-        // Removed transform property to prevent hardware acceleration
-        touchAction: isMobile ? 'pan-y' : 'auto' // Fix mobile scrolling
+        marginTop: '0',
+        pointerEvents: 'none',
+        touchAction: isMobile ? 'pan-y' : 'auto'
       }}
     />
   );
@@ -417,14 +447,14 @@ const Index = () => {
         </section>
         
         {/* Scroll Target for Find Creators */}
-        <ScrollTarget id="find-creators" height={12} />
+        <ScrollTarget id="find-creators" height={8} />
         
-        {/* Section Transition: Hero to Find Creators */}
+        {/* Section Transition: Hero to Find Creators - Smoother blend */}
         <SectionTransition 
           fromColor="#EBE3FF" 
           toColor="#F9F6EC" 
-          height={isMobile ? 100 : 80}
-          withOverlap={true}
+          height={isMobile ? 60 : 50}
+          withOverlap={false}
         />
         
         {/* Find Creators Section */}
@@ -452,7 +482,7 @@ const Index = () => {
             }
           }
           className={cn(
-            "relative w-full pt-20 pb-24", // Increased vertical spacing
+            "relative w-full pt-16 pb-20", // Standardized vertical spacing (reduced)
             "bg-[#F9F6EC]", // Soft champagne - now applied to both mobile and desktop
             isMobile && cn("py-8", moc.sectionPaddingMain), // Standardized mobile padding
             moc.sectionWrapper, // Standardized section wrapper
@@ -471,14 +501,14 @@ const Index = () => {
         </section>
         
         {/* Scroll Target for How It Works */}
-        <ScrollTarget id="how-it-works" height={12} />
+        <ScrollTarget id="how-it-works" height={8} />
         
-        {/* Section Transition: Find Creators to How It Works */}
+        {/* Section Transition: Find Creators to How It Works - Unified flow */}
         <SectionTransition 
           fromColor="#F9F6EC" 
           toColor="#EDF7F2" 
-          height={isMobile ? 100 : 80}
-          withOverlap={true}
+          height={isMobile ? 50 : 40}
+          withOverlap={false}
         />
         
         {/* How It Works Section */}
@@ -499,7 +529,7 @@ const Index = () => {
             }
           }
           className={cn(
-            "relative w-full pt-20 pb-24", // Increased vertical spacing
+            "relative w-full pt-16 pb-20", // Standardized vertical spacing (reduced)
             "bg-[#EDF7F2]", // Pale mint - now applied to both mobile and desktop
             isMobile && cn("py-8", moc.sectionPaddingMain), // Standardized mobile padding
             moc.sectionWrapper // Standardized section wrapper
@@ -515,16 +545,16 @@ const Index = () => {
           </div>
         </section>
         
-        {/* Section Transition: How It Works to Features */}
+        {/* Section Transition: How It Works to Features - Subtle gradient */}
         <SectionTransition 
           fromColor="#EDF7F2" 
           toColor="#E7E9FF" 
-          height={80}
-          withOverlap={true}
+          height={isMobile ? 50 : 40}
+          withOverlap={false}
         />
         
         {/* Scroll Target for Features */}
-        <ScrollTarget id="features" height={12} />
+        <ScrollTarget id="features" height={8} />
         
         {/* Features Section */}
         <section 
@@ -544,7 +574,7 @@ const Index = () => {
             }
           }
           className={cn(
-            "relative w-full pt-20 pb-24", // Increased vertical spacing
+            "relative w-full pt-16 pb-20", // Standardized vertical spacing (reduced)
             "bg-[#E7E9FF]", // Rich periwinkle - now applied to both mobile and desktop
             isMobile && cn("py-8", moc.sectionPaddingMain, "touch-action-pan-y overscroll-behavior-none"), // Standardized mobile padding with scroll fix
             moc.sectionWrapper // Standardized section wrapper
@@ -560,16 +590,16 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Section Transition: Features to Pricing */}
+        {/* Section Transition: Features to Pricing - Cohesive flow */}
         <SectionTransition 
           fromColor="#E7E9FF" 
           toColor="#EEF3F9" 
-          height={80}
-          withOverlap={true}
+          height={isMobile ? 50 : 40}
+          withOverlap={false}
         />
 
         {/* Scroll Target for Pricing */}
-        <ScrollTarget id="pricing" height={12} />
+        <ScrollTarget id="pricing" height={8} />
 
         {/* Pricing Section */}
         <section 
@@ -589,7 +619,7 @@ const Index = () => {
             }
           }
           className={cn(
-            "relative w-full pt-20 pb-24", // Increased vertical spacing
+            "relative w-full pt-16 pb-20", // Standardized vertical spacing (reduced)
             "bg-[#EEF3F9]", // Soft blue-grey - now applied to both mobile and desktop
             isMobile && cn("py-8", moc.sectionPaddingMain), // Standardized mobile padding
             moc.sectionWrapper // Standardized section wrapper
@@ -605,16 +635,16 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Section Transition: Pricing to Blog */}
+        {/* Section Transition: Pricing to Blog - Seamless blend */}
         <SectionTransition 
           fromColor="#EEF3F9" 
           toColor="#F9F6EC" 
-          height={80}
-          withOverlap={true}
+          height={isMobile ? 50 : 40}
+          withOverlap={false}
         />
 
         {/* Scroll Target for Blog */}
-        <ScrollTarget id="blog" height={12} />
+        <ScrollTarget id="blog" height={8} />
 
         {/* Blog Section */}
         <section 
@@ -634,7 +664,7 @@ const Index = () => {
             }
           }
           className={cn(
-            "relative w-full pt-20 pb-24", // Increased vertical spacing
+            "relative w-full pt-16 pb-20", // Standardized vertical spacing (reduced)
             "bg-[#F9F6EC]", // Soft champagne (same as Find Creators) - now applied to both mobile and desktop
             isMobile && cn("py-8", moc.sectionPaddingMain), // Standardized mobile padding
             moc.sectionWrapper // Standardized section wrapper
@@ -650,15 +680,13 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Section Transition: Blog to Footer - Hidden on mobile */}
-        {!isMobile && (
-          <SectionTransition 
-            fromColor="#F9F6EC" 
-            toColor="#f8f8fb" 
-            height={80}
-            withOverlap={true}
-          />
-        )}
+        {/* Section Transition: Blog to Footer - Minimal subtle transition */}
+        <SectionTransition 
+          fromColor="#F9F6EC" 
+          toColor="#f8f8fb" 
+          height={isMobile ? 40 : 30}
+          withOverlap={false}
+        />
 
         {!isMobile && (
           <div className="fixed right-6 top-1/2 transform -translate-y-1/2 z-[100] hidden lg:flex flex-col items-center gap-3">
