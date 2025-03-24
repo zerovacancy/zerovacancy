@@ -21,15 +21,22 @@ const AdminLogin = () => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [clientSideRendered, setClientSideRendered] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
   
-  // Set flag for client-side rendering to avoid hydration mismatch
+  // Use two-step hydration process to avoid React errors
   useEffect(() => {
-    // This will only run on the client
-    setClientSideRendered(true);
+    // Step 1: Mark component as mounted (immediately)
     mountedRef.current = true;
     
+    // Step 2: Complete hydration in next tick to allow React to finish its work
+    const timeout = setTimeout(() => {
+      if (mountedRef.current) {
+        setHydrated(true);
+      }
+    }, 10);
+    
     return () => {
+      clearTimeout(timeout);
       mountedRef.current = false;
     };
   }, []);
@@ -84,7 +91,7 @@ const AdminLogin = () => {
   };
   
   // Use a loading state to prevent hydration mismatch
-  if (isLoading) {
+  if (isLoading || !hydrated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="w-12 h-12 border-4 border-brand-purple rounded-full border-t-transparent animate-spin"></div>
@@ -100,8 +107,8 @@ const AdminLogin = () => {
         noindex={true}
       />
       
-      {/* Only render the form once we're on the client side */}
-      {clientSideRendered && (
+      {/* Only render the form when fully hydrated */}
+      {hydrated && (
         <div className="max-w-md w-full space-y-8">
           <div className="text-center">
             <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">

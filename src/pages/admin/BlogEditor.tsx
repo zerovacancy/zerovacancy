@@ -22,6 +22,13 @@ const BlogEditor = () => {
   const navigate = useNavigate();
   const { isAuthenticated, isLoading: authLoading } = useAuth();
   const isEditing = !!id;
+  const [hydrated, setHydrated] = useState(false);
+  
+  // This helps prevent hydration errors by ensuring we only render
+  // the full component after the client-side code is running
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
   
   // Check admin access
   useEffect(() => {
@@ -305,7 +312,8 @@ const BlogEditor = () => {
     );
   };
   
-  if (loading) {
+  // Show loading state if data is loading or component isn't hydrated yet
+  if (loading || !hydrated) {
     return (
       <AdminLayout>
         <div className="flex justify-center items-center h-64">
