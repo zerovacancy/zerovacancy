@@ -1,5 +1,5 @@
-import React, { lazy, Suspense, useEffect, useCallback } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation, useNavigationType } from 'react-router-dom';
+import React, { lazy, Suspense, useEffect, useCallback, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation, useNavigationType, Navigate } from 'react-router-dom';
 import { ErrorBoundary } from 'react-error-boundary';
 import ErrorFallback from './components/ErrorFallback';
 import { Toaster } from '@/components/ui/toaster';
@@ -147,24 +147,35 @@ function App() {
             <div className="relative landscape-container">
               <Suspense fallback={<PageLoader />}>
                 <Routes>
+                  {/* Public Routes */}
                   <Route path="/" element={<Index />} />
                   <Route path="/payment-confirmation" element={<PaymentConfirmation />} />
                   <Route path="/terms" element={<Terms />} />
+                  <Route path="/blog" element={<Blog />} />
+                  <Route path="/blog/:slug" element={<BlogPost />} />
+                  
+                  {/* Auth Routes */}
                   <Route path="/account" element={<Account />} />
                   <Route path="/auth/callback" element={<AuthCallback />} />
                   <Route path="/onboarding" element={<Onboarding />} />
+                  
+                  {/* Dashboard Routes */}
                   <Route path="/creator/dashboard" element={<CreatorDashboard />} />
                   <Route path="/property/dashboard" element={<PropertyDashboard />} />
+                  
+                  {/* Connect Routes */}
                   <Route path="/connect/success" element={<ConnectSuccess />} />
                   <Route path="/connect/refresh" element={<ConnectRefresh />} />
                   <Route path="/connect/onboarding" element={<ConnectOnboarding />} />
-                  <Route path="/blog" element={<Blog />} />
-                  <Route path="/blog/:slug" element={<BlogPost />} />
+                  
+                  {/* Admin Routes */}
+                  <Route path="/admin/login" element={<AdminLogin />} />
+                  <Route path="/hidden-admin-login" element={<AdminLogin />} />
                   <Route path="/admin/blog" element={<BlogAdmin />} />
                   <Route path="/admin/blog/new" element={<BlogEditor />} />
                   <Route path="/admin/blog/edit/:id" element={<BlogEditor />} />
-                  <Route path="/admin/login" element={<AdminLogin />} />
-                  <Route path="/hidden-admin-login" element={<AdminLogin />} />
+                  
+                  {/* 404 Route */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </Suspense>
