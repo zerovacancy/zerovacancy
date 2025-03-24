@@ -113,17 +113,27 @@ const Header = () => {
           <button 
             className={cn(
               "inline-flex items-center justify-center rounded-md md:hidden",
-              "min-h-[44px] min-w-[44px] p-2",  // Increased touch target
+              "min-h-[50px] min-w-[50px] p-3",  // Further increased touch target
               "text-gray-500 hover:text-gray-700 hover:bg-gray-100",
-              "touch-manipulation" // Better handling for touch events
+              "touch-manipulation active:bg-gray-200", // Better feedback on touch
+              "transition-colors duration-200" // Smoother transition
             )}
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            onClick={(e) => {
+              e.stopPropagation(); // Prevent event bubbling
+              setIsMenuOpen(!isMenuOpen);
+            }}
+            aria-expanded={isMenuOpen}
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           >
-            <span className="sr-only">Open main menu</span>
-            {isMenuOpen ? 
-              <X className="block h-6 w-6" aria-hidden="true" /> : 
-              <Menu className="block h-6 w-6" aria-hidden="true" />
-            }
+            {isMenuOpen ? (
+              <div className="p-1 flex items-center justify-center touch-manipulation">
+                <X className="block h-7 w-7" aria-hidden="true" />
+              </div>
+            ) : (
+              <div className="p-1 flex items-center justify-center touch-manipulation">
+                <Menu className="block h-7 w-7" aria-hidden="true" />
+              </div>
+            )}
           </button>
         </div>
       </div>
