@@ -1,8 +1,8 @@
 // Script to create a new admin user in Supabase
 // Run with Node.js: node src/scripts/create-admin-user.js
 
-const { createClient } = require('@supabase/supabase-js');
-const readline = require('readline');
+import { createClient } from '@supabase/supabase-js';
+import readline from 'readline';
 
 // Supabase credentials
 const SUPABASE_URL = "https://pozblfzhjqlsxkakhowp.supabase.co";
