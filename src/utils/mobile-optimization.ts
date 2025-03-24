@@ -161,6 +161,24 @@ export const optimizeMobileViewport = () => {
   }
 };
 
+// Mobile-specific spacing utilities
+export const mobileSpacingUtils = {
+  // More compact section spacing for mobile
+  sectionSpacing: "py-4", // Reduced from py-8
+  
+  // Compact content spacing for mobile
+  contentSpacing: "space-y-4", // For stacked content inside sections
+  
+  // Reduced vertical margins between elements
+  elementSpacing: "my-3",
+  
+  // Helper class to apply to section transitions on mobile
+  compactTransition: "h-10 max-h-10 overflow-hidden",
+  
+  // Zero-gap container to eliminate unwanted space
+  zeroGap: "m-0 p-0 border-0 outline-0",
+};
+
 // Helper classes to conditionally apply to components
 export const mobileOptimizationClasses = {
   // Hide elements completely on mobile
@@ -245,6 +263,9 @@ export const mobileOptimizationClasses = {
   spacingBetweenBlocks: "mb-4", // Space between content blocks
   spacingBeforeCTA: "mt-6", // Space before call-to-actions
   spacingInteractive: "gap-4", // Minimum spacing between interactive elements
+  
+  // Add the mobile spacing utilities
+  ...mobileSpacingUtils,
 };
 
 // Enhanced landscape mode detection that also considers device type

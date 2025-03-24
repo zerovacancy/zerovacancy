@@ -23,85 +23,112 @@ import {
   pricingPatternPaper,
   generateBackgroundWithPattern 
 } from '@/utils/background-patterns';
-import { mobileOptimizationClasses as moc } from '@/utils/mobile-optimization';
+import { mobileOptimizationClasses as moc, mobileSpacingUtils } from '@/utils/mobile-optimization';
 
 const { useState, useEffect, useRef, lazy, Suspense, useCallback } = React;
 
-// Modern section transition component with enhanced aesthetics and seamless blending
-const SectionTransition = ({ 
+// Simplified and reduced spacing system based on analysis
+const getResponsiveSpacing = (index: number, isMobile: boolean) => {
+  // Significantly reduced spacing values that scale down the page
+  const baseSpacingDesktop = {
+    top: [32, 28, 24, 24, 20, 20], // Reduced from [48, 40, 36, 32, 32, 28]
+    bottom: [32, 28, 24, 24, 20, 20], // Drastically reduced from [64, 56, 48, 48, 44, 40]
+  };
+  
+  const baseSpacingMobile = {
+    top: [16, 16, 12, 12, 12, 12], // Reduced from [24, 20, 20, 16, 16, 16]
+    bottom: [16, 16, 12, 12, 12, 12], // Reduced from [24, 20, 20, 16, 16, 16]
+  };
+  
+  // Use relative units for better accessibility
+  if (isMobile) {
+    return {
+      paddingTop: `${baseSpacingMobile.top[Math.min(index, baseSpacingMobile.top.length - 1)]}px`,
+      paddingBottom: `${baseSpacingMobile.bottom[Math.min(index, baseSpacingMobile.bottom.length - 1)]}px`,
+    };
+  }
+  
+  return {
+    paddingTop: `${baseSpacingDesktop.top[Math.min(index, baseSpacingDesktop.top.length - 1)]}px`,
+    paddingBottom: `${baseSpacingDesktop.bottom[Math.min(index, baseSpacingDesktop.bottom.length - 1)]}px`,
+  };
+};
+
+// Significantly reduced transition heights based on analysis
+const getTransitionHeight = (index: number, isMobile: boolean) => {
+  // Much smaller transition heights to reduce spacing between sections
+  const heights = [40, 36, 32, 28, 24]; // Reduced from [80, 70, 60, 50, 40]
+  const mobileHeights = [24, 20, 20, 16, 16]; // Reduced from [60, 50, 40, 30, 30]
+  
+  const heightArray = isMobile ? mobileHeights : heights;
+  return heightArray[Math.min(index, heightArray.length - 1)];
+};
+
+// Optional: Add a customized version of the ScrollTarget specifically for mobile
+const MobileScrollTarget = ({ id }: { id: string }) => {
+  return (
+    <div 
+      id={id}
+      aria-hidden="true"
+      className="w-full invisible block m-0 p-0 h-0.5 touch-action-pan-y overscroll-behavior-none"
+      style={{ 
+        position: 'relative',
+        zIndex: 5,
+        background: 'transparent',
+        pointerEvents: 'none'
+      }}
+    />
+  );
+};
+
+// Combined component that serves as both scroll target and transition
+const ScrollTransition = ({ 
+  id,
   fromColor, 
   toColor, 
-  height = 40,
-  withOverlap = true,
-  type = "gradient" 
+  height = 40
 }: { 
+  id: string;
   fromColor: string; 
   toColor: string; 
   height?: number;
-  withOverlap?: boolean;
-  type?: "gradient" | "wave" | "dots" | "angled";
 }) => {
   const isMobile = useIsMobile();
   
-  // Dynamic height calculation based on type and device
-  const getHeight = () => {
-    // Base heights - more subtle for different transition types
-    const baseHeight = type === "gradient" ? height : 
-                      type === "wave" ? Math.max(height, 60) : 
-                      type === "dots" ? Math.max(height, 50) : 
-                      type === "angled" ? Math.max(height, 70) : height;
-    
-    // Adjust for mobile - slightly more compact but still visually effective
-    const mobileMultiplier = type === "gradient" ? 0.7 : 
-                            type === "wave" ? 0.8 :
-                            type === "dots" ? 0.7 :
-                            type === "angled" ? 0.6 : 0.7;
-    
-    return isMobile ? Math.max(baseHeight * mobileMultiplier, 28) : baseHeight;
-  };
+  // Use exact height without minimum limits - based on analysis findings
+  const actualHeight = height;
   
-  const actualHeight = getHeight();
-  
-  // Generate a unique ID for SVG patterns
-  const patternId = `pattern-${fromColor.replace('#', '')}-${toColor.replace('#', '')}`;
-
-  // Keep the original gradient transition that works well
-  const renderTransitionContent = () => {
-    return (
+  // Unified component implementation for both mobile and desktop
+  return (
+    <div 
+      id={id} // This makes it a scroll target
+      className="w-full overflow-hidden relative z-10 section-transition"
+      style={{ 
+        height: `${actualHeight}px`,
+        margin: '0',          // Removed negative margins that create additional space
+        padding: 0,
+        pointerEvents: 'none',
+        width: '100%',
+        position: 'relative',
+        backgroundColor: fromColor,
+        backgroundImage: 'none'
+      }}
+    >
       <div 
-        className="w-full h-full"
+        className="absolute inset-0" // Use inset for better positioning
         style={{
           background: `linear-gradient(to bottom, 
             ${fromColor} 0%, 
-            ${fromColor}80 15%, 
-            ${modifyColorOpacity(fromColor, toColor, 0.6)} 35%,
-            ${modifyColorOpacity(fromColor, toColor, 0.4)} 65%,
-            ${toColor}80 85%, 
+            ${fromColor} 15%, 
+            ${modifyColorOpacity(fromColor, toColor, 0.7)} 35%,
+            ${modifyColorOpacity(fromColor, toColor, 0.3)} 65%,
+            ${toColor} 85%, 
             ${toColor} 100%)`,
+          width: '100%',
+          height: '100%',     // No extra height extension
           boxShadow: 'none'
         }}
       />
-    );
-  };
-
-  return (
-    <div 
-      className={cn(
-        "w-full overflow-hidden relative z-10", 
-        isMobile && "touch-action-pan-y overscroll-behavior-none"
-      )}
-      style={{ 
-        height: `${actualHeight}px`,
-        marginTop: '0',
-        marginBottom: '0',
-        padding: '0',
-        touchAction: isMobile ? 'pan-y' : 'auto',
-        pointerEvents: 'none',
-        width: '100%',
-        marginLeft: '0'
-      }}
-    >
-      {renderTransitionContent()}
     </div>
   );
 };
@@ -135,37 +162,6 @@ const modifyColorOpacity = (fromColor: string, toColor: string, ratio: number) =
   
   // For other color formats like rgb, rgba, or named colors
   return `color-mix(in srgb, ${fromColor} ${ratio * 100}%, ${toColor} ${(1 - ratio) * 100}%)`;
-};
-
-// Optimized scroll target component designed to work seamlessly with section transitions
-interface ScrollTargetProps {
-  id: string;
-  height?: number;
-  className?: string;
-}
-
-const ScrollTarget: React.FC<ScrollTargetProps> = ({ id, height = 8, className }) => {
-  const isMobile = useIsMobile();
-  return (
-    <div 
-      id={id}
-      aria-hidden="true"
-      className={cn(
-        "w-full overflow-hidden invisible block",
-        className,
-        isMobile && "touch-action-pan-y overscroll-behavior-none"
-      )}
-      style={{ 
-        height: `${height}px`,
-        position: 'relative',
-        zIndex: 5, // Lower z-index to prevent interfering with transitions
-        background: 'transparent',
-        marginTop: '0',
-        pointerEvents: 'none',
-        touchAction: isMobile ? 'pan-y' : 'auto'
-      }}
-    />
-  );
 };
 
 const OptimizedHowItWorks = lazy(() => import('../components/how-it-works/OptimizedHowItWorks'));
@@ -418,22 +414,32 @@ const Index = () => {
         {/* Hero Section */}
         <section 
           ref={addSectionRef(0)} 
-          style={isMobile ? 
-            { 
+          style={{
+            ...(isMobile ? { 
               position: 'static', 
               zIndex: 'auto',
               contain: 'none',
               willChange: 'auto',
               transform: 'none',
-              overflow: 'hidden',  // Changed to hidden to prevent content from flowing outside
-              isolation: 'auto'
-            } : 
-            { ...getZIndex(0), ...getBackgroundTransition(0) }
-          }
+              overflow: 'hidden',
+              isolation: 'auto',
+              // Mobile spacing following best practices
+              paddingTop: '1.5rem',    // 24px - optimal for critical content section
+              paddingBottom: '1.5rem'  // 24px - consistent spacing that avoids overcrowding
+            } : { 
+              ...getZIndex(0), 
+              ...getBackgroundTransition(0),
+              // Explicit padding override for Hero section
+              // Desktop spacing that maintains visual hierarchy
+              paddingTop: '2rem',    // 32px - progressive enhancement from mobile
+              paddingBottom: '2rem'  // 32px - consistent with spacing system
+            })
+          }}
           className={cn(
-            "w-full bg-[#EBE3FF]", // Lavender background for hero section
-            moc.sectionWrapper, // Standardized section wrapper
-            isMobile && "touch-action-pan-y overscroll-behavior-none" // Fix mobile scrolling
+            "w-full bg-[#EBE3FF]",
+            // Remove any padding classes since we're using inline styles
+            moc.sectionWrapper,
+            isMobile && "touch-action-pan-y overscroll-behavior-none"
           )}
         >
           <div 
@@ -447,21 +453,131 @@ const Index = () => {
               } : 
               { position: 'relative' }
             } 
-            className="w-full max-w-none"
+            className={cn(
+              "w-full max-w-none",
+              isMobile && mobileSpacingUtils.zeroGap // Apply zero-gap to eliminate unwanted space
+            )}
           >
-            <Hero />
+            {/* Hero component wrapper with custom hero-specific styles */}
+            <div className="hero-compact-container" style={{
+              // Apply mobile-first spacing variables
+              "--mobile-density": isMobile ? "1" : "0",
+              "--desktop-density": isMobile ? "0" : "1",
+              
+              // Using the established spacing system
+              "--hero-heading-margin": "calc(var(--space-sm) * var(--desktop-density) + var(--space-xs) * var(--mobile-density))",
+              "--hero-paragraph-margin": "calc(var(--space-sm) * var(--desktop-density) + var(--space-xs) * var(--mobile-density))",
+              "--hero-button-margin": "calc(var(--space-sm) * var(--desktop-density) + var(--space-xs) * var(--mobile-density))",
+              "--content-spacing": "calc(var(--space-sm) * var(--desktop-density) + var(--space-xs) * var(--mobile-density))"
+            }}>
+              <style>{`
+                /* Mobile spacing system with consistent scale */
+                :root {
+                  --space-xs: 0.5rem;  /* 8px */
+                  --space-sm: 1rem;    /* 16px */
+                  --space-md: 1.5rem;  /* 24px */
+                  --space-lg: 2rem;    /* 32px */
+                  --space-xl: 3rem;    /* 48px */
+                }
+                
+                /* Hero spacing system using consistent scale */
+                .hero-compact-container h1, 
+                .hero-compact-container h2, 
+                .hero-compact-container [role="heading"] {
+                  margin-bottom: var(--space-sm); /* 16px - standard spacing between related elements */
+                }
+                
+                .hero-compact-container p {
+                  margin-bottom: var(--space-sm); /* 16px - consistent spacing */
+                }
+                
+                .hero-compact-container [class*="button-container"],
+                .hero-compact-container [id*="hero-cta-section"] {
+                  margin-top: var(--space-sm); /* 16px - adequate spacing for touch targets */
+                }
+                
+                /* Reduced internal padding based on spacing analysis */
+                .hero-compact-container > div {
+                  padding-top: var(--space-sm);    /* 16px - reduced from 24px */
+                  padding-bottom: var(--space-sm); /* 16px - reduced from 24px */
+                }
+                
+                /* Proper spacing for CTA sections */
+                .hero-compact-container [id="hero-cta-section"],
+                .hero-compact-container [id="hero-cta-section"] + div {
+                  margin-bottom: var(--space-sm); /* 16px - standard spacing */
+                }
+                
+                /* Mobile CTA container using spacing system */
+                .hero-compact-container .w-[92%],
+                .hero-compact-container .mt-10 {
+                  margin-top: var(--space-xs);    /* 8px - tightly coupled elements */
+                  margin-bottom: var(--space-xs); /* 8px - compact but readable */
+                }
+                
+                /* Social proof with consistent spacing system */
+                .hero-compact-container .social-proof,
+                .hero-compact-container [class*="SocialProof"] {
+                  margin-top: var(--space-xs);    /* 8px - subtle separation */
+                  margin-bottom: var(--space-xs); /* 8px - compact but clear */
+                  transform: scale(0.95);         /* Slight scale for visual hierarchy */
+                }
+                
+                /* Modest desktop spacing based on analysis */
+                @media (min-width: 640px) {
+                  /* Less excessive spacing for desktop */
+                  .hero-compact-container > div {
+                    padding-top: var(--space-md);    /* 24px - reduced from 32px */
+                    padding-bottom: var(--space-md); /* 24px - reduced from 32px */
+                  }
+                  
+                  /* More generous spacing for desktop content */
+                  .hero-compact-container > div > div[class*="flex"] {
+                    margin-bottom: var(--space-sm); /* 16px - standard spacing */
+                  }
+                  
+                  /* Consistent system for desktop CTA section */
+                  .hero-compact-container #hero-cta-section,
+                  .hero-compact-container div[id="hero-cta-section"] {
+                    margin-bottom: var(--space-sm); /* 16px - standard spacing */
+                  }
+                  
+                  /* Maintain consistent system for social proof */
+                  .hero-compact-container div:last-child .social-proof,
+                  .hero-compact-container div:last-child [class*="SocialProof"] {
+                    margin-top: var(--space-xs);    /* 8px - subtle separation */
+                    margin-bottom: var(--space-xs); /* 8px - maintains consistency */
+                  }
+                }
+                
+                /* Optimized scroll indicator using spacing system */
+                .hero-compact-container div:last-child > div.flex.flex-col.items-center.opacity-60,
+                .hero-compact-container .w-full.flex.justify-center.mt-10 {
+                  margin-top: var(--space-xs);  /* 8px - subtle separation */
+                  transform: scale(0.9);        /* Subtle scaling for hierarchy */
+                  height: var(--space-lg);      /* 32px - adequate touch target */
+                }
+                
+                /* Optimized text in scroll indicator for mobile */
+                .hero-compact-container .text-xs.text-purple-600.mb-1.font-medium.block {
+                  margin-bottom: calc(var(--space-xs) / 2);  /* 4px - minimal spacing */
+                  font-size: 0.75rem;                        /* 12px - readable but compact */
+                  line-height: 1.2;                          /* Tight but readable line height */
+                  min-height: calc(var(--space-sm) * 1.2);   /* 19px - ensures adequate touch area */
+                }
+              `}</style>
+              <Hero />
+            </div>
           </div>
         </section>
         
-        {/* Scroll Target for Find Creators */}
-        <ScrollTarget id="find-creators" height={8} />
-        
-        {/* Section Transition: Hero to Find Creators */}
-        <SectionTransition 
+        {/* Combined Scroll Target and Transition */}
+        <ScrollTransition 
+          id="find-creators"
           fromColor="#EBE3FF" 
           toColor="#F9F6EC" 
-          height={isMobile ? 60 : 70}
-          withOverlap={false}
+          // Minimal transition height based on analysis findings
+          height={isMobile ? 16 : 24} // Reduced by ~30% to minimize excess spacing
         />
         
         {/* Find Creators Section */}
@@ -481,25 +597,29 @@ const Index = () => {
               marginRight: '0', // Remove any margin
               paddingLeft: '0', // Remove horizontal padding
               paddingRight: '0', // Remove horizontal padding
-              backgroundColor: '#F9F6EC' // Explicitly set tan background on mobile
+              backgroundColor: '#F9F6EC', // Explicitly set tan background on mobile
+              ...getResponsiveSpacing(1, isMobile)
             } : 
             {
               ...getZIndex(1),
-              ...getBackgroundTransition(1)
+              ...getBackgroundTransition(1),
+              ...getResponsiveSpacing(1, isMobile)
             }
           }
           className={cn(
-            "relative w-full pt-16 pb-20", // Standardized vertical spacing (reduced)
-            "bg-[#F9F6EC]", // Soft champagne - now applied to both mobile and desktop
-            isMobile && cn("py-8", moc.sectionPaddingMain), // Standardized mobile padding
+            "relative w-full bg-[#F9F6EC]",
+            isMobile ? cn(
+              "touch-action-pan-y overscroll-behavior-none",
+              mobileSpacingUtils.sectionSpacing, // More compact section spacing for mobile
+              "px-0 mx-0 max-w-none find-creators-section" // Remove horizontal padding/margin on mobile
+            ) : null,
             moc.sectionWrapper, // Standardized section wrapper
-            "creator-section", // Added this class for Safari-specific fixes
-            isMobile && "px-0 mx-0 max-w-none find-creators-section" // Remove horizontal padding/margin on mobile
+            "creator-section" // Added this class for Safari-specific fixes
           )}
         >
           <div className={cn(
             "w-full overflow-hidden",
-            isMobile ? "px-0 mx-0" : "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+            isMobile ? "px-0 mx-0" : "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" // Removed negative margins for better layout stability
           )}>
             <Suspense fallback={<SectionLoader />}>
               <PreviewSearch />
@@ -507,15 +627,12 @@ const Index = () => {
           </div>
         </section>
         
-        {/* Scroll Target for How It Works */}
-        <ScrollTarget id="how-it-works" height={8} />
-        
-        {/* Section Transition: Find Creators to How It Works */}
-        <SectionTransition 
+        {/* Combined Scroll Target and Transition */}
+        <ScrollTransition 
+          id="how-it-works"
           fromColor="#F9F6EC" 
           toColor="#EDF7F2" 
-          height={isMobile ? 60 : 70}
-          withOverlap={false}
+          height={getTransitionHeight(1, isMobile)}
         />
         
         {/* How It Works Section */}
@@ -528,23 +645,28 @@ const Index = () => {
               contain: 'none',
               willChange: 'auto',
               transform: 'none',
-              overflow: 'hidden'
+              overflow: 'hidden',
+              ...getResponsiveSpacing(2, isMobile)
             } : 
             {
               ...getZIndex(2),
-              ...getBackgroundTransition(2)
+              ...getBackgroundTransition(2),
+              ...getResponsiveSpacing(2, isMobile)
             }
           }
           className={cn(
-            "relative w-full pt-16 pb-20", // Standardized vertical spacing (reduced)
-            "bg-[#EDF7F2]", // Pale mint - now applied to both mobile and desktop
-            isMobile && cn("py-8", moc.sectionPaddingMain), // Standardized mobile padding
+            "relative w-full bg-[#EDF7F2]",
+            isMobile ? cn(
+              "touch-action-pan-y overscroll-behavior-none",
+              mobileSpacingUtils.sectionSpacing // More compact section spacing for mobile
+            ) : null,
             moc.sectionWrapper // Standardized section wrapper
           )}
         >
           <div className={cn(
             "w-full max-w-7xl mx-auto overflow-hidden", 
-            moc.contentPadding // Standardized content padding
+            moc.contentPadding, // Standardized content padding
+            isMobile && mobileSpacingUtils.contentSpacing // Add compact content spacing for mobile
           )}>
             <Suspense fallback={<SectionLoader />}>
               <OptimizedHowItWorks />
@@ -552,16 +674,13 @@ const Index = () => {
           </div>
         </section>
         
-        {/* Section Transition: How It Works to Features */}
-        <SectionTransition 
+        {/* Combined Scroll Target and Transition */}
+        <ScrollTransition 
+          id="features"
           fromColor="#EDF7F2" 
           toColor="#E7E9FF" 
-          height={isMobile ? 60 : 70}
-          withOverlap={false}
+          height={getTransitionHeight(2, isMobile)}
         />
-        
-        {/* Scroll Target for Features */}
-        <ScrollTarget id="features" height={8} />
         
         {/* Features Section */}
         <section 
@@ -573,23 +692,28 @@ const Index = () => {
               contain: 'none',
               willChange: 'auto',
               transform: 'none',
-              overflow: 'hidden'
+              overflow: 'hidden',
+              ...getResponsiveSpacing(3, isMobile)
             } : 
             {
               ...getZIndex(3),
-              ...getBackgroundTransition(3)
+              ...getBackgroundTransition(3),
+              ...getResponsiveSpacing(3, isMobile)
             }
           }
           className={cn(
-            "relative w-full pt-16 pb-20", // Standardized vertical spacing (reduced)
-            "bg-[#E7E9FF]", // Rich periwinkle - now applied to both mobile and desktop
-            isMobile && cn("py-8", moc.sectionPaddingMain, "touch-action-pan-y overscroll-behavior-none"), // Standardized mobile padding with scroll fix
+            "relative w-full bg-[#E7E9FF]",
+            isMobile ? cn(
+              "touch-action-pan-y overscroll-behavior-none",
+              mobileSpacingUtils.sectionSpacing // More compact section spacing for mobile
+            ) : null,
             moc.sectionWrapper // Standardized section wrapper
           )}
         >
           <div className={cn(
             "w-full max-w-7xl mx-auto overflow-hidden", 
-            moc.contentPadding // Standardized content padding
+            moc.contentPadding, // Standardized content padding
+            isMobile && mobileSpacingUtils.contentSpacing // Add compact content spacing for mobile
           )}>
             <Suspense fallback={<SectionLoader />}>
               <FeaturesSectionWithHoverEffects />
@@ -597,16 +721,13 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Section Transition: Features to Pricing */}
-        <SectionTransition 
+        {/* Combined Scroll Target and Transition */}
+        <ScrollTransition 
+          id="pricing"
           fromColor="#E7E9FF" 
           toColor="#EEF3F9" 
-          height={isMobile ? 60 : 70}
-          withOverlap={false}
+          height={getTransitionHeight(3, isMobile)}
         />
-
-        {/* Scroll Target for Pricing */}
-        <ScrollTarget id="pricing" height={8} />
 
         {/* Pricing Section */}
         <section 
@@ -618,23 +739,28 @@ const Index = () => {
               contain: 'none',
               willChange: 'auto',
               transform: 'none',
-              overflow: 'hidden'
+              overflow: 'hidden',
+              ...getResponsiveSpacing(4, isMobile)
             } : 
             {
               ...getZIndex(4),
-              ...getBackgroundTransition(4)
+              ...getBackgroundTransition(4),
+              ...getResponsiveSpacing(4, isMobile)
             }
           }
           className={cn(
-            "relative w-full pt-16 pb-20", // Standardized vertical spacing (reduced)
-            "bg-[#EEF3F9]", // Soft blue-grey - now applied to both mobile and desktop
-            isMobile && cn("py-8", moc.sectionPaddingMain), // Standardized mobile padding
+            "relative w-full bg-[#EEF3F9]",
+            isMobile ? cn(
+              "touch-action-pan-y overscroll-behavior-none",
+              mobileSpacingUtils.sectionSpacing // More compact section spacing for mobile
+            ) : null,
             moc.sectionWrapper // Standardized section wrapper
           )}
         >
           <div className={cn(
             "w-full max-w-7xl mx-auto overflow-hidden", 
-            moc.contentPadding // Standardized content padding
+            moc.contentPadding, // Standardized content padding
+            isMobile && mobileSpacingUtils.contentSpacing // Add compact content spacing for mobile
           )}>
             <Suspense fallback={<SectionLoader />}>
               <Pricing />
@@ -642,16 +768,13 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Section Transition: Pricing to Blog */}
-        <SectionTransition 
+        {/* Combined Scroll Target and Transition */}
+        <ScrollTransition 
+          id="blog"
           fromColor="#EEF3F9" 
           toColor="#F9F6EC" 
-          height={isMobile ? 60 : 70}
-          withOverlap={false}
+          height={getTransitionHeight(4, isMobile)}
         />
-
-        {/* Scroll Target for Blog */}
-        <ScrollTarget id="blog" height={8} />
 
         {/* Blog Section */}
         <section 
@@ -663,23 +786,28 @@ const Index = () => {
               contain: 'none',
               willChange: 'auto',
               transform: 'none',
-              overflow: 'hidden'
+              overflow: 'hidden',
+              ...getResponsiveSpacing(5, isMobile)
             } : 
             {
               ...getZIndex(5),
-              ...getBackgroundTransition(5)
+              ...getBackgroundTransition(5),
+              ...getResponsiveSpacing(5, isMobile)
             }
           }
           className={cn(
-            "relative w-full pt-16 pb-20", // Standardized vertical spacing (reduced)
-            "bg-[#F9F6EC]", // Soft champagne (same as Find Creators) - now applied to both mobile and desktop
-            isMobile && cn("py-8", moc.sectionPaddingMain), // Standardized mobile padding
+            "relative w-full bg-[#F9F6EC]",
+            isMobile ? cn(
+              "touch-action-pan-y overscroll-behavior-none",
+              mobileSpacingUtils.sectionSpacing // More compact section spacing for mobile
+            ) : null,
             moc.sectionWrapper // Standardized section wrapper
           )}
         >
           <div className={cn(
             "w-full max-w-7xl mx-auto overflow-hidden", 
-            moc.contentPadding // Standardized content padding
+            moc.contentPadding, // Standardized content padding
+            isMobile && mobileSpacingUtils.contentSpacing // Add compact content spacing for mobile
           )}>
             <Suspense fallback={<SectionLoader />}>
               <FeaturedBlogPosts />
@@ -687,12 +815,12 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Section Transition: Blog to Footer */}
-        <SectionTransition 
+        {/* Combined Scroll Target and Footer Transition */}
+        <ScrollTransition 
+          id="footer-transition"
           fromColor="#F9F6EC" 
           toColor="#f8f8fb" 
-          height={isMobile ? 60 : 70}
-          withOverlap={false}
+          height={getTransitionHeight(5, isMobile)}
         />
 
         {!isMobile && (
