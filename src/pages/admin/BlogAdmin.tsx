@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { 
   Plus, 
   Search, 
@@ -16,8 +16,11 @@ import { BlogService } from '@/services/BlogService';
 import { BlogPostPreview, BlogPostsFilters, BlogCategory } from '@/types/blog';
 import { formatDate } from '@/lib/utils';
 import SEO from '@/components/SEO';
+import { useAuth } from '@/components/auth/AuthContext';
 
 const BlogAdmin = () => {
+  const navigate = useNavigate();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
   const [posts, setPosts] = useState<BlogPostPreview[]>([]);
   const [totalPosts, setTotalPosts] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -27,6 +30,19 @@ const BlogAdmin = () => {
   const [searchQuery, setSearchQuery] = useState('');
   
   const postsPerPage = 10;
+  
+  // Check admin access
+  useEffect(() => {
+    // Wait until auth state is loaded
+    if (!authLoading) {
+      const adminToken = sessionStorage.getItem('adminAccessToken');
+      
+      // If not authenticated or no admin token, redirect to login
+      if (!isAuthenticated || adminToken !== 'granted') {
+        navigate('/admin/login');
+      }
+    }
+  }, [isAuthenticated, authLoading, navigate]);
   
   // Load posts and categories on mount
   useEffect(() => {
@@ -54,8 +70,11 @@ const BlogAdmin = () => {
       }
     };
     
-    fetchData();
-  }, [currentPage, filters]);
+    // Only fetch data if authenticated
+    if (isAuthenticated) {
+      fetchData();
+    }
+  }, [currentPage, filters, isAuthenticated]);
   
   // Handle search
   const handleSearch = (e: React.FormEvent) => {

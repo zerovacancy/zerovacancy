@@ -14,11 +14,26 @@ import { BlogService } from '@/services/BlogService';
 import { BlogPost, BlogCategory, BlogAuthor } from '@/types/blog';
 import { formatDate } from '@/lib/utils';
 import SEO from '@/components/SEO';
+import { useAuth } from '@/components/auth/AuthContext';
 
 const BlogEditor = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
   const isEditing = !!id;
+  
+  // Check admin access
+  useEffect(() => {
+    // Wait until auth state is loaded
+    if (!authLoading) {
+      const adminToken = sessionStorage.getItem('adminAccessToken');
+      
+      // If not authenticated or no admin token, redirect to login
+      if (!isAuthenticated || adminToken !== 'granted') {
+        navigate('/admin/login');
+      }
+    }
+  }, [isAuthenticated, authLoading, navigate]);
   
   // State for form fields
   const [title, setTitle] = useState('');

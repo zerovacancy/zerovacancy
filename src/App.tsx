@@ -163,6 +163,7 @@ function App() {
                   <Route path="/admin/blog" element={<BlogAdmin />} />
                   <Route path="/admin/blog/new" element={<BlogEditor />} />
                   <Route path="/admin/blog/edit/:id" element={<BlogEditor />} />
+                  <Route path="/admin/login" element={<AdminLogin />} />
                   <Route path="/hidden-admin-login" element={<AdminLogin />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>

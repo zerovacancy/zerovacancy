@@ -5,12 +5,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { supabase } from '@/integrations/supabase/client';
 import SEO from '@/components/SEO';
+import { LockKeyhole, AlertCircle } from 'lucide-react';
 
 /**
- * Simple AdminLogin component with no conditional hooks
+ * Simplified AdminLogin component
  */
 const AdminLogin = () => {
-  // ===== ALL HOOKS MUST BE DECLARED HERE, AT THE TOP LEVEL =====
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   
@@ -20,59 +20,11 @@ const AdminLogin = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   
-  // UI state - but never conditionally rendered
-  const [accessMessage, setAccessMessage] = useState('');
-  const [showLoginForm, setShowLoginForm] = useState(true);
-  
-  // Use a ref to prevent duplicate redirects
-  const redirectedRef = React.useRef(false);
-
-  // Check access permissions
+  // Check if already authenticated
   useEffect(() => {
-    const checkAccess = () => {
-      // Already authenticated - go directly to admin
-      if (isAuthenticated) {
-        navigate('/admin/blog');
-        return;
-      }
-      
-      // Has admin token - show login form
-      const adminToken = sessionStorage.getItem('adminAccessToken');
-      if (adminToken === 'granted') {
-        setShowLoginForm(true);
-        return;
-      }
-      
-      // Development environment - always allow
-      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        setShowLoginForm(true);
-        return;
-      }
-      
-      // Coming from our site - might be legitimate
-      const referrer = document.referrer;
-      if (referrer && referrer.includes(window.location.origin)) {
-        setShowLoginForm(true);
-        return;
-      }
-      
-      // Otherwise - unauthorized, redirect to home
-      setShowLoginForm(false);
-      setAccessMessage('Unauthorized access. Redirecting to home page...');
-      
-      // Use a delayed redirect without useState changes
-      if (!redirectedRef.current) {
-        redirectedRef.current = true;
-        const redirectTimer = window.setTimeout(() => {
-          navigate('/');
-        }, 1500);
-        
-        // Cleanup the timer if component unmounts
-        return () => window.clearTimeout(redirectTimer);
-      }
-    };
-    
-    checkAccess();
+    if (isAuthenticated) {
+      navigate('/admin/blog');
+    }
   }, [isAuthenticated, navigate]);
 
   // Handle the login form submission
@@ -88,27 +40,34 @@ const AdminLogin = () => {
     setError('');
     
     try {
-      // Set the admin token
-      sessionStorage.setItem('adminAccessToken', 'granted');
-      
-      // Try to log in
-      const { error } = await supabase.auth.signInWithPassword({
+      // Sign in with Supabase
+      const { error, data } = await supabase.auth.signInWithPassword({
         email,
         password
       });
       
       if (error) throw error;
       
+      // Set admin token to grant access
+      sessionStorage.setItem('adminAccessToken', 'granted');
+      
+      // Discretely log access for security monitoring
+      console.info('Admin login successful:', new Date().toISOString());
+      
+      // Store last login time for reference
+      localStorage.setItem('admin_last_login', new Date().toISOString());
+      
       // Success - go to admin panel
       navigate('/admin/blog');
     } catch (err: any) {
+      console.error('Login error:', err);
       setError(err.message || 'Failed to sign in');
+      sessionStorage.removeItem('adminAccessToken');
     } finally {
       setLoading(false);
     }
   };
   
-  // ===== ALWAYS RENDER BOTH VIEWS, USE CSS TO SHOW/HIDE =====
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <SEO
@@ -117,21 +76,14 @@ const AdminLogin = () => {
         noindex={true}
       />
       
-      {/* IMPORTANT: We always render both components, but hide one with CSS */}
-      {/* This prevents hook ordering issues in React */}
-      
-      {/* Unauthorized Message */}
-      <div className={`max-w-md w-full space-y-8 text-center ${showLoginForm ? 'hidden' : 'block'}`}>
-        <h2 className="text-3xl font-bold text-gray-900">Access Restricted</h2>
-        <p className="text-gray-600">{accessMessage}</p>
-      </div>
-      
-      {/* Login Form - Always rendered but might be hidden */}
-      <div className={`max-w-md w-full space-y-8 ${showLoginForm ? 'block' : 'hidden'}`}>
-        <div>
+      <div className="max-w-md w-full space-y-8">
+        <div className="text-center">
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Admin Access
+            Blog Admin Access
           </h2>
+          <p className="mt-2 text-sm text-gray-600">
+            Sign in to manage blog posts and content
+          </p>
         </div>
         
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -171,7 +123,10 @@ const AdminLogin = () => {
           </div>
 
           {error && (
-            <div className="text-red-500 text-sm mt-2">{error}</div>
+            <div className="flex items-center text-red-500 text-sm mt-2">
+              <AlertCircle size={16} className="mr-2" />
+              {error}
+            </div>
           )}
 
           <div>
@@ -180,8 +135,21 @@ const AdminLogin = () => {
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-brand-purple hover:bg-brand-purple-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-purple"
               disabled={loading}
             >
+              <span className="absolute left-0 inset-y-0 flex items-center pl-3">
+                <LockKeyhole size={16} className="h-5 w-5 text-brand-purple-light group-hover:text-white" />
+              </span>
               {loading ? 'Signing in...' : 'Sign in'}
             </Button>
+          </div>
+          
+          {/* Quick instructions for team members */}
+          <div className="text-center text-sm text-gray-600 mt-4">
+            <p>
+              <strong>Team Access:</strong> Use your ZeroVacancy account email and password
+            </p>
+            <p className="mt-1">
+              Contact admin if you need access or forgot credentials
+            </p>
           </div>
         </form>
       </div>
