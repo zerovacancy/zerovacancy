@@ -41,22 +41,21 @@ const SectionTransition = ({
 }) => {
   const isMobile = useIsMobile();
   
-  // Adjust height and margins for mobile
+  // Adjust height for mobile without negative margins
   const mobileHeight = Math.max(height / 2, 40); // Increased minimum height on mobile
   const actualHeight = isMobile ? mobileHeight : height;
-  const overlapMargin = isMobile ? '-20px' : '-20px'; // Increased negative margin for better overlap on mobile
 
   return (
     <div 
       className={cn(
-        "w-full overflow-hidden relative z-20",
+        "w-full overflow-visible relative z-10", // Changed to overflow-visible to prevent clipping
         isMobile && "touch-action-pan-y overscroll-behavior-none"
       )}
       style={{ 
         height: `${actualHeight}px`,
-        // Increase overlap to eliminate any white space and purple lines
-        marginTop: withOverlap ? overlapMargin : '0',
-        marginBottom: withOverlap ? overlapMargin : '0',
+        // No negative margins to prevent jittering
+        marginTop: '0',
+        marginBottom: '0',
         // Create a fuller blend between sections
         padding: isMobile ? '0' : '10px', // Remove padding on mobile
         // Fix mobile scrolling
@@ -65,18 +64,16 @@ const SectionTransition = ({
         // Ensure no borders on mobile
         borderTop: isMobile ? 'none' : undefined,
         borderBottom: isMobile ? 'none' : undefined,
-        // Extra width on mobile to prevent edge issues
-        width: isMobile ? '102vw' : '100%',
-        marginLeft: isMobile ? '-1vw' : '0'
+        // Standard width without overflow
+        width: '100%',
+        marginLeft: '0'
       }}
     >
       {/* Gradient background for smooth transition */}
       <div 
         className="w-full h-full"
         style={{
-          background: isMobile
-            ? `linear-gradient(to bottom, ${fromColor} 0%, ${toColor} 100%)`  // Smoother gradient on mobile
-            : `linear-gradient(to bottom, ${fromColor} 0%, ${fromColor} 10%, ${toColor} 90%, ${toColor} 100%)`,
+          background: `linear-gradient(to bottom, ${fromColor} 0%, ${toColor} 100%)`, // Simpler gradient for all devices
           borderTop: 'none',
           borderBottom: 'none',
           borderLeft: 'none',
@@ -108,12 +105,12 @@ const ScrollTarget: React.FC<ScrollTargetProps> = ({ id, height = 12, className 
       )}
       style={{ 
         height: `${height}px`,
-        position: isMobile ? 'relative' : 'absolute',
-        zIndex: isMobile ? '1' : '30', // Adjusted z-index for mobile
+        position: 'relative', // Changed to always be relative instead of absolute
+        zIndex: 10, // Consistent z-index
         background: 'transparent',
-        marginTop: isMobile ? '0' : '-24px', // No negative margin on mobile
+        marginTop: '0', // Removed negative margin completely
         pointerEvents: 'none', // Prevent blocking clicks on other elements
-        transform: 'translateZ(0)',
+        // Removed transform property to prevent hardware acceleration
         touchAction: isMobile ? 'pan-y' : 'auto' // Fix mobile scrolling
       }}
     />
@@ -150,6 +147,57 @@ const Index = () => {
     4: true,
     5: true
   });
+  
+  // Safari-specific fixes for jittering issues
+  useEffect(() => {
+    // Check if browser is Safari
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    
+    if (isSafari) {
+      // Add a class to the document for Safari-specific CSS
+      document.documentElement.classList.add('safari');
+      
+      // Create and add Safari-specific CSS
+      const safariStyle = document.createElement('style');
+      safariStyle.innerHTML = `
+        /* Disable problematic hardware acceleration in creator section */
+        .safari .creator-section * {
+          will-change: auto !important;
+          transform: none !important;
+          backface-visibility: visible !important;
+          perspective: none !important;
+          transition: none !important;
+        }
+        
+        /* Fix the unstable positioning */
+        .safari .creator-section {
+          isolation: isolate;
+          position: relative;
+          z-index: 10;
+        }
+        
+        /* Prevent section transitions from causing jitter */
+        .safari .w-full.overflow-visible.relative.z-10 {
+          margin: 0 !important;
+          overflow: hidden !important;
+          transition: none !important;
+        }
+        
+        /* Fix scroll targets in Safari */
+        .safari [id="find-creators"],
+        .safari [id="how-it-works"],
+        .safari [id="features"],
+        .safari [id="pricing"],
+        .safari [id="blog"] {
+          position: relative !important;
+          margin: 0 !important;
+          transform: none !important;
+          transition: none !important;
+        }
+      `;
+      document.head.appendChild(safariStyle);
+    }
+  }, []);
   
   // Simple flag to track Alt+A+Z key combination
   const adminLoginRef = React.useRef({
@@ -408,6 +456,7 @@ const Index = () => {
             "bg-[#F9F6EC]", // Soft champagne - now applied to both mobile and desktop
             isMobile && cn("py-8", moc.sectionPaddingMain), // Standardized mobile padding
             moc.sectionWrapper, // Standardized section wrapper
+            "creator-section", // Added this class for Safari-specific fixes
             isMobile && "px-0 mx-0 max-w-none find-creators-section" // Remove horizontal padding/margin on mobile
           )}
         >
