@@ -15,7 +15,6 @@ import { CookieConsent } from '@/components/ui/cookie-consent';
 import FontLoader from '@/components/FontLoader';
 import CriticalPreload from '@/components/CriticalPreload';
 import { AuthProvider } from '@/components/auth/AuthContext';
-import AdminLoginLink from '@/components/admin/AdminLoginLink';
 
 const Index = lazy(() => import('./pages/index'));
 const PaymentConfirmation = lazy(() => import('./pages/PaymentConfirmation'));
@@ -145,7 +144,6 @@ function App() {
             <ScrollToTop />
             <ScrollProgress />
             <ScrollToTopComponent />
-            <AdminLoginLink />
             <div className="relative landscape-container">
               <Suspense fallback={<PageLoader />}>
                 <Routes>

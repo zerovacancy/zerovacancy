@@ -151,17 +151,37 @@ const Index = () => {
     5: true
   });
   
-  // Add a hidden admin login method
+  // Add a secure admin login method using key sequence
   useEffect(() => {
-    // Add global functions to the window object that can be called from browser console
-    (window as any).adminLogin = async () => {
+    // Secret passphrase as a Konami-style code
+    const secretKeySequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+    let keySequence: string[] = [];
+    let adminPasswordHash = 'ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f'; // SHA-256 of 'admin123' - this should be changed in production
+
+    // Function to validate password
+    const validatePassword = async (password: string): Promise<boolean> => {
+      // Use subtle crypto to hash password with SHA-256
+      const encoder = new TextEncoder();
+      const data = encoder.encode(password);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      return hashHex === adminPasswordHash;
+    };
+
+    // Add a more secure admin login function
+    (window as any).adminLoginAuth = async (secretKey: string) => {
       try {
+        if (!await validatePassword(secretKey)) {
+          console.error('Invalid authentication key');
+          return;
+        }
+        
         const email = prompt('Email:');
         const password = prompt('Password:');
         
         if (!email || !password) return;
         
-        console.log('Attempting admin login...');
         const { data, error } = await supabase.auth.signInWithPassword({ 
           email, 
           password 
@@ -169,78 +189,54 @@ const Index = () => {
         
         if (error) {
           console.error('Login failed:', error.message);
-          alert('Login failed: ' + error.message);
           return;
         }
         
         if (data.user) {
-          console.log('Login successful, redirecting to admin...');
           navigate('/admin/blog');
         }
       } catch (err: any) {
-        console.error('Unexpected error:', err);
-        alert('Error: ' + (err.message || 'Unknown error'));
+        console.error('Unexpected error');
       }
     };
     
-    // Add a function to create an admin user (for initial setup)
-    (window as any).createAdminUser = async () => {
-      try {
-        const email = prompt('Create admin email:');
-        const password = prompt('Create admin password (min 6 chars):');
-        
-        if (!email || !password || password.length < 6) {
-          alert('Invalid input. Password must be at least 6 characters.');
-          return;
-        }
-        
-        console.log('Creating admin user...');
-        const { data, error } = await supabase.auth.signUp({ 
-          email, 
-          password,
-          options: {
-            data: {
-              role: 'admin'
+    // Keyboard event handler for secret sequence
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Add the key to the sequence
+      keySequence.push(event.key);
+      
+      // Keep only the last N keys where N is the length of the secret sequence
+      if (keySequence.length > secretKeySequence.length) {
+        keySequence = keySequence.slice(-secretKeySequence.length);
+      }
+      
+      // Check if the current sequence matches the secret sequence
+      const isMatch = keySequence.every((key, index) => key === secretKeySequence[index]);
+      
+      if (isMatch && keySequence.length === secretKeySequence.length) {
+        // Secret sequence matched, prompt for admin password
+        const password = prompt('Enter admin password:');
+        if (password) {
+          validatePassword(password).then(isValid => {
+            if (isValid) {
+              // Set the admin access token before navigating
+              sessionStorage.setItem('adminAccessToken', 'granted');
+              navigate('/hidden-admin-login');
             }
-          }
-        });
-        
-        if (error) {
-          console.error('User creation failed:', error.message);
-          alert('User creation failed: ' + error.message);
-          return;
+          });
         }
-        
-        console.log('User creation response:', data);
-        alert('Admin user created! Check your email for verification if required.');
-      } catch (err: any) {
-        console.error('Unexpected error:', err);
-        alert('Error: ' + (err.message || 'Unknown error'));
+        // Clear the sequence
+        keySequence = [];
       }
     };
     
-    // Create a hidden button that will only be visible to the user if they know about it
-    const hiddenButton = document.createElement('button');
-    hiddenButton.id = 'admin-login-button';
-    hiddenButton.textContent = 'Admin Login';
-    hiddenButton.style.position = 'fixed';
-    hiddenButton.style.bottom = '10px';
-    hiddenButton.style.right = '10px';
-    hiddenButton.style.zIndex = '9999';
-    hiddenButton.style.opacity = '0.1'; // Nearly invisible
-    hiddenButton.style.padding = '8px 12px';
-    hiddenButton.style.background = '#f0f0f0';
-    hiddenButton.style.border = '1px solid #ccc';
-    hiddenButton.style.borderRadius = '4px';
-    hiddenButton.onclick = (window as any).adminLogin;
-    
-    document.body.appendChild(hiddenButton);
+    // Add the keyboard event listener
+    document.addEventListener('keydown', handleKeyDown);
     
     return () => {
       // Clean up
-      document.body.removeChild(hiddenButton);
-      delete (window as any).adminLogin;
-      delete (window as any).createAdminUser; // Still remove from window object
+      document.removeEventListener('keydown', handleKeyDown);
+      delete (window as any).adminLoginAuth;
     };
   }, [navigate]);
   

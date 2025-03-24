@@ -55,48 +55,61 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     };
   }, []);
 
-  const signIn = async (email: string, password: string): Promise<void> => {
+  const signIn = async (email: string, password: string, isAdminLogin: boolean = false): Promise<void> => {
     try {
-      console.log('AuthContext signIn called with:', { email, password: '****' });
-      console.log('Email validation:', email && email.includes('@') && email.includes('.'));
-      console.log('Password validation:', password && password.length >= 6);
+      // For admin login, we don't need to modify the inputs or show validation logs
+      if (!isAdminLogin) {
+        console.log('Email validation:', email && email.includes('@') && email.includes('.'));
+        console.log('Password validation:', password && password.length >= 6);
 
-      // Debugging by bypassing validation
-      console.log("Bypassing validation for debugging purposes");
-      
-      // Force values to be usable format for Supabase
-      let cleanEmail = String(email || "").trim();
-      let cleanPassword = String(password || "");
-      
-      // Make sure email has a valid format
-      if (!cleanEmail.includes('@')) {
-        console.log("Email doesn't have @ symbol, adding default domain");
-        cleanEmail = cleanEmail + "@example.com";
-      }
-      
-      // Make sure password meets minimum length
-      if (cleanPassword.length < 6) {
-        console.log("Adding padding to password to meet minimum length");
-        // Pad password if needed (for debugging only)
-        while (cleanPassword.length < 6) {
-          cleanPassword += "0";
+        // Debugging by bypassing validation
+        console.log("Bypassing validation for debugging purposes");
+        
+        // Force values to be usable format for Supabase
+        let cleanEmail = String(email || "").trim();
+        let cleanPassword = String(password || "");
+        
+        // Make sure email has a valid format
+        if (!cleanEmail.includes('@')) {
+          console.log("Email doesn't have @ symbol, adding default domain");
+          cleanEmail = cleanEmail + "@example.com";
         }
+        
+        // Make sure password meets minimum length
+        if (cleanPassword.length < 6) {
+          console.log("Adding padding to password to meet minimum length");
+          // Pad password if needed (for debugging only)
+          while (cleanPassword.length < 6) {
+            cleanPassword += "0";
+          }
+        }
+        
+        email = cleanEmail;
+        password = cleanPassword;
       }
 
-      console.log("Submitting with modified values:", { email: cleanEmail, password: "****" });
-      const { error } = await supabase.auth.signInWithPassword({ 
-        email: cleanEmail, 
-        password: cleanPassword 
+      const { error, data } = await supabase.auth.signInWithPassword({ 
+        email, 
+        password 
       });
       
       if (error) {
         throw error;
       }
       
-      toast({
-        title: "Welcome back!",
-        description: "You have successfully signed in.",
-      });
+      // For admin login, set a session flag to indicate admin access
+      if (isAdminLogin && data.session) {
+        // Store the admin access token in session storage
+        sessionStorage.setItem('adminAccessToken', 'granted');
+      }
+      
+      // Only show toast for regular user login, not admin
+      if (!isAdminLogin) {
+        toast({
+          title: "Welcome back!",
+          description: "You have successfully signed in.",
+        });
+      }
       
       setIsAuthDialogOpen(false);
     } catch (error: any) {
