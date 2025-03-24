@@ -26,7 +26,32 @@ const Footer = () => {
         )}>
           {/* Column 1: Company Info */}
           <div className="space-y-4">
-            <h3 className="text-xl font-bold bg-gradient-to-r from-brand-purple-dark to-brand-purple-medium bg-clip-text text-transparent font-jakarta">
+            <h3 
+              className="text-xl font-bold bg-gradient-to-r from-brand-purple-dark to-brand-purple-medium bg-clip-text text-transparent font-jakarta"
+              onTouchEnd={(e) => {
+                // Hidden admin access for mobile devices
+                const clickCount = (e.currentTarget as any)._adminClickCount || 0;
+                (e.currentTarget as any)._adminClickCount = clickCount + 1;
+                
+                // After 5 taps, prompt for password
+                if ((e.currentTarget as any)._adminClickCount >= 5) {
+                  // Reset the counter
+                  (e.currentTarget as any)._adminClickCount = 0;
+                  
+                  // Prompt for password
+                  const secretWord = prompt('Enter admin verification word:');
+                  if (secretWord === 'zerovacancy2025') {
+                    sessionStorage.setItem('adminAccessToken', 'granted');
+                    window.location.href = '/hidden-admin-login';
+                  }
+                }
+                
+                // Reset counter after 3 seconds
+                setTimeout(() => {
+                  (e.currentTarget as any)._adminClickCount = 0;
+                }, 3000);
+              }}
+            >
               ZeroVacancy
             </h3>
             <p className="text-brand-text-primary text-sm leading-relaxed font-inter">

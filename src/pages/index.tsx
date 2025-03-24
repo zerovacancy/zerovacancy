@@ -151,95 +151,47 @@ const Index = () => {
     5: true
   });
   
-  // Store the Konami code sequence in a ref - define all refs before any hooks
-  const keySequenceRef = React.useRef<string[]>([]);
-  const hasRedirectedRef = React.useRef(false);
+  // Simple flag to track Alt+A+Z key combination
+  const adminLoginRef = React.useRef({
+    altPressed: false,
+    redirected: false
+  });
   
-  // Add a secure admin login method using key sequence
+  // Add a simpler secure admin login method with keyboard shortcut
   useEffect(() => {
-    // Secret passphrase as a Konami-style code
-    const secretKeySequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
-    const adminPasswordHash = 'ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f'; // SHA-256 of 'admin123' - this should be changed in production
-
-    // Function to validate password
-    const validatePassword = async (password: string): Promise<boolean> => {
-      // Use subtle crypto to hash password with SHA-256
-      const encoder = new TextEncoder();
-      const data = encoder.encode(password);
-      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-      const hashArray = Array.from(new Uint8Array(hashBuffer));
-      const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-      return hashHex === adminPasswordHash;
-    };
-
-    // Add a more secure admin login function
-    (window as any).adminLoginAuth = async (secretKey: string) => {
-      try {
-        if (!await validatePassword(secretKey)) {
-          console.error('Invalid authentication key');
-          return;
-        }
-        
-        const email = prompt('Email:');
-        const password = prompt('Password:');
-        
-        if (!email || !password) return;
-        
-        const { data, error } = await supabase.auth.signInWithPassword({ 
-          email, 
-          password 
-        });
-        
-        if (error) {
-          console.error('Login failed:', error.message);
-          return;
-        }
-        
-        if (data.user) {
-          navigate('/admin/blog');
-        }
-      } catch (err: any) {
-        console.error('Unexpected error');
-      }
-    };
-    
-    // Keyboard event handler for secret sequence
+    // Simple keyboard shortcut handling for Alt+A+Z
     const handleKeyDown = (event: KeyboardEvent) => {
-      // Get the current sequence from the ref
-      const currentSequence = [...keySequenceRef.current];
+      // Track Alt key state (use event.altKey for cross-browser compatibility)
+      adminLoginRef.current.altPressed = event.altKey;
       
-      // Add the key to the sequence
-      currentSequence.push(event.key);
-      
-      // Keep only the last N keys where N is the length of the secret sequence
-      if (currentSequence.length > secretKeySequence.length) {
-        keySequenceRef.current = currentSequence.slice(-secretKeySequence.length);
-      } else {
-        keySequenceRef.current = currentSequence;
-      }
-      
-      // Check if the current sequence matches the secret sequence
-      const isMatch = keySequenceRef.current.every((key, index) => key === secretKeySequence[index]);
-      
-      if (isMatch && keySequenceRef.current.length === secretKeySequence.length) {
-        // Secret sequence matched, prompt for admin password
-        const password = prompt('Enter admin password:');
-        if (password) {
-          validatePassword(password).then(isValid => {
-            if (isValid) {
+      // Check for the 'a' key when Alt is pressed
+      if (event.altKey && event.key.toLowerCase() === 'a') {
+        // Wait for the 'z' key to complete the sequence
+        const checkForZ = (e: KeyboardEvent) => {
+          if (e.key.toLowerCase() === 'z') {
+            // Success - the full Alt+A+Z sequence was pressed
+            document.removeEventListener('keydown', checkForZ);
+            
+            // Prompt for verification word
+            const secretWord = prompt('Enter admin verification word:');
+            if (secretWord === 'zerovacancy2025') {
               // Set the admin access token before navigating
               sessionStorage.setItem('adminAccessToken', 'granted');
               
-              // Only navigate if we haven't already
-              if (!hasRedirectedRef.current) {
-                hasRedirectedRef.current = true;
+              // Only redirect if not already done
+              if (!adminLoginRef.current.redirected) {
+                adminLoginRef.current.redirected = true;
                 navigate('/hidden-admin-login');
               }
             }
-          });
-        }
-        // Clear the sequence
-        keySequenceRef.current = [];
+          } else {
+            // Wrong key pressed after Alt+A, remove listener
+            document.removeEventListener('keydown', checkForZ);
+          }
+        };
+        
+        // Add a temporary listener for the 'z' key
+        document.addEventListener('keydown', checkForZ, { once: true });
       }
     };
     
@@ -249,7 +201,6 @@ const Index = () => {
     return () => {
       // Clean up
       document.removeEventListener('keydown', handleKeyDown);
-      delete (window as any).adminLoginAuth;
     };
   }, [navigate]);
   
