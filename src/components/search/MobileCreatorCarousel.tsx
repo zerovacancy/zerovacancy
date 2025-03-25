@@ -1,7 +1,5 @@
-import React, { useCallback, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import useEmblaCarousel from 'embla-carousel-react';
-import { cn } from '@/lib/utils';
 import { CreatorCard } from '../creator/CreatorCard';
 import type { Creator } from '../creator/types';
 
@@ -13,6 +11,9 @@ interface MobileCreatorCarouselProps {
   onPreviewClick?: (imageSrc: string) => void;
 }
 
+/**
+ * Mobile-optimized carousel using native scroll snap
+ */
 export const MobileCreatorCarousel = ({
   creators,
   onImageLoad,
@@ -20,66 +21,131 @@ export const MobileCreatorCarousel = ({
   imageRef,
   onPreviewClick
 }: MobileCreatorCarouselProps) => {
-  // Reset to default embla options
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    align: 'start',
-    containScroll: 'trimSnaps'
-  });
-  
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(true);
+
+  // Function to scroll to a specific slide
+  const scrollToSlide = (index: number) => {
+    if (!scrollContainerRef.current) return;
+    
+    // Calculate the scroll position
+    const slideWidth = scrollContainerRef.current.offsetWidth * 0.85; // 85% of container width
+    const scrollPosition = index * (slideWidth + 16); // 16px is the margin-right
+    
+    // Smooth scroll to the position
+    scrollContainerRef.current.scrollTo({
+      left: scrollPosition,
+      behavior: 'smooth'
+    });
+    
+    // Update the selected index
+    setSelectedIndex(index);
+    
+    // Update button states
+    updateButtonStates(index);
+  };
   
-  const scrollPrev = useCallback(() => {
-    if (emblaApi) {
-      emblaApi.scrollPrev();
-      setSelectedIndex(emblaApi.selectedScrollSnap());
-      
-      // Force update using requestAnimationFrame
-      requestAnimationFrame(() => {
-        if (emblaApi) {
-          emblaApi.reInit();
-          setSelectedIndex(emblaApi.selectedScrollSnap());
-        }
-      });
+  // Update the button states based on the current index
+  const updateButtonStates = (index: number) => {
+    setCanScrollPrev(index > 0);
+    setCanScrollNext(index < creators.length - 1);
+  };
+  
+  // Handle scroll event to update the selected index
+  const handleScroll = () => {
+    if (!scrollContainerRef.current) return;
+    
+    // Calculate which slide is most visible
+    const scrollLeft = scrollContainerRef.current.scrollLeft;
+    const slideWidth = scrollContainerRef.current.offsetWidth * 0.85; // 85% of container width
+    const currentIndex = Math.round(scrollLeft / (slideWidth + 16)); // 16px is the margin-right
+    
+    // Update the selected index and button states
+    if (currentIndex !== selectedIndex) {
+      setSelectedIndex(currentIndex);
+      updateButtonStates(currentIndex);
     }
-  }, [emblaApi]);
+  };
   
-  const scrollNext = useCallback(() => {
-    if (emblaApi) {
-      emblaApi.scrollNext();
-      setSelectedIndex(emblaApi.selectedScrollSnap());
-      
-      // Force update using requestAnimationFrame
-      requestAnimationFrame(() => {
-        if (emblaApi) {
-          emblaApi.reInit();
-          setSelectedIndex(emblaApi.selectedScrollSnap());
-        }
-      });
+  // Scroll to the previous slide
+  const scrollPrev = () => {
+    if (selectedIndex > 0) {
+      scrollToSlide(selectedIndex - 1);
     }
-  }, [emblaApi]);
+  };
   
+  // Scroll to the next slide
+  const scrollNext = () => {
+    if (selectedIndex < creators.length - 1) {
+      scrollToSlide(selectedIndex + 1);
+    }
+  };
+  
+  // Set up scroll event listener
+  useEffect(() => {
+    const scrollContainer = scrollContainerRef.current;
+    if (!scrollContainer) return;
+    
+    // Add passive scroll listener for better performance
+    scrollContainer.addEventListener('scroll', handleScroll, { passive: true });
+    
+    // Clean up the listener when component unmounts
+    return () => {
+      scrollContainer.removeEventListener('scroll', handleScroll);
+    };
+  }, [selectedIndex]);
+  
+  // Update button states when creators change
+  useEffect(() => {
+    updateButtonStates(selectedIndex);
+  }, [creators, selectedIndex]);
+
   return (
     <div className="relative w-full py-4">
-      <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex">
-          {creators.map((creator, index) => (
-            <div key={creator.name} className="flex-none w-[85%] px-2">
-              <CreatorCard 
-                creator={creator} 
-                onImageLoad={onImageLoad}
-                loadedImages={loadedImages}
-                imageRef={imageRef}
-                onPreviewClick={onPreviewClick}
-              />
-            </div>
-          ))}
-        </div>
+      {/* Native scroll-snap container */}
+      <div 
+        ref={scrollContainerRef}
+        className="w-full overflow-x-auto pb-4 hide-scrollbar"
+        style={{
+          scrollSnapType: 'x mandatory',
+          scrollBehavior: 'smooth',
+          WebkitOverflowScrolling: 'touch',
+          display: 'flex',
+          paddingLeft: '20px',
+          paddingRight: '20px',
+          // Hide scrollbar
+          msOverflowStyle: 'none',
+          scrollbarWidth: 'none'
+        }}
+      >
+        {creators.map((creator, index) => (
+          <div 
+            key={creator.name} 
+            className="flex-none w-[85%] mr-4"
+            style={{
+              scrollSnapAlign: 'start',
+              scrollSnapStop: 'always',
+            }}
+          >
+            <CreatorCard 
+              creator={creator} 
+              onImageLoad={onImageLoad}
+              loadedImages={loadedImages}
+              imageRef={(node) => imageRef && imageRef(node)}
+              onPreviewClick={onPreviewClick}
+            />
+          </div>
+        ))}
       </div>
       
       {/* Navigation buttons */}
       <button
         onClick={scrollPrev}
-        className="absolute left-2 top-1/2 -translate-y-1/2 bg-purple-600 rounded-full p-3 text-white z-10"
+        className={`absolute left-2 top-1/2 -translate-y-1/2 bg-purple-600 rounded-full p-3 text-white z-10 transition-opacity ${
+          !canScrollPrev ? 'opacity-0 pointer-events-none' : 'opacity-100'
+        }`}
         aria-label="Previous"
       >
         <ChevronLeft className="w-6 h-6" />
@@ -87,23 +153,36 @@ export const MobileCreatorCarousel = ({
       
       <button
         onClick={scrollNext}
-        className="absolute right-2 top-1/2 -translate-y-1/2 bg-purple-600 rounded-full p-3 text-white z-10"
+        className={`absolute right-2 top-1/2 -translate-y-1/2 bg-purple-600 rounded-full p-3 text-white z-10 transition-opacity ${
+          !canScrollNext ? 'opacity-0 pointer-events-none' : 'opacity-100'
+        }`}
         aria-label="Next"
       >
         <ChevronRight className="w-6 h-6" />
       </button>
       
-      {/* Indicators */}
+      {/* Indicator dots */}
       <div className="flex justify-center mt-4 space-x-2">
         {creators.map((_, idx) => (
-          <div
+          <button
             key={idx}
-            className={`h-2 rounded-full ${
+            onClick={() => scrollToSlide(idx)}
+            className={`h-2 rounded-full transition-all ${
               idx === selectedIndex ? 'w-4 bg-purple-600' : 'w-2 bg-purple-300'
             }`}
+            aria-label={`Go to slide ${idx + 1}`}
           />
         ))}
       </div>
+      
+      {/* CSS for hiding scrollbars */}
+      <style>
+        {`
+          .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+          }
+        `}
+      </style>
     </div>
   );
 };
