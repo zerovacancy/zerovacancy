@@ -980,11 +980,12 @@ export class BlogService {
       console.log(`Uploading image to path: ${filePath}`);
       
       // Upload the file to Supabase Storage
+      // Change bucket name to 'images' which is a more common default bucket name
       const { data: uploadData, error } = await supabase.storage
-        .from('blog-images')
+        .from('images')
         .upload(filePath, file, {
           cacheControl: '3600',
-          upsert: false
+          upsert: true
         });
       
       if (error) {
@@ -998,7 +999,7 @@ export class BlogService {
       
       // Get the public URL for the uploaded file
       const { data } = supabase.storage
-        .from('blog-images')
+        .from('images')
         .getPublicUrl(filePath);
       
       if (!data || !data.publicUrl) {
