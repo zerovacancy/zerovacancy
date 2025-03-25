@@ -336,6 +336,13 @@ export class BlogService {
         reading_time: postData.readingTime || null
       };
       
+      // Log each field to verify it's being sent correctly
+      console.log('Creating post with these fields:', {
+        title: supabasePost.title ? `${supabasePost.title.substring(0, 20)}...` : 'MISSING',
+        content: supabasePost.content ? `${supabasePost.content.length} chars` : 'MISSING',
+        excerpt: supabasePost.excerpt ? `${supabasePost.excerpt.substring(0, 20)}...` : 'MISSING'
+      });
+      
       console.log('Creating blog post with data:', JSON.stringify(supabasePost, null, 2));
       
       // Insert the post
@@ -442,6 +449,20 @@ export class BlogService {
         updated_at: new Date().toISOString()
       };
       
+      // IMPORTANT: Make sure key fields are sent even if undefined
+      // This fixes issues where fields weren't being updated
+      if (cleanPostData.title !== undefined) {
+        supabasePost.title = cleanPostData.title;
+      }
+      
+      if (cleanPostData.content !== undefined) {
+        supabasePost.content = cleanPostData.content;
+      }
+      
+      if (cleanPostData.excerpt !== undefined) {
+        supabasePost.excerpt = cleanPostData.excerpt;
+      }
+      
       // Only update provided fields
       Object.keys(supabasePost).forEach(key => {
         if (supabasePost[key] === undefined) {
@@ -479,6 +500,16 @@ export class BlogService {
       
       console.log('Updating blog post:', id, JSON.stringify(supabasePost, null, 2));
       
+      // Log the actual data being sent to Supabase for update
+      console.log('Sending to Supabase for update:', {
+        id,
+        supabasePost,
+        title: supabasePost.title ? 'PRESENT' : 'MISSING',
+        content: supabasePost.content ? 'PRESENT' : 'MISSING',
+        excerpt: supabasePost.excerpt ? 'PRESENT' : 'MISSING',
+        fieldsCount: Object.keys(supabasePost).length
+      });
+      
       // Update the post
       const { data, error } = await supabase
         .from('blog_posts')
@@ -496,7 +527,12 @@ export class BlogService {
         throw new Error('No data returned from update operation');
       }
       
-      console.log('Blog post updated successfully');
+      console.log('Blog post updated successfully, returned data:', {
+        id: data.id,
+        title: data.title || 'MISSING',
+        content: data.content ? 'PRESENT' : 'MISSING',
+        fieldsUpdated: Object.keys(data).length
+      });
       
       // Update tags if provided
       if (tags) {
