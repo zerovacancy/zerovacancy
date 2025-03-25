@@ -378,8 +378,8 @@ export const Hero = () => {
       className={cn(
         "flex items-center justify-center flex-col w-full", 
         "px-0", 
-        isMobile ? "py-10 my-0" : "pt-24 pb-24 sm:pt-28 sm:pb-28 lg:pt-32 lg:pb-36 mt-1",
-        "min-h-fit",
+        "my-auto", // Added my-auto for both mobile and desktop for vertical centering
+        "min-h-[80vh]", // Changed from min-h-fit to ensure container takes sufficient vertical space
         !isMobile && "relative z-10",
         "gap-3 sm:gap-4", 
         "touch-manipulation",
@@ -404,7 +404,8 @@ export const Hero = () => {
       <div 
         className={cn(
           "flex flex-col items-center justify-center max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8",
-          "gap-1 sm:gap-6", 
+          "gap-4 sm:gap-6", // Increased gap for better vertical rhythm
+          "my-auto", // Added my-auto for better vertical centering
           isInView ? "animate-fade-in delay-100" : "opacity-0"
         )}
         style={isMobile ? { 
@@ -422,13 +423,13 @@ export const Hero = () => {
           {/* Visual heading for users */}
           <div aria-hidden="true" className={cn(
             "tracking-tight leading-[1.15] font-bold font-jakarta mx-auto",
-            isMobile ? "mb-3 mt-4 text-center" : "mb-0 sm:mb-0 text-center max-w-5xl"
+            "text-center max-w-5xl" // Removed all margins to support vertical centering
           )}>
             <span 
               className={cn(
                 isMobile ? "text-[2rem]" : "text-3xl sm:text-5xl lg:text-6xl",
                 "tracking-[-0.02em]",
-                "block sm:inline-block mb-0 font-jakarta",
+                "block sm:inline-block font-jakarta",
                 "bg-clip-text text-transparent",
                 "bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1]",
                 "font-bold",
@@ -436,9 +437,8 @@ export const Hero = () => {
                   ? "drop-shadow-[0_1px_3px_rgba(74,45,217,0.2)]" 
                   : "drop-shadow-[0_1px_2px_rgba(74,45,217,0.05)]", 
                 isMobile && "relative",
-                isMobile && "mb-3",
                 "w-full mx-auto text-center",
-                !isMobile && "mb-3" // Added bottom margin
+                "mb-3" // Consistent bottom margin for both mobile and desktop
               )}
               style={{ height: isMobile ? "auto" : "auto", letterSpacing: isMobile ? "-0.03em" : "-0.02em" }}
             >
@@ -452,8 +452,8 @@ export const Hero = () => {
               className={cn(
                 "relative flex w-full justify-center",
                 isMobile 
-                  ? "h-[4em] mt-1" // Increased height for mobile
-                  : "h-[4.5em] sm:h-[3em] md:h-[2.5em] lg:h-[2.5em] mt-0 mb-6", // Equal vertical spacing
+                  ? "h-[4em]" // Increased height for mobile, removed mt-1
+                  : "h-[4.5em] sm:h-[3em] md:h-[2.5em] lg:h-[2.5em] mb-6", // Equal vertical spacing, removed mt-0
                 "overflow-visible",
                 "gpu-accelerated will-change-auto",
                 isMobile && "mobile-optimize"
@@ -512,12 +512,12 @@ export const Hero = () => {
           className={cn(
             "text-base leading-relaxed",
             "text-brand-text-primary", 
-            isMobile ? "text-center" : "text-center", 
+            "text-center", 
             "max-w-[95%] sm:max-w-[650px]",
             "mx-auto", 
             "font-inter",
             "relative",
-            isMobile ? "mt-4 mb-10 text-sm px-4 py-2" : "mt-6 mb-8"
+            isMobile ? "mb-8 text-sm px-4 py-2" : "mb-8" // Removed mt-4/mt-6 to help vertical centering
           )}
         >
           {isMobile ? (
@@ -550,7 +550,7 @@ export const Hero = () => {
       <div 
         className={cn(
           "w-full", 
-          isMobile ? "mt-[-8px]" : "mt-3 sm:mt-4",
+          "mt-2", // Standardized margin for both mobile and desktop
           isMobile ? "px-4" : "px-4 sm:px-6 lg:px-8",
           isInView ? "animate-fade-in delay-200" : "opacity-0"
         )}
