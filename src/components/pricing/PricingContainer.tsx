@@ -261,7 +261,7 @@ export const PricingContainer = () => {
       </AnimatePresence>
       
       {isMobile ? (
-        <div className="px-4">
+        <div className="px-4 max-w-full overflow-x-hidden">
           {pricingTiers.map((tier, index) => {
             const colorScheme = getColorScheme(tier.color);
             const isExpanded = !!expandedFeatures[index];
@@ -271,7 +271,9 @@ export const PricingContainer = () => {
               <motion.div
                 key={tier.title}
                 className={cn(
-                  "rounded-xl overflow-visible transition-all mt-10 relative group mx-auto max-w-[280px] w-full",
+                  "rounded-xl overflow-visible transition-all mt-10 relative group mx-auto w-full",
+                  // Remove fixed width and make responsive
+                  "max-w-[95%] sm:max-w-[280px]",
                   tier.popularPlan ? (isMobile ? "shadow-lg" : "border-brand-purple shadow-lg") : (isMobile ? "" : "border-slate-200"),
                   tier.popularPlan && "relative",
                   colorScheme.cardBg,

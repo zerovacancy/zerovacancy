@@ -24,16 +24,20 @@ export const MobileCreatorCarousel = ({
   // Use useRef to track if we've already initialized to prevent duplicate initialization
   const hasInitialized = React.useRef(false);
   
-  // Memoize carousel options to prevent re-creating the object on every render
+  // Memoize carousel options with improved mobile touch handling
   const carouselOptions = useMemo(() => ({
     align: 'start',
     containScroll: 'trimSnaps',
     loop: false,
-    dragFree: true, // Allow free dragging for smoother experience
+    dragFree: false, // Disable free drag for more consistent snapping
     skipSnaps: false,
-    inViewThreshold: 0.7, // Lower threshold to make more cards visible
+    inViewThreshold: 0.6, // Adjusted threshold
     startIndex: 0,
-    watchDrag: true // Better touch response
+    watchDrag: true, // Better touch response
+    dragThreshold: 10, // Lower threshold for drag detection on mobile
+    breakpoints: {
+      '(max-width: 768px)': { dragFree: false, containScroll: 'keepSnaps' }
+    }
   }), []);
 
   // Initialize the carousel with stable options
@@ -150,11 +154,14 @@ export const MobileCreatorCarousel = ({
     >
       {/* Main carousel container with hardware acceleration */}
       <div 
-        className="w-full rounded-lg relative transform-gpu"
+        className="w-full rounded-lg relative transform-gpu overflow-visible"
         ref={emblaRef}
         style={{
           width: '100%',
-          minHeight: '480px' // Reduced height for mobile display
+          minHeight: '480px', // Reduced height for mobile display
+          WebkitOverflowScrolling: 'touch', // Better iOS scrolling
+          touchAction: 'pan-y', // Allow vertical scroll but control horizontal
+          overscrollBehavior: 'contain' // Prevent scroll chaining
         }}
       >
         <div className="flex flex-nowrap pl-2 transform-gpu">
