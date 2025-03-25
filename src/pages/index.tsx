@@ -25,7 +25,9 @@ import {
 } from '@/utils/background-patterns';
 import { mobileOptimizationClasses as moc } from '@/utils/mobile-optimization';
 
-const { useState, useEffect, useRef, lazy, Suspense, useCallback } = React;
+// Import React hooks directly instead of destructuring
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { lazy, Suspense } from 'react';
 
 // Completely revised section transition component to eliminate all gaps on both mobile and desktop
 const SectionTransition = ({ 

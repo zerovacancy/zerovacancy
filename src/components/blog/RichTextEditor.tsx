@@ -103,7 +103,11 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   
   // Handle image upload
   const handleImageUpload = useCallback(async () => {
-    if (!editor || !postId) return;
+    if (!editor) {
+      console.error('Editor is not initialized');
+      alert('Editor is not ready. Please try again.');
+      return;
+    }
     
     // Insert from URL
     if (imageUrl) {
@@ -119,9 +123,28 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     
     // Upload file
     if (imageFile) {
+      // Check if postId is missing
+      if (!postId) {
+        console.error('Missing postId for image upload');
+        alert('Please save the post before adding images.');
+        setIsUploading(false);
+        setIsImageMenuOpen(false);
+        return;
+      }
+      
       try {
         setIsUploading(true);
+        
+        // Add logging to debug
+        console.log('Uploading image to postId:', postId);
+        
         const uploadedUrl = await BlogService.uploadImage(imageFile, postId, 'content');
+        
+        // Ensure we got a valid URL back
+        if (!uploadedUrl || typeof uploadedUrl !== 'string') {
+          throw new Error('Failed to get valid URL from upload service');
+        }
+        
         editor.chain().focus().setImage({ src: uploadedUrl }).run();
         
         if (onImageUpload) {
@@ -360,8 +383,125 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
       {/* Editor Content */}
       <EditorContent 
         editor={editor} 
-        className="prose prose-lg max-w-none p-4 min-h-[300px] focus:outline-none"
+        className="prose prose-lg max-w-none p-4 min-h-[300px] focus:outline-none editor-content"
       />
+      
+      {/* Add style tag for consistent formatting with published blog post */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        /* Ensure editor content matches the published blog post */
+        .editor-content {
+          font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+          color: #374151;
+          line-height: 1.6;
+        }
+        
+        .editor-content h1 {
+          font-size: 2.25rem;
+          font-weight: 700;
+          margin-top: 2rem;
+          margin-bottom: 1rem;
+          color: #111827;
+        }
+        
+        .editor-content h2 {
+          font-size: 1.875rem;
+          font-weight: 700;
+          margin-top: 2rem;
+          margin-bottom: 1rem;
+          color: #111827;
+        }
+        
+        .editor-content h3 {
+          font-size: 1.5rem;
+          font-weight: 600;
+          margin-top: 1.75rem;
+          margin-bottom: 0.75rem;
+          color: #111827;
+        }
+        
+        .editor-content p {
+          margin-top: 1rem;
+          margin-bottom: 1rem;
+        }
+        
+        .editor-content ul, .editor-content ol {
+          margin-top: 1rem;
+          margin-bottom: 1rem;
+          padding-left: 2rem;
+        }
+        
+        .editor-content ul {
+          list-style-type: disc;
+        }
+        
+        .editor-content ol {
+          list-style-type: decimal;
+        }
+        
+        .editor-content a {
+          color: #7633DC;
+          text-decoration: underline;
+          text-underline-offset: 2px;
+        }
+        
+        .editor-content blockquote {
+          border-left: 4px solid #E5E7EB;
+          margin-left: 0;
+          margin-right: 0;
+          padding-left: 1rem;
+          font-style: italic;
+          color: #6B7280;
+        }
+        
+        .editor-content img {
+          border-radius: 0.375rem;
+          max-width: 100%;
+          height: auto;
+          margin: 1.5rem auto;
+          display: block;
+        }
+        
+        .editor-content hr {
+          border: 0;
+          height: 1px;
+          background-color: #E5E7EB;
+          margin-top: 2rem;
+          margin-bottom: 2rem;
+        }
+        
+        /* Ensure visible position indicators for text alignment */
+        .editor-content .is-editor-empty:first-of-type::before {
+          color: #adb5bd;
+          content: attr(data-placeholder);
+          float: left;
+          height: 0;
+          pointer-events: none;
+        }
+        
+        .editor-content .text-align-center {
+          text-align: center !important;
+        }
+        
+        .editor-content .text-align-right {
+          text-align: right !important;
+        }
+        
+        .editor-content .text-align-left {
+          text-align: left !important;
+        }
+        
+        /* Make sure the cursor is visible with text alignment */
+        .editor-content .ProseMirror {
+          position: relative;
+          outline: none;
+          word-wrap: break-word;
+          white-space: pre-wrap;
+          white-space: break-spaces;
+          -webkit-font-variant-ligatures: none;
+          font-variant-ligatures: none;
+          font-feature-settings: "liga" 0;
+        }
+      `}} />
     </div>
   );
 };
