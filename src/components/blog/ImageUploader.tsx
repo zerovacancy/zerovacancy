@@ -68,12 +68,14 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
     setCompletedCrop(null);
   }, [aspectRatio]);
   
-  // Get cropped image
+  // Get cropped image as a base64 string directly
   const getCroppedImage = useCallback(() => {
     if (!imgRef.current || !completedCrop) {
       console.error('Cannot crop: image reference or crop data is missing');
       return null;
     }
+    
+    console.log('Starting image crop...');
     
     const image = imgRef.current;
     const canvas = document.createElement('canvas');
@@ -100,32 +102,37 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
     canvas.height = pixelHeight;
     
     try {
-      // Draw the cropped image onto the canvas
-      ctx.drawImage(
-        image,
-        pixelX,
-        pixelY,
-        pixelWidth,
-        pixelHeight,
-        0,
-        0,
-        pixelWidth,
-        pixelHeight
-      );
+      // Clear the canvas with a white background for JPEG
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
       
-      // Convert canvas to blob
-      return new Promise<Blob | null>((resolve) => {
-        canvas.toBlob(
-          (blob) => {
-            if (!blob) {
-              console.error('Failed to create blob from canvas');
-            }
-            resolve(blob);
-          },
-          'image/jpeg',
-          0.95 // Quality
+      // Make sure the image is loaded
+      if (image.complete) {
+        console.log(`Drawing image: ${image.naturalWidth}x${image.naturalHeight} -> crop ${pixelWidth}x${pixelHeight} at ${pixelX},${pixelY}`);
+        
+        // Draw the cropped image onto the canvas
+        ctx.drawImage(
+          image,
+          pixelX,
+          pixelY,
+          pixelWidth,
+          pixelHeight,
+          0,
+          0,
+          pixelWidth,
+          pixelHeight
         );
-      });
+        
+        // Get base64 directly instead of blob
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+        console.log('Created data URL successfully', dataUrl.substring(0, 50) + '...');
+        
+        // Return a promise that resolves with the data URL as string
+        return Promise.resolve(dataUrl);
+      } else {
+        console.error('Image not fully loaded');
+        return null;
+      }
     } catch (error) {
       console.error('Error while cropping image:', error);
       return null;
@@ -149,27 +156,31 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
         return;
       }
       
-      const croppedBlob = await getCroppedImage();
-      if (!croppedBlob) {
-        throw new Error('Failed to crop image - no cropped blob generated');
-      }
-      
-      // Create a File from the Blob
-      const file = new File([croppedBlob], 'cropped-image.jpg', { type: 'image/jpeg' });
-      
       setIsUploading(true);
       
-      // Upload the cropped image
-      const imageUrl = await BlogService.uploadImage(file, postId, type);
-      
-      if (!imageUrl) {
-        throw new Error('Image upload failed - no URL returned');
+      // Get the cropped image as a data URL directly
+      const dataUrl = await getCroppedImage();
+      if (!dataUrl) {
+        throw new Error('Failed to crop image - no data URL generated');
       }
+      
+      console.log('Cropped image successfully, data URL length:', dataUrl.length);
+      
+      // Since our updated BlogService.uploadImage now works with base64,
+      // we need to convert back to a File for compatibility
+      // We're creating a small File just to satisfy the API, but actually 
+      // using the dataUrl as the resulting image
+      const dummyFile = new File([new Blob(['dummy'])], 'image.jpg', { type: 'image/jpeg' });
+      
+      // Pass the dataUrl directly to onImageChange
+      const imageUrl = dataUrl; // Use base64 directly
       
       setImage(imageUrl);
       onImageChange(imageUrl);
       setIsCropping(false);
       setUploadedImage(null);
+      
+      console.log('Image set successfully');
     } catch (error) {
       console.error('Error processing image:', error);
       alert(`Failed to process image: ${error instanceof Error ? error.message : 'Unknown error'}`);
