@@ -283,15 +283,25 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
               </div>
             </div>
           ) : (
-            <button
-              type="button"
-              onClick={triggerFileInput}
-              className="w-full h-40 border-2 border-dashed border-gray-300 rounded-md flex flex-col items-center justify-center text-gray-500 hover:border-brand-purple hover:text-brand-purple transition-colors"
-            >
-              <Upload size={24} className="mb-2" />
-              <span className="text-sm font-medium">Click to upload image</span>
-              <span className="text-xs mt-1">JPG, PNG, or GIF</span>
-            </button>
+            <>
+              {!postId ? (
+                <div className="w-full h-40 border-2 border-dashed border-gray-300 rounded-md flex flex-col items-center justify-center text-gray-500 bg-gray-50 p-4">
+                  <ImageIcon size={24} className="mb-2 text-amber-500" />
+                  <span className="text-sm font-medium text-center">Save the post first to enable image uploads</span>
+                  <span className="text-xs mt-1 text-center max-w-xs">Click "Save Draft" above to create the post, then you'll be able to add images</span>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={triggerFileInput}
+                  className="w-full h-40 border-2 border-dashed border-gray-300 rounded-md flex flex-col items-center justify-center text-gray-500 hover:border-brand-purple hover:text-brand-purple transition-colors"
+                >
+                  <Upload size={24} className="mb-2" />
+                  <span className="text-sm font-medium">Click to upload image</span>
+                  <span className="text-xs mt-1">JPG, PNG, or GIF</span>
+                </button>
+              )}
+            </>
           )}
         </div>
       )}
