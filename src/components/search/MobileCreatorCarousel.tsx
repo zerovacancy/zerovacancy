@@ -21,33 +21,44 @@ export const MobileCreatorCarousel = ({
   imageRef,
   onPreviewClick
 }: MobileCreatorCarouselProps) => {
-  // Very basic, reliable embla configuration
+  // Updated embla configuration with proper scroll containment
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: false,
     align: 'start',
     dragFree: false,
-    containScroll: false 
+    containScroll: 'trimSnaps', // Changed from false to 'trimSnaps'
+    skipSnaps: false // Ensuring we don't skip slides
   });
   
   const [prevBtnEnabled, setPrevBtnEnabled] = useState(false);
   const [nextBtnEnabled, setNextBtnEnabled] = useState(true);
   const [selectedIndex, setSelectedIndex] = useState(0);
   
-  // Handler for when slide changes
+  // Handler for when slide changes with debug logging
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
     setPrevBtnEnabled(emblaApi.canScrollPrev());
     setNextBtnEnabled(emblaApi.canScrollNext());
-    setSelectedIndex(emblaApi.selectedScrollSnap());
+    const index = emblaApi.selectedScrollSnap();
+    setSelectedIndex(index);
+    console.log('Selected slide:', index); // Debug logging to verify movement
   }, [emblaApi]);
   
-  // Basic scroll handlers
+  // Enhanced scroll handlers with reflow forcing
   const scrollPrev = useCallback(() => {
-    if (emblaApi) emblaApi.scrollPrev();
+    if (emblaApi) {
+      emblaApi.scrollPrev();
+      // Force a reflow to ensure visual updates
+      setTimeout(() => emblaApi.reInit(), 0);
+    }
   }, [emblaApi]);
   
   const scrollNext = useCallback(() => {
-    if (emblaApi) emblaApi.scrollNext();
+    if (emblaApi) {
+      emblaApi.scrollNext();
+      // Force a reflow to ensure visual updates
+      setTimeout(() => emblaApi.reInit(), 0);
+    }
   }, [emblaApi]);
   
   // Set up event listeners
@@ -76,13 +87,13 @@ export const MobileCreatorCarousel = ({
 
   return (
     <div className="w-full relative pb-4 pt-2 px-0">
-      {/* Simple container without fancy styles */}
-      <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex">
+      {/* Container with proper width styling */}
+      <div className="overflow-hidden w-full" ref={emblaRef}>
+        <div className="flex w-full">
           {creators.map((creator, index) => (
             <div 
               key={creator.name} 
-              className="min-w-[75vw] w-[75vw] mr-4 flex-shrink-0"
+              className="min-w-[75vw] w-[75vw] mr-4 flex-shrink-0 flex-grow-0"
             >
               <CreatorCard 
                 creator={creator} 
