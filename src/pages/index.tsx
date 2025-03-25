@@ -41,8 +41,8 @@ const SectionTransition = ({
 }) => {
   const isMobile = useIsMobile();
   
-  // Use much larger height for mobile to ensure complete coverage
-  const actualHeight = isMobile ? Math.max(height, 140) : Math.max(height, 80);
+  // Smaller heights to reduce spacing between sections
+  const actualHeight = isMobile ? Math.max(height, 60) : Math.max(height, 40);
   
   return (
     <div 
@@ -50,7 +50,7 @@ const SectionTransition = ({
       aria-hidden="true"
       style={{ 
         height: `${actualHeight}px`,
-        margin: '-5px 0', // Much larger negative margin for better overlap
+        margin: '-20px 0', // Increased negative margin for better overlap to pull sections closer
         padding: 0,
         pointerEvents: 'none',
         width: '100vw', // Full viewport width to prevent side gaps
@@ -73,11 +73,11 @@ const SectionTransition = ({
             ${toColor} 85%, 
             ${toColor} 100%)`,
           position: 'absolute',
-          top: '-20px', // Doubled extension beyond container for mobile
+          top: '-30px', // Tripled extension beyond container for better overlap
           left: 0,
           right: 0,
-          bottom: '-20px', // Doubled extension beyond container for mobile
-          height: 'calc(100% + 40px)', // Much taller to prevent any gaps
+          bottom: '-30px', // Tripled extension beyond container for better overlap
+          height: 'calc(100% + 60px)', // Much taller to prevent any gaps
           width: '100%',
           boxShadow: 'none'
         }}
@@ -411,52 +411,108 @@ const Index = () => {
              } : {}}
              id="main-content">
         {/* Hero Section */}
+        <style dangerouslySetInnerHTML={{ __html: `
+          /* Position hero section content at the top with padding */
+          @media (min-width: 768px) {
+            /* Hero section positioning */
+            section[data-hero-section] {
+              display: flex !important;
+              align-items: flex-start !important;
+              justify-content: center !important;
+              padding-top: 100px !important;
+              min-height: auto !important;
+            }
+            
+            /* Direct positioning for the hero component itself */
+            #root main section[data-hero-section] > div,
+            #root main section[data-hero-section] > div > div {
+              display: flex !important;
+              align-items: flex-start !important;
+              justify-content: center !important;
+            }
+          }
+          
+          /* Additional fix to prevent jumps during render */
+          #root {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+          }
+        `}} />
+        
         <section 
+          data-hero-section="true"
           ref={addSectionRef(0)} 
-          style={isMobile ? 
-            { 
+          style={{
+            ...(isMobile ? { 
               position: 'static', 
               zIndex: 'auto',
               contain: 'none',
               willChange: 'auto',
               transform: 'none',
-              overflow: 'hidden',  // Changed to hidden to prevent content from flowing outside
+              overflow: 'hidden',
               isolation: 'auto'
-            } : 
-            { ...getZIndex(0), ...getBackgroundTransition(0) }
-          }
+            } : { 
+              ...getZIndex(0), 
+              ...getBackgroundTransition(0),
+              display: 'flex',
+              alignItems: 'flex-start',
+              justifyContent: 'center',
+              paddingTop: '80px',
+              minHeight: 'auto',
+              paddingBottom: '0', // Remove bottom padding
+              marginBottom: '-30px' // Add negative margin to eliminate gap
+            })
+          }}
           className={cn(
             "w-full bg-[#EBE3FF]", // Lavender background for hero section
+            !isMobile && "flex items-start justify-center pt-20", // Position at top with padding
             moc.sectionWrapper, // Standardized section wrapper
             isMobile && "touch-action-pan-y overscroll-behavior-none" // Fix mobile scrolling
           )}
         >
           <div 
-            style={isMobile ? 
-              { 
+            style={{
+              ...(isMobile ? { 
                 position: 'static',
                 contain: 'none',
                 willChange: 'auto',
                 width: '100%',
                 overflow: 'hidden'
-              } : 
-              { position: 'relative' }
-            } 
-            className="w-full max-w-none"
+              } : { 
+                position: 'relative',
+                display: 'flex',
+                alignItems: 'flex-start',
+                justifyContent: 'center',
+                width: '100%',
+                paddingBottom: '0', // Explicitly remove bottom padding
+                marginBottom: '-20px' // Negative margin to pull up next section
+              })
+            }} 
+            className={cn(
+              "w-full max-w-none",
+              !isMobile && "flex items-start justify-center"
+            )}
           >
             <Hero />
           </div>
         </section>
         
         {/* Scroll Target for Find Creators */}
-        <ScrollTarget id="find-creators" height={1} />
+        <ScrollTarget id="find-creators" height={0} />
         
         {/* Section Transition: Hero to Find Creators - Smoother blend */}
-        <SectionTransition 
-          fromColor="#EBE3FF" 
-          toColor="#F9F6EC" 
-          height={120}
-        />
+        <div style={{ 
+          marginTop: '-50px', // Negative margin to pull up the transition and eliminate gap
+          position: 'relative',
+          zIndex: 30
+        }}>
+          <SectionTransition 
+            fromColor="#EBE3FF" 
+            toColor="#F9F6EC" 
+            height={40} // Reduced height significantly
+          />
+        </div>
         
         {/* Find Creators Section */}
         <section 
@@ -502,14 +558,20 @@ const Index = () => {
         </section>
         
         {/* Scroll Target for How It Works */}
-        <ScrollTarget id="how-it-works" height={1} />
+        <ScrollTarget id="how-it-works" height={0} />
         
         {/* Section Transition: Find Creators to How It Works - Unified flow */}
-        <SectionTransition 
-          fromColor="#F9F6EC" 
-          toColor="#EDF7F2" 
-          height={120}
-        />
+        <div style={{ 
+          marginTop: '-50px', // Negative margin to pull up the transition
+          position: 'relative',
+          zIndex: 30
+        }}>
+          <SectionTransition 
+            fromColor="#F9F6EC" 
+            toColor="#EDF7F2" 
+            height={40} // Reduced height significantly
+          />
+        </div>
         
         {/* How It Works Section */}
         <section 
@@ -546,14 +608,20 @@ const Index = () => {
         </section>
         
         {/* Section Transition: How It Works to Features - Subtle gradient */}
-        <SectionTransition 
-          fromColor="#EDF7F2" 
-          toColor="#E7E9FF" 
-          height={120}
-        />
+        <div style={{ 
+          marginTop: '-50px', // Negative margin to pull up the transition
+          position: 'relative',
+          zIndex: 30
+        }}>
+          <SectionTransition 
+            fromColor="#EDF7F2" 
+            toColor="#E7E9FF" 
+            height={40} // Reduced height significantly
+          />
+        </div>
         
         {/* Scroll Target for Features */}
-        <ScrollTarget id="features" height={1} />
+        <ScrollTarget id="features" height={0} />
         
         {/* Features Section */}
         <section 
@@ -590,14 +658,20 @@ const Index = () => {
         </section>
 
         {/* Section Transition: Features to Pricing - Cohesive flow */}
-        <SectionTransition 
-          fromColor="#E7E9FF" 
-          toColor="#EEF3F9" 
-          height={120}
-        />
+        <div style={{ 
+          marginTop: '-50px', // Negative margin to pull up the transition
+          position: 'relative',
+          zIndex: 30
+        }}>
+          <SectionTransition 
+            fromColor="#E7E9FF" 
+            toColor="#EEF3F9" 
+            height={40} // Reduced height significantly
+          />
+        </div>
 
         {/* Scroll Target for Pricing */}
-        <ScrollTarget id="pricing" height={1} />
+        <ScrollTarget id="pricing" height={0} />
 
         {/* Pricing Section */}
         <section 
@@ -634,14 +708,20 @@ const Index = () => {
         </section>
 
         {/* Section Transition: Pricing to Blog - Seamless blend */}
-        <SectionTransition 
-          fromColor="#EEF3F9" 
-          toColor="#F9F6EC" 
-          height={120}
-        />
+        <div style={{ 
+          marginTop: '-50px', // Negative margin to pull up the transition
+          position: 'relative',
+          zIndex: 30
+        }}>
+          <SectionTransition 
+            fromColor="#EEF3F9" 
+            toColor="#F9F6EC" 
+            height={40} // Reduced height significantly
+          />
+        </div>
 
         {/* Scroll Target for Blog */}
-        <ScrollTarget id="blog" height={1} />
+        <ScrollTarget id="blog" height={0} />
 
         {/* Blog Section */}
         <section 
@@ -678,11 +758,17 @@ const Index = () => {
         </section>
 
         {/* Section Transition: Blog to Footer - Minimal subtle transition */}
-        <SectionTransition 
-          fromColor="#F9F6EC" 
-          toColor="#f8f8fb" 
-          height={120}
-        />
+        <div style={{ 
+          marginTop: '-50px', // Negative margin to pull up the transition
+          position: 'relative',
+          zIndex: 30
+        }}>
+          <SectionTransition 
+            fromColor="#F9F6EC" 
+            toColor="#f8f8fb" 
+            height={40} // Reduced height significantly
+          />
+        </div>
 
         {!isMobile && (
           <div className="fixed right-6 top-1/2 transform -translate-y-1/2 z-[100] hidden lg:flex flex-col items-center gap-3">

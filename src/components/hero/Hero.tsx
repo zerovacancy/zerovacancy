@@ -376,36 +376,39 @@ export const Hero = () => {
     <div 
       ref={sectionRef}
       className={cn(
-        "flex items-center justify-center flex-col w-full", 
+        "flex items-center justify-start flex-col w-full", // Changed justify-center to justify-start
         "px-0", 
-        "my-auto", // Added my-auto for both mobile and desktop for vertical centering
-        "min-h-[80vh]", // Changed from min-h-fit to ensure container takes sufficient vertical space
         !isMobile && "relative z-10",
-        "gap-3 sm:gap-4", 
+        "gap-6", // Balanced spacing between major sections
         "touch-manipulation",
         "opacity-100"
       )}
-      style={isMobile ? {
-        // For mobile: Complete removal of any positioning properties that could cause scrolling issues
-        position: 'static',
-        zIndex: 'auto',
-        marginTop: '0',
-        transform: 'none',
-        overflow: 'visible',
-        isolation: 'auto',
-        contain: 'none',
-        willChange: 'auto'
-      } : {
-        contentVisibility: "auto",
-        containIntrinsicSize: "0 600px"
+      style={{
+        ...(isMobile ? {
+          // For mobile: Complete removal of any positioning properties that could cause scrolling issues
+          position: 'static',
+          zIndex: 'auto',
+          marginTop: '0',
+          transform: 'none',
+          overflow: 'visible',
+          isolation: 'auto',
+          contain: 'none',
+          willChange: 'auto'
+        } : {
+          position: 'relative',
+          display: 'flex',
+          alignItems: 'flex-start',
+          justifyContent: 'flex-start',
+          paddingTop: '0',
+          paddingBottom: '0'
+        })
       }}
     >
       
       <div 
         className={cn(
-          "flex flex-col items-center justify-center max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8",
-          "gap-4 sm:gap-6", // Increased gap for better vertical rhythm
-          "my-auto", // Added my-auto for better vertical centering
+          "flex flex-col items-center justify-start max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8",
+          "gap-5", // Moderate gap for better spacing
           isInView ? "animate-fade-in delay-100" : "opacity-0"
         )}
         style={isMobile ? { 
@@ -517,7 +520,7 @@ export const Hero = () => {
             "mx-auto", 
             "font-inter",
             "relative",
-            isMobile ? "mb-8 text-sm px-4 py-2" : "mb-8" // Removed mt-4/mt-6 to help vertical centering
+            isMobile ? "mb-4 text-sm px-4 py-2" : "mb-6" // Moderate bottom margin for balanced spacing
           )}
         >
           {isMobile ? (
@@ -550,9 +553,9 @@ export const Hero = () => {
       <div 
         className={cn(
           "w-full", 
-          "mt-2", // Standardized margin for both mobile and desktop
+          "mt-0", // No top margin
           isMobile ? "px-4" : "px-4 sm:px-6 lg:px-8",
-          isInView ? "animate-fade-in delay-200" : "opacity-0"
+          isInView ? "animate-fade-in delay-100" : "opacity-0"
         )}
         style={isMobile ? { 
           position: 'static', 
@@ -565,7 +568,7 @@ export const Hero = () => {
       >
         {!isMobile && (
           <div className="w-full max-w-5xl mx-auto relative" id="hero-cta-section">
-            <div className="flex flex-row justify-center gap-[8%] mb-3 relative items-start">
+            <div className="flex flex-row justify-center gap-[8%] mb-2 relative items-start">
               <div className="flex flex-col w-[45%] max-w-[280px]">
                 <WaitlistCTA 
                   buttonText="RESERVE EARLY ACCESS" 
@@ -585,7 +588,7 @@ export const Hero = () => {
             </div>
             
             <div className="w-full flex justify-center">
-              <SocialProof className="mt-1" />
+              <SocialProof className="mt-0" />
             </div>
           </div>
         )}
