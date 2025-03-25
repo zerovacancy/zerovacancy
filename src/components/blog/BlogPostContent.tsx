@@ -165,6 +165,19 @@ const BlogPostContent = ({ post, relatedPosts = [] }: BlogPostContentProps) => {
         .blog-content .paragraph-spacing {
           margin-bottom: 1.5rem;
         }
+        
+        /* Support for newlines within paragraphs */
+        .blog-content p br {
+          display: block;
+          content: "";
+          margin-top: 0.75rem;
+        }
+        
+        /* Extra spacing for empty paragraphs (created by double Enter) */
+        .blog-content p:empty {
+          min-height: 1.5rem;
+          margin-bottom: 1.5rem;
+        }
       `}} />
       
       {relatedPosts.length > 0 && (

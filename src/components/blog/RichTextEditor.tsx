@@ -57,6 +57,10 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
             class: 'paragraph-spacing',
           },
         },
+        // Enable hard breaks (multiple newlines)
+        hardBreak: {
+          keepMarks: true,
+        },
       }),
       ImageExtension.configure({
         inline: true,
@@ -79,6 +83,31 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML());
     },
+    // Add handler for double Enter key press
+    editorProps: {
+      handleKeyDown: (view, event) => {
+        // Check if it's an Enter key
+        if (event.key === 'Enter') {
+          // Get the current position
+          const { $from } = view.state.selection;
+          const node = $from.node();
+          
+          // If we're at the end of a paragraph and it ends with a line break, 
+          // insert a new paragraph
+          if (node.type.name === 'paragraph' && 
+              $from.parentOffset === node.nodeSize - 2 &&
+              node.textContent.endsWith('\n')) {
+            
+            console.log('Detected double Enter, creating new paragraph with spacing');
+            
+            // This will create proper paragraph spacing
+            view.dispatch(view.state.tr.split($from.pos).scrollIntoView());
+            return true;
+          }
+        }
+        return false;
+      }
+    }
   });
   
   // When external value changes, update editor content
@@ -516,6 +545,18 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
         /* Add styling for paragraphs to ensure proper spacing */
         .editor-content .paragraph-spacing {
           margin-bottom: 1.5rem;
+        }
+        
+        /* Support for newlines within paragraphs */
+        .editor-content .ProseMirror p br {
+          display: block;
+          content: "";
+          margin-top: 0.75rem;
+        }
+        
+        /* Extra spacing for empty paragraphs (created by double Enter) */
+        .editor-content .ProseMirror p:empty {
+          min-height: 1.5rem;
         }
         
         /* This makes sure Enter creates proper paragraph spacing */
