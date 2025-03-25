@@ -10,7 +10,8 @@ import {
   Plus,
   AlertCircle,
   Clock,
-  Send
+  Send,
+  ImageIcon
 } from 'lucide-react';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { BlogService } from '@/services/BlogService';
@@ -732,7 +733,7 @@ const BlogEditor = () => {
                 {/* Featured Image */}
                 <div className="bg-gray-50 p-4 rounded-md border border-gray-200">
                   <h3 className="text-lg font-medium text-gray-900 mb-4">
-                    <Image size={16} className="inline mr-1" />
+                    <ImageIcon size={16} className="inline mr-1" />
                     Featured Image
                   </h3>
                   

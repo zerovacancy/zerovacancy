@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react';
 import ReactCrop, { Crop, PixelCrop, centerCrop, makeAspectCrop } from 'react-image-crop';
-import { Image, Upload, Crop as CropIcon, Check, X } from 'lucide-react';
+import { Upload, Crop as CropIcon, Check, X, ImageIcon } from 'lucide-react';
 import { BlogService } from '@/services/BlogService';
 import 'react-image-crop/dist/ReactCrop.css';
 
