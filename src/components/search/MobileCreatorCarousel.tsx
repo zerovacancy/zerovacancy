@@ -4,6 +4,7 @@ import useEmblaCarousel from 'embla-carousel-react';
 import { cn } from '@/lib/utils';
 import { CreatorCard } from '../creator/CreatorCard';
 import type { Creator } from '../creator/types';
+import { mobileOptimizationClasses as moc } from '@/utils/mobile-optimization';
 
 interface MobileCreatorCarouselProps {
   creators: Creator[];
@@ -13,7 +14,7 @@ interface MobileCreatorCarouselProps {
   onPreviewClick?: (imageSrc: string) => void;
 }
 
-// Straightforward component definition with arrow function
+// Component definition with improved mobile support
 export const MobileCreatorCarousel = ({
   creators,
   onImageLoad,
@@ -35,6 +36,9 @@ export const MobileCreatorCarousel = ({
     startIndex: 0,
     watchDrag: true, // Better touch response
     dragThreshold: 10, // Lower threshold for drag detection on mobile
+    draggable: true,   // Explicitly enable dragging
+    draggableClass: '', // Don't add any draggable classes that might interfere
+    draggingClass: '', // Don't add any dragging classes that might interfere
     breakpoints: {
       '(max-width: 768px)': { dragFree: false, containScroll: 'keepSnaps' }
     }
@@ -47,17 +51,6 @@ export const MobileCreatorCarousel = ({
   const [nextBtnEnabled, setNextBtnEnabled] = useState(true);
   const [selectedIndex, setSelectedIndex] = useState(0);
   
-  // Memoize scroll handlers
-  const scrollPrev = useCallback(() => {
-    if (!emblaApi) return;
-    emblaApi.scrollPrev();
-  }, [emblaApi]);
-  
-  const scrollNext = useCallback(() => {
-    if (!emblaApi) return;
-    emblaApi.scrollNext();
-  }, [emblaApi]);
-  
   // Memoize select handler
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
@@ -65,6 +58,37 @@ export const MobileCreatorCarousel = ({
     setNextBtnEnabled(emblaApi.canScrollNext());
     setSelectedIndex(emblaApi.selectedScrollSnap());
   }, [emblaApi]);
+  
+  // Memoize scroll handlers
+  const scrollPrev = useCallback(() => {
+    if (!emblaApi) return;
+    try {
+      emblaApi.scrollPrev();
+      // Force reselect to update button state
+      setTimeout(() => {
+        if (emblaApi) {
+          onSelect();
+        }
+      }, 50);
+    } catch (error) {
+      console.error("Error scrolling carousel:", error);
+    }
+  }, [emblaApi, onSelect]);
+  
+  const scrollNext = useCallback(() => {
+    if (!emblaApi) return;
+    try {
+      emblaApi.scrollNext();
+      // Force reselect to update button state
+      setTimeout(() => {
+        if (emblaApi) {
+          onSelect();
+        }
+      }, 50);
+    } catch (error) {
+      console.error("Error scrolling carousel:", error);
+    }
+  }, [emblaApi, onSelect]);
   
   // Initialize once and prevent reinitializing when scrolling back
   useEffect(() => {
@@ -84,14 +108,6 @@ export const MobileCreatorCarousel = ({
       emblaApi.off('reInit', onSelect);
     };
   }, [emblaApi, onSelect]);
-
-  // Cache dom references
-  const carouselWrapperStyle = useMemo(() => ({
-    boxShadow: 'none',
-    border: 'none',
-    willChange: 'transform', // Hint for browser that transform will change
-    transform: 'translateZ(0)' // Hardware acceleration
-  }), []);
 
   // Pre-render carousel slides to prevent jitter
   const carouselSlides = useMemo(() => (
@@ -143,13 +159,19 @@ export const MobileCreatorCarousel = ({
 
   return (
     <div 
-      className="w-full relative pb-4 pt-2 px-0 overflow-visible bg-transparent"
+      className={cn(
+        "w-full relative pb-4 pt-2 px-0 overflow-visible bg-transparent",
+        moc.carouselContainer
+      )}
       style={{
         boxShadow: 'none',
         border: 'none',
         transform: 'translateZ(0)',
         paddingLeft: '1px', // Ensure proper alignment
-        paddingRight: '1px'  // Ensure proper alignment
+        paddingRight: '1px', // Ensure proper alignment
+        position: 'relative',
+        touchAction: 'manipulation',
+        zIndex: 10
       }}
     >
       {/* Main carousel container with hardware acceleration */}
@@ -161,7 +183,10 @@ export const MobileCreatorCarousel = ({
           minHeight: '480px', // Reduced height for mobile display
           WebkitOverflowScrolling: 'touch', // Better iOS scrolling
           touchAction: 'pan-y', // Allow vertical scroll but control horizontal
-          overscrollBehavior: 'contain' // Prevent scroll chaining
+          overscrollBehavior: 'contain', // Prevent scroll chaining
+          paddingLeft: '20px',  // Make room for left arrow
+          paddingRight: '20px', // Make room for right arrow
+          pointerEvents: 'auto'
         }}
       >
         <div className="flex flex-nowrap pl-2 transform-gpu">
@@ -181,42 +206,62 @@ export const MobileCreatorCarousel = ({
         {paginationDots}
       </div>
 
-      {/* Navigation buttons with hardware acceleration */}
-      <button 
-        onClick={scrollPrev} 
+      {/* Simplified navigation buttons with improved mobile touch handling */}
+      <div 
+        role="button"
+        tabIndex={0}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (prevBtnEnabled && emblaApi) emblaApi.scrollPrev();
+        }}
         className={cn(
-          "absolute left-0 top-[36%] -translate-y-1/2 z-20 rounded-full p-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white", 
-          "touch-manipulation h-[40px] w-[40px] flex items-center justify-center shadow-[0_6px_10px_-2px_rgba(138,79,255,0.3),_0_3px_4px_-2px_rgba(138,79,255,0.4)] opacity-90 hover:opacity-70 transform-gpu", 
-          !prevBtnEnabled && "pointer-events-none opacity-0"
-        )} 
-        disabled={!prevBtnEnabled}
+          "absolute left-0 top-[50%] z-50 -translate-y-1/2 rounded-full bg-purple-600 text-white",
+          "touch-manipulation h-[60px] w-[60px] flex items-center justify-center",
+          "shadow-lg opacity-95 active:opacity-100 transform-gpu",
+          "cursor-pointer select-none",
+          !prevBtnEnabled && "opacity-0 pointer-events-none",
+          moc.carouselNavButton
+        )}
         aria-label="Previous creator"
         style={{
-          transform: 'translate3d(0, -50%, 0)', // Hardware-accelerated transform
-          visibility: prevBtnEnabled ? 'visible' : 'hidden'
+          touchAction: 'manipulation',
+          WebkitTapHighlightColor: 'transparent',
+          zIndex: 999,
+          border: '2px solid rgba(255,255,255,0.5)',
+          userSelect: 'none'
         }}
       >
-        <ChevronLeft className="w-5 h-5" />
-      </button>
+        <ChevronLeft className="w-8 h-8" />
+      </div>
       
-      <button 
-        onClick={scrollNext} 
+      <div 
+        role="button"
+        tabIndex={0}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (nextBtnEnabled && emblaApi) emblaApi.scrollNext();
+        }}
         className={cn(
-          "absolute right-1 top-[36%] -translate-y-1/2 z-20 rounded-full p-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white", 
-          "touch-manipulation h-[40px] w-[40px] flex items-center justify-center shadow-[0_6px_10px_-2px_rgba(138,79,255,0.3),_0_3px_4px_-2px_rgba(138,79,255,0.4)] opacity-90 hover:opacity-70 transform-gpu", 
-          !nextBtnEnabled && "pointer-events-none opacity-0"
-        )} 
-        disabled={!nextBtnEnabled}
+          "absolute right-0 top-[50%] z-50 -translate-y-1/2 rounded-full bg-purple-600 text-white",
+          "touch-manipulation h-[60px] w-[60px] flex items-center justify-center",
+          "shadow-lg opacity-95 active:opacity-100 transform-gpu",
+          "cursor-pointer select-none",
+          !nextBtnEnabled && "opacity-0 pointer-events-none",
+          moc.carouselNavButton
+        )}
         aria-label="Next creator"
         style={{
-          transform: 'translate3d(0, -50%, 0)', // Hardware-accelerated transform
-          visibility: nextBtnEnabled ? 'visible' : 'hidden'
+          touchAction: 'manipulation',
+          WebkitTapHighlightColor: 'transparent',
+          zIndex: 999,
+          border: '2px solid rgba(255,255,255,0.5)',
+          userSelect: 'none'
         }}
       >
-        <ChevronRight className="w-5 h-5" />
-      </button>
+        <ChevronRight className="w-8 h-8" />
+      </div>
     </div>
   );
 }
-
-// Component is exported directly above

@@ -255,14 +255,22 @@ export const mobileOptimizationClasses = {
   mobileFriendlyButton: "h-[48px] min-w-[44px] px-5 rounded-xl",
   
   // Standardized spacing system
-  sectionPaddingMain: "py-10", // Main sections
-  sectionPaddingSecondary: "py-8", // Secondary sections
+  sectionPaddingMain: "py-8", // Reduced from py-10 for better mobile layout
+  sectionPaddingSecondary: "py-6", // Reduced from py-8
   contentPadding: "px-4 sm:px-6", // Consistent content padding
   sectionWrapper: "w-full max-w-none overflow-hidden", // Full-width section wrapper
-  spacingHeadingToContent: "mb-6", // Space between heading and content
-  spacingBetweenBlocks: "mb-4", // Space between content blocks
-  spacingBeforeCTA: "mt-6", // Space before call-to-actions
-  spacingInteractive: "gap-4", // Minimum spacing between interactive elements
+  spacingHeadingToContent: "mb-4", // Reduced spacing between heading and content for mobile
+  spacingBetweenBlocks: "mb-3", // Reduced spacing between content blocks
+  spacingBeforeCTA: "mt-4", // Reduced spacing before call-to-actions
+  spacingInteractive: "gap-3", // Reduced spacing between interactive elements
+  
+  // Section transition classes - specifically for section transitions
+  sectionTransition: "h-[40px] min-h-[40px] max-h-[40px] m-0 p-0 overflow-hidden",
+  sectionTransitionDesktop: "h-[60px] min-h-[60px] max-h-[60px] m-0 p-0 overflow-hidden",
+  
+  // Carousel optimization classes
+  carouselContainer: "touch-action-pan-y overscroll-behavior-x-contain relative z-10",
+  carouselNavButton: "min-w-[60px] min-h-[60px] touch-manipulation z-50",
   
   // Add the mobile spacing utilities
   ...mobileSpacingUtils,

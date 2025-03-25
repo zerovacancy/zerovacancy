@@ -4,7 +4,7 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/favicon.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover, user-scalable=no" />
     <meta name="theme-color" content="#6633FF" />
     <link rel="manifest" href="/manifest.json" />
     <title>ZeroVacancy - AI-Driven Property Marketing & Content Creator Marketplace</title>
@@ -55,6 +55,10 @@
         padding: 0;
         background-color: #fff;
         font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        overflow-x: hidden;
+        width: 100%;
+        position: relative;
+        max-width: 100vw;
       }
       
       /* Layout optimization with content-visibility */
@@ -140,6 +144,44 @@
       @keyframes spin {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
+      }
+      
+      /* Mobile layout fixes - fix section spacing issues */
+      @media (max-width: 767px) {
+        /* Standardize section spacing */
+        section {
+          padding-top: 16px !important;
+          padding-bottom: 24px !important;
+          margin-top: 0 !important;
+          margin-bottom: 0 !important;
+          min-height: auto !important;
+        }
+        
+        /* Fix transitions between sections */
+        .section-transition, [id*="transition"] {
+          height: 40px !important;
+          min-height: 40px !important;
+          max-height: 40px !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          overflow: hidden !important;
+        }
+        
+        /* Fix carousel controls */
+        .carousel-controls [role="button"] {
+          min-width: 60px !important;
+          min-height: 60px !important;
+          z-index: 999 !important;
+          touch-action: manipulation !important;
+        }
+        
+        /* Fix content spacing within sections */
+        section > div > div {
+          margin-top: 4px !important;
+          margin-bottom: 4px !important;
+          padding-top: 4px !important;
+          padding-bottom: 4px !important;
+        }
       }
     </style>
     
