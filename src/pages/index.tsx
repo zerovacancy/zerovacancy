@@ -41,8 +41,8 @@ const SectionTransition = ({
 }) => {
   const isMobile = useIsMobile();
   
-  // Smaller heights to reduce spacing between sections
-  const actualHeight = isMobile ? Math.max(height, 60) : Math.max(height, 40);
+  // Smaller heights to reduce spacing between sections, even smaller on mobile
+  const actualHeight = isMobile ? Math.max(height, 40) : Math.max(height, 40);
   
   return (
     <div 
@@ -73,11 +73,11 @@ const SectionTransition = ({
             ${toColor} 85%, 
             ${toColor} 100%)`,
           position: 'absolute',
-          top: '-30px', // Tripled extension beyond container for better overlap
+          top: '-40px', // 4x extension beyond container for better overlap on mobile
           left: 0,
           right: 0,
-          bottom: '-30px', // Tripled extension beyond container for better overlap
-          height: 'calc(100% + 60px)', // Much taller to prevent any gaps
+          bottom: '-40px', // 4x extension beyond container for better overlap on mobile
+          height: 'calc(100% + 80px)', // Even taller to prevent any gaps on mobile
           width: '100%',
           boxShadow: 'none'
         }}
@@ -503,7 +503,7 @@ const Index = () => {
         
         {/* Section Transition: Hero to Find Creators - Smoother blend */}
         <div style={{ 
-          marginTop: '-50px', // Negative margin to pull up the transition and eliminate gap
+          marginTop: isMobile ? '-30px' : '-50px', // Adjusted for different devices
           position: 'relative',
           zIndex: 30
         }}>
@@ -562,7 +562,7 @@ const Index = () => {
         
         {/* Section Transition: Find Creators to How It Works - Unified flow */}
         <div style={{ 
-          marginTop: '-50px', // Negative margin to pull up the transition
+          marginTop: isMobile ? '-30px' : '-50px', // Adjusted for different devices
           position: 'relative',
           zIndex: 30
         }}>
@@ -609,7 +609,7 @@ const Index = () => {
         
         {/* Section Transition: How It Works to Features - Subtle gradient */}
         <div style={{ 
-          marginTop: '-50px', // Negative margin to pull up the transition
+          marginTop: isMobile ? '-30px' : '-50px', // Adjusted for different devices
           position: 'relative',
           zIndex: 30
         }}>
@@ -659,7 +659,7 @@ const Index = () => {
 
         {/* Section Transition: Features to Pricing - Cohesive flow */}
         <div style={{ 
-          marginTop: '-50px', // Negative margin to pull up the transition
+          marginTop: isMobile ? '-30px' : '-50px', // Adjusted for different devices
           position: 'relative',
           zIndex: 30
         }}>
@@ -709,7 +709,7 @@ const Index = () => {
 
         {/* Section Transition: Pricing to Blog - Seamless blend */}
         <div style={{ 
-          marginTop: '-50px', // Negative margin to pull up the transition
+          marginTop: isMobile ? '-30px' : '-50px', // Adjusted for different devices
           position: 'relative',
           zIndex: 30
         }}>
@@ -759,7 +759,7 @@ const Index = () => {
 
         {/* Section Transition: Blog to Footer - Minimal subtle transition */}
         <div style={{ 
-          marginTop: '-50px', // Negative margin to pull up the transition
+          marginTop: isMobile ? '-30px' : '-50px', // Adjusted for different devices
           position: 'relative',
           zIndex: 30
         }}>
