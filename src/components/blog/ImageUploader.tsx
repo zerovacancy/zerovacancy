@@ -1,9 +1,9 @@
 import React, { useState, useRef, useCallback } from 'react';
-import ReactCrop, { Crop, PixelCrop, centerCrop, makeAspectCrop } from 'react-image-crop';
+import ReactCrop, { Crop, centerCrop, makeAspectCrop } from 'react-image-crop';
 import { Upload, Crop as CropIcon, Check, X, ImageIcon } from 'lucide-react';
-import { BlogService } from '@/services/BlogService';
 import 'react-image-crop/dist/ReactCrop.css';
 
+// Simplified version without using Blob/File objects for storage
 interface ImageUploaderProps {
   initialImage?: string;
   postId?: string;
@@ -21,11 +21,12 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
 }) => {
   const [image, setImage] = useState<string | null>(initialImage || null);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
   const [isCropping, setIsCropping] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [crop, setCrop] = useState<Crop>();
-  const [completedCrop, setCompletedCrop] = useState<PixelCrop | null>(null);
+  const [completedCrop, setCompletedCrop] = useState<Crop | null>(null);
   
+  const previewCanvasRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
@@ -65,129 +66,76 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
     );
     
     setCrop(crop);
-    setCompletedCrop(null);
   }, [aspectRatio]);
   
-  // Get cropped image as a base64 string directly
-  const getCroppedImage = useCallback(() => {
+  // Apply crop - using a simpler approach with canvas directly in the component
+  const applyCrop = useCallback(() => {
     if (!imgRef.current || !completedCrop) {
-      console.error('Cannot crop: image reference or crop data is missing');
-      return null;
+      alert('Please select a crop area first');
+      return;
     }
     
-    console.log('Starting image crop...');
-    
-    const image = imgRef.current;
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    
-    if (!ctx) {
-      console.error('Cannot crop: failed to get canvas 2D context');
-      return null;
-    }
-    
-    // Ensure numeric dimensions (sometimes these can be percentages)
-    const pixelWidth = Math.round(completedCrop.width);
-    const pixelHeight = Math.round(completedCrop.height);
-    const pixelX = Math.round(completedCrop.x);
-    const pixelY = Math.round(completedCrop.y);
-    
-    if (pixelWidth <= 0 || pixelHeight <= 0) {
-      console.error(`Invalid crop dimensions: ${pixelWidth}x${pixelHeight}`);
-      return null;
-    }
-    
-    // Set canvas dimensions to match the cropped area
-    canvas.width = pixelWidth;
-    canvas.height = pixelHeight;
+    setIsUploading(true);
     
     try {
-      // Clear the canvas with a white background for JPEG
+      // Create a hidden canvas for the cropping operation
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      
+      if (!ctx) {
+        throw new Error('Could not get canvas context');
+      }
+      
+      // Get image dimensions
+      const image = imgRef.current;
+      const imageWidth = image.naturalWidth;
+      const imageHeight = image.naturalHeight;
+      
+      // Calculate crop dimensions based on percentages
+      const cropX = (completedCrop.x / 100) * imageWidth;
+      const cropY = (completedCrop.y / 100) * imageHeight;
+      const cropWidth = (completedCrop.width / 100) * imageWidth;
+      const cropHeight = (completedCrop.height / 100) * imageHeight;
+      
+      // Set canvas size to the cropped area
+      canvas.width = cropWidth;
+      canvas.height = cropHeight;
+      
+      // Fill with white background to avoid transparency issues with JPEG
       ctx.fillStyle = 'white';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
-      // Make sure the image is loaded
-      if (image.complete) {
-        console.log(`Drawing image: ${image.naturalWidth}x${image.naturalHeight} -> crop ${pixelWidth}x${pixelHeight} at ${pixelX},${pixelY}`);
-        
-        // Draw the cropped image onto the canvas
-        ctx.drawImage(
-          image,
-          pixelX,
-          pixelY,
-          pixelWidth,
-          pixelHeight,
-          0,
-          0,
-          pixelWidth,
-          pixelHeight
-        );
-        
-        // Get base64 directly instead of blob
-        const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
-        console.log('Created data URL successfully', dataUrl.substring(0, 50) + '...');
-        
-        // Return a promise that resolves with the data URL as string
-        return Promise.resolve(dataUrl);
-      } else {
-        console.error('Image not fully loaded');
-        return null;
-      }
-    } catch (error) {
-      console.error('Error while cropping image:', error);
-      return null;
-    }
-  }, [completedCrop]);
-  
-  // Apply crop and upload
-  const applyCrop = async () => {
-    try {
-      if (!postId) {
-        console.error('Missing postId - cannot upload image without post ID');
-        alert('Cannot upload image: Post ID is missing. Save the post first to enable image uploads.');
-        setIsCropping(false);
-        return;
-      }
+      // Draw the cropped portion
+      ctx.drawImage(
+        image, 
+        cropX, 
+        cropY, 
+        cropWidth, 
+        cropHeight, 
+        0, 
+        0, 
+        cropWidth, 
+        cropHeight
+      );
       
-      if (!uploadedImage) {
-        console.error('Missing uploadedImage');
-        alert('No image selected for upload.');
-        setIsCropping(false);
-        return;
-      }
+      // Get the data URL (base64 encoded image)
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
       
-      setIsUploading(true);
+      // Set the result image
+      setImage(dataUrl);
+      onImageChange(dataUrl);
       
-      // Get the cropped image as a data URL directly
-      const dataUrl = await getCroppedImage();
-      if (!dataUrl) {
-        throw new Error('Failed to crop image - no data URL generated');
-      }
-      
-      console.log('Cropped image successfully, data URL length:', dataUrl.length);
-      
-      // Since our updated BlogService.uploadImage now works with base64,
-      // we need to convert back to a File for compatibility
-      // We're creating a small File just to satisfy the API, but actually 
-      // using the dataUrl as the resulting image
-      const dummyFile = new File([new Blob(['dummy'])], 'image.jpg', { type: 'image/jpeg' });
-      
-      // Pass the dataUrl directly to onImageChange
-      const imageUrl = dataUrl; // Use base64 directly
-      
-      setImage(imageUrl);
-      onImageChange(imageUrl);
+      // Reset UI state
       setIsCropping(false);
       setUploadedImage(null);
       
-      console.log('Image set successfully');
     } catch (error) {
-      console.error('Error processing image:', error);
-      alert(`Failed to process image: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.error('Error cropping image:', error);
+      alert('Failed to crop image: ' + (error instanceof Error ? error.message : 'Unknown error'));
     } finally {
       setIsUploading(false);
     }
-  };
+  }, [completedCrop, onImageChange]);
   
   // Cancel cropping
   const cancelCrop = () => {
@@ -221,8 +169,8 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
           <div className="bg-gray-100 p-4 rounded-md">
             <ReactCrop
               crop={crop}
-              onChange={c => setCrop(c)}
-              onComplete={c => setCompletedCrop(c)}
+              onChange={(c) => setCrop(c)}
+              onComplete={(c) => setCompletedCrop(c)}
               aspect={aspectRatio}
               minHeight={100}
             >
@@ -232,6 +180,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
                 alt="Crop preview"
                 onLoad={onImageLoad}
                 className="max-w-full"
+                crossOrigin="anonymous"
               />
             </ReactCrop>
           </div>
@@ -254,7 +203,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
               {isUploading ? (
                 <>
                   <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full mr-2" />
-                  Uploading...
+                  Processing...
                 </>
               ) : (
                 <>
