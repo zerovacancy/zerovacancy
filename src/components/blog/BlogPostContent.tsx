@@ -9,14 +9,31 @@ interface BlogPostContentProps {
 }
 
 const BlogPostContent = ({ post, relatedPosts = [] }: BlogPostContentProps) => {
-  const formattedDate = formatDate(post.publishedAt, { format: 'long' });
+  const formattedDate = post.publishedAt 
+    ? formatDate(post.publishedAt, { format: 'long' }) 
+    : 'Draft';
 
   return (
     <article className="max-w-4xl mx-auto">
+      {/* Tags at the top */}
+      {post.tags && post.tags.length > 0 && (
+        <div className="mb-4 flex flex-wrap gap-2">
+          {post.tags.map(tag => (
+            <Link 
+              key={tag} 
+              to={`/blog?tag=${encodeURIComponent(tag)}`}
+              className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800 hover:bg-gray-200"
+            >
+              {tag}
+            </Link>
+          ))}
+        </div>
+      )}
+      
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-4">{post.title}</h1>
         <div className="text-gray-600 mb-4">
-          By {post.author.name} • {formattedDate}
+          By {post.author?.name || 'Team Zero'} • {formattedDate}
         </div>
         <img 
           src={post.coverImage} 
@@ -25,31 +42,18 @@ const BlogPostContent = ({ post, relatedPosts = [] }: BlogPostContentProps) => {
         />
       </div>
       
-      <div className="prose prose-lg max-w-none mb-8">
-        {/* Simple content display without ReactMarkdown */}
-        {post.content.split('\n').map((paragraph, index) => {
-          if (paragraph.trim().startsWith('#')) {
-            // Handle headings
-            const level = paragraph.match(/^#+/)[0].length;
-            const text = paragraph.replace(/^#+\s+/, '');
-            
-            switch(level) {
-              case 1:
-                return <h1 key={index} className="text-3xl font-bold my-4">{text}</h1>;
-              case 2:
-                return <h2 key={index} className="text-2xl font-bold my-3">{text}</h2>;
-              case 3:
-                return <h3 key={index} className="text-xl font-bold my-2">{text}</h3>;
-              default:
-                return <h4 key={index} className="text-lg font-bold my-2">{text}</h4>;
-            }
-          } else if (paragraph.trim()) {
-            // Regular paragraph
-            return <p key={index} className="my-4">{paragraph}</p>;
-          }
-          return null;
-        })}
-      </div>
+      {/* Display the excerpt if available */}
+      {post.excerpt && (
+        <div className="text-xl text-gray-600 italic mb-8 font-serif">
+          {post.excerpt}
+        </div>
+      )}
+      
+      {/* Rich content display */}
+      <div 
+        className="prose prose-lg max-w-none mb-8"
+        dangerouslySetInnerHTML={{ __html: post.content }}
+      />
       
       {relatedPosts.length > 0 && (
         <div className="border-t pt-8">

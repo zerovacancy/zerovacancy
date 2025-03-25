@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
   Save, 
   Calendar, 
-  Image, 
+  FilePlus,
   Eye, 
   ArrowLeft, 
   X, 
   Plus,
-  AlertCircle
+  AlertCircle,
+  Clock,
+  Send
 } from 'lucide-react';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { BlogService } from '@/services/BlogService';
@@ -16,6 +18,9 @@ import { BlogPost, BlogCategory, BlogAuthor } from '@/types/blog';
 import { formatDate } from '@/lib/utils';
 import SEO from '@/components/SEO';
 import { useAuth } from '@/components/auth/AuthContext';
+import RichTextEditor from '@/components/blog/RichTextEditor';
+import ImageUploader from '@/components/blog/ImageUploader';
+import CategorySelector from '@/components/blog/CategorySelector';
 
 const BlogEditor = () => {
   const { id } = useParams<{ id: string }>();
@@ -24,10 +29,23 @@ const BlogEditor = () => {
   const isEditing = !!id;
   const [hydrated, setHydrated] = useState(false);
   
+  // Autosave timer reference
+  const autosaveTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const autoSaveInterval = 2 * 60 * 1000; // 2 minutes in milliseconds
+  
   // This helps prevent hydration errors by ensuring we only render
   // the full component after the client-side code is running
   useEffect(() => {
     setHydrated(true);
+  }, []);
+  
+  // Clean up autosave timer on unmount
+  useEffect(() => {
+    return () => {
+      if (autosaveTimerRef.current) {
+        clearTimeout(autosaveTimerRef.current);
+      }
+    };
   }, []);
   
   // Check admin access
@@ -55,15 +73,19 @@ const BlogEditor = () => {
   const [newTag, setNewTag] = useState('');
   
   // Publishing state
-  const [isPublished, setIsPublished] = useState(false);
+  const [status, setStatus] = useState<'draft' | 'published'>('draft');
   const [publishedAt, setPublishedAt] = useState<string | null>(null);
+  const [lastSaved, setLastSaved] = useState<string | null>(null);
   
   // UI state
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [publishing, setPublishing] = useState(false);
   const [categories, setCategories] = useState<BlogCategory[]>([]);
   const [authors, setAuthors] = useState<BlogAuthor[]>([]);
   const [previewMode, setPreviewMode] = useState(false);
+  const [isAutosaving, setIsAutosaving] = useState(false);
+  const [lastAutosaved, setLastAutosaved] = useState<string | null>(null);
   
   // Load post data if editing, and load categories and authors
   useEffect(() => {
@@ -72,13 +94,19 @@ const BlogEditor = () => {
       
       try {
         // Fetch categories and authors
-        const [categoriesData, authorsData] = await Promise.all([
+        const [categoriesData, authorsData, defaultAuthor] = await Promise.all([
           BlogService.getCategories(),
-          BlogService.getAuthors()
+          BlogService.getAuthors(),
+          BlogService.getDefaultAuthor()
         ]);
         
         setCategories(categoriesData.categories);
         setAuthors(authorsData);
+        
+        // Set default author to Team Zero if not editing
+        if (!isEditing) {
+          setAuthorId(defaultAuthor.id);
+        }
         
         // If editing, fetch post data
         if (isEditing && id) {
@@ -90,6 +118,9 @@ const BlogEditor = () => {
             
             if (fullPost && fullPost.post) {
               populateForm(fullPost.post);
+              
+              // Start autosave timer for existing posts
+              startAutosaveTimer();
             } else {
               navigate('/admin/blog');
             }
@@ -117,8 +148,65 @@ const BlogEditor = () => {
     setCategoryId(post.category.id);
     setAuthorId(post.author.id);
     setTags(post.tags || []);
-    setIsPublished(!!post.publishedAt);
+    setStatus(post.status || (post.publishedAt ? 'published' : 'draft'));
     setPublishedAt(post.publishedAt);
+    setLastSaved(post.lastSaved || null);
+  };
+  
+  // Start autosave timer
+  const startAutosaveTimer = () => {
+    // Clear any existing timer
+    if (autosaveTimerRef.current) {
+      clearTimeout(autosaveTimerRef.current);
+    }
+    
+    // Set new timer
+    autosaveTimerRef.current = setTimeout(() => {
+      // Only autosave if we're in draft mode and editing an existing post
+      if (status === 'draft' && isEditing && id) {
+        handleAutosave();
+      }
+      
+      // Restart timer
+      startAutosaveTimer();
+    }, autoSaveInterval);
+  };
+  
+  // Handle autosave
+  const handleAutosave = async () => {
+    // Don't autosave if we're in preview mode or already saving
+    if (previewMode || saving || publishing) {
+      return;
+    }
+    
+    if (!isEditing || !id) {
+      return; // Can't autosave new posts (they don't have an ID yet)
+    }
+    
+    setIsAutosaving(true);
+    
+    try {
+      // Create minimal data for autosave
+      const autosaveData: Partial<BlogPost> = {
+        title,
+        content,
+        excerpt
+      };
+      
+      // Autosave the post
+      const success = await BlogService.autosaveDraft(id, autosaveData);
+      
+      if (success) {
+        // Update last autosaved time
+        const now = new Date().toISOString();
+        setLastAutosaved(now);
+      }
+    } catch (error) {
+      console.error('Autosave failed:', error);
+      // Don't show error messages for autosave failures
+    } finally {
+      setIsAutosaving(false);
+    }
   };
   
   // Generate slug from title
@@ -178,8 +266,8 @@ const BlogEditor = () => {
     return true;
   };
   
-  // Handle form submission
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Handle save (without publishing)
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setValidationError('');
     
@@ -198,22 +286,31 @@ const BlogEditor = () => {
         excerpt,
         content,
         coverImage,
-        publishedAt: isPublished ? (publishedAt || now) : null,
+        status: 'draft',
+        publishedAt: null,
         category: { id: categoryId } as BlogCategory,
         author: { id: authorId } as BlogAuthor,
         tags
       };
       
-      console.log('Submitting blog post:', postData);
+      console.log('Saving draft:', postData);
       
       if (isEditing && id) {
         await BlogService.updatePost(id, postData);
       } else {
-        await BlogService.createPost(postData);
+        const newPost = await BlogService.createPost(postData);
+        if (newPost && newPost.id) {
+          // Redirect to edit page for the new post
+          navigate(`/admin/blog/edit/${newPost.id}`);
+          return;
+        }
       }
       
-      // Success - go back to blog admin
-      navigate('/admin/blog');
+      // Update last saved time
+      setLastSaved(now);
+      
+      // Show success message
+      alert('Draft saved successfully');
     } catch (error: any) {
       // Extract meaningful error message
       const errorMessage = error.message || 'Failed to save post. Please try again.';
@@ -227,24 +324,100 @@ const BlogEditor = () => {
     }
   };
   
+  // Handle publish
+  const handlePublish = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setValidationError('');
+    
+    // Validate form before submission
+    if (!validateForm()) {
+      return;
+    }
+    
+    setPublishing(true);
+    
+    try {
+      const now = new Date().toISOString();
+      const postData: Partial<BlogPost> = {
+        title,
+        slug,
+        excerpt,
+        content,
+        coverImage,
+        status: 'published',
+        publishedAt: now,
+        category: { id: categoryId } as BlogCategory,
+        author: { id: authorId } as BlogAuthor,
+        tags
+      };
+      
+      console.log('Publishing post:', postData);
+      
+      if (isEditing && id) {
+        await BlogService.updatePost(id, postData, true);
+      } else {
+        const newPost = await BlogService.createPost(postData);
+        if (newPost && newPost.id) {
+          // Go to blog admin
+          navigate('/admin/blog');
+          return;
+        }
+      }
+      
+      // Success - go back to blog admin
+      navigate('/admin/blog');
+    } catch (error: any) {
+      // Extract meaningful error message
+      const errorMessage = error.message || 'Failed to publish post. Please try again.';
+      console.error('Error publishing post:', error);
+      setValidationError(errorMessage);
+      
+      // Don't navigate away on error
+      window.scrollTo(0, 0); // Scroll to top to show error
+    } finally {
+      setPublishing(false);
+    }
+  };
+  
+  // Handle image upload for rich text editor
+  const handleContentImageUpload = (url: string) => {
+    // Optional: store the URLs of uploaded images if needed
+    console.log('Content image uploaded:', url);
+  };
+  
   // Preview post
   const renderPreview = () => {
     const previewPost: BlogPost = {
       id: id || 'preview',
       title: title || 'Untitled Post',
       slug: slug || 'untitled-post',
-      excerpt: excerpt || 'No excerpt provided',
-      content: content || 'No content provided',
+      excerpt: excerpt || '',
+      content: content || '<p>No content provided</p>',
       coverImage: coverImage || '/placeholder.svg',
-      publishedAt: publishedAt || null,
+      publishedAt: publishedAt,
+      status,
       category: categories.find(c => c.id === categoryId) || { id: '', name: 'Uncategorized', slug: 'uncategorized' },
-      author: authors.find(a => a.id === authorId) || { id: '', name: 'Unknown Author' },
+      author: authors.find(a => a.id === authorId) || { id: '', name: 'Team Zero' },
       tags: tags,
       readingTime: Math.ceil(content.split(/\s+/).length / 200) || 1
     };
     
     return (
       <div className="prose prose-lg max-w-none">
+        {/* Tags at top */}
+        {previewPost.tags.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-6">
+            {previewPost.tags.map(tag => (
+              <span 
+                key={tag} 
+                className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
+        
         {coverImage && (
           <img 
             src={coverImage} 
@@ -257,11 +430,11 @@ const BlogEditor = () => {
         
         <div className="flex items-center text-gray-500 mb-6 text-sm">
           <span className="font-medium text-gray-700 mr-2">
-            {authors.find(a => a.id === authorId)?.name || 'Unknown Author'}
+            {authors.find(a => a.id === authorId)?.name || 'Team Zero'}
           </span>
           <span className="mx-2">•</span>
           <span>
-            {isPublished 
+            {status === 'published' 
               ? formatDate(publishedAt || new Date().toISOString(), { format: 'long' }) 
               : 'Draft'
             }
@@ -274,40 +447,10 @@ const BlogEditor = () => {
         
         {excerpt && <p className="text-lg font-medium text-gray-700 mb-8 italic">{excerpt}</p>}
         
-        <div className="mt-6">
-          {content.split('\n\n').map((paragraph, idx) => {
-            if (!paragraph.trim()) return null;
-            
-            // Check if it's a heading
-            if (paragraph.startsWith('# ')) {
-              return <h1 key={idx}>{paragraph.substring(2)}</h1>;
-            } else if (paragraph.startsWith('## ')) {
-              return <h2 key={idx}>{paragraph.substring(3)}</h2>;
-            } else if (paragraph.startsWith('### ')) {
-              return <h3 key={idx}>{paragraph.substring(4)}</h3>;
-            } else if (paragraph.startsWith('#### ')) {
-              return <h4 key={idx}>{paragraph.substring(5)}</h4>;
-            }
-            
-            // Regular paragraph
-            return <p key={idx}>{paragraph}</p>;
-          })}
-        </div>
-        
-        {tags.length > 0 && (
-          <div className="mt-8 border-t pt-6">
-            <div className="flex flex-wrap gap-2">
-              {tags.map(tag => (
-                <span 
-                  key={tag} 
-                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
+        <div 
+          className="mt-6"
+          dangerouslySetInnerHTML={{ __html: content }}
+        />
       </div>
     );
   };
@@ -340,6 +483,23 @@ const BlogEditor = () => {
         </button>
         
         <div className="flex items-center space-x-4">
+          {/* Autosave indicator */}
+          {isEditing && status === 'draft' && (
+            <div className="text-sm text-gray-500 flex items-center">
+              {isAutosaving ? (
+                <>
+                  <Clock size={14} className="mr-1 animate-pulse" />
+                  Autosaving...
+                </>
+              ) : lastAutosaved ? (
+                <>
+                  <Clock size={14} className="mr-1" />
+                  Autosaved at {new Date(lastAutosaved).toLocaleTimeString()}
+                </>
+              ) : null}
+            </div>
+          )}
+          
           <button
             onClick={() => setPreviewMode(!previewMode)}
             className={`flex items-center px-4 py-2 border rounded-md ${
@@ -352,14 +512,41 @@ const BlogEditor = () => {
             {previewMode ? 'Edit' : 'Preview'}
           </button>
           
+          {/* Save button */}
           <button
-            onClick={handleSubmit}
+            onClick={handleSave}
             disabled={saving}
-            className="flex items-center px-4 py-2 bg-brand-purple text-white rounded-md hover:bg-brand-purple-dark disabled:opacity-70 disabled:cursor-not-allowed"
+            className="flex items-center px-4 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-800 disabled:opacity-70 disabled:cursor-not-allowed"
           >
             <Save size={18} className="mr-2" />
-            {saving ? 'Saving...' : 'Save'}
+            {saving ? 'Saving...' : 'Save Draft'}
           </button>
+          
+          {/* Publish button */}
+          <button
+            onClick={handlePublish}
+            disabled={publishing}
+            className="flex items-center px-4 py-2 bg-brand-purple text-white rounded-md hover:bg-brand-purple-dark disabled:opacity-70 disabled:cursor-not-allowed"
+          >
+            <Send size={18} className="mr-2" />
+            {publishing ? 'Publishing...' : status === 'published' ? 'Update' : 'Publish'}
+          </button>
+        </div>
+      </div>
+      
+      {/* Post status indicator */}
+      <div className="mb-6">
+        <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+          status === 'published' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+        }`}>
+          <FilePlus size={14} className="mr-1" />
+          {status === 'published' ? 'Published' : 'Draft'}
+          
+          {lastSaved && (
+            <span className="ml-2 text-xs text-gray-500">
+              Last saved {formatDate(lastSaved, { format: 'relative' })}
+            </span>
+          )}
         </div>
       </div>
       
@@ -380,7 +567,7 @@ const BlogEditor = () => {
             {renderPreview()}
           </div>
         ) : (
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSave}>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-4">
               {/* Main content - 3 columns */}
               <div className="md:col-span-3 space-y-6">
@@ -451,24 +638,25 @@ const BlogEditor = () => {
                     className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-brand-purple focus:border-brand-purple"
                     placeholder="Brief summary of the post"
                   />
+                  <p className="mt-1 text-xs text-gray-500">
+                    A short summary that appears on blog listings and social shares
+                  </p>
                 </div>
                 
-                {/* Content */}
+                {/* Rich Text Editor */}
                 <div>
                   <label 
                     htmlFor="content" 
-                    className="block text-sm font-medium text-gray-700"
+                    className="block text-sm font-medium text-gray-700 mb-2"
                   >
-                    Content (Markdown)
+                    Content
                   </label>
-                  <textarea
-                    id="content"
+                  <RichTextEditor
                     value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                    rows={20}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-brand-purple focus:border-brand-purple font-mono text-sm"
-                    placeholder="Write your post content in Markdown format..."
-                    required
+                    onChange={setContent}
+                    placeholder="Write your blog post content here..."
+                    postId={id}
+                    onImageUpload={handleContentImageUpload}
                   />
                 </div>
               </div>
@@ -480,23 +668,44 @@ const BlogEditor = () => {
                   <h3 className="text-lg font-medium text-gray-900 mb-4">Publish</h3>
                   
                   <div className="space-y-4">
-                    <div className="flex items-center">
-                      <input
-                        id="publish"
-                        type="checkbox"
-                        checked={isPublished}
-                        onChange={(e) => setIsPublished(e.target.checked)}
-                        className="h-4 w-4 text-brand-purple focus:ring-brand-purple border-gray-300 rounded"
-                      />
-                      <label 
-                        htmlFor="publish" 
-                        className="ml-2 block text-sm text-gray-900"
-                      >
-                        Publish immediately
+                    {/* Status toggle */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Status
                       </label>
+                      <div className="flex rounded-md shadow-sm">
+                        <button
+                          type="button"
+                          onClick={() => setStatus('draft')}
+                          className={`flex-1 py-2 px-3 text-sm border ${
+                            status === 'draft'
+                              ? 'bg-yellow-100 border-yellow-400 text-yellow-800 font-medium'
+                              : 'bg-white border-gray-300 text-gray-700'
+                          } rounded-l-md focus:outline-none`}
+                        >
+                          Draft
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setStatus('published');
+                            if (!publishedAt) {
+                              setPublishedAt(new Date().toISOString());
+                            }
+                          }}
+                          className={`flex-1 py-2 px-3 text-sm border ${
+                            status === 'published'
+                              ? 'bg-green-100 border-green-400 text-green-800 font-medium'
+                              : 'bg-white border-gray-300 text-gray-700'
+                          } rounded-r-md focus:outline-none`}
+                        >
+                          Published
+                        </button>
+                      </div>
                     </div>
                     
-                    {isPublished && (
+                    {/* Publish date */}
+                    {status === 'published' && (
                       <div>
                         <label 
                           htmlFor="publishDate" 
@@ -527,45 +736,22 @@ const BlogEditor = () => {
                     Featured Image
                   </h3>
                   
-                  <input
-                    type="text"
-                    value={coverImage}
-                    onChange={(e) => setCoverImage(e.target.value)}
-                    className="block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-sm focus:outline-none focus:ring-brand-purple focus:border-brand-purple"
-                    placeholder="Image URL"
+                  <ImageUploader
+                    initialImage={coverImage}
+                    postId={id}
+                    onImageChange={setCoverImage}
+                    aspectRatio={16/9}
                   />
-                  
-                  {coverImage && (
-                    <div className="mt-3">
-                      <img 
-                        src={coverImage} 
-                        alt="Preview" 
-                        className="w-full h-32 object-cover rounded-md"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = '/placeholder.svg';
-                        }}
-                      />
-                    </div>
-                  )}
                 </div>
                 
                 {/* Categories */}
                 <div className="bg-gray-50 p-4 rounded-md border border-gray-200">
-                  <h3 className="text-lg font-medium text-gray-900 mb-4">Category</h3>
-                  
-                  <select
-                    value={categoryId}
-                    onChange={(e) => setCategoryId(e.target.value)}
-                    className="block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 text-sm focus:outline-none focus:ring-brand-purple focus:border-brand-purple"
-                    required
-                  >
-                    <option value="">Select a category</option>
-                    {categories.map((category) => (
-                      <option key={category.id} value={category.id}>
-                        {category.name}
-                      </option>
-                    ))}
-                  </select>
+                  <CategorySelector
+                    categories={categories}
+                    selectedCategoryId={categoryId}
+                    onChange={setCategoryId}
+                    onCategoriesChange={setCategories}
+                  />
                 </div>
                 
                 {/* Authors */}

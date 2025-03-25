@@ -79,6 +79,8 @@ const transformPost = async (post: any): Promise<BlogPost> => {
     category,
     author,
     tags,
+    status: post.status || (post.published_at ? 'published' : 'draft'),
+    lastSaved: post.updated_at || post.created_at,
     readingTime: post.reading_time || calculateReadingTime(post.content)
   };
 };
@@ -418,7 +420,7 @@ export class BlogService {
   }
   
   // Update an existing blog post
-  static async updatePost(id: string, postData: Partial<BlogPost>): Promise<BlogPost | null> {
+  static async updatePost(id: string, postData: Partial<BlogPost>, isPublishing: boolean = false): Promise<BlogPost | null> {
     try {
       // Extract tags before updating
       const tags = postData.tags;
@@ -436,7 +438,8 @@ export class BlogService {
         excerpt: cleanPostData.excerpt,
         content: cleanPostData.content,
         cover_image: cleanPostData.coverImage,
-        reading_time: cleanPostData.readingTime
+        reading_time: cleanPostData.readingTime,
+        updated_at: new Date().toISOString()
       };
       
       // Only update provided fields
@@ -447,9 +450,21 @@ export class BlogService {
       });
       
       // Handle published status
-      if (cleanPostData.publishedAt !== undefined) {
+      if (isPublishing || cleanPostData.publishedAt !== undefined) {
         supabasePost.published_at = cleanPostData.publishedAt;
         supabasePost.status = cleanPostData.publishedAt ? 'published' : 'draft';
+      }
+      
+      // Directly set status if provided
+      if (cleanPostData.status) {
+        supabasePost.status = cleanPostData.status;
+        
+        // Ensure published_at is set or cleared based on status
+        if (cleanPostData.status === 'published' && !supabasePost.published_at) {
+          supabasePost.published_at = new Date().toISOString();
+        } else if (cleanPostData.status === 'draft' && supabasePost.published_at === undefined) {
+          supabasePost.published_at = null;
+        }
       }
       
       // Update category if provided
@@ -844,6 +859,49 @@ export class BlogService {
     return true;
   }
   
+  // Autosave a draft blog post
+  static async autosaveDraft(id: string, postData: Partial<BlogPost>): Promise<boolean> {
+    try {
+      // Create a minimal update payload focused on content and related fields
+      const updatePayload = {
+        content: postData.content,
+        title: postData.title,
+        excerpt: postData.excerpt,
+        status: 'draft',
+        updated_at: new Date().toISOString()
+      };
+      
+      // Only include fields that are defined
+      Object.keys(updatePayload).forEach(key => {
+        if (updatePayload[key] === undefined) {
+          delete updatePayload[key];
+        }
+      });
+      
+      // Skip if nothing to update
+      if (Object.keys(updatePayload).length === 0) {
+        return false;
+      }
+      
+      // Update the post
+      const { error } = await supabase
+        .from('blog_posts')
+        .update(updatePayload)
+        .eq('id', id);
+      
+      if (error) {
+        console.error('Error autosaving draft:', error);
+        throw error;
+      }
+      
+      return true;
+    } catch (error) {
+      console.error('Error in autosaveDraft:', error);
+      // Silently fail for autosave
+      return false;
+    }
+  }
+  
   // Get all authors
   static async getAuthors(): Promise<BlogAuthor[]> {
     const { data, error } = await supabase
@@ -857,5 +915,87 @@ export class BlogService {
     }
     
     return data || [];
+  }
+  
+  // Upload an image for the blog post
+  static async uploadImage(file: File, postId: string, type: 'cover' | 'content'): Promise<string> {
+    try {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        throw new Error('Only image files are allowed');
+      }
+      
+      // Generate a unique file path for the image
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${type === 'cover' ? 'cover' : 'content'}-${Date.now()}.${fileExt}`;
+      const filePath = `blog/${postId}/${fileName}`;
+      
+      // Upload the file to Supabase Storage
+      const { error } = await supabase.storage
+        .from('blog-images')
+        .upload(filePath, file);
+      
+      if (error) {
+        console.error('Error uploading image:', error);
+        throw error;
+      }
+      
+      // Get the public URL for the uploaded file
+      const { data } = supabase.storage
+        .from('blog-images')
+        .getPublicUrl(filePath);
+      
+      if (!data || !data.publicUrl) {
+        throw new Error('Failed to get public URL for uploaded image');
+      }
+      
+      return data.publicUrl;
+    } catch (error) {
+      console.error('Error in uploadImage:', error);
+      throw error;
+    }
+  }
+  
+  // Get default author - finds or creates "Team Zero" author
+  static async getDefaultAuthor(): Promise<BlogAuthor> {
+    try {
+      // Look for existing Team Zero author
+      const { data, error } = await supabase
+        .from('blog_authors')
+        .select('*')
+        .eq('name', 'Team Zero')
+        .single();
+      
+      if (error && error.code !== 'PGRST116') { // Not found error
+        console.error('Error finding default author:', error);
+        throw error;
+      }
+      
+      // If found, return the existing author
+      if (data) {
+        return data;
+      }
+      
+      // If not found, create a new Team Zero author
+      const { data: newAuthor, error: createError } = await supabase
+        .from('blog_authors')
+        .insert({
+          name: 'Team Zero',
+          role: 'ZeroVacancy Team',
+          bio: 'The team at ZeroVacancy'
+        })
+        .select()
+        .single();
+      
+      if (createError) {
+        console.error('Error creating default author:', createError);
+        throw createError;
+      }
+      
+      return newAuthor;
+    } catch (error) {
+      console.error('Error getting default author:', error);
+      throw error;
+    }
   }
 }

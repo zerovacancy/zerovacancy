@@ -19,11 +19,13 @@ export type BlogPost = {
   excerpt: string;
   content: string;
   coverImage: string;
-  publishedAt: string;
+  publishedAt: string | null;
   category: BlogCategory;
   author: BlogAuthor;
   tags?: string[];
   readingTime?: number;
+  status?: 'draft' | 'published';
+  lastSaved?: string;
 };
 
 export type BlogPostPreview = Omit<BlogPost, 'content'>;

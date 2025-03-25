@@ -29,6 +29,7 @@ const ConnectRefresh = lazy(() => import('./pages/ConnectRefresh'));
 const ConnectOnboarding = lazy(() => import('./pages/ConnectOnboarding'));
 const Blog = lazy(() => import('./pages/Blog'));
 const BlogPost = lazy(() => import('./pages/BlogPost'));
+const BlogTest = lazy(() => import('./pages/blog-test'));
 const BlogAdmin = lazy(() => import('./pages/admin/BlogAdmin'));
 const BlogEditor = lazy(() => import('./pages/admin/BlogEditor'));
 const AdminLogin = lazy(() => import('./pages/admin/AdminLogin'));
@@ -153,6 +154,7 @@ function App() {
                   <Route path="/terms" element={<Terms />} />
                   <Route path="/blog" element={<Blog />} />
                   <Route path="/blog/:slug" element={<BlogPost />} />
+                  <Route path="/blog-test" element={<BlogTest />} />
                   
                   {/* Auth Routes */}
                   <Route path="/account" element={<Account />} />
