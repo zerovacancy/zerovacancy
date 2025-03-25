@@ -121,13 +121,38 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
       // Get the data URL (base64 encoded image)
       const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
       
-      // Set the result image
-      setImage(dataUrl);
-      onImageChange(dataUrl);
+      console.log('Generated image data URL:', dataUrl.substring(0, 50) + '...');
+      console.log('Image data URL length:', dataUrl.length);
       
-      // Reset UI state
-      setIsCropping(false);
-      setUploadedImage(null);
+      // Verify the data URL format
+      if (!dataUrl.startsWith('data:image/')) {
+        throw new Error('Invalid image data format');
+      }
+      
+      // Create a new Image object to verify the data URL works
+      const testImg = new Image();
+      testImg.onload = () => {
+        console.log('Test image loaded successfully from data URL');
+        
+        // Now that we've verified the image loads, set it
+        setImage(dataUrl);
+        onImageChange(dataUrl);
+        
+        // Reset UI state
+        setIsCropping(false);
+        setUploadedImage(null);
+      };
+      
+      testImg.onerror = () => {
+        console.error('Test image failed to load from data URL');
+        throw new Error('Generated image data is invalid - cannot be loaded as an image');
+      };
+      
+      // Trigger the load test
+      testImg.src = dataUrl;
+      
+      // Note: UI state reset is now handled in the testImg.onload callback
+      // to ensure we only update the UI after successful verification
       
     } catch (error) {
       console.error('Error cropping image:', error);

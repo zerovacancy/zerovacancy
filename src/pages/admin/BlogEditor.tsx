@@ -283,6 +283,19 @@ const BlogEditor = () => {
     
     try {
       const now = new Date().toISOString();
+      // Log all form values for debugging
+      console.log('Current form values:', {
+        title: title || 'MISSING',
+        slug: slug || 'MISSING',
+        excerpt: excerpt || 'MISSING',
+        content: content || 'MISSING',
+        coverImage: coverImage ? 'PRESENT' : 'MISSING',
+        categoryId: categoryId || 'MISSING',
+        authorId: authorId || 'MISSING',
+        tags: tags || 'MISSING',
+        contentLength: content ? content.length : 0
+      });
+      
       const postData: Partial<BlogPost> = {
         title,
         slug,
@@ -296,7 +309,11 @@ const BlogEditor = () => {
         tags
       };
       
-      console.log('Saving draft:', postData);
+      console.log('Saving draft with data:', JSON.stringify({
+        ...postData,
+        content: postData.content ? `[CONTENT: ${postData.content.substring(0, 100)}...]` : 'MISSING',
+        coverImage: postData.coverImage ? 'PRESENT' : 'MISSING'
+      }, null, 2));
       
       if (isEditing && id) {
         await BlogService.updatePost(id, postData);
@@ -461,11 +478,21 @@ const BlogEditor = () => {
         )}
         
         {coverImage && (
-          <img 
-            src={coverImage} 
-            alt={title} 
-            className="w-full rounded-lg object-cover mb-6 max-h-[400px]"
-          />
+          <>
+            <img 
+              src={coverImage} 
+              alt={title} 
+              className="w-full rounded-lg object-cover mb-6 max-h-[400px]"
+              onError={(e) => {
+                console.error('Image failed to load in preview:', e);
+                console.log('Cover image data length:', coverImage.length);
+                console.log('Cover image data starts with:', coverImage.substring(0, 50) + '...');
+                (e.target as HTMLImageElement).style.border = '2px solid red';
+                (e.target as HTMLImageElement).style.backgroundColor = '#ffeeee';
+              }}
+              onLoad={() => console.log('Image loaded successfully in preview')}
+            />
+          </>
         )}
         
         <h1>{title || 'Untitled Post'}</h1>
