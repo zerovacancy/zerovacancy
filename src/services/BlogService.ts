@@ -998,7 +998,11 @@ export class BlogService {
       // Generate a unique file path for the image
       const fileExt = file.name.split('.').pop() || 'jpg';
       const fileName = `${type === 'cover' ? 'cover' : 'content'}-${Date.now()}.${fileExt}`;
-      const filePath = `blog/${postId}/${fileName}`;
+      
+      // Use the folders that are actually specified in your policy permissions
+      // You mentioned your current policies are for folders like 1ffg0oo_0, 1ffg0oo_1, etc.
+      const policyFolder = type === 'cover' ? '1ffg0oo_0' : '1ffg0oo_1';
+      const filePath = `${policyFolder}/${fileName}`;
       
       console.log(`Uploading image to bucket '${bucketName}', path: ${filePath}`);
       
