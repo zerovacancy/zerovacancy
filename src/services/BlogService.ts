@@ -954,7 +954,7 @@ export class BlogService {
     return data || [];
   }
   
-  // Upload an image for the blog post
+  // Upload an image for the blog post - using base64 encoding to bypass storage buckets
   static async uploadImage(file: File, postId: string, type: 'cover' | 'content'): Promise<string> {
     try {
       if (!postId) {
@@ -966,77 +966,43 @@ export class BlogService {
         throw new Error('Only image files are allowed');
       }
       
-      // Validate file size
-      const maxSizeInBytes = 10 * 1024 * 1024; // 10MB max
+      // Validate file size (more strict for base64)
+      const maxSizeInBytes = 2 * 1024 * 1024; // 2MB max for base64 storage
       if (file.size > maxSizeInBytes) {
-        throw new Error(`Image is too large. Maximum size is ${maxSizeInBytes / (1024 * 1024)}MB`);
+        throw new Error(`Image is too large. Maximum size is ${maxSizeInBytes / (1024 * 1024)}MB for direct storage`);
       }
       
-      // First check available buckets to help with debugging
-      console.log('Checking available storage buckets...');
-      const { data: buckets, error: bucketsError } = await supabase.storage.listBuckets();
+      console.log('Using base64 encoding for image storage (bypassing Supabase Storage)');
       
-      if (bucketsError) {
-        console.error('Error listing buckets:', bucketsError);
-        throw new Error(`Cannot access storage: ${bucketsError.message}`);
-      }
-      
-      console.log('Available buckets:', buckets?.map(b => b.name) || 'No buckets found');
-      
-      // If no buckets available or images bucket not found, try to use the first available bucket
-      let bucketName = 'images';
-      if (buckets && buckets.length > 0) {
-        const imagesBucketExists = buckets.some(b => b.name === 'images');
-        if (!imagesBucketExists) {
-          bucketName = buckets[0].name;
-          console.log(`'images' bucket not found, using first available bucket: ${bucketName}`);
-        }
-      } else {
-        throw new Error('No storage buckets available. Please create a bucket in Supabase dashboard.');
-      }
-      
-      // Generate a unique file path for the image
-      const fileExt = file.name.split('.').pop() || 'jpg';
-      const fileName = `${type === 'cover' ? 'cover' : 'content'}-${Date.now()}.${fileExt}`;
-      
-      // Use the folders that are actually specified in your policy permissions
-      // You mentioned your current policies are for folders like 1ffg0oo_0, 1ffg0oo_1, etc.
-      const policyFolder = type === 'cover' ? '1ffg0oo_0' : '1ffg0oo_1';
-      const filePath = `${policyFolder}/${fileName}`;
-      
-      console.log(`Uploading image to bucket '${bucketName}', path: ${filePath}`);
-      
-      // Try to upload the file to Supabase Storage
-      const { data: uploadData, error } = await supabase.storage
-        .from(bucketName)
-        .upload(filePath, file, {
-          cacheControl: '3600',
-          upsert: true
-        });
-      
-      if (error) {
-        console.error('Error uploading image:', error);
-        if (error.message.includes('Permission denied')) {
-          throw new Error(`Upload failed: Permission denied. Check storage policies in Supabase dashboard.`);
-        }
-        throw new Error(`Upload failed: ${error.message}`);
-      }
-      
-      if (!uploadData || !uploadData.path) {
-        throw new Error('Upload returned no data');
-      }
-      
-      // Get the public URL for the uploaded file
-      const { data } = supabase.storage
-        .from(bucketName)
-        .getPublicUrl(filePath);
-      
-      if (!data || !data.publicUrl) {
-        throw new Error('Failed to get public URL for uploaded image');
-      }
-      
-      console.log(`Image uploaded successfully. Public URL: ${data.publicUrl}`);
-      return data.publicUrl;
+      // Read the file as base64
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        
+        reader.onload = () => {
+          try {
+            // The result is the base64 string
+            const base64String = reader.result as string;
+            
+            // Use the base64 string directly as the image URL
+            // This bypasses storage buckets completely
+            console.log('Image encoded as base64 successfully');
+            
+            // For memory efficiency, we could store these base64 strings
+            // in the database instead of returning them directly, but
+            // for simplicity we're just returning the data URI
+            resolve(base64String);
+          } catch (e) {
+            reject(new Error('Failed to process base64 image data'));
+          }
+        };
+        
+        reader.onerror = () => {
+          reject(new Error('Failed to read file as base64'));
+        };
+        
+        // Read the file as a data URL (base64)
+        reader.readAsDataURL(file);
+      });
     } catch (error) {
       console.error('Error in uploadImage:', error);
       throw error;
