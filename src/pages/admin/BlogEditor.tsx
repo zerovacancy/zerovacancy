@@ -177,8 +177,8 @@ const BlogEditor = () => {
   
   // Handle autosave
   const handleAutosave = async () => {
-    // Don't autosave if we're in preview mode or already saving
-    if (previewMode || saving || publishing) {
+    // Don't autosave if already saving or publishing
+    if (saving || publishing) {
       return;
     }
     
@@ -543,7 +543,13 @@ const BlogEditor = () => {
           )}
           
           <button
-            onClick={() => setPreviewMode(!previewMode)}
+            onClick={() => {
+              // Save draft before showing preview
+              if (!previewMode && id) {
+                handleAutosave();
+              }
+              setPreviewMode(!previewMode);
+            }}
             className={`flex items-center px-4 py-2 border rounded-md ${
               previewMode
                 ? 'bg-brand-purple-light/30 border-brand-purple text-brand-purple'

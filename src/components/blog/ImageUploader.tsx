@@ -70,57 +70,88 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   
   // Get cropped image
   const getCroppedImage = useCallback(() => {
-    if (!imgRef.current || !completedCrop) return null;
+    if (!imgRef.current || !completedCrop) {
+      console.error('Cannot crop: image reference or crop data is missing');
+      return null;
+    }
     
     const image = imgRef.current;
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     
-    if (!ctx) return null;
+    if (!ctx) {
+      console.error('Cannot crop: failed to get canvas 2D context');
+      return null;
+    }
+    
+    // Ensure numeric dimensions (sometimes these can be percentages)
+    const pixelWidth = Math.round(completedCrop.width);
+    const pixelHeight = Math.round(completedCrop.height);
+    const pixelX = Math.round(completedCrop.x);
+    const pixelY = Math.round(completedCrop.y);
+    
+    if (pixelWidth <= 0 || pixelHeight <= 0) {
+      console.error(`Invalid crop dimensions: ${pixelWidth}x${pixelHeight}`);
+      return null;
+    }
     
     // Set canvas dimensions to match the cropped area
-    canvas.width = completedCrop.width;
-    canvas.height = completedCrop.height;
+    canvas.width = pixelWidth;
+    canvas.height = pixelHeight;
     
-    // Draw the cropped image onto the canvas
-    ctx.drawImage(
-      image,
-      completedCrop.x,
-      completedCrop.y,
-      completedCrop.width,
-      completedCrop.height,
-      0,
-      0,
-      completedCrop.width,
-      completedCrop.height
-    );
-    
-    // Convert canvas to blob
-    return new Promise<Blob | null>((resolve) => {
-      canvas.toBlob(
-        (blob) => {
-          resolve(blob);
-        },
-        'image/jpeg',
-        0.95 // Quality
+    try {
+      // Draw the cropped image onto the canvas
+      ctx.drawImage(
+        image,
+        pixelX,
+        pixelY,
+        pixelWidth,
+        pixelHeight,
+        0,
+        0,
+        pixelWidth,
+        pixelHeight
       );
-    });
+      
+      // Convert canvas to blob
+      return new Promise<Blob | null>((resolve) => {
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) {
+              console.error('Failed to create blob from canvas');
+            }
+            resolve(blob);
+          },
+          'image/jpeg',
+          0.95 // Quality
+        );
+      });
+    } catch (error) {
+      console.error('Error while cropping image:', error);
+      return null;
+    }
   }, [completedCrop]);
   
   // Apply crop and upload
   const applyCrop = async () => {
     try {
-      if (!postId || !uploadedImage) {
-        // If no postId or uploadedImage, just use the original image for now
-        setImage(uploadedImage);
-        onImageChange(uploadedImage || '');
+      if (!postId) {
+        console.error('Missing postId - cannot upload image without post ID');
+        alert('Cannot upload image: Post ID is missing. Save the post first to enable image uploads.');
+        setIsCropping(false);
+        return;
+      }
+      
+      if (!uploadedImage) {
+        console.error('Missing uploadedImage');
+        alert('No image selected for upload.');
         setIsCropping(false);
         return;
       }
       
       const croppedBlob = await getCroppedImage();
       if (!croppedBlob) {
-        throw new Error('Failed to crop image');
+        throw new Error('Failed to crop image - no cropped blob generated');
       }
       
       // Create a File from the Blob
@@ -131,13 +162,17 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
       // Upload the cropped image
       const imageUrl = await BlogService.uploadImage(file, postId, type);
       
+      if (!imageUrl) {
+        throw new Error('Image upload failed - no URL returned');
+      }
+      
       setImage(imageUrl);
       onImageChange(imageUrl);
       setIsCropping(false);
       setUploadedImage(null);
     } catch (error) {
       console.error('Error processing image:', error);
-      alert('Failed to process image. Please try again.');
+      alert(`Failed to process image: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setIsUploading(false);
     }

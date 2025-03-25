@@ -957,24 +957,43 @@ export class BlogService {
   // Upload an image for the blog post
   static async uploadImage(file: File, postId: string, type: 'cover' | 'content'): Promise<string> {
     try {
+      if (!postId) {
+        throw new Error('Post ID is required for image upload');
+      }
+      
       // Validate file type
       if (!file.type.startsWith('image/')) {
         throw new Error('Only image files are allowed');
       }
       
+      // Validate file size
+      const maxSizeInBytes = 10 * 1024 * 1024; // 10MB max
+      if (file.size > maxSizeInBytes) {
+        throw new Error(`Image is too large. Maximum size is ${maxSizeInBytes / (1024 * 1024)}MB`);
+      }
+      
       // Generate a unique file path for the image
-      const fileExt = file.name.split('.').pop();
+      const fileExt = file.name.split('.').pop() || 'jpg';
       const fileName = `${type === 'cover' ? 'cover' : 'content'}-${Date.now()}.${fileExt}`;
       const filePath = `blog/${postId}/${fileName}`;
       
+      console.log(`Uploading image to path: ${filePath}`);
+      
       // Upload the file to Supabase Storage
-      const { error } = await supabase.storage
+      const { data: uploadData, error } = await supabase.storage
         .from('blog-images')
-        .upload(filePath, file);
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false
+        });
       
       if (error) {
         console.error('Error uploading image:', error);
-        throw error;
+        throw new Error(`Upload failed: ${error.message}`);
+      }
+      
+      if (!uploadData || !uploadData.path) {
+        throw new Error('Upload returned no data');
       }
       
       // Get the public URL for the uploaded file
@@ -986,6 +1005,7 @@ export class BlogService {
         throw new Error('Failed to get public URL for uploaded image');
       }
       
+      console.log(`Image uploaded successfully. Public URL: ${data.publicUrl}`);
       return data.publicUrl;
     } catch (error) {
       console.error('Error in uploadImage:', error);
