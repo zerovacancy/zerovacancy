@@ -11,7 +11,8 @@ import {
   AlertCircle,
   Clock,
   Send,
-  ImageIcon
+  ImageIcon,
+  Archive
 } from 'lucide-react';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { BlogService } from '@/services/BlogService';
@@ -82,6 +83,7 @@ const BlogEditor = () => {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [publishing, setPublishing] = useState(false);
+  const [unpublishing, setUnpublishing] = useState(false);
   const [categories, setCategories] = useState<BlogCategory[]>([]);
   const [authors, setAuthors] = useState<BlogAuthor[]>([]);
   const [previewMode, setPreviewMode] = useState(false);
@@ -380,6 +382,45 @@ const BlogEditor = () => {
     }
   };
   
+  // Handle unpublish
+  const handleUnpublish = async () => {
+    if (!isEditing || !id) {
+      setValidationError('Cannot unpublish a new post');
+      return;
+    }
+    
+    // Confirm before unpublishing
+    if (!window.confirm('Are you sure you want to unpublish this post? It will no longer be visible to visitors.')) {
+      return;
+    }
+    
+    setValidationError('');
+    setUnpublishing(true);
+    
+    try {
+      const updatedPost = await BlogService.unpublishPost(id);
+      
+      if (updatedPost) {
+        // Update local state to match server state
+        setStatus('draft');
+        setPublishedAt(null);
+        
+        // Show success message
+        alert('Post has been unpublished and is now a draft');
+      }
+    } catch (error: any) {
+      // Extract meaningful error message
+      const errorMessage = error.message || 'Failed to unpublish post. Please try again.';
+      console.error('Error unpublishing post:', error);
+      setValidationError(errorMessage);
+      
+      // Scroll to top to show error
+      window.scrollTo(0, 0);
+    } finally {
+      setUnpublishing(false);
+    }
+  };
+
   // Handle image upload for rich text editor
   const handleContentImageUpload = (url: string) => {
     // Optional: store the URLs of uploaded images if needed
@@ -526,12 +567,24 @@ const BlogEditor = () => {
           {/* Publish button */}
           <button
             onClick={handlePublish}
-            disabled={publishing}
+            disabled={publishing || unpublishing}
             className="flex items-center px-4 py-2 bg-brand-purple text-white rounded-md hover:bg-brand-purple-dark disabled:opacity-70 disabled:cursor-not-allowed"
           >
             <Send size={18} className="mr-2" />
             {publishing ? 'Publishing...' : status === 'published' ? 'Update' : 'Publish'}
           </button>
+          
+          {/* Unpublish button - only show for published posts */}
+          {status === 'published' && isEditing && (
+            <button
+              onClick={handleUnpublish}
+              disabled={unpublishing || publishing}
+              className="flex items-center px-4 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700 disabled:opacity-70 disabled:cursor-not-allowed"
+            >
+              <Archive size={18} className="mr-2" />
+              {unpublishing ? 'Unpublishing...' : 'Unpublish'}
+            </button>
+          )}
         </div>
       </div>
       

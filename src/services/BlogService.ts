@@ -592,6 +592,43 @@ export class BlogService {
     return true;
   }
   
+  // Unpublish a blog post
+  static async unpublishPost(id: string): Promise<BlogPost | null> {
+    try {
+      console.log('Unpublishing blog post:', id);
+      
+      // Update the post to set status to draft and remove published date
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .update({
+          status: 'draft',
+          published_at: null,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', id)
+        .select()
+        .single();
+      
+      if (error) {
+        console.error('Error unpublishing blog post:', error);
+        throw error;
+      }
+      
+      if (!data) {
+        throw new Error('No data returned from unpublish operation');
+      }
+      
+      console.log('Blog post unpublished successfully');
+      
+      // Get the full post with relations
+      return this.getPostBySlug(data.slug)
+        .then(response => response?.post || null);
+    } catch (error) {
+      console.error('Error in unpublishPost:', error);
+      throw error;
+    }
+  }
+  
   // Get all blog posts for admin (including drafts)
   static async getAdminPosts(filters: BlogPostsFilters = {}): Promise<BlogPosts> {
     const { 
