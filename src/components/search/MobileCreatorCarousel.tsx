@@ -1,10 +1,9 @@
-import React, { useCallback, useEffect, useState, memo, useMemo } from 'react';
+import React, { useCallback, useState, useMemo } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import useEmblaCarousel from 'embla-carousel-react';
 import { cn } from '@/lib/utils';
 import { CreatorCard } from '../creator/CreatorCard';
 import type { Creator } from '../creator/types';
-import { mobileOptimizationClasses as moc } from '@/utils/mobile-optimization';
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 
 interface MobileCreatorCarouselProps {
   creators: Creator[];
@@ -14,7 +13,7 @@ interface MobileCreatorCarouselProps {
   onPreviewClick?: (imageSrc: string) => void;
 }
 
-// Component definition with improved mobile support
+// Completely rebuilt component using the native carousel components
 export const MobileCreatorCarousel = ({
   creators,
   onImageLoad,
@@ -22,246 +21,188 @@ export const MobileCreatorCarousel = ({
   imageRef,
   onPreviewClick
 }: MobileCreatorCarouselProps) => {
-  // Use useRef to track if we've already initialized to prevent duplicate initialization
-  const hasInitialized = React.useRef(false);
-  
-  // Memoize carousel options with improved mobile touch handling
-  const carouselOptions = useMemo(() => ({
-    align: 'start',
-    containScroll: 'trimSnaps',
-    loop: false,
-    dragFree: false, // Disable free drag for more consistent snapping
-    skipSnaps: false,
-    inViewThreshold: 0.6, // Adjusted threshold
-    startIndex: 0,
-    watchDrag: true, // Better touch response
-    dragThreshold: 10, // Lower threshold for drag detection on mobile
-    draggable: true,   // Explicitly enable dragging
-    draggableClass: '', // Don't add any draggable classes that might interfere
-    draggingClass: '', // Don't add any dragging classes that might interfere
-    breakpoints: {
-      '(max-width: 768px)': { dragFree: false, containScroll: 'keepSnaps' }
-    }
-  }), []);
-
-  // Initialize the carousel with stable options
-  const [emblaRef, emblaApi] = useEmblaCarousel(carouselOptions);
-  
+  const [api, setApi] = useState<any>(null);
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const [prevBtnEnabled, setPrevBtnEnabled] = useState(false);
   const [nextBtnEnabled, setNextBtnEnabled] = useState(true);
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  
-  // Memoize select handler
-  const onSelect = useCallback(() => {
-    if (!emblaApi) return;
-    setPrevBtnEnabled(emblaApi.canScrollPrev());
-    setNextBtnEnabled(emblaApi.canScrollNext());
-    setSelectedIndex(emblaApi.selectedScrollSnap());
-  }, [emblaApi]);
-  
-  // Memoize scroll handlers
+
+  // Handle button states when the carousel API changes
+  const onCarouselApiChange = useCallback((newApi: any) => {
+    if (!newApi) return;
+    
+    setApi(newApi);
+    
+    // Initial state check
+    setPrevBtnEnabled(newApi.canScrollPrev());
+    setNextBtnEnabled(newApi.canScrollNext());
+    
+    // Setup listeners for state changes
+    const updateButtonStates = () => {
+      setPrevBtnEnabled(newApi.canScrollPrev());
+      setNextBtnEnabled(newApi.canScrollNext());
+      setSelectedIndex(newApi.selectedScrollSnap());
+    };
+    
+    newApi.on('select', updateButtonStates);
+    newApi.on('reInit', updateButtonStates);
+    
+    // Initial update
+    updateButtonStates();
+  }, []);
+
+  // Manual scroll handlers with improved error handling
   const scrollPrev = useCallback(() => {
-    if (!emblaApi) return;
+    if (!api) return;
     try {
-      emblaApi.scrollPrev();
-      // Force reselect to update button state
-      setTimeout(() => {
-        if (emblaApi) {
-          onSelect();
-        }
-      }, 50);
+      api.scrollPrev();
     } catch (error) {
       console.error("Error scrolling carousel:", error);
     }
-  }, [emblaApi, onSelect]);
+  }, [api]);
   
   const scrollNext = useCallback(() => {
-    if (!emblaApi) return;
+    if (!api) return;
     try {
-      emblaApi.scrollNext();
-      // Force reselect to update button state
-      setTimeout(() => {
-        if (emblaApi) {
-          onSelect();
-        }
-      }, 50);
+      api.scrollNext();
     } catch (error) {
       console.error("Error scrolling carousel:", error);
     }
-  }, [emblaApi, onSelect]);
-  
-  // Initialize once and prevent reinitializing when scrolling back
-  useEffect(() => {
-    if (!emblaApi || hasInitialized.current) return;
-    
-    // Mark as initialized to prevent re-initialization
-    hasInitialized.current = true;
-    
-    // Setup listeners
-    onSelect();
-    emblaApi.on('select', onSelect);
-    emblaApi.on('reInit', onSelect);
-    
-    // Clean up
-    return () => {
-      emblaApi.off('select', onSelect);
-      emblaApi.off('reInit', onSelect);
-    };
-  }, [emblaApi, onSelect]);
+  }, [api]);
 
-  // Pre-render carousel slides to prevent jitter
-  const carouselSlides = useMemo(() => (
-    creators.map((creator, index) => (
-      <div 
-        key={creator.name} 
-        style={{ 
-          transform: 'translateZ(0)', // Hardware acceleration
-          willChange: 'transform', // Optimization hint
-          // Consistent box shadow that won't cause reflow
-          boxShadow: index < creators.length - 1 ? '8px 0 12px -6px rgba(118, 51, 220, 0.08)' : 'none'
-        }} 
-        className={cn(
-          "min-w-[75vw] w-[75vw] py-2 pb-4 flex-shrink-0", // Reduced width to show more of next card
-          "mr-4", // Consistent margin between cards
-          "transform-gpu" // Force GPU rendering
-        )}
-      >
-        <CreatorCard 
-          creator={creator} 
-          onImageLoad={onImageLoad} 
-          loadedImages={loadedImages} 
-          imageRef={imageRef}
-          onPreviewClick={onPreviewClick}
-        />
-      </div>
-    ))
-  ), [creators, onImageLoad, loadedImages, imageRef, onPreviewClick]);
+  // Simplified carousel options with Safari focus
+  const carouselOptions = useMemo(() => ({
+    align: 'center',
+    loop: false,
+    dragFree: true, // Enable free dragging for smoother scrolling
+    skipSnaps: false,
+    containScroll: 'keepSnaps',
+    dragThreshold: 10,
+    slidesToScroll: 1,
+    startIndex: 0,
+    duration: 25, // Faster animation for better responsiveness
+    speed: 5 // Adjust the speed setting
+  }), []);
 
-  // Pre-render pagination dots to prevent jitter
+  // Simple memoized pagination dots
   const paginationDots = useMemo(() => (
     creators.map((_, index) => (
       <div 
         key={index} 
-        className={cn(
-          "h-1.5 rounded-full",
-          // Use fixed width to prevent layout shifts during transitions
+        className={
           selectedIndex === index 
-            ? "w-4 bg-purple-600" 
-            : "w-1.5 bg-purple-300/50"
-        )}
-        style={{
-          transform: 'translateZ(0)', // Hardware acceleration
-          transition: 'none' // Remove transitions that cause jitter
-        }}
+            ? "h-1.5 w-4 rounded-full bg-purple-600" 
+            : "h-1.5 w-1.5 rounded-full bg-purple-300/50"
+        }
       />
     ))
   ), [creators, selectedIndex]);
 
   return (
     <div 
-      className={cn(
-        "w-full relative pb-4 pt-2 px-0 overflow-visible bg-transparent",
-        moc.carouselContainer
-      )}
+      className="relative w-full pb-6 pt-2 px-0"
       style={{
-        boxShadow: 'none',
-        border: 'none',
-        transform: 'translateZ(0)',
-        paddingLeft: '1px', // Ensure proper alignment
-        paddingRight: '1px', // Ensure proper alignment
-        position: 'relative',
-        touchAction: 'manipulation',
-        zIndex: 10
+        touchAction: 'pan-y',
+        WebkitOverflowScrolling: 'touch'
       }}
     >
-      {/* Main carousel container with hardware acceleration */}
-      <div 
-        className="w-full rounded-lg relative transform-gpu overflow-visible"
-        ref={emblaRef}
+      {/* Use the standard Carousel component with enhanced Safari support */}
+      <Carousel
+        opts={carouselOptions}
+        setApi={onCarouselApiChange}
+        className="w-full touch-pan-y"
         style={{
-          width: '100%',
-          minHeight: '480px', // Reduced height for mobile display
-          WebkitOverflowScrolling: 'touch', // Better iOS scrolling
-          touchAction: 'pan-y', // Allow vertical scroll but control horizontal
-          overscrollBehavior: 'contain', // Prevent scroll chaining
-          paddingLeft: '20px',  // Make room for left arrow
-          paddingRight: '20px', // Make room for right arrow
-          pointerEvents: 'auto'
+          WebkitTapHighlightColor: 'transparent',
+          WebkitUserSelect: 'none',
+          userSelect: 'none',
+          touchAction: 'pan-x'
         }}
       >
-        <div className="flex flex-nowrap pl-2 transform-gpu">
-          {carouselSlides}
-        </div>
-      </div>
-      
-      {/* Fixed-layout pagination to prevent jitter */}
-      <div 
-        className="absolute bottom-0 left-0 right-0 flex justify-center space-x-1.5 z-10 pt-1 pb-0"
-        style={{
-          height: '10px', // Fixed height
-          transform: 'translateZ(0)', // Hardware acceleration
-          contain: 'layout paint' // Prevent layout calculations
-        }}
-      >
+        <CarouselContent 
+          className="py-2 -ml-2 touch-pan-x"
+          style={{
+            WebkitOverflowScrolling: 'touch',
+            touchAction: 'pan-x',
+            overscrollBehavior: 'contain'
+          }}
+        >
+          {creators.map((creator, index) => (
+            <CarouselItem 
+              key={creator.name} 
+              className="pl-2 basis-[75%] min-w-0 touch-pan-x"
+              style={{
+                WebkitTapHighlightColor: 'transparent',
+                WebkitUserSelect: 'none',
+                userSelect: 'none',
+                touchAction: 'pan-x',
+                WebkitTransform: 'translateZ(0)',
+                transform: 'translateZ(0)'
+              }}
+            >
+              <CreatorCard 
+                creator={creator} 
+                onImageLoad={onImageLoad} 
+                loadedImages={loadedImages} 
+                imageRef={(node) => imageRef && imageRef(node)}
+                onPreviewClick={onPreviewClick}
+              />
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+      </Carousel>
+
+      {/* Pagination dots */}
+      <div className="absolute bottom-0 left-0 right-0 flex justify-center space-x-1.5 z-10 pt-1 pb-0 h-[10px]">
         {paginationDots}
       </div>
 
-      {/* Simplified navigation buttons with improved mobile touch handling */}
-      <div 
-        role="button"
-        tabIndex={0}
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          if (prevBtnEnabled && emblaApi) emblaApi.scrollPrev();
-        }}
+      {/* Custom navigation buttons */}
+      <button
+        type="button"
+        onClick={scrollPrev}
+        onTouchStart={scrollPrev} // Add touch event for better Safari response
         className={cn(
-          "absolute left-0 top-[50%] z-50 -translate-y-1/2 rounded-full bg-purple-600 text-white",
-          "touch-manipulation h-[60px] w-[60px] flex items-center justify-center",
-          "shadow-lg opacity-95 active:opacity-100 transform-gpu",
-          "cursor-pointer select-none",
-          !prevBtnEnabled && "opacity-0 pointer-events-none",
-          moc.carouselNavButton
+          "absolute left-2 top-[50%] z-50 -translate-y-1/2 rounded-full bg-purple-600 text-white",
+          "h-[60px] w-[60px] flex items-center justify-center",
+          "shadow-lg active:shadow-md touch-manipulation",
+          "active:scale-95 transition-transform active:bg-purple-700", // Add press effect
+          !prevBtnEnabled && "opacity-0 pointer-events-none"
         )}
-        aria-label="Previous creator"
         style={{
-          touchAction: 'manipulation',
           WebkitTapHighlightColor: 'transparent',
-          zIndex: 999,
-          border: '2px solid rgba(255,255,255,0.5)',
-          userSelect: 'none'
+          WebkitTouchCallout: 'none',
+          WebkitUserSelect: 'none',
+          userSelect: 'none',
+          WebkitAppearance: 'none',
+          transform: 'translateZ(0)'
         }}
+        aria-label="Previous creator"
       >
         <ChevronLeft className="w-8 h-8" />
-      </div>
+      </button>
       
-      <div 
-        role="button"
-        tabIndex={0}
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          if (nextBtnEnabled && emblaApi) emblaApi.scrollNext();
-        }}
+      <button
+        type="button"
+        onClick={scrollNext}
+        onTouchStart={scrollNext} // Add touch event for better Safari response 
         className={cn(
-          "absolute right-0 top-[50%] z-50 -translate-y-1/2 rounded-full bg-purple-600 text-white",
-          "touch-manipulation h-[60px] w-[60px] flex items-center justify-center",
-          "shadow-lg opacity-95 active:opacity-100 transform-gpu",
-          "cursor-pointer select-none",
-          !nextBtnEnabled && "opacity-0 pointer-events-none",
-          moc.carouselNavButton
+          "absolute right-2 top-[50%] z-50 -translate-y-1/2 rounded-full bg-purple-600 text-white",
+          "h-[60px] w-[60px] flex items-center justify-center",
+          "shadow-lg active:shadow-md touch-manipulation",
+          "active:scale-95 transition-transform active:bg-purple-700", // Add press effect
+          !nextBtnEnabled && "opacity-0 pointer-events-none"
         )}
-        aria-label="Next creator"
         style={{
-          touchAction: 'manipulation',
           WebkitTapHighlightColor: 'transparent',
-          zIndex: 999,
-          border: '2px solid rgba(255,255,255,0.5)',
-          userSelect: 'none'
+          WebkitTouchCallout: 'none', 
+          WebkitUserSelect: 'none',
+          userSelect: 'none',
+          WebkitAppearance: 'none',
+          transform: 'translateZ(0)'
         }}
+        aria-label="Next creator"
       >
         <ChevronRight className="w-8 h-8" />
-      </div>
+      </button>
     </div>
   );
 }
