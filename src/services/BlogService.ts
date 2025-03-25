@@ -972,17 +972,39 @@ export class BlogService {
         throw new Error(`Image is too large. Maximum size is ${maxSizeInBytes / (1024 * 1024)}MB`);
       }
       
+      // First check available buckets to help with debugging
+      console.log('Checking available storage buckets...');
+      const { data: buckets, error: bucketsError } = await supabase.storage.listBuckets();
+      
+      if (bucketsError) {
+        console.error('Error listing buckets:', bucketsError);
+        throw new Error(`Cannot access storage: ${bucketsError.message}`);
+      }
+      
+      console.log('Available buckets:', buckets?.map(b => b.name) || 'No buckets found');
+      
+      // If no buckets available or images bucket not found, try to use the first available bucket
+      let bucketName = 'images';
+      if (buckets && buckets.length > 0) {
+        const imagesBucketExists = buckets.some(b => b.name === 'images');
+        if (!imagesBucketExists) {
+          bucketName = buckets[0].name;
+          console.log(`'images' bucket not found, using first available bucket: ${bucketName}`);
+        }
+      } else {
+        throw new Error('No storage buckets available. Please create a bucket in Supabase dashboard.');
+      }
+      
       // Generate a unique file path for the image
       const fileExt = file.name.split('.').pop() || 'jpg';
       const fileName = `${type === 'cover' ? 'cover' : 'content'}-${Date.now()}.${fileExt}`;
       const filePath = `blog/${postId}/${fileName}`;
       
-      console.log(`Uploading image to path: ${filePath}`);
+      console.log(`Uploading image to bucket '${bucketName}', path: ${filePath}`);
       
-      // Upload the file to Supabase Storage
-      // Change bucket name to 'images' which is a more common default bucket name
+      // Try to upload the file to Supabase Storage
       const { data: uploadData, error } = await supabase.storage
-        .from('images')
+        .from(bucketName)
         .upload(filePath, file, {
           cacheControl: '3600',
           upsert: true
@@ -990,6 +1012,9 @@ export class BlogService {
       
       if (error) {
         console.error('Error uploading image:', error);
+        if (error.message.includes('Permission denied')) {
+          throw new Error(`Upload failed: Permission denied. Check storage policies in Supabase dashboard.`);
+        }
         throw new Error(`Upload failed: ${error.message}`);
       }
       
@@ -999,7 +1024,7 @@ export class BlogService {
       
       // Get the public URL for the uploaded file
       const { data } = supabase.storage
-        .from('images')
+        .from(bucketName)
         .getPublicUrl(filePath);
       
       if (!data || !data.publicUrl) {
