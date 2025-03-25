@@ -51,7 +51,13 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        paragraph: {
+          HTMLAttributes: {
+            class: 'paragraph-spacing',
+          },
+        },
+      }),
       ImageExtension.configure({
         inline: true,
         allowBase64: true,
@@ -420,8 +426,13 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
         }
         
         .editor-content p {
-          margin-top: 1rem;
-          margin-bottom: 1rem;
+          margin-top: 0;
+          margin-bottom: 1.5rem;
+        }
+        
+        /* Add extra space between paragraphs in the editor */
+        .editor-content p + p {
+          margin-top: 1.5rem;
         }
         
         .editor-content ul, .editor-content ol {
@@ -500,6 +511,20 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           -webkit-font-variant-ligatures: none;
           font-variant-ligatures: none;
           font-feature-settings: "liga" 0;
+        }
+        
+        /* Add styling for paragraphs to ensure proper spacing */
+        .editor-content .paragraph-spacing {
+          margin-bottom: 1.5rem;
+        }
+        
+        /* This makes sure Enter creates proper paragraph spacing */
+        .editor-content .ProseMirror p.is-editor-empty:first-child::before {
+          content: attr(data-placeholder);
+          float: left;
+          color: #adb5bd;
+          pointer-events: none;
+          height: 0;
         }
       `}} />
     </div>

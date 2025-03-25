@@ -91,8 +91,13 @@ const BlogPostContent = ({ post, relatedPosts = [] }: BlogPostContentProps) => {
         }
         
         .blog-content p {
-          margin-top: 1rem;
-          margin-bottom: 1rem;
+          margin-top: 0;
+          margin-bottom: 1.5rem;
+        }
+        
+        /* Add extra space between paragraphs */
+        .blog-content p + p {
+          margin-top: 1.5rem;
         }
         
         .blog-content ul, .blog-content ol {
@@ -154,6 +159,11 @@ const BlogPostContent = ({ post, relatedPosts = [] }: BlogPostContentProps) => {
         .blog-content [style*="text-align: left"] {
           text-align: left !important;
           display: block;
+        }
+        
+        /* Apply consistent paragraph spacing for editor-added classes */
+        .blog-content .paragraph-spacing {
+          margin-bottom: 1.5rem;
         }
       `}} />
       
