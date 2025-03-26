@@ -175,7 +175,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
             "overflow-hidden flex flex-col w-full h-full",
             "bg-transparent",
             "border-0", 
-            "rounded-xl relative transition-all duration-300 active:scale-[0.99]",
+            "rounded-2xl relative transition-all duration-300 active:scale-[0.99]",
             isSelected && "ring-2 ring-purple-300 ring-opacity-50"
           )}
             style={{
@@ -184,11 +184,13 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               transition: 'all 0.3s ease',
               backgroundColor: isSelected 
                 ? 'rgba(248, 245, 255, 0.9)' // Slightly more opaque when selected
-                : 'rgba(248, 245, 255, 0.75)' // Light lavender with transparency
+                : 'rgba(248, 245, 255, 0.75)', // Light lavender with transparency
+              borderRadius: '16px', // Consistent corner radius
+              overflow: 'hidden' // Ensure content respects border-radius
             }}>
             
-            {/* Enhanced border with dynamic highlighting */}
-            <div className="absolute inset-0 rounded-[15px] pointer-events-none" 
+            {/* Enhanced border with dynamic highlighting and refined corners */}
+            <div className="absolute inset-0 rounded-[16px] pointer-events-none" 
                  style={{
                    // Single refined border with premium styling
                    boxShadow: isSelected 
@@ -215,44 +217,78 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                        '0 6px 12px rgba(0, 0, 0, 0.05),' +
                        '0 8px 16px rgba(118, 51, 220, 0.02)',
                    zIndex: 10,
-                   transition: 'all 0.25s ease'
+                   transition: 'all 0.25s ease',
+                   borderRadius: '16px', // Match card radius
+                   // Add subtle blur at corners for glass effect
+                   backdropFilter: 'blur(2px)',
+                   WebkitBackdropFilter: 'blur(2px)'
                  }}
             ></div>
             
             {/* Subtle pulsing highlight effect when selected */}
             {isSelected && (
               <div 
-                className="absolute inset-0 rounded-[15px] pointer-events-none z-5 animate-pulse"
+                className="absolute inset-0 rounded-[16px] pointer-events-none z-5 animate-pulse"
                 style={{
                   boxShadow: '0 0 0 3px rgba(124, 58, 237, 0.15)',
-                  animation: 'pulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+                  animation: 'pulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                  borderRadius: '16px' // Match card radius
                 }}
               ></div>
             )}
             
-            {/* Single unified lighting effect overlay */}
-            <div className="absolute inset-0 pointer-events-none rounded-xl z-[2]" 
+            {/* Enhanced corner treatment with refined lighting effects */}
+            <div className="absolute inset-0 pointer-events-none rounded-2xl z-[2]" 
                  style={{
                    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.1) 50%, rgba(0, 0, 0, 0.02) 100%)',
-                   opacity: 0.6
+                   opacity: 0.6,
+                   borderRadius: '16px' // Match card radius
                  }}>
-                 {/* Top-left corner highlight for subtle lighting */}
-                 <div className="absolute top-0 left-0 w-16 h-16 rounded-tl-[16px]" 
+                 {/* Top-left corner highlight with enhanced lighting */}
+                 <div className="absolute top-0 left-0 w-20 h-20 rounded-tl-[16px]" 
                      style={{
-                       background: 'radial-gradient(circle at top left, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.5) 40%, transparent 70%)'
+                       background: 'radial-gradient(circle at top left, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.6) 35%, transparent 70%)',
+                       filter: 'blur(1px)'
+                     }}>
+                 </div>
+                 
+                 {/* Top-right corner subtle highlight */}
+                 <div className="absolute top-0 right-0 w-16 h-16 rounded-tr-[16px]" 
+                     style={{
+                       background: 'radial-gradient(circle at top right, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.3) 40%, transparent 70%)',
+                       filter: 'blur(2px)'
+                     }}>
+                 </div>
+                 
+                 {/* Bottom-left corner subtle shadow */}
+                 <div className="absolute bottom-0 left-0 w-12 h-12 rounded-bl-[16px]" 
+                     style={{
+                       background: 'radial-gradient(circle at bottom left, rgba(118, 51, 220, 0.05) 0%, transparent 70%)',
+                       filter: 'blur(2px)'
+                     }}>
+                 </div>
+                 
+                 {/* Bottom-right corner subtle shadow */}
+                 <div className="absolute bottom-0 right-0 w-12 h-12 rounded-br-[16px]" 
+                     style={{
+                       background: 'radial-gradient(circle at bottom right, rgba(118, 51, 220, 0.08) 0%, transparent 70%)',
+                       filter: 'blur(2px)'
                      }}>
                  </div>
             </div>
             
             {/* Media section with properly positioned price tag */}
             <div className="relative">
-              {/* Fixed aspect ratio for all cards with 3D styling */}
-              <div className="aspect-[4/3] relative w-full overflow-hidden flex-shrink-0 rounded-t-md transition-transform duration-300">
-                {/* Simplified image container with minimal border treatment */}
-                <div className="absolute inset-0 w-full h-full z-10 overflow-hidden"
+              {/* Fixed aspect ratio with consistent corner radius */}
+              <div className="aspect-[4/3] relative w-full overflow-hidden flex-shrink-0 rounded-t-[16px] transition-transform duration-300">
+                {/* Improved image container with refined border treatment */}
+                <div className="absolute inset-0 w-full h-full z-10 overflow-hidden rounded-t-[16px]"
                   style={{
                     boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.8)',
-                    transition: 'all 0.3s ease'
+                    transition: 'all 0.3s ease',
+                    // Add subtle corner softening
+                    borderTopLeftRadius: '16px',
+                    borderTopRightRadius: '16px'
                   }}>
                 </div>
                 
