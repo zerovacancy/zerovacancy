@@ -168,12 +168,12 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
   return (
     <>
       {isMobile ? (
-        <div className="relative w-full h-full">
-          {/* Main container without border - to be replaced with custom border implementation */}
+        <div className="relative w-full h-full flex">
+          {/* Main container with flex layout to distribute space properly */}
           <Card className={cn(
             "overflow-hidden flex flex-col w-full h-full",
             "bg-white",
-            "border-0",
+            "border-0", 
             "rounded-xl relative transition-all duration-300 active:scale-[0.99]"
           )}
             style={{
@@ -312,10 +312,10 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               </div>
             </div>
 
-            {/* Content sections with proper organization */}
-            <div className="w-full px-4 pt-3 pb-6 flex flex-col relative z-10 flex-grow flex-shrink-0">
+            {/* Content sections with proper organization - adjusted for flex layout */}
+            <div className="w-full px-4 pt-3 pb-4 flex flex-col relative z-10 flex-grow flex-1 h-full">
               {/* Creator info section */}
-              <div className="pb-3 mb-3 border-b border-purple-200/30">
+              <div className="pb-2 mb-2 border-b border-purple-200/30">
                 {/* Creator name and location with proper styling */}
                 <div 
                   className="flex justify-between items-center mb-2.5 py-2 px-3 -mx-1 rounded-[10px]"
@@ -459,9 +459,9 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               </div>
               
               {/* Recent Work section with proper header */}
-              <div className="mb-3">
-                {/* Section header with enhanced styling */}
-                <div className="mb-3 flex justify-between items-center">
+              <div className="mb-1">
+                {/* Section header with enhanced styling - reduced bottom margin */}
+                <div className="mb-2 flex justify-between items-center">
                   <div className="flex items-center">
                     <div className="w-1 h-4 bg-gradient-to-b from-indigo-500 to-purple-500 rounded-full mr-2 shadow-sm"></div>
                     <div className="text-xs text-gray-800 font-semibold font-space uppercase tracking-wide">Recent Work</div>
@@ -530,8 +530,8 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 </div>
               </div>
               
-              {/* Enhanced CTA button with more prominence for mobile */}
-              <div className="mt-3 mb-4">
+              {/* Enhanced CTA button positioned at bottom with flex spacing */}
+              <div className="mt-auto mb-2 pt-2">
                 {/* Success state */}
                 {showInlineSuccess ? (
                   <div className="w-full py-4 px-4 font-medium rounded-[12px] text-white relative flex flex-col items-center justify-center animate-fade-in"
