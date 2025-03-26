@@ -173,24 +173,29 @@ export const MobileCreatorCarousel = ({
           scrollBehavior: 'smooth',
           WebkitOverflowScrolling: 'touch',
           display: 'flex',
-          paddingLeft: '16px', 
-          paddingRight: '16px',
+          paddingLeft: '10px', 
+          paddingRight: '10px',
           // Hide scrollbar
           msOverflowStyle: 'none',
           scrollbarWidth: 'none',
-          borderLeft: '10px solid transparent', /* Increased edge space */
-          borderRight: '10px solid transparent',
+          borderLeft: '6px solid transparent', /* Edge space */
+          borderRight: '6px solid transparent',
           // Optimize GPU rendering
           transform: 'translateZ(0)',
           willChange: 'scroll-position',
-          backfaceVisibility: 'hidden'
+          backfaceVisibility: 'hidden',
+          // Safari-specific fixes
+          WebkitBoxSizing: 'border-box',
+          boxSizing: 'border-box',
+          width: '100%',
+          maxWidth: '100vw'
         }}
       >
         {creators.map((creator, index) => (
           <div 
             key={creator.name}
             data-slide={`slide-${index}`}
-            className="flex-none w-[93%] mr-4"
+            className="flex-none w-[95%] mr-3"
             style={{
               scrollSnapAlign: 'start',
               scrollSnapStop: 'always',
@@ -203,6 +208,10 @@ export const MobileCreatorCarousel = ({
               boxShadow: selectedIndex === index 
                 ? '0 4px 20px rgba(124, 58, 237, 0.08)' 
                 : '0 2px 10px rgba(0, 0, 0, 0.05)',
+              // Safari fixes
+              minWidth: 'calc(95% - 3px)',
+              WebkitFlexBasis: '95%',
+              flexBasis: '95%',
             }}
           >
             <CreatorCard 

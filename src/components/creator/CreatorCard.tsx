@@ -385,7 +385,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 </div>
                 
                 {/* Ratings and availability grouped together in a content section - MOVED AFTER TAGS */}
-                <div className="flex justify-between mb-4 py-2.5 px-3 bg-purple-50/50 rounded-lg"
+                <div className="flex justify-between mb-2 py-2 px-3 bg-purple-50/50 rounded-lg"
                   style={{
                     transform: 'translateZ(0)', // Hardware acceleration
                     position: 'relative', // For pseudo-elements
@@ -433,12 +433,12 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 </div>
               </div>
               
-              {/* Recent Work section - pushed up to create space at bottom */}
-              <div className="mb-0 w-full mt-2">
+              {/* Recent Work section with optimized spacing */}
+              <div className="mb-0 w-full mt-1">
                 {/* Light divider instead of border */}
-                <div className="w-full h-px bg-gradient-to-r from-transparent via-purple-200/50 to-transparent mb-3"></div>
+                <div className="w-full h-px bg-gradient-to-r from-transparent via-purple-200/50 to-transparent mb-2"></div>
                 {/* Section header with enhanced styling and visibility */}
-                <div className="mb-3 flex items-center py-1 px-1"
+                <div className="mb-2 flex items-center py-1 px-1"
                   style={{
                     minHeight: '26px',
                     borderBottom: '1px solid rgba(220, 215, 240, 0.2)'
