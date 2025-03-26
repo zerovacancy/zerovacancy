@@ -475,45 +475,78 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               <div className="mb-0 w-full mt-1">
                 {/* Thin divider line */}
                 <div className="w-full h-px bg-gradient-to-r from-transparent via-purple-200/30 to-transparent mb-1"></div>
-                {/* More compact section header */}
-                <div className="mb-1 flex items-center py-0.5 px-1"
+                {/* Enhanced section header with better prominence */}
+                <div className="mb-2 flex items-center justify-between py-1 px-1"
                   style={{
-                    minHeight: '22px',
-                    borderBottom: '1px solid rgba(220, 215, 240, 0.2)'
+                    minHeight: '24px',
+                    borderBottom: '1px solid rgba(220, 215, 240, 0.3)'
                 }}>
-                  <div className="w-1 h-3 bg-gradient-to-b from-indigo-500 to-purple-500 rounded-full mr-1.5 shadow-sm"></div>
-                  <div className="text-xs text-gray-800 font-semibold font-space uppercase tracking-wide">Recent Work</div>
+                  <div className="flex items-center">
+                    <div className="w-1.5 h-4 bg-gradient-to-b from-indigo-500 to-purple-500 rounded-full mr-2 shadow-sm"></div>
+                    <div className="text-xs text-gray-800 font-bold font-space uppercase tracking-wide">Recent Work</div>
+                  </div>
+                  <div 
+                    className="text-[10px] text-purple-600 font-medium flex items-center cursor-pointer"
+                    onClick={() => onPreviewClick && onPreviewClick(creator.workExamples[0])}
+                  >
+                    View All
+                    <svg className="w-3 h-3 ml-0.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M9 6L15 12L9 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </div>
                 </div>
                 
-                {/* Portfolio thumbnails with tighter spacing */}
-                <div className="grid grid-cols-3 gap-1 w-full px-0.5 pb-0">
+                {/* Refined thumbnails with 3-column layout */}
+                <div className="grid grid-cols-3 gap-1.5 w-full px-0.5 pb-1 pt-1">
                   {creator.workExamples.slice(0, 3).map((example, index) => (
                     <div 
                       key={index}
-                      className="relative touch-manipulation rounded-xl overflow-hidden transition-all duration-150 focus:outline-none flex-grow"
+                      onClick={() => onPreviewClick && onPreviewClick(example)}
+                      className="relative touch-manipulation rounded-[10px] overflow-hidden transition-all duration-150 focus:outline-none flex-grow"
                       style={{
-                        width: 'calc(33.33% - 7px)', // Ensure even division of space with gaps
-                        minWidth: '80px', // Minimum width constraint
-                        minHeight: '44px', // Minimum height for touch target
-                        aspectRatio: '4/3', // Consistent aspect ratio that works well for property photos
-                        background: 'rgba(255,255,255,0.8)',
+                        width: 'calc(33.33% - 4px)', // Ensure even division of space in 3-column layout
+                        minWidth: '70px', // Optimized minimum width for 3 columns
+                        minHeight: '70px', // Appropriate height for mobile viewing
+                        aspectRatio: '1/1', // Square aspect ratio for consistent layout
+                        background: 'rgba(255,255,255,0.9)',
                         backdropFilter: 'blur(4px)',
                         WebkitBackdropFilter: 'blur(4px)',
                         border: '1px solid rgba(118, 51, 220, 0.12)',
-                        borderTop: '2px solid rgba(255,255,255,0.95)',
-                        borderLeft: '2px solid rgba(255,255,255,0.8)',
+                        borderTop: '1.5px solid rgba(255,255,255,0.95)',
+                        borderLeft: '1.5px solid rgba(255,255,255,0.85)',
                         borderRight: '1px solid rgba(118,51,220,0.08)',
                         borderBottom: '1px solid rgba(118,51,220,0.15)',
                         boxShadow: 
-                          'inset 1px 1px 2px rgba(255,255,255,0.8),' +
+                          'inset 1px 1px 1px rgba(255,255,255,0.9),' +
                           'inset -1px -1px 1px rgba(0,0,0,0.02),' +
-                          '0 1px 3px rgba(118,51,220,0.04)',
+                          '0 1px 3px rgba(118,51,220,0.08)',
                         transform: 'translateZ(0)', // Hardware acceleration
-                        willChange: 'transform', // Optimization hint
-                        position: 'relative'
+                        willChange: 'transform, box-shadow', // Optimization hint
+                        position: 'relative',
+                        transformStyle: 'preserve-3d', // Enhance 3D appearance
+                        transition: 'all 0.15s ease-out',
+                        cursor: 'pointer',
+                        WebkitTapHighlightColor: 'transparent', // Remove tap highlight on mobile
                       }}
-                      aria-label={`${index === 0 ? 'Interior' : index === 1 ? 'Exterior' : 'Detail'} image`}
+                      onTouchStart={() => {
+                        // Add subtle touch highlight effect - simplified for better performance
+                        const el = document.activeElement as HTMLElement;
+                        if (el && el.style) {
+                          el.style.transform = 'translateZ(0) scale(0.97)';
+                          el.style.boxShadow = 'inset 1px 1px 1px rgba(255,255,255,0.9), inset -1px -1px 1px rgba(0,0,0,0.02), 0 1px 2px rgba(118,51,220,0.15)';
+                        }
+                      }}
+                      onTouchEnd={() => {
+                        // Reset styles - simplified for better performance
+                        const el = document.activeElement as HTMLElement;
+                        if (el && el.style) {
+                          el.style.transform = 'translateZ(0) scale(1)';
+                          el.style.boxShadow = 'inset 1px 1px 1px rgba(255,255,255,0.9), inset -1px -1px 1px rgba(0,0,0,0.02), 0 1px 3px rgba(118,51,220,0.08)';
+                        }
+                      }}
+                      aria-label={`${index === 0 ? 'Primary' : 'Secondary'} portfolio image`}
                     >
+                      {/* Image with improved rendering quality */}
                       <img 
                         src={example}
                         alt={`${creator.name}'s work ${index + 1}`}
@@ -525,22 +558,39 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                           width: '100%',
                           height: '100%',
                           transform: 'translateZ(0)', // Hardware acceleration
-                          contain: 'paint' // Optimization
+                          imageRendering: 'high-quality', // Improved image rendering
+                          WebkitImageRendering: 'crisp-edges', // Safari support
+                          objectFit: 'cover',
+                          filter: 'contrast(1.02) saturate(1.02)', // Subtle enhancement
+                          borderRadius: '9px', // Inner radius for images - smaller to match container
+                          transformStyle: 'preserve-3d', // Apply 3D rendering context
+                          backfaceVisibility: 'hidden' // Prevent unwanted artifacts
                         }}
+                        loading="eager" // Prioritize loading these images
+                        decoding="async" // Allow browser optimization
                       />
-                      {/* Glass effect overlay matching card styling */}
-                      <div className="absolute inset-0 pointer-events-none"
+                      
+                      {/* Refined glass effect with appropriate corner treatment */}
+                      <div className="absolute inset-0 pointer-events-none rounded-[10px]"
                            style={{
-                             boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.1)',
-                             background: 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 100%)',
-                             opacity: 0.5
+                             boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.15)',
+                             background: 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%)',
+                             opacity: 0.6,
+                             borderRadius: '10px'
                            }}>
+                        {/* Top-left corner highlight scaled for smaller size */}
+                        <div className="absolute top-0 left-0 w-4 h-4 rounded-tl-[9px]" 
+                            style={{
+                              background: 'radial-gradient(circle at top left, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.4) 40%, transparent 70%)',
+                              filter: 'blur(0.5px)'
+                            }}>
+                        </div>
                       </div>
                       
-                      {/* Enhanced tap indicator with glass effect */}
-                      <div className="absolute inset-0 bg-purple-600/10 opacity-0 active:opacity-100 transition-opacity flex items-center justify-center">
-                        <div className="w-8 h-8 rounded-full bg-white/85 shadow-sm flex items-center justify-center transform-gpu hover:scale-105 transition-transform">
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      {/* Subtle touch/hover indicator optimized for smaller size */}
+                      <div className="absolute inset-0 bg-purple-600/15 opacity-0 hover:opacity-100 active:opacity-100 transition-opacity duration-150 flex items-center justify-center">
+                        <div className="w-7 h-7 rounded-full bg-white/90 shadow-sm flex items-center justify-center transform-gpu scale-95 hover:scale-100 transition-transform">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M15 3H21V9" stroke="#6D28D9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                             <path d="M21 3L9 15" stroke="#6D28D9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                           </svg>
