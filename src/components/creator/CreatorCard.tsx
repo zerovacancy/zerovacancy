@@ -268,16 +268,18 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 <div className="w-12 h-0.5 mx-auto mb-2 bg-gradient-to-r from-transparent via-purple-200/40 to-transparent"></div>
                 {/* Creator name and location with proper styling */}
                 <div 
-                  className="flex justify-between items-center mb-1.5 py-1 px-1"
+                  className="flex justify-between mb-1.5 py-1 px-1"
                   style={{
-                    transform: 'translateZ(0)' // Hardware acceleration
+                    transform: 'translateZ(0)', // Hardware acceleration
+                    display: 'flex', 
+                    alignItems: 'center'
                   }}
                 >
                   <h3 className="text-lg leading-tight font-bold text-gray-800 tracking-tight flex items-center">
                     {creator.name}
                     <span className="absolute -top-0.5 -right-0.5 w-12 h-6 bg-gradient-to-br from-purple-100/40 to-transparent blur-sm rounded-full"></span>
                   </h3>
-                  <p className="text-gray-500 text-xs flex items-center self-center max-w-[120px]">
+                  <p className="text-gray-500 text-xs flex items-center max-w-[120px]">
                     <svg className="w-3.5 h-3.5 mr-1 flex-shrink-0 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                       <circle cx="12" cy="10" r="3"></circle>
@@ -287,10 +289,12 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 </div>
                 
                 {/* Services tags without container border - MOVED BEFORE RATINGS */}
-                <div className="flex flex-wrap gap-x-1.5 gap-y-1 mt-1 px-1 py-1 mb-2 max-w-full"
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5 mt-1 px-1 py-1.5 mb-3 max-w-full"
                   style={{
                     position: 'relative',
-                    transform: 'translateZ(0)' // Hardware acceleration
+                    transform: 'translateZ(0)', // Hardware acceleration
+                    display: 'flex',
+                    alignItems: 'center'
                   }}
                 >
                   {creator.services.map((service, index) => {
@@ -326,7 +330,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                             minWidth: '44px'
                           }}
                         >
-                          <span className="truncate">{service}</span>
+                          <span className="truncate flex items-center">{service}</span>
                         </span>
                       );
                     } else if (index === 3) {
@@ -344,7 +348,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                             minWidth: '44px'
                           }}
                         >
-                          +{creator.services.length - 3} more
+                          <span className="flex items-center">+{creator.services.length - 3} more</span>
                         </span>
                       );
                     }
@@ -353,36 +357,25 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 </div>
                 
                 {/* Ratings and availability grouped together in a content section - MOVED AFTER TAGS */}
-                <div className="flex justify-between items-center mb-2 py-1.5 px-2 bg-purple-50/30 rounded-md"
+                <div className="flex justify-between mb-2 py-1.5 px-2 bg-purple-50/30 rounded-md"
                   style={{
                     transform: 'translateZ(0)', // Hardware acceleration
-                    position: 'relative' // For pseudo-elements
+                    position: 'relative', // For pseudo-elements
+                    display: 'flex',
+                    alignItems: 'center'
                   }}>
                   <div className="flex items-center">
-                    <div className="flex items-center px-1.5 py-0.5 rounded-md mr-1" style={{
-                        minHeight: '24px',
-                        minWidth: '40px',
-                        display: 'flex',
-                        alignItems: 'center'
-                      }}>
+                    <div className="flex items-center" style={{ alignItems: 'center' }}>
                       <Star className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500 mr-0.5" />
-                      <span className="text-sm font-bold font-space text-gray-800 flex items-center">{creator.rating.toFixed(1)}</span>
+                      <span className="text-sm font-bold font-space text-gray-800">{creator.rating.toFixed(1)}</span>
                     </div>
-                    {creator.reviews > 0 && (
-                      <span className="text-xs text-gray-600 ml-0.5 font-inter px-1 py-0.5 rounded-md flex items-center" style={{
-                        minHeight: '22px'
-                      }}>
-                        {creator.reviews} reviews
-                      </span>
-                    )}
+                    {/* Number of reviews removed from mobile view */}
                   </div>
                   
                   {/* Availability indicator with optimized size and alignment */}
                   {creator.availabilityStatus && (
                     <div className="flex items-center py-0.5 px-2 rounded-full text-xs font-medium"
                       style={{
-                        minHeight: '24px',
-                        minWidth: '40px',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center'

@@ -103,7 +103,7 @@ export const MobileCreatorCarousel = ({
   }, [creators, selectedIndex]);
 
   return (
-    <div className="relative w-full py-4 px-4">
+    <div className="relative w-full py-4 px-2">
       {/* Native scroll-snap container with extra padding to prevent touching viewport edge */}
       <div 
         ref={scrollContainerRef}
@@ -113,8 +113,8 @@ export const MobileCreatorCarousel = ({
           scrollBehavior: 'smooth',
           WebkitOverflowScrolling: 'touch',
           display: 'flex',
-          paddingLeft: '16px', 
-          paddingRight: '16px',
+          paddingLeft: '12px', 
+          paddingRight: '12px',
           // Hide scrollbar
           msOverflowStyle: 'none',
           scrollbarWidth: 'none',
@@ -125,7 +125,7 @@ export const MobileCreatorCarousel = ({
         {creators.map((creator, index) => (
           <div 
             key={creator.name} 
-            className="flex-none w-[85%] mr-4"
+            className="flex-none w-[94%] mr-3"
             style={{
               scrollSnapAlign: 'start',
               scrollSnapStop: 'always',
@@ -145,7 +145,7 @@ export const MobileCreatorCarousel = ({
       {/* Navigation buttons */}
       <button
         onClick={scrollPrev}
-        className={`absolute left-6 top-1/2 -translate-y-1/2 bg-purple-600 rounded-full p-2.5 text-white z-10 transition-opacity ${
+        className={`absolute left-3 top-1/2 -translate-y-1/2 bg-purple-600 rounded-full p-2.5 text-white z-10 transition-opacity ${
           !canScrollPrev ? 'opacity-0 pointer-events-none' : 'opacity-100'
         }`}
         aria-label="Previous"
@@ -155,7 +155,7 @@ export const MobileCreatorCarousel = ({
       
       <button
         onClick={scrollNext}
-        className={`absolute right-6 top-1/2 -translate-y-1/2 bg-purple-600 rounded-full p-2.5 text-white z-10 transition-opacity ${
+        className={`absolute right-3 top-1/2 -translate-y-1/2 bg-purple-600 rounded-full p-2.5 text-white z-10 transition-opacity ${
           !canScrollNext ? 'opacity-0 pointer-events-none' : 'opacity-100'
         }`}
         aria-label="Next"
