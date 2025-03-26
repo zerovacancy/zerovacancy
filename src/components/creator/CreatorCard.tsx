@@ -313,7 +313,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
             </div>
 
             {/* Content sections with proper organization - adjusted for flex layout */}
-            <div className="w-full px-4 pt-3 pb-4 flex flex-col relative z-10 flex-grow flex-1 h-full">
+            <div className="w-full px-4 pt-3 pb-5 flex flex-col relative z-10 flex-grow flex-1 h-full justify-between">
               {/* Creator info section */}
               <div className="pb-2 mb-2 border-b border-purple-200/30">
                 {/* Creator name and location with proper styling */}
@@ -459,7 +459,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               </div>
               
               {/* Recent Work section with proper header */}
-              <div className="mb-1">
+              <div className="mb-4">
                 {/* Section header with enhanced styling - reduced bottom margin */}
                 <div className="mb-2 flex justify-between items-center">
                   <div className="flex items-center">
@@ -530,8 +530,8 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 </div>
               </div>
               
-              {/* Enhanced CTA button positioned at bottom with flex spacing */}
-              <div className="mt-auto mb-2 pt-2">
+              {/* Enhanced CTA button positioned with proper spacing from thumbnails */}
+              <div className="mt-auto mb-3 pt-6">
                 {/* Success state */}
                 {showInlineSuccess ? (
                   <div className="w-full py-4 px-4 font-medium rounded-[12px] text-white relative flex flex-col items-center justify-center animate-fade-in"
