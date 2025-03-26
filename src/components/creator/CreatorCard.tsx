@@ -182,20 +182,21 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               transform: 'translateZ(0)', // Hardware acceleration
               willChange: 'transform', // Optimization hint for transitions
               transition: 'all 0.3s ease',
-              backgroundColor: isSelected 
-                ? 'rgba(239, 240, 236, 0.85)' // Enhanced translucency when selected
-                : 'rgba(239, 240, 236, 0.82)', // Enhanced translucency for normal state
-              backdropFilter: 'blur(10px)', // True glass effect 
-              WebkitBackdropFilter: 'blur(10px)', // Safari support
+              background: isSelected 
+                ? 'radial-gradient(circle at center, rgba(239, 240, 236, 0.9) 0%, rgba(239, 240, 236, 0.85) 60%, rgba(239, 240, 236, 0.8) 100%)' // Subtle gradient with higher opacity in center
+                : 'radial-gradient(circle at center, rgba(239, 240, 236, 0.87) 0%, rgba(239, 240, 236, 0.82) 60%, rgba(239, 240, 236, 0.78) 100%)', // Subtle gradient for normal state
+              backdropFilter: 'blur(7px)', // More balanced glass effect
+              WebkitBackdropFilter: 'blur(7px)', // Safari support
               borderRadius: '16px', // THE STANDARD border radius
               overflow: 'hidden', // Ensure content respects border-radius
               maxHeight: '85vh', // Limit maximum height on mobile
               height: 'auto', // Allow content to determine height within max limit
-              // Enhanced 3D border effect
-              boxShadow: `inset 0 1px 0 rgba(255, 255, 255, 0.9), 
+              // Enhanced 3D border effect with subtle inner glow
+              boxShadow: `inset 0 0 6px rgba(255, 255, 255, 0.4), 
+                          inset 0 1px 0 rgba(255, 255, 255, 0.9), 
                           inset 1px 0 0 rgba(255, 255, 255, 0.8),
                           ${isSelected ? '0 8px 24px rgba(0, 0, 0, 0.04)' : '0 4px 16px rgba(0, 0, 0, 0.03)'}`,
-              // Subtle border style for added dimension
+              // Refined border style for added dimension
               border: `1px solid rgba(200, 200, 200, 0.25)`,
               // Prevent content from overflowing
               contain: 'paint'
@@ -209,11 +210,11 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                    transform: 'translateZ(0)',
                    zIndex: 2
                  }}>
-              {/* Primary highlight gradient - top-left to bottom-right flow */}
+              {/* Primary highlight gradient - refined top-left to bottom-right flow */}
               <div className="absolute inset-0"
                    style={{
-                     background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.15) 35%, rgba(255, 255, 255, 0.05) 65%, rgba(255, 255, 255, 0) 100%)',
-                     opacity: 0.8,
+                     background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.2) 25%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.05) 75%, rgba(255, 255, 255, 0) 100%)',
+                     opacity: 0.7,
                      transform: 'translateZ(0)',
                      borderRadius: '16px'
                    }}>
@@ -228,9 +229,18 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                    }}>
               </div>
               
-              {/* Enhanced top and left border highlights to simulate light refraction */}
-              <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-white/90 via-white/70 to-white/40"></div>
-              <div className="absolute left-0 inset-y-0 w-[1px] bg-gradient-to-b from-white/90 via-white/70 to-white/40"></div>
+              {/* Enhanced edge glow that follows rounded corners precisely */}
+              <div className="absolute inset-0 rounded-[16px] pointer-events-none" 
+                   style={{
+                     boxShadow: `
+                       inset 0px 1px 1px rgba(255, 255, 255, 0.8), 
+                       inset 1px 0px 1px rgba(255, 255, 255, 0.8),
+                       inset -1px 0px 0px rgba(255, 255, 255, 0.1),
+                       inset 0px -1px 0px rgba(255, 255, 255, 0.1)
+                     `,
+                     transform: 'translateZ(0)'
+                   }}>
+              </div>
               
               {/* Corner light reflection */}
               <div className="absolute top-0 left-0 w-24 h-24"
