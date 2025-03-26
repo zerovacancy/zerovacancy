@@ -1,0 +1,29 @@
+/* Custom animations for CreatorCard component */
+
+@keyframes pulse-arrow {
+  0% {
+    transform: translateX(0) translateZ(1px);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateX(3px) translateZ(1px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(0) translateZ(1px);
+    opacity: 0.7;
+  }
+}
+
+/* Fixes for mobile view */
+@media (max-width: 640px) {
+  /* Ensure proper text wrapping in mobile buttons */
+  .bg-creator-cta span {
+    white-space: nowrap;
+  }
+  
+  /* Enhance touch target size slightly */
+  .bg-creator-cta {
+    touch-action: manipulation;
+  }
+}

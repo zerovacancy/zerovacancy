@@ -2,6 +2,7 @@ import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Card } from '../ui/card';
 import { ArrowRight, Star, X, Clock, Crown, CheckCircle, ShieldCheck, Loader2 } from 'lucide-react';
 import { Dialog, DialogContent } from "../ui/dialog";
+import './creator-card.css'; // Import CSS for custom animations
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { CreatorRating } from './CreatorRating';
@@ -173,34 +174,113 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
             "overflow-hidden flex flex-col w-full h-full",
             "bg-white",
             "border-0",
-            "shadow-[0_2px_8px_rgba(0,0,0,0.08),_0_4px_12px_rgba(0,0,0,0.06)]",
-            "rounded-xl relative transition-transform duration-300"
-          )}>
+            "rounded-xl relative transition-all duration-300 active:scale-[0.99]"
+          )}
+            style={{
+              transform: 'translateZ(0)', // Hardware acceleration
+              willChange: 'transform, box-shadow', // Optimization hint for transitions
+              transition: 'all 0.3s ease'
+            }}>
             
-            {/* Custom border container - wraps the entire card including the button */}
-            <div className="absolute inset-0 rounded-[14px] pointer-events-none" 
+            {/* Enhanced custom border container with refined borders and layered shadows */}
+            <div className="absolute inset-0 rounded-[15px] pointer-events-none" 
                  style={{
-                   borderWidth: '2px',
+                   borderWidth: '0', // Remove default border in favor of custom borders
                    borderStyle: 'solid',
-                   borderColor: 'rgba(204, 204, 204, 0.6)', // Light gray border instead of purple
-                   // Layered shadows for depth using standard format:
-                   boxShadow: '0 2px 6px rgba(0, 0, 0, 0.06), 0 6px 16px rgba(0, 0, 0, 0.03), inset 0 1px 0 rgba(255, 255, 255, 1)',
+                   // Layered shadows for depth with directional lighting:
+                   boxShadow: 
+                     /* Main border with specified purple tint */
+                     'inset 0 0 0 1.5px rgba(118, 51, 220, 0.12),' +
+                     
+                     /* Highlight effect on top border */
+                     'inset 0 1px 0 rgba(255, 255, 255, 0.95),' +
+                     
+                     /* Slightly darker bottom border */
+                     'inset 0 -1px 0 rgba(118, 51, 220, 0.15),' +
+                     
+                     /* Left border highlight */
+                     'inset 1px 0 0 rgba(255, 255, 255, 0.8),' +
+                     
+                     /* Right border slightly darker */
+                     'inset -1px 0 0 rgba(118, 51, 220, 0.08),' +
+                     
+                     /* Layer 1: Closest shadow with purple tint */
+                     '0 2px 4px rgba(118, 51, 220, 0.04),' +
+                     
+                     /* Layer 2: Mid-distance shadow with directional bias */
+                     '2px 2px 6px rgba(0, 0, 0, 0.04),' +
+                     
+                     /* Layer 3: Distant shadow with more spread */
+                     '0 6px 12px rgba(0, 0, 0, 0.05),' +
+                     
+                     /* Layer 4: Wide ambient shadow with brand color influence */
+                     '0 8px 16px rgba(118, 51, 220, 0.02)',
                    zIndex: 10
                  }}
             ></div>
             
+            {/* Directional lighting effect overlays */}
+            <div className="absolute inset-x-0 top-0 h-[2px] z-[2] pointer-events-none rounded-t-xl"
+                 style={{
+                   background: 'linear-gradient(to bottom, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.3) 100%)'
+                 }}></div>
+            
+            <div className="absolute inset-y-0 left-0 w-[2px] z-[2] pointer-events-none rounded-l-xl"
+                 style={{
+                   background: 'linear-gradient(to right, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.25) 100%)'
+                 }}></div>
+            
+            {/* Bottom-right corner shadow for enhanced depth */}
+            <div className="absolute bottom-0 right-0 w-10 h-10 rounded-br-[16px] pointer-events-none z-[2]" 
+                 style={{
+                   background: 'radial-gradient(circle at bottom right, rgba(0, 0, 0, 0.035) 0%, rgba(0, 0, 0, 0.02) 30%, transparent 70%)'
+                 }}></div>
+            
+            {/* Top-left corner highlight - enhanced brightest point */}
+            <div className="absolute top-0 left-0 w-10 h-10 rounded-tl-[16px] pointer-events-none z-[3]" 
+                 style={{
+                   background: 'radial-gradient(circle at top left, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.7) 30%, transparent 70%)',
+                   boxShadow: 'inset 0px 0px 2px rgba(255, 255, 255, 0.8)'
+                 }}></div>
+            
             {/* Media section with properly positioned price tag */}
             <div className="relative">
               {/* Fixed aspect ratio for all cards with 3D styling */}
-              <div className="aspect-[4/3] relative w-full overflow-hidden flex-shrink-0 rounded-t-md group-hover:scale-[1.01] transition-transform duration-300">
-                {/* Image container with shadow and subtle border */}
-                <div className="absolute inset-0 w-full h-full 
-                  shadow-[0_1px_3px_rgba(0,0,0,0.05),_0_4px_6px_rgba(0,0,0,0.05),_0_10px_20px_rgba(0,0,0,0.04)] 
-                  group-hover:shadow-[0_2px_4px_rgba(0,0,0,0.05),_0_6px_10px_rgba(0,0,0,0.05),_0_12px_24px_rgba(0,0,0,0.06)]
-                  border border-[rgba(118,51,220,0.15)]
-                  transition-shadow duration-300
-                  z-10">
+              <div className="aspect-[4/3] relative w-full overflow-hidden flex-shrink-0 rounded-t-md transition-transform duration-300">
+                {/* Enhanced image container with directional lighting and glass effect */}
+                <div className="absolute inset-0 w-full h-full z-10"
+                  style={{
+                    boxShadow: 
+                      /* Layered shadows matching card style */
+                      'inset 1px 1px 2px rgba(255,255,255,0.8),' +
+                      'inset -1px -1px 2px rgba(0,0,0,0.03),' +
+                      '0 2px 6px rgba(0,0,0,0.04)',
+                    borderTop: '1px solid rgba(255,255,255,0.9)',
+                    borderLeft: '1px solid rgba(255,255,255,0.7)',
+                    borderRight: '1px solid rgba(0,0,0,0.03)',
+                    borderBottom: '1px solid rgba(118,51,220,0.08)', // Subtle purple tint
+                    transition: 'all 0.3s ease'
+                  }}>
+                  
+                  {/* Top edge highlight */}
+                  <div className="absolute inset-x-0 top-0 h-[1.5px] z-[2]" 
+                      style={{
+                        background: 'linear-gradient(to bottom, rgba(255,255,255,0.9) 0%, transparent 100%)'
+                      }}></div>
+                      
+                  {/* Left edge highlight */}
+                  <div className="absolute inset-y-0 left-0 w-[1.5px] z-[2]" 
+                      style={{
+                        background: 'linear-gradient(to right, rgba(255,255,255,0.85) 0%, transparent 100%)'
+                      }}></div>
                 </div>
+                
+                {/* Top-left corner - brightest point for media container */}
+                <div className="absolute top-0 left-0 w-10 h-10 pointer-events-none z-20" 
+                    style={{
+                      background: 'radial-gradient(circle at top left, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.5) 30%, transparent 70%)'
+                    }}></div>
+                
                 <CreatorMedia 
                   creator={creator}
                   onImageLoad={onImageLoad}
@@ -208,9 +288,25 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 />
               </div>
               
-              {/* Price tag - repositioned for better visibility */}
+              {/* Price tag - enhanced with glass effect and directional lighting */}
               <div className="absolute top-3 right-3 z-20">
-                <span className="px-2.5 py-1 text-xs font-semibold bg-purple-50 shadow-sm border border-purple-200/70 text-purple-800 rounded-full transition-all duration-200 group-hover:bg-purple-100">
+                <span 
+                  className="px-2.5 py-1 text-xs font-semibold text-purple-800 rounded-full transition-all duration-200"
+                  style={{
+                    background: 'rgba(255,255,255,0.85)',
+                    backdropFilter: 'blur(4px)',
+                    WebkitBackdropFilter: 'blur(4px)',
+                    boxShadow: 
+                      'inset 0 0 0 1px rgba(255,255,255,0.4), ' +
+                      'inset 1px 1px 1px rgba(255,255,255,0.8), ' +
+                      '0 1px 2px rgba(0,0,0,0.05), ' +
+                      '1px 1px 1px rgba(118,51,220,0.05)',
+                    borderTop: '1px solid rgba(255,255,255,0.9)',
+                    borderLeft: '1px solid rgba(255,255,255,0.7)',
+                    borderRight: '1px solid rgba(124,58,237,0.1)',
+                    borderBottom: '1px solid rgba(124,58,237,0.15)'
+                  }}
+                >
                   ${creator.price}/session
                 </span>
               </div>
@@ -221,7 +317,24 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               {/* Creator info section */}
               <div className="pb-3 mb-3 border-b border-purple-200/30">
                 {/* Creator name and location with proper styling */}
-                <div className="flex justify-between items-center mb-2.5">
+                <div 
+                  className="flex justify-between items-center mb-2.5 py-2 px-3 -mx-1 rounded-[10px]"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.8)',
+                    backdropFilter: 'blur(4px)',
+                    WebkitBackdropFilter: 'blur(4px)',
+                    border: '1px solid rgba(118, 51, 220, 0.12)',
+                    borderTop: '1px solid rgba(255,255,255,0.95)',
+                    borderLeft: '1px solid rgba(255,255,255,0.8)',
+                    borderRight: '1px solid rgba(118,51,220,0.08)',
+                    borderBottom: '1px solid rgba(118,51,220,0.15)',
+                    boxShadow: 
+                      'inset 1px 1px 2px rgba(255,255,255,0.8),' +
+                      'inset -1px -1px 1px rgba(0,0,0,0.02),' +
+                      '0 1px 2px rgba(118,51,220,0.03)',
+                    overflow: 'hidden' // Ensure content doesn't overflow rounded corners
+                  }}
+                >
                   <h3 className="text-base leading-tight font-semibold text-gray-800">{creator.name}</h3>
                   <p className="text-gray-500 text-xs flex items-center">
                     <svg className="w-3.5 h-3.5 mr-1 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -233,7 +346,23 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 </div>
                 
                 {/* Ratings and availability grouped together */}
-                <div className="flex justify-between items-center mb-3 py-2 px-3 bg-gray-50/70 rounded-lg border border-gray-100 shadow-sm">
+                <div className="flex justify-between items-center mb-3 py-2 px-3 rounded-[12px]"
+                  style={{
+                    background: 'rgba(248, 248, 252, 0.8)', // Subtly purple-tinted background
+                    backdropFilter: 'blur(4px)',
+                    WebkitBackdropFilter: 'blur(4px)',
+                    border: '1px solid rgba(118, 51, 220, 0.12)',
+                    borderTop: '1px solid rgba(255,255,255,0.95)',
+                    borderLeft: '1px solid rgba(255,255,255,0.8)',
+                    borderRight: '1px solid rgba(118,51,220,0.08)',
+                    borderBottom: '1px solid rgba(118,51,220,0.15)',
+                    boxShadow: 
+                      'inset 1px 1px 1px rgba(255,255,255,0.9),' +
+                      'inset -1px -1px 1px rgba(0,0,0,0.03),' +
+                      '0 1px 2px rgba(118,51,220,0.03)',
+                    overflow: 'hidden', // Ensure content doesn't overflow rounded corners
+                    position: 'relative' // For pseudo-elements
+                  }}>
                   <div className="flex items-center">
                     <Star className="w-4 h-4 text-yellow-400 fill-yellow-400 mr-1.5" />
                     <span className="text-sm font-semibold font-space text-gray-700">{creator.rating.toFixed(1)}</span>
@@ -270,7 +399,23 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 </div>
                 
                 {/* Services with organized tag styling - optimized for mobile */}
-                <div className="flex flex-wrap gap-x-1 gap-y-1 mt-2 px-2 py-1.5 bg-white/80 rounded-lg border border-gray-200/50 shadow-inner shadow-white/50 max-w-full">
+                <div className="flex flex-wrap gap-x-1 gap-y-1 mt-2 px-2 py-1.5 rounded-[8px] max-w-full"
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.7)',
+                    backdropFilter: 'blur(4px)',
+                    WebkitBackdropFilter: 'blur(4px)',
+                    border: '1px solid rgba(118, 51, 220, 0.12)',
+                    borderTop: '1px solid rgba(255,255,255,0.95)',
+                    borderLeft: '1px solid rgba(255,255,255,0.8)',
+                    borderRight: '1px solid rgba(118,51,220,0.08)',
+                    borderBottom: '1px solid rgba(118,51,220,0.15)',
+                    boxShadow: 
+                      'inset 0 1px 2px rgba(255,255,255,0.8),' +
+                      'inset 0 -1px 1px rgba(0,0,0,0.03)',
+                    position: 'relative',
+                    overflow: 'hidden'
+                  }}
+                >
                   {creator.services.map((service, index) => {
                     // Force specific line wrapping for Emily Johnson on mobile
                     const forceWrap = isMobile && 
@@ -321,7 +466,21 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     <div className="w-1 h-4 bg-gradient-to-b from-indigo-500 to-purple-500 rounded-full mr-2 shadow-sm"></div>
                     <div className="text-xs text-gray-800 font-semibold font-space uppercase tracking-wide">Recent Work</div>
                   </div>
-                  <span className="text-xs text-purple-600 font-medium px-2 py-1 rounded-md bg-purple-50/80 transition-colors">
+                  <span 
+                    className="text-xs text-purple-600 font-medium px-2 py-1 rounded-[7px] transition-colors"
+                    style={{
+                      background: 'rgba(245, 243, 255, 0.7)',
+                      backdropFilter: 'blur(2px)',
+                      WebkitBackdropFilter: 'blur(2px)',
+                      border: '1px solid rgba(118, 51, 220, 0.12)',
+                      borderTop: '1px solid rgba(255,255,255,0.95)',
+                      borderLeft: '1px solid rgba(255,255,255,0.8)',
+                      borderRight: '1px solid rgba(118,51,220,0.08)',
+                      borderBottom: '1px solid rgba(118,51,220,0.15)',
+                      boxShadow: 'inset 1px 1px 1px rgba(255,255,255,0.8), 0 1px 2px rgba(118,51,220,0.04)',
+                      overflow: 'hidden'
+                    }}
+                  >
                     Recent Work
                   </span>
                 </div>
@@ -331,7 +490,19 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   {creator.workExamples.slice(0, 3).map((example, index) => (
                     <div 
                       key={index}
-                      className="relative h-[60px] touch-manipulation rounded-lg overflow-hidden border border-purple-100/80 shadow-sm transition-all duration-150 focus:outline-none"
+                      className="relative h-[60px] touch-manipulation rounded-[9px] overflow-hidden transition-all duration-150 focus:outline-none"
+                      style={{
+                        border: '1px solid rgba(118, 51, 220, 0.12)',
+                        borderTop: '1px solid rgba(255,255,255,0.95)',
+                        borderLeft: '1px solid rgba(255,255,255,0.8)',
+                        borderRight: '1px solid rgba(118,51,220,0.08)',
+                        borderBottom: '1px solid rgba(118,51,220,0.15)',
+                        boxShadow: 
+                          'inset 1px 1px 1px rgba(255,255,255,0.7),' +
+                          'inset -1px -1px 1px rgba(0,0,0,0.04),' +
+                          '0 1px 3px rgba(118,51,220,0.05)',
+                        position: 'relative'
+                      }}
                       aria-label={`${index === 0 ? 'Interior' : index === 1 ? 'Exterior' : 'Detail'} image`}
                     >
                       <img 
@@ -368,7 +539,18 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                       background: 'linear-gradient(180deg, #8A42F5 0%, #7837DB 100%)',
                       color: 'white',
                       border: '1px solid rgba(255,255,255,0.2)',
-                      boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(0,0,0,0.05), 0 16px 32px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15)',
+                      boxShadow: 
+                        /* Layered shadow system */
+                        '0 2px 4px rgba(118,51,220,0.08),' +
+                        '0 4px 8px rgba(118,51,220,0.08),' +
+                        '0 8px 16px rgba(0,0,0,0.05),' + 
+                        '0 16px 32px rgba(0,0,0,0.04),' +
+                        /* Inner highlights */
+                        'inset 0 1px 0 rgba(255,255,255,0.25),' +
+                        'inset 1px 0 0 rgba(255,255,255,0.2),' +
+                        /* Inner shadows */
+                        'inset 0 -1px 0 rgba(0,0,0,0.15),' +
+                        'inset -1px 0 0 rgba(0,0,0,0.08)',
                     }}
                   >
                     <div className="h-12 w-12 bg-purple-50/20 rounded-full flex items-center justify-center mb-2">
@@ -441,31 +623,83 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     </div>
                   </form>
                 ) : (
-                  /* Initial button state */
+                  /* Initial button state with enhanced styling */
                   <button 
                     onClick={handleCTAClick}
                     aria-label={`Join as creator with ${creator.name}`}
-                    className="w-full flex items-center justify-center rounded-[12px] font-medium font-sans h-[48px] transition-all duration-200 relative hover:scale-[1.02] bg-creator-cta"
+                    className="w-full flex items-center justify-center rounded-[14px] font-medium font-sans h-[48px] transition-all duration-300 relative hover:scale-[1.02] active:scale-[0.97] bg-creator-cta"
                     style={{
-                      background: 'linear-gradient(180deg, #F5F5F7 0%, #EEEEF2 100%)', // Subtle gradient for depth
+                      background: 'rgba(255, 255, 255, 0.8)', // Translucent background for glass effect
+                      backdropFilter: 'blur(4px)', // Glass-like blur
+                      WebkitBackdropFilter: 'blur(4px)', // For Safari support
                       color: '#7633DC', // Purple text color
-                      border: '1px solid rgba(118,51,220,0.2)', // Purple-tinted border for emphasis
-                      boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(118,51,220,0.05)', // Enhanced shadow with purple tint
+                      border: '1px solid rgba(118, 51, 220, 0.12)',
+                      borderTop: '2px solid rgba(255, 255, 255, 0.95)', // Pronounced white highlight at top
+                      borderLeft: '2px solid rgba(255, 255, 255, 0.8)', // Pronounced white highlight at left
+                      borderRight: '1px solid rgba(118, 51, 220, 0.08)', // Subtle purple tint at right
+                      borderBottom: '1px solid rgba(118, 51, 220, 0.15)', // Darker purple tint at bottom
+                      boxShadow: 
+                        /* Outer layered shadow system */
+                        '0 2px 8px rgba(118, 51, 220, 0.15),' + // Main outer shadow with purple tint
+                        '0 4px 12px rgba(0, 0, 0, 0.05),' + // Secondary distance shadow
+                        
+                        /* Inner highlight effects */
+                        'inset 0 1px 0 rgba(255, 255, 255, 0.9),' + // Top inner highlight
+                        'inset 1px 0 0 rgba(255, 255, 255, 0.7),' + // Left inner highlight
+                        
+                        /* Inner shadow for depth */
+                        'inset 0 -1px 0 rgba(118, 51, 220, 0.1),' + // Bottom inner shadow
+                        'inset -1px 0 0 rgba(118, 51, 220, 0.05)', // Right inner shadow
+                      
                       fontSize: '14px',
                       fontWeight: 600, // Medium weight
+                      transform: 'translateZ(0)', // Hardware acceleration
+                      willChange: 'transform, box-shadow', // Optimization hint
+                      transformStyle: 'preserve-3d', // Enhance 3D appearance
+                      transition: 'all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)', // Custom bezier for smoother motion
+                      position: 'relative', // For pseudo-elements
+                      overflow: 'hidden', // For glass effect containment
                     }}
                   >
-                    {/* Icon container - Now using flexbox for alignment instead of absolute positioning */}
-                    <div className="flex items-center justify-center h-full">
+                    {/* Subtle reflective glow effect for top-left corner */}
+                    <div className="absolute top-0 left-0 w-[80px] h-[26px] rounded-tl-[14px] pointer-events-none overflow-hidden">
+                      <div 
+                        style={{
+                          position: 'absolute',
+                          top: '-20px',
+                          left: '-20px',
+                          width: '100px',
+                          height: '60px',
+                          background: 'radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.1) 60%, transparent 80%)',
+                          opacity: 0.6,
+                          transform: 'rotate(-5deg)',
+                          pointerEvents: 'none'
+                        }}
+                      ></div>
+                    </div>
+                    
+                    {/* Enhanced icon container with matching lighting effects */}
+                    <div className="flex items-center justify-center h-full z-10 relative">
                       <div 
                         className="flex items-center justify-center mr-3"
                         style={{
-                          width: '32px',
-                          height: '32px',
-                          background: 'rgba(134,65,245,0.05)', // Slightly stronger purple tint
-                          border: '1px solid rgba(118,51,220,0.15)', // Subtle purple border
+                          width: '34px',
+                          height: '34px',
+                          background: 'rgba(255,255,255,0.9)', // Brighter background for icon contrast
+                          border: '1px solid rgba(118,51,220,0.12)',
+                          borderTop: '1.5px solid rgba(255,255,255,0.95)', // Match button's top highlight
+                          borderLeft: '1.5px solid rgba(255,255,255,0.8)', // Match button's left highlight
                           borderRadius: '12px',
-                          boxShadow: 'inset 0 1px 0 rgba(255,255,255,1), inset 0 -1px 0 rgba(0,0,0,0.04)'
+                          boxShadow: 
+                            /* Outer subtle shadow */
+                            '0 1px 3px rgba(118,51,220,0.1),' + 
+                            
+                            /* Directional lighting with inset shadows */
+                            'inset 1px 1px 2px rgba(255,255,255,0.9),' +
+                            'inset -1px -1px 1px rgba(118,51,220,0.05)',
+                            
+                          transform: 'translateZ(5px)', // Subtle 3D lift above button surface
+                          position: 'relative' // For light refraction effect
                         }}
                       >
                         {creator.name === "Emily Johnson" ? (
@@ -494,8 +728,18 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                           </svg>
                         )}
                       </div>
-                      <span className="tracking-wide">JOIN AS CREATOR</span>
-                      <ArrowRight className="w-4 h-4 ml-2 text-[#7633DC] animate-pulse-subtle" aria-hidden="true" />
+                      <span className="tracking-wide font-semibold relative" style={{
+                        textShadow: '0 1px 1px rgba(255,255,255,0.7)',
+                        letterSpacing: '0.02em'
+                      }}>JOIN AS CREATOR</span>
+                      <ArrowRight 
+                        className="w-4 h-4 ml-2 text-[#7633DC] relative" 
+                        style={{
+                          filter: 'drop-shadow(0 1px 1px rgba(255,255,255,0.8))',
+                          transform: 'translateZ(1px)',
+                          animation: 'pulse-arrow 2s infinite ease-in-out'
+                        }}
+                        aria-hidden="true" />
                     </div>
                   </button>
                 )}
@@ -583,11 +827,12 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               <Card className={cn(
                 "overflow-hidden flex flex-col w-full h-full",
                 "will-change-transform transition-all duration-300",
-                "hover:translate-y-[-2px] hover:scale-[1.01]", // Added subtle scale transform
-                "bg-white", // Pure white background for maximum contrast with pearl gray section
+                "hover:translate-y-[-3px]", // Slightly more lift on hover
+                "hover:scale-[1.01]", // Subtle scale on hover
+                "bg-white", // Pure white background for maximum contrast
                 "border-0 relative rounded-xl", // Remove default border for custom styling
-                "shadow-[0_4px_12px_rgba(0,0,0,0.06),_0_2px_4px_rgba(118,51,220,0.04)]", // Add shadow for better contrast with pearl gray background
-                "hover:shadow-[0_8px_24px_rgba(0,0,0,0.08),_0_4px_8px_rgba(118,51,220,0.06)]", // Enhanced shadow on hover
+                "shadow-[0_4px_12px_rgba(0,0,0,0.06),_0_2px_4px_rgba(118,51,220,0.04)]", // Default shadow
+                "hover:shadow-[0_4px_8px_rgba(118,51,220,0.06),_4px_4px_10px_rgba(0,0,0,0.04),_0_16px_24px_rgba(0,0,0,0.06),_0_24px_48px_rgba(118,51,220,0.04),_0_0_20px_rgba(255,255,255,0.15)]", // Layered shadow system for hover
                 "block", // Force block display
                 "pb-16" // Reduced padding to ensure CTA is not cut off but not take too much space
               )}
@@ -595,26 +840,128 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 display: 'flex',
                 flexDirection: 'column',
                 position: 'relative',
-                background: 'linear-gradient(180deg, #FFFFFF 0%, #FFFFFF 100%)', // Pure white background
-                borderWidth: '1.5px',
+                borderWidth: '0', // Remove standard border in favor of glass effect
                 borderStyle: 'solid',
-                borderColor: 'rgba(118,51,220,0.15)', // Consistent purple-tinted border 
-                borderTopWidth: '2px',
-                borderTopColor: 'rgba(255,255,255,0.8)', // Brighter top edge for highlight effect
-                boxShadow: 'inset 0 2px 4px rgba(255,255,255,0.9), inset 0 -3px 4px rgba(118,51,220,0.08), inset 2px 0 3px rgba(255,255,255,0.5), inset -2px 0 3px rgba(255,255,255,0.5), 0 6px 16px rgba(0,0,0,0.04), 0 3px 6px rgba(118,51,220,0.03)'
+                background: 'rgba(255,255,255,0.6)', // Semi-transparent base for glass effect
+                backdropFilter: 'blur(8px)', // Glass blur effect
+                WebkitBackdropFilter: 'blur(8px)', // For Safari support
+                boxShadow: 
+                  /* Layer 1: Closest shadow - subtle purple tint */
+                  '0 2px 4px rgba(118,51,220,0.04),' +
+                  
+                  /* Layer 2: Mid-distance shadow with directional bias */
+                  '3px 3px 8px rgba(0,0,0,0.04),' +
+                  
+                  /* Layer 3: Distant shadow with more spread */
+                  '0 8px 16px rgba(0,0,0,0.05),' +
+                  
+                  /* Layer 4: Wide ambient shadow with brand color influence */
+                  '0 12px 24px rgba(118,51,220,0.03), 0 16px 32px rgba(0,0,0,0.03),' +
+                  
+                  /* Glass edge highlight - thin bright line along edges */
+                  'inset 0 0 0 1px rgba(255,255,255,0.3),' +
+                  
+                  /* Inner shadow layers - directional from top-left */
+                  'inset -2px -2px 4px rgba(0,0,0,0.02),' + 
+                  'inset 2px 2px 3px rgba(255,255,255,0.9),' +
+                  'inset 4px 4px 8px rgba(255,255,255,0.4),' +
+                  
+                  /* Bottom-right inner shadow - reinforcing lighting direction */
+                  'inset -3px -3px 6px rgba(118,51,220,0.02),' +
+                  
+                  /* Inner border glow - subtle purple tint */
+                  'inset 0 0 0 1px rgba(118,51,220,0.08)'
               }}>
-                {/* Subtle pearl texture overlay for material quality */}
-                <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.15)_0.5px,transparent_1px)] bg-[length:10px_10px] opacity-[0.07] z-0 pointer-events-none"></div>
+                {/* Enhanced glass texture effect */}
+                <div className="absolute inset-0 pointer-events-none z-[1]" style={{
+                  background: 'linear-gradient(135deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.15) 100%)',
+                  opacity: 0.5
+                }}></div>
                 
-                {/* Enhanced 3D border effect with subtle gradients */}
-                <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-b from-white to-transparent opacity-80 z-[1] pointer-events-none rounded-t-xl"></div>
-                <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-t from-purple-100/20 to-transparent z-[1] pointer-events-none rounded-b-xl"></div>
-                <div className="absolute inset-y-0 left-0 w-1 bg-gradient-to-r from-white/50 to-transparent z-[1] pointer-events-none"></div>
-                <div className="absolute inset-y-0 right-0 w-1 bg-gradient-to-l from-white/50 to-transparent z-[1] pointer-events-none"></div>
+                {/* Subtle dot pattern for glass material */}
+                <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.2)_1px,transparent_1px)] bg-[length:16px_16px] opacity-[0.1] z-0 pointer-events-none"></div>
+                
+                {/* Directional lighting model with top-left light source */}
+                {/* Glass effect - Top edge highlight */}
+                <div className="absolute inset-x-0 top-0 h-[1px] z-[3] pointer-events-none rounded-t-xl"
+                     style={{
+                       background: 'linear-gradient(to right, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0.3) 100%)'
+                     }}></div>
+                
+                {/* Glass effect - Left edge highlight */}
+                <div className="absolute inset-y-0 left-0 w-[1px] z-[3] pointer-events-none rounded-l-xl"
+                     style={{
+                       background: 'linear-gradient(to bottom, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0.3) 100%)'
+                     }}></div>
+                
+                {/* Glass effect - Bottom edge subtle glow */}
+                <div className="absolute inset-x-0 bottom-0 h-[1px] z-[3] pointer-events-none rounded-b-xl"
+                     style={{
+                       background: 'linear-gradient(to right, rgba(118,51,220,0.05) 0%, rgba(118,51,220,0.1) 50%, rgba(118,51,220,0.05) 100%)'
+                     }}></div>
+                
+                {/* Glass effect - Right edge subtle line */}
+                <div className="absolute inset-y-0 right-0 w-[1px] z-[3] pointer-events-none rounded-r-xl"
+                     style={{
+                       background: 'linear-gradient(to bottom, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.05) 50%, rgba(0,0,0,0.02) 100%)'
+                     }}></div>
+                
+                {/* Original directional lighting - now underneath the glass effect */}
+                <div className="absolute inset-x-0 top-0 h-[3px] z-[1] pointer-events-none rounded-t-xl"
+                     style={{
+                       background: 'linear-gradient(to bottom, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.3) 60%, transparent 100%)'
+                     }}></div>
+                
+                <div className="absolute inset-y-0 left-0 w-[3px] z-[1] pointer-events-none rounded-l-xl"
+                     style={{
+                       background: 'linear-gradient(to right, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.25) 70%, transparent 100%)'
+                     }}></div>
+                
+                <div className="absolute inset-x-0 bottom-0 h-[3px] z-[1] pointer-events-none rounded-b-xl"
+                     style={{
+                       background: 'linear-gradient(to top, rgba(118,51,220,0.08) 0%, rgba(0,0,0,0.03) 60%, transparent 100%)'
+                     }}></div>
+                
+                <div className="absolute inset-y-0 right-0 w-[3px] z-[1] pointer-events-none rounded-r-xl"
+                     style={{
+                       background: 'linear-gradient(to left, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.02) 70%, transparent 100%)'
+                     }}></div>
+                
+                {/* Top-left corner - enhanced brightest point with glass effect */}
+                <div className="absolute top-0 left-0 w-12 h-12 rounded-tl-xl pointer-events-none z-[2]" 
+                    style={{
+                      background: 'radial-gradient(circle at top left, rgba(255,255,255,0.98) 0%, rgba(255,255,255,0.7) 25%, rgba(255,255,255,0.3) 50%, transparent 85%)'
+                    }}></div>
+                
+                {/* Bottom-right corner - subtle internal light reflection */}
+                <div className="absolute bottom-0 right-0 w-20 h-20 rounded-br-xl pointer-events-none z-[2]" 
+                    style={{
+                      background: 'radial-gradient(circle at bottom right, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 30%, transparent 70%)'
+                    }}></div>
+                
+                {/* Top-right corner - very subtle reflection */}
+                <div className="absolute top-0 right-0 w-16 h-16 rounded-tr-xl pointer-events-none z-[2]" 
+                    style={{
+                      background: 'radial-gradient(circle at top right, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 40%, transparent 70%)'
+                    }}></div>
 
                 {/* Optimized price tag - compact and visually distinct */}
                 <div className="absolute top-3.5 right-3.5 z-20">
-                  <div className="px-3 py-1 text-sm font-semibold bg-purple-50 shadow-sm border border-purple-200/60 text-purple-800 rounded-full transition-all duration-200 group-hover:bg-purple-100">
+                  <div className="px-3 py-1 text-sm font-semibold text-purple-800 rounded-full transition-all duration-200 group-hover:bg-purple-100/70"
+                    style={{
+                      background: 'rgba(255,255,255,0.7)',
+                      backdropFilter: 'blur(4px)',
+                      WebkitBackdropFilter: 'blur(4px)',
+                      boxShadow: 
+                        'inset 0 0 0 1px rgba(255,255,255,0.4), ' +
+                        'inset 1px 1px 1px rgba(255,255,255,0.8), ' +
+                        '0 1px 2px rgba(0,0,0,0.05), ' +
+                        '1px 1px 1px rgba(118,51,220,0.05)',
+                      borderTop: '1px solid rgba(255,255,255,0.9)',
+                      borderLeft: '1px solid rgba(255,255,255,0.7)',
+                      borderRight: '1px solid rgba(124,58,237,0.1)',
+                      borderBottom: '1px solid rgba(124,58,237,0.15)'
+                    }}>
                     ${creator.price}/session
                   </div>
                 </div>
@@ -622,12 +969,24 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 {/* Media container with 3D styling */}
                 <div className="aspect-[4/3] relative w-full overflow-hidden flex-shrink-0 group-hover:scale-[1.01] transition-transform duration-300">
                   {/* Image container with shadow and subtle border */}
-                  <div className="absolute inset-0 w-full h-full 
-                    shadow-[0_1px_3px_rgba(0,0,0,0.05),_0_4px_6px_rgba(0,0,0,0.05),_0_10px_20px_rgba(0,0,0,0.04)] 
-                    group-hover:shadow-[0_2px_4px_rgba(0,0,0,0.05),_0_6px_10px_rgba(0,0,0,0.05),_0_12px_24px_rgba(0,0,0,0.06)]
-                    border border-[rgba(118,51,220,0.15)]
-                    transition-shadow duration-300
-                    z-10">
+                  <div className="absolute inset-0 w-full h-full rounded-t-lg overflow-hidden z-10"
+                    style={{
+                      boxShadow: 
+                        /* Enhanced directional shadows matching updated card lighting model */
+                        'inset 2px 2px 3px rgba(255,255,255,0.85), ' +
+                        'inset -2px -2px 3px rgba(0,0,0,0.05), ' +
+                        '0 4px 8px rgba(0,0,0,0.03)',
+                      borderTop: '1px solid rgba(255,255,255,0.9)',
+                      borderLeft: '1px solid rgba(255,255,255,0.7)',
+                      borderRight: '1px solid rgba(0,0,0,0.04)',
+                      borderBottom: '1px solid rgba(118,51,220,0.06)', // Subtle purple tint at bottom
+                      transition: 'all 0.3s ease'
+                    }}>
+                    {/* Enhanced top edge highlight for media container */}
+                    <div className="absolute inset-x-0 top-0 h-[2px] z-[1]" 
+                         style={{
+                           background: 'linear-gradient(to bottom, rgba(255,255,255,0.9) 0%, transparent 100%)'
+                         }}></div>
                   </div>
                   <CreatorMedia 
                     creator={creator}
