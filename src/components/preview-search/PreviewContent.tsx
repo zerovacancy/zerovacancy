@@ -22,9 +22,9 @@ const CREATOR_DATA = [
     availability: true,
     availabilityStatus: "available-now",
     workExamples: [
-      "/creatorcontent/emily-johnson/work-1.webp",
-      "/creatorcontent/emily-johnson/work-2.jpg",
-      "/creatorcontent/emily-johnson/work-3.jpg"
+      "/creatorcontent/recent-work/emily-johnson/work-1.webp",
+      "/creatorcontent/recent-work/emily-johnson/work-2.webp",
+      "/creatorcontent/recent-work/emily-johnson/work-3.webp"
     ]
   },
   {
@@ -39,9 +39,9 @@ const CREATOR_DATA = [
     availability: true,
     availabilityStatus: "available-tomorrow",
     workExamples: [
-      "/creatorcontent/jane-cooper/work-1.jpg",
-      "/creatorcontent/jane-cooper/work-2.jpg",
-      "/creatorcontent/jane-cooper/work-3.webp"
+      "/creatorcontent/recent-work/jane-cooper/work-1.webp",
+      "/creatorcontent/recent-work/jane-cooper/work-2.webp",
+      "/creatorcontent/recent-work/jane-cooper/work-3.webp"
     ]
   },
   {
@@ -56,9 +56,9 @@ const CREATOR_DATA = [
     availability: true,
     availabilityStatus: "premium-only",
     workExamples: [
-      "/creatorcontent/michael-brown/work-1.webp",
-      "/creatorcontent/michael-brown/work-2.jpg",
-      "/creatorcontent/michael-brown/work-3.webp"
+      "/creatorcontent/recent-work/michael-brown/work-1.webp",
+      "/creatorcontent/recent-work/michael-brown/work-2.webp",
+      "/creatorcontent/recent-work/michael-brown/work-3.webp"
     ]
   }
 ];
