@@ -28,6 +28,7 @@ export interface CreatorCardProps {
   onPreviewClick?: (imageSrc: string) => void;
   className?: string;
   style?: React.CSSProperties;
+  isSelected?: boolean;
 }
 
 export type AvailabilityStatus = 'available-now' | 'available-tomorrow' | 'premium-only';

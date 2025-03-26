@@ -7,7 +7,7 @@ interface MobileCreatorCarouselProps {
   creators: Creator[];
   onImageLoad: (imageSrc: string) => void;
   loadedImages: Set<string>;
-  imageRef: (node: HTMLImageElement | null) => void;
+  imageRef?: (node: HTMLImageElement | null) => void;
   onPreviewClick?: (imageSrc: string) => void;
 }
 
@@ -26,13 +26,22 @@ export const MobileCreatorCarousel = ({
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(true);
 
-  // Function to scroll to a specific slide
+  // Function to scroll to a specific slide with more precise calculations
   const scrollToSlide = (index: number) => {
     if (!scrollContainerRef.current) return;
     
-    // Calculate the scroll position
-    const slideWidth = scrollContainerRef.current.offsetWidth * 0.85; // 85% of container width
-    const scrollPosition = index * (slideWidth + 16); // 16px is the margin-right
+    // Get all slide elements
+    const slideElements = scrollContainerRef.current.querySelectorAll('[data-slide]');
+    if (slideElements.length === 0 || !slideElements[index]) return;
+    
+    // Use the actual position of the slide element for more accurate scrolling
+    const slideElement = slideElements[index] as HTMLElement;
+    const containerLeft = scrollContainerRef.current.getBoundingClientRect().left;
+    const slideLeft = slideElement.getBoundingClientRect().left;
+    const currentScrollLeft = scrollContainerRef.current.scrollLeft;
+    
+    // Calculate the exact position to scroll to
+    const scrollPosition = currentScrollLeft + (slideLeft - containerLeft) - 16; // 16px is the left padding
     
     // Smooth scroll to the position
     scrollContainerRef.current.scrollTo({
@@ -53,19 +62,38 @@ export const MobileCreatorCarousel = ({
     setCanScrollNext(index < creators.length - 1);
   };
   
-  // Handle scroll event to update the selected index
+  // Handle scroll event to update the selected index - uses a more accurate calculation
   const handleScroll = () => {
     if (!scrollContainerRef.current) return;
     
-    // Calculate which slide is most visible
-    const scrollLeft = scrollContainerRef.current.scrollLeft;
-    const slideWidth = scrollContainerRef.current.offsetWidth * 0.85; // 85% of container width
-    const currentIndex = Math.round(scrollLeft / (slideWidth + 16)); // 16px is the margin-right
+    const container = scrollContainerRef.current;
+    const containerVisible = container.getBoundingClientRect();
+    const slideElements = container.querySelectorAll('[data-slide]');
+    if (slideElements.length === 0) return;
     
-    // Update the selected index and button states
-    if (currentIndex !== selectedIndex) {
-      setSelectedIndex(currentIndex);
-      updateButtonStates(currentIndex);
+    // Find which slide has the most visible area within the viewport
+    let maxVisibleArea = 0;
+    let maxVisibleIndex = selectedIndex;
+    
+    slideElements.forEach((slideElement, index) => {
+      const slideRect = slideElement.getBoundingClientRect();
+      
+      // Calculate the visible area of this slide
+      const visibleLeft = Math.max(slideRect.left, containerVisible.left);
+      const visibleRight = Math.min(slideRect.right, containerVisible.right);
+      const visibleWidth = Math.max(0, visibleRight - visibleLeft);
+      const visibleArea = visibleWidth * slideRect.height;
+      
+      if (visibleArea > maxVisibleArea) {
+        maxVisibleArea = visibleArea;
+        maxVisibleIndex = index;
+      }
+    });
+    
+    // Update the selected index and button states only if it changed
+    if (maxVisibleIndex !== selectedIndex) {
+      setSelectedIndex(maxVisibleIndex);
+      updateButtonStates(maxVisibleIndex);
     }
   };
   
@@ -83,19 +111,51 @@ export const MobileCreatorCarousel = ({
     }
   };
   
-  // Set up scroll event listener
+  // Set up scroll event listener with debouncing for better performance
   useEffect(() => {
     const scrollContainer = scrollContainerRef.current;
     if (!scrollContainer) return;
     
+    // Debounce the scroll handler to improve performance
+    let scrollTimeout: number | null = null;
+    
+    const debouncedScrollHandler = () => {
+      // Clear any existing timeout
+      if (scrollTimeout !== null) {
+        window.clearTimeout(scrollTimeout);
+      }
+      
+      // Set a new timeout
+      scrollTimeout = window.setTimeout(() => {
+        handleScroll();
+        scrollTimeout = null;
+      }, 50); // 50ms debounce time - short enough to feel responsive, long enough to avoid excessive calculations
+    };
+    
     // Add passive scroll listener for better performance
-    scrollContainer.addEventListener('scroll', handleScroll, { passive: true });
+    scrollContainer.addEventListener('scroll', debouncedScrollHandler, { passive: true });
     
     // Clean up the listener when component unmounts
     return () => {
-      scrollContainer.removeEventListener('scroll', handleScroll);
+      if (scrollTimeout !== null) {
+        window.clearTimeout(scrollTimeout);
+      }
+      scrollContainer.removeEventListener('scroll', debouncedScrollHandler);
     };
   }, [selectedIndex]);
+  
+  // Initialize by setting the selected card visible with a slight delay after mount
+  useEffect(() => {
+    // Wait until DOM is fully rendered
+    const timer = setTimeout(() => {
+      if (scrollContainerRef.current && scrollContainerRef.current.children.length > 0) {
+        // Select the first slide by default
+        updateButtonStates(0);
+      }
+    }, 200);
+    
+    return () => clearTimeout(timer);
+  }, []);
   
   // Update button states when creators change
   useEffect(() => {
@@ -104,7 +164,7 @@ export const MobileCreatorCarousel = ({
 
   return (
     <div className="relative w-full py-4 px-2">
-      {/* Native scroll-snap container with extra padding to prevent touching viewport edge */}
+      {/* Native scroll-snap container with optimized padding */}
       <div 
         ref={scrollContainerRef}
         className="w-full overflow-x-auto pb-4 hide-scrollbar"
@@ -113,22 +173,36 @@ export const MobileCreatorCarousel = ({
           scrollBehavior: 'smooth',
           WebkitOverflowScrolling: 'touch',
           display: 'flex',
-          paddingLeft: '12px', 
-          paddingRight: '12px',
+          paddingLeft: '16px', 
+          paddingRight: '16px',
           // Hide scrollbar
           msOverflowStyle: 'none',
           scrollbarWidth: 'none',
-          borderLeft: '8px solid transparent', /* Add transparent border to create more edge space */
-          borderRight: '8px solid transparent'
+          borderLeft: '10px solid transparent', /* Increased edge space */
+          borderRight: '10px solid transparent',
+          // Optimize GPU rendering
+          transform: 'translateZ(0)',
+          willChange: 'scroll-position',
+          backfaceVisibility: 'hidden'
         }}
       >
         {creators.map((creator, index) => (
           <div 
-            key={creator.name} 
-            className="flex-none w-[94%] mr-3"
+            key={creator.name}
+            data-slide={`slide-${index}`}
+            className="flex-none w-[93%] mr-4"
             style={{
               scrollSnapAlign: 'start',
               scrollSnapStop: 'always',
+              // Optimize for touch interactions
+              WebkitTapHighlightColor: 'transparent',
+              touchAction: 'pan-x',
+              // Smooth transitions when elements change
+              transition: 'transform 150ms ease-out, box-shadow 150ms ease',
+              transform: selectedIndex === index ? 'scale(1)' : 'scale(0.98)',
+              boxShadow: selectedIndex === index 
+                ? '0 4px 20px rgba(124, 58, 237, 0.08)' 
+                : '0 2px 10px rgba(0, 0, 0, 0.05)',
             }}
           >
             <CreatorCard 
@@ -137,51 +211,106 @@ export const MobileCreatorCarousel = ({
               loadedImages={loadedImages}
               imageRef={(node) => imageRef && imageRef(node)}
               onPreviewClick={onPreviewClick}
+              isSelected={selectedIndex === index}
             />
           </div>
         ))}
       </div>
       
-      {/* Navigation buttons */}
+      {/* Enhanced navigation buttons with better touch targets */}
       <button
         onClick={scrollPrev}
-        className={`absolute left-3 top-1/2 -translate-y-1/2 bg-purple-600 rounded-full p-2.5 text-white z-10 transition-opacity ${
-          !canScrollPrev ? 'opacity-0 pointer-events-none' : 'opacity-100'
+        className={`absolute left-2 top-1/2 -translate-y-1/2 bg-purple-600 rounded-full p-3 text-white z-10 transition-all shadow-md ${
+          !canScrollPrev ? 'opacity-0 pointer-events-none translate-x-[-10px]' : 'opacity-100 translate-x-0'
         }`}
         aria-label="Previous"
+        style={{ 
+          touchAction: 'manipulation',
+          WebkitTapHighlightColor: 'transparent',
+          transform: 'translateZ(0) translateY(-50%)',
+        }}
       >
         <ChevronLeft className="w-5 h-5" />
       </button>
       
       <button
         onClick={scrollNext}
-        className={`absolute right-3 top-1/2 -translate-y-1/2 bg-purple-600 rounded-full p-2.5 text-white z-10 transition-opacity ${
-          !canScrollNext ? 'opacity-0 pointer-events-none' : 'opacity-100'
+        className={`absolute right-2 top-1/2 -translate-y-1/2 bg-purple-600 rounded-full p-3 text-white z-10 transition-all shadow-md ${
+          !canScrollNext ? 'opacity-0 pointer-events-none translate-x-[10px]' : 'opacity-100 translate-x-0'
         }`}
         aria-label="Next"
+        style={{ 
+          touchAction: 'manipulation',
+          WebkitTapHighlightColor: 'transparent',
+          transform: 'translateZ(0) translateY(-50%)',
+        }}
       >
         <ChevronRight className="w-5 h-5" />
       </button>
       
-      {/* Indicator dots */}
-      <div className="flex justify-center mt-4 space-x-2">
+      {/* Improved indicator dots with better touch targets */}
+      <div className="flex justify-center mt-5 space-x-3">
         {creators.map((_, idx) => (
           <button
             key={idx}
             onClick={() => scrollToSlide(idx)}
-            className={`h-2 rounded-full transition-all ${
-              idx === selectedIndex ? 'w-4 bg-purple-600' : 'w-2 bg-purple-300'
+            className={`transition-all rounded-full ${
+              idx === selectedIndex 
+                ? 'w-6 h-2.5 bg-purple-600' 
+                : 'w-2.5 h-2.5 bg-purple-300/70'
             }`}
+            style={{
+              // Improve touch target without changing visual size
+              touchAction: 'manipulation',
+              WebkitTapHighlightColor: 'transparent',
+              position: 'relative',
+            }}
             aria-label={`Go to slide ${idx + 1}`}
-          />
+          >
+            {/* Invisible touch target extender */}
+            <span 
+              className="absolute inset-0 -m-2"
+              aria-hidden="true"
+            />
+          </button>
         ))}
       </div>
       
-      {/* CSS for hiding scrollbars */}
+      {/* CSS for hiding scrollbars and touch feedback */}
       <style>
         {`
           .hide-scrollbar::-webkit-scrollbar {
             display: none;
+          }
+          
+          /* Add active state feedback for touch devices */
+          button:active {
+            transform: translateZ(0) scale(0.95);
+            transition: transform 0.1s ease-out;
+          }
+
+          /* Touch feedback animation for card elements */
+          @keyframes card-select-pulse {
+            0% {
+              box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.2);
+            }
+            70% {
+              box-shadow: 0 0 0 5px rgba(124, 58, 237, 0);
+            }
+            100% {
+              box-shadow: 0 0 0 0 rgba(124, 58, 237, 0);
+            }
+          }
+          
+          /* Smooth slide-in animation for nav buttons */
+          @keyframes slide-in-left {
+            from { transform: translateX(-10px) translateY(-50%); opacity: 0; }
+            to { transform: translateX(0) translateY(-50%); opacity: 1; }
+          }
+          
+          @keyframes slide-in-right {
+            from { transform: translateX(10px) translateY(-50%); opacity: 0; }
+            to { transform: translateX(0) translateY(-50%); opacity: 1; }
           }
         `}
       </style>
