@@ -103,8 +103,8 @@ export const MobileCreatorCarousel = ({
   }, [creators, selectedIndex]);
 
   return (
-    <div className="relative w-full py-4">
-      {/* Native scroll-snap container */}
+    <div className="relative w-full py-4 px-4">
+      {/* Native scroll-snap container with extra padding to prevent touching viewport edge */}
       <div 
         ref={scrollContainerRef}
         className="w-full overflow-x-auto pb-4 hide-scrollbar"
@@ -113,11 +113,13 @@ export const MobileCreatorCarousel = ({
           scrollBehavior: 'smooth',
           WebkitOverflowScrolling: 'touch',
           display: 'flex',
-          paddingLeft: '20px',
-          paddingRight: '20px',
+          paddingLeft: '16px', 
+          paddingRight: '16px',
           // Hide scrollbar
           msOverflowStyle: 'none',
-          scrollbarWidth: 'none'
+          scrollbarWidth: 'none',
+          borderLeft: '8px solid transparent', /* Add transparent border to create more edge space */
+          borderRight: '8px solid transparent'
         }}
       >
         {creators.map((creator, index) => (
@@ -143,22 +145,22 @@ export const MobileCreatorCarousel = ({
       {/* Navigation buttons */}
       <button
         onClick={scrollPrev}
-        className={`absolute left-2 top-1/2 -translate-y-1/2 bg-purple-600 rounded-full p-3 text-white z-10 transition-opacity ${
+        className={`absolute left-6 top-1/2 -translate-y-1/2 bg-purple-600 rounded-full p-2.5 text-white z-10 transition-opacity ${
           !canScrollPrev ? 'opacity-0 pointer-events-none' : 'opacity-100'
         }`}
         aria-label="Previous"
       >
-        <ChevronLeft className="w-6 h-6" />
+        <ChevronLeft className="w-5 h-5" />
       </button>
       
       <button
         onClick={scrollNext}
-        className={`absolute right-2 top-1/2 -translate-y-1/2 bg-purple-600 rounded-full p-3 text-white z-10 transition-opacity ${
+        className={`absolute right-6 top-1/2 -translate-y-1/2 bg-purple-600 rounded-full p-2.5 text-white z-10 transition-opacity ${
           !canScrollNext ? 'opacity-0 pointer-events-none' : 'opacity-100'
         }`}
         aria-label="Next"
       >
-        <ChevronRight className="w-6 h-6" />
+        <ChevronRight className="w-5 h-5" />
       </button>
       
       {/* Indicator dots */}

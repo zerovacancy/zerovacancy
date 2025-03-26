@@ -172,114 +172,62 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
           {/* Main container with flex layout to distribute space properly */}
           <Card className={cn(
             "overflow-hidden flex flex-col w-full h-full",
-            "bg-white",
+            "bg-transparent",
             "border-0", 
             "rounded-xl relative transition-all duration-300 active:scale-[0.99]"
           )}
             style={{
               transform: 'translateZ(0)', // Hardware acceleration
               willChange: 'transform, box-shadow', // Optimization hint for transitions
-              transition: 'all 0.3s ease'
+              transition: 'all 0.3s ease',
+              backgroundColor: 'rgba(248, 245, 255, 0.75)' // Light lavender with transparency
             }}>
             
-            {/* Enhanced custom border container with refined borders and layered shadows */}
+            {/* Simplified border with premium shadow treatment */}
             <div className="absolute inset-0 rounded-[15px] pointer-events-none" 
                  style={{
-                   borderWidth: '0', // Remove default border in favor of custom borders
-                   borderStyle: 'solid',
-                   // Layered shadows for depth with directional lighting:
+                   // Single refined border with premium styling
                    boxShadow: 
-                     /* Main border with specified purple tint */
+                     /* Clean single border with subtle purple tint */
                      'inset 0 0 0 1.5px rgba(118, 51, 220, 0.12),' +
                      
-                     /* Highlight effect on top border */
+                     /* Unified directional lighting effect */
                      'inset 0 1px 0 rgba(255, 255, 255, 0.95),' +
-                     
-                     /* Slightly darker bottom border */
-                     'inset 0 -1px 0 rgba(118, 51, 220, 0.15),' +
-                     
-                     /* Left border highlight */
                      'inset 1px 0 0 rgba(255, 255, 255, 0.8),' +
                      
-                     /* Right border slightly darker */
-                     'inset -1px 0 0 rgba(118, 51, 220, 0.08),' +
-                     
-                     /* Layer 1: Closest shadow with purple tint */
+                     /* Optimized layered shadow system */
                      '0 2px 4px rgba(118, 51, 220, 0.04),' +
-                     
-                     /* Layer 2: Mid-distance shadow with directional bias */
-                     '2px 2px 6px rgba(0, 0, 0, 0.04),' +
-                     
-                     /* Layer 3: Distant shadow with more spread */
                      '0 6px 12px rgba(0, 0, 0, 0.05),' +
-                     
-                     /* Layer 4: Wide ambient shadow with brand color influence */
                      '0 8px 16px rgba(118, 51, 220, 0.02)',
                    zIndex: 10
                  }}
             ></div>
             
-            {/* Directional lighting effect overlays */}
-            <div className="absolute inset-x-0 top-0 h-[2px] z-[2] pointer-events-none rounded-t-xl"
+            {/* Single unified lighting effect overlay */}
+            <div className="absolute inset-0 pointer-events-none rounded-xl z-[2]" 
                  style={{
-                   background: 'linear-gradient(to bottom, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.3) 100%)'
-                 }}></div>
-            
-            <div className="absolute inset-y-0 left-0 w-[2px] z-[2] pointer-events-none rounded-l-xl"
-                 style={{
-                   background: 'linear-gradient(to right, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.25) 100%)'
-                 }}></div>
-            
-            {/* Bottom-right corner shadow for enhanced depth */}
-            <div className="absolute bottom-0 right-0 w-10 h-10 rounded-br-[16px] pointer-events-none z-[2]" 
-                 style={{
-                   background: 'radial-gradient(circle at bottom right, rgba(0, 0, 0, 0.035) 0%, rgba(0, 0, 0, 0.02) 30%, transparent 70%)'
-                 }}></div>
-            
-            {/* Top-left corner highlight - enhanced brightest point */}
-            <div className="absolute top-0 left-0 w-10 h-10 rounded-tl-[16px] pointer-events-none z-[3]" 
-                 style={{
-                   background: 'radial-gradient(circle at top left, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.7) 30%, transparent 70%)',
-                   boxShadow: 'inset 0px 0px 2px rgba(255, 255, 255, 0.8)'
-                 }}></div>
+                   background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.1) 50%, rgba(0, 0, 0, 0.02) 100%)',
+                   opacity: 0.6
+                 }}>
+                 {/* Top-left corner highlight for subtle lighting */}
+                 <div className="absolute top-0 left-0 w-16 h-16 rounded-tl-[16px]" 
+                     style={{
+                       background: 'radial-gradient(circle at top left, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.5) 40%, transparent 70%)'
+                     }}>
+                 </div>
+            </div>
             
             {/* Media section with properly positioned price tag */}
             <div className="relative">
               {/* Fixed aspect ratio for all cards with 3D styling */}
               <div className="aspect-[4/3] relative w-full overflow-hidden flex-shrink-0 rounded-t-md transition-transform duration-300">
-                {/* Enhanced image container with directional lighting and glass effect */}
-                <div className="absolute inset-0 w-full h-full z-10"
+                {/* Simplified image container with minimal border treatment */}
+                <div className="absolute inset-0 w-full h-full z-10 overflow-hidden"
                   style={{
-                    boxShadow: 
-                      /* Layered shadows matching card style */
-                      'inset 1px 1px 2px rgba(255,255,255,0.8),' +
-                      'inset -1px -1px 2px rgba(0,0,0,0.03),' +
-                      '0 2px 6px rgba(0,0,0,0.04)',
-                    borderTop: '1px solid rgba(255,255,255,0.9)',
-                    borderLeft: '1px solid rgba(255,255,255,0.7)',
-                    borderRight: '1px solid rgba(0,0,0,0.03)',
-                    borderBottom: '1px solid rgba(118,51,220,0.08)', // Subtle purple tint
+                    boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.8)',
                     transition: 'all 0.3s ease'
                   }}>
-                  
-                  {/* Top edge highlight */}
-                  <div className="absolute inset-x-0 top-0 h-[1.5px] z-[2]" 
-                      style={{
-                        background: 'linear-gradient(to bottom, rgba(255,255,255,0.9) 0%, transparent 100%)'
-                      }}></div>
-                      
-                  {/* Left edge highlight */}
-                  <div className="absolute inset-y-0 left-0 w-[1.5px] z-[2]" 
-                      style={{
-                        background: 'linear-gradient(to right, rgba(255,255,255,0.85) 0%, transparent 100%)'
-                      }}></div>
                 </div>
-                
-                {/* Top-left corner - brightest point for media container */}
-                <div className="absolute top-0 left-0 w-10 h-10 pointer-events-none z-20" 
-                    style={{
-                      background: 'radial-gradient(circle at top left, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.5) 30%, transparent 70%)'
-                    }}></div>
                 
                 <CreatorMedia 
                   creator={creator}
@@ -312,108 +260,37 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               </div>
             </div>
 
-            {/* Content sections with proper organization - adjusted for flex layout */}
-            <div className="w-full px-4 pt-3 pb-5 flex flex-col relative z-10 flex-grow flex-1 h-full justify-between">
-              {/* Creator info section */}
-              <div className="pb-2 mb-2 border-b border-purple-200/30">
+            {/* Content sections with optimized spacing for mobile */}
+            <div className="w-full px-3 pt-2 pb-4 flex flex-col relative z-10 flex-grow flex-1 h-full" style={{ display: 'flex', flexDirection: 'column' }}>
+              {/* Creator info section - with optimized spacing */}
+              <div className="pb-1 mb-1">
+                {/* Subtle divider instead of full border */}
+                <div className="w-12 h-0.5 mx-auto mb-2 bg-gradient-to-r from-transparent via-purple-200/40 to-transparent"></div>
                 {/* Creator name and location with proper styling */}
                 <div 
-                  className="flex justify-between items-center mb-2.5 py-2 px-3 -mx-1 rounded-[10px]"
+                  className="flex justify-between items-center mb-1.5 py-1 px-1"
                   style={{
-                    background: 'rgba(255, 255, 255, 0.8)',
-                    backdropFilter: 'blur(4px)',
-                    WebkitBackdropFilter: 'blur(4px)',
-                    border: '1px solid rgba(118, 51, 220, 0.12)',
-                    borderTop: '1px solid rgba(255,255,255,0.95)',
-                    borderLeft: '1px solid rgba(255,255,255,0.8)',
-                    borderRight: '1px solid rgba(118,51,220,0.08)',
-                    borderBottom: '1px solid rgba(118,51,220,0.15)',
-                    boxShadow: 
-                      'inset 1px 1px 2px rgba(255,255,255,0.8),' +
-                      'inset -1px -1px 1px rgba(0,0,0,0.02),' +
-                      '0 1px 2px rgba(118,51,220,0.03)',
-                    overflow: 'hidden' // Ensure content doesn't overflow rounded corners
+                    transform: 'translateZ(0)' // Hardware acceleration
                   }}
                 >
-                  <h3 className="text-base leading-tight font-semibold text-gray-800">{creator.name}</h3>
-                  <p className="text-gray-500 text-xs flex items-center">
-                    <svg className="w-3.5 h-3.5 mr-1 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <h3 className="text-lg leading-tight font-bold text-gray-800 tracking-tight flex items-center">
+                    {creator.name}
+                    <span className="absolute -top-0.5 -right-0.5 w-12 h-6 bg-gradient-to-br from-purple-100/40 to-transparent blur-sm rounded-full"></span>
+                  </h3>
+                  <p className="text-gray-500 text-xs flex items-center self-center max-w-[120px]">
+                    <svg className="w-3.5 h-3.5 mr-1 flex-shrink-0 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                       <circle cx="12" cy="10" r="3"></circle>
                     </svg>
-                    {creator.location}
+                    <span className="truncate">{creator.location}</span>
                   </p>
                 </div>
                 
-                {/* Ratings and availability grouped together */}
-                <div className="flex justify-between items-center mb-3 py-2 px-3 rounded-[12px]"
+                {/* Services tags without container border - MOVED BEFORE RATINGS */}
+                <div className="flex flex-wrap gap-x-1.5 gap-y-1 mt-1 px-1 py-1 mb-2 max-w-full"
                   style={{
-                    background: 'rgba(248, 248, 252, 0.8)', // Subtly purple-tinted background
-                    backdropFilter: 'blur(4px)',
-                    WebkitBackdropFilter: 'blur(4px)',
-                    border: '1px solid rgba(118, 51, 220, 0.12)',
-                    borderTop: '1px solid rgba(255,255,255,0.95)',
-                    borderLeft: '1px solid rgba(255,255,255,0.8)',
-                    borderRight: '1px solid rgba(118,51,220,0.08)',
-                    borderBottom: '1px solid rgba(118,51,220,0.15)',
-                    boxShadow: 
-                      'inset 1px 1px 1px rgba(255,255,255,0.9),' +
-                      'inset -1px -1px 1px rgba(0,0,0,0.03),' +
-                      '0 1px 2px rgba(118,51,220,0.03)',
-                    overflow: 'hidden', // Ensure content doesn't overflow rounded corners
-                    position: 'relative' // For pseudo-elements
-                  }}>
-                  <div className="flex items-center">
-                    <Star className="w-4 h-4 text-yellow-400 fill-yellow-400 mr-1.5" />
-                    <span className="text-sm font-semibold font-space text-gray-700">{creator.rating.toFixed(1)}</span>
-                    {creator.reviews > 0 && (
-                      <span className="text-xs text-gray-500 ml-1.5 font-inter">
-                        ({creator.reviews})
-                      </span>
-                    )}
-                  </div>
-                  
-                  {/* Availability indicator with improved styling */}
-                  {creator.availabilityStatus && (
-                    <div className="flex items-center py-1 px-2.5 rounded-full text-xs font-medium bg-white/80 shadow-sm border border-gray-100/90">
-                      {creator.availabilityStatus === 'available-now' && (
-                        <span className="flex items-center text-emerald-700">
-                          <div className="w-2 h-2 rounded-full bg-emerald-500 mr-1.5 animate-pulse shadow-[0_0_4px_rgba(16,185,129,0.6)]"></div>
-                          Available Now
-                        </span>
-                      )}
-                      {creator.availabilityStatus === 'available-tomorrow' && (
-                        <span className="flex items-center text-amber-700">
-                          <Clock className="w-3.5 h-3.5 mr-1.5 text-amber-500" />
-                          Available Soon
-                        </span>
-                      )}
-                      {creator.availabilityStatus === 'premium-only' && (
-                        <span className="flex items-center text-purple-700">
-                          <Crown className="w-3.5 h-3.5 mr-1.5 text-purple-500" />
-                          Premium Only
-                        </span>
-                      )}
-                    </div>
-                  )}
-                </div>
-                
-                {/* Services with organized tag styling - optimized for mobile */}
-                <div className="flex flex-wrap gap-x-1 gap-y-1 mt-2 px-2 py-1.5 rounded-[8px] max-w-full"
-                  style={{
-                    background: 'rgba(255, 255, 255, 0.7)',
-                    backdropFilter: 'blur(4px)',
-                    WebkitBackdropFilter: 'blur(4px)',
-                    border: '1px solid rgba(118, 51, 220, 0.12)',
-                    borderTop: '1px solid rgba(255,255,255,0.95)',
-                    borderLeft: '1px solid rgba(255,255,255,0.8)',
-                    borderRight: '1px solid rgba(118,51,220,0.08)',
-                    borderBottom: '1px solid rgba(118,51,220,0.15)',
-                    boxShadow: 
-                      'inset 0 1px 2px rgba(255,255,255,0.8),' +
-                      'inset 0 -1px 1px rgba(0,0,0,0.03)',
                     position: 'relative',
-                    overflow: 'hidden'
+                    transform: 'translateZ(0)' // Hardware acceleration
                   }}
                 >
                   {creator.services.map((service, index) => {
@@ -438,7 +315,16 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                       return (
                         <span 
                           key={index} 
-                          className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs border whitespace-nowrap touch-manipulation shadow-sm max-w-[110px] ${bgColor} ${forceWrap ? 'w-auto flex-shrink-0' : ''}`}
+                          className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs border whitespace-nowrap touch-manipulation shadow-sm max-w-[110px] font-medium ${bgColor} ${forceWrap ? 'w-auto flex-shrink-0' : ''}`}
+                          style={{
+                            backdropFilter: 'blur(4px)',
+                            WebkitBackdropFilter: 'blur(4px)',
+                            borderTop: '1px solid rgba(255,255,255,0.9)',
+                            borderLeft: '1px solid rgba(255,255,255,0.7)',
+                            boxShadow: 'inset 1px 1px 1px rgba(255,255,255,0.8), 0 1px 1px rgba(118,51,220,0.04)',
+                            minHeight: '24px',
+                            minWidth: '44px'
+                          }}
                         >
                           <span className="truncate">{service}</span>
                         </span>
@@ -447,7 +333,16 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                       return (
                         <span 
                           key={index} 
-                          className="inline-flex items-center px-2 py-0.5 rounded-full text-xs text-gray-600 border border-gray-200 bg-white/90 shadow-sm"
+                          className="inline-flex items-center px-2 py-0.5 rounded-full text-xs text-gray-600 border border-gray-200 font-medium"
+                          style={{
+                            backdropFilter: 'blur(4px)',
+                            WebkitBackdropFilter: 'blur(4px)',
+                            borderTop: '1px solid rgba(255,255,255,0.9)',
+                            borderLeft: '1px solid rgba(255,255,255,0.7)',
+                            boxShadow: 'inset 1px 1px 1px rgba(255,255,255,0.8), 0 1px 1px rgba(118,51,220,0.04)',
+                            minHeight: '24px',
+                            minWidth: '44px'
+                          }}
                         >
                           +{creator.services.length - 3} more
                         </span>
@@ -456,51 +351,103 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     return null;
                   })}
                 </div>
+                
+                {/* Ratings and availability grouped together in a content section - MOVED AFTER TAGS */}
+                <div className="flex justify-between items-center mb-2 py-1.5 px-2 bg-purple-50/30 rounded-md"
+                  style={{
+                    transform: 'translateZ(0)', // Hardware acceleration
+                    position: 'relative' // For pseudo-elements
+                  }}>
+                  <div className="flex items-center">
+                    <div className="flex items-center px-1.5 py-0.5 rounded-md mr-1" style={{
+                        minHeight: '24px',
+                        minWidth: '40px',
+                        display: 'flex',
+                        alignItems: 'center'
+                      }}>
+                      <Star className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500 mr-0.5" />
+                      <span className="text-sm font-bold font-space text-gray-800 flex items-center">{creator.rating.toFixed(1)}</span>
+                    </div>
+                    {creator.reviews > 0 && (
+                      <span className="text-xs text-gray-600 ml-0.5 font-inter px-1 py-0.5 rounded-md flex items-center" style={{
+                        minHeight: '22px'
+                      }}>
+                        {creator.reviews} reviews
+                      </span>
+                    )}
+                  </div>
+                  
+                  {/* Availability indicator with optimized size and alignment */}
+                  {creator.availabilityStatus && (
+                    <div className="flex items-center py-0.5 px-2 rounded-full text-xs font-medium"
+                      style={{
+                        minHeight: '24px',
+                        minWidth: '40px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}>
+                      {creator.availabilityStatus === 'available-now' && (
+                        <span className="flex items-center text-emerald-700 whitespace-nowrap">
+                          <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1 animate-pulse shadow-[0_0_3px_rgba(16,185,129,0.6)]"></div>
+                          <span className="flex items-center">Available Now</span>
+                        </span>
+                      )}
+                      {creator.availabilityStatus === 'available-tomorrow' && (
+                        <span className="flex items-center text-amber-700 whitespace-nowrap">
+                          <Clock className="w-3 h-3 mr-1 text-amber-500" />
+                          <span className="flex items-center">Available Soon</span>
+                        </span>
+                      )}
+                      {creator.availabilityStatus === 'premium-only' && (
+                        <span className="flex items-center text-purple-700 whitespace-nowrap">
+                          <Crown className="w-3 h-3 mr-1 text-purple-500" />
+                          <span className="flex items-center">Premium Only</span>
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
               
-              {/* Recent Work section with proper header */}
-              <div className="mb-4">
-                {/* Section header with enhanced styling - reduced bottom margin */}
-                <div className="mb-2 flex justify-between items-center">
-                  <div className="flex items-center">
-                    <div className="w-1 h-4 bg-gradient-to-b from-indigo-500 to-purple-500 rounded-full mr-2 shadow-sm"></div>
-                    <div className="text-xs text-gray-800 font-semibold font-space uppercase tracking-wide">Recent Work</div>
-                  </div>
-                  <span 
-                    className="text-xs text-purple-600 font-medium px-2 py-1 rounded-[7px] transition-colors"
-                    style={{
-                      background: 'rgba(245, 243, 255, 0.7)',
-                      backdropFilter: 'blur(2px)',
-                      WebkitBackdropFilter: 'blur(2px)',
-                      border: '1px solid rgba(118, 51, 220, 0.12)',
-                      borderTop: '1px solid rgba(255,255,255,0.95)',
-                      borderLeft: '1px solid rgba(255,255,255,0.8)',
-                      borderRight: '1px solid rgba(118,51,220,0.08)',
-                      borderBottom: '1px solid rgba(118,51,220,0.15)',
-                      boxShadow: 'inset 1px 1px 1px rgba(255,255,255,0.8), 0 1px 2px rgba(118,51,220,0.04)',
-                      overflow: 'hidden'
-                    }}
-                  >
-                    Recent Work
-                  </span>
+              {/* Recent Work section - pushed up to create space at bottom */}
+              <div className="mb-0 w-full mt-1">
+                {/* Light divider instead of border */}
+                <div className="w-full h-px bg-gradient-to-r from-transparent via-purple-200/40 to-transparent mb-2"></div>
+                {/* Section header with enhanced styling and optimized size */}
+                <div className="mb-2 flex items-center py-0.5"
+                  style={{
+                    minHeight: '22px'
+                }}>
+                  <div className="w-1 h-4 bg-gradient-to-b from-indigo-500 to-purple-500 rounded-full mr-2 shadow-sm"></div>
+                  <div className="text-xs text-gray-800 font-semibold font-space uppercase tracking-wide">Recent Work</div>
                 </div>
                 
-                {/* Fixed height portfolio thumbnails - reduced height for mobile */}
-                <div className="grid grid-cols-3 gap-2">
+                {/* Portfolio thumbnails with optimized spacing */}
+                <div className="grid grid-cols-3 gap-1.5 w-full px-0.5 pb-0.5">
                   {creator.workExamples.slice(0, 3).map((example, index) => (
                     <div 
                       key={index}
-                      className="relative h-[60px] touch-manipulation rounded-[9px] overflow-hidden transition-all duration-150 focus:outline-none"
+                      className="relative touch-manipulation rounded-xl overflow-hidden transition-all duration-150 focus:outline-none flex-grow"
                       style={{
+                        width: 'calc(33.33% - 7px)', // Ensure even division of space with gaps
+                        minWidth: '80px', // Minimum width constraint
+                        minHeight: '44px', // Minimum height for touch target
+                        aspectRatio: '4/3', // Consistent aspect ratio that works well for property photos
+                        background: 'rgba(255,255,255,0.8)',
+                        backdropFilter: 'blur(4px)',
+                        WebkitBackdropFilter: 'blur(4px)',
                         border: '1px solid rgba(118, 51, 220, 0.12)',
-                        borderTop: '1px solid rgba(255,255,255,0.95)',
-                        borderLeft: '1px solid rgba(255,255,255,0.8)',
+                        borderTop: '2px solid rgba(255,255,255,0.95)',
+                        borderLeft: '2px solid rgba(255,255,255,0.8)',
                         borderRight: '1px solid rgba(118,51,220,0.08)',
                         borderBottom: '1px solid rgba(118,51,220,0.15)',
                         boxShadow: 
-                          'inset 1px 1px 1px rgba(255,255,255,0.7),' +
-                          'inset -1px -1px 1px rgba(0,0,0,0.04),' +
-                          '0 1px 3px rgba(118,51,220,0.05)',
+                          'inset 1px 1px 2px rgba(255,255,255,0.8),' +
+                          'inset -1px -1px 1px rgba(0,0,0,0.02),' +
+                          '0 1px 3px rgba(118,51,220,0.04)',
+                        transform: 'translateZ(0)', // Hardware acceleration
+                        willChange: 'transform', // Optimization hint
                         position: 'relative'
                       }}
                       aria-label={`${index === 0 ? 'Interior' : index === 1 ? 'Exterior' : 'Detail'} image`}
@@ -508,18 +455,30 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                       <img 
                         src={example}
                         alt={`${creator.name}'s work ${index + 1}`}
-                        className="object-cover h-full w-full"
+                        className="object-cover w-full h-full"
+                        style={{
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          width: '100%',
+                          height: '100%',
+                          transform: 'translateZ(0)', // Hardware acceleration
+                          contain: 'paint' // Optimization
+                        }}
                       />
-                      {/* Enhanced label overlay with gradient background */}
-                      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-black/5 py-1 text-center">
-                        <span className="text-[10px] text-white font-medium uppercase tracking-wide font-space">
-                          {index === 0 ? 'Interior' : index === 1 ? 'Exterior' : 'Detail'}
-                        </span>
+                      {/* Glass effect overlay matching card styling */}
+                      <div className="absolute inset-0 pointer-events-none"
+                           style={{
+                             boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.1)',
+                             background: 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 100%)',
+                             opacity: 0.5
+                           }}>
                       </div>
-                      {/* Tap indicator with glass effect */}
+                      
+                      {/* Enhanced tap indicator with glass effect */}
                       <div className="absolute inset-0 bg-purple-600/10 opacity-0 active:opacity-100 transition-opacity flex items-center justify-center">
-                        <div className="w-7 h-7 rounded-full bg-white/80 shadow-sm flex items-center justify-center">
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <div className="w-8 h-8 rounded-full bg-white/85 shadow-sm flex items-center justify-center transform-gpu hover:scale-105 transition-transform">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M15 3H21V9" stroke="#6D28D9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                             <path d="M21 3L9 15" stroke="#6D28D9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                           </svg>
@@ -530,8 +489,13 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 </div>
               </div>
               
-              {/* Enhanced CTA button positioned with proper spacing from thumbnails */}
-              <div className="mt-auto mb-3 pt-6">
+              {/* Flexible spacer to push CTA to bottom */}
+              <div className="flex-grow" style={{ minHeight: '30px' }}></div>
+              
+              {/* CTA section positioned at bottom of card */}
+              <div className="flex items-center justify-center py-2" style={{
+                position: 'relative'
+              }}>
                 {/* Success state */}
                 {showInlineSuccess ? (
                   <div className="w-full py-4 px-4 font-medium rounded-[12px] text-white relative flex flex-col items-center justify-center animate-fade-in"
@@ -627,11 +591,12 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   <button 
                     onClick={handleCTAClick}
                     aria-label={`Join as creator with ${creator.name}`}
-                    className="w-full flex items-center justify-center rounded-[14px] font-medium font-sans h-[48px] transition-all duration-300 relative hover:scale-[1.02] active:scale-[0.97] bg-creator-cta"
+                    className="w-full flex items-center justify-center rounded-[14px] font-bold font-sans h-[48px] transition-all duration-300 relative hover:scale-[1.02] active:scale-[0.97] bg-creator-cta"
                     style={{
-                      background: 'rgba(255, 255, 255, 0.8)', // Translucent background for glass effect
+                      background: 'rgba(255, 255, 255, 0.9)', // Slightly more opaque for better visibility
                       backdropFilter: 'blur(4px)', // Glass-like blur
                       WebkitBackdropFilter: 'blur(4px)', // For Safari support
+                      boxShadow: '0 2px 8px rgba(118, 51, 220, 0.2), 0 4px 12px rgba(0, 0, 0, 0.05)', // Enhanced shadow for CTA focus
                       color: '#7633DC', // Purple text color
                       border: '1px solid rgba(118, 51, 220, 0.12)',
                       borderTop: '2px solid rgba(255, 255, 255, 0.95)', // Pronounced white highlight at top
@@ -728,7 +693,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                           </svg>
                         )}
                       </div>
-                      <span className="tracking-wide font-semibold relative" style={{
+                      <span className="tracking-wide font-bold text-base relative" style={{
                         textShadow: '0 1px 1px rgba(255,255,255,0.7)',
                         letterSpacing: '0.02em'
                       }}>JOIN AS CREATOR</span>
@@ -999,7 +964,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 <div className="px-5 pt-4 pb-2 flex flex-col relative z-10 flex-grow rounded-b-xl overflow-hidden">
                   {/* Enhanced creator info section with improved visual hierarchy */}
                   <div className="mb-3 pb-3 border-b border-purple-100/40">
-                    <div className="py-2 px-3 -mx-2 mb-2 bg-white/90 border-l-2 border-purple-400 rounded-r-md shadow-[inset_1px_1px_2px_rgba(255,255,255,0.9)]">
+                    <div className="py-2 px-3 -mx-2 mb-2 bg-purple-50/30 border-l-2 border-purple-400 rounded-r-md shadow-[inset_1px_1px_2px_rgba(255,255,255,0.9)]">
                       <h3 className="text-title leading-tight font-semibold text-purple-800">{creator.name}</h3>
                     </div>
                     
@@ -1013,7 +978,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     </p>
                     
                     {/* Services with color-coded tag styling */}
-                    <div className="flex flex-wrap gap-1.5 mt-2 bg-white/70 p-1.5 rounded-md -mx-1 shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)]">
+                    <div className="flex flex-wrap gap-1.5 mt-2 bg-purple-50/30 p-1.5 rounded-md -mx-1 shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)]">
                       {creator.services.map((service, index) => {
                         // Determine tag color based on service type
                         const isPlatform = service.includes('TikTok') || service.includes('Instagram') || service.includes('YouTube');
@@ -1046,7 +1011,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   </div>
 
                   {/* Refined rating section with reduced spacing */}
-                  <div className="mb-2 p-2.5 rounded-md bg-white/70 shadow-[inset_0_1px_2px_rgba(255,255,255,0.7),inset_0_-1px_1px_rgba(0,0,0,0.02)]">
+                  <div className="mb-2 p-2.5 rounded-md bg-purple-50/30 shadow-[inset_0_1px_2px_rgba(255,255,255,0.7),inset_0_-1px_1px_rgba(0,0,0,0.02)]">
                     <div className="mb-1.5 pb-1 border-b border-gray-100 flex justify-between items-center">
                       <div className="flex items-center">
                         <div className="w-0.5 h-3.5 bg-gradient-to-b from-indigo-400/80 to-purple-400/80 rounded-full mr-1.5"></div>
