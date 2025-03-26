@@ -617,7 +617,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     aria-label={`Join as creator with ${creator.name}`}
                     className="w-full flex items-center justify-center rounded-[14px] font-bold font-sans h-[48px] transition-all duration-300 relative hover:scale-[1.02] active:scale-[0.97] bg-creator-cta"
                     style={{
-                      background: 'rgba(255, 255, 255, 0.9)', // Slightly more opaque for better visibility
+                      background: 'rgba(248, 245, 255, 0.85)', // Using creator card lavender background color
                       backdropFilter: 'blur(4px)', // Glass-like blur
                       WebkitBackdropFilter: 'blur(4px)', // For Safari support
                       boxShadow: '0 2px 8px rgba(118, 51, 220, 0.2), 0 4px 12px rgba(0, 0, 0, 0.05)', // Enhanced shadow for CTA focus
@@ -674,7 +674,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                         style={{
                           width: '34px',
                           height: '34px',
-                          background: 'rgba(255,255,255,0.9)', // Brighter background for icon contrast
+                          background: 'rgba(248, 245, 255, 0.85)', // Match the lavender background
                           border: '1px solid rgba(118,51,220,0.12)',
                           borderTop: '1.5px solid rgba(255,255,255,0.95)', // Match button's top highlight
                           borderLeft: '1.5px solid rgba(255,255,255,0.8)', // Match button's left highlight
