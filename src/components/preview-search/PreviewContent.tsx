@@ -22,7 +22,7 @@ const CREATOR_DATA = [
     availability: true,
     availabilityStatus: "available-now",
     workExamples: [
-      "/creatorcontent/recent-work/emily-johnson/work-1.webp",
+      "/placeholder.svg", // Testing with a known working image
       "/creatorcontent/recent-work/emily-johnson/work-2.webp",
       "/creatorcontent/recent-work/emily-johnson/work-3.webp"
     ]
