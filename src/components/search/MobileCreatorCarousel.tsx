@@ -163,23 +163,23 @@ export const MobileCreatorCarousel = ({
   }, [creators, selectedIndex]);
 
   return (
-    <div className="relative w-full py-4 px-2">
+    <div className="relative w-full py-3 px-1">
       {/* Native scroll-snap container with optimized padding */}
       <div 
         ref={scrollContainerRef}
-        className="w-full overflow-x-auto pb-4 hide-scrollbar"
+        className="w-full overflow-x-auto pb-3 hide-scrollbar"
         style={{
           scrollSnapType: 'x mandatory',
           scrollBehavior: 'smooth',
           WebkitOverflowScrolling: 'touch',
           display: 'flex',
-          paddingLeft: '10px', 
-          paddingRight: '10px',
+          paddingLeft: '12px', 
+          paddingRight: '12px',
           // Hide scrollbar
           msOverflowStyle: 'none',
           scrollbarWidth: 'none',
-          borderLeft: '6px solid transparent', /* Edge space */
-          borderRight: '6px solid transparent',
+          borderLeft: '4px solid transparent', /* Edge space - reduced to show more of adjacent cards */
+          borderRight: '4px solid transparent',
           // Optimize GPU rendering
           transform: 'translateZ(0)',
           willChange: 'scroll-position',
@@ -195,7 +195,7 @@ export const MobileCreatorCarousel = ({
           <div 
             key={creator.name}
             data-slide={`slide-${index}`}
-            className="flex-none w-[95%] mr-3"
+            className="flex-none w-[85%] mr-[12px]"
             style={{
               scrollSnapAlign: 'start',
               scrollSnapStop: 'always',
@@ -204,14 +204,14 @@ export const MobileCreatorCarousel = ({
               touchAction: 'pan-x',
               // Smooth transitions when elements change
               transition: 'transform 150ms ease-out, box-shadow 150ms ease',
-              transform: selectedIndex === index ? 'scale(1)' : 'scale(0.98)',
+              transform: selectedIndex === index ? 'scale(1)' : 'scale(0.97)',
               boxShadow: selectedIndex === index 
                 ? '0 4px 20px rgba(124, 58, 237, 0.08)' 
                 : '0 2px 10px rgba(0, 0, 0, 0.05)',
               // Safari fixes
-              minWidth: 'calc(95% - 3px)',
-              WebkitFlexBasis: '95%',
-              flexBasis: '95%',
+              minWidth: 'calc(85% - 12px)',
+              WebkitFlexBasis: '85%',
+              flexBasis: '85%',
             }}
           >
             <CreatorCard 

@@ -172,7 +172,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
         <div className="relative w-full h-full flex">
           {/* Main container with flex layout to distribute space properly */}
           <Card className={cn(
-            "overflow-hidden flex flex-col w-full h-full",
+            "overflow-hidden flex flex-col w-full",
             "bg-transparent",
             "border-0", 
             "rounded-2xl relative transition-all duration-300 active:scale-[0.99]",
@@ -186,7 +186,9 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 ? 'rgba(248, 245, 255, 0.9)' // Slightly more opaque when selected
                 : 'rgba(248, 245, 255, 0.75)', // Light lavender with transparency
               borderRadius: '16px', // Consistent corner radius
-              overflow: 'hidden' // Ensure content respects border-radius
+              overflow: 'hidden', // Ensure content respects border-radius
+              maxHeight: '85vh', // Limit maximum height on mobile
+              height: 'auto' // Allow content to determine height within max limit
             }}>
             
             {/* Enhanced border with dynamic highlighting and refined corners */}
@@ -323,15 +325,15 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               </div>
             </div>
 
-            {/* Content sections with optimized spacing for mobile */}
-            <div className="w-full px-4 pt-3 pb-5 flex flex-col relative z-10 flex-grow flex-1 h-full" style={{ display: 'flex', flexDirection: 'column' }}>
-              {/* Creator info section - with optimized spacing */}
-              <div className="pb-2 mb-3">
-                {/* Subtle divider instead of full border */}
-                <div className="w-16 h-0.5 mx-auto mb-3 bg-gradient-to-r from-transparent via-purple-200/50 to-transparent"></div>
-                {/* Creator name and location with proper styling */}
+            {/* Content sections with more compact spacing for mobile */}
+            <div className="w-full px-3 pt-2 pb-3 flex flex-col relative z-10 flex-grow flex-1" style={{ display: 'flex', flexDirection: 'column' }}>
+              {/* Creator info section - with tighter spacing */}
+              <div className="pb-1 mb-2">
+                {/* Remove divider to save vertical space */}
+                
+                {/* Creator name and location with more compact styling */}
                 <div 
-                  className="flex justify-between mb-3 py-2 px-1"
+                  className="flex justify-between mb-2 py-1 px-1"
                   style={{
                     transform: 'translateZ(0)', // Hardware acceleration
                     display: 'flex', 
@@ -352,8 +354,8 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   </p>
                 </div>
                 
-                {/* Services tags without container border - MOVED BEFORE RATINGS */}
-                <div className="flex flex-wrap items-center gap-x-2 gap-y-2 mt-2 px-1 py-2 mb-4 max-w-full"
+                {/* Services tags with tighter spacing */}
+                <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1.5 mt-1 px-1 py-1 mb-2 max-w-full"
                   style={{
                     position: 'relative',
                     transform: 'translateZ(0)', // Hardware acceleration
@@ -383,15 +385,15 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                       return (
                         <span 
                           key={index} 
-                          className={`inline-flex items-center px-3 py-1 rounded-full text-sm border whitespace-nowrap touch-manipulation shadow-sm max-w-[120px] font-medium ${bgColor} ${forceWrap ? 'w-auto flex-shrink-0' : ''}`}
+                          className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs border whitespace-nowrap touch-manipulation shadow-sm max-w-[120px] font-medium ${bgColor} ${forceWrap ? 'w-auto flex-shrink-0' : ''}`}
                           style={{
                             backdropFilter: 'blur(4px)',
                             WebkitBackdropFilter: 'blur(4px)',
-                            borderTop: '1.5px solid rgba(255,255,255,0.9)',
-                            borderLeft: '1.5px solid rgba(255,255,255,0.7)',
+                            borderTop: '1px solid rgba(255,255,255,0.9)',
+                            borderLeft: '1px solid rgba(255,255,255,0.7)',
                             boxShadow: 'inset 1px 1px 1px rgba(255,255,255,0.8), 0 1px 2px rgba(118,51,220,0.08)',
-                            minHeight: '28px',
-                            minWidth: '44px'
+                            minHeight: '24px',
+                            minWidth: '40px'
                           }}
                         >
                           <span className="truncate flex items-center">{service}</span>
@@ -401,15 +403,15 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                       return (
                         <span 
                           key={index} 
-                          className="inline-flex items-center px-3 py-1 rounded-full text-sm text-gray-600 border border-gray-200 font-medium"
+                          className="inline-flex items-center px-2 py-0.5 rounded-full text-xs text-gray-600 border border-gray-200 font-medium"
                           style={{
                             backdropFilter: 'blur(4px)',
                             WebkitBackdropFilter: 'blur(4px)',
-                            borderTop: '1.5px solid rgba(255,255,255,0.9)',
-                            borderLeft: '1.5px solid rgba(255,255,255,0.7)',
+                            borderTop: '1px solid rgba(255,255,255,0.9)',
+                            borderLeft: '1px solid rgba(255,255,255,0.7)',
                             boxShadow: 'inset 1px 1px 1px rgba(255,255,255,0.8), 0 1px 2px rgba(118,51,220,0.08)',
-                            minHeight: '28px',
-                            minWidth: '44px'
+                            minHeight: '24px',
+                            minWidth: '40px'
                           }}
                         >
                           <span className="flex items-center">+{creator.services.length - 3} more</span>
@@ -469,22 +471,22 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 </div>
               </div>
               
-              {/* Recent Work section with optimized spacing */}
+              {/* Recent Work section with compact spacing */}
               <div className="mb-0 w-full mt-1">
-                {/* Light divider instead of border */}
-                <div className="w-full h-px bg-gradient-to-r from-transparent via-purple-200/50 to-transparent mb-2"></div>
-                {/* Section header with enhanced styling and visibility */}
-                <div className="mb-2 flex items-center py-1 px-1"
+                {/* Thin divider line */}
+                <div className="w-full h-px bg-gradient-to-r from-transparent via-purple-200/30 to-transparent mb-1"></div>
+                {/* More compact section header */}
+                <div className="mb-1 flex items-center py-0.5 px-1"
                   style={{
-                    minHeight: '26px',
+                    minHeight: '22px',
                     borderBottom: '1px solid rgba(220, 215, 240, 0.2)'
                 }}>
-                  <div className="w-1 h-4 bg-gradient-to-b from-indigo-500 to-purple-500 rounded-full mr-2 shadow-sm"></div>
+                  <div className="w-1 h-3 bg-gradient-to-b from-indigo-500 to-purple-500 rounded-full mr-1.5 shadow-sm"></div>
                   <div className="text-xs text-gray-800 font-semibold font-space uppercase tracking-wide">Recent Work</div>
                 </div>
                 
-                {/* Portfolio thumbnails with optimized spacing */}
-                <div className="grid grid-cols-3 gap-1.5 w-full px-0.5 pb-0.5">
+                {/* Portfolio thumbnails with tighter spacing */}
+                <div className="grid grid-cols-3 gap-1 w-full px-0.5 pb-0">
                   {creator.workExamples.slice(0, 3).map((example, index) => (
                     <div 
                       key={index}
