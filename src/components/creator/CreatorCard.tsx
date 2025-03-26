@@ -170,127 +170,104 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
     <>
       {isMobile ? (
         <div className="relative w-full h-full flex">
-          {/* Main container with flex layout to distribute space properly */}
+          {/* Main container with standardized border radius */}
           <Card className={cn(
             "overflow-hidden flex flex-col w-full",
             "bg-transparent",
             "border-0", 
-            "rounded-2xl relative transition-all duration-300 active:scale-[0.99]",
-            isSelected && "ring-2 ring-purple-300 ring-opacity-50"
+            "relative transition-all duration-300 active:scale-[0.99]",
+            isSelected && "ring-2 ring-[#EFEFEC] ring-opacity-70"
           )}
             style={{
               transform: 'translateZ(0)', // Hardware acceleration
-              willChange: 'transform, box-shadow', // Optimization hint for transitions
+              willChange: 'transform', // Optimization hint for transitions
               transition: 'all 0.3s ease',
               backgroundColor: isSelected 
-                ? 'rgba(248, 245, 255, 0.9)' // Slightly more opaque when selected
-                : 'rgba(248, 245, 255, 0.75)', // Light lavender with transparency
-              borderRadius: '16px', // Consistent corner radius
+                ? 'rgba(239, 240, 236, 0.85)' // Enhanced translucency when selected
+                : 'rgba(239, 240, 236, 0.82)', // Enhanced translucency for normal state
+              backdropFilter: 'blur(10px)', // True glass effect 
+              WebkitBackdropFilter: 'blur(10px)', // Safari support
+              borderRadius: '16px', // THE STANDARD border radius
               overflow: 'hidden', // Ensure content respects border-radius
               maxHeight: '85vh', // Limit maximum height on mobile
-              height: 'auto' // Allow content to determine height within max limit
+              height: 'auto', // Allow content to determine height within max limit
+              // Enhanced 3D border effect
+              boxShadow: `inset 0 1px 0 rgba(255, 255, 255, 0.9), 
+                          inset 1px 0 0 rgba(255, 255, 255, 0.8),
+                          ${isSelected ? '0 8px 24px rgba(0, 0, 0, 0.04)' : '0 4px 16px rgba(0, 0, 0, 0.03)'}`,
+              // Subtle border style for added dimension
+              border: `1px solid rgba(200, 200, 200, 0.25)`,
+              // Prevent content from overflowing
+              contain: 'paint'
             }}>
             
-            {/* Enhanced border with dynamic highlighting and refined corners */}
-            <div className="absolute inset-0 rounded-[16px] pointer-events-none" 
+            {/* Enhanced glass morphism layer with improved light reflections */}
+            <div className="absolute inset-0 pointer-events-none" 
                  style={{
-                   // Single refined border with premium styling
-                   boxShadow: isSelected 
-                     ? /* Enhanced shadow for selected state */
-                       'inset 0 0 0 1.5px rgba(118, 51, 220, 0.25),' +
-                       
-                       /* Intensified directional lighting effect */
-                       'inset 0 1px 0 rgba(255, 255, 255, 0.95),' +
-                       'inset 1px 0 0 rgba(255, 255, 255, 0.9),' +
-                       
-                       /* Enhanced layered shadow system for selected card */
-                       '0 4px 8px rgba(118, 51, 220, 0.08),' +
-                       '0 8px 16px rgba(0, 0, 0, 0.06),' +
-                       '0 12px 24px rgba(118, 51, 220, 0.04)'
-                     : /* Standard shadow for non-selected state */
-                       'inset 0 0 0 1.5px rgba(118, 51, 220, 0.12),' +
-                       
-                       /* Unified directional lighting effect */
-                       'inset 0 1px 0 rgba(255, 255, 255, 0.95),' +
-                       'inset 1px 0 0 rgba(255, 255, 255, 0.8),' +
-                       
-                       /* Optimized layered shadow system */
-                       '0 2px 4px rgba(118, 51, 220, 0.04),' +
-                       '0 6px 12px rgba(0, 0, 0, 0.05),' +
-                       '0 8px 16px rgba(118, 51, 220, 0.02)',
-                   zIndex: 10,
-                   transition: 'all 0.25s ease',
-                   borderRadius: '16px', // Match card radius
-                   // Add subtle blur at corners for glass effect
-                   backdropFilter: 'blur(2px)',
-                   WebkitBackdropFilter: 'blur(2px)'
-                 }}
-            ></div>
+                   borderRadius: '16px', // Consistent radius
+                   overflow: 'hidden',
+                   transform: 'translateZ(0)',
+                   zIndex: 2
+                 }}>
+              {/* Primary highlight gradient - top-left to bottom-right flow */}
+              <div className="absolute inset-0"
+                   style={{
+                     background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.15) 35%, rgba(255, 255, 255, 0.05) 65%, rgba(255, 255, 255, 0) 100%)',
+                     opacity: 0.8,
+                     transform: 'translateZ(0)',
+                     borderRadius: '16px'
+                   }}>
+              </div>
+              
+              {/* Secondary environmental reflection */}
+              <div className="absolute inset-0"
+                   style={{
+                     background: 'linear-gradient(to bottom, rgba(255, 255, 255, 0) 40%, rgba(255, 255, 255, 0.08) 70%, rgba(255, 255, 255, 0.12) 100%)',
+                     opacity: 0.6,
+                     borderRadius: '16px'
+                   }}>
+              </div>
+              
+              {/* Enhanced top and left border highlights to simulate light refraction */}
+              <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-white/90 via-white/70 to-white/40"></div>
+              <div className="absolute left-0 inset-y-0 w-[1px] bg-gradient-to-b from-white/90 via-white/70 to-white/40"></div>
+              
+              {/* Corner light reflection */}
+              <div className="absolute top-0 left-0 w-24 h-24"
+                   style={{
+                     background: 'radial-gradient(circle at 6% 6%, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.1) 40%, transparent 70%)',
+                     borderTopLeftRadius: '16px'
+                   }}>
+              </div>
+            </div>
             
-            {/* Subtle pulsing highlight effect when selected */}
+            {/* Subtle pulsing highlight effect when selected - simplified */}
             {isSelected && (
               <div 
-                className="absolute inset-0 rounded-[16px] pointer-events-none z-5 animate-pulse"
+                className="absolute inset-0 pointer-events-none z-[5]"
                 style={{
-                  boxShadow: '0 0 0 3px rgba(124, 58, 237, 0.15)',
+                  boxShadow: '0 0 0 2px rgba(124, 58, 237, 0.2)',
+                  borderRadius: '16px',
                   animation: 'pulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                  borderRadius: '16px' // Match card radius
+                  transform: 'translateZ(0)'
                 }}
               ></div>
             )}
             
-            {/* Enhanced corner treatment with refined lighting effects */}
-            <div className="absolute inset-0 pointer-events-none rounded-2xl z-[2]" 
-                 style={{
-                   background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.1) 50%, rgba(0, 0, 0, 0.02) 100%)',
-                   opacity: 0.6,
-                   borderRadius: '16px' // Match card radius
-                 }}>
-                 {/* Top-left corner highlight with enhanced lighting */}
-                 <div className="absolute top-0 left-0 w-20 h-20 rounded-tl-[16px]" 
-                     style={{
-                       background: 'radial-gradient(circle at top left, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.6) 35%, transparent 70%)',
-                       filter: 'blur(1px)'
-                     }}>
-                 </div>
-                 
-                 {/* Top-right corner subtle highlight */}
-                 <div className="absolute top-0 right-0 w-16 h-16 rounded-tr-[16px]" 
-                     style={{
-                       background: 'radial-gradient(circle at top right, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.3) 40%, transparent 70%)',
-                       filter: 'blur(2px)'
-                     }}>
-                 </div>
-                 
-                 {/* Bottom-left corner subtle shadow */}
-                 <div className="absolute bottom-0 left-0 w-12 h-12 rounded-bl-[16px]" 
-                     style={{
-                       background: 'radial-gradient(circle at bottom left, rgba(118, 51, 220, 0.05) 0%, transparent 70%)',
-                       filter: 'blur(2px)'
-                     }}>
-                 </div>
-                 
-                 {/* Bottom-right corner subtle shadow */}
-                 <div className="absolute bottom-0 right-0 w-12 h-12 rounded-br-[16px]" 
-                     style={{
-                       background: 'radial-gradient(circle at bottom right, rgba(118, 51, 220, 0.08) 0%, transparent 70%)',
-                       filter: 'blur(2px)'
-                     }}>
-                 </div>
-            </div>
-            
-            {/* Media section with properly positioned price tag */}
+            {/* Media section with consistent border radius */}
             <div className="relative">
-              {/* Fixed aspect ratio with consistent corner radius */}
-              <div className="aspect-[4/3] relative w-full overflow-hidden flex-shrink-0 rounded-t-[16px] transition-transform duration-300">
-                {/* Improved image container with refined border treatment */}
-                <div className="absolute inset-0 w-full h-full z-10 overflow-hidden rounded-t-[16px]"
+              {/* Fixed aspect ratio with standard corner radius */}
+              <div className="aspect-[4/3] relative w-full overflow-hidden flex-shrink-0 transition-transform duration-300"
+                   style={{
+                     borderTopLeftRadius: '16px',
+                     borderTopRightRadius: '16px'
+                   }}>
+                {/* Simplified overlay with consistent corner radius */}
+                <div className="absolute inset-0 w-full h-full z-10 overflow-hidden"
                   style={{
-                    boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.8)',
-                    transition: 'all 0.3s ease',
-                    // Add subtle corner softening
                     borderTopLeftRadius: '16px',
-                    borderTopRightRadius: '16px'
+                    borderTopRightRadius: '16px',
+                    transform: 'translateZ(0)'
                   }}>
                 </div>
                 
@@ -301,23 +278,19 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 />
               </div>
               
-              {/* Price tag - enhanced with glass effect and directional lighting */}
+              {/* Price tag with simplified glass effect */}
               <div className="absolute top-3 right-3 z-20">
                 <span 
-                  className="px-2.5 py-1 text-xs font-semibold text-purple-800 rounded-full transition-all duration-200"
+                  className="px-3 py-1 text-xs font-semibold text-purple-800 rounded-full transition-all duration-200"
                   style={{
-                    background: 'rgba(255,255,255,0.85)',
+                    background: 'rgba(255,255,255,0.9)',
                     backdropFilter: 'blur(4px)',
                     WebkitBackdropFilter: 'blur(4px)',
-                    boxShadow: 
-                      'inset 0 0 0 1px rgba(255,255,255,0.4), ' +
-                      'inset 1px 1px 1px rgba(255,255,255,0.8), ' +
-                      '0 1px 2px rgba(0,0,0,0.05), ' +
-                      '1px 1px 1px rgba(118,51,220,0.05)',
-                    borderTop: '1px solid rgba(255,255,255,0.9)',
-                    borderLeft: '1px solid rgba(255,255,255,0.7)',
-                    borderRight: '1px solid rgba(124,58,237,0.1)',
-                    borderBottom: '1px solid rgba(124,58,237,0.15)'
+                    // Simplified shadow and border style for cleaner rendering
+                    boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
+                    border: '1px solid rgba(124,58,237,0.12)',
+                    // Hardware acceleration
+                    transform: 'translateZ(0)'
                   }}
                 >
                   ${creator.price}/session
@@ -345,8 +318,8 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     {creator.name}
                     <span className="absolute -top-0.5 -right-0.5 w-12 h-6 bg-gradient-to-br from-purple-100/40 to-transparent blur-sm rounded-full"></span>
                   </h3>
-                  <p className="text-gray-600 text-sm flex items-center max-w-[120px]">
-                    <svg className="w-4 h-4 mr-1.5 flex-shrink-0 text-purple-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <p className="text-gray-600 text-xs flex items-center max-w-[120px]">
+                    <svg className="w-3 h-3 mr-1 flex-shrink-0 text-purple-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                       <circle cx="12" cy="10" r="3"></circle>
                     </svg>
@@ -374,26 +347,36 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     const isVisualStyle = service.includes('Tour') || service.includes('POV') || service.includes('Photo') || service.includes('Video');
                     const isSpecialty = service.includes('Staging') || service.includes('Design') || service.includes('Plan');
                     
-                    let bgColor = "bg-purple-100/80 border-purple-200/70 text-purple-800";
-                    if (isPlatform) bgColor = "bg-purple-100/80 border-purple-200/70 text-purple-700"; // Changed from blue to purple
-                    if (isHashtag) bgColor = "bg-indigo-100/80 border-indigo-200/70 text-indigo-700";
-                    if (isVisualStyle) bgColor = "bg-violet-100/80 border-violet-200/70 text-violet-700";
-                    if (isSpecialty) bgColor = "bg-teal-100/80 border-teal-200/70 text-teal-700";
+                    let bgColor = "bg-[rgba(239,240,236,0.8)] border-[rgba(239,240,236,0.9)] text-gray-700";
+                    if (isPlatform) bgColor = "bg-[rgba(239,240,236,0.8)] border-[rgba(239,240,236,0.9)] text-gray-700"; // Changed from purple
+                    if (isHashtag) bgColor = "bg-[rgba(239,240,236,0.8)] border-[rgba(239,240,236,0.9)] text-gray-700"; // Changed from indigo
+                    if (isVisualStyle) bgColor = "bg-[rgba(239,240,236,0.8)] border-[rgba(239,240,236,0.9)] text-gray-700"; // Changed from violet
+                    if (isSpecialty) bgColor = "bg-[rgba(239,240,236,0.8)] border-[rgba(239,240,236,0.9)] text-gray-700"; // Changed from teal
                     
                     // Only show the first 3 services to save more space on mobile
                     if (index < 3) {
                       return (
                         <span 
                           key={index} 
-                          className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs border whitespace-nowrap touch-manipulation shadow-sm max-w-[120px] font-medium ${bgColor} ${forceWrap ? 'w-auto flex-shrink-0' : ''}`}
+                          className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs whitespace-nowrap touch-manipulation max-w-[120px] font-medium ${bgColor} ${forceWrap ? 'w-auto flex-shrink-0' : ''}`}
                           style={{
-                            backdropFilter: 'blur(4px)',
-                            WebkitBackdropFilter: 'blur(4px)',
+                            // Enhanced glass effect
+                            background: 'rgba(239, 240, 236, 0.85)',
+                            backdropFilter: 'blur(8px)',
+                            WebkitBackdropFilter: 'blur(8px)',
+                            // Improved 3D border effect
+                            border: '1px solid rgba(200, 200, 200, 0.25)',
                             borderTop: '1px solid rgba(255,255,255,0.9)',
                             borderLeft: '1px solid rgba(255,255,255,0.7)',
-                            boxShadow: 'inset 1px 1px 1px rgba(255,255,255,0.8), 0 1px 2px rgba(118,51,220,0.08)',
+                            // Enhanced shadow for better depth
+                            boxShadow: 'inset 1px 1px 1px rgba(255,255,255,0.9), 0 1px 3px rgba(0,0,0,0.05)',
+                            // Better sizing
                             minHeight: '24px',
-                            minWidth: '40px'
+                            minWidth: '40px',
+                            // Hardware acceleration
+                            transform: 'translateZ(0)',
+                            // Improved spacing
+                            margin: '1px'
                           }}
                         >
                           <span className="truncate flex items-center">{service}</span>
@@ -403,15 +386,25 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                       return (
                         <span 
                           key={index} 
-                          className="inline-flex items-center px-2 py-0.5 rounded-full text-xs text-gray-600 border border-gray-200 font-medium"
+                          className="inline-flex items-center px-2.5 py-1 rounded-full text-xs text-gray-600 font-medium"
                           style={{
-                            backdropFilter: 'blur(4px)',
-                            WebkitBackdropFilter: 'blur(4px)',
+                            // Enhanced glass effect to match service tags
+                            background: 'rgba(239, 240, 236, 0.85)',
+                            backdropFilter: 'blur(8px)',
+                            WebkitBackdropFilter: 'blur(8px)',
+                            // Improved 3D border effect
+                            border: '1px solid rgba(200, 200, 200, 0.25)',
                             borderTop: '1px solid rgba(255,255,255,0.9)',
                             borderLeft: '1px solid rgba(255,255,255,0.7)',
-                            boxShadow: 'inset 1px 1px 1px rgba(255,255,255,0.8), 0 1px 2px rgba(118,51,220,0.08)',
+                            // Enhanced shadow for better depth
+                            boxShadow: 'inset 1px 1px 1px rgba(255,255,255,0.9), 0 1px 3px rgba(0,0,0,0.05)',
+                            // Better sizing
                             minHeight: '24px',
-                            minWidth: '40px'
+                            minWidth: '40px',
+                            // Hardware acceleration
+                            transform: 'translateZ(0)',
+                            // Improved spacing
+                            margin: '1px'
                           }}
                         >
                           <span className="flex items-center">+{creator.services.length - 3} more</span>
@@ -422,47 +415,112 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   })}
                 </div>
                 
-                {/* Ratings and availability grouped together in a content section - MOVED AFTER TAGS */}
-                <div className="flex justify-between mb-2 py-2 px-3 bg-purple-50/50 rounded-lg"
+                {/* Ratings and availability without the shared container */}
+                <div className="flex justify-between items-center mb-2.5 px-1 py-1" 
                   style={{
                     transform: 'translateZ(0)', // Hardware acceleration
                     position: 'relative', // For pseudo-elements
-                    display: 'flex',
-                    alignItems: 'center',
-                    boxShadow: 'inset 0 1px 2px rgba(255,255,255,0.8), 0 1px 2px rgba(118,51,220,0.04)'
+                    zIndex: 5, // Ensure components appear above other elements
+                    willChange: 'transform', // Optimization hint
+                    gap: '6px' // Add slight gap between components
                   }}>
-                  <div className="flex items-center">
-                    <div className="flex items-center" style={{ alignItems: 'center' }}>
-                      <Star className="w-5 h-5 text-yellow-500 fill-yellow-500 mr-1" />
-                      <span className="text-base font-bold font-space text-gray-800">{creator.rating.toFixed(1)}</span>
+                  {/* Star rating with review count, enhanced glass effect */}
+                  <div 
+                    className="flex items-center py-1 px-3 rounded-full"
+                    style={{
+                      // Enhanced glass effect
+                      background: 'rgba(239, 240, 236, 0.85)',
+                      backdropFilter: 'blur(8px)',
+                      WebkitBackdropFilter: 'blur(8px)',
+                      // Improved 3D border effect
+                      border: '1px solid rgba(200, 200, 200, 0.25)',
+                      borderTop: '1px solid rgba(255,255,255,0.9)',
+                      borderLeft: '1px solid rgba(255,255,255,0.7)',
+                      // Enhanced shadow for better depth perception
+                      boxShadow: 
+                        /* Inner highlight */
+                        'inset 1px 1px 2px rgba(255,255,255,0.9),' +
+                        
+                        /* Improved outer shadow */
+                        '0 2px 4px rgba(0,0,0,0.06)',
+                      
+                      // Hardware acceleration and interaction improvements
+                      transform: 'translateZ(0)', 
+                      transition: 'all 0.2s ease',
+                      minHeight: '28px',
+                      touchAction: 'manipulation',
+                      WebkitTapHighlightColor: 'transparent',
+                      display: 'flex',
+                      alignItems: 'center'
+                    }}
+                  >
+                    {/* Add subtle inner glow to star icon */}
+                    <div className="relative">
+                      <Star className="w-4 h-4 text-yellow-500 fill-yellow-500 mr-1 relative z-10" 
+                        style={{
+                          filter: 'drop-shadow(0 0 1px rgba(252, 211, 77, 0.4))',
+                          transform: 'translateZ(1px)' // Subtle 3D lift
+                        }} 
+                      />
+                      {/* Subtle glow behind star */}
+                      <div className="absolute -inset-1 bg-yellow-100/30 rounded-full blur-sm -z-0"></div>
                     </div>
-                    {/* Number of reviews removed from mobile view */}
+                    <span className="text-xs font-medium text-gray-800 whitespace-nowrap"
+                      style={{
+                        letterSpacing: '0.01em' // Slightly improved letter spacing
+                      }}
+                    >
+                      {creator.rating.toFixed(1)} <span className="text-gray-600">({creator.reviews})</span>
+                    </span>
                   </div>
                   
-                  {/* Availability indicator with optimized size and alignment */}
+                  {/* Availability indicator with enhanced glass effect */}
                   {creator.availabilityStatus && (
-                    <div className="flex items-center py-1 px-3 rounded-full text-sm font-medium"
+                    <div 
+                      className="flex items-center py-1 px-3 rounded-full"
                       style={{
+                        // Enhanced glass effect matching star rating
+                        background: 'rgba(239, 240, 236, 0.85)',
+                        backdropFilter: 'blur(8px)',
+                        WebkitBackdropFilter: 'blur(8px)',
+                        // Improved 3D border effect
+                        border: '1px solid rgba(200, 200, 200, 0.25)',
+                        borderTop: '1px solid rgba(255,255,255,0.9)',
+                        borderLeft: '1px solid rgba(255,255,255,0.7)',
+                        // Enhanced shadow for better depth perception
+                        boxShadow: 
+                          /* Inner highlight */
+                          'inset 1px 1px 2px rgba(255,255,255,0.9),' +
+                          
+                          /* Improved outer shadow */
+                          '0 2px 4px rgba(0,0,0,0.06)',
+                        
+                        // Hardware acceleration and interaction improvements  
+                        transform: 'translateZ(0)',
+                        transition: 'all 0.2s ease',
+                        minHeight: '28px',
+                        touchAction: 'manipulation',
+                        WebkitTapHighlightColor: 'transparent',
                         display: 'flex',
                         alignItems: 'center',
-                        justifyContent: 'center',
-                        boxShadow: '0 1px 2px rgba(0,0,0,0.05), inset 0 1px 1px rgba(255,255,255,0.7)'
-                      }}>
+                        justifyContent: 'center'
+                      }}
+                    >
                       {creator.availabilityStatus === 'available-now' && (
-                        <span className="flex items-center text-emerald-700 whitespace-nowrap">
+                        <span className="flex items-center text-emerald-700 whitespace-nowrap text-xs font-medium">
                           <div className="w-2 h-2 rounded-full bg-emerald-500 mr-1.5 animate-pulse shadow-[0_0_4px_rgba(16,185,129,0.6)]"></div>
                           <span className="flex items-center">Available Now</span>
                         </span>
                       )}
                       {creator.availabilityStatus === 'available-tomorrow' && (
-                        <span className="flex items-center text-amber-700 whitespace-nowrap">
+                        <span className="flex items-center text-amber-700 whitespace-nowrap text-xs font-medium">
                           <Clock className="w-4 h-4 mr-1.5 text-amber-500" />
                           <span className="flex items-center">Available Soon</span>
                         </span>
                       )}
                       {creator.availabilityStatus === 'premium-only' && (
-                        <span className="flex items-center text-purple-700 whitespace-nowrap">
-                          <Crown className="w-4 h-4 mr-1.5 text-purple-500" />
+                        <span className="flex items-center text-gray-700 whitespace-nowrap text-xs font-medium">
+                          <Crown className="w-4 h-4 mr-1.5 text-gray-500" />
                           <span className="flex items-center">Premium Only</span>
                         </span>
                       )}
@@ -482,11 +540,11 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     borderBottom: '1px solid rgba(220, 215, 240, 0.3)'
                 }}>
                   <div className="flex items-center">
-                    <div className="w-1.5 h-4 bg-gradient-to-b from-indigo-500 to-purple-500 rounded-full mr-2 shadow-sm"></div>
+                    <div className="w-1.5 h-4 bg-gradient-to-b from-[#EFEFEC] to-[rgba(239,240,236,0.7)] rounded-full mr-2 shadow-sm"></div>
                     <div className="text-xs text-gray-800 font-bold font-space uppercase tracking-wide">Recent Work</div>
                   </div>
                   <div 
-                    className="text-[10px] text-purple-600 font-medium flex items-center cursor-pointer"
+                    className="text-[10px] text-gray-600 font-medium flex items-center cursor-pointer"
                     onClick={() => onPreviewClick && onPreviewClick(creator.workExamples[0])}
                   >
                     View All
@@ -496,52 +554,49 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   </div>
                 </div>
                 
-                {/* Refined thumbnails with 3-column layout */}
-                <div className="grid grid-cols-3 gap-1.5 w-full px-0.5 pb-1 pt-1">
+                {/* Simplified thumbnails with 3-column layout */}
+                <div className="grid grid-cols-3 gap-2 w-full px-0.5 pb-1 pt-1">
                   {creator.workExamples.slice(0, 3).map((example, index) => (
                     <div 
                       key={index}
                       onClick={() => onPreviewClick && onPreviewClick(example)}
-                      className="relative touch-manipulation rounded-[10px] overflow-hidden transition-all duration-150 focus:outline-none flex-grow"
+                      className="relative touch-manipulation overflow-hidden transition-all duration-150 focus:outline-none flex-grow"
                       style={{
-                        width: 'calc(33.33% - 4px)', // Ensure even division of space in 3-column layout
-                        minWidth: '70px', // Optimized minimum width for 3 columns
-                        minHeight: '70px', // Appropriate height for mobile viewing
+                        borderRadius: '10px', // Standard corner radius for thumbnails
                         aspectRatio: '1/1', // Square aspect ratio for consistent layout
-                        background: 'rgba(255,255,255,0.9)',
-                        backdropFilter: 'blur(4px)',
-                        WebkitBackdropFilter: 'blur(4px)',
-                        border: '1px solid rgba(118, 51, 220, 0.12)',
-                        borderTop: '1.5px solid rgba(255,255,255,0.95)',
-                        borderLeft: '1.5px solid rgba(255,255,255,0.85)',
-                        borderRight: '1px solid rgba(118,51,220,0.08)',
-                        borderBottom: '1px solid rgba(118,51,220,0.15)',
-                        boxShadow: 
-                          'inset 1px 1px 1px rgba(255,255,255,0.9),' +
-                          'inset -1px -1px 1px rgba(0,0,0,0.02),' +
-                          '0 1px 3px rgba(118,51,220,0.08)',
-                        transform: 'translateZ(0)', // Hardware acceleration
-                        willChange: 'transform, box-shadow', // Optimization hint
-                        position: 'relative',
-                        transformStyle: 'preserve-3d', // Enhance 3D appearance
+                        // Enhanced glass effect
+                        background: 'rgba(239, 240, 236, 0.85)',
+                        backdropFilter: 'blur(8px)',
+                        WebkitBackdropFilter: 'blur(8px)',
+                        // Improved 3D border effect
+                        border: '1px solid rgba(200, 200, 200, 0.25)',
+                        borderTop: '1px solid rgba(255,255,255,0.9)',
+                        borderLeft: '1px solid rgba(255,255,255,0.7)',
+                        // Enhanced shadow for better depth
+                        boxShadow: 'inset 1px 1px 1px rgba(255,255,255,0.9), 0 2px 4px rgba(0,0,0,0.06)',
+                        // Hardware acceleration
+                        transform: 'translateZ(0)',
+                        willChange: 'transform',
                         transition: 'all 0.15s ease-out',
                         cursor: 'pointer',
                         WebkitTapHighlightColor: 'transparent', // Remove tap highlight on mobile
+                        // Ensure smooth animation
+                        WebkitTransform: 'translateZ(0)'
                       }}
-                      onTouchStart={() => {
+                      onTouchStart={(e) => {
                         // Add subtle touch highlight effect - simplified for better performance
-                        const el = document.activeElement as HTMLElement;
+                        const el = e.currentTarget as HTMLElement;
                         if (el && el.style) {
                           el.style.transform = 'translateZ(0) scale(0.97)';
-                          el.style.boxShadow = 'inset 1px 1px 1px rgba(255,255,255,0.9), inset -1px -1px 1px rgba(0,0,0,0.02), 0 1px 2px rgba(118,51,220,0.15)';
+                          el.style.boxShadow = '0 1px 3px rgba(118,51,220,0.12)';
                         }
                       }}
-                      onTouchEnd={() => {
+                      onTouchEnd={(e) => {
                         // Reset styles - simplified for better performance
-                        const el = document.activeElement as HTMLElement;
+                        const el = e.currentTarget as HTMLElement;
                         if (el && el.style) {
                           el.style.transform = 'translateZ(0) scale(1)';
-                          el.style.boxShadow = 'inset 1px 1px 1px rgba(255,255,255,0.9), inset -1px -1px 1px rgba(0,0,0,0.02), 0 1px 3px rgba(118,51,220,0.08)';
+                          el.style.boxShadow = '0 1px 2px rgba(0,0,0,0.04)';
                         }
                       }}
                       aria-label={`${index === 0 ? 'Primary' : 'Secondary'} portfolio image`}
@@ -552,47 +607,24 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                         alt={`${creator.name}'s work ${index + 1}`}
                         className="object-cover w-full h-full"
                         style={{
-                          position: 'absolute',
-                          top: 0,
-                          left: 0,
                           width: '100%',
                           height: '100%',
-                          transform: 'translateZ(0)', // Hardware acceleration
-                          imageRendering: 'high-quality', // Improved image rendering
-                          WebkitImageRendering: 'crisp-edges', // Safari support
+                          borderRadius: '9px', // Slightly inset from container
                           objectFit: 'cover',
-                          filter: 'contrast(1.02) saturate(1.02)', // Subtle enhancement
-                          borderRadius: '9px', // Inner radius for images - smaller to match container
-                          transformStyle: 'preserve-3d', // Apply 3D rendering context
-                          backfaceVisibility: 'hidden' // Prevent unwanted artifacts
+                          // Optimize rendering
+                          transform: 'translateZ(0)',
+                          imageRendering: 'auto',
+                          WebkitImageRendering: 'auto'
                         }}
                         loading="eager" // Prioritize loading these images
-                        decoding="async" // Allow browser optimization
                       />
                       
-                      {/* Refined glass effect with appropriate corner treatment */}
-                      <div className="absolute inset-0 pointer-events-none rounded-[10px]"
-                           style={{
-                             boxShadow: 'inset 0 0 0 1px rgba(255,255,255,0.15)',
-                             background: 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%)',
-                             opacity: 0.6,
-                             borderRadius: '10px'
-                           }}>
-                        {/* Top-left corner highlight scaled for smaller size */}
-                        <div className="absolute top-0 left-0 w-4 h-4 rounded-tl-[9px]" 
-                            style={{
-                              background: 'radial-gradient(circle at top left, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.4) 40%, transparent 70%)',
-                              filter: 'blur(0.5px)'
-                            }}>
-                        </div>
-                      </div>
-                      
-                      {/* Subtle touch/hover indicator optimized for smaller size */}
-                      <div className="absolute inset-0 bg-purple-600/15 opacity-0 hover:opacity-100 active:opacity-100 transition-opacity duration-150 flex items-center justify-center">
-                        <div className="w-7 h-7 rounded-full bg-white/90 shadow-sm flex items-center justify-center transform-gpu scale-95 hover:scale-100 transition-transform">
+                      {/* Simplified hover/touch state overlay */}
+                      <div className="absolute inset-0 bg-gray-600/10 opacity-0 hover:opacity-100 active:opacity-100 transition-opacity duration-150 flex items-center justify-center rounded-[9px]">
+                        <div className="w-7 h-7 rounded-full bg-white/90 shadow-sm flex items-center justify-center">
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M15 3H21V9" stroke="#6D28D9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                            <path d="M21 3L9 15" stroke="#6D28D9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M15 3H21V9" stroke="#666666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M21 3L9 15" stroke="#666666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                           </svg>
                         </div>
                       </div>

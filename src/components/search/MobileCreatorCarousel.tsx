@@ -167,14 +167,15 @@ export const MobileCreatorCarousel = ({
       {/* Native scroll-snap container with optimized padding */}
       <div 
         ref={scrollContainerRef}
-        className="w-full overflow-x-auto pb-3 hide-scrollbar"
+        className="w-full overflow-x-auto pb-4 hide-scrollbar"
         style={{
           scrollSnapType: 'x mandatory',
           scrollBehavior: 'smooth',
           WebkitOverflowScrolling: 'touch',
           display: 'flex',
-          paddingLeft: '12px', 
-          paddingRight: '12px',
+          paddingLeft: '14px', 
+          paddingRight: '14px',
+          paddingTop: '4px', // Added slight top padding for better visual balance
           // Hide scrollbar
           msOverflowStyle: 'none',
           scrollbarWidth: 'none',
@@ -188,7 +189,10 @@ export const MobileCreatorCarousel = ({
           WebkitBoxSizing: 'border-box',
           boxSizing: 'border-box',
           width: '100%',
-          maxWidth: '100vw'
+          maxWidth: '100vw',
+          // Additional properties for smoother scrolling
+          overscrollBehavior: 'contain', // Prevent scroll chaining
+          WebkitOverscrollBehavior: 'contain'
         }}
       >
         {creators.map((creator, index) => (
@@ -203,15 +207,20 @@ export const MobileCreatorCarousel = ({
               WebkitTapHighlightColor: 'transparent',
               touchAction: 'pan-x',
               // Smooth transitions when elements change
-              transition: 'transform 150ms ease-out, box-shadow 150ms ease',
-              transform: selectedIndex === index ? 'scale(1)' : 'scale(0.97)',
+              transition: 'transform 180ms ease-out',
+              transform: selectedIndex === index ? 'scale(1)' : 'scale(0.975)',
+              // Removed bottom shadow for cleaner appearance
               boxShadow: selectedIndex === index 
-                ? '0 4px 20px rgba(124, 58, 237, 0.08)' 
-                : '0 2px 10px rgba(0, 0, 0, 0.05)',
+                ? 'none' 
+                : '0 2px 6px rgba(0, 0, 0, 0.03)',
               // Safari fixes
               minWidth: 'calc(85% - 12px)',
               WebkitFlexBasis: '85%',
               flexBasis: '85%',
+              // Additional optimization to ensure proper rendering on all iOS devices
+              WebkitBoxSizing: 'border-box',
+              boxSizing: 'border-box',
+              WebkitTransform: selectedIndex === index ? 'scale(1)' : 'scale(0.975)',
             }}
           >
             <CreatorCard 
@@ -237,6 +246,7 @@ export const MobileCreatorCarousel = ({
           touchAction: 'manipulation',
           WebkitTapHighlightColor: 'transparent',
           transform: 'translateZ(0) translateY(-50%)',
+          backgroundColor: 'rgba(100, 100, 100, 0.9)' // Changed from purple
         }}
       >
         <ChevronLeft className="w-5 h-5" />
@@ -244,7 +254,7 @@ export const MobileCreatorCarousel = ({
       
       <button
         onClick={scrollNext}
-        className={`absolute right-2 top-1/2 -translate-y-1/2 bg-purple-600 rounded-full p-3 text-white z-10 transition-all shadow-md ${
+        className={`absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-3 text-white z-10 transition-all shadow-md ${
           !canScrollNext ? 'opacity-0 pointer-events-none translate-x-[10px]' : 'opacity-100 translate-x-0'
         }`}
         aria-label="Next"
@@ -252,6 +262,7 @@ export const MobileCreatorCarousel = ({
           touchAction: 'manipulation',
           WebkitTapHighlightColor: 'transparent',
           transform: 'translateZ(0) translateY(-50%)',
+          backgroundColor: 'rgba(100, 100, 100, 0.9)' // Changed from purple
         }}
       >
         <ChevronRight className="w-5 h-5" />
@@ -265,8 +276,8 @@ export const MobileCreatorCarousel = ({
             onClick={() => scrollToSlide(idx)}
             className={`transition-all rounded-full ${
               idx === selectedIndex 
-                ? 'w-6 h-2.5 bg-purple-600' 
-                : 'w-2.5 h-2.5 bg-purple-300/70'
+                ? 'w-6 h-2.5 bg-[#EFEFEC]' 
+                : 'w-2.5 h-2.5 bg-[rgba(239,240,236,0.7)]'
             }`}
             style={{
               // Improve touch target without changing visual size
