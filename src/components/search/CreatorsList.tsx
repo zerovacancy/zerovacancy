@@ -23,9 +23,9 @@ export const CreatorsList: React.FC = () => {
       location: "Chicago, IL",
       image: "/emilyprofilephoto.webp",
       workExamples: [
-        "/creatorcontent/emily-johnson/work-1.webp",
-        "/creatorcontent/emily-johnson/work-2.jpg",
-        "/creatorcontent/emily-johnson/work-3.jpg"
+        "/creatorcontent/recent-work/emily-johnson/work-1.webp",
+        "/creatorcontent/recent-work/emily-johnson/work-2.webp",
+        "/creatorcontent/recent-work/emily-johnson/work-3.webp"
       ],
       availabilityStatus: "available-now"
     }, 
@@ -38,9 +38,9 @@ export const CreatorsList: React.FC = () => {
       location: "Los Angeles, CA",
       image: "/janeprofile.png",
       workExamples: [
-        "/creatorcontent/jane-cooper/work-1.jpg",
-        "/creatorcontent/jane-cooper/work-2.jpg",
-        "/creatorcontent/jane-cooper/work-3.jpg"
+        "/creatorcontent/recent-work/jane-cooper/work-1.webp",
+        "/creatorcontent/recent-work/jane-cooper/work-2.webp",
+        "/creatorcontent/recent-work/jane-cooper/work-3.webp"
       ],
       availabilityStatus: "available-tomorrow"
     }, 
@@ -53,9 +53,9 @@ export const CreatorsList: React.FC = () => {
       location: "New York, NY",
       image: "/michaelprofile.mov",
       workExamples: [
-        "/creatorcontent/michael-brown/work-1.jpg",
-        "/creatorcontent/michael-brown/work-2.jpg",
-        "/creatorcontent/michael-brown/work-3.jpg"
+        "/creatorcontent/recent-work/michael-brown/work-1.webp",
+        "/creatorcontent/recent-work/michael-brown/work-2.webp",
+        "/creatorcontent/recent-work/michael-brown/work-3.webp"
       ],
       availabilityStatus: "premium-only"
     }
