@@ -171,13 +171,10 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
           {/* Main container without border - to be replaced with custom border implementation */}
           <Card className={cn(
             "overflow-hidden flex flex-col w-full h-full",
-            "bg-white", // Pure white background for better contrast with border
-            "border-0", // Remove default border - we'll use custom border below
-            "shadow-[0_2px_8px_rgba(0,0,0,0.08),_0_4px_12px_rgba(0,0,0,0.06)]", // Neutral shadow without purple tint
-            "hover:scale-[1.01]", // Subtle scale transform on hover
-            "rounded-xl relative transition-all duration-300",
-            "transform-gpu", // Hardware acceleration for mobile
-            "will-change-transform" // Performance optimization
+            "bg-white",
+            "border-0",
+            "shadow-[0_2px_8px_rgba(0,0,0,0.08),_0_4px_12px_rgba(0,0,0,0.06)]",
+            "rounded-xl relative transition-transform duration-300"
           )}>
             
             {/* Custom border container - wraps the entire card including the button */}
@@ -526,18 +523,24 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     boxShadow: 'inset 0 1px 0 rgba(255,255,255,1), inset 0 -1px 0 rgba(118,51,220,0.05)',
                     transform: 'translateY(-2px)', // Small lift above card but won't cause cutoff
                     height: '52px',
-                    paddingLeft: '52px', // Make room for icon
+                    paddingLeft: '72px', // Make room for icon
+                    paddingRight: '16px', // Balance the padding
                     fontSize: '14px',
                     fontWeight: 600, // Medium weight to match hero
-                    transition: 'all 0.2s ease'
+                    transition: 'all 0.2s ease',
+                    display: 'flex',
+                    alignItems: 'center', // Safari-specific fix for flex alignment
+                    justifyContent: 'center'
                   }}
                 >
-                  {/* Icon container */}
+                  {/* Icon container positioned with fixed left value instead of margin */}
                   <div 
-                    className="absolute left-0 top-1/2 -translate-y-1/2 ml-6 flex items-center justify-center"
+                    className="absolute top-0 bottom-0 flex items-center justify-center"
                     style={{
+                      left: '26px', // Fixed left positioning instead of margin
                       width: '32px',
                       height: '32px',
+                      margin: 'auto 0', // Center vertically using margin auto
                       background: 'rgba(134,65,245,0.02)', // Very light purple tint to match hero
                       border: '1px solid rgba(0,0,0,0.1)', // Match button border
                       borderRadius: '12px',
@@ -570,8 +573,10 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                       </svg>
                     )}
                   </div>
-                  <span className="text-base tracking-wide font-sans">JOIN AS CREATOR</span>
-                  <ArrowRight className="w-4 h-4 ml-2 text-[#7633DC]" />
+                  <span className="text-base tracking-wide font-sans inline-flex items-center -ml-2">
+                    JOIN AS CREATOR
+                    <ArrowRight className="w-4 h-4 ml-2 text-[#7633DC]" />
+                  </span>
                 </button>
               </div>
               

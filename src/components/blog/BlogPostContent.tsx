@@ -174,9 +174,12 @@ const BlogPostContent = ({ post, relatedPosts = [] }: BlogPostContentProps) => {
         }
         
         /* Extra spacing for empty paragraphs (created by double Enter) */
-        .blog-content p:empty {
+        .blog-content p:empty,
+        .blog-content p.paragraph-spacer {
           min-height: 1.5rem;
+          margin-top: 1.5rem;
           margin-bottom: 1.5rem;
+          display: block;
         }
       `}} />
       

@@ -49,6 +49,35 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   const [imageUrl, setImageUrl] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   
+  // Custom function to make double newlines act like paragraph breaks
+  const handleEditorKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey && editor) {
+      const { state } = editor;
+      const { selection } = state;
+      const { $from, empty } = selection;
+      
+      // If the cursor is at the end of a paragraph
+      if (empty && $from.parent.type.name === 'paragraph') {
+        // Check if current paragraph is empty
+        if ($from.parent.textContent === '') {
+          console.log('Creating extra paragraph for spacing');
+          
+          // Prevent default behavior and add a paragraph with spacing
+          e.preventDefault();
+          
+          // Create a double paragraph break by adding a paragraph with non-breaking space
+          editor.chain()
+            .insertContent('<p class="paragraph-spacer">&nbsp;</p>')
+            .focus()
+            .run();
+            
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+  
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -56,10 +85,6 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           HTMLAttributes: {
             class: 'paragraph-spacing',
           },
-        },
-        // Enable hard breaks (multiple newlines)
-        hardBreak: {
-          keepMarks: true,
         },
       }),
       ImageExtension.configure({
@@ -83,31 +108,6 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML());
     },
-    // Add handler for double Enter key press
-    editorProps: {
-      handleKeyDown: (view, event) => {
-        // Check if it's an Enter key
-        if (event.key === 'Enter') {
-          // Get the current position
-          const { $from } = view.state.selection;
-          const node = $from.node();
-          
-          // If we're at the end of a paragraph and it ends with a line break, 
-          // insert a new paragraph
-          if (node.type.name === 'paragraph' && 
-              $from.parentOffset === node.nodeSize - 2 &&
-              node.textContent.endsWith('\n')) {
-            
-            console.log('Detected double Enter, creating new paragraph with spacing');
-            
-            // This will create proper paragraph spacing
-            view.dispatch(view.state.tr.split($from.pos).scrollIntoView());
-            return true;
-          }
-        }
-        return false;
-      }
-    }
   });
   
   // When external value changes, update editor content
@@ -419,6 +419,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
       <EditorContent 
         editor={editor} 
         className="prose prose-lg max-w-none p-4 min-h-[300px] focus:outline-none editor-content"
+        onKeyDown={handleEditorKeyDown}
       />
       
       {/* Add style tag for consistent formatting with published blog post */}
@@ -555,8 +556,11 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
         }
         
         /* Extra spacing for empty paragraphs (created by double Enter) */
-        .editor-content .ProseMirror p:empty {
+        .editor-content .ProseMirror p:empty,
+        .editor-content .ProseMirror p.paragraph-spacer {
           min-height: 1.5rem;
+          margin-top: 1.5rem;
+          margin-bottom: 1.5rem;
         }
         
         /* This makes sure Enter creates proper paragraph spacing */
