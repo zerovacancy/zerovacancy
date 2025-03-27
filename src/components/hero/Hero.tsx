@@ -376,7 +376,7 @@ export const Hero = () => {
     <div 
       ref={sectionRef}
       className={cn(
-        "flex items-center justify-center flex-col w-full", // Center both horizontally and vertically
+        "flex items-center justify-center flex-col w-full bg-[#F9F6EC]", // Center both horizontally and vertically, tan/gold background for all devices
         "px-0", 
         !isMobile && "relative z-10",
         "gap-6", // Balanced spacing between major sections
@@ -394,9 +394,7 @@ export const Hero = () => {
           isolation: 'auto',
           contain: 'none',
           willChange: 'auto',
-          backgroundColor: '#F9F6EC', // Tan/gold background on mobile
           backgroundImage: 'none', // Reset any background image
-          background: '#F9F6EC', // Simple solid background
           borderBottomWidth: '0', // Explicitly remove bottom border
           paddingTop: '80px', // Significantly increased top padding on mobile to separate from header
           paddingBottom: '30px' // Added padding to create space for gradient

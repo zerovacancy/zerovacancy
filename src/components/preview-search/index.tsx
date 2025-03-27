@@ -134,7 +134,7 @@ const PreviewSearch = () => {
         contentVisibility: 'auto', // More efficient than content-visibility CSS class
         position: 'relative',
         transform: 'translateZ(0)', // Hardware acceleration
-        backgroundColor: isMobile ? '#EBE3FF' : undefined, // Changed to lavender background on mobile
+        backgroundColor: '#EBE3FF', // Lavender background for both mobile and desktop
         backgroundImage: 'none', // Prevent any background patterns
         borderWidth: 0, // Ensure no borders
         borderColor: 'transparent', // Transparent border color
