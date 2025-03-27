@@ -953,10 +953,8 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 "will-change-transform transition-all duration-300",
                 "hover:translate-y-[-3px]", // Slightly more lift on hover
                 "hover:scale-[1.01]", // Subtle scale on hover
-                "bg-white", // Pure white background for maximum contrast
+                "bg-transparent", // Transparent background for glass effect
                 "border-0 relative rounded-xl", // Remove default border for custom styling
-                "shadow-[0_4px_12px_rgba(0,0,0,0.06),_0_2px_4px_rgba(118,51,220,0.04)]", // Default shadow
-                "hover:shadow-[0_4px_8px_rgba(118,51,220,0.06),_4px_4px_10px_rgba(0,0,0,0.04),_0_16px_24px_rgba(0,0,0,0.06),_0_24px_48px_rgba(118,51,220,0.04),_0_0_20px_rgba(255,255,255,0.15)]", // Layered shadow system for hover
                 "block", // Force block display
                 "pb-16" // Reduced padding to ensure CTA is not cut off but not take too much space
               )}
@@ -964,110 +962,80 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 display: 'flex',
                 flexDirection: 'column',
                 position: 'relative',
-                borderWidth: '0', // Remove standard border in favor of glass effect
-                borderStyle: 'solid',
-                background: 'rgba(255,255,255,0.6)', // Semi-transparent base for glass effect
-                backdropFilter: 'blur(8px)', // Glass blur effect
-                WebkitBackdropFilter: 'blur(8px)', // For Safari support
-                boxShadow: 
-                  /* Layer 1: Closest shadow - subtle purple tint */
-                  '0 2px 4px rgba(118,51,220,0.04),' +
-                  
-                  /* Layer 2: Mid-distance shadow with directional bias */
-                  '3px 3px 8px rgba(0,0,0,0.04),' +
-                  
-                  /* Layer 3: Distant shadow with more spread */
-                  '0 8px 16px rgba(0,0,0,0.05),' +
-                  
-                  /* Layer 4: Wide ambient shadow with brand color influence */
-                  '0 12px 24px rgba(118,51,220,0.03), 0 16px 32px rgba(0,0,0,0.03),' +
-                  
-                  /* Glass edge highlight - thin bright line along edges */
-                  'inset 0 0 0 1px rgba(255,255,255,0.3),' +
-                  
-                  /* Inner shadow layers - directional from top-left */
-                  'inset -2px -2px 4px rgba(0,0,0,0.02),' + 
-                  'inset 2px 2px 3px rgba(255,255,255,0.9),' +
-                  'inset 4px 4px 8px rgba(255,255,255,0.4),' +
-                  
-                  /* Bottom-right inner shadow - reinforcing lighting direction */
-                  'inset -3px -3px 6px rgba(118,51,220,0.02),' +
-                  
-                  /* Inner border glow - subtle purple tint */
-                  'inset 0 0 0 1px rgba(118,51,220,0.08)'
+                transform: 'translateZ(0)', // Hardware acceleration
+                willChange: 'transform, box-shadow', // Optimization hint for transitions
+                transition: 'all 0.3s ease',
+                // Gradient background matching mobile styling for consistency
+                background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.85) 0%, rgba(245, 245, 250, 0.85) 100%)', // Subtle vertical gradient
+                backdropFilter: 'blur(6px)', // Enhanced glass effect 
+                WebkitBackdropFilter: 'blur(6px)', // Safari support
+                borderRadius: '16px', // THE STANDARD border radius
+                overflow: 'hidden', // Ensure content respects border-radius
+                
+                // Enhanced directional borders to match mobile styling
+                border: '1px solid rgba(220, 220, 230, 0.5)',
+                borderTop: '2px solid rgba(255, 255, 255, 0.95)',
+                borderLeft: '2px solid rgba(255, 255, 255, 0.8)',
+                borderRight: '1px solid rgba(118, 51, 220, 0.08)',
+                borderBottom: '1px solid rgba(118, 51, 220, 0.15)',
+                
+                // Layered shadow system matching mobile styling
+                boxShadow: `
+                  0 2px 8px rgba(118, 51, 220, 0.15),
+                  0 4px 12px rgba(0, 0, 0, 0.05),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.9),
+                  inset 1px 0 0 rgba(255, 255, 255, 0.7),
+                  inset 0 -1px 0 rgba(118, 51, 220, 0.1),
+                  inset -1px 0 0 rgba(118, 51, 220, 0.05)
+                `,
+                
+                // Enhanced 3D effect
+                transformStyle: 'preserve-3d'
               }}>
-                {/* Enhanced glass texture effect */}
-                <div className="absolute inset-0 pointer-events-none z-[1]" style={{
-                  background: 'linear-gradient(135deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.15) 100%)',
-                  opacity: 0.5
-                }}></div>
-                
-                {/* Subtle dot pattern for glass material */}
-                <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.2)_1px,transparent_1px)] bg-[length:16px_16px] opacity-[0.1] z-0 pointer-events-none"></div>
-                
-                {/* Directional lighting model with top-left light source */}
-                {/* Glass effect - Top edge highlight */}
-                <div className="absolute inset-x-0 top-0 h-[1px] z-[3] pointer-events-none rounded-t-xl"
+                {/* Enhanced inner light effect matching mobile styling */}
+                <div className="absolute inset-0 pointer-events-none" 
                      style={{
-                       background: 'linear-gradient(to right, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0.3) 100%)'
-                     }}></div>
-                
-                {/* Glass effect - Left edge highlight */}
-                <div className="absolute inset-y-0 left-0 w-[1px] z-[3] pointer-events-none rounded-l-xl"
-                     style={{
-                       background: 'linear-gradient(to bottom, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0.3) 100%)'
-                     }}></div>
-                
-                {/* Glass effect - Bottom edge subtle glow */}
-                <div className="absolute inset-x-0 bottom-0 h-[1px] z-[3] pointer-events-none rounded-b-xl"
-                     style={{
-                       background: 'linear-gradient(to right, rgba(118,51,220,0.05) 0%, rgba(118,51,220,0.1) 50%, rgba(118,51,220,0.05) 100%)'
-                     }}></div>
-                
-                {/* Glass effect - Right edge subtle line */}
-                <div className="absolute inset-y-0 right-0 w-[1px] z-[3] pointer-events-none rounded-r-xl"
-                     style={{
-                       background: 'linear-gradient(to bottom, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.05) 50%, rgba(0,0,0,0.02) 100%)'
-                     }}></div>
-                
-                {/* Original directional lighting - now underneath the glass effect */}
-                <div className="absolute inset-x-0 top-0 h-[3px] z-[1] pointer-events-none rounded-t-xl"
-                     style={{
-                       background: 'linear-gradient(to bottom, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.3) 60%, transparent 100%)'
-                     }}></div>
-                
-                <div className="absolute inset-y-0 left-0 w-[3px] z-[1] pointer-events-none rounded-l-xl"
-                     style={{
-                       background: 'linear-gradient(to right, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.25) 70%, transparent 100%)'
-                     }}></div>
-                
-                <div className="absolute inset-x-0 bottom-0 h-[3px] z-[1] pointer-events-none rounded-b-xl"
-                     style={{
-                       background: 'linear-gradient(to top, rgba(118,51,220,0.08) 0%, rgba(0,0,0,0.03) 60%, transparent 100%)'
-                     }}></div>
-                
-                <div className="absolute inset-y-0 right-0 w-[3px] z-[1] pointer-events-none rounded-r-xl"
-                     style={{
-                       background: 'linear-gradient(to left, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.02) 70%, transparent 100%)'
-                     }}></div>
-                
-                {/* Top-left corner - enhanced brightest point with glass effect */}
-                <div className="absolute top-0 left-0 w-12 h-12 rounded-tl-xl pointer-events-none z-[2]" 
-                    style={{
-                      background: 'radial-gradient(circle at top left, rgba(255,255,255,0.98) 0%, rgba(255,255,255,0.7) 25%, rgba(255,255,255,0.3) 50%, transparent 85%)'
-                    }}></div>
-                
-                {/* Bottom-right corner - subtle internal light reflection */}
-                <div className="absolute bottom-0 right-0 w-20 h-20 rounded-br-xl pointer-events-none z-[2]" 
-                    style={{
-                      background: 'radial-gradient(circle at bottom right, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 30%, transparent 70%)'
-                    }}></div>
-                
-                {/* Top-right corner - very subtle reflection */}
-                <div className="absolute top-0 right-0 w-16 h-16 rounded-tr-xl pointer-events-none z-[2]" 
-                    style={{
-                      background: 'radial-gradient(circle at top right, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 40%, transparent 70%)'
-                    }}></div>
+                       borderRadius: '16px', // Consistent radius
+                       transform: 'translateZ(0)',
+                       zIndex: 2,
+                       overflow: 'hidden',
+                       // Inner border highlight matching mobile specs
+                       boxShadow: 'inset 0 0 0 1px rgba(255, 255, 255, 0.9)'
+                     }}>
+                     
+                  {/* Top-left corner highlight matching mobile */}
+                  <div className="absolute top-0 left-0 w-[80px] h-[26px] rounded-tl-[16px] pointer-events-none overflow-hidden">
+                    <div 
+                      style={{
+                        position: 'absolute',
+                        top: '-20px',
+                        left: '-20px',
+                        width: '100px',
+                        height: '60px',
+                        background: 'radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.1) 60%, transparent 80%)',
+                        opacity: 0.6,
+                        transform: 'rotate(-5deg)',
+                        pointerEvents: 'none'
+                      }}
+                    ></div>
+                  </div>
+                  
+                  {/* Additional bottom-right corner highlight */}
+                  <div className="absolute bottom-0 right-0 w-[60px] h-[20px] rounded-br-[16px] pointer-events-none overflow-hidden">
+                    <div 
+                      style={{
+                        position: 'absolute',
+                        bottom: '0',
+                        right: '0',
+                        width: '80px',
+                        height: '40px',
+                        background: 'radial-gradient(circle at 70% 80%, rgba(255,255,255,0.4) 0%, transparent 70%)',
+                        opacity: 0.3,
+                        pointerEvents: 'none'
+                      }}
+                    ></div>
+                  </div>
+                </div>
 
                 {/* Optimized price tag - compact and visually distinct */}
                 <div className="absolute top-3.5 right-3.5 z-20">
