@@ -144,7 +144,7 @@ const PreviewSearch = () => {
         contentVisibility: 'auto', // More efficient than content-visibility CSS class
         position: 'relative',
         transform: 'translateZ(0)', // Hardware acceleration
-        backgroundColor: '#EBE3FF', // Lavender background for both mobile and desktop
+        backgroundColor: isMobile ? '#EBE3FF' : '#F5F1FF', // Lighter background for desktop to enhance card visibility
         backgroundImage: 'none', // Prevent any background patterns
         borderWidth: 0, // Ensure no borders
         borderColor: 'transparent', // Transparent border color
@@ -152,7 +152,7 @@ const PreviewSearch = () => {
         outline: 'none', // No outline
         boxShadow: 'none', // No box shadow
         zIndex: 20, // Higher z-index to ensure content appears above gradient
-        paddingTop: isMobile ? '60px' : '40px', // Reduced top padding on desktop for better spacing with the hero section
+        paddingTop: isMobile ? '60px' : '60px', // Consistent top padding for both mobile and desktop
         borderTop: isMobile ? 'none' : '1px solid rgba(138, 66, 245, 0.1)' // Subtle top border on desktop for separation
       }}
     >
@@ -206,10 +206,15 @@ const PreviewSearch = () => {
       {/* Main content wrapper with optimized animations */}
       <div 
         className="mx-auto relative group max-w-7xl transform-gpu"
-        style={{ transform: 'translateZ(0)' }}
+        style={{ 
+          transform: 'translateZ(0)',
+          width: '100%',
+          ...(isMobile ? {} : { 
+            padding: '0 20px', // Add padding on desktop only
+            maxWidth: '1280px' // Wider container on desktop
+          })
+        }}
       >
-        {/* Removed desktop glow effect for a cleaner look */}
-
         {/* Main content card with optimized visibility prop */}
         <PreviewCard isVisible={isVisible || hasBeenSeen.current}>
           <PreviewContent />

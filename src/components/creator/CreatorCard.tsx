@@ -322,7 +322,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
             </div>
 
             {/* Content sections with improved padding for mobile */}
-            <div className="w-full px-5 pt-3 pb-2 flex flex-col relative z-10 flex-grow flex-1" style={{ display: 'flex', flexDirection: 'column' }}>
+            <div className="w-full px-4 pt-3 pb-2 flex flex-col relative z-10 flex-grow flex-1" style={{ display: 'flex', flexDirection: 'column' }}>
               {/* Creator info section with minimized spacing */}
               <div className="pb-0 mb-1">
                 {/* Creator name and location with more compact styling */}
@@ -659,7 +659,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               </div>
               
               {/* CTA section positioned at bottom of card with clean, cohesive design */}
-              <div className="flex items-center justify-center py-3 pb-5" style={{
+              <div className="flex items-center justify-center py-2 pb-2" style={{
                 position: 'relative',
                 marginTop: '0' // No additional margin needed with the spacer above
               }}>
@@ -758,7 +758,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   <button 
                     onClick={handleCTAClick}
                     aria-label={`Join as creator with ${creator.name}`}
-                    className="w-full flex items-center justify-center rounded-[14px] font-semibold h-[52px] transition-all duration-300 relative hover:scale-[1.02] active:scale-[0.97] bg-creator-cta"
+                    className="w-full flex items-center justify-center rounded-[14px] font-semibold h-[46px] transition-all duration-300 relative hover:scale-[1.02] active:scale-[0.97] bg-creator-cta"
                     style={{
                       background: 'rgba(245, 245, 247, 0.92)', // Neutral light gray that matches card design
                       backdropFilter: 'blur(10px)', // Enhanced glass-like blur matching thumbnails
@@ -869,15 +869,15 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
             <div className="relative h-full w-full rounded-xl overflow-hidden">
               {/* Completely removed glass morphism glow effect */}
               
-              {/* Desktop CTA with reduced spacing */}
-              <div className="absolute bottom-3 left-0 right-0 z-50 px-5">
+              {/* Desktop CTA with proper positioning */}
+              <div className="absolute bottom-4 left-0 right-0 z-10 px-6">
                 {/* Subtle visual indicator with reduced spacing */}
                 <div className="mb-2 mt-1 mx-auto w-8 h-0.5 rounded-full bg-gradient-to-r from-purple-200/50 via-purple-300/50 to-purple-200/50"></div>
                 
                 <button 
                   onClick={handleCTAClick}
                   aria-label={`Join as creator with ${creator.name}`}
-                  className="w-full flex items-center justify-center rounded-[14px] font-semibold h-[52px] transition-all duration-300 relative hover:scale-[1.02] active:scale-[0.97]"
+                  className="w-full flex items-center justify-center rounded-[16px] font-semibold h-[60px] transition-all duration-300 relative hover:scale-[1.02] active:scale-[0.97]"
                   style={{
                     background: 'rgba(245, 245, 247, 0.92)', // Neutral light gray that matches card design
                     backdropFilter: 'blur(10px)', // Enhanced glass-like blur matching thumbnails
@@ -974,9 +974,9 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                       </svg>
                     )}
                   </div>
-                  <span className="text-center font-medium text-base text-gray-700 flex items-center">
-                    <span className="leading-none">JOIN AS CREATOR</span>
-                    <ArrowRight className="w-4 h-4 ml-2 text-gray-500" />
+                  <span className="text-center font-semibold text-base text-gray-700 flex items-center">
+                    <span className="leading-none tracking-wide">JOIN AS CREATOR</span>
+                    <ArrowRight className="w-4 h-4 ml-2 text-purple-500" />
                   </span>
                 </button>
               </div>
@@ -989,7 +989,9 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 "bg-transparent", // Transparent background for glass effect
                 "border-0 relative rounded-xl", // Remove default border for custom styling
                 "block", // Force block display
-                "pb-16" // Reduced padding to ensure CTA is not cut off but not take too much space
+                "pb-18", // Increased padding to ensure CTA is not cut off
+                "max-w-[380px]", // Add maximum width constraint
+                "mx-auto" // Center the card in its container
               )}
               style={{
                 display: 'flex',
@@ -998,36 +1000,40 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 transform: 'translateZ(0)', // Hardware acceleration
                 willChange: 'transform, box-shadow', // Optimization hint for transitions
                 transition: 'all 0.3s ease',
-                background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.85) 0%, rgba(245, 245, 250, 0.85) 100%)', // Subtle vertical gradient from mobile
-                backdropFilter: 'blur(6px)', // Enhanced glass effect matching mobile
-                WebkitBackdropFilter: 'blur(6px)', // Safari support
-                borderRadius: '16px', // THE STANDARD border radius from mobile
+                background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(245, 245, 250, 0.9) 100%)', // Slightly higher opacity gradient for desktop
+                backdropFilter: 'blur(8px)', // Enhanced glass effect for desktop
+                WebkitBackdropFilter: 'blur(8px)', // Safari support
+                borderRadius: '20px', // Larger radius for desktop cards
                 overflow: 'hidden',
+                height: '100%', // Ensure full height
+                minHeight: '580px', // Minimum height for desktop cards
+                maxHeight: '620px', // Add maximum height constraint
                 
-                // Enhanced directional borders matching mobile styling
-                border: '1px solid rgba(220, 220, 230, 0.5)',
+                // Enhanced directional borders for desktop styling
+                border: '1px solid rgba(220, 220, 230, 0.6)',
                 borderTop: '2px solid rgba(255, 255, 255, 0.95)',
                 borderLeft: '2px solid rgba(255, 255, 255, 0.8)',
-                borderRight: '1px solid rgba(118, 51, 220, 0.08)',
-                borderBottom: '1px solid rgba(118, 51, 220, 0.15)',
+                borderRight: '1px solid rgba(118, 51, 220, 0.1)',
+                borderBottom: '1px solid rgba(118, 51, 220, 0.2)',
                 
-                // Layered shadow system from mobile cards
+                // Enhanced shadow system for desktop cards
                 boxShadow: `
-                  0 2px 8px rgba(118, 51, 220, 0.15),
-                  0 4px 12px rgba(0, 0, 0, 0.05),
+                  0 4px 16px rgba(118, 51, 220, 0.18),
+                  0 8px 24px rgba(0, 0, 0, 0.08),
+                  0 16px 32px rgba(0, 0, 0, 0.04),
                   inset 0 1px 0 rgba(255, 255, 255, 0.9),
                   inset 1px 0 0 rgba(255, 255, 255, 0.7),
-                  inset 0 -1px 0 rgba(118, 51, 220, 0.1),
-                  inset -1px 0 0 rgba(118, 51, 220, 0.05)
+                  inset 0 -1px 0 rgba(118, 51, 220, 0.12),
+                  inset -1px 0 0 rgba(118, 51, 220, 0.08)
                 `,
                 
-                // Enhanced 3D effect from mobile
+                // Enhanced 3D effect for desktop
                 transformStyle: 'preserve-3d'
               }}>
                 {/* Enhanced inner light effect matching mobile styling */}
                 <div className="absolute inset-0 pointer-events-none" 
                      style={{
-                       borderRadius: '16px', // Consistent radius
+                       borderRadius: '18px', // Match the updated border radius
                        transform: 'translateZ(0)',
                        zIndex: 2,
                        overflow: 'hidden',
@@ -1036,7 +1042,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                      }}>
                      
                   {/* Top-left corner highlight matching mobile */}
-                  <div className="absolute top-0 left-0 w-[80px] h-[26px] rounded-tl-[16px] pointer-events-none overflow-hidden">
+                  <div className="absolute top-0 left-0 w-[80px] h-[26px] rounded-tl-[18px] pointer-events-none overflow-hidden">
                     <div 
                       style={{
                         position: 'absolute',
@@ -1053,7 +1059,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   </div>
                   
                   {/* Additional bottom-right corner highlight */}
-                  <div className="absolute bottom-0 right-0 w-[60px] h-[20px] rounded-br-[16px] pointer-events-none overflow-hidden">
+                  <div className="absolute bottom-0 right-0 w-[60px] h-[20px] rounded-br-[18px] pointer-events-none overflow-hidden">
                     <div 
                       style={{
                         position: 'absolute',
@@ -1088,10 +1094,10 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   </span>
                 </div>
 
-                {/* Media container with 3D styling */}
-                <div className="aspect-[4/3] relative w-full overflow-hidden flex-shrink-0 group-hover:scale-[1.01] transition-transform duration-300">
+                {/* Media container with 3D styling - improved aspect ratio for desktop */}
+                <div className="aspect-[16/10] relative w-full overflow-hidden flex-shrink-0 group-hover:scale-[1.01] transition-transform duration-300">
                   {/* Image container with shadow and subtle border */}
-                  <div className="absolute inset-0 w-full h-full rounded-t-lg overflow-hidden z-10"
+                  <div className="absolute inset-0 w-full h-full rounded-t-[20px] overflow-hidden z-10"
                     style={{
                       boxShadow: 
                         /* Enhanced directional shadows matching updated card lighting model */
@@ -1118,15 +1124,15 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 </div>
 
                 {/* Content section integrated with section background */}
-                <div className="px-5 pt-4 pb-2 flex flex-col relative z-10 flex-grow rounded-b-xl overflow-hidden">
+                <div className="px-4 pt-3 pb-2 flex flex-col relative z-10 flex-grow rounded-b-xl overflow-hidden">
                   {/* Enhanced creator info section with improved visual hierarchy */}
-                  <div className="mb-3 pb-3 border-b border-purple-100/40">
-                    <div className="py-2 px-3 -mx-2 mb-2 bg-purple-50/30 border-l-2 border-purple-400 rounded-r-md shadow-[inset_1px_1px_2px_rgba(255,255,255,0.9)]">
-                      <h3 className="text-title leading-tight font-semibold text-purple-800">{creator.name}</h3>
+                  <div className="mb-2 pb-2 border-b border-purple-100/40">
+                    <div className="py-1.5 px-2.5 -mx-1.5 mb-1.5 bg-purple-50/30 border-l-2 border-purple-400 rounded-r-md shadow-[inset_1px_1px_2px_rgba(255,255,255,0.9)]">
+                      <h3 className="text-base leading-tight font-semibold text-purple-800">{creator.name}</h3>
                     </div>
                     
                     {/* Location with enhanced icon */}
-                    <p className="text-caption flex items-center mt-1 ml-0.5">
+                    <p className="text-xs flex items-center mt-0.5 ml-0.5">
                       <svg className="w-4 h-4 mr-1.5 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                         <circle cx="12" cy="10" r="3"></circle>
@@ -1135,10 +1141,10 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     </p>
                     
                     {/* Services with standardized glass effect tags */}
-                    <div className="flex flex-wrap items-center gap-1.5 mt-2 bg-purple-50/30 p-1.5 rounded-md -mx-1 shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)]" style={{
+                    <div className="flex flex-wrap items-center gap-1 mt-1.5 bg-purple-50/30 p-1 rounded-md -mx-1 shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)]" style={{
                       display: 'flex',
                       alignItems: 'center',
-                      minHeight: '38px' // Ensure consistent height for better vertical centering
+                      minHeight: '32px' // Reduced height for better vertical centering
                     }}>
                       {creator.services.map((service, index) => {
                         // Simplified service type checks - matching mobile
@@ -1153,7 +1159,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                         return (
                           <span 
                             key={index} 
-                            className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs whitespace-nowrap touch-manipulation font-medium ${textColor}`}
+                            className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs whitespace-nowrap touch-manipulation font-medium ${textColor}`}
                             style={{
                               // Standardized glass effect matching mobile
                               background: 'rgba(245, 245, 247, 0.92)',
@@ -1164,8 +1170,8 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                               // Standardized shadow with top/left highlights
                               boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.9), inset 1px 0 0 rgba(255,255,255,0.8), 0 1px 2px rgba(0,0,0,0.04)',
                               // Better sizing
-                              minHeight: '24px',
-                              minWidth: '40px',
+                              minHeight: '20px',
+                              minWidth: '36px',
                               // Hardware acceleration
                               transform: 'translateZ(0)',
                               // Improved spacing
@@ -1184,15 +1190,15 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   </div>
 
                   {/* Ratings section with mobile-matching styling */}
-                  <div className="mb-2 p-2.5 rounded-md">
-                    <div className="mb-1.5 pb-1 border-b border-gray-100 flex justify-between items-center">
+                  <div className="mb-1.5 p-2 rounded-md">
+                    <div className="mb-1 pb-0.5 border-b border-gray-100 flex justify-between items-center">
                       <div className="flex items-center">
                         <div className="w-0.5 h-3.5 bg-gradient-to-b from-indigo-400/80 to-purple-400/80 rounded-full mr-1.5"></div>
                         <div className="text-[11px] text-gray-500 font-medium font-space uppercase tracking-wide">Ratings</div>
                       </div>
                       <div className="text-[11px] text-purple-400/80 font-medium font-space">Availability →</div>
                     </div>
-                    <div className="flex justify-between items-center py-1 gap-4" 
+                    <div className="flex justify-between items-center py-0.5 gap-3" 
                       style={{
                         transform: 'translateZ(0)', // Hardware acceleration
                         position: 'relative', // For pseudo-elements
@@ -1291,7 +1297,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   </div>
 
                   {/* Recent Work section with mobile-matching styling */}
-                  <div className="mb-2 w-full">
+                  <div className="mb-1.5 w-full">
                     {/* Enhanced section header with better prominence */}
                     <div className="mb-1.5 pb-1 border-b border-gray-100 flex justify-between items-center py-0.5"
                       style={{
@@ -1313,7 +1319,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     </div>
                     
                     {/* Thumbnails with glass effect styling */}
-                    <div className="grid grid-cols-3 gap-2 w-full pt-2">
+                    <div className="grid grid-cols-3 gap-1.5 w-full pt-1.5">
                       {creator.workExamples.slice(0, 3).map((example, index) => (
                         <div 
                           key={index}
@@ -1373,8 +1379,43 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     </div>
                   </div>
 
-                  {/* Minimal visual spacing before CTA */}
-                  <div className="mt-1 mb-1 pt-1"></div>
+                  {/* Adding proper spacing and container for CTA */}
+                  <div className="mt-3 mb-3 pt-2 pb-14 relative"></div>
+                  
+                  {/* CTA container positioned at the bottom */}
+                  <div className="absolute bottom-3 left-0 right-0 px-4 z-10">
+                    <button 
+                      onClick={handleCTAClick}
+                      aria-label={`Join as creator with ${creator.name}`}
+                      className="w-full flex items-center justify-center rounded-[14px] font-semibold h-[46px] transition-all duration-300 relative hover:scale-[1.02] active:scale-[0.97] bg-creator-cta"
+                      style={{
+                        background: 'rgba(245, 245, 247, 0.92)',
+                        backdropFilter: 'blur(10px)',
+                        WebkitBackdropFilter: 'blur(10px)',
+                        color: '#555555',
+                        border: '1px solid rgba(118, 51, 220, 0.18)',
+                        borderTop: '1px solid rgba(255, 255, 255, 0.9)',
+                        borderLeft: '1px solid rgba(255, 255, 255, 0.8)',
+                        borderRight: '1px solid rgba(200, 200, 200, 0.2)',
+                        borderBottom: '1px solid rgba(200, 200, 200, 0.25)',
+                        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.9), inset 1px 0 0 rgba(255, 255, 255, 0.8)',
+                        fontSize: '14px',
+                        fontWeight: 600,
+                        fontFamily: 'var(--font-sans)',
+                        transform: 'translateZ(0)',
+                        willChange: 'transform, box-shadow',
+                        transformStyle: 'preserve-3d',
+                        transition: 'all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)',
+                        position: 'relative',
+                        overflow: 'hidden'
+                      }}
+                    >
+                      <span className="text-center font-semibold text-base text-gray-700 flex items-center">
+                        <span className="leading-none tracking-wide">JOIN AS CREATOR</span>
+                        <ArrowRight className="w-4 h-4 ml-2 text-purple-500" />
+                      </span>
+                    </button>
+                  </div>
                 </div>
               </Card>
             </div>

@@ -24,7 +24,10 @@ export const PreviewCard: React.FC<PreviewCardProps> = ({ isVisible, children })
         }
       }}
       viewport={{ once: true, margin: "-50px" }}
-      className="will-change-transform relative"
+      className={cn(
+        "will-change-transform relative",
+        !isMobile && "px-6 py-8" // Increased padding on desktop for better spacing
+      )}
     >
       {children}
     </motion.div>

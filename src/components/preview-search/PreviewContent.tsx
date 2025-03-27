@@ -156,16 +156,18 @@ export const PreviewContent: React.FC<PreviewContentProps> = ({
               onPreviewClick={handlePreviewClick}
             />
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6 md:gap-8 px-4 md:px-6 place-items-center justify-items-center w-full">
               {filteredCreators.map((creator, index) => (
-                <MemoizedCreatorCard 
-                  key={`${creator.name}-${index}`}
-                  creator={creator}
-                  onImageLoad={handleImageLoad}
-                  loadedImages={loadedImages}
-                  imageRef={creatorRefs[index]}
-                  onPreviewClick={handlePreviewClick}
-                />
+                <div className="h-full flex" key={`${creator.name}-${index}`}>
+                  <MemoizedCreatorCard 
+                    creator={creator}
+                    onImageLoad={handleImageLoad}
+                    loadedImages={loadedImages}
+                    imageRef={creatorRefs[index]}
+                    onPreviewClick={handlePreviewClick}
+                    isSelected={false}
+                  />
+                </div>
               ))}
             </div>
           )}
