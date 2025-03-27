@@ -324,6 +324,47 @@ export const Hero = () => {
       if (interval) clearInterval(interval);
     };
   }, [isInView, isMobile]);
+  
+  // Add a MutationObserver to catch any style changes and override them
+  useEffect(() => {
+    if (!sectionRef.current) return;
+    
+    // Create a function that will force our styles
+    const forceHeightStyles = () => {
+      if (!sectionRef.current) return;
+      
+      // Chrome-specific fix for desktop
+      if (!isMobile && navigator.userAgent.indexOf('Chrome') > -1) {
+        sectionRef.current.style.setProperty('height', 'auto', 'important');
+        sectionRef.current.style.setProperty('min-height', 'auto', 'important');
+        sectionRef.current.style.setProperty('padding-bottom', '80px', 'important');
+      }
+    };
+    
+    // Create a MutationObserver to watch for style changes
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'style') {
+          // Re-apply our styles if they've been changed
+          forceHeightStyles();
+        }
+      });
+    });
+    
+    // Start observing style changes on the hero element
+    observer.observe(sectionRef.current, { 
+      attributes: true, 
+      attributeFilter: ['style'] 
+    });
+    
+    // Apply immediately
+    forceHeightStyles();
+    
+    // Clean up
+    return () => {
+      observer.disconnect();
+    };
+  }, [isMobile]);
 
   useEffect(() => {
     if (!sectionRef.current) return;
@@ -332,14 +373,18 @@ export const Hero = () => {
     const forceStyles = () => {
       if (!sectionRef.current) return;
       
+      // Force styles on both mobile and desktop to handle Chrome issues
+      // Desktop only needs margin adjustments, not the full viewport height
+      // Force our styles with !important
+      const applyStyle = (el: HTMLElement, prop: string, value: string) => {
+        el.style.setProperty(prop, value, 'important');
+      };
+      
+      // Main hero element
+      const hero = sectionRef.current;
+      
       if (isMobile) {
-        // Force our styles with !important
-        const applyStyle = (el: HTMLElement, prop: string, value: string) => {
-          el.style.setProperty(prop, value, 'important');
-        };
-        
-        // Main hero element
-        const hero = sectionRef.current;
+        // Mobile-specific styles
         applyStyle(hero, 'height', '100vh');
         applyStyle(hero, 'min-height', '100vh');
         applyStyle(hero, 'max-height', 'none');
@@ -348,23 +393,50 @@ export const Hero = () => {
         applyStyle(hero, 'align-items', 'center');
         applyStyle(hero, 'justify-content', 'center');
         applyStyle(hero, 'padding-top', '10px');
-        
-        // Find all the gaps and force them to be tight
-        const heroTitle = hero.querySelector('#hero-title');
-        if (heroTitle && heroTitle instanceof HTMLElement) {
+      } else {
+        // Desktop styles to fix Chrome issues
+        applyStyle(hero, 'height', 'auto');
+        applyStyle(hero, 'min-height', 'auto');
+        applyStyle(hero, 'max-height', 'none');
+        applyStyle(hero, 'padding-bottom', '80px');
+      }
+      
+      // Find all the gaps and force them to be tight
+      const heroTitle = hero.querySelector('#hero-title');
+      if (heroTitle && heroTitle instanceof HTMLElement) {
+        if (isMobile) {
           applyStyle(heroTitle, 'margin-top', '-60px');
           applyStyle(heroTitle, 'margin-bottom', '-20px');
           applyStyle(heroTitle, 'line-height', '0.9');
+        } else {
+          // Desktop margin adjustments
+          applyStyle(heroTitle, 'margin-bottom', '0px');
         }
-        
-        // Find subtitle paragraph
-        const textElements = hero.querySelectorAll('p');
-        textElements.forEach(el => {
-          if (el instanceof HTMLElement) {
-            applyStyle(el, 'margin-top', '-20px');
-          }
-        });
       }
+      
+      // Adjust spacing for text rotation container
+      const textRotateContainer = hero.querySelector('[style*="height"]');
+      if (textRotateContainer && textRotateContainer instanceof HTMLElement) {
+        if (isMobile) {
+          applyStyle(textRotateContainer, 'margin-bottom', '-20px');
+          applyStyle(textRotateContainer, 'margin-top', '-10px');
+        } else {
+          applyStyle(textRotateContainer, 'margin-bottom', '10px');
+        }
+      }
+      
+      // Find subtitle paragraph
+      const textElements = hero.querySelectorAll('p');
+      textElements.forEach(el => {
+        if (el instanceof HTMLElement) {
+          if (isMobile) {
+            applyStyle(el, 'margin-top', '-20px');
+          } else {
+            // Desktop spacing
+            applyStyle(el, 'margin-top', '0');
+          }
+        }
+      });
     };
     
     // Apply styles immediately
