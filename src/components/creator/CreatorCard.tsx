@@ -965,21 +965,20 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 transform: 'translateZ(0)', // Hardware acceleration
                 willChange: 'transform, box-shadow', // Optimization hint for transitions
                 transition: 'all 0.3s ease',
-                // Gradient background matching mobile styling for consistency
-                background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.85) 0%, rgba(245, 245, 250, 0.85) 100%)', // Subtle vertical gradient
-                backdropFilter: 'blur(6px)', // Enhanced glass effect 
+                background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.85) 0%, rgba(245, 245, 250, 0.85) 100%)', // Subtle vertical gradient from mobile
+                backdropFilter: 'blur(6px)', // Enhanced glass effect matching mobile
                 WebkitBackdropFilter: 'blur(6px)', // Safari support
-                borderRadius: '16px', // THE STANDARD border radius
-                overflow: 'hidden', // Ensure content respects border-radius
+                borderRadius: '16px', // THE STANDARD border radius from mobile
+                overflow: 'hidden',
                 
-                // Enhanced directional borders to match mobile styling
+                // Enhanced directional borders matching mobile styling
                 border: '1px solid rgba(220, 220, 230, 0.5)',
                 borderTop: '2px solid rgba(255, 255, 255, 0.95)',
                 borderLeft: '2px solid rgba(255, 255, 255, 0.8)',
                 borderRight: '1px solid rgba(118, 51, 220, 0.08)',
                 borderBottom: '1px solid rgba(118, 51, 220, 0.15)',
                 
-                // Layered shadow system matching mobile styling
+                // Layered shadow system from mobile cards
                 boxShadow: `
                   0 2px 8px rgba(118, 51, 220, 0.15),
                   0 4px 12px rgba(0, 0, 0, 0.05),
@@ -989,7 +988,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   inset -1px 0 0 rgba(118, 51, 220, 0.05)
                 `,
                 
-                // Enhanced 3D effect
+                // Enhanced 3D effect from mobile
                 transformStyle: 'preserve-3d'
               }}>
                 {/* Enhanced inner light effect matching mobile styling */}
