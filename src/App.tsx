@@ -84,6 +84,55 @@ function App() {
   const passiveEventHandler = useCallback(() => {}, []);
   
   useEffect(() => {
+    // Add a direct style override for hero heights
+    const heroHeightOverride = document.createElement('style');
+    heroHeightOverride.id = 'hero-height-override';
+    heroHeightOverride.innerHTML = `
+      /* Direct override for any Core Web Vitals setting min-height */
+      @media (max-width: 768px) {
+        #hero, div#hero, .hero-height-reset, [id="hero"] {
+          min-height: 100vh !important;
+          height: 100vh !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          max-height: none !important;
+          padding-top: 65px !important; /* Spacing from the header */
+        }
+      }
+      
+      @media (min-width: 769px) {
+        #hero, div#hero, .hero-height-reset, [id="hero"] {
+          min-height: auto !important;
+          height: auto !important;
+          max-height: none !important;
+        }
+      }
+      
+      /* Target for performance optimizations */
+      .hero-height-reset * {
+        min-height: auto !important;
+      }
+      
+      /* Override for sections that might have explicit heights */
+      @media (max-width: 768px) {
+        section[id="hero"], section.hero, section[class*="hero"] {
+          min-height: 100vh !important;
+          height: 100vh !important;
+          display: flex !important;
+          align-items: center !important;
+        }
+      }
+      
+      @media (min-width: 769px) {
+        section[id="hero"], section.hero, section[class*="hero"] {
+          min-height: auto !important;
+          height: auto !important;
+        }
+      }
+    `;
+    document.head.appendChild(heroHeightOverride);
+    
     optimizeMobileViewport();
     
     const cleanupLandscapeFixes = applyLandscapeOrientationFixes();
@@ -126,6 +175,12 @@ function App() {
       
       document.body.classList.remove('color-white-bg-mobile');
       document.body.classList.remove('optimize-animations-mobile');
+      
+      // Remove our height override style
+      const heroHeightStyle = document.getElementById('hero-height-override');
+      if (heroHeightStyle && heroHeightStyle.parentNode) {
+        heroHeightStyle.parentNode.removeChild(heroHeightStyle);
+      }
       
       if (cleanupLandscapeFixes) cleanupLandscapeFixes();
       

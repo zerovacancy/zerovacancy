@@ -167,9 +167,9 @@ export function fixCoreWebVitals(): void {
   // Fix CLS issues by reserving space for elements that load dynamically
   const fixCLS = () => {
     // Find hero sections and ensure they have min-height
-    document.querySelectorAll('.hero, [class*="hero-"], [id*="hero"]').forEach((el) => {
+    document.querySelectorAll('.hero:not(#hero), [class*="hero-"]:not(#hero), [id*="hero"]:not(#hero)').forEach((el) => {
       const element = el as HTMLElement;
-      if (!element.style.minHeight) {
+      if (!element.style.minHeight && element.id !== 'hero') {
         element.style.minHeight = '500px';
       }
     });

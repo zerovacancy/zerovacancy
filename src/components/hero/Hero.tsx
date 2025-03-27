@@ -1,4 +1,5 @@
-import React, { useRef, useEffect, useState } from "react";
+import * as React from "react";
+import { useRef, useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { WaitlistCTA } from "../ui/waitlist-cta";
@@ -26,11 +27,12 @@ const MobileHeroCTA = () => {
   const [submittedEmail, setSubmittedEmail] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   
-  // Import confetti directly in component
+  // Safely handle confetti
   useEffect(() => {
-    // Add confetti to window to ensure it's available
-    if (typeof window !== 'undefined' && !window.hasOwnProperty('confetti')) {
-      window.confetti = confetti;
+    // Avoid modifying window object directly, which can cause issues
+    // Just ensure confetti is available for our component's use
+    if (typeof window !== 'undefined') {
+      // We'll use the imported confetti directly instead of assigning to window
     }
   }, []);
   
@@ -107,26 +109,16 @@ const MobileHeroCTA = () => {
       // This avoids all the issues with dialog rendering on mobile browsers
       setShowInlineSuccess(true);
       
-      // Fire confetti immediately
-      if (typeof window !== 'undefined' && window.celebrateSuccess) {
-        try {
-          window.celebrateSuccess(true);
-        } catch (err) {
-          console.error("Error triggering confetti:", err);
-          try {
-            // Fallback
-            confetti();
-          } catch (e) {
-            console.error("Fallback confetti also failed:", e);
-          }
-        }
-      } else {
-        try {
-          // Direct call if global method not available
-          confetti();
-        } catch (err) {
-          console.error("Direct confetti call failed:", err);
-        }
+      // Fire confetti immediately - simplified to avoid window object issues
+      try {
+        // Just use the imported confetti directly
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.3 }
+        });
+      } catch (err) {
+        console.error("Confetti failed:", err);
       }
       
       // Set state to true for conditional rendering
@@ -140,7 +132,7 @@ const MobileHeroCTA = () => {
     }
   };
   
-  // Direct trigger for confetti when showing success message
+  // Direct trigger for confetti when showing success message - simplified
   useEffect(() => {
     if (showInlineSuccess) {
       console.log("Firing confetti for mobile success");
@@ -148,26 +140,14 @@ const MobileHeroCTA = () => {
       // Set a timeout to ensure the UI is rendered first
       setTimeout(() => {
         try {
-          // Try using the global function first
-          if (typeof window !== 'undefined' && window.celebrateSuccess) {
-            window.celebrateSuccess(true);
-          } else if (typeof window !== 'undefined' && window.confetti) {
-            // Use direct window.confetti as fallback
-            window.confetti({
-              particleCount: 100,
-              spread: 70,
-              origin: { y: 0.3 }
-            });
-          } else {
-            // Use imported confetti as last resort
-            confetti({
-              particleCount: 100,
-              spread: 70,
-              origin: { y: 0.3 }
-            });
-          }
+          // Use imported confetti directly - avoiding window object
+          confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.3 }
+          });
         } catch (err) {
-          console.error("All confetti attempts failed:", err);
+          console.error("Confetti failed:", err);
         }
       }, 100);
     }
@@ -212,8 +192,8 @@ const MobileHeroCTA = () => {
         onClick={handleButtonClick}
         className={cn(
           "w-full min-w-full font-medium rounded-[12px] text-white relative flex items-center justify-center",
-          mobileOptimizationClasses.mobileFriendlyButton, // Standard mobile-friendly button
-          mobileOptimizationClasses.tapTargetExtraLarge // Ensure easy tapping
+          "h-10 min-h-[40px] px-4 py-2 rounded-lg", // Smaller custom size
+          "text-sm" // Smaller text size
         )}
         style={{
           background: 'linear-gradient(180deg, #8A42F5 0%, #7837DB 100%)',
@@ -313,11 +293,8 @@ const MobileHeroCTA = () => {
       {/* Fire confetti when showConfetti is true */}
       {showConfetti && (
         <div className="fixed inset-0 pointer-events-none z-[5000]" style={{ position: 'fixed' }}>
-          {typeof window !== 'undefined' && window.celebrateSuccess && (
-            <script dangerouslySetInnerHTML={{ 
-              __html: `setTimeout(function() { window.celebrateSuccess(true); }, 0);` 
-            }} />
-          )}
+          {/* Using script tags with dangerouslySetInnerHTML inside React can cause issues */}
+          {/* Removed problematic script tag */}
         </div>
       )}
     </>
@@ -373,20 +350,30 @@ export const Hero = () => {
   }, []);
 
   return (
-    <div 
+    <div
+      id="hero" 
       ref={sectionRef}
       className={cn(
         "flex items-center justify-center flex-col w-full bg-[#F9F6EC]", // Center both horizontally and vertically, tan/gold background for all devices
         "px-0", 
         !isMobile && "relative z-10",
-        "gap-6", // Balanced spacing between major sections
+        "gap-0", // Removed gap completely
         "touch-manipulation",
         "opacity-100"
+        // Removed problematic classes
       )}
       style={{
         ...(isMobile ? {
-          // For mobile: Properly positioned element with gradient background
+          // Mobile styles directly applied with highest specificity
+          height: '100vh',
+          minHeight: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          overflowY: 'hidden',
           position: 'relative',
+          paddingTop: '10px', /* Greatly reduced padding from top */
           zIndex: 10,
           marginTop: '0',
           transform: 'none',
@@ -394,27 +381,33 @@ export const Hero = () => {
           isolation: 'auto',
           contain: 'none',
           willChange: 'auto',
-          backgroundImage: 'none', // Reset any background image
-          borderBottomWidth: '0', // Explicitly remove bottom border
-          paddingTop: '80px', // Significantly increased top padding on mobile to separate from header
-          paddingBottom: '30px' // Added padding to create space for gradient
+          backgroundImage: 'none',
+          borderBottomWidth: '0',
+          paddingBottom: '0'
         } : {
+          // Desktop styles
           position: 'relative',
           display: 'flex',
-          alignItems: 'flex-start',
-          justifyContent: 'flex-start',
-          paddingTop: '0',
-          paddingBottom: '0',
-          borderBottomWidth: '0', // Explicitly remove bottom border
-          marginTop: '0' // No margin needed with vertical centering
+          alignItems: 'center',
+          justifyContent: 'center',
+          paddingTop: '20px',
+          paddingBottom: '80px',
+          borderBottomWidth: '0',
+          marginTop: '0',
+          height: 'auto',
+          minHeight: 'auto',
+          maxHeight: 'none',
+          // These styles are now directly applied above with higher specificity
+          // Styles already applied above
         })
       }}
+      aria-labelledby="hero-title"
     >
       
       <div 
         className={cn(
           "flex flex-col items-center justify-start max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8",
-          "gap-5", // Moderate gap for better spacing
+          "gap-0", // Removed gap completely
           isInView ? "animate-fade-in delay-100" : "opacity-0"
         )}
         style={isMobile ? { 
@@ -427,18 +420,43 @@ export const Hero = () => {
           position: 'relative'
         }}
       >
-        <div style={isMobile ? { position: 'static' } : { position: 'relative' }}>
-          {/* SEO-friendly text that is visually hidden but available to crawlers and screen readers */}
-          <h1 className="sr-only">ZeroVacancy - Property Content That Converts, Captivates, and Closes</h1>
-          
-          {/* Visual heading for users */}
-          <div aria-hidden="true" className={cn(
-            "tracking-tight leading-[1.15] font-bold font-jakarta mx-auto",
-            "text-center max-w-5xl" // Removed all margins to support vertical centering
-          )}>
+        <div style={isMobile ? 
+          { 
+            position: 'static',
+            marginBottom: '0',
+            paddingBottom: '0',
+            height: 'auto',
+            minHeight: '0',
+            overflow: 'visible',
+            display: 'flex',
+            flexDirection: 'column'
+          } : { 
+            position: 'relative',
+            marginBottom: '0',
+            paddingBottom: '0',
+            height: 'auto',
+            minHeight: '0',
+            overflow: 'visible',
+            display: 'flex',
+            flexDirection: 'column'
+          }}>
+          {/* Main heading - both screen-reader friendly and visually styled */}
+          <h1 id="hero-title" className={cn(
+            "tracking-tight leading-[1.15] font-bold font-jakarta mx-auto headingLarge",
+            "text-center max-w-5xl mb-0", // Added explicit zero bottom margin
+            "flex flex-col items-center justify-center" // Added flex to control child spacing
+          )} style={{ 
+            marginBottom: '0', 
+            paddingBottom: '0',
+            ...(isMobile && {
+              lineHeight: 0.9, // Even tighter line height on mobile
+              marginTop: '-60px', // Even larger negative margin to pull content up drastically
+              marginBottom: '-20px' // Pull next elements closer
+            })
+          }}>
             <span 
               className={cn(
-                isMobile ? "text-[2rem]" : "text-3xl sm:text-5xl lg:text-6xl",
+                isMobile ? "text-[2rem]" : "text-3xl sm:text-5xl lg:text-6xl", // Original size
                 "tracking-[-0.02em]",
                 "block sm:inline-block font-jakarta",
                 "bg-clip-text text-transparent",
@@ -449,9 +467,12 @@ export const Hero = () => {
                   : "drop-shadow-[0_1px_2px_rgba(74,45,217,0.05)]", 
                 isMobile && "relative",
                 "w-full mx-auto text-center",
-                "mb-3" // Consistent bottom margin for both mobile and desktop
+                "mb-0" // No margin needed - removing space completely
               )}
-              style={{ height: isMobile ? "auto" : "auto", letterSpacing: isMobile ? "-0.03em" : "-0.02em" }}
+              style={{ 
+                letterSpacing: isMobile ? "-0.03em" : "-0.02em",
+                lineHeight: isMobile ? "1.1" : "1.2" // Added tighter line height
+              }}
             >
               {/* Removed background pattern for mobile */}
               PROPERTY CONTENT THAT
@@ -462,22 +483,22 @@ export const Hero = () => {
               aria-label="Property Content animation"
               className={cn(
                 "relative flex w-full justify-center",
-                isMobile 
-                  ? "h-[4em]" // Increased height for mobile, removed mt-1
-                  : "h-[4.5em] sm:h-[3em] md:h-[2.5em] lg:h-[2.5em] mb-6", // Equal vertical spacing, removed mt-0
                 "overflow-visible",
                 "gpu-accelerated will-change-auto",
                 isMobile && "mobile-optimize"
               )}
               style={{ 
-                width: isMobile ? "100%" : "100%",
-                height: isMobile ? "4em" : "auto",
-                minHeight: isMobile ? "90px" : "auto"
+                width: "100%",
+                height: isMobile ? "70px" : "70px", // Original height
+                minHeight: isMobile ? "70px" : "70px", // Match minHeight to height
+                overflow: "visible", // Allow text to overflow beyond the container
+                marginBottom: isMobile ? "-20px" : "10px", // Negative margin on mobile to pull next element up
+                marginTop: isMobile ? "-10px" : "0" // Pull this element up on mobile
               }}
             >
               <TextRotate
                 texts={TITLES}
-                mainClassName="flex justify-center items-center"
+                mainClassName="flex justify-center items-center h-auto"
                 staggerFrom="last"
                 // Simplified transitions for mobile
                 initial={{ opacity: 1 }} // Start visible to improve LCP
@@ -489,15 +510,17 @@ export const Hero = () => {
                 rotationInterval={isMobile ? 4500 : 3000}
                 splitLevelClassName={isMobile ? "" : "overflow-visible"}
                 elementLevelClassName={cn(
-                  isMobile ? "text-[4rem]" : "text-4xl sm:text-5xl lg:text-7xl",
+                  isMobile ? "text-[2.8rem]" : "text-4xl sm:text-5xl lg:text-6xl", // Original size
                   "font-bold font-jakarta tracking-[-0.03em]",
                   "bg-clip-text text-transparent", 
                   "bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1]",
                   isMobile ? "" : "animate-shimmer-slide bg-size-200",
-                  isMobile ? "" : "overflow-visible",
+                  "overflow-visible", // Always allow overflow
                   "drop-shadow-[0_1px_2px_rgba(74,45,217,0.2)]",
                   isMobile ? "" : "filter brightness-110",
-                  "leading-[1]"
+                  "leading-[1.1]", // Slightly looser line height for readability
+                  "h-auto min-h-0", // Minimize height
+                  "py-2" // Add padding for better spacing
                 )}
                 // Simpler tween animation for mobile
                 transition={isMobile ? 
@@ -516,25 +539,32 @@ export const Hero = () => {
                 auto={true}
               />
             </div>
-          </div>
+          </h1>
         </div>
 
-        <div 
+        <p 
           className={cn(
-            "text-base leading-relaxed",
+            "text-base leading-relaxed bodyText",
             "text-brand-text-primary", 
             "text-center", 
             "max-w-[95%] sm:max-w-[650px]",
             "mx-auto", 
             "font-inter",
             "relative",
-            isMobile ? "mb-4 text-sm px-4 py-2" : "mb-6" // Moderate bottom margin for balanced spacing
+            isMobile ? "mb-4 text-sm px-4 py-0" : "mb-6" // Standard spacing
           )}
+          style={{
+            marginTop: isMobile ? '-20px' : '0', // Negative margin on mobile to pull up
+            position: 'relative',
+            zIndex: 10, // Ensure text appears above any backgrounds
+            paddingTop: isMobile ? '0' : '10px' // No padding on mobile
+          }}
         >
           {isMobile ? (
+            // The mobile version has additional heading structure
             <>
               <div className="relative flex flex-col items-center text-center">
-                <div className="relative mb-4">
+                <div className="relative mb-1"> {/* Further reduced margin */}
                   <div className="absolute left-1/2 w-16 h-[2px] bg-purple-300/50" style={{ transform: 'translateX(-50%)', top: '-0.5px' }}></div>
                   <h2 className={cn(
                     mobileOptimizationClasses.headingMedium, // Standardized heading
@@ -542,20 +572,15 @@ export const Hero = () => {
                   )}>
                     Elite content that works
                   </h2>
-                  <div className="h-[1px] w-10 bg-purple-300/30 mx-auto mt-2"></div>
+                  <div className="h-[1px] w-10 bg-purple-300/30 mx-auto mt-1"></div> {/* Reduced mt-2 to mt-1 */}
                 </div>
-                <p className={cn(
-                  mobileOptimizationClasses.bodyText, // Standardized body text
-                  "text-gray-700 max-w-[300px] mb-0 mt-2 font-sans"
-                )}>
-                  Connect with top creators who transform your spaces with professional photography, video, and 3D tours that showcase your property's potential.
-                </p>
+                Connect with top creators who transform your spaces with professional photography, video, and 3D tours that showcase your property's potential.
               </div>
             </>
           ) : (
-            "Connect with elite content creators who transform your spaces into compelling visual stories. Our curated network of real estate specialists delivers photography, video, and 3D content that doesn't just show your property—it showcases its potential."
+            "Connect with elite content creators who transform your spaces into compelling visual stories. Access the most in-demand creators for content that doesn't just show your property—it showcases its potential."
           )}
-        </div>
+        </p>
       </div>
 
       <div 
@@ -570,6 +595,7 @@ export const Hero = () => {
           zIndex: 'auto',
           contain: 'none',
           willChange: 'auto',
+          marginTop: '10px', // Change to positive margin
           transform: 'none',
           overflow: 'visible' 
         } : {}}
@@ -579,8 +605,10 @@ export const Hero = () => {
             <div className="flex flex-row justify-center gap-[8%] mb-2 relative items-start">
               <div className="flex flex-col w-[45%] max-w-[280px]">
                 <WaitlistCTA 
-                  buttonText="RESERVE EARLY ACCESS" 
+                  buttonText="RESERVE YOUR SPOT" 
                   showSocialProof={false}
+                  aria-label="Reserve your spot"
+                  className="primary-cta"
                 />
               </div>
               
@@ -589,7 +617,8 @@ export const Hero = () => {
                   <WaitlistCreatorCTA 
                     buttonText="JOIN AS CREATOR" 
                     showSocialProof={false}
-                    className=""
+                    aria-label="Join as a content creator"
+                    className="secondary-cta"
                   />
                 </div>
               </div>
@@ -604,7 +633,7 @@ export const Hero = () => {
         {isMobile && (
           <>
             <div className="w-full flex flex-col items-center" style={{ position: 'static' }}>
-              <div className="w-[92%] max-w-[320px] mx-auto flex flex-col items-center gap-5" style={{ position: 'static' }}>
+              <div className="w-[80%] max-w-[280px] mx-auto flex flex-col items-center gap-3" style={{ position: 'static' }}>
                 {/* Mobile CTA with inline email form expansion */}
                 <div className="w-full" style={{ position: 'static' }}>
                   <MobileHeroCTA />

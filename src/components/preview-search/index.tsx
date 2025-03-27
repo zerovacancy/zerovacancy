@@ -1,4 +1,5 @@
-import React, { useRef, useState, useEffect, useMemo, memo } from 'react';
+import * as React from 'react';
+import { useRef, useState, useEffect, useMemo, memo } from 'react';
 import { cn } from '@/lib/utils';
 import { PreviewCard } from './PreviewCard';
 import { PreviewContent } from './PreviewContent';
@@ -32,14 +33,21 @@ const SectionTitle = memo(({ isVisible, isMobile }: { isVisible: boolean; isMobi
       isMobile && "mb-3"
     )}>
       <h2 
-        className={titleClass}
+        id="creators-title" 
+        className={cn(titleClass, "headingLarge")}
         style={{ 
           willChange: 'opacity, transform',
           transform: isVisible ? 'translateZ(0)' : 'translateZ(0) translateY(10px)',
           wordBreak: 'break-word', // Ensures text wraps properly
           maxWidth: '100%', // Constrains the text within its container
           overflowWrap: 'break-word', // Additional support for long words
-          hyphens: 'auto' // Adds hyphens when breaking words if needed
+          hyphens: 'auto', // Adds hyphens when breaking words if needed
+          background: 'linear-gradient(to right, #7633DC, #A367E7)', // Gradient text for better visibility
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text',
+          textFillColor: 'transparent',
+          display: 'inline-block'
         }}
       >
         {isMobile ? (
@@ -53,7 +61,7 @@ const SectionTitle = memo(({ isVisible, isMobile }: { isVisible: boolean; isMobi
       </h2>
       
       <p 
-        className={subtitleClass}
+        className={cn(subtitleClass, "bodyText tagline")}
         style={{ 
           willChange: 'opacity',
           transitionDelay: '0.2s',
@@ -126,7 +134,9 @@ const PreviewSearch = () => {
   }), [isVisible]);
 
   return (
-    <div 
+    <section 
+      id="find-creators"
+      aria-labelledby="creators-title"
       className={containerClasses}
       ref={containerRef}
       style={{
@@ -142,7 +152,8 @@ const PreviewSearch = () => {
         outline: 'none', // No outline
         boxShadow: 'none', // No box shadow
         zIndex: 20, // Higher z-index to ensure content appears above gradient
-        paddingTop: isMobile ? '60px' : undefined // Increased padding on mobile to ensure content is below gradient
+        paddingTop: isMobile ? '60px' : '40px', // Reduced top padding on desktop for better spacing with the hero section
+        borderTop: isMobile ? 'none' : '1px solid rgba(138, 66, 245, 0.1)' // Subtle top border on desktop for separation
       }}
     >
       {/* Section header with optimized rendering */}
@@ -157,15 +168,25 @@ const PreviewSearch = () => {
         maxWidth: '100%', // Ensure content doesn't overflow
         boxSizing: 'border-box' // Include padding in width calculations
       }}>
-        {/* Section label for better organization - static element */}
-        {isMobile && (
+        {/* Enhanced section label for better visual distinction */}
+        {isMobile ? (
           <div 
-            className="mb-5 flex items-center justify-center transform-gpu"
+            className="mb-6 flex flex-col items-center justify-center transform-gpu"
             style={{ transform: 'translateZ(0)', marginTop: '10px' }}
           >
-            <div className="h-px w-5 bg-gray-200/50 mr-2"></div>
-            <span className="text-xs uppercase tracking-wider text-gray-700 font-semibold">Creator Network</span>
-            <div className="h-px w-5 bg-gray-200/50 ml-2"></div>
+            <div className="bg-purple-100 px-4 py-1.5 rounded-full mb-2 shadow-sm">
+              <span className="text-xs uppercase tracking-wider text-purple-700 font-semibold">Creator Network</span>
+            </div>
+            <div className="h-px w-16 bg-purple-200/70"></div>
+          </div>
+        ) : (
+          <div 
+            className="mb-6 flex items-center justify-center transform-gpu"
+            style={{ transform: 'translateZ(0)', marginTop: '10px' }}
+          >
+            <div className="h-px w-16 bg-purple-200/60 mr-3"></div>
+            <span className="text-sm uppercase tracking-wider text-purple-700 font-semibold px-4 py-1 bg-purple-100/80 rounded-full">Creator Network</span>
+            <div className="h-px w-16 bg-purple-200/60 ml-3"></div>
           </div>
         )}
         
@@ -196,7 +217,7 @@ const PreviewSearch = () => {
       </div>
       
       {/* Removed mobile-only divider */}
-    </div>
+    </section>
   );
 }
 
