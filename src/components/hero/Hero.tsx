@@ -328,11 +328,62 @@ export const Hero = () => {
   useEffect(() => {
     if (!sectionRef.current) return;
 
+    // Function to force our styles
+    const forceStyles = () => {
+      if (!sectionRef.current) return;
+      
+      if (isMobile) {
+        // Force our styles with !important
+        const applyStyle = (el: HTMLElement, prop: string, value: string) => {
+          el.style.setProperty(prop, value, 'important');
+        };
+        
+        // Main hero element
+        const hero = sectionRef.current;
+        applyStyle(hero, 'height', '100vh');
+        applyStyle(hero, 'min-height', '100vh');
+        applyStyle(hero, 'max-height', 'none');
+        applyStyle(hero, 'display', 'flex');
+        applyStyle(hero, 'flex-direction', 'column');
+        applyStyle(hero, 'align-items', 'center');
+        applyStyle(hero, 'justify-content', 'center');
+        applyStyle(hero, 'padding-top', '10px');
+        
+        // Find all the gaps and force them to be tight
+        const heroTitle = hero.querySelector('#hero-title');
+        if (heroTitle && heroTitle instanceof HTMLElement) {
+          applyStyle(heroTitle, 'margin-top', '-60px');
+          applyStyle(heroTitle, 'margin-bottom', '-20px');
+          applyStyle(heroTitle, 'line-height', '0.9');
+        }
+        
+        // Find subtitle paragraph
+        const textElements = hero.querySelectorAll('p');
+        textElements.forEach(el => {
+          if (el instanceof HTMLElement) {
+            applyStyle(el, 'margin-top', '-20px');
+          }
+        });
+      }
+    };
+    
+    // Apply styles immediately
+    forceStyles();
+    
+    // Apply after load to override any other scripts
+    window.addEventListener('load', forceStyles);
+    
+    // Also apply on resize in case of orientation change
+    window.addEventListener('resize', forceStyles);
+    
+    // Regular intersection observer functionality
     const observer = new IntersectionObserver(
       (entries) => {
         const [entry] = entries;
         if (entry.isIntersecting) {
           setIsInView(true);
+          // Apply styles again when visible
+          forceStyles();
           observer.disconnect();
         }
       },
@@ -346,8 +397,10 @@ export const Hero = () => {
 
     return () => {
       observer.disconnect();
+      window.removeEventListener('load', forceStyles);
+      window.removeEventListener('resize', forceStyles);
     };
-  }, []);
+  }, [isMobile]);
 
   return (
     <div

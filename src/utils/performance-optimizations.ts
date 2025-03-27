@@ -166,13 +166,42 @@ export function optimizeCRP(): void {
 export function fixCoreWebVitals(): void {
   // Fix CLS issues by reserving space for elements that load dynamically
   const fixCLS = () => {
-    // Find hero sections and ensure they have min-height
-    document.querySelectorAll('.hero:not(#hero), [class*="hero-"]:not(#hero), [id*="hero"]:not(#hero)').forEach((el) => {
+    // Find hero sections and ensure they have min-height, but exclude specific #hero element
+    document.querySelectorAll('.hero, [class*="hero-"], [id*="hero"]').forEach((el) => {
       const element = el as HTMLElement;
-      if (!element.style.minHeight && element.id !== 'hero') {
+      // Skip our main hero element which has its own responsive styles
+      if (element.id === 'hero') return;
+      
+      // Don't override existing inline styles
+      if (!element.style.minHeight) {
         element.style.minHeight = '500px';
       }
     });
+    
+    // Ensure our specific hero has the right styles on mobile
+    const mainHero = document.getElementById('hero');
+    if (mainHero) {
+      const isMobile = window.innerWidth < 768;
+      if (isMobile) {
+        // IMPORTANT: These styles must match what's in App.tsx
+        mainHero.style.setProperty('height', '100vh', 'important');
+        mainHero.style.setProperty('minHeight', '100vh', 'important');
+        mainHero.style.setProperty('display', 'flex', 'important');
+        mainHero.style.setProperty('alignItems', 'center', 'important');
+        mainHero.style.setProperty('justifyContent', 'center', 'important');
+        
+        // Apply negative margins for compact layout
+        const heroTitle = mainHero.querySelector('#hero-title');
+        if (heroTitle && heroTitle instanceof HTMLElement) {
+          heroTitle.style.setProperty('marginTop', '-60px', 'important');
+          heroTitle.style.setProperty('marginBottom', '-20px', 'important');
+        }
+      } else {
+        // On desktop, let React handle the styling
+        mainHero.style.height = 'auto';
+        mainHero.style.minHeight = 'auto';
+      }
+    }
     
     // Ensure images have width and height attributes
     document.querySelectorAll('img:not([width]):not([height])').forEach((img) => {

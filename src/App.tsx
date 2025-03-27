@@ -97,7 +97,7 @@ function App() {
           align-items: center !important;
           justify-content: center !important;
           max-height: none !important;
-          padding-top: 65px !important; /* Spacing from the header */
+          padding-top: 10px !important; /* Reduced spacing from header */
         }
       }
       
