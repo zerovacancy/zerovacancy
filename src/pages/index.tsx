@@ -489,7 +489,7 @@ const Index = () => {
           }}
           className={cn(
             "w-full bg-[#EBE3FF]", // Lavender background for hero section (desktop)
-            isMobile && "!bg-[#F9F6EC]", // Override with tan/gold on mobile only
+            isMobile && "!bg-[#F9F6EC] pt-8", // Override with tan/gold on mobile and add top padding
             !isMobile && "flex items-center justify-center pt-6 pb-6", // Centered vertically with modest padding
             moc.sectionWrapper, // Standardized section wrapper
             isMobile && "touch-action-pan-y overscroll-behavior-none" // Fix mobile scrolling

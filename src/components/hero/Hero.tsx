@@ -398,7 +398,7 @@ export const Hero = () => {
           backgroundImage: 'none', // Reset any background image
           background: '#F9F6EC', // Simple solid background
           borderBottomWidth: '0', // Explicitly remove bottom border
-          paddingTop: '40px', // Added padding at the top for proper spacing
+          paddingTop: '80px', // Significantly increased top padding on mobile to separate from header
           paddingBottom: '30px' // Added padding to create space for gradient
         } : {
           position: 'relative',
