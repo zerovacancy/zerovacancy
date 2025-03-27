@@ -852,9 +852,9 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                           </svg>
                         )}
                       </div>
-                      <span className="tracking-wide font-bold text-base relative text-gray-700" style={{
+                      <span className="font-medium text-base font-sans relative text-gray-700" style={{
                         textShadow: '0 1px 1px rgba(255,255,255,0.7)',
-                        letterSpacing: '0.02em'
+                        letterSpacing: '0.01em'
                       }}>JOIN AS CREATOR</span>
                       <ArrowRight 
                         className="w-4 h-4 ml-2 text-gray-500 relative" 
