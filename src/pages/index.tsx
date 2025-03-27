@@ -359,7 +359,7 @@ const Index = () => {
            overflow: 'hidden',
            margin: 0,
            padding: 0,
-           backgroundColor: isMobile ? '#F9F6EC' : '#EBE3FF' // Match section background colors
+           backgroundColor: '#F9F6EC' // Tan/gold background for consistency
          }}>
       <SEO 
         title="Property Content Creators | ZeroVacancy" 
@@ -427,7 +427,7 @@ const Index = () => {
                overflow: 'hidden',
                margin: 0,
                padding: 0,
-               backgroundColor: isMobile ? '#F9F6EC' : '#EBE3FF' // Match section background colors
+               backgroundColor: '#F9F6EC' // Tan/gold background for consistency 
              }}
              id="main-content">
         {/* Hero Section */}
@@ -488,8 +488,7 @@ const Index = () => {
             })
           }}
           className={cn(
-            "w-full bg-[#EBE3FF]", // Lavender background for hero section (desktop)
-            isMobile && "!bg-[#F9F6EC] pt-8", // Override with tan/gold on mobile and add top padding
+            "w-full bg-[#F9F6EC]", // Tan/gold background for hero section (desktop)
             !isMobile && "flex items-center justify-center pt-6 pb-6", // Centered vertically with modest padding
             moc.sectionWrapper, // Standardized section wrapper
             isMobile && "touch-action-pan-y overscroll-behavior-none" // Fix mobile scrolling
@@ -587,7 +586,7 @@ const Index = () => {
               zIndex: 80,
               marginTop: '0', // No negative margin
               paddingTop: '10px', // Standard padding on desktop
-              backgroundColor: '#F9F6EC', // Correct background color on desktop
+              backgroundColor: '#EBE3FF', // Lavender background on desktop
               borderTopWidth: '0' // No top border
             }
           }
@@ -646,7 +645,7 @@ const Index = () => {
           zIndex: 30
         }}>
           <SectionTransition 
-            fromColor={isMobile ? "#EBE3FF" : "#F9F6EC"} 
+            fromColor="#F9F6EC" 
             toColor="#EDF7F2" 
             height={40} // Reduced height significantly
           />
