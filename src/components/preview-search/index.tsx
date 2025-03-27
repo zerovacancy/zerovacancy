@@ -9,12 +9,12 @@ import { useIsMobile } from '@/hooks/use-mobile';
 const SectionTitle = memo(({ isVisible, isMobile }: { isVisible: boolean; isMobile: boolean }) => {
   // Pre-compute classes to avoid recalculation during render
   const titleClass = useMemo(() => cn(
-    "text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight mb-2",
+    "text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight mb-3",
     // Use CSS classes for animation instead of JS-based motion
     "transition-all duration-500 transform-gpu", 
     isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2",
     // Add padding for mobile to prevent text overflow
-    isMobile ? "px-2 w-full" : ""
+    isMobile ? "px-2 w-full mt-2" : ""
   ), [isVisible, isMobile]);
 
   const subtitleClass = useMemo(() => cn(
@@ -134,13 +134,21 @@ const PreviewSearch = () => {
         contentVisibility: 'auto', // More efficient than content-visibility CSS class
         position: 'relative',
         transform: 'translateZ(0)', // Hardware acceleration
-        backgroundColor: isMobile ? '#F9F6EC' : undefined, // Explicitly set tan background on mobile
+        backgroundColor: isMobile ? '#EBE3FF' : undefined, // Changed to lavender background on mobile
+        backgroundImage: 'none', // Prevent any background patterns
+        borderWidth: 0, // Ensure no borders
+        borderColor: 'transparent', // Transparent border color
+        borderStyle: 'none', // No border style
+        outline: 'none', // No outline
+        boxShadow: 'none', // No box shadow
+        zIndex: 10, // Ensure proper stacking
+        paddingTop: isMobile ? '40px' : undefined // Extra padding on mobile to prevent content from being too close to top
       }}
     >
       {/* Section header with optimized rendering */}
       <div className={cn(
         "text-center relative z-20",
-        "pb-4 mb-4 transform-gpu", // Force GPU rendering
+        "pb-6 mb-6 transform-gpu", // Increased bottom padding and margin
         isMobile ? "px-2 w-full max-w-full" : "" // Add horizontal padding on mobile
       )}
       style={{
@@ -152,8 +160,8 @@ const PreviewSearch = () => {
         {/* Section label for better organization - static element */}
         {isMobile && (
           <div 
-            className="mb-3 flex items-center justify-center transform-gpu"
-            style={{ transform: 'translateZ(0)' }}
+            className="mb-5 flex items-center justify-center transform-gpu"
+            style={{ transform: 'translateZ(0)', marginTop: '10px' }}
           >
             <div className="h-px w-5 bg-gray-200/50 mr-2"></div>
             <span className="text-xs uppercase tracking-wider text-gray-700 font-semibold">Creator Network</span>

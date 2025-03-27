@@ -385,22 +385,28 @@ export const Hero = () => {
       )}
       style={{
         ...(isMobile ? {
-          // For mobile: Complete removal of any positioning properties that could cause scrolling issues
-          position: 'static',
-          zIndex: 'auto',
+          // For mobile: Properly positioned element with gradient background
+          position: 'relative',
+          zIndex: 10,
           marginTop: '0',
           transform: 'none',
           overflow: 'visible',
           isolation: 'auto',
           contain: 'none',
-          willChange: 'auto'
+          willChange: 'auto',
+          backgroundColor: '#F9F6EC', // Tan/gold background on mobile
+          backgroundImage: 'none', // Reset any background image
+          background: '#F9F6EC', // Simple solid background
+          borderBottomWidth: '0', // Explicitly remove bottom border
+          paddingBottom: '30px' // Added padding to create space for gradient
         } : {
           position: 'relative',
           display: 'flex',
           alignItems: 'flex-start',
           justifyContent: 'flex-start',
           paddingTop: '0',
-          paddingBottom: '0'
+          paddingBottom: '0',
+          borderBottomWidth: '0' // Explicitly remove bottom border
         })
       }}
     >

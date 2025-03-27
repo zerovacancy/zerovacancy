@@ -43,8 +43,8 @@ const SectionTransition = ({
 }) => {
   const isMobile = useIsMobile();
   
-  // Smaller heights to reduce spacing between sections, even smaller on mobile
-  const actualHeight = isMobile ? Math.max(height, 40) : Math.max(height, 40);
+  // Ensure sufficient height for complete coverage
+  const actualHeight = Math.max(height, 60); // Increased minimum height to ensure overlap
   
   return (
     <div 
@@ -52,36 +52,51 @@ const SectionTransition = ({
       aria-hidden="true"
       style={{ 
         height: `${actualHeight}px`,
-        margin: '-20px 0', // Increased negative margin for better overlap to pull sections closer
+        margin: isMobile ? '-40px 0' : '-30px 0', // More aggressive negative margins
         padding: 0,
         pointerEvents: 'none',
         width: '100vw', // Full viewport width to prevent side gaps
         maxWidth: '100vw',
         position: 'relative',
-        backgroundColor: fromColor, // Solid background color matching the starting section
+        backgroundColor: 'transparent', // Use transparent background to prevent color bleed
         backgroundImage: 'none', // Prevent any default backgrounds
         left: 0,
-        right: 0
-      }}
-    >
+        right: 0,
+        borderWidth: 0, // Explicitly remove any borders
+        overflow: 'visible' // Allow gradient to extend beyond bounds
+      }}>
       <div 
         className="absolute"
         style={{
-          background: `linear-gradient(to bottom, 
-            ${fromColor} 0%, 
-            ${fromColor} 15%, 
-            ${modifyColorOpacity(fromColor, toColor, 0.7)} 35%,
-            ${modifyColorOpacity(fromColor, toColor, 0.3)} 65%,
-            ${toColor} 85%, 
-            ${toColor} 100%)`,
+          // For mobile devices, we completely REVERSE the gradient direction
+          background: isMobile ? 
+            `linear-gradient(to top, 
+              ${toColor} 0%, 
+              ${toColor} 25%, 
+              ${modifyColorOpacity(toColor, fromColor, 0.9)} 40%,
+              ${modifyColorOpacity(toColor, fromColor, 0.5)} 50%,
+              ${modifyColorOpacity(toColor, fromColor, 0.1)} 60%,
+              ${fromColor} 75%, 
+              ${fromColor} 100%)`
+            :
+            `linear-gradient(to top, 
+              ${fromColor} 0%, 
+              ${fromColor} 25%, 
+              ${modifyColorOpacity(fromColor, toColor, 0.9)} 40%,
+              ${modifyColorOpacity(fromColor, toColor, 0.5)} 50%,
+              ${modifyColorOpacity(fromColor, toColor, 0.1)} 60%,
+              ${toColor} 75%, 
+              ${toColor} 100%)`,
           position: 'absolute',
-          top: '-40px', // 4x extension beyond container for better overlap on mobile
+          top: isMobile ? '-40px' : '-50px', // More aggressive extension
           left: 0,
           right: 0,
-          bottom: '-40px', // 4x extension beyond container for better overlap on mobile
-          height: 'calc(100% + 80px)', // Even taller to prevent any gaps on mobile
+          bottom: isMobile ? '-40px' : '-50px', // More aggressive extension
+          height: isMobile ? 'calc(100% + 80px)' : 'calc(100% + 100px)', // Taller gradient for better coverage
           width: '100%',
-          boxShadow: 'none'
+          boxShadow: 'none',
+          borderWidth: 0, // Explicitly remove any borders
+          zIndex: 1 // Ensure this is above background but below content
         }}
       />
     </div>
@@ -126,7 +141,7 @@ interface ScrollTargetProps {
   className?: string;
 }
 
-const ScrollTarget: React.FC<ScrollTargetProps> = ({ id, height = 1, className }) => {
+const ScrollTarget: React.FC<ScrollTargetProps & { style?: React.CSSProperties }> = ({ id, height = 1, className, style = {} }) => {
   const isMobile = useIsMobile();
   return (
     <div 
@@ -145,7 +160,8 @@ const ScrollTarget: React.FC<ScrollTargetProps> = ({ id, height = 1, className }
         margin: 0,
         padding: 0,
         pointerEvents: 'none',
-        touchAction: isMobile ? 'pan-y' : 'auto'
+        touchAction: isMobile ? 'pan-y' : 'auto',
+        ...style // Allow additional styles to be passed in
       }}
     />
   );
@@ -447,8 +463,8 @@ const Index = () => {
           ref={addSectionRef(0)} 
           style={{
             ...(isMobile ? { 
-              position: 'static', 
-              zIndex: 'auto',
+              position: 'relative', // Changed from static to relative
+              zIndex: 70, // High z-index but lower than creator section
               contain: 'none',
               willChange: 'auto',
               transform: 'none',
@@ -463,11 +479,14 @@ const Index = () => {
               paddingTop: '80px',
               minHeight: 'auto',
               paddingBottom: '0', // Remove bottom padding
-              marginBottom: '-30px' // Add negative margin to eliminate gap
+              marginBottom: '-30px', // Add negative margin to eliminate gap
+              position: 'relative',
+              zIndex: 70 // Consistent z-index with mobile
             })
           }}
           className={cn(
-            "w-full bg-[#EBE3FF]", // Lavender background for hero section
+            "w-full bg-[#EBE3FF]", // Lavender background for hero section (desktop)
+            isMobile && "!bg-[#F9F6EC]", // Override with tan/gold on mobile only
             !isMobile && "flex items-start justify-center pt-20", // Position at top with padding
             moc.sectionWrapper, // Standardized section wrapper
             isMobile && "touch-action-pan-y overscroll-behavior-none" // Fix mobile scrolling
@@ -500,59 +519,96 @@ const Index = () => {
           </div>
         </section>
         
-        {/* Scroll Target for Find Creators */}
-        <ScrollTarget id="find-creators" height={0} />
-        
-        {/* Section Transition: Hero to Find Creators - Smoother blend */}
-        <div style={{ 
-          marginTop: isMobile ? '-30px' : '-50px', // Adjusted for different devices
+        {/* Scroll Target for Find Creators - positioned at exact junction point */}
+        <ScrollTarget id="find-creators" height={1} style={{ 
+          backgroundColor: 'transparent',
           position: 'relative',
-          zIndex: 30
-        }}>
-          <SectionTransition 
-            fromColor="#EBE3FF" 
-            toColor="#F9F6EC" 
-            height={40} // Reduced height significantly
-          />
-        </div>
+          zIndex: 79, // Just below the section but above everything else
+          marginTop: '-1px', // Position exactly at the junction
+          pointerEvents: 'none', // Don't capture clicks
+          opacity: 0 // Make completely invisible
+        }} />
         
         {/* Find Creators Section */}
         <section 
           ref={addSectionRef(1)}
           style={isMobile ?
             {
-              position: 'static',
-              zIndex: 'auto',
+              position: 'relative',
+              zIndex: 80, // Higher z-index to ensure it's above the Hero section
               contain: 'none',
               willChange: 'auto',
               transform: 'none',
               overflow: 'hidden',
-              width: '100vw', // Ensure full viewport width on mobile
-              maxWidth: '100vw', // Prevent overflow
-              marginLeft: '0', // Remove any margin
-              marginRight: '0', // Remove any margin
-              paddingLeft: '0', // Remove horizontal padding
-              paddingRight: '0', // Remove horizontal padding
-              backgroundColor: '#F9F6EC' // Explicitly set tan background on mobile
+              width: '100vw',
+              maxWidth: '100vw',
+              marginLeft: '0',
+              marginRight: '0',
+              paddingLeft: '0',
+              paddingRight: '0',
+              backgroundColor: '#EBE3FF', // Explicitly set lavender background on mobile
+              backgroundImage: 'none', // Reset backgroundImage
+              background: '#EBE3FF', // Solid lavender background for the Creator section
+              marginTop: '0', // NO negative margin - clean edge
+              paddingTop: '60px', // Significantly increased padding for better spacing
+              borderTopWidth: '0', // No border on top
+              borderBottomWidth: '0',
+              borderLeftWidth: '0',
+              borderRightWidth: '0',
+              borderColor: 'transparent',
+              borderStyle: 'none',
+              outline: 'none',
+              boxShadow: 'none'
             } : 
             {
               ...getZIndex(1),
-              ...getBackgroundTransition(1)
+              ...getBackgroundTransition(1),
+              position: 'relative',
+              zIndex: 80,
+              marginTop: '0', // No negative margin
+              paddingTop: '10px', // Standard padding on desktop
+              backgroundColor: '#F9F6EC', // Correct background color on desktop
+              borderTopWidth: '0' // No top border
             }
           }
+          // Remove background classes from the className to avoid conflicts with inline styles
           className={cn(
-            "relative w-full pt-16 pb-20", // Standardized vertical spacing (reduced)
-            "bg-[#F9F6EC]", // Soft champagne - now applied to both mobile and desktop
+            "relative w-full pt-16 pb-20", // Standardized vertical spacing
+            // Removed background classes that could conflict with inline styles
             isMobile && cn("py-8", moc.sectionPaddingMain), // Standardized mobile padding
             moc.sectionWrapper, // Standardized section wrapper
-            "creator-section", // Added this class for Safari-specific fixes
+            "creator-section", // Class for Safari-specific fixes
             isMobile && "px-0 mx-0 max-w-none find-creators-section" // Remove horizontal padding/margin on mobile
           )}
         >
-          <div className={cn(
-            "w-full overflow-hidden",
-            isMobile ? "px-0 mx-0" : "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
-          )}>
+          {/* Gradient overlay for mobile */}
+          {isMobile && (
+            <div 
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '180px', // Further increased height for better gradient effect
+                background: 'linear-gradient(to bottom, #F9F6EC 0%, rgba(249, 246, 236, 0.98) 15%, rgba(249, 246, 236, 0.95) 25%, rgba(249, 246, 236, 0.9) 35%, rgba(249, 246, 236, 0.8) 45%, rgba(249, 246, 236, 0.6) 55%, rgba(249, 246, 236, 0.4) 65%, rgba(249, 246, 236, 0.2) 75%, rgba(249, 246, 236, 0) 85%)',
+                zIndex: 10,
+                pointerEvents: 'none'
+              }}
+            />
+          )}
+          
+          <div 
+            className={cn(
+              "w-full overflow-hidden",
+              isMobile ? "px-0 mx-0" : "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+            )}
+            style={isMobile ? { 
+              backgroundColor: '#EBE3FF', 
+              backgroundImage: 'none',
+              position: 'relative',
+              zIndex: 5
+            } : undefined}>
+          
             <Suspense fallback={<SectionLoader />}>
               <PreviewSearch />
             </Suspense>
@@ -569,7 +625,7 @@ const Index = () => {
           zIndex: 30
         }}>
           <SectionTransition 
-            fromColor="#F9F6EC" 
+            fromColor={isMobile ? "#EBE3FF" : "#F9F6EC"} 
             toColor="#EDF7F2" 
             height={40} // Reduced height significantly
           />
