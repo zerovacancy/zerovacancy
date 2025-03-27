@@ -353,13 +353,14 @@ const Index = () => {
   
   return (
     <div className="flex flex-col min-h-screen w-full" 
-         style={isMobile ? {
-           width: '100vw', 
-           maxWidth: '100vw', 
+         style={{
+           width: isMobile ? '100vw' : '100%',
+           maxWidth: isMobile ? '100vw' : '100%',
            overflow: 'hidden',
            margin: 0,
-           padding: 0
-         } : {}}>
+           padding: 0,
+           backgroundColor: isMobile ? '#F9F6EC' : '#EBE3FF' // Match section background colors
+         }}>
       <SEO 
         title="Property Content Creators | ZeroVacancy" 
         description="Connect with elite content creators who transform your spaces into compelling visual stories. Find photographers, videographers, and more for your properties."
@@ -420,13 +421,14 @@ const Index = () => {
       )}
 
       <main className="flex-1 pb-16 sm:pb-0 w-full mt-0" 
-             style={isMobile ? {
-               width: '100vw',
-               maxWidth: '100vw',
+             style={{
+               width: isMobile ? '100vw' : '100%',
+               maxWidth: isMobile ? '100vw' : '100%',
                overflow: 'hidden',
                margin: 0,
-               padding: 0
-             } : {}}
+               padding: 0,
+               backgroundColor: isMobile ? '#F9F6EC' : '#EBE3FF' // Match section background colors
+             }}
              id="main-content">
         {/* Hero Section */}
         <style dangerouslySetInnerHTML={{ __html: `
@@ -476,8 +478,9 @@ const Index = () => {
               display: 'flex',
               alignItems: 'flex-start',
               justifyContent: 'center',
-              paddingTop: '80px',
+              paddingTop: '20px', // Minimal top padding 
               minHeight: 'auto',
+              height: 'auto', // Allow the section to size to its content
               paddingBottom: '0', // Remove bottom padding
               marginBottom: '-30px', // Add negative margin to eliminate gap
               position: 'relative',
@@ -487,7 +490,7 @@ const Index = () => {
           className={cn(
             "w-full bg-[#EBE3FF]", // Lavender background for hero section (desktop)
             isMobile && "!bg-[#F9F6EC]", // Override with tan/gold on mobile only
-            !isMobile && "flex items-start justify-center pt-20", // Position at top with padding
+            !isMobile && "flex items-center justify-center pt-6 pb-6", // Centered vertically with modest padding
             moc.sectionWrapper, // Standardized section wrapper
             isMobile && "touch-action-pan-y overscroll-behavior-none" // Fix mobile scrolling
           )}
@@ -518,15 +521,32 @@ const Index = () => {
             <Hero />
           </div>
         </section>
+
+        {/* Dedicated transition element between Hero and Creator sections */}
+        {isMobile && (
+          <div 
+            style={{
+              height: '120px',
+              width: '100%',
+              position: 'relative',
+              zIndex: 50,
+              marginTop: '-30px',
+              marginBottom: '-30px',
+              pointerEvents: 'none',
+              background: 'linear-gradient(to bottom, #F9F6EC 0%, #F9F6EC 20%, rgba(249, 246, 236, 0.9) 30%, rgba(249, 246, 236, 0.7) 40%, rgba(249, 246, 236, 0.5) 50%, rgba(242, 237, 245, 0.7) 60%, rgba(235, 227, 255, 0.8) 70%, #EBE3FF 80%, #EBE3FF 100%)',
+              overflow: 'hidden'
+            }}
+          />
+        )}
         
         {/* Scroll Target for Find Creators - positioned at exact junction point */}
         <ScrollTarget id="find-creators" height={1} style={{ 
           backgroundColor: 'transparent',
           position: 'relative',
-          zIndex: 79, // Just below the section but above everything else
-          marginTop: '-1px', // Position exactly at the junction
-          pointerEvents: 'none', // Don't capture clicks
-          opacity: 0 // Make completely invisible
+          zIndex: 49,
+          marginTop: '-1px',
+          pointerEvents: 'none',
+          opacity: 0
         }} />
         
         {/* Find Creators Section */}
@@ -589,9 +609,9 @@ const Index = () => {
                 top: 0,
                 left: 0,
                 width: '100%',
-                height: '180px', // Further increased height for better gradient effect
-                background: 'linear-gradient(to bottom, #F9F6EC 0%, rgba(249, 246, 236, 0.98) 15%, rgba(249, 246, 236, 0.95) 25%, rgba(249, 246, 236, 0.9) 35%, rgba(249, 246, 236, 0.8) 45%, rgba(249, 246, 236, 0.6) 55%, rgba(249, 246, 236, 0.4) 65%, rgba(249, 246, 236, 0.2) 75%, rgba(249, 246, 236, 0) 85%)',
-                zIndex: 10,
+                height: '200px', // Expanded height to ensure gradient is more visible
+                background: 'linear-gradient(to bottom, #F9F6EC 0%, #F9F6EC 10%, rgba(249, 246, 236, 0.95) 20%, rgba(249, 246, 236, 0.9) 30%, rgba(249, 246, 236, 0.8) 40%, rgba(249, 246, 236, 0.6) 50%, rgba(249, 246, 236, 0.4) 60%, rgba(249, 246, 236, 0.2) 70%, rgba(249, 246, 236, 0) 80%)',
+                zIndex: 8, // Balanced z-index to ensure visibility while not covering content
                 pointerEvents: 'none'
               }}
             />
@@ -606,7 +626,8 @@ const Index = () => {
               backgroundColor: '#EBE3FF', 
               backgroundImage: 'none',
               position: 'relative',
-              zIndex: 5
+              zIndex: 10, // Balanced z-index - high enough to show above base but below gradient
+              paddingTop: '20px' // Add padding to push content down
             } : undefined}>
           
             <Suspense fallback={<SectionLoader />}>

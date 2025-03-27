@@ -141,13 +141,13 @@ const PreviewSearch = () => {
         borderStyle: 'none', // No border style
         outline: 'none', // No outline
         boxShadow: 'none', // No box shadow
-        zIndex: 10, // Ensure proper stacking
-        paddingTop: isMobile ? '40px' : undefined // Extra padding on mobile to prevent content from being too close to top
+        zIndex: 20, // Higher z-index to ensure content appears above gradient
+        paddingTop: isMobile ? '60px' : undefined // Increased padding on mobile to ensure content is below gradient
       }}
     >
       {/* Section header with optimized rendering */}
       <div className={cn(
-        "text-center relative z-20",
+        "text-center relative z-30",
         "pb-6 mb-6 transform-gpu", // Increased bottom padding and margin
         isMobile ? "px-2 w-full max-w-full" : "" // Add horizontal padding on mobile
       )}

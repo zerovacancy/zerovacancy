@@ -376,7 +376,7 @@ export const Hero = () => {
     <div 
       ref={sectionRef}
       className={cn(
-        "flex items-center justify-start flex-col w-full", // Changed justify-center to justify-start
+        "flex items-center justify-center flex-col w-full", // Center both horizontally and vertically
         "px-0", 
         !isMobile && "relative z-10",
         "gap-6", // Balanced spacing between major sections
@@ -398,6 +398,7 @@ export const Hero = () => {
           backgroundImage: 'none', // Reset any background image
           background: '#F9F6EC', // Simple solid background
           borderBottomWidth: '0', // Explicitly remove bottom border
+          paddingTop: '40px', // Added padding at the top for proper spacing
           paddingBottom: '30px' // Added padding to create space for gradient
         } : {
           position: 'relative',
@@ -406,7 +407,8 @@ export const Hero = () => {
           justifyContent: 'flex-start',
           paddingTop: '0',
           paddingBottom: '0',
-          borderBottomWidth: '0' // Explicitly remove bottom border
+          borderBottomWidth: '0', // Explicitly remove bottom border
+          marginTop: '0' // No margin needed with vertical centering
         })
       }}
     >
@@ -423,7 +425,9 @@ export const Hero = () => {
           contain: 'none',
           willChange: 'auto',
           transform: 'none'
-        } : {}}
+        } : {
+          position: 'relative'
+        }}
       >
         <div style={isMobile ? { position: 'static' } : { position: 'relative' }}>
           {/* SEO-friendly text that is visually hidden but available to crawlers and screen readers */}
