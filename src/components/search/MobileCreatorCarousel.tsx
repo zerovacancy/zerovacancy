@@ -40,14 +40,30 @@ export const MobileCreatorCarousel = ({
     const slideLeft = slideElement.getBoundingClientRect().left;
     const currentScrollLeft = scrollContainerRef.current.scrollLeft;
     
-    // Calculate the exact position to scroll to
-    const scrollPosition = currentScrollLeft + (slideLeft - containerLeft) - 16; // 16px is the left padding
+    // Calculate the exact position to scroll to, ensure consistent padding offset
+    // Hardcode the left padding value to match the container style (18px padding + 4px border)
+    const paddingOffset = 22; 
+    const scrollPosition = currentScrollLeft + (slideLeft - containerLeft) - paddingOffset;
     
-    // Smooth scroll to the position
+    // Force scroll to the exact computed position
     scrollContainerRef.current.scrollTo({
       left: scrollPosition,
       behavior: 'smooth'
     });
+    
+    // Store the exact scroll position to enforce after animation completes
+    const finalTargetPosition = scrollPosition;
+    
+    // Set a timeout to check and correct position after the smooth scroll animation finishes
+    setTimeout(() => {
+      if (scrollContainerRef.current && Math.abs(scrollContainerRef.current.scrollLeft - finalTargetPosition) > 2) {
+        // If position drifted, force it back (without animation)
+        scrollContainerRef.current.scrollTo({
+          left: finalTargetPosition,
+          behavior: 'auto'
+        });
+      }
+    }, 500); // 500ms should cover the smooth scroll duration
     
     // Update the selected index
     setSelectedIndex(index);
@@ -87,6 +103,30 @@ export const MobileCreatorCarousel = ({
       if (visibleArea > maxVisibleArea) {
         maxVisibleArea = visibleArea;
         maxVisibleIndex = index;
+      }
+      
+      // Special case for first slide - ensure it stays in position
+      if (index === 0) {
+        const firstSlideOffset = slideRect.left - containerVisible.left - 22; // 18px padding + 4px border
+        
+        // If first slide is more than 20px from its expected position, force correction
+        // But only do this when the first slide is not the currently selected one
+        // This prevents fighting with user scroll input
+        if (Math.abs(firstSlideOffset) > 20 && maxVisibleIndex !== 0) {
+          requestAnimationFrame(() => {
+            // Only correct if we're not actively transitioning to a new slide
+            // This prevents jumpy behavior during normal navigation
+            const isTransitioning = container.style.scrollBehavior === 'smooth';
+            if (!isTransitioning) {
+              // Use a less noticeable correction to not disrupt user experience
+              const currentScrollLeft = container.scrollLeft;
+              container.scrollTo({
+                left: currentScrollLeft - firstSlideOffset,
+                behavior: 'auto'
+              });
+            }
+          });
+        }
       }
     });
     
@@ -144,11 +184,42 @@ export const MobileCreatorCarousel = ({
     };
   }, [selectedIndex]);
   
-  // Initialize by setting the selected card visible with a slight delay after mount
+  // Initialize carousel with simplified positioning logic for better reliability
   useEffect(() => {
     // Wait until DOM is fully rendered
     const timer = setTimeout(() => {
       if (scrollContainerRef.current && scrollContainerRef.current.children.length > 0) {
+        // Force the scroll position to show the first card properly
+        if (scrollContainerRef.current) {
+          // First reset scroll position to start
+          scrollContainerRef.current.scrollLeft = 0;
+          
+          // Force a brief layout calculation
+          scrollContainerRef.current.offsetHeight;
+          
+          // Then immediately position to the intended position (with no animation)
+          const slideElements = scrollContainerRef.current.querySelectorAll('[data-slide]');
+          if (slideElements?.[0]) {
+            const slideElement = slideElements[0] as HTMLElement;
+            // Position slide directly with exact calculation
+            const cardWidth = slideElement.offsetWidth;
+            const containerWidth = scrollContainerRef.current.offsetWidth;
+            
+            // Calculate position to center the card
+            const position = 0; // Start at 0 for 'center' scrollSnapAlign to work
+            
+            // Apply position without animation
+            scrollContainerRef.current.scrollLeft = position;
+            
+            // Apply final position with animation after a delay
+            setTimeout(() => {
+              if (scrollContainerRef.current) {
+                scrollToSlide(0);
+              }
+            }, 100);
+          }
+        }
+        
         // Select the first slide by default
         updateButtonStates(0);
       }
@@ -169,12 +240,12 @@ export const MobileCreatorCarousel = ({
         ref={scrollContainerRef}
         className="w-full overflow-x-auto pb-4 hide-scrollbar"
         style={{
-          scrollSnapType: 'x mandatory',
+          scrollSnapType: 'x mandatory', // Changed back to mandatory for more predictable behavior
           scrollBehavior: 'smooth',
           WebkitOverflowScrolling: 'touch',
           display: 'flex',
-          paddingLeft: '14px', 
-          paddingRight: '14px',
+          paddingLeft: '18px', // Adjusted padding for better card positioning
+          paddingRight: '18px', // Matching padding on both sides
           paddingTop: '4px', // Added slight top padding for better visual balance
           // Hide scrollbar
           msOverflowStyle: 'none',
@@ -192,35 +263,47 @@ export const MobileCreatorCarousel = ({
           maxWidth: '100vw',
           // Additional properties for smoother scrolling
           overscrollBehavior: 'contain', // Prevent scroll chaining
-          WebkitOverscrollBehavior: 'contain'
+          WebkitOverscrollBehavior: 'contain',
+          // Add explicit containment for better performance
+          contain: 'paint layout style'
         }}
       >
+        {/* No spacer needed as we've increased the left padding */}
         {creators.map((creator, index) => (
           <div 
             key={creator.name}
             data-slide={`slide-${index}`}
-            className="flex-none w-[85%] mr-[12px]"
+            className={`flex-none w-[88%] mr-[18px]`}
             style={{
-              scrollSnapAlign: 'start',
-              scrollSnapStop: 'always',
+              scrollSnapAlign: 'center', // Center alignment for all slides
+              scrollSnapStop: 'normal', // More natural scrolling behavior
               // Optimize for touch interactions
               WebkitTapHighlightColor: 'transparent',
               touchAction: 'pan-x',
               // Smooth transitions when elements change
-              transition: 'transform 180ms ease-out',
+              transition: 'transform 180ms ease-out, opacity 180ms ease-out',
               transform: selectedIndex === index ? 'scale(1)' : 'scale(0.975)',
+              opacity: 1, // Ensure all cards are visible
               // Removed bottom shadow for cleaner appearance
               boxShadow: selectedIndex === index 
                 ? 'none' 
                 : '0 2px 6px rgba(0, 0, 0, 0.03)',
-              // Safari fixes
-              minWidth: 'calc(85% - 12px)',
-              WebkitFlexBasis: '85%',
-              flexBasis: '85%',
-              // Additional optimization to ensure proper rendering on all iOS devices
+              // Optimized card width with consistent margins
+              minWidth: 'calc(88% - 18px)',
+              WebkitFlexBasis: '88%',
+              flexBasis: '88%',
+              // Max height to prevent excessive vertical stretching
+              maxHeight: '80vh',
+              // Ensure consistent box sizing
               WebkitBoxSizing: 'border-box',
               boxSizing: 'border-box',
               WebkitTransform: selectedIndex === index ? 'scale(1)' : 'scale(0.975)',
+              // Proper GPU acceleration and layering
+              willChange: 'transform, opacity',
+              backfaceVisibility: 'hidden',
+              WebkitBackfaceVisibility: 'hidden',
+              position: 'relative',
+              zIndex: selectedIndex === index ? 2 : 1,
             }}
           >
             <CreatorCard 
@@ -296,7 +379,7 @@ export const MobileCreatorCarousel = ({
         ))}
       </div>
       
-      {/* CSS for hiding scrollbars and touch feedback */}
+      {/* CSS for hiding scrollbars, touch feedback, and positioning fixes */}
       <style>
         {`
           .hide-scrollbar::-webkit-scrollbar {
@@ -307,6 +390,30 @@ export const MobileCreatorCarousel = ({
           button:active {
             transform: translateZ(0) scale(0.95);
             transition: transform 0.1s ease-out;
+          }
+
+          /* Mobile card spacing adjustment */
+          [data-slide] {
+            transform-origin: center center !important;
+            transition: transform 150ms ease-out !important;
+          }
+          
+          /* Safari-specific overrides for scroll snap behavior */
+          @supports (-webkit-touch-callout: none) {
+            /* Target iOS Safari specifically */
+            .hide-scrollbar {
+              /* Use a different approach for iOS Safari scroll snap */
+              scroll-snap-type: x mandatory !important;
+              -webkit-scroll-snap-type: x mandatory !important;
+            }
+            
+            [data-slide] {
+              /* Ensure cards are positioned precisely in iOS Safari */
+              scroll-snap-align: center !important;
+              -webkit-scroll-snap-align: center !important;
+              /* Force card positioning to overcome Safari bugs */
+              transform: translateZ(0) !important;
+            }
           }
 
           /* Touch feedback animation for card elements */

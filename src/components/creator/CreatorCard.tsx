@@ -175,89 +175,100 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
             "overflow-hidden flex flex-col w-full",
             "bg-transparent",
             "border-0", 
-            "relative transition-all duration-300 active:scale-[0.99]",
-            isSelected && "ring-2 ring-[#EFEFEC] ring-opacity-70"
+            "relative transition-all duration-300 hover:translate-y-[-2px] active:scale-[0.99]",
+            isSelected && "ring-1 ring-[rgba(118,51,220,0.25)] ring-opacity-100"
           )}
             style={{
               transform: 'translateZ(0)', // Hardware acceleration
-              willChange: 'transform', // Optimization hint for transitions
+              willChange: 'transform, box-shadow', // Optimization hint for transitions
               transition: 'all 0.3s ease',
+              // Gradient background matching CTA styling for consistency
               background: isSelected 
-                ? 'radial-gradient(circle at center, rgba(239, 240, 236, 0.9) 0%, rgba(239, 240, 236, 0.85) 60%, rgba(239, 240, 236, 0.8) 100%)' // Subtle gradient with higher opacity in center
-                : 'radial-gradient(circle at center, rgba(239, 240, 236, 0.87) 0%, rgba(239, 240, 236, 0.82) 60%, rgba(239, 240, 236, 0.78) 100%)', // Subtle gradient for normal state
-              backdropFilter: 'blur(7px)', // More balanced glass effect
-              WebkitBackdropFilter: 'blur(7px)', // Safari support
+                ? 'linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(245, 245, 247, 0.9) 100%)' // Slightly brighter when selected
+                : 'linear-gradient(180deg, rgba(255, 255, 255, 0.85) 0%, rgba(245, 245, 250, 0.85) 100%)', // Subtle vertical gradient
+              backdropFilter: 'blur(6px)', // Enhanced glass effect 
+              WebkitBackdropFilter: 'blur(6px)', // Safari support
               borderRadius: '16px', // THE STANDARD border radius
               overflow: 'hidden', // Ensure content respects border-radius
               maxHeight: '85vh', // Limit maximum height on mobile
               height: 'auto', // Allow content to determine height within max limit
-              // Enhanced 3D border effect with subtle inner glow
-              boxShadow: `inset 0 0 6px rgba(255, 255, 255, 0.4), 
-                          inset 0 1px 0 rgba(255, 255, 255, 0.9), 
-                          inset 1px 0 0 rgba(255, 255, 255, 0.8),
-                          ${isSelected ? '0 8px 24px rgba(0, 0, 0, 0.04)' : '0 4px 16px rgba(0, 0, 0, 0.03)'}`,
-              // Refined border style for added dimension
-              border: `1px solid rgba(200, 200, 200, 0.25)`,
+              
+              // Enhanced directional borders to match CTA styling
+              border: '1px solid rgba(220, 220, 230, 0.5)',
+              borderTop: '2px solid rgba(255, 255, 255, 0.95)',
+              borderLeft: '2px solid rgba(255, 255, 255, 0.8)',
+              borderRight: '1px solid rgba(118, 51, 220, 0.08)',
+              borderBottom: '1px solid rgba(118, 51, 220, 0.15)',
+              
+              // Layered shadow system matching CTA styling
+              boxShadow: `
+                0 2px 8px rgba(118, 51, 220, 0.15),
+                0 4px 12px rgba(0, 0, 0, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9),
+                inset 1px 0 0 rgba(255, 255, 255, 0.7),
+                inset 0 -1px 0 rgba(118, 51, 220, 0.1),
+                inset -1px 0 0 rgba(118, 51, 220, 0.05)
+              `,
+              
               // Prevent content from overflowing
-              contain: 'paint'
+              contain: 'paint',
+              // Enhanced 3D effect
+              transformStyle: 'preserve-3d'
             }}>
             
-            {/* Enhanced glass morphism layer with improved light reflections */}
+            {/* Simplified glass effect with single element and gradient background - now matching CTA styling */}
+            {/* Enhanced inner light effect matching CTA styling */}
             <div className="absolute inset-0 pointer-events-none" 
                  style={{
                    borderRadius: '16px', // Consistent radius
-                   overflow: 'hidden',
                    transform: 'translateZ(0)',
-                   zIndex: 2
+                   zIndex: 2,
+                   overflow: 'hidden',
+                   // Inner border highlight matching CTA specs
+                   boxShadow: 'inset 0 0 0 1px rgba(255, 255, 255, 0.9)'
                  }}>
-              {/* Primary highlight gradient - refined top-left to bottom-right flow */}
-              <div className="absolute inset-0"
-                   style={{
-                     background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.2) 25%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.05) 75%, rgba(255, 255, 255, 0) 100%)',
-                     opacity: 0.7,
-                     transform: 'translateZ(0)',
-                     borderRadius: '16px'
-                   }}>
+                 
+              {/* Top-left corner highlight matching CTA */}
+              <div className="absolute top-0 left-0 w-[80px] h-[26px] rounded-tl-[16px] pointer-events-none overflow-hidden">
+                <div 
+                  style={{
+                    position: 'absolute',
+                    top: '-20px',
+                    left: '-20px',
+                    width: '100px',
+                    height: '60px',
+                    background: 'radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.1) 60%, transparent 80%)',
+                    opacity: 0.6,
+                    transform: 'rotate(-5deg)',
+                    pointerEvents: 'none'
+                  }}
+                ></div>
               </div>
               
-              {/* Secondary environmental reflection */}
-              <div className="absolute inset-0"
-                   style={{
-                     background: 'linear-gradient(to bottom, rgba(255, 255, 255, 0) 40%, rgba(255, 255, 255, 0.08) 70%, rgba(255, 255, 255, 0.12) 100%)',
-                     opacity: 0.6,
-                     borderRadius: '16px'
-                   }}>
-              </div>
-              
-              {/* Enhanced edge glow that follows rounded corners precisely */}
-              <div className="absolute inset-0 rounded-[16px] pointer-events-none" 
-                   style={{
-                     boxShadow: `
-                       inset 0px 1px 1px rgba(255, 255, 255, 0.8), 
-                       inset 1px 0px 1px rgba(255, 255, 255, 0.8),
-                       inset -1px 0px 0px rgba(255, 255, 255, 0.1),
-                       inset 0px -1px 0px rgba(255, 255, 255, 0.1)
-                     `,
-                     transform: 'translateZ(0)'
-                   }}>
-              </div>
-              
-              {/* Corner light reflection */}
-              <div className="absolute top-0 left-0 w-24 h-24"
-                   style={{
-                     background: 'radial-gradient(circle at 6% 6%, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.1) 40%, transparent 70%)',
-                     borderTopLeftRadius: '16px'
-                   }}>
+              {/* Additional bottom-right corner highlight */}
+              <div className="absolute bottom-0 right-0 w-[60px] h-[20px] rounded-br-[16px] pointer-events-none overflow-hidden">
+                <div 
+                  style={{
+                    position: 'absolute',
+                    bottom: '0',
+                    right: '0',
+                    width: '80px',
+                    height: '40px',
+                    background: 'radial-gradient(circle at 70% 80%, rgba(255,255,255,0.4) 0%, transparent 70%)',
+                    opacity: 0.3,
+                    pointerEvents: 'none'
+                  }}
+                ></div>
               </div>
             </div>
             
-            {/* Subtle pulsing highlight effect when selected - simplified */}
+            {/* Subtle pulsing highlight effect for selected cards */}
             {isSelected && (
               <div 
                 className="absolute inset-0 pointer-events-none z-[5]"
                 style={{
-                  boxShadow: '0 0 0 2px rgba(124, 58, 237, 0.2)',
-                  borderRadius: '16px',
+                  boxShadow: '0 0 0 1px rgba(118, 51, 220, 0.25)', // Precise 1px border matching main border color
+                  borderRadius: '16px', // Consistent radius
                   animation: 'pulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                   transform: 'translateZ(0)'
                 }}
@@ -270,7 +281,9 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               <div className="aspect-[4/3] relative w-full overflow-hidden flex-shrink-0 transition-transform duration-300"
                    style={{
                      borderTopLeftRadius: '16px',
-                     borderTopRightRadius: '16px'
+                     borderTopRightRadius: '16px',
+                     // Ensure proper image container
+                     contain: 'layout size'
                    }}>
                 {/* Simplified overlay with consistent corner radius */}
                 <div className="absolute inset-0 w-full h-full z-10 overflow-hidden"
@@ -293,12 +306,12 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 <span 
                   className="px-3 py-1 text-xs font-semibold text-purple-800 rounded-full transition-all duration-200"
                   style={{
-                    background: 'rgba(255,255,255,0.9)',
-                    backdropFilter: 'blur(4px)',
-                    WebkitBackdropFilter: 'blur(4px)',
+                    background: 'rgba(245, 245, 247, 0.92)',
+                    backdropFilter: 'blur(10px)',
+                    WebkitBackdropFilter: 'blur(10px)',
                     // Simplified shadow and border style for cleaner rendering
                     boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
-                    border: '1px solid rgba(124,58,237,0.12)',
+                    border: '1px solid rgba(118, 51, 220, 0.18)',
                     // Hardware acceleration
                     transform: 'translateZ(0)'
                   }}
@@ -308,15 +321,13 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               </div>
             </div>
 
-            {/* Content sections with more compact spacing for mobile */}
-            <div className="w-full px-3 pt-2 pb-3 flex flex-col relative z-10 flex-grow flex-1" style={{ display: 'flex', flexDirection: 'column' }}>
-              {/* Creator info section - with tighter spacing */}
-              <div className="pb-1 mb-2">
-                {/* Remove divider to save vertical space */}
-                
+            {/* Content sections with improved padding for mobile */}
+            <div className="w-full px-5 pt-3 pb-2 flex flex-col relative z-10 flex-grow flex-1" style={{ display: 'flex', flexDirection: 'column' }}>
+              {/* Creator info section with minimized spacing */}
+              <div className="pb-0 mb-1">
                 {/* Creator name and location with more compact styling */}
                 <div 
-                  className="flex justify-between mb-2 py-1 px-1"
+                  className="flex justify-between mb-1 py-0.5 px-0"
                   style={{
                     transform: 'translateZ(0)', // Hardware acceleration
                     display: 'flex', 
@@ -324,7 +335,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     borderBottom: '1px solid rgba(220, 215, 240, 0.3)'
                   }}
                 >
-                  <h3 className="text-xl leading-tight font-bold text-gray-800 tracking-tight flex items-center">
+                  <h3 className="text-lg leading-tight font-bold text-gray-800 tracking-tight flex items-center">
                     {creator.name}
                     <span className="absolute -top-0.5 -right-0.5 w-12 h-6 bg-gradient-to-br from-purple-100/40 to-transparent blur-sm rounded-full"></span>
                   </h3>
@@ -338,7 +349,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 </div>
                 
                 {/* Services tags with tighter spacing */}
-                <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1.5 mt-1 px-1 py-1 mb-2 max-w-full"
+                <div className="flex flex-wrap items-center gap-x-1 gap-y-1 mt-0.5 px-0 py-0.5 mb-1 max-w-full"
                   style={{
                     position: 'relative',
                     transform: 'translateZ(0)', // Hardware acceleration
@@ -370,16 +381,14 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                           key={index} 
                           className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs whitespace-nowrap touch-manipulation max-w-[120px] font-medium ${bgColor} ${forceWrap ? 'w-auto flex-shrink-0' : ''}`}
                           style={{
-                            // Enhanced glass effect
-                            background: 'rgba(239, 240, 236, 0.85)',
-                            backdropFilter: 'blur(8px)',
-                            WebkitBackdropFilter: 'blur(8px)',
-                            // Improved 3D border effect
-                            border: '1px solid rgba(200, 200, 200, 0.25)',
-                            borderTop: '1px solid rgba(255,255,255,0.9)',
-                            borderLeft: '1px solid rgba(255,255,255,0.7)',
-                            // Enhanced shadow for better depth
-                            boxShadow: 'inset 1px 1px 1px rgba(255,255,255,0.9), 0 1px 3px rgba(0,0,0,0.05)',
+                            // Standardized glass effect matching card and CTA
+                            background: 'rgba(245, 245, 247, 0.92)',
+                            backdropFilter: 'blur(10px)',
+                            WebkitBackdropFilter: 'blur(10px)',
+                            // Consistent border treatment
+                            border: '1px solid rgba(118, 51, 220, 0.15)',
+                            // Standardized shadow with top/left highlights
+                            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.9), inset 1px 0 0 rgba(255,255,255,0.8), 0 1px 2px rgba(0,0,0,0.04)',
                             // Better sizing
                             minHeight: '24px',
                             minWidth: '40px',
@@ -398,16 +407,14 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                           key={index} 
                           className="inline-flex items-center px-2.5 py-1 rounded-full text-xs text-gray-600 font-medium"
                           style={{
-                            // Enhanced glass effect to match service tags
+                            // Standardized glass effect matching service tags
                             background: 'rgba(239, 240, 236, 0.85)',
-                            backdropFilter: 'blur(8px)',
-                            WebkitBackdropFilter: 'blur(8px)',
-                            // Improved 3D border effect
-                            border: '1px solid rgba(200, 200, 200, 0.25)',
-                            borderTop: '1px solid rgba(255,255,255,0.9)',
-                            borderLeft: '1px solid rgba(255,255,255,0.7)',
-                            // Enhanced shadow for better depth
-                            boxShadow: 'inset 1px 1px 1px rgba(255,255,255,0.9), 0 1px 3px rgba(0,0,0,0.05)',
+                            backdropFilter: 'blur(7px)',
+                            WebkitBackdropFilter: 'blur(7px)',
+                            // Consistent border treatment
+                            border: '1px solid rgba(118, 51, 220, 0.15)',
+                            // Standardized shadow with top/left highlights
+                            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.9), inset 1px 0 0 rgba(255,255,255,0.8), 0 1px 2px rgba(0,0,0,0.04)',
                             // Better sizing
                             minHeight: '24px',
                             minWidth: '40px',
@@ -426,33 +433,26 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 </div>
                 
                 {/* Ratings and availability without the shared container */}
-                <div className="flex justify-between items-center mb-2.5 px-1 py-1" 
+                <div className="flex justify-between items-center mb-1.5 px-0 py-0.5" 
                   style={{
                     transform: 'translateZ(0)', // Hardware acceleration
                     position: 'relative', // For pseudo-elements
                     zIndex: 5, // Ensure components appear above other elements
                     willChange: 'transform', // Optimization hint
-                    gap: '6px' // Add slight gap between components
+                    gap: '4px' // Reduced gap between components
                   }}>
                   {/* Star rating with review count, enhanced glass effect */}
                   <div 
                     className="flex items-center py-1 px-3 rounded-full"
                     style={{
-                      // Enhanced glass effect
-                      background: 'rgba(239, 240, 236, 0.85)',
-                      backdropFilter: 'blur(8px)',
-                      WebkitBackdropFilter: 'blur(8px)',
-                      // Improved 3D border effect
-                      border: '1px solid rgba(200, 200, 200, 0.25)',
-                      borderTop: '1px solid rgba(255,255,255,0.9)',
-                      borderLeft: '1px solid rgba(255,255,255,0.7)',
-                      // Enhanced shadow for better depth perception
-                      boxShadow: 
-                        /* Inner highlight */
-                        'inset 1px 1px 2px rgba(255,255,255,0.9),' +
-                        
-                        /* Improved outer shadow */
-                        '0 2px 4px rgba(0,0,0,0.06)',
+                      // Standardized glass effect matching card and CTA
+                      background: 'rgba(245, 245, 247, 0.92)',
+                      backdropFilter: 'blur(10px)',
+                      WebkitBackdropFilter: 'blur(10px)',
+                      // Consistent border treatment
+                      border: '1px solid rgba(118, 51, 220, 0.15)',
+                      // Standardized shadow with top/left highlights
+                      boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.9), inset 1px 0 0 rgba(255,255,255,0.8), 0 1px 3px rgba(0,0,0,0.05)',
                       
                       // Hardware acceleration and interaction improvements
                       transform: 'translateZ(0)', 
@@ -489,21 +489,14 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     <div 
                       className="flex items-center py-1 px-3 rounded-full"
                       style={{
-                        // Enhanced glass effect matching star rating
+                        // Standardized glass effect
                         background: 'rgba(239, 240, 236, 0.85)',
-                        backdropFilter: 'blur(8px)',
-                        WebkitBackdropFilter: 'blur(8px)',
-                        // Improved 3D border effect
-                        border: '1px solid rgba(200, 200, 200, 0.25)',
-                        borderTop: '1px solid rgba(255,255,255,0.9)',
-                        borderLeft: '1px solid rgba(255,255,255,0.7)',
-                        // Enhanced shadow for better depth perception
-                        boxShadow: 
-                          /* Inner highlight */
-                          'inset 1px 1px 2px rgba(255,255,255,0.9),' +
-                          
-                          /* Improved outer shadow */
-                          '0 2px 4px rgba(0,0,0,0.06)',
+                        backdropFilter: 'blur(7px)',
+                        WebkitBackdropFilter: 'blur(7px)',
+                        // Consistent border treatment
+                        border: '1px solid rgba(118, 51, 220, 0.15)',
+                        // Standardized shadow with top/left highlights
+                        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.9), inset 1px 0 0 rgba(255,255,255,0.8), 0 1px 3px rgba(0,0,0,0.05)',
                         
                         // Hardware acceleration and interaction improvements  
                         transform: 'translateZ(0)',
@@ -539,19 +532,18 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 </div>
               </div>
               
-              {/* Recent Work section with compact spacing */}
-              <div className="mb-0 w-full mt-1">
-                {/* Thin divider line */}
-                <div className="w-full h-px bg-gradient-to-r from-transparent via-purple-200/30 to-transparent mb-1"></div>
+              {/* Recent Work section with reduced spacing */}
+              <div className="mb-0 w-full mt-0.5">
+                {/* Thin divider line - removed for more compact layout */}
                 {/* Enhanced section header with better prominence */}
-                <div className="mb-2 flex items-center justify-between py-1 px-1"
+                <div className="mb-1 flex items-center justify-between py-0.5 px-0"
                   style={{
-                    minHeight: '24px',
+                    minHeight: '20px',
                     borderBottom: '1px solid rgba(220, 215, 240, 0.3)'
                 }}>
                   <div className="flex items-center">
-                    <div className="w-1.5 h-4 bg-gradient-to-b from-[#EFEFEC] to-[rgba(239,240,236,0.7)] rounded-full mr-2 shadow-sm"></div>
-                    <div className="text-xs text-gray-800 font-bold font-space uppercase tracking-wide">Recent Work</div>
+                    <div className="w-1 h-3.5 bg-gradient-to-b from-[#EFEFEC] to-[rgba(239,240,236,0.7)] rounded-full mr-1.5 shadow-sm"></div>
+                    <div className="text-xs text-gray-800 font-medium font-space uppercase tracking-wide">Recent Work</div>
                   </div>
                   <div 
                     className="text-[10px] text-gray-600 font-medium flex items-center cursor-pointer"
@@ -564,26 +556,24 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   </div>
                 </div>
                 
-                {/* Simplified thumbnails with 3-column layout */}
-                <div className="grid grid-cols-3 gap-2 w-full px-0.5 pb-1 pt-1">
+                {/* Thumbnails with optimized spacing and cleaner styling */}
+                <div className="grid grid-cols-3 gap-2 w-full px-0 pb-0 pt-2">
                   {creator.workExamples.slice(0, 3).map((example, index) => (
                     <div 
                       key={index}
                       onClick={() => onPreviewClick && onPreviewClick(example)}
                       className="relative touch-manipulation overflow-hidden transition-all duration-150 focus:outline-none flex-grow"
                       style={{
-                        borderRadius: '10px', // Standard corner radius for thumbnails
+                        borderRadius: '12px', // Appropriate for thumbnail elements
                         aspectRatio: '1/1', // Square aspect ratio for consistent layout
-                        // Enhanced glass effect
-                        background: 'rgba(239, 240, 236, 0.85)',
-                        backdropFilter: 'blur(8px)',
-                        WebkitBackdropFilter: 'blur(8px)',
-                        // Improved 3D border effect
-                        border: '1px solid rgba(200, 200, 200, 0.25)',
-                        borderTop: '1px solid rgba(255,255,255,0.9)',
-                        borderLeft: '1px solid rgba(255,255,255,0.7)',
-                        // Enhanced shadow for better depth
-                        boxShadow: 'inset 1px 1px 1px rgba(255,255,255,0.9), 0 2px 4px rgba(0,0,0,0.06)',
+                        // Enhanced glass effect perfectly matching card and CTA
+                        background: 'rgba(245, 245, 247, 0.92)',
+                        backdropFilter: 'blur(10px)',
+                        WebkitBackdropFilter: 'blur(10px)',
+                        // Enhanced border matching main CTA button
+                        border: '1px solid rgba(118, 51, 220, 0.18)', 
+                        // Inner highlight without bottom shadow
+                        boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.9), inset 1px 0 0 rgba(255,255,255,0.8)',
                         // Hardware acceleration
                         transform: 'translateZ(0)',
                         willChange: 'transform',
@@ -598,7 +588,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                         const el = e.currentTarget as HTMLElement;
                         if (el && el.style) {
                           el.style.transform = 'translateZ(0) scale(0.97)';
-                          el.style.boxShadow = '0 1px 3px rgba(118,51,220,0.12)';
+                          el.style.opacity = '0.95';
                         }
                       }}
                       onTouchEnd={(e) => {
@@ -606,7 +596,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                         const el = e.currentTarget as HTMLElement;
                         if (el && el.style) {
                           el.style.transform = 'translateZ(0) scale(1)';
-                          el.style.boxShadow = '0 1px 2px rgba(0,0,0,0.04)';
+                          el.style.opacity = '1';
                         }
                       }}
                       aria-label={`${index === 0 ? 'Primary' : 'Secondary'} portfolio image`}
@@ -619,7 +609,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                         style={{
                           width: '100%',
                           height: '100%',
-                          borderRadius: '9px', // Slightly inset from container
+                          borderRadius: '11px', // Slightly inset from container
                           objectFit: 'cover',
                           // Optimize rendering
                           transform: 'translateZ(0)',
@@ -629,8 +619,8 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                         loading="eager" // Prioritize loading these images
                       />
                       
-                      {/* Simplified hover/touch state overlay */}
-                      <div className="absolute inset-0 bg-gray-600/10 opacity-0 hover:opacity-100 active:opacity-100 transition-opacity duration-150 flex items-center justify-center rounded-[9px]">
+                      {/* Simplified hover/touch state overlay with matching border radius */}
+                      <div className="absolute inset-0 bg-gray-600/10 opacity-0 hover:opacity-100 active:opacity-100 transition-opacity duration-150 flex items-center justify-center rounded-[11px]">
                         <div className="w-7 h-7 rounded-full bg-white/90 shadow-sm flex items-center justify-center">
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M15 3H21V9" stroke="#666666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -643,12 +633,35 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 </div>
               </div>
               
-              {/* Flexible spacer to push CTA to bottom */}
-              <div className="flex-grow" style={{ minHeight: '30px' }}></div>
+              {/* Optimized spacer for mobile UI/UX - reduced whitespace */}
+              <div className="flex-grow relative" style={{ 
+                minHeight: '8px', // Minimal height for proper spacing
+                marginTop: '12px', // Moderate top margin
+                marginBottom: '0' // No bottom margin needed
+              }}>
+                {/* Bottom corner highlights */}
+                <div 
+                  className="absolute bottom-0 left-0 w-[20px] h-[20px]" 
+                  style={{
+                    background: 'radial-gradient(circle at bottom left, rgba(255,255,255,0.3) 0%, transparent 70%)',
+                    borderBottomLeftRadius: '16px',
+                    zIndex: 5
+                  }}
+                ></div>
+                <div 
+                  className="absolute bottom-0 right-0 w-[20px] h-[20px]" 
+                  style={{
+                    background: 'radial-gradient(circle at bottom right, rgba(255,255,255,0.3) 0%, transparent 70%)',
+                    borderBottomRightRadius: '16px',
+                    zIndex: 5
+                  }}
+                ></div>
+              </div>
               
-              {/* CTA section positioned at bottom of card */}
-              <div className="flex items-center justify-center py-2" style={{
-                position: 'relative'
+              {/* CTA section positioned at bottom of card with clean, cohesive design */}
+              <div className="flex items-center justify-center py-3 pb-5" style={{
+                position: 'relative',
+                marginTop: '0' // No additional margin needed with the spacer above
               }}>
                 {/* Success state */}
                 {showInlineSuccess ? (
@@ -745,34 +758,28 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   <button 
                     onClick={handleCTAClick}
                     aria-label={`Join as creator with ${creator.name}`}
-                    className="w-full flex items-center justify-center rounded-[14px] font-bold font-sans h-[48px] transition-all duration-300 relative hover:scale-[1.02] active:scale-[0.97] bg-creator-cta"
+                    className="w-full flex items-center justify-center rounded-[14px] font-bold font-sans h-[52px] transition-all duration-300 relative hover:scale-[1.02] active:scale-[0.97] bg-creator-cta"
                     style={{
-                      background: 'rgba(248, 245, 255, 0.85)', // Using creator card lavender background color
-                      backdropFilter: 'blur(4px)', // Glass-like blur
-                      WebkitBackdropFilter: 'blur(4px)', // For Safari support
-                      boxShadow: '0 2px 8px rgba(118, 51, 220, 0.2), 0 4px 12px rgba(0, 0, 0, 0.05)', // Enhanced shadow for CTA focus
-                      color: '#7633DC', // Purple text color
-                      border: '1px solid rgba(118, 51, 220, 0.12)',
-                      borderTop: '2px solid rgba(255, 255, 255, 0.95)', // Pronounced white highlight at top
-                      borderLeft: '2px solid rgba(255, 255, 255, 0.8)', // Pronounced white highlight at left
-                      borderRight: '1px solid rgba(118, 51, 220, 0.08)', // Subtle purple tint at right
-                      borderBottom: '1px solid rgba(118, 51, 220, 0.15)', // Darker purple tint at bottom
+                      background: 'rgba(245, 245, 247, 0.92)', // Neutral light gray that matches card design
+                      backdropFilter: 'blur(10px)', // Enhanced glass-like blur matching thumbnails
+                      WebkitBackdropFilter: 'blur(10px)', // For Safari support
+                      color: '#555555', // Neutral dark gray text for better contrast
+                      border: '1px solid rgba(118, 51, 220, 0.18)', // Match thumbnail border exactly
+                      borderTop: '1px solid rgba(255, 255, 255, 0.9)', // Subtle top highlight
+                      borderLeft: '1px solid rgba(255, 255, 255, 0.8)', // Subtle left highlight
+                      borderRight: '1px solid rgba(200, 200, 200, 0.2)', // Neutral right edge
+                      borderBottom: '1px solid rgba(200, 200, 200, 0.25)', // Neutral bottom edge
+                      // Consistent shadow matching the thumbnails
                       boxShadow: 
-                        /* Outer layered shadow system */
-                        '0 2px 8px rgba(118, 51, 220, 0.15),' + // Main outer shadow with purple tint
-                        '0 4px 12px rgba(0, 0, 0, 0.05),' + // Secondary distance shadow
+                        /* Matching thumbnail shadows for visual continuity */
+                        '0 4px 8px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.04),' +
                         
-                        /* Inner highlight effects */
-                        'inset 0 1px 0 rgba(255, 255, 255, 0.9),' + // Top inner highlight
-                        'inset 1px 0 0 rgba(255, 255, 255, 0.7),' + // Left inner highlight
-                        
-                        /* Inner shadow for depth */
-                        'inset 0 -1px 0 rgba(118, 51, 220, 0.1),' + // Bottom inner shadow
-                        'inset -1px 0 0 rgba(118, 51, 220, 0.05)', // Right inner shadow
+                        /* Standardized inner highlight pattern matching thumbnails */
+                        'inset 0 1px 0 rgba(255, 255, 255, 0.9), inset 1px 0 0 rgba(255, 255, 255, 0.8)', // Right inner shadow
                       
                       fontSize: '14px',
                       fontWeight: 600, // Medium weight
-                      transform: 'translateZ(0)', // Hardware acceleration
+                      transform: 'translateY(-2px) translateZ(0)', // Lifted appearance with hardware acceleration
                       willChange: 'transform, box-shadow', // Optimization hint
                       transformStyle: 'preserve-3d', // Enhance 3D appearance
                       transition: 'all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)', // Custom bezier for smoother motion
@@ -804,42 +811,40 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                         style={{
                           width: '34px',
                           height: '34px',
-                          background: 'rgba(248, 245, 255, 0.85)', // Match the lavender background
-                          border: '1px solid rgba(118,51,220,0.12)',
-                          borderTop: '1.5px solid rgba(255,255,255,0.95)', // Match button's top highlight
-                          borderLeft: '1.5px solid rgba(255,255,255,0.8)', // Match button's left highlight
+                          background: 'rgba(245, 245, 247, 0.85)', // Match the neutral button background
+                          border: '1px solid rgba(118,51,220,0.18)', // Match button border
+                          borderTop: '1px solid rgba(255,255,255,0.9)', // Match button's top highlight
+                          borderLeft: '1px solid rgba(255,255,255,0.8)', // Match button's left highlight
                           borderRadius: '12px',
+                          // Standardized shadow pattern matching button 
                           boxShadow: 
-                            /* Outer subtle shadow */
-                            '0 1px 3px rgba(118,51,220,0.1),' + 
-                            
-                            /* Directional lighting with inset shadows */
-                            'inset 1px 1px 2px rgba(255,255,255,0.9),' +
-                            'inset -1px -1px 1px rgba(118,51,220,0.05)',
+                            '0 2px 4px rgba(0,0,0,0.04), ' + 
+                            'inset 0 1px 0 rgba(255,255,255,0.9), ' +
+                            'inset 1px 0 0 rgba(255,255,255,0.8)',
                             
                           transform: 'translateZ(5px)', // Subtle 3D lift above button surface
                           position: 'relative' // For light refraction effect
                         }}
                       >
                         {creator.name === "Emily Johnson" ? (
-                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7633DC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#555555" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M14.5 10A0.5 0.5 0 1 1 15 9.5A0.5 0.5 0 0 1 14.5 10Z"></path>
                             <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                             <path d="M9 3L9 21"></path>
                           </svg>
                         ) : creator.name === "Jane Cooper" ? (
-                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7633DC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#555555" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                             <polyline points="9 22 9 12 15 12 15 22"></polyline>
                           </svg>
                         ) : creator.name === "Michael Brown" ? (
-                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7633DC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#555555" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M2 12A10 10 0 1 0 12 2m-9.87 4.5a14 14 0 0 0-0.13 1.8c0 7.5 5.5 14.4 13 14.7a10.8 10.8 0 0 0 2 .1"></path>
                             <path d="M3.3 7.7A13.4 13.4 0 0 0 2.5 10a15 15 0 0 0 6 11.1A11 11 0 0 0 12 22"></path>
                             <path d="M5 2.3A10 10 0 0 1 17.55 5"></path>
                           </svg>
                         ) : (
-                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#7633DC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#555555" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
                             <circle cx="9" cy="7" r="4"></circle>
                             <line x1="19" x2="19" y1="8" y2="14"></line>
@@ -847,12 +852,12 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                           </svg>
                         )}
                       </div>
-                      <span className="tracking-wide font-bold text-base relative" style={{
+                      <span className="tracking-wide font-bold text-base relative text-gray-700" style={{
                         textShadow: '0 1px 1px rgba(255,255,255,0.7)',
                         letterSpacing: '0.02em'
                       }}>JOIN AS CREATOR</span>
                       <ArrowRight 
-                        className="w-4 h-4 ml-2 text-[#7633DC] relative" 
+                        className="w-4 h-4 ml-2 text-gray-500 relative" 
                         style={{
                           filter: 'drop-shadow(0 1px 1px rgba(255,255,255,0.8))',
                           transform: 'translateZ(1px)',

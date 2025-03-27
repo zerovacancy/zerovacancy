@@ -109,9 +109,11 @@ export const CreatorMedia = ({
       style={{
         // Set explicit dimensions for reliability
         aspectRatio: '4/3',
-        minHeight: '300px',
-        contain: 'paint', // Removed layout constraint
-        position: 'relative'
+        minHeight: '0', // Allow container to size based on aspect ratio
+        maxHeight: '100%', // Prevent overflow
+        contain: 'layout paint style', // Better containment
+        position: 'relative',
+        width: '100%'
       }}
     >
       {/* Always render the image immediately with explicit dimensions */}
@@ -133,8 +135,12 @@ export const CreatorMedia = ({
           // Ensure hardware acceleration
           transform: 'translateZ(0)',
           objectFit: 'cover',
+          objectPosition: 'center',
           display: 'block',
-          border: '0'
+          border: '0',
+          // Improve image quality
+          imageRendering: 'auto',
+          WebkitImageRendering: 'auto'
         }}
       />
       
