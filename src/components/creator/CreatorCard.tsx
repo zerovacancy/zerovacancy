@@ -872,12 +872,12 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               {/* Desktop CTA with proper positioning */}
               <div className="absolute bottom-4 left-0 right-0 z-10 px-6">
                 {/* Subtle visual indicator with reduced spacing */}
-                <div className="mb-2 mt-1 mx-auto w-8 h-0.5 rounded-full bg-gradient-to-r from-purple-200/50 via-purple-300/50 to-purple-200/50"></div>
+                <div className="mb-1 mx-auto w-6 h-0.5 rounded-full bg-gradient-to-r from-purple-200/30 via-purple-300/30 to-purple-200/30"></div>
                 
                 <button 
                   onClick={handleCTAClick}
                   aria-label={`Join as creator with ${creator.name}`}
-                  className="w-full flex items-center justify-center rounded-[16px] font-semibold h-[60px] transition-all duration-300 relative hover:scale-[1.02] active:scale-[0.97]"
+                  className="w-full flex items-center justify-center rounded-[12px] font-semibold transition-all duration-300 relative hover:scale-[1.02] active:scale-[0.97]"
                   style={{
                     background: 'rgba(245, 245, 247, 0.92)', // Neutral light gray that matches card design
                     backdropFilter: 'blur(10px)', // Enhanced glass-like blur matching thumbnails
@@ -891,12 +891,12 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     // Consistent shadow matching the thumbnails
                     boxShadow: 
                       /* Matching thumbnail shadows for visual continuity */
-                      '0 4px 8px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.04),' +
+                      '0 2px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.03),' +
                       
                       /* Standardized inner highlight pattern matching thumbnails */
                       'inset 0 1px 0 rgba(255, 255, 255, 0.9), inset 1px 0 0 rgba(255, 255, 255, 0.8)', // Right inner shadow
                     
-                    fontSize: '14px',
+                    fontSize: '13px',
                     fontWeight: 600, // Medium weight
                     fontFamily: 'var(--font-sans)', // Use website's standard font
                     transform: 'translateY(-2px) translateZ(0)', // Lifted appearance with hardware acceleration
@@ -905,8 +905,9 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     transition: 'all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)', // Custom bezier for smoother motion
                     position: 'relative', // For pseudo-elements
                     overflow: 'hidden', // For glass effect containment
-                    paddingLeft: '72px', // Make room for icon
-                    paddingRight: '16px' // Balance the padding
+                    paddingLeft: '54px', // Reduced space for icon
+                    paddingRight: '12px', // Reduced padding
+                    height: '44px' // Reduced height from 60px to 44px
                   }}
                 >
                   {/* Subtle reflective glow effect for top-left corner */}
@@ -928,45 +929,45 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   
                   {/* Enhanced icon container with matching lighting effects */}
                   <div 
-                    className="absolute top-0 bottom-0 left-[26px] flex items-center justify-center"
+                    className="absolute top-0 bottom-0 left-[20px] flex items-center justify-center"
                     style={{
                       margin: 'auto 0', // Center vertically
-                      width: '34px',
-                      height: '34px',
+                      width: '28px',
+                      height: '28px',
                       background: 'rgba(245, 245, 247, 0.85)', // Match the neutral button background
                       border: '1px solid rgba(118,51,220,0.18)', // Match button border
                       borderTop: '1px solid rgba(255,255,255,0.9)', // Match button's top highlight
                       borderLeft: '1px solid rgba(255,255,255,0.8)', // Match button's left highlight
-                      borderRadius: '12px',
-                      // Standardized shadow pattern matching button 
+                      borderRadius: '8px',
+                      // Reduced shadow
                       boxShadow: 
-                        '0 2px 4px rgba(0,0,0,0.04), ' + 
+                        '0 1px 2px rgba(0,0,0,0.03), ' + 
                         'inset 0 1px 0 rgba(255,255,255,0.9), ' +
                         'inset 1px 0 0 rgba(255,255,255,0.8)',
                         
-                      transform: 'translateZ(5px)', // Subtle 3D lift above button surface
+                      transform: 'translateZ(3px)', // Reduced 3D lift
                       zIndex: 10 // Ensure it sits above other elements
                     }}
                   >
                     {creator.name === "Emily Johnson" ? (
-                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#555555" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#555555" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M14.5 10A0.5 0.5 0 1 1 15 9.5A0.5 0.5 0 0 1 14.5 10Z"></path>
                         <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                         <path d="M9 3L9 21"></path>
                       </svg>
                     ) : creator.name === "Jane Cooper" ? (
-                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#555555" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#555555" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                         <polyline points="9 22 9 12 15 12 15 22"></polyline>
                       </svg>
                     ) : creator.name === "Michael Brown" ? (
-                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#555555" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#555555" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M2 12A10 10 0 1 0 12 2m-9.87 4.5a14 14 0 0 0-0.13 1.8c0 7.5 5.5 14.4 13 14.7a10.8 10.8 0 0 0 2 .1"></path>
                         <path d="M3.3 7.7A13.4 13.4 0 0 0 2.5 10a15 15 0 0 0 6 11.1A11 11 0 0 0 12 22"></path>
                         <path d="M5 2.3A10 10 0 0 1 17.55 5"></path>
                       </svg>
                     ) : (
-                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#555555" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#555555" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
                         <circle cx="9" cy="7" r="4"></circle>
                         <line x1="19" x2="19" y1="8" y2="14"></line>
@@ -974,9 +975,9 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                       </svg>
                     )}
                   </div>
-                  <span className="text-center font-semibold text-base text-gray-700 flex items-center">
-                    <span className="leading-none tracking-wide">JOIN AS CREATOR</span>
-                    <ArrowRight className="w-4 h-4 ml-2 text-purple-500" />
+                  <span className="text-center font-semibold text-sm text-gray-700 flex items-center">
+                    <span className="leading-none tracking-normal">JOIN AS CREATOR</span>
+                    <ArrowRight className="w-3.5 h-3.5 ml-1.5 text-purple-500" />
                   </span>
                 </button>
               </div>
@@ -1379,43 +1380,8 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     </div>
                   </div>
 
-                  {/* Adding proper spacing and container for CTA */}
-                  <div className="mt-3 mb-3 pt-2 pb-14 relative"></div>
-                  
-                  {/* CTA container positioned at the bottom */}
-                  <div className="absolute bottom-3 left-0 right-0 px-4 z-10">
-                    <button 
-                      onClick={handleCTAClick}
-                      aria-label={`Join as creator with ${creator.name}`}
-                      className="w-full flex items-center justify-center rounded-[14px] font-semibold h-[46px] transition-all duration-300 relative hover:scale-[1.02] active:scale-[0.97] bg-creator-cta"
-                      style={{
-                        background: 'rgba(245, 245, 247, 0.92)',
-                        backdropFilter: 'blur(10px)',
-                        WebkitBackdropFilter: 'blur(10px)',
-                        color: '#555555',
-                        border: '1px solid rgba(118, 51, 220, 0.18)',
-                        borderTop: '1px solid rgba(255, 255, 255, 0.9)',
-                        borderLeft: '1px solid rgba(255, 255, 255, 0.8)',
-                        borderRight: '1px solid rgba(200, 200, 200, 0.2)',
-                        borderBottom: '1px solid rgba(200, 200, 200, 0.25)',
-                        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.9), inset 1px 0 0 rgba(255, 255, 255, 0.8)',
-                        fontSize: '14px',
-                        fontWeight: 600,
-                        fontFamily: 'var(--font-sans)',
-                        transform: 'translateZ(0)',
-                        willChange: 'transform, box-shadow',
-                        transformStyle: 'preserve-3d',
-                        transition: 'all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)',
-                        position: 'relative',
-                        overflow: 'hidden'
-                      }}
-                    >
-                      <span className="text-center font-semibold text-base text-gray-700 flex items-center">
-                        <span className="leading-none tracking-wide">JOIN AS CREATOR</span>
-                        <ArrowRight className="w-4 h-4 ml-2 text-purple-500" />
-                      </span>
-                    </button>
-                  </div>
+                  {/* Adding proper spacing for bottom padding without a duplicate CTA */}
+                  <div className="mt-3 mb-0 pt-2 pb-16 relative"></div>
                 </div>
               </Card>
             </div>
