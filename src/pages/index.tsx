@@ -332,6 +332,26 @@ const Index = () => {
       5: true
     });
     
+    // Remove any debug overlays that might be present on mobile
+    if (isMobile) {
+      const removeDebugElements = () => {
+        // Look for any debug overlays with lavender background and class information display
+        const debugOverlays = document.querySelectorAll('div[style*="background-color: #EBE3FF"], div[style*="background: #EBE3FF"]');
+        
+        debugOverlays.forEach(el => {
+          // If it contains dimensional information or class name information, it's likely a debug overlay
+          const content = el.textContent || '';
+          if (content.includes(' x ') || content.includes('section') || content.includes('creator-section')) {
+            el.remove();
+          }
+        });
+      };
+      
+      // Run immediately and after a short delay to catch dynamically added elements
+      removeDebugElements();
+      setTimeout(removeDebugElements, 500);
+    }
+    
     return () => {
       // No cleanup needed
     };
@@ -480,6 +500,31 @@ const Index = () => {
             max-height: none !important;
           }
           
+          /* Remove any debug overlays that might be present */
+          body > div:not([id]):not([class]) {
+            display: none !important;
+            opacity: 0 !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+            position: absolute !important;
+            z-index: -9999 !important;
+          }
+          
+          /* Target specifically debug elements with lavender background and dimensions */
+          div[style*="#EBE3FF"],
+          div:not([id]):not([class])[style*="393 x"] {
+            display: none !important;
+            visibility: hidden !important;
+            width: 0 !important;
+            height: 0 !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+            position: absolute !important;
+            top: -9999px !important;
+            left: -9999px !important;
+            z-index: -9999 !important;
+          }
+          
           /* Fix overlap between hero and creator sections */
           @media (max-width: 768px) {
             #mobile-hero-cta-section > div {
@@ -496,7 +541,7 @@ const Index = () => {
 
         {/* Direct DOM manipulation script */}
         <script dangerouslySetInnerHTML={{ __html: `
-          // Direct DOM manipulation to fix heights
+          // Direct DOM manipulation to fix heights and remove debug overlays
           (function() {
             function fixHeroHeight() {
               const heroElements = document.querySelectorAll('section#hero, [data-hero-section="true"]');
@@ -514,13 +559,58 @@ const Index = () => {
               });
             }
             
+            // Function to remove debug overlays
+            function removeDebugOverlays() {
+              // Check if mobile
+              if (window.innerWidth < 768) {
+                // Target elements with lavender background and class/dimension info
+                const debugOverlays = document.querySelectorAll('body > div[style*="#EBE3FF"], div[style*="393 x"]');
+                debugOverlays.forEach(el => {
+                  // Check if it contains class names or dimension information
+                  const content = el.textContent || '';
+                  if (
+                    content.includes(' x ') || 
+                    content.includes('section') || 
+                    content.includes('creator-section') || 
+                    content.includes('find-creators-section') ||
+                    el.style.backgroundColor === '#EBE3FF'
+                  ) {
+                    // Found debug overlay - remove it
+                    el.style.display = 'none';
+                    el.style.opacity = '0';
+                    el.style.visibility = 'hidden';
+                    el.style.pointerEvents = 'none';
+                    el.style.position = 'absolute';
+                    el.style.zIndex = '-9999';
+                    
+                    // Try to remove from DOM entirely
+                    if (el.parentNode) {
+                      try {
+                        el.parentNode.removeChild(el);
+                      } catch (e) {
+                        console.log('Could not remove debug element');
+                      }
+                    }
+                  }
+                });
+              }
+            }
+            
             // Run immediately
             fixHeroHeight();
+            removeDebugOverlays();
             
             // Also run after load and after any animations
-            window.addEventListener('load', fixHeroHeight);
+            window.addEventListener('load', function() {
+              fixHeroHeight();
+              removeDebugOverlays();
+            });
+            
+            // Run multiple times to catch late-rendered elements
             setTimeout(fixHeroHeight, 500);
-            setTimeout(fixHeroHeight, 1000);
+            setTimeout(removeDebugOverlays, 500);
+            setTimeout(removeDebugOverlays, 1000);
+            setTimeout(removeDebugOverlays, 2000);
           })();
         `}} />
         
