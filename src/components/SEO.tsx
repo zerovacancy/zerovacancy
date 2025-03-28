@@ -50,8 +50,6 @@ const SEO: React.FC<SEOProps> = ({
       <meta property="og:image:height" content="630" />
       <meta property="og:image:alt" content={ogImageAlt} />
       <meta property="og:site_name" content="ZeroVacancy" />
-      {/* Fallback PNG for platforms that don't support WebP */}
-      <meta property="og:image" content="https://www.zerovacancy.ai/og-image.png" />
       
       {/* Twitter Card Tags */}
       <meta name="twitter:card" content="summary_large_image" />
@@ -59,8 +57,6 @@ const SEO: React.FC<SEOProps> = ({
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={ogImage} />
       <meta name="twitter:image:alt" content={ogImageAlt} />
-      {/* Fallback PNG for platforms that don't support WebP */}
-      <meta name="twitter:image:src" content="https://www.zerovacancy.ai/og-image.png" />
       
       {/* Structured Data JSON-LD */}
       {structuredData && Array.isArray(structuredData) ? (
