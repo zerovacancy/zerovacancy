@@ -152,7 +152,7 @@ const PreviewSearch = () => {
         outline: 'none', // No outline
         boxShadow: 'none', // No box shadow
         zIndex: isMobile ? 10 : 20, // Lower z-index on mobile to prevent blocking social proof
-        paddingTop: isMobile ? '60px' : '40px', // Increased padding on mobile to create space for social proof
+        paddingTop: isMobile ? '80px' : '40px', // Increased from 60px to 80px for more breathing room on mobile
         borderTop: isMobile ? 'none' : '1px solid rgba(138, 66, 245, 0.1)', // Subtle top border on desktop for separation
         marginTop: isMobile ? '30px' : 0 // Add top margin on mobile to push section down
       }}
