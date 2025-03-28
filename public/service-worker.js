@@ -86,24 +86,33 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// Activate event - clean up old caches
+// Activate event - clean up old caches and always clear CSS cache
 self.addEventListener('activate', (event) => {
   const currentCaches = [
     STATIC_CACHE_NAME, 
     IMAGE_CACHE_NAME, 
-    JS_CACHE_NAME, 
-    CSS_CACHE_NAME,
+    JS_CACHE_NAME,
     API_CACHE_NAME
   ];
   
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames
-          .filter((name) => !currentCaches.includes(name))
-          .map((name) => caches.delete(name))
-      );
+    Promise.all([
+      // First clear all CSS caches to avoid using stale CSS
+      caches.delete(CSS_CACHE_NAME),
+      
+      // Then clean up other old caches
+      caches.keys().then((cacheNames) => {
+        return Promise.all(
+          cacheNames
+            .filter((name) => !currentCaches.includes(name) && name !== CSS_CACHE_NAME)
+            .map((name) => caches.delete(name))
+        );
+      })
+    ]).then(() => {
+      // Create a fresh CSS cache
+      return caches.open(CSS_CACHE_NAME);
     }).then(() => {
+      // Claim clients
       return self.clients.claim();
     })
   );
@@ -190,10 +199,34 @@ self.addEventListener('fetch', (event) => {
       return;
     }
     
-    // Desktop uses stale-while-revalidate for CSS and JS
+    // Desktop uses network-first for CSS and stale-while-revalidate for JS
     if (destination === 'script' || destination === 'style') {
+      // Special handling for CSS - use network-first to avoid stale CSS issues
+      if (destination === 'style') {
+        event.respondWith(
+          fetch(event.request)
+            .then(response => {
+              // Clone and cache fresh CSS
+              if (response && response.ok) {
+                const clonedResponse = response.clone();
+                caches.open(CSS_CACHE_NAME).then(cache => {
+                  cache.put(event.request, clonedResponse);
+                });
+              }
+              return response;
+            })
+            .catch(() => {
+              // Fallback to cache if offline
+              return caches.open(CSS_CACHE_NAME)
+                .then(cache => cache.match(event.request));
+            })
+        );
+        return;
+      }
+      
+      // For JS, keep using stale-while-revalidate
       event.respondWith(
-        caches.open(destination === 'script' ? JS_CACHE_NAME : CSS_CACHE_NAME)
+        caches.open(JS_CACHE_NAME)
           .then(cache => {
             return cache.match(event.request)
               .then(cachedResponse => {

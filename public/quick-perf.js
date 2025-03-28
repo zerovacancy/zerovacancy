@@ -1,5 +1,34 @@
 // Quick performance optimizations that run immediately
 (function() {
+  // CSS error recovery mechanism
+  function recoverFromCssErrors() {
+    // Handle CSS preload errors and missing files
+    window.addEventListener('error', function(event) {
+      const target = event.target;
+      // Check if error is from a CSS file
+      if (target && target.tagName === 'LINK' && 
+          target.rel === 'preload' && target.as === 'style' &&
+          event.target.href && event.target.href.includes('/assets/css/index-')) {
+        
+        console.warn('CSS preload failed, attempting recovery:', target.href);
+        
+        // Remove the failing preload
+        target.remove();
+        
+        // Force clear any related caches if service worker available
+        if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+          navigator.serviceWorker.controller.postMessage({
+            type: 'CLEAR_CACHE',
+            cacheNames: ['zerovacancy-css-v1']
+          });
+        }
+      }
+    }, true);
+  }
+  
+  // Run CSS recovery immediately
+  recoverFromCssErrors();
+  
   // Check if we're on a mobile device
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
                    window.innerWidth < 768;
