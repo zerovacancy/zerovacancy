@@ -385,10 +385,11 @@ html, body {
     max-width: 100vw !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
+    padding-top: 80px !important; /* Increased padding for better spacing */
     margin-left: 0 !important;
     margin-right: 0 !important;
     overflow-x: hidden !important;
-    background-color: #F9F6EC !important; /* Explicit tan background */
+    background-color: #EBE3FF !important; /* Use proper lavender background */
     border: none !important;
     border-top: none !important;
     border-bottom: none !important;
