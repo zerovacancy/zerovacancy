@@ -23,7 +23,7 @@ const SEO: React.FC<SEOProps> = ({
   title = 'ZeroVacancy - AI-Driven Property Marketing & Content Creator Marketplace',
   description = 'Connect with elite content creators who transform your spaces into compelling visual stories',
   canonicalPath = '',
-  ogImage = 'https://www.zerovacancy.ai/og-image-new.png',
+  ogImage = 'https://www.zerovacancy.ai/og-image-new.webp',
   ogType = 'website',
   ogImageAlt = 'ZeroVacancy - The premium marketplace for real estate content creators',
   noindex = false,
@@ -45,8 +45,13 @@ const SEO: React.FC<SEOProps> = ({
       <meta property="og:url" content={canonical} />
       <meta property="og:type" content={ogType} />
       <meta property="og:image" content={ogImage} />
+      <meta property="og:image:type" content="image/webp" />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
       <meta property="og:image:alt" content={ogImageAlt} />
       <meta property="og:site_name" content="ZeroVacancy" />
+      {/* Fallback PNG for platforms that don't support WebP */}
+      <meta property="og:image" content="https://www.zerovacancy.ai/og-image.png" />
       
       {/* Twitter Card Tags */}
       <meta name="twitter:card" content="summary_large_image" />
@@ -54,6 +59,8 @@ const SEO: React.FC<SEOProps> = ({
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={ogImage} />
       <meta name="twitter:image:alt" content={ogImageAlt} />
+      {/* Fallback PNG for platforms that don't support WebP */}
+      <meta name="twitter:image:src" content="https://www.zerovacancy.ai/og-image.png" />
       
       {/* Structured Data JSON-LD */}
       {structuredData && Array.isArray(structuredData) ? (
