@@ -144,7 +144,7 @@ const PreviewSearch = () => {
         contentVisibility: 'auto', // More efficient than content-visibility CSS class
         position: 'relative',
         transform: 'translateZ(0)', // Hardware acceleration
-        backgroundColor: isMobile ? '#EBE3FF' : '#F5F1FF', // Lighter background for desktop to enhance card visibility
+        backgroundColor: '#EBE3FF', // Consistent lavender background for both mobile and desktop
         backgroundImage: 'none', // Prevent any background patterns
         borderWidth: 0, // Ensure no borders
         borderColor: 'transparent', // Transparent border color

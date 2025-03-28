@@ -337,7 +337,7 @@ export const Hero = () => {
       if (!isMobile && navigator.userAgent.indexOf('Chrome') > -1) {
         sectionRef.current.style.setProperty('height', 'auto', 'important');
         sectionRef.current.style.setProperty('min-height', 'auto', 'important');
-        sectionRef.current.style.setProperty('padding-bottom', '80px', 'important');
+        sectionRef.current.style.setProperty('padding-bottom', '20px', 'important');
       }
     };
     
@@ -392,16 +392,25 @@ export const Hero = () => {
         applyStyle(hero, 'flex-direction', 'column');
         applyStyle(hero, 'align-items', 'center');
         applyStyle(hero, 'justify-content', 'center');
-        applyStyle(hero, 'padding-top', '10px');
+        applyStyle(hero, 'padding-top', '5px');
       } else {
         // Desktop styles to fix Chrome issues
         applyStyle(hero, 'height', 'auto');
         applyStyle(hero, 'min-height', 'auto');
         applyStyle(hero, 'max-height', 'none');
-        applyStyle(hero, 'padding-bottom', '80px');
+        applyStyle(hero, 'padding-top', '0px');
+        applyStyle(hero, 'padding-bottom', '20px');
       }
       
       // Find all the gaps and force them to be tight
+      const heroContainer = hero.querySelector('.flex.flex-col.items-center');
+      if (heroContainer && heroContainer instanceof HTMLElement) {
+        // Force zero gap between elements
+        applyStyle(heroContainer, 'gap', '0');
+        applyStyle(heroContainer, 'margin-top', '0');
+        applyStyle(heroContainer, 'padding-top', '0');
+      }
+
       const heroTitle = hero.querySelector('#hero-title');
       if (heroTitle && heroTitle instanceof HTMLElement) {
         if (isMobile) {
@@ -421,7 +430,7 @@ export const Hero = () => {
           applyStyle(textRotateContainer, 'margin-bottom', '-20px');
           applyStyle(textRotateContainer, 'margin-top', '-10px');
         } else {
-          applyStyle(textRotateContainer, 'margin-bottom', '10px');
+          applyStyle(textRotateContainer, 'margin-bottom', '-10px');
         }
       }
       
@@ -432,8 +441,9 @@ export const Hero = () => {
           if (isMobile) {
             applyStyle(el, 'margin-top', '-20px');
           } else {
-            // Desktop spacing
-            applyStyle(el, 'margin-top', '0');
+            // Desktop spacing - eliminate gaps
+            applyStyle(el, 'margin-top', '-20px');
+            applyStyle(el, 'margin-bottom', '0px');
           }
         }
       });
@@ -475,8 +485,9 @@ export const Hero = () => {
   }, [isMobile]);
 
   return (
-    <div
+    <section
       id="hero" 
+      data-hero-section="true"
       ref={sectionRef}
       className={cn(
         "flex items-center justify-center flex-col w-full bg-[#F9F6EC]", // Center both horizontally and vertically, tan/gold background for all devices
@@ -498,7 +509,8 @@ export const Hero = () => {
           justifyContent: 'center',
           overflowY: 'hidden',
           position: 'relative',
-          paddingTop: '10px', /* Greatly reduced padding from top */
+          paddingTop: '0px', /* No padding from top */
+          paddingBottom: '0px', /* No padding at bottom */
           zIndex: 10,
           marginTop: '0',
           transform: 'none',
@@ -515,8 +527,8 @@ export const Hero = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          paddingTop: '20px',
-          paddingBottom: '80px',
+          paddingTop: '0px',
+          paddingBottom: '10px',
           borderBottomWidth: '0',
           marginTop: '0',
           height: 'auto',
@@ -531,7 +543,7 @@ export const Hero = () => {
       
       <div 
         className={cn(
-          "flex flex-col items-center justify-start max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8",
+          "flex flex-col items-center justify-center max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 text-center",
           "gap-0", // Removed gap completely
           isInView ? "animate-fade-in delay-100" : "opacity-0"
         )}
@@ -554,16 +566,24 @@ export const Hero = () => {
             minHeight: '0',
             overflow: 'visible',
             display: 'flex',
-            flexDirection: 'column'
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
+            textAlign: 'center'
           } : { 
             position: 'relative',
             marginBottom: '0',
             paddingBottom: '0',
             height: 'auto',
-            minHeight: '0',
-            overflow: 'visible',
             display: 'flex',
-            flexDirection: 'column'
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
+            textAlign: 'center',
+            minHeight: '0',
+            overflow: 'visible'
           }}>
           {/* Main heading - both screen-reader friendly and visually styled */}
           <h1 id="hero-title" className={cn(
@@ -591,7 +611,7 @@ export const Hero = () => {
                   ? "drop-shadow-[0_1px_3px_rgba(74,45,217,0.2)]" 
                   : "drop-shadow-[0_1px_2px_rgba(74,45,217,0.05)]", 
                 isMobile && "relative",
-                "w-full mx-auto text-center",
+                "w-full mx-auto text-center flex items-center justify-center",
                 "mb-0" // No margin needed - removing space completely
               )}
               style={{ 
@@ -607,7 +627,7 @@ export const Hero = () => {
               role="text" 
               aria-label="Property Content animation"
               className={cn(
-                "relative flex w-full justify-center",
+                "relative flex w-full justify-center mx-auto text-center",
                 "overflow-visible",
                 "gpu-accelerated will-change-auto",
                 isMobile && "mobile-optimize"
@@ -617,7 +637,7 @@ export const Hero = () => {
                 height: isMobile ? "70px" : "70px", // Original height
                 minHeight: isMobile ? "70px" : "70px", // Match minHeight to height
                 overflow: "visible", // Allow text to overflow beyond the container
-                marginBottom: isMobile ? "-20px" : "10px", // Negative margin on mobile to pull next element up
+                marginBottom: isMobile ? "-25px" : "4px", // Increased negative margin on mobile, reduced on desktop
                 marginTop: isMobile ? "-10px" : "0" // Pull this element up on mobile
               }}
             >
@@ -675,8 +695,8 @@ export const Hero = () => {
             "max-w-[95%] sm:max-w-[650px]",
             "mx-auto", 
             "font-inter",
-            "relative",
-            isMobile ? "mb-4 text-sm px-4 py-0" : "mb-6" // Standard spacing
+            "relative flex items-center justify-center",
+            isMobile ? "mb-2 text-sm px-4 py-0" : "mb-2" // Reduced spacing
           )}
           style={{
             marginTop: isMobile ? '-20px' : '0', // Negative margin on mobile to pull up
@@ -710,8 +730,8 @@ export const Hero = () => {
 
       <div 
         className={cn(
-          "w-full", 
-          "mt-0", // No top margin
+          "w-full flex items-center justify-center", 
+          "mt-6", // Increased top margin
           isMobile ? "px-4" : "px-4 sm:px-6 lg:px-8",
           isInView ? "animate-fade-in delay-100" : "opacity-0"
         )}
@@ -723,34 +743,41 @@ export const Hero = () => {
           marginTop: '10px', // Change to positive margin
           transform: 'none',
           overflow: 'visible' 
-        } : {}}
+        } : {
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
       >
         {!isMobile && (
-          <div className="w-full max-w-5xl mx-auto relative" id="hero-cta-section">
-            <div className="flex flex-row justify-center gap-[8%] mb-2 relative items-start">
-              <div className="flex flex-col w-[45%] max-w-[280px]">
+          <div className="w-full flex flex-col items-center justify-center mt-4" id="hero-cta-section">
+            {/* Container for both buttons in a row */}
+            <div className="flex flex-row justify-center items-center gap-12 mb-6">
+              {/* Reserve Your Spot button */}
+              <div className="flex items-center justify-center" style={{ width: '260px' }}>
                 <WaitlistCTA 
                   buttonText="RESERVE YOUR SPOT" 
                   showSocialProof={false}
                   aria-label="Reserve your spot"
-                  className="primary-cta"
+                  className="primary-cta w-full"
                 />
               </div>
               
-              <div className="flex flex-col w-[45%] max-w-[280px] relative">
-                <div className="relative">
-                  <WaitlistCreatorCTA 
-                    buttonText="JOIN AS CREATOR" 
-                    showSocialProof={false}
-                    aria-label="Join as a content creator"
-                    className="secondary-cta"
-                  />
-                </div>
+              {/* Join as Creator button */}
+              <div className="flex items-center justify-center" style={{ width: '260px' }}>
+                <WaitlistCreatorCTA 
+                  buttonText="JOIN AS CREATOR" 
+                  showSocialProof={false}
+                  aria-label="Join as a content creator"
+                  className="secondary-cta w-full"
+                />
               </div>
             </div>
             
-            <div className="w-full flex justify-center">
-              <SocialProof className="mt-0" />
+            {/* Social proof below both buttons */}
+            <div className="flex justify-center items-center mt-6">
+              <SocialProof className="mx-auto" />
             </div>
           </div>
         )}
@@ -792,7 +819,7 @@ export const Hero = () => {
           </>
         )}
       </div>
-    </div>
+    </section>
   );
 };
 

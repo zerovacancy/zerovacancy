@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import Header from '../components/Header';
 import { Hero } from '../components/hero/Hero';
@@ -25,8 +26,7 @@ import {
 } from '@/utils/background-patterns';
 import { mobileOptimizationClasses as moc } from '@/utils/mobile-optimization';
 
-// Import React hooks directly instead of destructuring
-import { useState, useEffect, useRef, useCallback } from 'react';
+// Import additional React hooks
 import { lazy, Suspense } from 'react';
 
 // Completely revised section transition component to eliminate all gaps on both mobile and desktop
@@ -435,17 +435,20 @@ const Index = () => {
           /* Position hero section content at the top with padding */
           @media (min-width: 768px) {
             /* Hero section positioning */
-            section[data-hero-section] {
+            section[data-hero-section="true"],
+            div[data-hero-section="true"] section[data-hero-section="true"] {
               display: flex !important;
               align-items: flex-start !important;
               justify-content: center !important;
-              padding-top: 100px !important;
+              padding-top: 0 !important;
               min-height: auto !important;
             }
             
             /* Direct positioning for the hero component itself */
-            #root main section[data-hero-section] > div,
-            #root main section[data-hero-section] > div > div {
+            #root main [data-hero-section="true"] > div,
+            #root main [data-hero-section="true"] > div > div,
+            section[data-hero-section="true"] > div,
+            section[data-hero-section="true"] > div > div {
               display: flex !important;
               align-items: flex-start !important;
               justify-content: center !important;
@@ -460,7 +463,7 @@ const Index = () => {
           }
         `}} />
         
-        <section 
+        <div
           data-hero-section="true"
           ref={addSectionRef(0)} 
           style={{
@@ -487,9 +490,10 @@ const Index = () => {
               zIndex: 70 // Consistent z-index with mobile
             })
           }}
+          data-hero-section="true"
           className={cn(
             "w-full bg-[#F9F6EC]", // Tan/gold background for hero section (desktop)
-            !isMobile && "flex items-center justify-center pt-6 pb-6", // Centered vertically with modest padding
+            !isMobile && "flex items-center justify-center pt-0 pb-0", // Reduced vertical padding
             moc.sectionWrapper, // Standardized section wrapper
             isMobile && "touch-action-pan-y overscroll-behavior-none" // Fix mobile scrolling
           )}
@@ -509,7 +513,7 @@ const Index = () => {
                 justifyContent: 'center',
                 width: '100%',
                 paddingBottom: '0', // Explicitly remove bottom padding
-                marginBottom: '-20px' // Negative margin to pull up next section
+                marginBottom: '-40px' // Increased negative margin to pull up next section more
               })
             }} 
             className={cn(
@@ -519,13 +523,13 @@ const Index = () => {
           >
             <Hero />
           </div>
-        </section>
+        </div>
 
-        {/* Dedicated transition element between Hero and Creator sections */}
+        {/* Enhanced transition element between Hero and Creator sections */}
         {isMobile && (
           <div 
             style={{
-              height: '120px',
+              height: '140px', // Increased height for more space
               width: '100%',
               position: 'relative',
               zIndex: 50,
@@ -535,7 +539,48 @@ const Index = () => {
               background: 'linear-gradient(to bottom, #F9F6EC 0%, #F9F6EC 20%, rgba(249, 246, 236, 0.9) 30%, rgba(249, 246, 236, 0.7) 40%, rgba(249, 246, 236, 0.5) 50%, rgba(242, 237, 245, 0.7) 60%, rgba(235, 227, 255, 0.8) 70%, #EBE3FF 80%, #EBE3FF 100%)',
               overflow: 'hidden'
             }}
-          />
+          >
+            {/* Visual divider to indicate section change */}
+            <div 
+              className="absolute bottom-20 left-1/2 transform -translate-x-1/2" 
+              style={{
+                width: '40px',
+                height: '3px',
+                background: 'linear-gradient(to right, rgba(138, 66, 245, 0.2), rgba(138, 66, 245, 0.6), rgba(138, 66, 245, 0.2))',
+                borderRadius: '3px',
+                zIndex: 51
+              }}
+            />
+          </div>
+        )}
+        
+        {/* Desktop transition element */}
+        {!isMobile && (
+          <div 
+            style={{
+              height: '40px',
+              width: '100%',
+              position: 'relative',
+              zIndex: 50,
+              marginTop: '-5px',
+              marginBottom: '-5px',
+              pointerEvents: 'none',
+              background: 'linear-gradient(to bottom, #F9F6EC 0%, rgba(249, 246, 236, 0.95) 20%, rgba(249, 246, 236, 0.9) 40%, rgba(242, 237, 245, 0.8) 60%, rgba(235, 227, 255, 0.9) 80%, #EBE3FF 100%)',
+              overflow: 'hidden'
+            }}
+          >
+            {/* Visual divider for desktop */}
+            <div 
+              className="absolute bottom-5 left-1/2 transform -translate-x-1/2" 
+              style={{
+                width: '60px',
+                height: '2px',
+                background: 'linear-gradient(to right, rgba(138, 66, 245, 0.1), rgba(138, 66, 245, 0.3), rgba(138, 66, 245, 0.1))',
+                borderRadius: '2px',
+                zIndex: 51
+              }}
+            />
+          </div>
         )}
         
         {/* Scroll Target for Find Creators - positioned at exact junction point */}
@@ -581,12 +626,14 @@ const Index = () => {
             } : 
             {
               ...getZIndex(1),
-              ...getBackgroundTransition(1),
+              // Removed getBackgroundTransition to avoid color conflicts
               position: 'relative',
               zIndex: 80,
               marginTop: '0', // No negative margin
               paddingTop: '10px', // Standard padding on desktop
               backgroundColor: '#EBE3FF', // Lavender background on desktop
+              background: '#EBE3FF', // Ensure solid background with no gradient
+              backgroundImage: 'none', // Prevent any background patterns
               borderTopWidth: '0' // No top border
             }
           }
@@ -600,34 +647,23 @@ const Index = () => {
             isMobile && "px-0 mx-0 max-w-none find-creators-section" // Remove horizontal padding/margin on mobile
           )}
         >
-          {/* Gradient overlay for mobile */}
-          {isMobile && (
-            <div 
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '200px', // Expanded height to ensure gradient is more visible
-                background: 'linear-gradient(to bottom, #F9F6EC 0%, #F9F6EC 10%, rgba(249, 246, 236, 0.95) 20%, rgba(249, 246, 236, 0.9) 30%, rgba(249, 246, 236, 0.8) 40%, rgba(249, 246, 236, 0.6) 50%, rgba(249, 246, 236, 0.4) 60%, rgba(249, 246, 236, 0.2) 70%, rgba(249, 246, 236, 0) 80%)',
-                zIndex: 8, // Balanced z-index to ensure visibility while not covering content
-                pointerEvents: 'none'
-              }}
-            />
-          )}
+          {/* Removed gradient overlay for consistent background */}
           
           <div 
             className={cn(
               "w-full overflow-hidden",
               isMobile ? "px-0 mx-0" : "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
             )}
-            style={isMobile ? { 
-              backgroundColor: '#EBE3FF', 
-              backgroundImage: 'none',
-              position: 'relative',
-              zIndex: 10, // Balanced z-index - high enough to show above base but below gradient
-              paddingTop: '20px' // Add padding to push content down
-            } : undefined}>
+            style={ 
+              // Apply same style for both mobile and desktop
+              {
+                backgroundColor: 'transparent', // Make container transparent to show section background
+                backgroundImage: 'none',
+                position: 'relative',
+                zIndex: 10, // Balanced z-index
+                paddingTop: isMobile ? '20px' : '0' // Add padding only on mobile
+              }
+            }>
           
             <Suspense fallback={<SectionLoader />}>
               <PreviewSearch />
