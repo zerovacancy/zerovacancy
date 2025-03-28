@@ -558,9 +558,18 @@ const Index = () => {
           /* DIRECT ATTACK ON FIXED HEIGHT */
           /* Target the exact height that's being set on the section */
           section#hero, section[data-hero-section="true"], div[data-hero-section="true"], [data-hero-section="true"] {
-            height: 450px !important; /* Force a shorter height */
-            min-height: 450px !important;
-            max-height: 450px !important;
+            height: 650px !important; /* Increased height to show full CTAs on desktop */
+            min-height: 650px !important;
+            max-height: 650px !important;
+          }
+          
+          /* Mobile-specific height adjustment */
+          @media (max-width: 768px) {
+            section#hero, section[data-hero-section="true"], div[data-hero-section="true"], [data-hero-section="true"] {
+              height: 450px !important; /* Shorter height only for mobile */
+              min-height: 450px !important;
+              max-height: 450px !important;
+            }
           }
           
           /* Force the section to have content-driven height */
@@ -587,8 +596,16 @@ const Index = () => {
           
           /* NUCLEAR OPTION - TARGETING WITH JS */
           section[id="hero"], [data-hero-section="true"] {
-            height: 450px !important;
-            max-height: 450px !important;
+            height: 650px !important;
+            max-height: 650px !important;
+          }
+          
+          /* Mobile-only NUCLEAR OPTION */
+          @media (max-width: 768px) {
+            section[id="hero"], [data-hero-section="true"] {
+              height: 450px !important;
+              max-height: 450px !important;
+            }
           }
           
           /* NUCLEAR OPTION - MORE SELECTORS */
@@ -642,10 +659,18 @@ const Index = () => {
             function fixHeroHeight() {
               const heroElements = document.querySelectorAll('section#hero, [data-hero-section="true"]');
               heroElements.forEach(el => {
-                // Force fixed height
-                el.style.setProperty('height', '450px', 'important');
-                el.style.setProperty('max-height', '450px', 'important');
-                el.style.setProperty('min-height', '450px', 'important');
+                // Force fixed height - different values for mobile and desktop
+                if (window.innerWidth <= 768) {
+                  // Mobile height
+                  el.style.setProperty('height', '450px', 'important');
+                  el.style.setProperty('max-height', '450px', 'important');
+                  el.style.setProperty('min-height', '450px', 'important');
+                } else {
+                  // Desktop height - increased to show full CTAs
+                  el.style.setProperty('height', '650px', 'important');
+                  el.style.setProperty('max-height', '650px', 'important');
+                  el.style.setProperty('min-height', '650px', 'important');
+                }
                 
                 // Force top alignment
                 el.style.setProperty('justify-content', 'flex-start', 'important');
@@ -787,7 +812,9 @@ const Index = () => {
               position: 'relative',
               zIndex: 70, // Consistent z-index with mobile
               width: '100%', // Ensure full width
-              maxWidth: '100%' // Prevent overflow
+              maxWidth: '100%', // Prevent overflow
+              height: '650px', // Match the height to the CSS
+              minHeight: '650px' // Consistent minimum height
             })
           }}
           data-hero-section="true"
