@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import Header from '../components/Header';
-import { Hero } from '../components/hero/Hero';
+import { HeroSection } from '../components/hero/new';
 import Footer from '../components/Footer';
 import { Banner } from '@/components/ui/banner';
 import { Button } from '@/components/ui/button';
@@ -432,29 +432,6 @@ const Index = () => {
              id="main-content">
         {/* Hero Section */}
         <style dangerouslySetInnerHTML={{ __html: `
-          /* Position hero section content at the top with padding */
-          @media (min-width: 768px) {
-            /* Hero section positioning */
-            section[data-hero-section="true"],
-            div[data-hero-section="true"] section[data-hero-section="true"] {
-              display: flex !important;
-              align-items: flex-start !important;
-              justify-content: center !important;
-              padding-top: 0 !important;
-              min-height: auto !important;
-            }
-            
-            /* Direct positioning for the hero component itself */
-            #root main [data-hero-section="true"] > div,
-            #root main [data-hero-section="true"] > div > div,
-            section[data-hero-section="true"] > div,
-            section[data-hero-section="true"] > div > div {
-              display: flex !important;
-              align-items: flex-start !important;
-              justify-content: center !important;
-            }
-          }
-          
           /* Additional fix to prevent jumps during render */
           #root {
             display: flex;
@@ -474,20 +451,25 @@ const Index = () => {
               willChange: 'auto',
               transform: 'none',
               overflow: 'hidden',
-              isolation: 'auto'
+              isolation: 'auto',
+              maxHeight: '550px', // Cap height on mobile
+              minHeight: 'calc(100vh - 120px)',  // Restrict to visible area
+              display: 'flex'
             } : { 
               ...getZIndex(0), 
               ...getBackgroundTransition(0),
               display: 'flex',
-              alignItems: 'flex-start',
+              alignItems: 'center', // Change to center alignment
               justifyContent: 'center',
               paddingTop: '20px', // Minimal top padding 
+              paddingBottom: '30px', // Add padding to bottom
               minHeight: 'auto',
               height: 'auto', // Allow the section to size to its content
-              paddingBottom: '0', // Remove bottom padding
               marginBottom: '-30px', // Add negative margin to eliminate gap
               position: 'relative',
-              zIndex: 70 // Consistent z-index with mobile
+              zIndex: 70, // Consistent z-index with mobile
+              width: '100%', // Ensure full width
+              maxWidth: '100%' // Prevent overflow
             })
           }}
           data-hero-section="true"
@@ -521,7 +503,7 @@ const Index = () => {
               !isMobile && "flex items-start justify-center"
             )}
           >
-            <Hero />
+            <HeroSection />
           </div>
         </div>
 
@@ -529,12 +511,12 @@ const Index = () => {
         {isMobile && (
           <div 
             style={{
-              height: '140px', // Increased height for more space
+              height: '80px', // Reduced from 140px to 80px
               width: '100%',
               position: 'relative',
               zIndex: 50,
-              marginTop: '-30px',
-              marginBottom: '-30px',
+              marginTop: '0', // Removed negative margins
+              marginBottom: '0', // Removed negative margins
               pointerEvents: 'none',
               background: 'linear-gradient(to bottom, #F9F6EC 0%, #F9F6EC 20%, rgba(249, 246, 236, 0.9) 30%, rgba(249, 246, 236, 0.7) 40%, rgba(249, 246, 236, 0.5) 50%, rgba(242, 237, 245, 0.7) 60%, rgba(235, 227, 255, 0.8) 70%, #EBE3FF 80%, #EBE3FF 100%)',
               overflow: 'hidden'

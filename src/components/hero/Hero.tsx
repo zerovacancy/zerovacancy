@@ -157,18 +157,25 @@ const MobileHeroCTA = () => {
   if (showInlineSuccess) {
     return (
       <>
-        <div className="w-full min-w-full py-5 px-4 font-medium rounded-[12px] text-white relative flex flex-col items-center justify-center animate-fade-in"
+        <div className="w-full max-w-[250px] py-5 px-4 font-medium rounded-[14px] text-white relative flex flex-col items-center justify-center animate-fade-in"
           style={{
             background: 'linear-gradient(180deg, #8A42F5 0%, #7837DB 100%)',
             color: 'white',
             border: '1px solid rgba(255,255,255,0.2)',
             boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(0,0,0,0.05), 0 16px 32px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15)',
+            transform: 'translateZ(0)', // Hardware acceleration
+            willChange: 'transform', // Optimize for animations
+            margin: '0 auto',
+            position: 'relative'
           }}
         >
-          <div className="h-16 w-16 bg-purple-50/20 rounded-full flex items-center justify-center mb-2">
-            <CheckCircle className="h-8 w-8 text-white" />
+          <div className="h-14 w-14 bg-purple-50/20 rounded-full flex items-center justify-center mb-2"
+            style={{
+              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.3), 0 2px 8px rgba(0,0,0,0.2)'
+            }}>
+            <CheckCircle className="h-7 w-7 text-white" />
           </div>
-          <h3 className="text-lg font-bold text-white mb-1">
+          <h3 className="text-base font-bold text-white mb-1">
             {alreadySubscribed ? "Already Subscribed" : "Success!"}
           </h3>
           <p className="text-white/90 text-center text-sm max-w-[24rem] mb-1">
@@ -191,9 +198,10 @@ const MobileHeroCTA = () => {
       <button
         onClick={handleButtonClick}
         className={cn(
-          "w-full min-w-full font-medium rounded-[12px] text-white relative flex items-center justify-center",
-          "h-10 min-h-[40px] px-4 py-2 rounded-lg", // Smaller custom size
-          "text-sm" // Smaller text size
+          "w-full mx-auto font-medium rounded-[12px] text-white relative flex items-center justify-center",
+          "h-12 min-h-[48px] px-4 py-2 rounded-full", // Increased height and full rounded corners
+          "text-sm",
+          "max-w-[250px]" // Constrain width to ensure centering
         )}
         style={{
           background: 'linear-gradient(180deg, #8A42F5 0%, #7837DB 100%)',
@@ -202,17 +210,22 @@ const MobileHeroCTA = () => {
           boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(0,0,0,0.05), 0 16px 32px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15)',
           fontWeight: 600,
           paddingLeft: '52px',
+          letterSpacing: '0.02em',
+          transform: 'translateZ(0)', // Hardware acceleration
+          willChange: 'transform', // Optimize for animations
+          margin: '0 auto',
+          position: 'relative'
         }}
       >
         {/* Icon container */}
         <div 
-          className="absolute left-0 top-1/2 -translate-y-1/2 ml-6 flex items-center justify-center"
+          className="absolute left-0 top-1/2 -translate-y-1/2 ml-4 flex items-center justify-center"
           style={{
             width: '32px',
             height: '32px',
             background: '#8A42F5', // Match the purple button color
             border: '1px solid rgba(255,255,255,0.3)',
-            borderRadius: '12px',
+            borderRadius: '10px',
             boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15)'
           }}
         >
@@ -231,14 +244,21 @@ const MobileHeroCTA = () => {
     <>
       <form 
         onSubmit={handleSubmit}
-        className="w-full relative animate-fade-in"
+        className="w-full max-w-[250px] mx-auto relative animate-fade-in"
+        style={{
+          transform: 'translateZ(0)', // Hardware acceleration
+          willChange: 'transform', // Optimize for animations
+          margin: '0 auto',
+          position: 'relative',
+          zIndex: 30
+        }}
       >
         <div className={cn(
           "flex flex-col w-full",
-          mobileOptimizationClasses.spacingInteractive // Standard spacing
+          "shadow-lg" // Add shadow to the entire form container
         )}>
           <div className="relative">
-            {/* Email input */}
+            {/* Email input - improved styling */}
             <input
               ref={inputRef}
               type="email"
@@ -246,11 +266,15 @@ const MobileHeroCTA = () => {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
               className={cn(
-                "w-full rounded-t-[12px] rounded-b-none text-gray-800 border border-purple-200/70 border-b-0 focus:outline-none focus:ring-2 focus:ring-purple-400/40",
-                mobileOptimizationClasses.mobileFriendlyInput // Standard mobile input
+                "w-full rounded-t-[10px] rounded-b-none text-gray-800 border border-purple-200/70 border-b-0 focus:outline-none focus:ring-2 focus:ring-purple-400/40",
+                "h-12 px-3 text-base font-medium" // Improved height and font styling
               )}
               style={{
-                backgroundColor: 'white'
+                backgroundColor: 'white',
+                boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.03)',
+                borderWidth: '1px',
+                borderStyle: 'solid',
+                borderColor: 'rgba(138, 66, 245, 0.2)'
               }}
               disabled={isLoading}
               required
@@ -264,15 +288,20 @@ const MobileHeroCTA = () => {
             )}
           </div>
           
-          {/* Submit button */}
+          {/* Submit button - improved styling */}
           <button
             type="submit"
             disabled={isLoading}
             className={cn(
-              "w-full bg-gradient-to-b from-purple-600 to-purple-700 text-white font-medium rounded-t-none rounded-b-[12px] flex items-center justify-center transition-all duration-200",
-              mobileOptimizationClasses.mobileFriendlyButton, // Standard mobile button
-              mobileOptimizationClasses.tapTargetExtraLarge // Easy tap target
+              "w-full bg-gradient-to-b from-purple-600 to-purple-700 text-white font-semibold rounded-t-none rounded-b-[10px] flex items-center justify-center transition-all duration-200",
+              "h-12 text-sm" // Matching height with input
             )}
+            style={{
+              background: 'linear-gradient(180deg, #8A42F5 0%, #7837DB 100%)',
+              border: '1px solid rgba(255,255,255,0.2)',
+              boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15)',
+              letterSpacing: '0.02em'
+            }}
           >
             {isLoading ? (
               <>
@@ -337,7 +366,19 @@ export const Hero = () => {
       if (!isMobile && navigator.userAgent.indexOf('Chrome') > -1) {
         sectionRef.current.style.setProperty('height', 'auto', 'important');
         sectionRef.current.style.setProperty('min-height', 'auto', 'important');
-        sectionRef.current.style.setProperty('padding-bottom', '20px', 'important');
+        sectionRef.current.style.setProperty('padding-top', '30px', 'important');
+        sectionRef.current.style.setProperty('padding-bottom', '30px', 'important');
+        
+        // Ensure proper button container alignment in Chrome
+        const ctaSection = sectionRef.current.querySelector('#hero-cta-section');
+        if (ctaSection && ctaSection instanceof HTMLElement) {
+          ctaSection.style.setProperty('display', 'flex', 'important');
+          ctaSection.style.setProperty('flex-direction', 'column', 'important');
+          ctaSection.style.setProperty('align-items', 'center', 'important');
+          ctaSection.style.setProperty('justify-content', 'center', 'important');
+          ctaSection.style.setProperty('width', '100%', 'important');
+          ctaSection.style.setProperty('text-align', 'center', 'important');
+        }
       }
     };
     
@@ -373,80 +414,130 @@ export const Hero = () => {
     const forceStyles = () => {
       if (!sectionRef.current) return;
       
-      // Force styles on both mobile and desktop to handle Chrome issues
-      // Desktop only needs margin adjustments, not the full viewport height
-      // Force our styles with !important
+      // Apply styles with !important to override any conflicting styles
       const applyStyle = (el: HTMLElement, prop: string, value: string) => {
         el.style.setProperty(prop, value, 'important');
       };
       
-      // Main hero element
+      // Main hero element - simplified proper spacing
       const hero = sectionRef.current;
       
-      if (isMobile) {
-        // Mobile-specific styles
-        applyStyle(hero, 'height', '100vh');
-        applyStyle(hero, 'min-height', '100vh');
-        applyStyle(hero, 'max-height', 'none');
-        applyStyle(hero, 'display', 'flex');
-        applyStyle(hero, 'flex-direction', 'column');
-        applyStyle(hero, 'align-items', 'center');
-        applyStyle(hero, 'justify-content', 'center');
-        applyStyle(hero, 'padding-top', '5px');
-      } else {
-        // Desktop styles to fix Chrome issues
-        applyStyle(hero, 'height', 'auto');
-        applyStyle(hero, 'min-height', 'auto');
-        applyStyle(hero, 'max-height', 'none');
-        applyStyle(hero, 'padding-top', '0px');
-        applyStyle(hero, 'padding-bottom', '20px');
-      }
+      // Basic clean structure for both mobile and desktop
+      applyStyle(hero, 'display', 'flex');
+      applyStyle(hero, 'flex-direction', 'column');
+      applyStyle(hero, 'align-items', 'center');
+      applyStyle(hero, 'height', 'auto');
+      applyStyle(hero, 'min-height', 'auto');
+      applyStyle(hero, 'max-height', 'none');
+      applyStyle(hero, 'margin', '0');
       
-      // Find all the gaps and force them to be tight
-      const heroContainer = hero.querySelector('.flex.flex-col.items-center');
-      if (heroContainer && heroContainer instanceof HTMLElement) {
-        // Force zero gap between elements
-        applyStyle(heroContainer, 'gap', '0');
-        applyStyle(heroContainer, 'margin-top', '0');
-        applyStyle(heroContainer, 'padding-top', '0');
+      if (isMobile) {
+        // Mobile-specific padding for navbar
+        applyStyle(hero, 'padding-top', '80px');
+        applyStyle(hero, 'padding-bottom', '60px');
+        applyStyle(hero, 'justify-content', 'flex-start');
+      } else {
+        // Desktop padding
+        applyStyle(hero, 'padding-top', '60px');
+        applyStyle(hero, 'padding-bottom', '60px');
+        applyStyle(hero, 'justify-content', 'center');
       }
 
+      // Remove any min-height from all containers
+      const containers = hero.querySelectorAll('div');
+      containers.forEach(container => {
+        if (container instanceof HTMLElement) {
+          applyStyle(container, 'min-height', 'auto');
+        }
+      });
+      
+      // Fix title styling - no negative margins
       const heroTitle = hero.querySelector('#hero-title');
       if (heroTitle && heroTitle instanceof HTMLElement) {
-        if (isMobile) {
-          applyStyle(heroTitle, 'margin-top', '-60px');
-          applyStyle(heroTitle, 'margin-bottom', '-20px');
-          applyStyle(heroTitle, 'line-height', '0.9');
-        } else {
-          // Desktop margin adjustments
-          applyStyle(heroTitle, 'margin-bottom', '0px');
-        }
+        applyStyle(heroTitle, 'margin', '0 0 30px 0');
+        applyStyle(heroTitle, 'padding', '0');
+        applyStyle(heroTitle, 'width', '100%');
+        applyStyle(heroTitle, 'min-height', 'auto');
+        applyStyle(heroTitle, 'text-align', 'center');
       }
       
-      // Adjust spacing for text rotation container
+      // Fix rotating text container
       const textRotateContainer = hero.querySelector('[style*="height"]');
       if (textRotateContainer && textRotateContainer instanceof HTMLElement) {
         if (isMobile) {
-          applyStyle(textRotateContainer, 'margin-bottom', '-20px');
-          applyStyle(textRotateContainer, 'margin-top', '-10px');
+          applyStyle(textRotateContainer, 'margin-bottom', '0');
+          applyStyle(textRotateContainer, 'margin-top', '0');
+          applyStyle(textRotateContainer, 'height', '50px');
+          applyStyle(textRotateContainer, 'min-height', '50px');
+          applyStyle(textRotateContainer, 'width', '100%');
+          applyStyle(textRotateContainer, 'padding', '0');
         } else {
-          applyStyle(textRotateContainer, 'margin-bottom', '-10px');
+          applyStyle(textRotateContainer, 'margin-bottom', '0');
+          applyStyle(textRotateContainer, 'margin-top', '0');
+          applyStyle(textRotateContainer, 'height', '60px');
+          applyStyle(textRotateContainer, 'min-height', '60px');
+          applyStyle(textRotateContainer, 'padding', '0');
         }
       }
       
-      // Find subtitle paragraph
-      const textElements = hero.querySelectorAll('p');
-      textElements.forEach(el => {
+      // Fix paragraph spacing
+      const paragraphs = hero.querySelectorAll('p');
+      paragraphs.forEach(el => {
         if (el instanceof HTMLElement) {
           if (isMobile) {
-            applyStyle(el, 'margin-top', '-20px');
+            applyStyle(el, 'margin-top', '24px'); // MORE space from the heading
+            applyStyle(el, 'margin-bottom', '32px'); // MORE space before buttons
+            applyStyle(el, 'line-height', '1.5');
+            applyStyle(el, 'text-align', 'center');
+            applyStyle(el, 'font-size', '0.95rem');
+            applyStyle(el, 'padding', '0 16px');
           } else {
-            // Desktop spacing - eliminate gaps
-            applyStyle(el, 'margin-top', '-20px');
-            applyStyle(el, 'margin-bottom', '0px');
+            applyStyle(el, 'margin-top', '24px'); // MORE space from the heading
+            applyStyle(el, 'margin-bottom', '32px'); // MORE space before buttons
+            applyStyle(el, 'line-height', '1.5');
+            applyStyle(el, 'padding', '0 16px');
           }
         }
       });
+      
+      // Fix mobile CTA container
+      if (isMobile) {
+        const mobileCTASection = hero.querySelector('#mobile-hero-cta-section');
+        if (mobileCTASection && mobileCTASection instanceof HTMLElement) {
+          applyStyle(mobileCTASection, 'width', '100%');
+          applyStyle(mobileCTASection, 'max-width', '280px');
+          applyStyle(mobileCTASection, 'margin', '0 auto');
+          applyStyle(mobileCTASection, 'padding', '0');
+          applyStyle(mobileCTASection, 'min-height', 'auto');
+        }
+      }
+      
+      // Fix desktop CTA section
+      const ctaSection = hero.querySelector('#hero-cta-section');
+      if (ctaSection && ctaSection instanceof HTMLElement && !isMobile) {
+        applyStyle(ctaSection, 'width', '100%');
+        applyStyle(ctaSection, 'max-width', '680px');
+        applyStyle(ctaSection, 'margin', '0 auto');
+        applyStyle(ctaSection, 'padding', '0');
+        applyStyle(ctaSection, 'min-height', 'auto');
+        
+        // Fix button container
+        const buttonContainer = ctaSection.querySelector('.flex.flex-row');
+        if (buttonContainer && buttonContainer instanceof HTMLElement) {
+          applyStyle(buttonContainer, 'display', 'flex');
+          applyStyle(buttonContainer, 'justify-content', 'center');
+          applyStyle(buttonContainer, 'align-items', 'center');
+          applyStyle(buttonContainer, 'gap', '24px');
+          applyStyle(buttonContainer, 'margin-bottom', '16px');
+        }
+        
+        // Fix social proof
+        const socialProof = ctaSection.querySelector('.flex.justify-center');
+        if (socialProof && socialProof instanceof HTMLElement) {
+          applyStyle(socialProof, 'margin-top', '20px'); // Increased spacing from buttons
+          applyStyle(socialProof, 'margin-bottom', '16px'); // Add space at bottom
+        }
+      }
     };
     
     // Apply styles immediately
@@ -489,198 +580,95 @@ export const Hero = () => {
       id="hero" 
       data-hero-section="true"
       ref={sectionRef}
-      className={cn(
-        "flex items-center justify-center flex-col w-full bg-[#F9F6EC]", // Center both horizontally and vertically, tan/gold background for all devices
-        "px-0", 
-        !isMobile && "relative z-10",
-        "gap-0", // Removed gap completely
-        "touch-manipulation",
-        "opacity-100"
-        // Removed problematic classes
-      )}
+      className="flex flex-col items-center w-full bg-[#F9F6EC] relative"
       style={{
-        ...(isMobile ? {
-          // Mobile styles directly applied with highest specificity
-          height: '100vh',
-          minHeight: '100vh',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          overflowY: 'hidden',
-          position: 'relative',
-          paddingTop: '0px', /* No padding from top */
-          paddingBottom: '0px', /* No padding at bottom */
-          zIndex: 10,
-          marginTop: '0',
-          transform: 'none',
-          overflow: 'visible',
-          isolation: 'auto',
-          contain: 'none',
-          willChange: 'auto',
-          backgroundImage: 'none',
-          borderBottomWidth: '0',
-          paddingBottom: '0'
-        } : {
-          // Desktop styles
-          position: 'relative',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          paddingTop: '0px',
-          paddingBottom: '10px',
-          borderBottomWidth: '0',
-          marginTop: '0',
-          height: 'auto',
-          minHeight: 'auto',
-          maxHeight: 'none',
-          // These styles are now directly applied above with higher specificity
-          // Styles already applied above
-        })
+        height: 'auto',
+        paddingTop: isMobile ? '80px' : '60px', // More padding on mobile for nav
+        paddingBottom: '60px',
+        margin: 0,
+        overflow: 'visible'
       }}
       aria-labelledby="hero-title"
     >
       
       <div 
         className={cn(
-          "flex flex-col items-center justify-center max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 text-center",
-          "gap-0", // Removed gap completely
+          "flex flex-col items-center w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center",
           isInView ? "animate-fade-in delay-100" : "opacity-0"
         )}
-        style={isMobile ? { 
-          position: 'static', 
-          zIndex: 'auto',
-          contain: 'none',
-          willChange: 'auto',
-          transform: 'none'
-        } : {
-          position: 'relative'
+        style={{
+          width: '100%',
+          maxWidth: '100%',
+          margin: '0 auto'
         }}
       >
-        <div style={isMobile ? 
-          { 
-            position: 'static',
-            marginBottom: '0',
-            paddingBottom: '0',
-            height: 'auto',
-            minHeight: '0',
-            overflow: 'visible',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '100%',
-            textAlign: 'center'
-          } : { 
-            position: 'relative',
-            marginBottom: '0',
-            paddingBottom: '0',
-            height: 'auto',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '100%',
-            textAlign: 'center',
-            minHeight: '0',
-            overflow: 'visible'
-          }}>
+        <div className="flex flex-col items-center w-full" style={{
+          width: '100%',
+          maxWidth: '920px',
+          margin: '0 auto 20px',
+          textAlign: 'center'
+        }}>
           {/* Main heading - both screen-reader friendly and visually styled */}
-          <h1 id="hero-title" className={cn(
-            "tracking-tight leading-[1.15] font-bold font-jakarta mx-auto headingLarge",
-            "text-center max-w-5xl mb-0", // Added explicit zero bottom margin
-            "flex flex-col items-center justify-center" // Added flex to control child spacing
-          )} style={{ 
-            marginBottom: '0', 
-            paddingBottom: '0',
-            ...(isMobile && {
-              lineHeight: 0.9, // Even tighter line height on mobile
-              marginTop: '-60px', // Even larger negative margin to pull content up drastically
-              marginBottom: '-20px' // Pull next elements closer
-            })
+          <h1 id="hero-title" className="tracking-tight font-bold font-jakarta text-center w-full flex flex-col items-center"
+          style={{ 
+            margin: '0 0 30px 0',
+            padding: '0',
+            width: '100%'
           }}>
             <span 
               className={cn(
-                isMobile ? "text-[2rem]" : "text-3xl sm:text-5xl lg:text-6xl", // Original size
+                isMobile ? "text-[2rem]" : "text-4xl sm:text-5xl lg:text-6xl",
                 "tracking-[-0.02em]",
-                "block sm:inline-block font-jakarta",
+                "font-jakarta mb-2",
                 "bg-clip-text text-transparent",
                 "bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1]",
                 "font-bold",
-                isMobile 
-                  ? "drop-shadow-[0_1px_3px_rgba(74,45,217,0.2)]" 
-                  : "drop-shadow-[0_1px_2px_rgba(74,45,217,0.05)]", 
-                isMobile && "relative",
-                "w-full mx-auto text-center flex items-center justify-center",
-                "mb-0" // No margin needed - removing space completely
+                "w-full mx-auto text-center"
               )}
               style={{ 
-                letterSpacing: isMobile ? "-0.03em" : "-0.02em",
-                lineHeight: isMobile ? "1.1" : "1.2" // Added tighter line height
+                letterSpacing: "-0.02em",
+                lineHeight: "1.3",
+                margin: '0 0 8px 0'
               }}
             >
-              {/* Removed background pattern for mobile */}
               PROPERTY CONTENT THAT
             </span>
 
             <div 
-              role="text" 
-              aria-label="Property Content animation"
-              className={cn(
-                "relative flex w-full justify-center mx-auto text-center",
-                "overflow-visible",
-                "gpu-accelerated will-change-auto",
-                isMobile && "mobile-optimize"
-              )}
+              className="flex justify-center w-full text-center"
               style={{ 
                 width: "100%",
-                height: isMobile ? "70px" : "70px", // Original height
-                minHeight: isMobile ? "70px" : "70px", // Match minHeight to height
-                overflow: "visible", // Allow text to overflow beyond the container
-                marginBottom: isMobile ? "-25px" : "4px", // Increased negative margin on mobile, reduced on desktop
-                marginTop: isMobile ? "-10px" : "0" // Pull this element up on mobile
+                height: isMobile ? "60px" : "70px",
+                margin: '0',
+                padding: '0'
               }}
             >
               <TextRotate
                 texts={TITLES}
                 mainClassName="flex justify-center items-center h-auto"
                 staggerFrom="last"
-                // Simplified transitions for mobile
-                initial={{ opacity: 1 }} // Start visible to improve LCP
-                animate={{ opacity: 1 }} // Stay visible
-                exit={isMobile ? { opacity: 0 } : { y: "-40%", opacity: 0, scale: 0.95 }}
-                // No staggering on mobile
+                initial={{ opacity: 1 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
                 staggerDuration={0}
-                // Slower rotation on mobile
-                rotationInterval={isMobile ? 4500 : 3000}
-                splitLevelClassName={isMobile ? "" : "overflow-visible"}
+                rotationInterval={3000}
+                splitLevelClassName="overflow-visible"
                 elementLevelClassName={cn(
-                  isMobile ? "text-[2.8rem]" : "text-4xl sm:text-5xl lg:text-6xl", // Original size
+                  isMobile ? "text-[2.4rem]" : "text-4xl sm:text-5xl lg:text-6xl",
                   "font-bold font-jakarta tracking-[-0.03em]",
                   "bg-clip-text text-transparent", 
                   "bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1]",
-                  isMobile ? "" : "animate-shimmer-slide bg-size-200",
-                  "overflow-visible", // Always allow overflow
+                  "animate-shimmer-slide bg-size-200",
                   "drop-shadow-[0_1px_2px_rgba(74,45,217,0.2)]",
-                  isMobile ? "" : "filter brightness-110",
-                  "leading-[1.1]", // Slightly looser line height for readability
-                  "h-auto min-h-0", // Minimize height
-                  "py-2" // Add padding for better spacing
+                  "filter brightness-110",
+                  "leading-[1.3]"
                 )}
                 // Simpler tween animation for mobile
-                transition={isMobile ? 
-                  { 
-                    type: "tween", 
-                    duration: 0.3,
-                    ease: "easeInOut"
-                  } : { 
-                    type: "spring",
-                    damping: 30,
-                    stiffness: 250,
-                    mass: 0.5,
-                    duration: 0.5,
-                    ease: "easeOut"
-                  }}
+                transition={{ 
+                  type: "tween", 
+                  duration: 0.3,
+                  ease: "easeInOut"
+                }}
                 auto={true}
               />
             </div>
@@ -688,40 +676,18 @@ export const Hero = () => {
         </div>
 
         <p 
-          className={cn(
-            "text-base leading-relaxed bodyText",
-            "text-brand-text-primary", 
-            "text-center", 
-            "max-w-[95%] sm:max-w-[650px]",
-            "mx-auto", 
-            "font-inter",
-            "relative flex items-center justify-center",
-            isMobile ? "mb-2 text-sm px-4 py-0" : "mb-2" // Reduced spacing
-          )}
+          className="text-gray-700 text-center font-inter"
           style={{
-            marginTop: isMobile ? '-20px' : '0', // Negative margin on mobile to pull up
-            position: 'relative',
-            zIndex: 10, // Ensure text appears above any backgrounds
-            paddingTop: isMobile ? '0' : '10px' // No padding on mobile
+            width: '100%',
+            maxWidth: isMobile ? '95%' : '650px',
+            margin: '0 auto 40px', // SIGNIFICANT spacing before buttons
+            padding: '0 16px',
+            lineHeight: '1.6',
+            fontSize: isMobile ? '0.95rem' : '1rem'
           }}
         >
           {isMobile ? (
-            // The mobile version has additional heading structure
-            <>
-              <div className="relative flex flex-col items-center text-center">
-                <div className="relative mb-1"> {/* Further reduced margin */}
-                  <div className="absolute left-1/2 w-16 h-[2px] bg-purple-300/50" style={{ transform: 'translateX(-50%)', top: '-0.5px' }}></div>
-                  <h2 className={cn(
-                    mobileOptimizationClasses.headingMedium, // Standardized heading
-                    "text-gray-800 mt-0 font-jakarta"
-                  )}>
-                    Elite content that works
-                  </h2>
-                  <div className="h-[1px] w-10 bg-purple-300/30 mx-auto mt-1"></div> {/* Reduced mt-2 to mt-1 */}
-                </div>
-                Connect with top creators who transform your spaces with professional photography, video, and 3D tours that showcase your property's potential.
-              </div>
-            </>
+            "Connect with top creators who transform your spaces with professional photography, video, and 3D tours that showcase your property's potential."
           ) : (
             "Connect with elite content creators who transform your spaces into compelling visual stories. Access the most in-demand creators for content that doesn't just show your property—it showcases its potential."
           )}
@@ -730,53 +696,65 @@ export const Hero = () => {
 
       <div 
         className={cn(
-          "w-full flex items-center justify-center", 
-          "mt-6", // Increased top margin
-          isMobile ? "px-4" : "px-4 sm:px-6 lg:px-8",
+          "flex flex-col items-center w-full",
           isInView ? "animate-fade-in delay-100" : "opacity-0"
         )}
-        style={isMobile ? { 
-          position: 'static', 
-          zIndex: 'auto',
-          contain: 'none',
-          willChange: 'auto',
-          marginTop: '10px', // Change to positive margin
-          transform: 'none',
-          overflow: 'visible' 
-        } : {
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center'
+        style={{
+          width: '100%',
+          margin: '0 auto',
+          padding: '0'
         }}
       >
         {!isMobile && (
-          <div className="w-full flex flex-col items-center justify-center mt-4" id="hero-cta-section">
-            {/* Container for both buttons in a row */}
-            <div className="flex flex-row justify-center items-center gap-12 mb-6">
-              {/* Reserve Your Spot button */}
-              <div className="flex items-center justify-center" style={{ width: '260px' }}>
+          <div className="flex flex-col items-center w-full" id="hero-cta-section" style={{
+              width: '100%',
+              maxWidth: '680px', 
+              margin: '0 auto',
+              padding: '0'
+            }}>
+            {/* Container for both buttons in a row with fixed width and centering */}
+            <div className="flex flex-row justify-center items-center w-full" style={{
+              gap: '24px',
+              marginBottom: '24px'
+            }}>
+              {/* Reserve Your Spot button - fixed width */}
+              <div style={{ width: '260px' }}>
                 <WaitlistCTA 
                   buttonText="RESERVE YOUR SPOT" 
                   showSocialProof={false}
                   aria-label="Reserve your spot"
                   className="primary-cta w-full"
+                  style={{
+                    button: {
+                      width: '100%',
+                      margin: '0 auto'
+                    }
+                  }}
                 />
               </div>
               
-              {/* Join as Creator button */}
-              <div className="flex items-center justify-center" style={{ width: '260px' }}>
+              {/* Join as Creator button - fixed width */}
+              <div style={{ width: '260px' }}>
                 <WaitlistCreatorCTA 
                   buttonText="JOIN AS CREATOR" 
                   showSocialProof={false}
                   aria-label="Join as a content creator"
                   className="secondary-cta w-full"
+                  style={{
+                    button: {
+                      width: '100%',
+                      margin: '0 auto'
+                    }
+                  }}
                 />
               </div>
             </div>
             
             {/* Social proof below both buttons */}
-            <div className="flex justify-center items-center mt-6">
+            <div className="flex justify-center items-center w-full" style={{
+              marginTop: '0',
+              marginBottom: '0'
+            }}>
               <SocialProof className="mx-auto" />
             </div>
           </div>
@@ -784,34 +762,37 @@ export const Hero = () => {
         
         {isMobile && (
           <>
-            <div className="w-full flex flex-col items-center" style={{ position: 'static' }}>
-              <div className="w-[80%] max-w-[280px] mx-auto flex flex-col items-center gap-3" style={{ position: 'static' }}>
-                {/* Mobile CTA with inline email form expansion */}
-                <div className="w-full" style={{ position: 'static' }}>
-                  <MobileHeroCTA />
-                </div>
-                
-                <div className="w-full flex justify-center mt-3 mb-3">
-                  {/* Removed divider line */}
-                  <SocialProof 
-                    className="mt-0 transform scale-[0.95]"
-                    style={{
-                      borderRadius: '12px',
-                      padding: '8px 12px',
-                      fontSize: '12px',
-                      background: '#F8F8FA',
-                      border: '1px solid rgba(0,0,0,0.08)',
-                      boxShadow: '0 1px 2px rgba(0,0,0,0.03), 0 2px 4px rgba(0,0,0,0.03), 0 4px 8px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(0,0,0,0.05)'
-                    }}
-                  />
-                </div>
+            <div className="flex flex-col items-center w-full" 
+              id="mobile-hero-cta-section"
+              style={{ 
+                width: '100%',
+                maxWidth: '280px',
+                margin: '0 auto',
+                padding: '0'
+              }}>
+              {/* Mobile CTA with inline email form expansion */}
+              <div className="w-full flex justify-center items-center mb-4">
+                <MobileHeroCTA />
               </div>
-            </div>
-            
-            <div className="w-full flex justify-center mt-10" style={{ position: 'static', transform: 'none' }}>
-              <div className="flex flex-col items-center opacity-60" style={{ position: 'static', transform: 'none' }}>
-                <span className="text-xs text-purple-600 mb-1 font-medium block" style={{ position: 'static', transform: 'none' }}>Scroll to explore</span>
-                <svg width="18" height="8" viewBox="0 0 20 10" fill="none" xmlns="http://www.w3.org/2000/svg" style={{display: 'block', overflow: 'visible', position: 'static', transform: 'none'}}>
+              
+              {/* Centered social proof */}
+              <div className="flex justify-center items-center w-full mb-8">
+                <SocialProof 
+                  className="mx-auto"
+                  style={{
+                    margin: '0 auto',
+                    width: 'auto',
+                    padding: '6px 10px',
+                    borderRadius: '10px',
+                    fontSize: '11px'
+                  }}
+                />
+              </div>
+              
+              {/* Scroll indicator */}
+              <div className="flex flex-col items-center opacity-60 mt-4">
+                <span className="text-[11px] text-purple-600 mb-1 font-medium">Scroll to explore</span>
+                <svg width="16" height="8" viewBox="0 0 20 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M1 1L10 9L19 1" stroke="#8A2BE2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </div>
