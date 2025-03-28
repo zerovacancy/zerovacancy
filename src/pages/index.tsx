@@ -523,7 +523,6 @@ const Index = () => {
             setTimeout(fixHeroHeight, 1000);
           })();
         `}} />
-        `}} />
         
         <div
           data-hero-section="true"
