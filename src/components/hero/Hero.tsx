@@ -583,10 +583,17 @@ export const Hero = () => {
       className="flex flex-col items-center w-full bg-[#F9F6EC] relative"
       style={{
         height: 'auto',
+        minHeight: 'auto',
+        maxHeight: 'none',
         paddingTop: isMobile ? '80px' : '60px', // More padding on mobile for nav
-        paddingBottom: '60px',
+        paddingBottom: isMobile ? '90px' : '60px', // Extra padding at bottom on mobile
         margin: 0,
-        overflow: 'visible'
+        marginBottom: '20px !important',
+        overflow: 'visible',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: isMobile ? 'flex-start' : 'center',
+        alignItems: 'center'
       }}
       aria-labelledby="hero-title"
     >
@@ -768,29 +775,47 @@ export const Hero = () => {
                 width: '100%',
                 maxWidth: '280px',
                 margin: '0 auto',
-                padding: '0'
+                padding: '0',
+                minHeight: 'auto',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '16px',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginTop: '8px',
+                marginBottom: '16px' // SOLUTION: Explicit, controlled bottom margin
               }}>
               {/* Mobile CTA with inline email form expansion */}
-              <div className="w-full flex justify-center items-center mb-4">
+              <div className="w-full flex justify-center items-center" style={{ 
+                marginBottom: '4px !important', 
+                padding: '0 !important',
+                marginTop: '0 !important'
+              }}>
                 <MobileHeroCTA />
               </div>
               
               {/* Centered social proof */}
-              <div className="flex justify-center items-center w-full mb-8">
+              <div className="flex justify-center items-center w-full" style={{ 
+                marginBottom: '0 !important', 
+                marginTop: '8px !important',
+                padding: '0 !important'
+              }}>
                 <SocialProof 
                   className="mx-auto"
                   style={{
-                    margin: '0 auto',
+                    margin: '0 auto !important',
                     width: 'auto',
                     padding: '6px 10px',
                     borderRadius: '10px',
-                    fontSize: '11px'
+                    fontSize: '11px',
+                    marginTop: '0 !important',
+                    marginBottom: '0 !important'
                   }}
                 />
               </div>
               
               {/* Scroll indicator */}
-              <div className="flex flex-col items-center opacity-60 mt-4">
+              <div className="flex flex-col items-center opacity-60" style={{ marginTop: '8px !important', marginBottom: '8px !important' }}>
                 <span className="text-[11px] text-purple-600 mb-1 font-medium">Scroll to explore</span>
                 <svg width="16" height="8" viewBox="0 0 20 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M1 1L10 9L19 1" stroke="#8A2BE2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>

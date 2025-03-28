@@ -54,17 +54,19 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ className }) => {
       data-hero-section="true"
       className={cn(
         "flex flex-col items-center w-full bg-[#F9F6EC] relative",
-        isMobile && "justify-evenly h-full", // Add even spacing in flex container on mobile
+        isMobile && "justify-center", // Center content vertically on mobile
         className
       )}
       style={{
-        height: isMobile ? 'calc(100vh - 120px)' : 'auto', // Set to viewport height minus header for mobile
-        maxHeight: isMobile ? '550px' : 'none', // Add maximum height constraint for mobile
-        paddingTop: isMobile ? '1rem' : '2.5rem', // Minimal top padding on mobile
-        paddingBottom: isMobile ? '0.5rem' : '2.5rem', // Minimal bottom padding on mobile
+        height: isMobile ? 'auto' : 'auto', // Let content determine height for mobile
+        maxHeight: isMobile ? '400px' : 'none', // Reduced maximum height for mobile
+        minHeight: isMobile ? 'auto' : 'auto', // Let content determine height
+        paddingTop: isMobile ? '24px' : '2.5rem', // Increased top padding on mobile
+        paddingBottom: isMobile ? '32px' : '2.5rem', // Increased bottom padding on mobile
         margin: 0,
-        overflow: 'visible',
-        zIndex: 50
+        overflow: isMobile ? 'hidden' : 'visible', // Prevent overflow on mobile
+        position: 'relative',
+        zIndex: 70
       }}
       aria-labelledby="hero-title"
     >

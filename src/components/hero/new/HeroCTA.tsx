@@ -108,7 +108,8 @@ export const HeroCTA: React.FC<HeroCTAProps> = ({
             width: '100%',
             maxWidth: '280px',
             margin: '0 auto',
-            padding: 0
+            padding: 0,
+            position: 'relative'
           }}
         >
           {/* Mobile CTA with inline email form expansion */}

@@ -151,9 +151,10 @@ const PreviewSearch = () => {
         borderStyle: 'none', // No border style
         outline: 'none', // No outline
         boxShadow: 'none', // No box shadow
-        zIndex: 20, // Higher z-index to ensure content appears above gradient
-        paddingTop: isMobile ? '60px' : '60px', // Consistent top padding for both mobile and desktop
-        borderTop: isMobile ? 'none' : '1px solid rgba(138, 66, 245, 0.1)' // Subtle top border on desktop for separation
+        zIndex: isMobile ? 10 : 20, // Lower z-index on mobile to prevent blocking social proof
+        paddingTop: isMobile ? '60px' : '40px', // Increased padding on mobile to create space for social proof
+        borderTop: isMobile ? 'none' : '1px solid rgba(138, 66, 245, 0.1)', // Subtle top border on desktop for separation
+        marginTop: isMobile ? '30px' : 0 // Add top margin on mobile to push section down
       }}
     >
       {/* Section header with optimized rendering */}

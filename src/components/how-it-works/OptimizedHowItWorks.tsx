@@ -1,5 +1,6 @@
 
-import React, { useState, useEffect } from 'react';
+import * as React from 'react';
+import { useState, useEffect } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import SectionHeaderSimple from './SectionHeaderSimple';
 import MobileStepsGridSimple from './MobileStepsGridSimple';
@@ -32,7 +33,7 @@ const OptimizedHowItWorks: React.FC = () => {
       { threshold: 0.2 }
     );
 
-    const section = document.getElementById('how-it-works-section');
+    const section = document.getElementById('how-it-works');
     if (section) {
       observer.observe(section);
     }
@@ -50,8 +51,9 @@ const OptimizedHowItWorks: React.FC = () => {
   };
 
   return (
-    <div 
-      id="how-it-works-section"
+    <section 
+      id="how-it-works-section" 
+      aria-labelledby="design-title"
       className={`pt-16 pb-20 w-full ${!isMobile ? "bg-[#EDF7F2]" : ""}`} // Pale mint background
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -79,7 +81,7 @@ const OptimizedHowItWorks: React.FC = () => {
           />
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

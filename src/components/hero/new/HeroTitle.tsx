@@ -23,7 +23,7 @@ export const HeroTitle: React.FC<HeroTitleProps> = ({
         className
       )}
       style={{
-        margin: isMobile ? '0 0 0.5rem 0' : '0 0 1.25rem 0', // Further reduced to 0.5rem (8px) on mobile
+        margin: isMobile ? '0 0 16px 0' : '0 0 1.25rem 0', // Increased to 16px on mobile
         padding: 0,
         width: '100%'
       }}

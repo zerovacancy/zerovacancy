@@ -438,6 +438,91 @@ const Index = () => {
             flex-direction: column;
             min-height: 100vh;
           }
+
+          /* DIRECT ATTACK ON FIXED HEIGHT */
+          /* Target the exact height that's being set on the section */
+          section#hero, section[data-hero-section="true"], div[data-hero-section="true"], [data-hero-section="true"] {
+            height: 450px !important; /* Force a shorter height */
+            min-height: 450px !important;
+            max-height: 450px !important;
+          }
+          
+          /* Force the section to have content-driven height */
+          section#hero, section[data-hero-section="true"] {
+            position: relative !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: flex-start !important;
+            align-items: center !important;
+            padding-top: 100px !important;
+            padding-bottom: 20px !important;
+            overflow: visible !important;
+          }
+          
+          /* Hide transition elements below hero */
+          section#hero + div {
+            display: none !important;
+          }
+          
+          /* Remove any scroll indicators */
+          .flex.flex-col.items-center.opacity-60 {
+            display: none !important;
+          }
+          
+          /* NUCLEAR OPTION - TARGETING WITH JS */
+          section[id="hero"], [data-hero-section="true"] {
+            height: 450px !important;
+            max-height: 450px !important;
+          }
+          
+          /* NUCLEAR OPTION - MORE SELECTORS */
+          section[id="hero"] *, [data-hero-section="true"] * {
+            max-height: none !important;
+          }
+          
+          /* Fix overlap between hero and creator sections */
+          @media (max-width: 768px) {
+            #mobile-hero-cta-section > div {
+              margin-bottom: 16px !important;
+              position: relative !important;
+              z-index: 100 !important;
+            }
+            
+            .find-creators-section {
+              margin-top: 16px !important;
+            }
+          }
+          `}} />
+
+        {/* Direct DOM manipulation script */}
+        <script dangerouslySetInnerHTML={{ __html: `
+          // Direct DOM manipulation to fix heights
+          (function() {
+            function fixHeroHeight() {
+              const heroElements = document.querySelectorAll('section#hero, [data-hero-section="true"]');
+              heroElements.forEach(el => {
+                // Force fixed height
+                el.style.setProperty('height', '450px', 'important');
+                el.style.setProperty('max-height', '450px', 'important');
+                el.style.setProperty('min-height', '450px', 'important');
+                
+                // Force top alignment
+                el.style.setProperty('justify-content', 'flex-start', 'important');
+                
+                // Ensure proper padding
+                el.style.setProperty('padding-top', '100px', 'important');
+              });
+            }
+            
+            // Run immediately
+            fixHeroHeight();
+            
+            // Also run after load and after any animations
+            window.addEventListener('load', fixHeroHeight);
+            setTimeout(fixHeroHeight, 500);
+            setTimeout(fixHeroHeight, 1000);
+          })();
+        `}} />
         `}} />
         
         <div
@@ -445,15 +530,16 @@ const Index = () => {
           ref={addSectionRef(0)} 
           style={{
             ...(isMobile ? { 
-              position: 'relative', // Changed from static to relative
+              position: 'relative',
               zIndex: 70, // High z-index but lower than creator section
               contain: 'none',
               willChange: 'auto',
               transform: 'none',
               overflow: 'hidden',
               isolation: 'auto',
-              maxHeight: '550px', // Cap height on mobile
-              minHeight: 'calc(100vh - 120px)',  // Restrict to visible area
+              maxHeight: '400px', // Reduced from 550px
+              minHeight: 'auto', // Let content determine height
+              height: 'auto', // Content-based height
               display: 'flex'
             } : { 
               ...getZIndex(0), 
@@ -507,48 +593,35 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Enhanced transition element between Hero and Creator sections */}
-        {isMobile && (
+        {/* Transition element completely removed for mobile */}
+        {false && isMobile && (
           <div 
             style={{
-              height: '80px', // Reduced from 140px to 80px
-              width: '100%',
-              position: 'relative',
-              zIndex: 50,
-              marginTop: '0', // Removed negative margins
-              marginBottom: '0', // Removed negative margins
-              pointerEvents: 'none',
-              background: 'linear-gradient(to bottom, #F9F6EC 0%, #F9F6EC 20%, rgba(249, 246, 236, 0.9) 30%, rgba(249, 246, 236, 0.7) 40%, rgba(249, 246, 236, 0.5) 50%, rgba(242, 237, 245, 0.7) 60%, rgba(235, 227, 255, 0.8) 70%, #EBE3FF 80%, #EBE3FF 100%)',
-              overflow: 'hidden'
+              display: 'none',
+              visibility: 'hidden',
+              height: '0',
+              width: '0',
+              position: 'absolute',
+              zIndex: -1,
+              opacity: 0
             }}
-          >
-            {/* Visual divider to indicate section change */}
-            <div 
-              className="absolute bottom-20 left-1/2 transform -translate-x-1/2" 
-              style={{
-                width: '40px',
-                height: '3px',
-                background: 'linear-gradient(to right, rgba(138, 66, 245, 0.2), rgba(138, 66, 245, 0.6), rgba(138, 66, 245, 0.2))',
-                borderRadius: '3px',
-                zIndex: 51
-              }}
-            />
-          </div>
+          ></div>
         )}
         
-        {/* Desktop transition element */}
+        {/* Desktop transition element - ONLY shown on desktop */}
         {!isMobile && (
           <div 
             style={{
               height: '40px',
               width: '100%',
               position: 'relative',
-              zIndex: 50,
+              zIndex: 10, // Reduced z-index to prevent overlap with social proof
               marginTop: '-5px',
               marginBottom: '-5px',
               pointerEvents: 'none',
               background: 'linear-gradient(to bottom, #F9F6EC 0%, rgba(249, 246, 236, 0.95) 20%, rgba(249, 246, 236, 0.9) 40%, rgba(242, 237, 245, 0.8) 60%, rgba(235, 227, 255, 0.9) 80%, #EBE3FF 100%)',
-              overflow: 'hidden'
+              overflow: 'hidden',
+              display: isMobile ? 'none' : 'block' // Extra check to ensure it's hidden on mobile
             }}
           >
             {/* Visual divider for desktop */}
@@ -565,14 +638,14 @@ const Index = () => {
           </div>
         )}
         
-        {/* Scroll Target for Find Creators - positioned at exact junction point */}
-        <ScrollTarget id="find-creators" height={1} style={{ 
+        {/* Scroll Target for Find Creators - zero height and absolute position to avoid blocking content */}
+        <ScrollTarget id="find-creators" height={0} style={{ 
           backgroundColor: 'transparent',
-          position: 'relative',
-          zIndex: 49,
-          marginTop: '-1px',
+          position: 'absolute',
+          zIndex: 1,
           pointerEvents: 'none',
-          opacity: 0
+          opacity: 0,
+          top: isMobile ? 'calc(100vh - 200px)' : 'auto'
         }} />
         
         {/* Find Creators Section */}
@@ -596,7 +669,7 @@ const Index = () => {
               backgroundImage: 'none', // Reset backgroundImage
               background: '#EBE3FF', // Solid lavender background for the Creator section
               marginTop: '0', // NO negative margin - clean edge
-              paddingTop: '60px', // Significantly increased padding for better spacing
+              paddingTop: '40px', // Reduced padding for better flow from hero section
               borderTopWidth: '0', // No border on top
               borderBottomWidth: '0',
               borderLeftWidth: '0',
@@ -657,17 +730,20 @@ const Index = () => {
         <ScrollTarget id="how-it-works" height={0} />
         
         {/* Section Transition: Find Creators to How It Works - Unified flow */}
-        <div style={{ 
-          marginTop: isMobile ? '-30px' : '-50px', // Adjusted for different devices
-          position: 'relative',
-          zIndex: 30
-        }}>
-          <SectionTransition 
-            fromColor="#F9F6EC" 
-            toColor="#EDF7F2" 
-            height={40} // Reduced height significantly
-          />
-        </div>
+        {/* Section transition - hidden on mobile */}
+        {!isMobile && (
+          <div style={{ 
+            marginTop: '-50px', 
+            position: 'relative',
+            zIndex: 30
+          }}>
+            <SectionTransition 
+              fromColor="#F9F6EC" 
+              toColor="#EDF7F2" 
+              height={40} // Reduced height significantly
+            />
+          </div>
+        )}
         
         {/* How It Works Section */}
         <section 

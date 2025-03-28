@@ -24,10 +24,10 @@ export const HeroDescription: React.FC<HeroDescriptionProps> = ({
       style={{
         width: '100%',
         maxWidth: isMobile ? '95%' : '650px',
-        margin: isMobile ? '0.5rem auto' : '0 auto 1.75rem', // Even smaller margin on mobile
+        margin: isMobile ? '0 auto 24px' : '0 auto 1.75rem', // Increased bottom margin to 24px on mobile
         padding: '0 1rem', // 16px in rem
-        lineHeight: isMobile ? '1.4' : '1.6', // Tighter line height on mobile
-        fontSize: isMobile ? '0.9rem' : '1rem' // Slightly smaller text on mobile
+        lineHeight: isMobile ? '1.5' : '1.6', // Slightly increased line height on mobile
+        fontSize: isMobile ? '0.95rem' : '1rem' // Slightly increased font size on mobile
       }}
     >
       {isMobile ? mobileText : desktopText}
