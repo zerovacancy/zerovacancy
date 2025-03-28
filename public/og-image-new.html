@@ -36,11 +36,13 @@
     .logo-container {
       display: flex;
       align-items: center;
-      margin-bottom: 20px;
+      justify-content: center;
+      margin-bottom: 40px;
     }
     
     .logo {
-      height: 50px;
+      height: 70px; /* Larger logo */
+      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
     }
     
     .content {
@@ -50,19 +52,23 @@
     
     .text-content {
       flex: 1;
-      padding-right: 40px;
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
       display: flex;
       flex-direction: column;
       justify-content: center;
+      text-align: center;
     }
     
     .headline {
       font-family: 'Space Grotesk', sans-serif;
       font-weight: 700;
-      font-size: 56px;
+      font-size: 64px; /* Increased size */
       line-height: 1.1;
       margin: 0 0 24px 0;
       color: white;
+      text-align: center;
     }
     
     .headline span {
@@ -75,114 +81,76 @@
     
     .subheadline {
       font-family: 'Inter', sans-serif;
-      font-size: 24px;
+      font-size: 28px; /* Increased size */
       line-height: 1.4;
       color: rgba(255, 255, 255, 0.85);
       font-weight: 500;
-      margin: 0 0 36px 0;
-      max-width: 550px;
+      margin: 0 auto 36px auto;
+      max-width: 700px; /* Increased width */
+      text-align: center;
     }
     
     .feature-list {
       display: flex;
       margin-top: 10px;
       gap: 20px;
+      justify-content: center;
     }
     
     .feature-item {
       display: flex;
       align-items: center;
-      font-size: 18px;
+      font-size: 22px; /* Increased font size */
       font-weight: 500;
       color: white;
+      margin: 0 10px;
+      background-color: rgba(139, 92, 246, 0.15);
+      padding: 10px 20px;
+      border-radius: 50px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
     
     .feature-icon {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 24px;
-      height: 24px;
-      background-color: rgba(139, 92, 246, 0.2);
+      width: 28px;
+      height: 28px;
+      background-color: rgba(139, 92, 246, 0.3);
       border-radius: 50%;
       margin-right: 10px;
+      color: white;
+      font-weight: bold;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
     
-    .image-content {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .image-grid {
-      position: relative;
-      width: 460px;
-      height: 340px;
-    }
-    
-    .image-box {
-      border-radius: 12px;
-      overflow: hidden;
-      position: absolute;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-      border: 3px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .image-box img {
-      object-fit: cover;
-      width: 100%;
-      height: 100%;
-    }
-    
-    .image-box-1 {
-      width: 220px;
-      height: 280px;
-      top: 0;
-      left: 0;
-      z-index: 1;
-    }
-    
-    .image-box-2 {
-      width: 240px;
-      height: 200px;
-      bottom: 0;
-      right: 0;
-      z-index: 2;
-    }
-    
-    .image-box-3 {
-      width: 160px;
-      height: 160px;
-      top: 20px;
-      right: 50px;
-      z-index: 3;
-    }
+    /* Image section removed */
     
     .cta-container {
       position: absolute;
-      right: 60px;
+      left: 50%;
+      transform: translateX(-50%);
       bottom: 60px;
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.15);
       backdrop-filter: blur(10px);
-      border-radius: 8px;
-      padding: 12px 24px;
+      border-radius: 50px;
+      padding: 16px 40px;
       display: flex;
       align-items: center;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     }
     
     .cta-container .url {
       font-family: 'Inter', sans-serif;
-      font-size: 18px;
-      color: rgba(255, 255, 255, 0.9);
-      font-weight: 500;
+      font-size: 24px;
+      color: rgba(255, 255, 255, 0.95);
+      font-weight: 600;
+      letter-spacing: 0.5px;
     }
     
     .glow {
       position: absolute;
-      width: 400px;
-      height: 400px;
       background: radial-gradient(circle, rgba(139, 92, 246, 0.4) 0%, rgba(139, 92, 246, 0) 70%);
       filter: blur(60px);
       z-index: 0;
@@ -190,7 +158,9 @@
     
     .glow-1 {
       top: -150px;
-      right: -150px;
+      right: -50px;
+      width: 600px;
+      height: 600px;
       opacity: 0.6;
     }
     
@@ -198,14 +168,22 @@
       bottom: -200px;
       left: -100px;
       opacity: 0.4;
+      width: 600px;
+      height: 600px;
+    }
+    
+    .glow-3 {
+      top: 50%;
+      right: -200px;
+      transform: translateY(-50%);
       width: 500px;
       height: 500px;
+      opacity: 0.5;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.4) 0%, rgba(99, 102, 241, 0) 70%);
     }
     
     .decorative-element {
       position: absolute;
-      width: 120px;
-      height: 120px;
       border: 2px solid rgba(139, 92, 246, 0.3);
       border-radius: 50%;
       z-index: 0;
@@ -213,14 +191,33 @@
     
     .decorative-element-1 {
       top: 80px;
-      right: 240px;
+      right: 120px;
+      width: 150px;
+      height: 150px;
     }
     
     .decorative-element-2 {
-      bottom: 100px;
-      left: 160px;
-      width: 80px;
-      height: 80px;
+      bottom: 120px;
+      left: 100px;
+      width: 100px;
+      height: 100px;
+    }
+    
+    .decorative-element-3 {
+      top: 200px;
+      right: 300px;
+      width: 70px;
+      height: 70px;
+      border-color: rgba(99, 102, 241, 0.4);
+    }
+    
+    .decorative-element-4 {
+      bottom: 200px;
+      right: 180px;
+      width: 40px;
+      height: 40px;
+      border-color: rgba(139, 92, 246, 0.5);
+      background-color: rgba(139, 92, 246, 0.1);
     }
   </style>
 </head>
@@ -229,10 +226,13 @@
     <!-- Glow effects -->
     <div class="glow glow-1"></div>
     <div class="glow glow-2"></div>
+    <div class="glow glow-3"></div>
     
     <!-- Decorative elements -->
     <div class="decorative-element decorative-element-1"></div>
     <div class="decorative-element decorative-element-2"></div>
+    <div class="decorative-element decorative-element-3"></div>
+    <div class="decorative-element decorative-element-4"></div>
     
     <!-- Logo -->
     <div class="logo-container">
@@ -254,19 +254,9 @@
             <span class="feature-icon">✓</span>
             <span>Quality guaranteed</span>
           </div>
-        </div>
-      </div>
-      
-      <div class="image-content">
-        <div class="image-grid">
-          <div class="image-box image-box-1">
-            <img src="./creatorcontent/emily-johnson/work-1.webp" alt="Property photo">
-          </div>
-          <div class="image-box image-box-2">
-            <img src="./creatorcontent/jane-cooper/work-2.jpg" alt="Property photo">
-          </div>
-          <div class="image-box image-box-3">
-            <img src="./creatorcontent/michael-brown/work-3.jpg" alt="Property photo">
+          <div class="feature-item">
+            <span class="feature-icon">✓</span>
+            <span>AI-powered matching</span>
           </div>
         </div>
       </div>
