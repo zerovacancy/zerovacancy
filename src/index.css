@@ -247,7 +247,7 @@ html, body {
     overflow-x: hidden !important;
     overflow-y: auto !important; /* Ensure vertical scrolling works */
     height: auto !important; /* Prevent fixed height issues */
-    position: static !important; /* Prevent fixed positioning issues */
+    /* Removed position: static which was causing sticky positioning issues */
     touch-action: manipulation !important; /* Better touch handling */
     -webkit-overflow-scrolling: touch !important; /* Smooth scrolling on iOS */
     overscroll-behavior-y: none !important; /* Prevent pull-to-refresh */
@@ -316,15 +316,25 @@ html, body {
     pointer-events: auto !important; /* Ensure events pass through */
   }
   
-  /* Fix for fixed/absolute height containers which might trap scrolling */
+  /* Fix for fixed/absolute height containers which might trap scrolling 
+     But exclude header to ensure it stays sticky */
   [class*="h-["], [class*="max-h-["], [class*="min-h-["], 
   [style*="height:"], [style*="max-height:"], [style*="min-height:"],
   .h-screen, .min-h-screen, .h-full, .min-h-full,
-  .fixed, .absolute, .sticky {
+  .fixed, .absolute, .sticky:not(header) {
     touch-action: pan-y !important;
     overscroll-behavior: none !important;
     -webkit-overflow-scrolling: touch !important;
     pointer-events: auto !important;
+  }
+  
+  /* Ensure header always stays sticky */
+  header.sticky, .mobile-sticky-header {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 100 !important;
+    width: 100% !important;
+    touch-action: none !important;
   }
   
   /* Fix for features section and all buttons used as cards */

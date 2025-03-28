@@ -29,6 +29,14 @@ import { mobileOptimizationClasses as moc } from '@/utils/mobile-optimization';
 // Import additional React hooks
 import { lazy, Suspense } from 'react';
 
+// Add type declaration for window methods we'll use
+declare global {
+  interface Window {
+    removeDebugOverlays?: () => void;
+    removeDebugElements?: () => void;
+  }
+}
+
 // Completely revised section transition component to eliminate all gaps on both mobile and desktop
 const SectionTransition = ({ 
   fromColor, 
@@ -332,30 +340,118 @@ const Index = () => {
       5: true
     });
     
-    // Remove any debug overlays that might be present on mobile
-    if (isMobile) {
-      const removeDebugElements = () => {
+    // Enhanced debug overlay removal that works on both mobile and desktop
+    const removeDebugElements = () => {
+      // Import the function from our script declaration
+      if (typeof window.removeDebugOverlays === 'function') {
+        window.removeDebugOverlays();
+      } else {
+        // Fallback implementation if the script function isn't available yet
         // Look for any debug overlays with lavender background and class information display
-        const debugOverlays = document.querySelectorAll('div[style*="background-color: #EBE3FF"], div[style*="background: #EBE3FF"]');
+        const debugSelectors = [
+          'body > div[style*="#EBE3FF"]',
+          'div[style*="background-color: #EBE3FF"]', 
+          'div[style*="background: #EBE3FF"]',
+          'div:not([id]):not([class])[style*="393 x"]',
+          'div[style*=" x "]',
+          'body > div:not([id]):not([class])'
+        ];
+        
+        const debugOverlays = document.querySelectorAll(debugSelectors.join(','));
         
         debugOverlays.forEach(el => {
-          // If it contains dimensional information or class name information, it's likely a debug overlay
+          // Check content for debugging information
           const content = el.textContent || '';
-          if (content.includes(' x ') || content.includes('section') || content.includes('creator-section')) {
-            el.remove();
+          if (
+            content.includes(' x ') || 
+            content.includes('section') || 
+            content.includes('creator-section') ||
+            content.includes('find-creators-section') ||
+            content.includes('relative') ||
+            content.includes('absolute') ||
+            content.includes('py-') ||
+            content.includes('px-') ||
+            content.includes('w-full') ||
+            content.includes('overflow-') ||
+            content.includes('px') ||
+            // Special check for Lovable tool debug output which shows component dimensions
+            (content.match(/\d+(\.\d+)? x \d+(\.\d+)?/) !== null)
+          ) {
+            // Try to remove it from the DOM
+            try {
+              if (el.parentNode) {
+                el.parentNode.removeChild(el);
+              }
+            } catch (e) {
+              // If removal fails, make it invisible
+              el.style.display = 'none';
+              el.style.visibility = 'hidden';
+              el.style.opacity = '0';
+              el.style.position = 'absolute';
+              el.style.pointerEvents = 'none';
+              el.style.zIndex = '-9999';
+            }
           }
         });
-      };
+      }
+    };
+    
+    // Attach the function to window for access by our script
+    window.removeDebugElements = removeDebugElements;
+    
+    // Run immediately
+    removeDebugElements();
+    
+    // Run multiple times with increasing delay to catch elements that appear during rendering
+    const timers = [
+      setTimeout(removeDebugElements, 100),
+      setTimeout(removeDebugElements, 500),
+      setTimeout(removeDebugElements, 1000),
+      setTimeout(removeDebugElements, 2000),
+      setTimeout(removeDebugElements, 5000)
+    ];
+    
+    // Set up a MutationObserver to watch for dynamically added debug elements
+    const observer = new MutationObserver((mutations) => {
+      let hasRelevantChanges = false;
       
-      // Run immediately and after a short delay to catch dynamically added elements
-      removeDebugElements();
-      setTimeout(removeDebugElements, 500);
-    }
+      mutations.forEach(mutation => {
+        // Check if nodes were added
+        if (mutation.addedNodes.length > 0) {
+          for (let i = 0; i < mutation.addedNodes.length; i++) {
+            const node = mutation.addedNodes[i];
+            // Check if it's an element node
+            if (node.nodeType === 1) {
+              // Check if it looks like a debug overlay
+              if (
+                (node.nodeName === 'DIV' && !node.id && !node.className) ||
+                (node instanceof HTMLElement && 
+                 (node.style.backgroundColor === '#EBE3FF' || 
+                  (node.getAttribute('style') || '').includes('#EBE3FF')))
+              ) {
+                hasRelevantChanges = true;
+                break;
+              }
+            }
+          }
+        }
+      });
+      
+      // Only run removal if relevant changes were detected
+      if (hasRelevantChanges) {
+        removeDebugElements();
+      }
+    });
+    
+    // Start observing the document with the configured parameters
+    observer.observe(document.body, { childList: true, subtree: true });
     
     return () => {
-      // No cleanup needed
+      // Clean up timers and observer
+      timers.forEach(timer => clearTimeout(timer));
+      observer.disconnect();
     };
-  }, [isMobile]);
+  }, []);
   
   const handleTryNowClick = () => {
     setShowGlowDialog(true);
@@ -559,41 +655,88 @@ const Index = () => {
               });
             }
             
-            // Function to remove debug overlays
+            // Enhanced function to remove debug overlays
             function removeDebugOverlays() {
-              // Check if mobile
-              if (window.innerWidth < 768) {
-                // Target elements with lavender background and class/dimension info
-                const debugOverlays = document.querySelectorAll('body > div[style*="#EBE3FF"], div[style*="393 x"]');
-                debugOverlays.forEach(el => {
-                  // Check if it contains class names or dimension information
-                  const content = el.textContent || '';
-                  if (
-                    content.includes(' x ') || 
-                    content.includes('section') || 
-                    content.includes('creator-section') || 
-                    content.includes('find-creators-section') ||
-                    el.style.backgroundColor === '#EBE3FF'
-                  ) {
-                    // Found debug overlay - remove it
-                    el.style.display = 'none';
-                    el.style.opacity = '0';
-                    el.style.visibility = 'hidden';
-                    el.style.pointerEvents = 'none';
-                    el.style.position = 'absolute';
-                    el.style.zIndex = '-9999';
-                    
-                    // Try to remove from DOM entirely
-                    if (el.parentNode) {
+              // Run for both mobile and desktop to ensure consistent experience
+              // Target elements with lavender background and class/dimension info
+              const debugSelectors = [
+                'body > div[style*="#EBE3FF"]', 
+                'div[style*="background-color: #EBE3FF"]',
+                'div[style*="background: #EBE3FF"]',
+                'div:not([id]):not([class])[style*="393 x"]',
+                'div:not([id]):not([class])[style*=" x "]',
+                'body > div:not([id]):not([class]):not([style])',
+                '#root > div:not([id]):not([class]):not([style])',
+                'main > div:not([id]):not([class]):not([style])'
+              ];
+              
+              const debugOverlays = document.querySelectorAll(debugSelectors.join(','));
+              
+              debugOverlays.forEach(el => {
+                // Check if it contains class names or dimension information
+                const content = el.textContent || '';
+                // More comprehensive check for debug overlay content
+                if (
+                  content.includes(' x ') || 
+                  content.includes('section') || 
+                  content.includes('creator-section') || 
+                  content.includes('find-creators-section') ||
+                  content.includes('relative') ||
+                  content.includes('absolute') ||
+                  content.includes('py-') ||
+                  content.includes('px-') ||
+                  content.includes('w-full') ||
+                  content.includes('overflow-') ||
+                  content.includes('px') ||
+                  (el.style && el.style.backgroundColor === '#EBE3FF') ||
+                  // Check for computed style
+                  (window.getComputedStyle && window.getComputedStyle(el).backgroundColor === 'rgb(235, 227, 255)') ||
+                  // Special check for Lovable tool debug output which shows component dimensions
+                  (content.match(/\d+(\.\d+)? x \d+(\.\d+)?/) !== null)
+                ) {
+                  // First try to make it invisible (in case removal fails)
+                  el.style.display = 'none';
+                  el.style.opacity = '0';
+                  el.style.visibility = 'hidden';
+                  el.style.pointerEvents = 'none';
+                  el.style.position = 'absolute';
+                  el.style.zIndex = '-9999';
+                  el.style.width = '0';
+                  el.style.height = '0';
+                  el.style.overflow = 'hidden';
+                  el.style.clip = 'rect(0 0 0 0)';
+                  el.style.margin = '0';
+                  el.style.padding = '0';
+                  
+                  // Try to remove from DOM entirely using multiple approaches
+                  if (el.parentNode) {
+                    try {
+                      // Method 1: Direct removal
+                      el.parentNode.removeChild(el);
+                    } catch (e) {
                       try {
-                        el.parentNode.removeChild(el);
-                      } catch (e) {
+                        // Method 2: Replace with empty comment
+                        el.parentNode.replaceChild(document.createComment('debug overlay removed'), el);
+                      } catch (e2) {
                         console.log('Could not remove debug element');
                       }
                     }
                   }
-                });
-              }
+                }
+              });
+              
+              // Also look for elements with suspiciously empty content
+              // that might be rendering technical information
+              const emptyNonSemantic = document.querySelectorAll('div:not([id]):not([class]):empty');
+              emptyNonSemantic.forEach(el => {
+                try {
+                  if (el.parentNode) {
+                    el.parentNode.removeChild(el);
+                  }
+                } catch (e) {
+                  // Silently fail
+                }
+              });
             }
             
             // Run immediately
