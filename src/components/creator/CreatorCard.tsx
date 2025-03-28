@@ -193,21 +193,14 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               maxHeight: '85vh', // Limit maximum height on mobile
               height: 'auto', // Allow content to determine height within max limit
               
-              // Enhanced directional borders to match CTA styling
-              border: '1px solid rgba(220, 220, 230, 0.5)',
-              borderTop: '2px solid rgba(255, 255, 255, 0.95)',
-              borderLeft: '2px solid rgba(255, 255, 255, 0.8)',
-              borderRight: '1px solid rgba(118, 51, 220, 0.08)',
-              borderBottom: '1px solid rgba(118, 51, 220, 0.15)',
+              // Simplified border with consistent styling
+              border: '1px solid rgba(0, 0, 0, 0.06)',
               
-              // Layered shadow system matching CTA styling
+              // Simplified shadow system with subtle highlights
               boxShadow: `
-                0 2px 8px rgba(118, 51, 220, 0.15),
-                0 4px 12px rgba(0, 0, 0, 0.05),
-                inset 0 1px 0 rgba(255, 255, 255, 0.9),
-                inset 1px 0 0 rgba(255, 255, 255, 0.7),
-                inset 0 -1px 0 rgba(118, 51, 220, 0.1),
-                inset -1px 0 0 rgba(118, 51, 220, 0.05)
+                0 2px 8px rgba(118, 51, 220, 0.06),
+                0 4px 12px rgba(0, 0, 0, 0.03),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8)
               `,
               
               // Prevent content from overflowing
@@ -217,49 +210,20 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
             }}>
             
             {/* Simplified glass effect with single element and gradient background - now matching CTA styling */}
-            {/* Enhanced inner light effect matching CTA styling */}
+            {/* Simplified inner light effect */}
             <div className="absolute inset-0 pointer-events-none" 
                  style={{
                    borderRadius: '16px', // Consistent radius
                    transform: 'translateZ(0)',
                    zIndex: 2,
-                   overflow: 'hidden',
-                   // Inner border highlight matching CTA specs
-                   boxShadow: 'inset 0 0 0 1px rgba(255, 255, 255, 0.9)'
+                   overflow: 'hidden'
                  }}>
                  
-              {/* Top-left corner highlight matching CTA */}
-              <div className="absolute top-0 left-0 w-[80px] h-[26px] rounded-tl-[16px] pointer-events-none overflow-hidden">
-                <div 
-                  style={{
-                    position: 'absolute',
-                    top: '-20px',
-                    left: '-20px',
-                    width: '100px',
-                    height: '60px',
-                    background: 'radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.1) 60%, transparent 80%)',
-                    opacity: 0.6,
-                    transform: 'rotate(-5deg)',
-                    pointerEvents: 'none'
-                  }}
-                ></div>
-              </div>
+              {/* Simplified top edge highlight */}
+              <div className="absolute top-0 inset-x-0 h-[1px] bg-white/30 pointer-events-none"></div>
               
-              {/* Additional bottom-right corner highlight */}
-              <div className="absolute bottom-0 right-0 w-[60px] h-[20px] rounded-br-[16px] pointer-events-none overflow-hidden">
-                <div 
-                  style={{
-                    position: 'absolute',
-                    bottom: '0',
-                    right: '0',
-                    width: '80px',
-                    height: '40px',
-                    background: 'radial-gradient(circle at 70% 80%, rgba(255,255,255,0.4) 0%, transparent 70%)',
-                    opacity: 0.3,
-                    pointerEvents: 'none'
-                  }}
-                ></div>
-              </div>
+              {/* Simplified left edge highlight */}
+              <div className="absolute left-0 inset-y-0 w-[1px] bg-white/30 pointer-events-none"></div>
             </div>
             
             {/* Subtle pulsing highlight effect for selected cards */}
@@ -988,7 +952,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 "hover:translate-y-[-3px]", // Slightly more lift on hover
                 "hover:scale-[1.01]", // Subtle scale on hover
                 "bg-transparent", // Transparent background for glass effect
-                "border-0 relative rounded-xl", // Remove default border for custom styling
+                "border-0 relative", // Remove default border for custom styling
                 "block", // Force block display
                 "pb-18", // Increased padding to ensure CTA is not cut off
                 "max-w-[380px]", // Add maximum width constraint
@@ -1001,79 +965,40 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 transform: 'translateZ(0)', // Hardware acceleration
                 willChange: 'transform, box-shadow', // Optimization hint for transitions
                 transition: 'all 0.3s ease',
-                background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(245, 245, 250, 0.9) 100%)', // Slightly higher opacity gradient for desktop
+                background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(245, 245, 250, 0.92) 100%)', // Slightly higher opacity gradient
                 backdropFilter: 'blur(8px)', // Enhanced glass effect for desktop
                 WebkitBackdropFilter: 'blur(8px)', // Safari support
-                borderRadius: '20px', // Larger radius for desktop cards
+                borderRadius: '16px', // Refined radius for more modern look
                 overflow: 'hidden',
                 height: '100%', // Ensure full height
                 minHeight: '580px', // Minimum height for desktop cards
                 maxHeight: '620px', // Add maximum height constraint
                 
-                // Enhanced directional borders for desktop styling
-                border: '1px solid rgba(220, 220, 230, 0.6)',
-                borderTop: '2px solid rgba(255, 255, 255, 0.95)',
-                borderLeft: '2px solid rgba(255, 255, 255, 0.8)',
-                borderRight: '1px solid rgba(118, 51, 220, 0.1)',
-                borderBottom: '1px solid rgba(118, 51, 220, 0.2)',
-                
-                // Enhanced shadow system for desktop cards
+                // Simplified border with consistent width
+                border: '1px solid rgba(0, 0, 0, 0.06)',
                 boxShadow: `
-                  0 4px 16px rgba(118, 51, 220, 0.18),
-                  0 8px 24px rgba(0, 0, 0, 0.08),
-                  0 16px 32px rgba(0, 0, 0, 0.04),
-                  inset 0 1px 0 rgba(255, 255, 255, 0.9),
-                  inset 1px 0 0 rgba(255, 255, 255, 0.7),
-                  inset 0 -1px 0 rgba(118, 51, 220, 0.12),
-                  inset -1px 0 0 rgba(118, 51, 220, 0.08)
+                  0 4px 12px rgba(118, 51, 220, 0.06),
+                  0 8px 24px rgba(0, 0, 0, 0.04),
+                  0 1px 3px rgba(0, 0, 0, 0.02)
                 `,
                 
                 // Enhanced 3D effect for desktop
                 transformStyle: 'preserve-3d'
               }}>
-                {/* Enhanced inner light effect matching mobile styling */}
+                {/* Simplified inner highlight */}
                 <div className="absolute inset-0 pointer-events-none" 
                      style={{
-                       borderRadius: '18px', // Match the updated border radius
+                       borderRadius: '16px', // Match the card border radius
                        transform: 'translateZ(0)',
                        zIndex: 2,
-                       overflow: 'hidden',
-                       // Inner border highlight matching mobile specs
-                       boxShadow: 'inset 0 0 0 1px rgba(255, 255, 255, 0.9)'
+                       overflow: 'hidden'
                      }}>
                      
-                  {/* Top-left corner highlight matching mobile */}
-                  <div className="absolute top-0 left-0 w-[80px] h-[26px] rounded-tl-[18px] pointer-events-none overflow-hidden">
-                    <div 
-                      style={{
-                        position: 'absolute',
-                        top: '-20px',
-                        left: '-20px',
-                        width: '100px',
-                        height: '60px',
-                        background: 'radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.1) 60%, transparent 80%)',
-                        opacity: 0.6,
-                        transform: 'rotate(-5deg)',
-                        pointerEvents: 'none'
-                      }}
-                    ></div>
-                  </div>
+                  {/* Top edge highlight */}
+                  <div className="absolute top-0 inset-x-0 h-[1px] bg-white/30 pointer-events-none"></div>
                   
-                  {/* Additional bottom-right corner highlight */}
-                  <div className="absolute bottom-0 right-0 w-[60px] h-[20px] rounded-br-[18px] pointer-events-none overflow-hidden">
-                    <div 
-                      style={{
-                        position: 'absolute',
-                        bottom: '0',
-                        right: '0',
-                        width: '80px',
-                        height: '40px',
-                        background: 'radial-gradient(circle at 70% 80%, rgba(255,255,255,0.4) 0%, transparent 70%)',
-                        opacity: 0.3,
-                        pointerEvents: 'none'
-                      }}
-                    ></div>
-                  </div>
+                  {/* Left edge highlight */}
+                  <div className="absolute left-0 inset-y-0 w-[1px] bg-white/30 pointer-events-none"></div>
                 </div>
 
                 {/* Price tag with standardized glass effect */}
@@ -1095,27 +1020,13 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                   </span>
                 </div>
 
-                {/* Media container with 3D styling - improved aspect ratio for desktop */}
+                {/* Media container with refined styling */}
                 <div className="aspect-[16/10] relative w-full overflow-hidden flex-shrink-0 group-hover:scale-[1.01] transition-transform duration-300">
-                  {/* Image container with shadow and subtle border */}
-                  <div className="absolute inset-0 w-full h-full rounded-t-[20px] overflow-hidden z-10"
+                  {/* Simplified image container */}
+                  <div className="absolute inset-0 w-full h-full rounded-t-[16px] overflow-hidden z-10"
                     style={{
-                      boxShadow: 
-                        /* Enhanced directional shadows matching updated card lighting model */
-                        'inset 2px 2px 3px rgba(255,255,255,0.85), ' +
-                        'inset -2px -2px 3px rgba(0,0,0,0.05), ' +
-                        '0 4px 8px rgba(0,0,0,0.03)',
-                      borderTop: '1px solid rgba(255,255,255,0.9)',
-                      borderLeft: '1px solid rgba(255,255,255,0.7)',
-                      borderRight: '1px solid rgba(0,0,0,0.04)',
-                      borderBottom: '1px solid rgba(118,51,220,0.06)', // Subtle purple tint at bottom
                       transition: 'all 0.3s ease'
                     }}>
-                    {/* Enhanced top edge highlight for media container */}
-                    <div className="absolute inset-x-0 top-0 h-[2px] z-[1]" 
-                         style={{
-                           background: 'linear-gradient(to bottom, rgba(255,255,255,0.9) 0%, transparent 100%)'
-                         }}></div>
                   </div>
                   <CreatorMedia 
                     creator={creator}
