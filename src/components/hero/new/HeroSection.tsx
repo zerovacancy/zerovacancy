@@ -4,6 +4,8 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { HeroTitle } from './HeroTitle';
 import { HeroDescription } from './HeroDescription';
 import { HeroCTA } from './HeroCTA';
+import '../hero-section.css'; // Import the dedicated CSS
+import '../mobile-hero.css'; // Import mobile-first CSS directly
 
 // Define text constants
 const STATIC_TITLE = 'PROPERTY CONTENT THAT';
@@ -53,57 +55,38 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ className }) => {
       ref={sectionRef}
       data-hero-section="true"
       className={cn(
-        "flex flex-col items-center w-full bg-[#F9F6EC] relative",
-        isMobile && "justify-center", // Center content vertically on mobile
+        "hero-section", // Use our dedicated class
         className
       )}
-      style={{
-        height: isMobile ? 'auto' : 'auto', // Let content determine height for mobile
-        maxHeight: isMobile ? '400px' : 'none', // Reduced maximum height for mobile
-        minHeight: isMobile ? 'auto' : 'auto', // Let content determine height
-        paddingTop: isMobile ? '24px' : '2.5rem', // Increased top padding on mobile
-        paddingBottom: isMobile ? '32px' : '2.5rem', // Increased bottom padding on mobile
-        margin: 0,
-        overflow: isMobile ? 'hidden' : 'visible', // Prevent overflow on mobile
-        position: 'relative',
-        zIndex: 70
-      }}
       aria-labelledby="hero-title"
     >
-      <div 
-        className={cn(
-          "flex flex-col items-center w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center",
-          isVisible ? "animate-fade-in delay-100" : "opacity-0"
-        )}
-        style={{
-          width: '100%',
-          maxWidth: '1200px', // Constrained max width for better control
-          margin: '0 auto',
-          padding: '0 1rem' // 16px padding on left and right
-        }}
-      >
+      {/* Added hero-wrapper to manage overall layout distribution */}
+      <div className="hero-wrapper">
         <div 
-          className="flex flex-col items-center w-full" 
-          style={{
-            width: '100%',
-            maxWidth: '920px',
-            margin: '0 auto 1.25rem', // 20px in rem
-            textAlign: 'center'
-          }}
+          className={cn(
+            "hero-content", // Use our dedicated class
+            isVisible ? "hero-fade-in hero-delay-100" : "opacity-0"
+          )}
         >
-          <HeroTitle 
-            staticText={STATIC_TITLE} 
-            rotatingTexts={ROTATING_TITLES} 
-          />
+          <div className="hero-title-container">
+            <HeroTitle 
+              staticText={STATIC_TITLE} 
+              rotatingTexts={ROTATING_TITLES}
+            />
+          </div>
+
+          <div className="hero-description-container">
+            <HeroDescription 
+              mobileText={MOBILE_DESCRIPTION} 
+              desktopText={DESKTOP_DESCRIPTION}
+            />
+          </div>
         </div>
 
-        <HeroDescription 
-          mobileText={MOBILE_DESCRIPTION} 
-          desktopText={DESKTOP_DESCRIPTION} 
-        />
+        <div className={cn("hero-cta-container", isVisible ? "hero-fade-in hero-delay-200" : "opacity-0")}>
+          <HeroCTA />
+        </div>
       </div>
-
-      <HeroCTA className={isVisible ? "animate-fade-in delay-100" : "opacity-0"} />
     </section>
   );
 };

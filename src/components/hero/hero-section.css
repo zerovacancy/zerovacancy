@@ -84,6 +84,250 @@
   }
 }
 
+/**
+ * Desktop Hero Section Styles (min-width: 769px)
+ * 
+ * CRITICAL FIX: Addresses issues where elements disappear, shift, or overlap after refresh
+ * 
+ * The problem: Multiple elements receiving inline styles with fixed 500px heights
+ * The solution: Multiple layers of protection against any height/dimension manipulation
+ */
+@media (min-width: 769px) {
+  /**
+   * 1. ROOT CONTAINER - FIXED HEIGHT
+   * 
+   * Set a consistent 650px height ONLY on the root container
+   * All child elements will size naturally within this container
+   */
+  section#hero,
+  section[data-hero-section="true"],
+  div[data-hero-section="true"],
+  [data-hero-section="true"] {
+    /* Fixed-height container using the CSS variable */
+    height: var(--hero-desktop-height, 650px) !important;
+    min-height: var(--hero-desktop-height, 650px) !important;
+    max-height: var(--hero-desktop-height, 650px) !important;
+    
+    /* Proper flex layout for consistent distribution */
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important; /* Vertical centering */
+    align-items: center !important;      /* Horizontal centering */
+    
+    /* Prevent any other properties from affecting layout */
+    position: relative !important;
+    overflow: visible !important;
+    transform: none !important;          /* No transforms that could shift content */
+    transition: none !important;         /* No transitions on layout properties */
+    
+    /* Block any 500px heights that might be applied via CSS variables */
+    --block-500px-height: none;
+  }
+  
+  /**
+   * 2. FLEXIBLE WRAPPER - CONTENT-DRIVEN SIZING
+   * 
+   * The hero-wrapper manages spacing between elements
+   * It must have content-driven height, NOT fixed height
+   */
+  .hero-wrapper,
+  div.hero-wrapper,
+  section#hero > .hero-wrapper,
+  [data-hero-section="true"] > .hero-wrapper {
+    /* Auto-height based on content */
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    
+    /* Flex layout for child distribution */
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    
+    /* Consistent 24px gap between major sections */
+    gap: 24px !important;
+    
+    /* Width constraints with responsive padding */
+    width: 100% !important;
+    max-width: var(--hero-content-max-width, 1200px) !important;
+    padding: 0 var(--hero-spacing-base, 16px) !important;
+
+    /* No fixed top/bottom margins or padding - rely on flex gap */
+    margin: 0 auto !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+  
+  /**
+   * 3. PREVENT FIXED HEIGHTS ON ALL CONTENT CONTAINERS
+   * 
+   * These selectors target inner containers that often get fixed 500px heights
+   * Content-driven sizing ensures proper spacing and prevents overlaps
+   */
+  /* Generic content containers */
+  .hero-content,
+  .hero-content-container,
+  div.hero-content,
+  .hero-wrapper > div,
+  .hero-wrapper > .hero-content {
+    /* Auto-height to prevent 500px override */
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    
+    /* Flex layout for proper distribution */
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    
+    /* Gap-based spacing instead of margins */
+    gap: 16px !important;
+    
+    /* Allow proper width but prevent overflow */
+    width: 100% !important;
+    
+    /* No fixed spacing - controlled by parent flex container */
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  
+  /* Title container */
+  .hero-title-container,
+  div.hero-title-container {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    position: relative !important;
+  }
+  
+  /* Title element */
+  h1#hero-title,
+  #hero-title,
+  .hero-title-container h1#hero-title {
+    height: auto !important; 
+    min-height: 0 !important;
+    max-height: none !important;
+    margin: 0 0 8px 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    
+    /* Font sizing */
+    font-size: 2.5rem !important;
+    line-height: 1.2 !important;
+  }
+
+  /**
+   * 4. SPECIAL HANDLING FOR ROTATING TEXT
+   * 
+   * The rotating text container needs a fixed height
+   * to prevent layout shifts during text rotation
+   */
+  #hero-title > div,
+  .desktop-text-container {
+    /* Fixed 64px height ONLY for this specific element */
+    height: 64px !important;
+    min-height: 64px !important;
+    max-height: 64px !important;
+    
+    /* Proper positioning to prevent layout issues */
+    position: relative !important;
+    overflow: visible !important;
+    
+    /* Center content */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    
+    /* Prevent transforms from affecting layout */
+    transform: none !important;
+    will-change: opacity !important;
+  }
+  
+  /**
+   * 5. DESCRIPTION CONTAINER AUTO-HEIGHT
+   * 
+   * The description container needs extra protection
+   * as it's a common source of layout issues
+   */
+  .hero-description-container,
+  div.hero-description-container,
+  .auto-height-container {
+    /* Auto height based solely on content */
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    
+    /* Width constraints for desktop */
+    width: 100% !important;
+    max-width: 650px !important;
+    
+    /* Minimal consistent spacing */
+    margin: 0 auto 16px auto !important;
+    padding: 0 !important;
+    
+    /* Prevent stacking context issues */
+    position: static !important;
+    z-index: auto !important;
+  }
+  
+  /**
+   * 6. CTA CONTAINER AUTO-HEIGHT
+   * 
+   * The CTA container should be sized based on its content
+   * with consistent horizontal alignment
+   */
+  .hero-cta-container,
+  div.hero-cta-container {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    
+    /* Flex alignment for buttons */
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+  
+  /**
+   * 7. ANIMATION CLASSES - VISUAL ONLY
+   * 
+   * Animation classes should ONLY affect visual properties
+   * not layout dimensions or positioning
+   */
+  .hero-fade-in,
+  .hero-delay-100,
+  .hero-delay-200,
+  .hero-content.hero-fade-in,
+  .hero-cta-container.hero-fade-in,
+  div.hero-content.hero-fade-in,
+  div.hero-cta-container.hero-fade-in,
+  .hero-description-container.hero-fade-in {
+    /* Reset any height properties that animations might set */
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    
+    /* Prevent animations from changing position or display */
+    position: static !important;
+    display: flex !important;
+    
+    /* Limit transitions to only opacity and transform */
+    transition-property: opacity, transform !important;
+    will-change: opacity, transform !important;
+    
+    /* Prevent any transforms from affecting layout */
+    transform-origin: center !important;
+  }
+}
+
 /* Wrapper around all content to maintain proper vertical distribution */
 .hero-wrapper {
   display: flex;
@@ -140,10 +384,15 @@
   }
 }
 
-/* Animation classes for hero elements */
+/* Animation classes for hero elements - CRITICAL: These should ONLY affect opacity/visual properties, not layout */
 .hero-fade-in {
   animation: fadeIn 0.4s ease-out forwards;
   will-change: opacity, transform;
+  /* IMPORTANT: Ensure animations don't affect layout properties */
+  height: auto !important; 
+  min-height: 0 !important;
+  max-height: none !important;
+  position: static !important; /* Prevent position changes during animation */
 }
 
 .hero-delay-100 {
@@ -154,8 +403,42 @@
   animation-delay: 200ms;
 }
 
-/* Define animations */
+/* Define animations - ONLY affects opacity and small Y transform, not layout dimensions */
 @keyframes fadeIn {
-  0% { opacity: 0; transform: translateY(8px); }
-  100% { opacity: 1; transform: translateY(0); }
+  0% { 
+    opacity: 0; 
+    transform: translateY(8px); 
+    /* CRITICAL: No height, width, or position changes in keyframes */
+  }
+  100% { 
+    opacity: 1; 
+    transform: translateY(0); 
+    /* CRITICAL: No height, width, or position changes in keyframes */
+  }
+}
+
+/* Target with high specificity instead of !important */
+section[data-hero-section="true"] .hero-description-container,
+div[data-hero-section="true"] .hero-description-container,
+#hero .hero-description-container,
+.hero-section .hero-description-container {
+  min-height: auto;
+  height: auto;
+  max-height: none;
+}
+
+/* Target with animation classes - even higher specificity */
+section[data-hero-section="true"] .hero-description-container.hero-fade-in,
+div[data-hero-section="true"] .hero-description-container.hero-fade-in,
+#hero .hero-description-container.hero-fade-in,
+.hero-section .hero-description-container.hero-fade-in {
+  min-height: auto;
+  height: auto;
+}
+
+/* Add a custom class that we can target without needing !important */
+.auto-height-container {
+  min-height: auto;
+  height: auto;
+  max-height: none;
 }

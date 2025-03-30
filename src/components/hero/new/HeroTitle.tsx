@@ -40,13 +40,29 @@ export const HeroTitle: React.FC<HeroTitleProps> = ({
         {staticText}
       </span>
 
-      {/* Rotating text container - fixed height ensures stable layout */}
-      <div className={cn(
-        "flex justify-center w-full text-center p-0 m-0 overflow-visible relative",
-        isMobile 
-          ? "h-[40px] min-h-[40px]" // Critical: Fixed height for mobile
-          : "h-[3.2rem]" // Desktop height
-      )}>
+      {/* Rotating text container - fixed height with optimized desktop/mobile rendering */}
+      <div 
+        className={cn(
+          "flex justify-center w-full text-center overflow-visible",
+          // Use dedicated class based on device type
+          isMobile ? "h-[40px] min-h-[40px] relative" : "desktop-text-container"
+        )}
+        style={isMobile ? {
+          // Mobile-specific inline styles
+          height: '40px',
+          minHeight: '40px',
+          position: 'relative',
+          margin: 0,
+          padding: 0
+        } : {
+          // Desktop-specific inline styles
+          height: '64px',
+          minHeight: '64px',
+          position: 'relative',
+          margin: 0,
+          padding: 0
+        }}
+      >
         <TextRotate
           texts={rotatingTexts}
           mainClassName={cn(
@@ -54,10 +70,11 @@ export const HeroTitle: React.FC<HeroTitleProps> = ({
             isMobile && "absolute inset-0" // Critical: Use absolute positioning on mobile
           )}
           staggerFrom="last"
-          initial={isMobile ? { opacity: 0 } : { opacity: 1 }}  // Simpler animation for mobile
+          // Safe animation properties that won't affect layout
+          initial={{ opacity: 1 }}
           animate={{ opacity: 1 }}
-          exit={isMobile ? { opacity: 0 } : { opacity: 0 }}     // Simpler animation for mobile
-          staggerDuration={isMobile ? 0 : 0}  // No stagger on mobile
+          exit={{ opacity: 1 }}
+          staggerDuration={0}
           rotationInterval={3000}
           splitLevelClassName="overflow-visible"
           elementLevelClassName={cn(
@@ -70,13 +87,13 @@ export const HeroTitle: React.FC<HeroTitleProps> = ({
             "filter brightness-110",
             "leading-[1.2]" // Tighter line height
           )}
-          // Simpler fade animation for mobile only
+          // Safer animation behavior
           transition={{ 
             type: "tween", 
-            duration: isMobile ? 0.25 : 0.3, // Shorter for mobile
+            duration: 0.3,
             ease: "easeInOut"
           }}
-          auto={true}
+          auto={!isMobile} // Only auto-rotate on desktop
         />
       </div>
     </h1>
