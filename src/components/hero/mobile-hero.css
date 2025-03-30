@@ -1,392 +1,246 @@
-/* 
- * Hero Section - Mobile-First CSS Architecture
- * A sustainable, maintainable approach to styling the hero section
- * with centralized design tokens and mobile-first patterns.
- */
-
 /* ==========================
- * Design System Tokens
+ * Mobile Hero Section - Final Unified Version
+ * For devices with max-width: 768px
+ * 
+ * This CSS ensures a stable, vertically centered hero layout by:
+ * - Setting a fixed 450px height for the hero container
+ * - Using flexbox for vertical centering
+ * - Using gaps instead of margins for consistent spacing
+ * - Removing all fixed heights from inner elements
+ * - Using !important flags to prevent overrides from JavaScript
  * ========================== */
+
+/* Define spacing and sizing variables */
 :root {
   /* Breakpoints */
   --breakpoint-mobile: 768px;
   
-  /* Spacing Scale */
+  /* Component variables */
+  --hero-content-max-width: 90%;
+  --hero-desktop-height: 650px;
+  
+  /* Spacing scale */
   --space-unit: 8px;
   --space-xs: calc(var(--space-unit) * 1);   /* 8px */
   --space-sm: calc(var(--space-unit) * 2);   /* 16px */
   --space-md: calc(var(--space-unit) * 3);   /* 24px */
   --space-lg: calc(var(--space-unit) * 4);   /* 32px */
   --space-xl: calc(var(--space-unit) * 6);   /* 48px */
-  --space-xxl: calc(var(--space-unit) * 8);  /* 64px */
-  
-  /* Colors */
-  --hero-bg-color: #F9F6EC;
-  
-  /* Component-Specific Variables */
-  --hero-mobile-height: 450px;      /* Fixed height for mobile as requested */
-  --hero-desktop-height: 650px;     /* Fixed height for desktop */
-  --hero-content-max-width: 90%;    /* Content containment */
-  --hero-padding-mobile: var(--space-sm) var(--space-xs) var(--space-sm) var(--space-xs); /* 16px top/bottom, 8px left/right */
-  --hero-title-spacing: var(--space-xs);  /* 8px */
-  --hero-desc-spacing: var(--space-xs);   /* 8px */
-  --hero-cta-spacing: var(--space-sm);    /* 16px */
 }
 
-/* ==========================
- * Base Hero Styles (Mobile First)
- * ========================== */
-
-/* Hero section container - Mobile First */
+/* Base styles for both mobile and desktop */
 section[data-hero-section="true"],
 div[data-hero-section="true"],
 section#hero {
-  /* Base dimensions - fixed height on mobile */
   width: 100%;
-  height: var(--hero-mobile-height);
-  min-height: var(--hero-mobile-height);
-  max-height: var(--hero-mobile-height);
-  
-  /* Basic layout with vertical centering */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
-  
-  /* Visual styles */
-  background-color: var(--hero-bg-color);
-  position: relative;
-  overflow: hidden;
   margin: 0;
-  padding: 0; /* No padding to allow pure flexbox centering */
+  padding: 0;
   box-sizing: border-box;
+  position: relative;
 }
 
 /* Content wrapper - unified block that contains all hero content */
 .hero-wrapper {
-  /* Fixed width for content containment */
   width: 100%;
-  max-width: 90%;
-  /* Set height to 100% to fill the parent container's fixed height */
-  height: 100%;
-  
-  /* Create flex layout with vertical centering */
+  max-width: var(--hero-content-max-width);
   display: flex;
   flex-direction: column;
-  /* This centers the entire content block within the fixed height container */
   justify-content: center;
   align-items: center;
-  
-  /* Remove any external spacing */
   padding: 0;
-  margin: 0;
+  margin: 0 auto;
   box-sizing: border-box;
-  
-  /* Set consistent 24px gap between elements with !important to override any conflicts */
-  gap: var(--space-md) !important; /* 24px gap between hero-content and CTA */
+  gap: var(--space-md); /* 24px gap between hero-content and CTA */
 }
 
-/* Main content container - holds title and description */
-.hero-content {
-  width: 100%;
-  padding: 0;
-  /* Remove bottom margin - spacing now handled by parent's gap */
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  
-  /* Use gap for consistent internal spacing */
-  gap: var(--space-xs); /* 8px between title and description */
-}
-
-/* Title container */
-.hero-title-container {
-  width: 100%;
-  margin: 0; /* No margins - spacing handled by parent gap */
-  padding: 0;
-  height: auto;
-}
-
-/* Description container */
-.hero-description-container {
-  margin: 0 auto; /* Center horizontally with no vertical margins */
-  padding: 0;
-  max-width: var(--hero-content-max-width);
-  width: 100%;
-}
-
-/* CTA container */
-.hero-cta-container {
-  width: 100%;
-  /* Use !important to ensure margins don't override the parent gap */
-  margin: 0 !important; 
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* Special adjustments for rotating text */
-#hero-title > div {
-  min-height: 2.3rem;
-  height: auto;
-}
-
-/* ==========================
- * Mobile-specific overrides with !important 
- * to ensure stable layout on mobile devices
- * ========================== */
+/* Mobile-specific styles */
 @media (max-width: 768px) {
-  /* Root Hero Container - Enforced fixed height with vertical centering */
+  /* 1. Root Hero Container - Fixed height with vertical centering */
   section#hero,
-  section[data-hero-section="true"],
-  div[data-hero-section="true"],
   [data-hero-section="true"] {
-    /* Fixed dimensions with !important to override any inline styles */
+    /* Fixed height of 450px that can't be overridden */
     height: 450px !important;
     min-height: 450px !important;
     max-height: 450px !important;
-    width: 100% !important;
     
-    /* Remove any spacing that might affect the layout */
+    /* Reset spacing to zero */
     margin: 0 !important;
     padding: 0 !important;
     
-    /* Vertical centering with flex */
+    /* Allow overflow to be visible to prevent content clipping */
+    overflow: visible !important;
+    
+    /* Flexbox for vertical centering */
     display: flex !important;
     flex-direction: column !important;
     justify-content: center !important;
     align-items: center !important;
-    text-align: center !important;
     
-    /* Allow content to overflow if needed */
-    overflow: visible !important;
-    
-    /* Control the box model */
+    /* Ensure proper box model */
     box-sizing: border-box !important;
     
-    /* Ensure proper positioning */
+    /* Ensure proper stacking context */
     position: relative !important;
+    z-index: 1 !important;
   }
   
-  /* Critical: Fix absolute position and stacking issues */
+  /* 2. Hero Wrapper - Container for all hero content with consistent spacing */
   .hero-wrapper {
-    /* Critical - use position: static to prevent stacking context issues */
-    position: static !important;
-    
-    /* Create flex layout with specific gap control */
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: center !important; 
-    align-items: center !important;
-    
-    /* Fixed 24px gap between major elements */
-    gap: 24px !important;
-    
-    /* Sizing */
+    /* Width constraints with 90% max-width */
     width: 100% !important;
     max-width: 90% !important;
-    height: auto !important;
     
-    /* Reset spacing */
+    /* No fixed height - determined by content */
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    
+    /* Centered horizontal alignment */
     margin: 0 auto !important;
     padding: 0 !important;
+    
+    /* Flexbox for vertical layout with centering */
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    
+    /* Critical: 24px gap between major elements (content and CTA) */
+    gap: 24px !important;
+    
+    /* Ensure proper box model */
+    box-sizing: border-box !important;
+    
+    /* Prevent stacking context issues */
+    position: static !important;
   }
   
-  /* Critical: Hero content container with proper spacing and stacking */
-  .hero-content {
-    /* Force static positioning to prevent overlapping */
-    position: static !important;
+  /* 3. Nested Elements - Reset heights and spacing */
+  .hero-content,
+  .hero-title-container,
+  .hero-description-container,
+  .hero-cta-container {
+    /* Remove all fixed height constraints */
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
     
-    /* Flex layout for vertical content */
+    /* Reset all margins and padding to zero */
+    margin: 0 !important;
+    padding: 0 !important;
+    
+    /* Ensure proper box model */
+    box-sizing: border-box !important;
+    
+    /* Prevent stacking context issues */
+    position: static !important;
+  }
+  
+  /* 4. Content-specific styles */
+  
+  /* Hero content container with title and description */
+  .hero-content {
+    /* Width control */
+    width: 100% !important;
+    
+    /* Flexbox for vertical layout */
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
-    justify-content: center !important;
     
-    /* Clear gap between title and description */
-    gap: 16px !important;
-    
-    /* Critical: Remove fixed height that causes overlap */
-    height: auto !important;
-    min-height: 0 !important;
-    max-height: none !important;
-    
-    /* Full width to align with parent */
-    width: 100% !important;
-    
-    /* Reset margins - use gap for spacing control */
-    margin: 0 !important;
-    padding: 0 !important;
+    /* Internal spacing between title and description */
+    gap: 8px !important;
   }
   
-  /* The title container needs to maintain its own height properly */
-  .hero-title-container,
-  #hero .hero-title-container,
-  [data-hero-section="true"] .hero-title-container {
-    position: static !important;
+  /* Title container with dedicated min-height for stability */
+  .hero-title-container {
+    width: 100% !important;
+    min-height: 40px !important;
     display: block !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    width: 100% !important;
-    height: auto !important;
-    min-height: 0 !important;
-    max-height: none !important;
   }
   
-  /* CRITICAL FIX: hero-title is the main container for the rotating text */
+  /* Title element styling */
   #hero-title {
-    /* Force proper positioning */
     position: static !important;
-    display: block !important;
-    
-    /* Remove any height restrictions */
-    height: auto !important;
-    min-height: 0 !important;
-    max-height: none !important;
-    
-    /* Critical: Reset margins */
-    margin: 0 0 8px 0 !important;
+    margin: 0 !important;
     padding: 0 !important;
-    
-    /* Use flex for internal content */
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 4px !important;
   }
   
-  /* CRITICAL: Fix the rotating text container height */
-  #hero-title > div,
-  [data-hero-section="true"] #hero-title > div {
-    /* Define explicit height for rotating container */
+  /* Critical: Rotating text container with stable height */
+  #hero-title > div {
     height: 40px !important;
     min-height: 40px !important;
-    
-    /* Critical: Relative position to contain animated children */
     position: relative !important;
-    
-    /* Ensure text is visible */
-    opacity: 1 !important;
-    visibility: visible !important;
-    
-    /* Properly contain the text */
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    
-    /* Critical: Prevent overflow issues */
     overflow: visible !important;
   }
   
-  /* Ensure rotating text elements remain visible */
+  /* Ensure rotating text elements are visible */
   #hero-title .rotating-text,
-  #hero-title .rotating-text span,
-  [data-hero-section="true"] #hero-title .rotating-text,
-  [data-hero-section="true"] #hero-title .rotating-text span {
+  #hero-title .rotating-text span {
     display: block !important;
     opacity: 1 !important;
     visibility: visible !important;
-    min-height: 0 !important;
-    height: auto !important;
   }
   
-  /* Description container requires static positioning and proper spacing */
-  .hero-description-container,
-  #hero .hero-description-container,
-  [data-hero-section="true"] .hero-description-container {
-    position: static !important;
-    display: block !important;
-    
-    /* Auto height based on content */
-    height: auto !important;
-    min-height: 0 !important;
-    max-height: none !important;
-    
-    /* Critical: Reset margins that cause issues */
-    margin: 0 !important;
-    padding: 0 !important;
-    
-    /* Full width for proper alignment */
+  /* Description container */
+  .hero-description-container {
     width: 100% !important;
     max-width: 90% !important;
   }
   
-  /* CTA container needs to be properly positioned at the bottom */
-  .hero-cta-container,
-  #hero .hero-cta-container,
-  [data-hero-section="true"] .hero-cta-container {
-    /* Static positioning prevents overlaps */
-    position: static !important;
-    
-    /* Flex for content alignment */
+  /* CTA container */
+  .hero-cta-container {
+    width: 100% !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
-    justify-content: center !important;
-    
-    /* Critical: Remove fixed heights */
-    height: auto !important;
-    min-height: 0 !important;
-    max-height: none !important;
-    
-    /* Full width for alignment */
-    width: 100% !important;
-    
-    /* Reset spacing - control comes from parent gap */
-    margin: 0 !important;
-    padding: 0 !important;
   }
   
-  /* Fix for CTA button icon alignment */
+  /* 5. CTA Button and Icon Alignment */
+  
+  /* CTA Button styling */
   .hero-cta-container button,
   .mobile-cta-button {
-    /* Ensure proper button layout */
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
     position: relative !important;
-    
-    /* Text alignment - move text slightly right for better balance with icon */
-    text-align: center !important;
     padding-left: 55px !important;
     padding-right: 16px !important;
   }
   
-  /* Fix the icon container specifically */
+  /* Icon container positioning */
   .hero-cta-container button > div[class*="absolute"],
   .mobile-cta-button > div[class*="absolute"],
   .cta-icon-container {
-    /* Fix position of the bordered icon */
     position: absolute !important;
     left: 4px !important;
     top: 50% !important;
     transform: translateY(-50%) !important;
     margin-left: 0 !important;
-    
-    /* Ensure proper size */
     width: 32px !important;
     height: 32px !important;
-    
-    /* Ensure proper display */
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
   }
   
-  /* Fix any other possible absolute positioning issues */
+  /* Prevent any transforms or z-index issues that might break layout */
   .hero-section *,
   #hero *,
   [data-hero-section="true"] * {
-    /* Prevent animation transformations from breaking layout */
-    transform: none !important;
-    
-    /* Prevent z-index stacking issues */
     z-index: auto !important;
   }
   
-  /* Remove pseudo-elements that might create overlays */
+  /* Remove any pseudo-elements that might create overlays */
   section#hero::after,
   section#hero::before,
   [data-hero-section="true"]::after,
@@ -415,42 +269,3 @@ section#hero {
     max-width: 650px;
   }
 }
-
-/* Debug styles (only during development) */
-.debug-hero-styles section[data-hero-section="true"],
-.debug-hero-styles div[data-hero-section="true"],
-.debug-hero-styles section#hero {
-  background-color: rgba(255, 0, 0, 0.05);
-}
-
-/* ==========================
- * Design System Documentation
- * ==========================
- *
- * This CSS implements a mobile-first approach with these principles:
- *
- * 1. Centralized Design Tokens
- *    - All measurements use the spacing scale (--space-*)
- *    - Breakpoints are defined as variables
- *    - Component-specific values are named semantically
- *
- * 2. Mobile-First Architecture
- *    - Base styles target mobile viewport
- *    - Desktop styles are applied with min-width media queries
- *    - No !important flags used in normal styling
- *
- * 3. Flexible Layout
- *    - Mobile uses min-height instead of fixed height
- *    - Content containers use auto height
- *    - space-between flex distribution for consistent spacing
- *
- * 4. Simplified Selectors
- *    - Avoid overly specific selectors
- *    - Target elements by their semantic role
- *    - Use classes over attribute selectors where possible
- *
- * 5. Maintainability
- *    - Organized by component structure
- *    - Descriptive comments
- *    - No hardcoded values
- */

@@ -587,268 +587,76 @@ const Index = () => {
              id="main-content">
         {/* Hero Section */}
         <style dangerouslySetInnerHTML={{ __html: `
-          /* Additional fix to prevent jumps during render */
+          /* Basic layout styles for root container */
           #root {
             display: flex;
             flex-direction: column;
             min-height: 100vh;
           }
 
-          /* DIRECT ATTACK ON FIXED HEIGHT */
-          /* Target the exact height that's being set on the section */
-          section#hero, section[data-hero-section="true"], div[data-hero-section="true"], [data-hero-section="true"] {
-            height: 650px !important; /* Increased height to show full CTAs on desktop */
-            min-height: 650px !important;
-            max-height: 650px !important;
-          }
-          
-          /* Mobile-specific styles - NO forced height override 
-           * (let mobile-hero.css control these values instead)
-           */
-          @media (max-width: 768px) {
-            section#hero, section[data-hero-section="true"], div[data-hero-section="true"], [data-hero-section="true"] {
-              /* No height values set here - defer to mobile-hero.css */
+          /* DESKTOP-ONLY HEIGHT CONSTRAINTS - Mobile heights are controlled by mobile-hero.css */
+          @media (min-width: 769px) {
+            /* Fixed height ONLY FOR DESKTOP */
+            section#hero, 
+            section[data-hero-section="true"], 
+            div[data-hero-section="true"], 
+            [data-hero-section="true"] {
+              height: 650px !important;
+              min-height: 650px !important;
+              max-height: 650px !important;
+              position: relative !important;
               display: flex !important;
               flex-direction: column !important;
-              justify-content: center !important;
+              justify-content: flex-start !important;
               align-items: center !important;
+              padding-top: 40px !important;
+              padding-bottom: 20px !important;
               overflow: visible !important;
             }
           }
           
-          /* Force the section to have content-driven height */
-          section#hero, section[data-hero-section="true"] {
-            position: relative !important;
-            display: flex !important;
-            flex-direction: column !important;
-            justify-content: flex-start !important;
-            align-items: center !important;
-            padding-top: 40px !important; /* Reduced from 100px to minimize the gap */
-            padding-bottom: 20px !important;
-            overflow: visible !important;
-          }
-          
-          /* Hide transition elements below hero */
-          section#hero + div {
-            display: none !important;
-          }
-          
-          /* Remove any scroll indicators */
+          /* Remove transition elements and scroll indicators */
+          section#hero + div,
           .flex.flex-col.items-center.opacity-60 {
             display: none !important;
           }
           
-          /* NUCLEAR OPTION - TARGETING WITH JS */
-          section[id="hero"], [data-hero-section="true"] {
-            height: 650px !important;
-            max-height: 650px !important;
-          }
-          
-          /* Mobile-only styles - defer height control to mobile-hero.css */
-          @media (max-width: 768px) {
-            section[id="hero"], [data-hero-section="true"] {
-              /* No height values here - let mobile-hero.css control them */
-              text-align: center !important;
-              justify-content: center !important;
-            }
-          }
-          
-          /* NUCLEAR OPTION - MORE SELECTORS */
-          section[id="hero"] *, [data-hero-section="true"] * {
-            max-height: none !important;
-          }
-          
-          /* Remove any debug overlays that might be present */
-          body > div:not([id]):not([class]) {
-            display: none !important;
-            opacity: 0 !important;
-            visibility: hidden !important;
-            pointer-events: none !important;
-            position: absolute !important;
-            z-index: -9999 !important;
-          }
-          
-          /* Target specifically debug elements with lavender background and dimensions */
+          /* Clean up debug overlays */
+          body > div:not([id]):not([class]),
           div[style*="#EBE3FF"],
           div:not([id]):not([class])[style*="393 x"] {
             display: none !important;
             visibility: hidden !important;
-            width: 0 !important;
-            height: 0 !important;
-            opacity: 0 !important;
             pointer-events: none !important;
             position: absolute !important;
-            top: -9999px !important;
-            left: -9999px !important;
             z-index: -9999 !important;
+            width: 0 !important;
+            height: 0 !important;
           }
           
-          /* Fix overlap between hero and creator sections */
+          /* Minimal mobile styles - only non-height related properties */
           @media (max-width: 768px) {
-            #mobile-hero-cta-section > div {
-              margin-bottom: 16px !important;
-              position: relative !important;
-              z-index: 100 !important;
-            }
-            
+            /* No height settings here - fully controlled by mobile-hero.css */
             .find-creators-section {
               margin-top: 16px !important;
             }
           }
           `}} />
 
-        {/* Direct DOM manipulation script */}
-        <script dangerouslySetInnerHTML={{ __html: `
-          // Direct DOM manipulation to fix heights and remove debug overlays
-          (function() {
-            function fixHeroHeight() {
-              const heroElements = document.querySelectorAll('section#hero, [data-hero-section="true"]');
-              const isMobile = window.innerWidth <= 768;
-              
-              heroElements.forEach(el => {
-                if (isMobile) {
-                  // For mobile: Let CSS handle all styling, don't apply any inline styles
-                  // This allows mobile-hero.css to fully control the layout
-                  
-                  // CRITICAL FIX: Remove problematic inline styles that cause title to disappear
-                  // Find and clean up any elements with fixed heights that break layout
-                  const elementsToFix = el.querySelectorAll('.hero-title-container, .hero-content, .hero-cta-container');
-                  elementsToFix.forEach(element => {
-                    // Remove height constraints
-                    element.style.removeProperty('height');
-                    element.style.removeProperty('min-height');
-                    element.style.removeProperty('max-height');
-                    
-                    // Remove any top/bottom margins
-                    element.style.removeProperty('margin-top');
-                    element.style.removeProperty('margin-bottom');
-                  });
-                  
-                  // Also fix rotating text specific issues
-                  const heroTitle = el.querySelector('#hero-title');
-                  if (heroTitle) {
-                    const rotatingElements = heroTitle.querySelectorAll('div, .rotating-text, .rotating-text span');
-                    rotatingElements.forEach(element => {
-                      // Ensure visibility
-                      element.style.removeProperty('height');
-                      element.style.removeProperty('min-height');
-                      element.style.removeProperty('opacity');
-                      element.style.removeProperty('visibility');
-                      element.style.setProperty('display', 'block', 'important');
-                    });
-                  }
-                } else {
-                  // Desktop height settings only
-                  el.style.setProperty('height', '650px', 'important');
-                  el.style.setProperty('max-height', '650px', 'important');
-                  el.style.setProperty('min-height', '650px', 'important');
-                  el.style.setProperty('justify-content', 'center', 'important');
-                  el.style.setProperty('padding-top', '40px', 'important');
-                }
-              });
-            }
-            
-            // Enhanced function to remove debug overlays
-            function removeDebugOverlays() {
-              // Run for both mobile and desktop to ensure consistent experience
-              // Target elements with lavender background and class/dimension info
-              const debugSelectors = [
-                'body > div[style*="#EBE3FF"]', 
-                'div[style*="background-color: #EBE3FF"]',
-                'div[style*="background: #EBE3FF"]',
-                'div:not([id]):not([class])[style*="393 x"]',
-                'div:not([id]):not([class])[style*=" x "]',
-                'body > div:not([id]):not([class]):not([style])',
-                '#root > div:not([id]):not([class]):not([style])',
-                'main > div:not([id]):not([class]):not([style])'
-              ];
-              
-              const debugOverlays = document.querySelectorAll(debugSelectors.join(','));
-              
-              debugOverlays.forEach(el => {
-                // Check if it contains class names or dimension information
-                const content = el.textContent || '';
-                // More comprehensive check for debug overlay content
-                if (
-                  content.includes(' x ') || 
-                  content.includes('section') || 
-                  content.includes('creator-section') || 
-                  content.includes('find-creators-section') ||
-                  content.includes('relative') ||
-                  content.includes('absolute') ||
-                  content.includes('py-') ||
-                  content.includes('px-') ||
-                  content.includes('w-full') ||
-                  content.includes('overflow-') ||
-                  content.includes('px') ||
-                  (el.style && el.style.backgroundColor === '#EBE3FF') ||
-                  // Check for computed style
-                  (window.getComputedStyle && window.getComputedStyle(el).backgroundColor === 'rgb(235, 227, 255)') ||
-                  // Special check for Lovable tool debug output which shows component dimensions
-                  (content.match(/\d+(\.\d+)? x \d+(\.\d+)?/) !== null)
-                ) {
-                  // First try to make it invisible (in case removal fails)
-                  el.style.display = 'none';
-                  el.style.opacity = '0';
-                  el.style.visibility = 'hidden';
-                  el.style.pointerEvents = 'none';
-                  el.style.position = 'absolute';
-                  el.style.zIndex = '-9999';
-                  el.style.width = '0';
-                  el.style.height = '0';
-                  el.style.overflow = 'hidden';
-                  el.style.clip = 'rect(0 0 0 0)';
-                  el.style.margin = '0';
-                  el.style.padding = '0';
-                  
-                  // Try to remove from DOM entirely using multiple approaches
-                  if (el.parentNode) {
-                    try {
-                      // Method 1: Direct removal
-                      el.parentNode.removeChild(el);
-                    } catch (e) {
-                      try {
-                        // Method 2: Replace with empty comment
-                        el.parentNode.replaceChild(document.createComment('debug overlay removed'), el);
-                      } catch (e2) {
-                        console.log('Could not remove debug element');
-                      }
-                    }
-                  }
-                }
-              });
-              
-              // Also look for elements with suspiciously empty content
-              // that might be rendering technical information
-              const emptyNonSemantic = document.querySelectorAll('div:not([id]):not([class]):empty');
-              emptyNonSemantic.forEach(el => {
-                try {
-                  if (el.parentNode) {
-                    el.parentNode.removeChild(el);
-                  }
-                } catch (e) {
-                  // Silently fail
-                }
-              });
-            }
-            
-            // Run immediately
-            fixHeroHeight();
-            removeDebugOverlays();
-            
-            // Also run after load and after any animations
-            window.addEventListener('load', function() {
-              fixHeroHeight();
-              removeDebugOverlays();
-            });
-            
-            // Run multiple times to catch late-rendered elements
-            setTimeout(fixHeroHeight, 500);
-            setTimeout(removeDebugOverlays, 500);
-            setTimeout(removeDebugOverlays, 1000);
-            setTimeout(removeDebugOverlays, 2000);
-          })();
-        `}} />
+        {/* 
+          IMPORTANT: All JavaScript DOM manipulation for hero section has been removed.
+          The hero section layout is now fully controlled by CSS files:
+          
+          - For mobile devices (max-width: 768px):
+            mobile-hero.css is the ONLY source of height/layout rules
+            It enforces a 450px height with proper flex spacing
+          
+          - For desktop (min-width: 769px):
+            hero-section.css and inline styles set the 650px height
+          
+          No JavaScript functions should manipulate the hero section layout after page load.
+          This ensures consistent layout without shifts or missing content.
+        */}
         
         <div
           data-hero-section="true"
@@ -916,78 +724,24 @@ const Index = () => {
           >
             <HeroSection />
             
-            {/* Anti-shift script - removes dynamic styles causing hero layout shifts */}
-            <script dangerouslySetInnerHTML={{ __html: `
-              (function preventHeroLayoutShifts() {
-                // Only run on mobile
-                if (window.innerWidth <= 768) {
-                  // Remove problematic dynamic styles specifically targeting hero section
-                  function stabilizeHeroLayout() {
-                    // CRITICAL FIX: Target the rotating text container
-                    const rotatingTextContainers = document.querySelectorAll('#hero-title > div');
-                    rotatingTextContainers.forEach(container => {
-                      // Ensure fixed height to prevent layout shifts
-                      container.style.setProperty('height', '40px', 'important');
-                      container.style.setProperty('min-height', '40px', 'important');
-                      container.style.setProperty('position', 'relative', 'important');
-                      container.style.setProperty('display', 'flex', 'important');
-                      container.style.setProperty('align-items', 'center', 'important');
-                      container.style.setProperty('justify-content', 'center', 'important');
-                      
-                      // Remove any transform that might interfere with layout
-                      container.style.removeProperty('transform');
-                    });
-                    
-                    // Ensure the text inside rotating container is visible
-                    const rotatingTexts = document.querySelectorAll('#hero-title .rotating-text, #hero-title .rotating-text span');
-                    rotatingTexts.forEach(text => {
-                      text.style.setProperty('opacity', '1', 'important');
-                      text.style.setProperty('visibility', 'visible', 'important');
-                      text.style.setProperty('display', 'block', 'important');
-                    });
-                    
-                    // Fix main height issues
-                    document.querySelectorAll('.hero-content, .hero-title-container, .hero-description-container, .hero-cta-container').forEach(el => {
-                      // Critical: Remove fixed heights that cause spacing issues
-                      el.style.removeProperty('min-height');
-                      el.style.removeProperty('height');
-                      el.style.removeProperty('max-height');
-                      
-                      // Force static positioning to prevent stacking issues
-                      el.style.setProperty('position', 'static', 'important');
-                    });
-                    
-                    // Fix CTA button icon alignment specifically
-                    const ctaButtons = document.querySelectorAll('.hero-cta-container button');
-                    ctaButtons.forEach(button => {
-                      button.style.setProperty('display', 'flex', 'important');
-                      button.style.setProperty('align-items', 'center', 'important');
-                      button.style.setProperty('position', 'relative', 'important');
-                      
-                      // Find the icon container and ensure it's properly positioned
-                      const iconContainer = button.querySelector('.cta-icon-container, div[class*="absolute"]');
-                      if (iconContainer) {
-                        iconContainer.style.setProperty('position', 'absolute', 'important');
-                        iconContainer.style.setProperty('left', '0', 'important');
-                        iconContainer.style.setProperty('top', '50%', 'important');
-                        iconContainer.style.setProperty('transform', 'translateY(-50%)', 'important');
-                        iconContainer.style.setProperty('margin-left', '4px', 'important');
-                      }
-                    });
-                  }
-                  
-                  // Run initially and then after a delay to catch dynamically added styles
-                  stabilizeHeroLayout();
-                  
-                  // Run again after animations might have completed
-                  setTimeout(stabilizeHeroLayout, 500);
-                  setTimeout(stabilizeHeroLayout, 1500);
-                  
-                  // Also run on any resize events
-                  window.addEventListener('resize', stabilizeHeroLayout);
-                }
-              })();
-            `}} />
+            {/* 
+            REMOVED: Dynamic style manipulation script (preventHeroLayoutShifts)
+            
+            The hero layout is now entirely controlled by CSS:
+            - mobile-hero.css handles all mobile layout (max-width: 768px)
+            - hero-section.css handles all desktop layout (min-width: 769px)
+            
+            Benefits of this change:
+            1. No more layout shifts caused by JavaScript overriding CSS
+            2. Consistent rendering across all devices and browsers
+            3. Better performance by eliminating DOM manipulations
+            4. Cleaner separation of concerns (CSS for styling, JS for behavior)
+            
+            If layout issues occur:
+            - Check mobile-hero.css for the correct 450px height and flex spacing
+            - Ensure the rotating text container has a fixed 40px height
+            - Verify that no inline styles are being added elsewhere
+            */}
           </div>
         </div>
 
