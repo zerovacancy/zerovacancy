@@ -3,32 +3,109 @@
  * This solution addresses the specific vertical alignment issues in the header
  */
 
-/* 1. Ensure the header has consistent height and alignment */
-header.sticky {
-  height: var(--header-height); /* Using CSS variable for consistency */
-  display: flex;
-  align-items: center;
+/* 
+ * Header navigation dimensions using standard web conventions 
+ * Based on Material Design, Apple Human Interface, and common web practices
+ */
+:root {
+  /* Base header dimensions */
+  --header-height: 3.5rem; /* 56px - standard mobile header height */
+  --header-height-sm: 4rem; /* 64px - standard desktop header height */
+  
+  /* Navigation item dimensions */
+  --nav-item-height: 2.5rem; /* 40px - optimal touch target height */
+  --nav-item-spacing: 1.75rem; /* 28px - standard spacing between items */
+  
+  /* Button dimensions - standard touch targets */
+  --header-btn-height: 2.25rem; /* 36px - standard button height */
+  --header-btn-padding-x: 1rem; /* 16px - standard horizontal padding */
+  
+  /* Spacing variables - for consistent layout */
+  --header-item-gap: 0.25rem; /* 4px - small gap between items */
+  --header-section-gap: 1rem; /* 16px - gap between nav sections */
+  --header-side-padding: 1rem; /* 16px - default horizontal padding */
 }
 
-/* 2. Fix container alignment */
+/* 1. Optimize header container for industry-standard dimensions and styling */
+header.sticky,
+header.mobile-sticky-header,
+header[class*="z-"] {
+  height: var(--header-height); /* Default mobile height */
+  min-height: var(--header-height);
+  max-height: var(--header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 1000; /* High z-index to stay above content */
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.98); /* Slightly translucent */
+  backdrop-filter: blur(8px); /* Modern glass effect */
+  -webkit-backdrop-filter: blur(8px); /* For Safari */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+  transition: height 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Desktop adjustments */
+@media (min-width: 640px) {
+  header.sticky,
+  header.mobile-sticky-header,
+  header[class*="z-"] {
+    height: var(--header-height-sm); /* Desktop height */
+    min-height: var(--header-height-sm);
+    max-height: var(--header-height-sm);
+  }
+}
+
+/* Scrolled state - enhanced shadow and opacity */
+header.sticky.scrolled,
+header.mobile-sticky-header.scrolled {
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.99);
+}
+
+/* 2. Optimize container alignment with proper spacing */
 header .container {
   height: 100%;
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  padding-left: var(--header-side-padding);
+  padding-right: var(--header-side-padding);
 }
 
-/* 3. Fix navigation container alignment */
+@media (min-width: 640px) {
+  header .container {
+    padding-left: calc(var(--header-side-padding) * 1.5);
+    padding-right: calc(var(--header-side-padding) * 1.5);
+  }
+}
+
+@media (min-width: 1024px) {
+  header .container {
+    padding-left: calc(var(--header-side-padding) * 2);
+    padding-right: calc(var(--header-side-padding) * 2);
+  }
+}
+
+/* 3. Optimize navigation container with industry-standard spacing */
 nav {
   height: 100%;
   display: flex;
   align-items: center;
+  gap: var(--nav-item-spacing); /* Standard gap between nav items */
 }
 
-/* 4. Ensure navigation list maintains height */
+/* 4. Ensure navigation list uses proper spacing and alignment */
 nav ul {
   height: 100%;
   display: flex;
   align-items: center;
+  gap: var(--nav-item-spacing); /* Standard gap between nav items */
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 /* 5. Fix individual list items */
@@ -37,65 +114,196 @@ nav > div {
   height: 100%;
   display: flex;
   align-items: center;
+  position: relative; /* For potential dropdown positioning */
 }
 
-/* 6. Standardize navigation links and buttons */
+/* 6. Standardize navigation links with consistent industry-standard styling */
+.header-nav-link,
 nav a,
 nav button {
   display: flex;
   align-items: center;
+  justify-content: center; /* Center content horizontally */
   height: var(--nav-item-height); /* Consistent height for all nav items */
   line-height: 1;
-  padding: 0 0.75rem; /* px-3 but with 0 vertical padding */
+  padding: 0 calc(var(--header-btn-padding-x) / 2); /* Horizontal padding only */
+  position: relative; /* For hover/active indicators */
+  font-size: 0.9375rem; /* 15px - standard nav text size */
+  font-weight: 500; /* Medium font weight */
+  transition: color 0.2s ease, background-color 0.2s ease; /* Smooth transitions */
+  border-radius: 0.25rem; /* Subtle rounding */
+  /* Added properties for improved UX */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.01em; /* Subtle letter spacing adjustment */
+  white-space: nowrap; /* Prevent wrapping */
+  user-select: none; /* Prevent text selection */
 }
 
-/* 7. Fix dropdown triggers */
+/* 7. Improve dropdown triggers with better sizing and spacing */
 nav .group {
   display: flex;
   align-items: center;
   height: var(--nav-item-height);
+  position: relative; /* For dropdown positioning */
 }
 
-/* 8. Ensure Magnetic component doesn't affect layout */
+/* 8. Optimize Magnetic component integration */
 nav .magnetic-wrapper > div {
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
-/* 9. Right side buttons alignment */
+/* Add subtle hover animation to magnetic elements */
+nav .magnetic-wrapper:hover > div {
+  transform: scale(1.02);
+  transition: transform 0.2s ease;
+}
+
+/* 9. Optimize right side buttons container */
 header .buttons-container {
   height: 100%;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: var(--header-item-gap);
+  margin-left: var(--header-section-gap); /* Create visual separation */
 }
 
-/* 10. Ensure consistent button height */
-header button,
-header a[role="button"] {
-  height: var(--nav-item-height) !important;
+/* Add visual separation between login and signup buttons */
+header .buttons-container > *:not(:last-child) {
+  margin-right: var(--header-item-gap);
+}
+
+/* Enhance logo area for better spacing */
+header .logo-container,
+header a[href="/"] {
+  height: 100%;
   display: flex;
   align-items: center;
+  margin-right: var(--header-section-gap); /* Create visual separation */
 }
 
-/* 11. Ensure tooltip spans don't affect layout */
+/* Ensure logo has proper dimensions */
+header .logo-container img,
+header a[href="/"] img {
+  height: 1.75rem; /* Standard logo height */
+  width: auto;
+  object-fit: contain;
+}
+
+/* 10. Header button classes with consistent industry-standard sizing */
+/* Base button styles for all header buttons */
+.header-btn-base,
+header button,
+header a[role="button"],
+header [class*="h-["],
+header .h-10,
+header .h-11 {
+  height: var(--header-btn-height) !important;
+  min-height: var(--header-btn-height) !important;
+  max-height: var(--header-btn-height) !important;
+  padding-left: var(--header-btn-padding-x) !important;
+  padding-right: var(--header-btn-padding-x) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 0.9375rem; /* 15px - optimal button text size */
+  font-weight: 500; /* Medium weight for buttons */
+  border-radius: 0.375rem; /* Slightly rounder than nav links */
+  transition: all 0.2s ease !important; /* Smooth transitions */
+  position: relative;
+  line-height: 1;
+  letter-spacing: -0.01em; /* Subtle letter spacing adjustment */
+}
+
+/* Secondary button - ghost style for login */
+.header-btn-secondary,
+header button[variant="ghost"],
+header button[variant="outline"] {
+  color: #333 !important;
+  background-color: transparent !important;
+  border: 1px solid transparent !important;
+}
+
+.header-btn-secondary:hover,
+header button[variant="ghost"]:hover,
+header button[variant="outline"]:hover {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Primary action button - optimized for conversions */
+.header-btn-primary,
+header button:not([variant="ghost"]):not([variant="outline"]),
+header a[role="button"].bg-primary {
+  height: calc(var(--header-btn-height) + 0.25rem) !important; /* Slightly taller for visual hierarchy */
+  min-height: calc(var(--header-btn-height) + 0.25rem) !important;
+  max-height: calc(var(--header-btn-height) + 0.25rem) !important;
+  padding-left: calc(var(--header-btn-padding-x) + 0.25rem) !important;
+  padding-right: calc(var(--header-btn-padding-x) + 0.25rem) !important;
+  font-weight: 600; /* Slightly bolder for emphasis */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* Subtle shadow for depth */
+  letter-spacing: 0; /* Normal letter spacing for primary CTA */
+}
+
+/* 11. Optimize tooltips and popovers */
+header button span.absolute,
 nav button span.absolute {
   pointer-events: none;
   z-index: 10;
+  font-size: 0.75rem; /* 12px - standard tooltip text */
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 0.375rem 0.625rem;
+  border-radius: 0.25rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-/* 12. Mobile menu styles */
+/* 12. Comprehensive mobile menu optimization */
 @media (max-width: 767px) {
+  /* Mobile sheet container */
+  header .sheet-content {
+    padding: 1.5rem !important;
+  }
+  
+  /* Mobile navigation layout */
   header .sheet-content nav {
     height: auto;
     flex-direction: column;
     align-items: flex-start;
+    gap: 0.75rem; /* Tighter spacing on mobile */
+    width: 100%;
   }
   
+  /* Mobile nav items */
   header .sheet-content nav a,
   header .sheet-content nav button {
-    height: 3rem; /* Larger touch targets on mobile */
+    height: 3rem !important; /* 48px - larger touch targets for mobile */
     width: 100%;
     justify-content: flex-start;
+    padding: 0 0.75rem;
+    font-size: 1rem; /* 16px - larger text on mobile */
+    border-radius: 0.375rem;
+  }
+  
+  /* Mobile nav item hover/focus states */
+  header .sheet-content nav a:hover,
+  header .sheet-content nav button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Mobile buttons container */
+  header .sheet-content .buttons-container {
+    width: 100%;
+    gap: 0.5rem;
+  }
+  
+  /* Mobile buttons */
+  header .sheet-content .buttons-container button,
+  header .sheet-content .buttons-container a[role="button"] {
+    height: 3rem !important; /* 48px - optimal mobile touch target */
+    width: 100%;
+    justify-content: center;
+    font-weight: 600;
   }
 }

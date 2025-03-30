@@ -35,7 +35,7 @@ const ResourcesDropdown = ({ className, onClick }: { className?: string, onClick
       <DropdownMenuTrigger className="group">
         <span className={cn(
           "text-[15px] font-medium transition-colors relative py-1.5",
-          "flex items-center h-[40px]", /* Match the height of other nav items */
+          "header-nav-link flex items-center justify-center", /* Use header-nav-link class for consistent sizing */
           "before:absolute before:inset-x-0 before:bottom-0 before:h-0.5 before:scale-x-0 before:origin-right",
           "before:transition-transform before:duration-300 group-hover:before:scale-x-100 before:origin-left",
           "before:bg-[#9b87f5]",
@@ -63,7 +63,7 @@ const NavLinks = ({ className, onClick }: { className?: string, onClick?: () => 
   const location = useLocation();
   
   return (
-    <nav className={cn("flex items-center gap-10", className)}>
+    <nav className={cn("flex items-center", className)}>
       {[
         { to: "/#search", label: "Find Creators", sectionId: "search" },
         { to: "/#how-it-works", label: "How It Works", sectionId: "how-it-works" },
@@ -81,7 +81,7 @@ const NavLinks = ({ className, onClick }: { className?: string, onClick?: () => 
             }}
             className={cn(
               "text-[15px] font-medium transition-colors relative py-1.5",
-              "flex items-center h-[40px]", /* Add consistent height and flex alignment */
+              "header-nav-link flex items-center justify-center", /* Use header-nav-link class for consistent sizing */
               "before:absolute before:inset-x-0 before:bottom-0 before:h-0.5 before:scale-x-0 before:origin-right",
               "before:transition-transform before:duration-300 hover:before:scale-x-100 hover:before:origin-left",
               "before:bg-[#9b87f5]",
@@ -149,14 +149,26 @@ const Header = () => {
     };
   }, []);
   
+  // Track scroll state for enhanced header styling
+  const [isScrolled, setIsScrolled] = React.useState(false);
+  
+  React.useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+  
   return (
-    <header className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border/40 mobile-sticky-header">
-      <div className="container flex h-16 items-center justify-between lg:px-8 md:px-6 px-4 header-container">
+    <header className={`sticky top-0 z-50 w-full mobile-sticky-header ${isScrolled ? 'scrolled' : ''}`}>
+      <div className="container header-container">
         {/* Logo */}
         <Magnetic intensity={0.3}>
           <Link 
             to="/" 
-            className="flex items-center transition-opacity active:opacity-80 -ml-1 md:ml-0"
+            className="flex items-center transition-opacity active:opacity-80 logo-container"
             onClick={handleLogoInteraction}
             onTouchStart={handleLogoInteraction}
           >
@@ -176,7 +188,7 @@ const Header = () => {
         {/* Mobile menu */}
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild className="md:hidden">
-            <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full">
+            <Button variant="ghost" size="icon" className="h-[2.75rem] w-[2.75rem] rounded-full">
               <svg
                 width="24"
                 height="24"
@@ -198,10 +210,10 @@ const Header = () => {
           <SheetContent side="right" className="flex flex-col gap-6 pt-10">
             <NavLinks onClick={() => setIsOpen(false)} className="flex-col items-start gap-4" />
             <div className="flex flex-col gap-2 mt-4">
-              <Button variant="ghost" asChild className="justify-start h-[40px]">
+              <Button variant="ghost" asChild className="justify-start header-btn-secondary">
                 <Link to="/login">Log In</Link>
               </Button>
-              <Button asChild className="justify-start h-[40px]">
+              <Button asChild className="justify-start header-btn-primary">
                 <Link to="/signup">Sign Up</Link>
               </Button>
             </div>
@@ -214,7 +226,7 @@ const Header = () => {
             <Button 
               variant="ghost" 
               asChild 
-              className="h-[40px] px-5 text-[15px] font-medium hover:bg-accent/50"
+              className="header-btn-secondary flex items-center justify-center"
             >
               <Link to="/login">Log In</Link>
             </Button>
@@ -222,7 +234,7 @@ const Header = () => {
           <Magnetic intensity={0.4}>
             <Button 
               asChild 
-              className="h-[40px] px-5 text-[15px] font-medium bg-primary hover:bg-primary/90 hover:shadow-lg transition-all duration-200"
+              className="header-btn-primary bg-primary hover:bg-primary/90 hover:shadow-lg flex items-center justify-center"
             >
               <Link to="/signup">Sign Up</Link>
             </Button>

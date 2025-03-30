@@ -38,9 +38,10 @@
     --destructive-foreground: 0 0% 98%;
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
-    /* Header navigation variables */
-    --header-height: 4rem; /* 64px */
-    --nav-item-height: 2.5rem; /* 40px */
+    /* Header navigation variables - updated to match banner */
+    --header-height: 3.25rem; /* 52px - matches banner height on mobile */
+    --header-height-sm: 3.5rem; /* 56px - matches banner height on desktop */
+    --nav-item-height: 2.75rem; /* 44px - consistent navigation item height */
   }
 
   html {
