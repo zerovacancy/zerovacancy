@@ -607,10 +607,10 @@ const Index = () => {
               position: relative !important;
               display: flex !important;
               flex-direction: column !important;
-              justify-content: flex-start !important;
+              justify-content: center !important;
               align-items: center !important;
-              padding-top: 40px !important;
-              padding-bottom: 20px !important;
+              padding-top: 0 !important;
+              padding-bottom: 0 !important;
               overflow: visible !important;
             }
           }
@@ -678,8 +678,8 @@ const Index = () => {
               display: 'flex',
               alignItems: 'center', // Change to center alignment
               justifyContent: 'center',
-              paddingTop: '20px', // Minimal top padding 
-              paddingBottom: '30px', // Add padding to bottom
+              paddingTop: '0', // Removed top padding for proper centering
+              paddingBottom: '0', // Removed bottom padding for proper centering
               minHeight: 'auto',
               height: 'auto', // Allow the section to size to its content
               marginBottom: '-30px', // Add negative margin to eliminate gap
@@ -710,16 +710,17 @@ const Index = () => {
               } : { 
                 position: 'relative',
                 display: 'flex',
-                alignItems: 'flex-start',
+                alignItems: 'center', /* Changed from flex-start to center for consistent alignment */
                 justifyContent: 'center',
                 width: '100%',
+                paddingTop: '0', // Explicitly remove top padding
                 paddingBottom: '0', // Explicitly remove bottom padding
-                marginBottom: '-40px' // Increased negative margin to pull up next section more
+                margin: 0 // Remove all margins to fix hero centering
               })
             }} 
             className={cn(
               "w-full max-w-none",
-              !isMobile && "flex items-start justify-center"
+              !isMobile && "flex items-center justify-center" /* Changed from items-start to items-center */
             )}
           >
             <HeroSection />

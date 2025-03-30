@@ -33,6 +33,8 @@ export const HeroDescription: React.FC<HeroDescriptionProps> = ({
         "hero-description-container",
         // Special class with high-specificity selectors in hero-section.css
         "auto-height-container",
+        // Add this new class for higher specificity to override any inline styles
+        "content-driven-height",
         // Any additional classes passed as props
         className
       )}

@@ -26,7 +26,7 @@
   --hero-spacing-base: var(--spacing-sm);    /* 16px - Base unit for hero spacing */
   
   /* Content spacing - desktop defaults */
-  --hero-content-padding-top: var(--spacing-md);    /* Reduced from 32px to 24px */
+  --hero-content-padding-top: 0px;            /* Set to 0 for better vertical centering */
   --hero-title-margin-bottom: var(--spacing-xs);    /* Reduced from 16px to 8px */
   --hero-description-margin-y: var(--spacing-xs);   /* Reduced from 16px to 8px top/bottom */
   --hero-cta-margin-top: var(--spacing-sm);         /* Reduced from 24px to 16px */
@@ -194,7 +194,10 @@
   
   /* Title container */
   .hero-title-container,
-  div.hero-title-container {
+  div.hero-title-container,
+  .hero-wrapper .hero-title-container,
+  #hero .hero-title-container,
+  [data-hero-section="true"] .hero-title-container {
     height: auto !important;
     min-height: 0 !important;
     max-height: none !important;
@@ -202,6 +205,11 @@
     padding: 0 !important;
     width: 100% !important;
     position: relative !important;
+    /* Ensure the container is centered and doesn't create extra space */
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
   }
   
   /* Title element */
@@ -334,9 +342,14 @@
   flex-direction: column;
   flex: 1;
   width: 100%;
+  height: 100%; /* Ensure it takes full height of parent */
   max-width: var(--hero-content-max-width);
-  justify-content: flex-start; /* Changed from space-between to flex-start for closer spacing */
+  justify-content: center; /* Changed from flex-start to center */
+  align-items: center;
   padding: 0 var(--hero-spacing-base);
+  margin: 0 auto; /* Center horizontally */
+  padding-top: 0; /* Remove top padding */
+  padding-bottom: 0; /* Remove bottom padding */
 }
 
 /* Content container styles */
@@ -344,9 +357,16 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center; /* Add vertical centering */
   width: 100%;
-  padding-top: calc(var(--hero-spacing-base) * 3); /* Add top padding */
+  padding-top: 0; /* Remove top padding */
+  padding-bottom: 0; /* Remove bottom padding */
+  margin: 0; /* Remove all margins */
   text-align: center;
+  /* Fix for extra gap above "PROPERTY CONTENT THAT" */
+  min-height: 0 !important;
+  height: auto !important;
+  max-height: none !important;
 }
 
 /* Ensure child elements use proper spacing */
@@ -371,7 +391,7 @@
 @media (max-width: 768px) {
   /* Mobile adjustments */
   .hero-content {
-    padding-top: var(--hero-spacing-base);
+    padding-top: var(--hero-content-padding-top, 0); /* Use CSS variable for consistent control */
   }
   
   .hero-description-container {
@@ -381,6 +401,69 @@
   
   .hero-cta-container {
     margin-bottom: var(--hero-spacing-base);
+  }
+}
+
+/* Sustainable fix for hero section top spacing */
+
+/* Use high-specificity selectors to override styles without !important */
+section[id="hero"],
+section[data-hero-section="true"],
+div[data-hero-section="true"],
+[data-hero-section="true"] {
+  /* Clear any padding that might be set inline */
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  /* Ensure proper vertical alignment */
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  /* Ensure proper sizing */
+  height: var(--hero-desktop-height, 650px) !important;
+  min-height: var(--hero-desktop-height, 650px) !important;
+  max-height: var(--hero-desktop-height, 650px) !important;
+}
+
+/* Target the hero-wrapper with specific selectors */
+section[id="hero"] .hero-wrapper,
+section[data-hero-section="true"] .hero-wrapper,
+div[data-hero-section="true"] .hero-wrapper {
+  justify-content: center;
+  align-items: center;
+}
+
+/* Target hero-content with specific selectors */
+.hero-section .hero-content,
+section[id="hero"] .hero-content,
+section[data-hero-section="true"] .hero-content {
+  padding-top: var(--hero-content-padding-top);
+}
+
+/* Desktop media query for granular control */
+@media (min-width: 769px) {
+  /* Adjust desktop-specific spacing */
+  :root {
+    --hero-content-padding-top: 0px;
+  }
+  
+  section[id="hero"] .hero-content,
+  section[data-hero-section="true"] .hero-content {
+    padding-top: 0;
+  }
+}
+
+/* Mobile media query for consistent behavior */
+@media (max-width: 768px) {
+  /* Adjust mobile-specific spacing */
+  :root {
+    --hero-content-padding-top: 0px;
+  }
+  
+  .hero-section .hero-content {
+    padding-top: 0;
   }
 }
 
@@ -441,4 +524,17 @@ div[data-hero-section="true"] .hero-description-container.hero-fade-in,
   min-height: auto;
   height: auto;
   max-height: none;
+}
+
+/* Add this to ensure the new class overrides any inline styles */
+.content-driven-height,
+.hero-description-container.content-driven-height {
+  min-height: auto !important;
+  height: auto !important;
+  max-height: none !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  width: 100% !important;
+  position: static !important;
+  z-index: auto !important;
 }
