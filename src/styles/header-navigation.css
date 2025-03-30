@@ -1,0 +1,101 @@
+/* 
+ * Header Navigation Alignment Fix
+ * This solution addresses the specific vertical alignment issues in the header
+ */
+
+/* 1. Ensure the header has consistent height and alignment */
+header.sticky {
+  height: var(--header-height); /* Using CSS variable for consistency */
+  display: flex;
+  align-items: center;
+}
+
+/* 2. Fix container alignment */
+header .container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* 3. Fix navigation container alignment */
+nav {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* 4. Ensure navigation list maintains height */
+nav ul {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* 5. Fix individual list items */
+nav ul li,
+nav > div {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* 6. Standardize navigation links and buttons */
+nav a,
+nav button {
+  display: flex;
+  align-items: center;
+  height: var(--nav-item-height); /* Consistent height for all nav items */
+  line-height: 1;
+  padding: 0 0.75rem; /* px-3 but with 0 vertical padding */
+}
+
+/* 7. Fix dropdown triggers */
+nav .group {
+  display: flex;
+  align-items: center;
+  height: var(--nav-item-height);
+}
+
+/* 8. Ensure Magnetic component doesn't affect layout */
+nav .magnetic-wrapper > div {
+  display: flex;
+  align-items: center;
+}
+
+/* 9. Right side buttons alignment */
+header .buttons-container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* 10. Ensure consistent button height */
+header button,
+header a[role="button"] {
+  height: var(--nav-item-height) !important;
+  display: flex;
+  align-items: center;
+}
+
+/* 11. Ensure tooltip spans don't affect layout */
+nav button span.absolute {
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* 12. Mobile menu styles */
+@media (max-width: 767px) {
+  header .sheet-content nav {
+    height: auto;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  header .sheet-content nav a,
+  header .sheet-content nav button {
+    height: 3rem; /* Larger touch targets on mobile */
+    width: 100%;
+    justify-content: flex-start;
+  }
+}

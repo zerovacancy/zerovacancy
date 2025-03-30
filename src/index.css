@@ -1,124 +1,519 @@
 
-@import './styles/base.css';
-@import './styles/typography.css';
-@import './styles/typography-mixins.css';
-@import './styles/components.css';
-@import './styles/animations.css';
-@import './styles/keyframes.css';
+/**
+ * Main CSS entry point for ZeroVacancy
+ * Follows Tailwind's recommended import order
+ */
+
+/* Import Google Fonts first */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+/* Import 3rd party CSS */
 @import 'react-image-crop/dist/ReactCrop.css';
 
-/* Tailwind layers */
+/* Import custom component CSS */
+@import './styles/header-navigation.css';
+
+/* Tailwind base layer (must be first) */
+@tailwind base;
+
+/* Base CSS variables and styles */
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5.9% 10%;
+    --radius: 0.75rem;
+    --white: rgb(255 255 255);
+    --black: rgb(0 0 0);
+    --transparent: transparent;
+    --blue-300: rgb(147 197 253);
+    --blue-400: rgb(96 165 250);
+    --blue-500: rgb(59 130 246);
+    --indigo-300: rgb(165 180 252);
+    --violet-200: rgb(221 214 254);
+    --color-1: 0 72% 51%;
+    --color-2: 262 83% 58%;
+    --color-3: 230 92% 65%;
+    --color-4: 332 87% 55%;
+    --color-5: 198 93% 60%;
+    /* Theme colors */
+    --primary: 262 83% 58%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 230 92% 65%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+  }
+
+  html {
+    height: 100%;
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    overflow-anchor: auto;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased font-inter font-normal;
+    min-height: 100%;
+    position: relative;
+    overflow-x: hidden;
+    touch-action: pan-y;
+    overscroll-behavior-y: contain;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  /* Global scrolling fixes */
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overscroll-behavior-y: none;
+    position: relative;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Root containers need to handle scrolling */
+  #root, #__next, .app-container, main {
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: auto;
+    width: 100%;
+    height: 100%;
+    overscroll-behavior-y: none;
+    touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Typography base styles */
+  h1 {
+    @apply text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight font-jakarta text-brand-purple-dark;
+  }
+
+  h2 {
+    @apply text-3xl sm:text-4xl lg:text-5xl font-semibold tracking-tight font-jakarta text-brand-purple-dark;
+  }
+
+  h3 {
+    @apply text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight font-jakarta text-brand-purple-medium;
+  }
+
+  h4 {
+    @apply text-xl sm:text-2xl font-medium font-jakarta text-brand-purple-medium;
+  }
+
+  h5 {
+    @apply text-lg sm:text-xl font-medium font-jakarta text-brand-purple-medium;
+  }
+
+  h6 {
+    @apply text-base sm:text-lg font-medium font-jakarta text-brand-purple-medium;
+  }
+
+  p {
+    @apply text-base leading-relaxed font-normal font-inter text-brand-text-primary;
+  }
+
+  a {
+    @apply text-brand-purple hover:text-opacity-80 transition-colors duration-200;
+  }
+
+  strong, b {
+    @apply font-semibold text-brand-purple-medium;
+  }
+
+  small {
+    @apply text-sm text-brand-text-light;
+  }
+}
+
+/* Tailwind components layer */
 @tailwind components;
+
+/* Custom component styles */
+@layer components {
+  /* Typography component classes */
+  .section-title {
+    @apply text-2xl sm:text-3xl lg:text-4xl font-semibold mb-4 text-center tracking-tight font-jakarta text-brand-purple-dark;
+  }
+
+  .section-subtitle {
+    @apply text-base sm:text-lg text-brand-text-secondary font-normal font-inter;
+  }
+
+  .text-display {
+    @apply text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight font-jakarta text-brand-purple-dark;
+  }
+
+  .text-heading {
+    @apply text-2xl sm:text-3xl font-semibold tracking-tight font-jakarta text-brand-purple-medium;
+  }
+
+  .text-title {
+    @apply text-xl font-medium font-jakarta text-brand-purple-medium;
+  }
+
+  .text-body {
+    @apply text-base font-normal leading-relaxed font-inter text-brand-text-primary;
+  }
+
+  .text-caption {
+    @apply text-sm font-normal text-brand-text-secondary font-inter;
+  }
+
+  .text-small {
+    @apply text-xs font-medium font-space text-brand-text-light;
+  }
+
+  /* Interactive text styles */
+  .text-link {
+    @apply text-brand-purple hover:text-opacity-80 transition-colors duration-200;
+  }
+
+  /* Special text elements */
+  .text-price {
+    @apply text-brand-purple-medium font-semibold;
+  }
+  
+  .text-metrics {
+    @apply text-brand-text-primary;
+  }
+  
+  .text-tag {
+    @apply text-brand-purple-medium;
+  }
+  
+  /* Highlighted text within headers */
+  .text-highlight {
+    @apply text-brand-purple;
+  }
+
+  /* Scrollbar hiding for mobile pricing carousel */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Desktop pricing toggle styles with enhanced borders and interactions */
+  .pricing-toggle-container {
+    border-radius: 9999px; /* Full rounded corners */
+    overflow: hidden;
+    padding: 3px;
+    background-color: rgba(241, 245, 249, 0.7); /* Slate-100 with transparency */
+    backdrop-filter: blur(8px);
+    box-shadow: inset 0 1px 2px 0 rgba(0, 0, 0, 0.05), 0 2px 6px rgba(0, 0, 0, 0.03);
+    display: flex;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  .pricing-toggle-container:hover {
+    box-shadow: inset 0 1px 2px 0 rgba(0, 0, 0, 0.05), 0 4px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .pricing-toggle-button {
+    border-radius: 9999px;
+    padding: 0.625rem 1.25rem;
+    font-weight: 500;
+    flex: 1;
+    text-align: center;
+    position: relative;
+    z-index: 20;
+    transition: color 0.3s ease, background-color 0.2s ease;
+    min-height: 40px;
+  }
+
+  .pricing-toggle-slider {
+    position: absolute;
+    height: calc(100% - 6px);
+    width: calc(50% - 3px);
+    background-color: white;
+    border-radius: 9999px;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.08);
+    top: 3px;
+    left: 3px;
+    transform: translateX(0);
+  }
+
+  .pricing-toggle-slider:hover {
+    box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.1);
+  }
+
+  /* Remove any third tab styling if it exists */
+  .pricing-toggle-container > button:nth-child(3) {
+    display: none;
+  }
+
+  /* Fix for dialogs on mobile */
+  [data-mobile-dialog], [data-desktop-dialog] {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    max-height: 85vh !important;
+    max-width: 90vw !important;
+    margin: 0 !important;
+    z-index: 9999 !important;
+    background-color: white !important;
+    border-radius: 0.75rem !important;
+    overflow: hidden !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+    height: auto !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  /* Fix scrolling inside dialog content */
+  [data-mobile-dialog] [role="dialog"], 
+  [data-desktop-dialog] [role="dialog"] {
+    max-height: 85vh !important;
+    overflow: hidden !important;
+  }
+
+  /* Ensure dialog overlay is visible and covers the entire screen */
+  [data-state="open"][class*="bg-black"] {
+    position: fixed !important;
+    inset: 0 !important;
+    background-color: rgba(0, 0, 0, 0.7) !important;
+    z-index: 9998 !important;
+  }
+
+  /* Fix for mobile dialogs without jittering */
+  .waitlist-creator-dialog form {
+    position: relative !important;
+    background-color: white !important;
+    transition: none !important;
+    will-change: auto !important;
+  }
+}
+
+/* Tailwind utilities layer */
 @tailwind utilities;
 
-/* Global scrolling fixes */
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  overscroll-behavior-y: none;
-  position: relative;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-}
+/* Custom utility styles */
+@layer utilities {
+  /* Animation utilities */
+  .animate-fade-in {
+    animation: fadeIn 0.4s ease-out forwards;
+    will-change: opacity, transform;
+  }
+  
+  .animate-fade-out {
+    animation: fadeOut 0.4s ease-in forwards;
+    will-change: opacity, transform;
+  }
+  
+  .animate-slide-in-bottom {
+    animation: slideInFromBottom 0.5s ease-out forwards;
+    will-change: transform, opacity;
+  }
+  
+  .animate-slide-in-left {
+    animation: slideInFromLeft 0.5s ease-out forwards;
+    will-change: transform, opacity;
+  }
+  
+  .animate-slide-in-right {
+    animation: slideInFromRight 0.5s ease-out forwards;
+    will-change: transform, opacity;
+  }
+  
+  .animate-zoom-in {
+    animation: zoomIn 0.4s ease-out forwards;
+    will-change: transform, opacity;
+  }
+  
+  .animate-rotate-in {
+    animation: rotateIn 0.4s ease-out forwards;
+    will-change: transform, opacity;
+  }
+  
+  /* Less intensive animations without will-change */
+  .animate-shift-bg {
+    animation: shiftBackgroundPosition 3s ease infinite;
+  }
+  
+  .animate-spin-slow {
+    animation: spin 3s linear infinite;
+  }
+  
+  .animate-ping-once {
+    animation: pingOnce 1s cubic-bezier(0, 0, 0.2, 1) forwards;
+  }
+  
+  .animate-subtle-bounce {
+    animation: bounce 2s ease-in-out infinite;
+  }
+  
+  .animate-pulse-subtle {
+    animation: pulse-subtle 2s ease-in-out infinite;
+  }
+  
+  .animate-counter-pulse {
+    animation: counter-pulse 2.5s ease-in-out infinite;
+  }
+  
+  .animate-shimmer {
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+  
+  .animate-float-subtle {
+    animation: float-subtle 3s ease-in-out infinite;
+  }
 
-/* Root containers need to handle scrolling */
-#root, #__next, .app-container, main {
-  position: relative;
-  overflow-x: hidden;
-  overflow-y: auto;
-  width: 100%;
-  height: 100%;
-  overscroll-behavior-y: none;
-  touch-action: pan-y;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* Desktop pricing toggle styles with enhanced borders and interactions */
-.pricing-toggle-container {
-  border-radius: 9999px; /* Full rounded corners */
-  overflow: hidden;
-  padding: 3px;
-  background-color: rgba(241, 245, 249, 0.7); /* Slate-100 with transparency */
-  backdrop-filter: blur(8px);
-  box-shadow: inset 0 1px 2px 0 rgba(0, 0, 0, 0.05), 0 2px 6px rgba(0, 0, 0, 0.03);
-  display: flex;
-  width: 100%;
-  max-width: 100%;
-  margin: 0 auto;
-  position: relative;
-  transition: all 0.3s ease;
-}
-
-.pricing-toggle-container:hover {
-  box-shadow: inset 0 1px 2px 0 rgba(0, 0, 0, 0.05), 0 4px 8px rgba(0, 0, 0, 0.05);
-}
-
-.pricing-toggle-button {
-  border-radius: 9999px;
-  padding: 0.625rem 1.25rem;
-  font-weight: 500;
-  flex: 1;
-  text-align: center;
-  position: relative;
-  z-index: 20;
-  transition: color 0.3s ease, background-color 0.2s ease;
-  min-height: 40px;
-}
-
-.pricing-toggle-slider {
-  position: absolute;
-  height: calc(100% - 6px);
-  width: calc(50% - 3px);
-  background-color: white;
-  border-radius: 9999px;
-  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.08);
-  top: 3px;
-  left: 3px;
-  transform: translateX(0);
-}
-
-.pricing-toggle-slider:hover {
-  box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.1);
-}
-
-.price-animation {
-  animation: pulse 1s ease-in-out;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
-}
-
-/* Remove any third tab styling if it exists */
-.pricing-toggle-container > button:nth-child(3) {
-  display: none;
-}
-
-/* Fix for dialogs on mobile */
-[data-mobile-dialog], [data-desktop-dialog] {
-  position: fixed !important;
-  top: 50% !important;
-  left: 50% !important;
-  transform: translate(-50%, -50%) !important;
-  max-height: 85vh !important;
-  max-width: 90vw !important;
-  margin: 0 !important;
-  z-index: 9999 !important;
-  background-color: white !important;
-  border-radius: 0.75rem !important;
-  overflow: hidden !important;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
-  height: auto !important;
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
+  .animate-shimmer-slide {
+    animation: shimmer-slide 20s infinite ease-in-out;
+    background-size: 200% 100%;
+  }
+  
+  .bg-size-200 {
+    background-size: 200% auto;
+  }
+  
+  .animate-sparkle {
+    animation: sparkle 3s ease-in-out infinite;
+  }
+  
+  .animate-shine {
+    animation: shine var(--duration, 14s) ease-in-out infinite;
+  }
+  
+  .bg-shine-size {
+    background-size: 300% 300%;
+  }
+  
+  .shadow-glow {
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+  }
+  
+  /* Animation delay utilities */
+  .animation-delay-200 {
+    animation-delay: 200ms;
+  }
+  
+  .animation-delay-300 {
+    animation-delay: 300ms;
+  }
+  
+  .animation-delay-500 {
+    animation-delay: 500ms;
+  }
+  
+  .animation-delay-600 {
+    animation-delay: 600ms;
+  }
+  
+  .animation-delay-800 {
+    animation-delay: 800ms;
+  }
+  
+  .gpu-accelerated {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
 }
 
 /* Force mobile dialogs to display */
 @media (max-width: 768px) {
+  /* Mobile optimization classes */
+  .optimize-animations-mobile * {
+    animation-duration: 0.5s !important;
+    transition-duration: 0.3s !important;
+    will-change: auto !important;
+  }
+
+  /* Selective blur on mobile - apply where needed */
+  .selective-blur-mobile {
+    backdrop-filter: blur(8px) !important;
+  }
+
+  /* Enhance gradients on mobile */
+  .enhance-gradient-mobile {
+    background-image: linear-gradient(to bottom right, #ffffff, #f5f3ff, #ede9fe) !important;
+  }
+  
+  /* Add subtle color to white backgrounds */
+  .color-white-bg-mobile {
+    background-color: #f5f3ff !important; /* Very light purple */
+  }
+  
+  /* Add colored borders to cards/elements */
+  .colored-border-mobile {
+    border: 1px solid #ddd6fe !important; /* Light purple border */
+    border-radius: 0.75rem !important;
+  }
+
+  /* Add subtle shadows on mobile */
+  .add-shadows-mobile {
+    box-shadow: 0 4px 14px rgba(111, 93, 165, 0.1) !important;
+  }
+  
+  /* Apply special styling to cards */
+  .card-style-mobile {
+    background-image: linear-gradient(to bottom right, #ffffff, #f9fafb, #f5f3ff) !important;
+    border: 1px solid #ddd6fe !important;
+    border-radius: 0.75rem !important;
+    box-shadow: 0 4px 14px rgba(111, 93, 165, 0.1) !important;
+  }
+  
+  /* Add colored accent to navigation elements */
+  .nav-accent-mobile {
+    border-left: 3px solid #8B5CF6 !important;
+  }
+
+  /* Optimize touch targets for mobile */
+  .optimize-touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Prevent scroll chaining */
+  .scroll-container {
+    overscroll-behavior: contain;
+    overflow-anchor: auto;
+  }
+  
+  /* Style form elements on mobile */
+  input, select, textarea {
+    background-color: #f9fafb !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 0.5rem !important;
+    font-size: 16px !important; /* Use 16px to maintain readability */
+  }
+
+  /* Enhance button styling on mobile */
+  button:not([class*="bg-"]) {
+    background-image: linear-gradient(to right, #8B5CF6, #6E59A5) !important;
+    color: white !important;
+  }
+  
   /* Pricing Feature Comparison Emergency Fix */
   .pricing-feature-modal-backdrop {
     position: fixed !important;
@@ -212,33 +607,7 @@ html, body {
     max-height: 80vh !important;
     padding: 0 !important;
   }
-}
-
-/* Fix scrolling inside dialog content */
-[data-mobile-dialog] [role="dialog"], 
-[data-desktop-dialog] [role="dialog"] {
-  max-height: 85vh !important;
-  overflow: hidden !important;
-}
-
-/* Ensure dialog overlay is visible and covers the entire screen */
-[data-state="open"][class*="bg-black"] {
-  position: fixed !important;
-  inset: 0 !important;
-  background-color: rgba(0, 0, 0, 0.7) !important;
-  z-index: 9998 !important;
-}
-
-/* Fix for mobile dialogs without jittering */
-.waitlist-creator-dialog form {
-  position: relative !important;
-  background-color: white !important;
-  transition: none !important;
-  will-change: auto !important;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
+  
   html, body {
     margin: 0 !important;
     padding: 0 !important;
@@ -316,8 +685,7 @@ html, body {
     pointer-events: auto !important; /* Ensure events pass through */
   }
   
-  /* Fix for fixed/absolute height containers which might trap scrolling 
-     But exclude header to ensure it stays sticky */
+  /* Fix for fixed/absolute height containers which might trap scrolling */
   [class*="h-["], [class*="max-h-["], [class*="min-h-["], 
   [style*="height:"], [style*="max-height:"], [style*="min-height:"],
   .h-screen, .min-h-screen, .h-full, .min-h-full,
@@ -354,21 +722,7 @@ html, body {
     pointer-events: auto !important;
     overscroll-behavior: none !important;
   }
-  
-  /* Additional classes to fix common motion issues */
-  .touch-action-pan-y {
-    touch-action: pan-y !important;
-  }
-  
-  .overscroll-behavior-none {
-    overscroll-behavior: none !important;
-  }
-  
-  /* Apply to all interactive elements to prevent scroll interference */
-  a, button, input, select, textarea, [role="button"], [tabindex]:not([tabindex="-1"]) {
-    touch-action: manipulation !important; /* Better touch handling */
-  }
-  
+
   main {
     padding-left: 0 !important;
     padding-right: 0 !important;
@@ -417,20 +771,7 @@ html, body {
     box-shadow: none !important;
   }
   
-  /* Specific fix for the tan divider above footer on mobile */
-  @media (max-width: 768px) {
-    section + section {
-      margin-top: 0 !important;
-      padding-top: 0 !important;
-      border-top: none !important;
-    }
-    
-    section:last-of-type {
-      margin-bottom: 0 !important;
-      padding-bottom: 0 !important;
-    }
-  }
-  
+  /* Mobile-specific spacing utility classes */
   .mobile-px-adjust {
     padding-left: 0.75rem !important;
     padding-right: 0.75rem !important;
@@ -476,4 +817,153 @@ html, body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+}
+
+/* Specific fix for the tan divider above footer on mobile */
+@media (max-width: 768px) {
+  section + section {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    border-top: none !important;
+  }
+  
+  section:last-of-type {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+  }
+  
+  .mobile-no-animate {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .mobile-simpler-animation {
+    animation-duration: 0.5s !important;
+    transition-duration: 0.3s !important;
+  }
+  
+  .mobile-no-hover-anim:hover {
+    transform: none !important;
+    box-shadow: inherit !important;
+  }
+  
+  .mobile-no-blur {
+    filter: none !important;
+    backdrop-filter: none !important;
+  }
+  
+  .mobile-static-bg {
+    background: white !important;
+    background-image: none !important;
+  }
+  
+  .mobile-optimize {
+    will-change: auto !important;
+    transform: none !important;
+  }
+}
+
+/* Keyframes definitions - consolidated */
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(8px); }
+}
+
+@keyframes slideInFromBottom {
+  0% { transform: translateY(15px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideInFromLeft {
+  0% { transform: translateX(-15px); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInFromRight {
+  0% { transform: translateX(15px); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInFromTop {
+  0% { transform: translateY(-15px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes zoomIn {
+  0% { transform: scale(0.95); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes rotateIn {
+  0% { transform: rotate(-5deg) scale(0.95); opacity: 0; }
+  100% { transform: rotate(0) scale(1); opacity: 1; }
+}
+
+@keyframes shiftBackgroundPosition {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pingOnce {
+  75%, 100% { transform: scale(1.1); opacity: 0; }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+}
+
+@keyframes counter-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.05); }
+}
+
+@keyframes expandWidth {
+  0% { width: 0; opacity: 0; }
+  100% { width: 100%; opacity: 1; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes float-subtle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.2); }
+}
+
+@keyframes shine {
+  to { background-position: 200% center; }
+}
+
+@keyframes shimmer-slide {
+  from { background-position: 200% center; }
+  to { background-position: -200% center; }
 }
