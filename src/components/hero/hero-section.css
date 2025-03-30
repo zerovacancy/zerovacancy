@@ -1,0 +1,161 @@
+/* 
+ * Hero Section - Spacing System
+ * A dedicated CSS module for hero section styling using CSS custom properties
+ * for maintainable and scalable spacing management.
+ */
+
+/* Base spacing variables - single source of truth */
+:root {
+  /* Core spacing units */
+  --spacing-unit: 8px;                  /* Base unit for all spacing calculations */
+  --spacing-xs: var(--spacing-unit);    /* 8px - Extra small spacing */
+  --spacing-sm: calc(var(--spacing-unit) * 2);  /* 16px - Small spacing */
+  --spacing-md: calc(var(--spacing-unit) * 3);  /* 24px - Medium spacing */
+  --spacing-lg: calc(var(--spacing-unit) * 4);  /* 32px - Large spacing */
+  --spacing-xl: calc(var(--spacing-unit) * 6);  /* 48px - Extra large spacing */
+
+  /* Hero section specific variables */
+  --hero-bg-color: #F9F6EC;
+  --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+  --hero-desktop-height: 650px;  
+  --hero-mobile-height: 450px; /* Standardized mobile height to 450px to match index.tsx */
+  --hero-z-index: 70;
+  --hero-content-max-width: 1200px;
+  --hero-title-max-width: 920px;
+  --hero-description-max-width: 650px;
+  --hero-spacing-base: var(--spacing-sm);    /* 16px - Base unit for hero spacing */
+  
+  /* Content spacing - desktop defaults */
+  --hero-content-padding-top: var(--spacing-md);    /* Reduced from 32px to 24px */
+  --hero-title-margin-bottom: var(--spacing-xs);    /* Reduced from 16px to 8px */
+  --hero-description-margin-y: var(--spacing-xs);   /* Reduced from 16px to 8px top/bottom */
+  --hero-cta-margin-top: var(--spacing-sm);         /* Reduced from 24px to 16px */
+  --hero-cta-margin-bottom: var(--spacing-md);      /* Reduced from 32px to 24px */
+}
+
+/* Main hero section container */
+.hero-section {
+  /* Position and dimensions */
+  position: relative;
+  width: 100%;
+  height: var(--hero-desktop-height);
+  min-height: var(--hero-desktop-height);
+  max-height: var(--hero-desktop-height);
+  
+  /* Visual styling */
+  background-color: var(--hero-bg-color);
+  overflow: visible;
+  z-index: var(--hero-z-index);
+  
+  /* Layout */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center content vertically */
+  align-items: center;     /* Center content horizontally */
+  
+  /* Remove padding to let internal elements control spacing */
+  padding: 0;
+  margin: 0;
+  text-align: center; /* Ensure proper text alignment */
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 768px) {
+  /* 
+   * Root variable overrides for mobile
+   * These extend the main spacing system but with mobile-specific values
+   */
+  :root {
+    /* Mobile uses tighter spacing values */
+    --hero-content-padding-top: var(--spacing-sm); /* 16px for mobile */
+    --hero-title-margin-bottom: var(--spacing-xs); /* 8px */
+    --hero-description-margin-y: var(--spacing-xs); /* 8px */
+    --hero-cta-margin-top: var(--spacing-sm); /* 16px */
+    --hero-cta-margin-bottom: var(--spacing-sm); /* 16px */
+  }
+  
+  .hero-section {
+    height: var(--hero-mobile-height);
+    min-height: var(--hero-mobile-height);
+    max-height: var(--hero-mobile-height);
+    padding: 0;
+    margin: 0;
+    text-align: center;
+  }
+}
+
+/* Wrapper around all content to maintain proper vertical distribution */
+.hero-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  max-width: var(--hero-content-max-width);
+  justify-content: flex-start; /* Changed from space-between to flex-start for closer spacing */
+  padding: 0 var(--hero-spacing-base);
+}
+
+/* Content container styles */
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding-top: calc(var(--hero-spacing-base) * 3); /* Add top padding */
+  text-align: center;
+}
+
+/* Ensure child elements use proper spacing */
+.hero-title-container {
+  max-width: var(--hero-title-max-width);
+  margin: 0 auto var(--hero-spacing-base);
+}
+
+.hero-description-container {
+  max-width: var(--hero-description-max-width);
+  margin: var(--hero-spacing-base) auto var(--hero-spacing-base); /* Reduced bottom margin */
+}
+
+/* Specific CTA container styles with spacing */
+.hero-cta-container {
+  width: 100%;
+  margin-top: calc(var(--hero-spacing-base) * 1.5); /* Reduced from auto to specific value */
+  margin-bottom: calc(var(--hero-spacing-base) * 2);
+  padding: 0 var(--hero-spacing-base);
+}
+
+@media (max-width: 768px) {
+  /* Mobile adjustments */
+  .hero-content {
+    padding-top: var(--hero-spacing-base);
+  }
+  
+  .hero-description-container {
+    max-width: 95%;
+    margin: calc(var(--hero-spacing-base) / 2) auto var(--hero-spacing-base);
+  }
+  
+  .hero-cta-container {
+    margin-bottom: var(--hero-spacing-base);
+  }
+}
+
+/* Animation classes for hero elements */
+.hero-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+  will-change: opacity, transform;
+}
+
+.hero-delay-100 {
+  animation-delay: 100ms;
+}
+
+.hero-delay-200 {
+  animation-delay: 200ms;
+}
+
+/* Define animations */
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}

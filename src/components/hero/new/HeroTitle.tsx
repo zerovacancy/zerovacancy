@@ -19,69 +19,61 @@ export const HeroTitle: React.FC<HeroTitleProps> = ({
   return (
     <h1 
       className={cn(
-        "tracking-tight font-bold font-jakarta text-center w-full flex flex-col items-center",
+        "tracking-tight font-bold font-jakarta text-center w-full flex flex-col items-center p-0",
+        "mb-1 md:mb-2", // Minimal bottom margin
         className
       )}
-      style={{
-        margin: isMobile ? '0 0 16px 0' : '0 0 1.25rem 0', // Increased to 16px on mobile
-        padding: 0,
-        width: '100%'
-      }}
+      id="hero-title"
     >
       {/* Static part of the title */}
       <span 
         className={cn(
-          isMobile ? "text-[1.75rem]" : "text-4xl sm:text-5xl lg:text-6xl", // Reduced from 2rem to 1.75rem on mobile
-          "tracking-[-0.02em]",
-          "font-jakarta mb-2",
+          isMobile ? "text-[1.75rem]" : "text-4xl sm:text-5xl lg:text-6xl",
+          "tracking-[-0.02em] leading-[1.2]", // Tighter line height
+          "font-jakarta mb-1", // Reduced margin
           "bg-clip-text text-transparent",
           "bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1]",
           "font-bold",
           "w-full mx-auto text-center"
         )}
-        style={{ 
-          letterSpacing: "-0.02em",
-          lineHeight: "1.3",
-          margin: '0 0 0.5rem 0' // 8px in rem
-        }}
       >
         {staticText}
       </span>
 
-      {/* Rotating text container */}
-      <div 
-        className="flex justify-center w-full text-center"
-        style={{ 
-          width: "100%",
-          height: isMobile ? "3rem" : "4.375rem", // Reduced from 3.75rem (60px) to 3rem (48px) on mobile
-          margin: 0,
-          padding: 0
-        }}
-      >
+      {/* Rotating text container - fixed height ensures stable layout */}
+      <div className={cn(
+        "flex justify-center w-full text-center p-0 m-0 overflow-visible relative",
+        isMobile 
+          ? "h-[40px] min-h-[40px]" // Critical: Fixed height for mobile
+          : "h-[3.2rem]" // Desktop height
+      )}>
         <TextRotate
           texts={rotatingTexts}
-          mainClassName="flex justify-center items-center h-auto"
+          mainClassName={cn(
+            "flex justify-center items-center",
+            isMobile && "absolute inset-0" // Critical: Use absolute positioning on mobile
+          )}
           staggerFrom="last"
-          initial={{ opacity: 1 }}
+          initial={isMobile ? { opacity: 0 } : { opacity: 1 }}  // Simpler animation for mobile
           animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          staggerDuration={0}
+          exit={isMobile ? { opacity: 0 } : { opacity: 0 }}     // Simpler animation for mobile
+          staggerDuration={isMobile ? 0 : 0}  // No stagger on mobile
           rotationInterval={3000}
           splitLevelClassName="overflow-visible"
           elementLevelClassName={cn(
-            isMobile ? "text-[2.4rem]" : "text-4xl sm:text-5xl lg:text-6xl",
+            isMobile ? "text-[2.2rem]" : "text-4xl sm:text-5xl lg:text-5xl", // Reduced text sizes
             "font-bold font-jakarta tracking-[-0.03em]",
             "bg-clip-text text-transparent", 
             "bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1]",
-            "animate-shimmer-slide bg-size-200",
+            isMobile ? "" : "animate-shimmer-slide bg-size-200", // Remove animation on mobile
             "drop-shadow-[0_1px_2px_rgba(74,45,217,0.2)]",
             "filter brightness-110",
-            "leading-[1.3]"
+            "leading-[1.2]" // Tighter line height
           )}
-          // Simpler tween animation for mobile
+          // Simpler fade animation for mobile only
           transition={{ 
             type: "tween", 
-            duration: 0.3,
+            duration: isMobile ? 0.25 : 0.3, // Shorter for mobile
             ease: "easeInOut"
           }}
           auto={true}

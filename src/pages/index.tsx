@@ -477,12 +477,51 @@ const Index = () => {
            padding: 0,
            backgroundColor: '#F9F6EC' // Tan/gold background for consistency
          }}>
+      {/* Fix for fixed element bottom value issue */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        /* Reset specific fixed element with large bottom value */
+        .fixed.top-0.left-0.right-0.z-\\[60\\] {
+          bottom: auto !important;
+          height: 1px !important;
+        }
+        
+        /* Target all fixed elements in the hero context */
+        .fixed:not(.mobile-sticky-header):not([role="dialog"]) {
+          bottom: auto !important;
+        }
+
+        /* Fix specific elements that might have excessive bottom values */
+        body > div > div > .fixed,
+        #__next > div > .fixed,
+        #root > div > .fixed,
+        main > .fixed,
+        [data-hero-section="true"] ~ .fixed {
+          bottom: auto !important;
+        }
+
+        /* Add special diagnostic code to count fixed elements */
+        body:after {
+          content: "" !important;
+          display: block !important;
+          position: fixed !important;
+          top: 0 !important;
+          left: 0 !important;
+          right: auto !important;
+          bottom: auto !important;
+          height: 1px !important;
+          width: 1px !important;
+          z-index: -9999 !important;
+          opacity: 0 !important;
+          pointer-events: none !important;
+        }
+      `}} />
       <SEO 
         title="Property Content Creators | ZeroVacancy" 
         description="Connect with elite content creators who transform your spaces into compelling visual stories. Find photographers, videographers, and more for your properties."
         canonicalPath="/"
         structuredData={[homepageSchema, organizationSchema]}
       />
+      {/* Mobile styles now handled directly by mobile-hero.css - no dynamic injection needed */}
       <Header />
       {showBanner && !isMobile && (
         <div className="relative mb-0">
@@ -563,12 +602,17 @@ const Index = () => {
             max-height: 650px !important;
           }
           
-          /* Mobile-specific height adjustment */
+          /* Mobile-specific styles - NO forced height override 
+           * (let mobile-hero.css control these values instead)
+           */
           @media (max-width: 768px) {
             section#hero, section[data-hero-section="true"], div[data-hero-section="true"], [data-hero-section="true"] {
-              height: 450px !important; /* Shorter height only for mobile */
-              min-height: 450px !important;
-              max-height: 450px !important;
+              /* No height values set here - defer to mobile-hero.css */
+              display: flex !important;
+              flex-direction: column !important;
+              justify-content: center !important;
+              align-items: center !important;
+              overflow: visible !important;
             }
           }
           
@@ -579,7 +623,7 @@ const Index = () => {
             flex-direction: column !important;
             justify-content: flex-start !important;
             align-items: center !important;
-            padding-top: 100px !important;
+            padding-top: 40px !important; /* Reduced from 100px to minimize the gap */
             padding-bottom: 20px !important;
             overflow: visible !important;
           }
@@ -600,11 +644,12 @@ const Index = () => {
             max-height: 650px !important;
           }
           
-          /* Mobile-only NUCLEAR OPTION */
+          /* Mobile-only styles - defer height control to mobile-hero.css */
           @media (max-width: 768px) {
             section[id="hero"], [data-hero-section="true"] {
-              height: 450px !important;
-              max-height: 450px !important;
+              /* No height values here - let mobile-hero.css control them */
+              text-align: center !important;
+              justify-content: center !important;
             }
           }
           
@@ -658,25 +703,48 @@ const Index = () => {
           (function() {
             function fixHeroHeight() {
               const heroElements = document.querySelectorAll('section#hero, [data-hero-section="true"]');
+              const isMobile = window.innerWidth <= 768;
+              
               heroElements.forEach(el => {
-                // Force fixed height - different values for mobile and desktop
-                if (window.innerWidth <= 768) {
-                  // Mobile height
-                  el.style.setProperty('height', '450px', 'important');
-                  el.style.setProperty('max-height', '450px', 'important');
-                  el.style.setProperty('min-height', '450px', 'important');
+                if (isMobile) {
+                  // For mobile: Let CSS handle all styling, don't apply any inline styles
+                  // This allows mobile-hero.css to fully control the layout
+                  
+                  // CRITICAL FIX: Remove problematic inline styles that cause title to disappear
+                  // Find and clean up any elements with fixed heights that break layout
+                  const elementsToFix = el.querySelectorAll('.hero-title-container, .hero-content, .hero-cta-container');
+                  elementsToFix.forEach(element => {
+                    // Remove height constraints
+                    element.style.removeProperty('height');
+                    element.style.removeProperty('min-height');
+                    element.style.removeProperty('max-height');
+                    
+                    // Remove any top/bottom margins
+                    element.style.removeProperty('margin-top');
+                    element.style.removeProperty('margin-bottom');
+                  });
+                  
+                  // Also fix rotating text specific issues
+                  const heroTitle = el.querySelector('#hero-title');
+                  if (heroTitle) {
+                    const rotatingElements = heroTitle.querySelectorAll('div, .rotating-text, .rotating-text span');
+                    rotatingElements.forEach(element => {
+                      // Ensure visibility
+                      element.style.removeProperty('height');
+                      element.style.removeProperty('min-height');
+                      element.style.removeProperty('opacity');
+                      element.style.removeProperty('visibility');
+                      element.style.setProperty('display', 'block', 'important');
+                    });
+                  }
                 } else {
-                  // Desktop height - increased to show full CTAs
+                  // Desktop height settings only
                   el.style.setProperty('height', '650px', 'important');
                   el.style.setProperty('max-height', '650px', 'important');
                   el.style.setProperty('min-height', '650px', 'important');
+                  el.style.setProperty('justify-content', 'center', 'important');
+                  el.style.setProperty('padding-top', '40px', 'important');
                 }
-                
-                // Force top alignment
-                el.style.setProperty('justify-content', 'flex-start', 'important');
-                
-                // Ensure proper padding
-                el.style.setProperty('padding-top', '100px', 'important');
               });
             }
             
@@ -792,12 +860,10 @@ const Index = () => {
               contain: 'none',
               willChange: 'auto',
               transform: 'none',
-              overflow: 'hidden',
+              overflow: 'visible', // Changed from hidden to visible
               isolation: 'auto',
-              maxHeight: '400px', // Reduced from 550px
-              minHeight: 'auto', // Let content determine height
-              height: 'auto', // Content-based height
               display: 'flex'
+              // Removed height constraints to let CSS control them
             } : { 
               ...getZIndex(0), 
               ...getBackgroundTransition(0),
@@ -849,6 +915,79 @@ const Index = () => {
             )}
           >
             <HeroSection />
+            
+            {/* Anti-shift script - removes dynamic styles causing hero layout shifts */}
+            <script dangerouslySetInnerHTML={{ __html: `
+              (function preventHeroLayoutShifts() {
+                // Only run on mobile
+                if (window.innerWidth <= 768) {
+                  // Remove problematic dynamic styles specifically targeting hero section
+                  function stabilizeHeroLayout() {
+                    // CRITICAL FIX: Target the rotating text container
+                    const rotatingTextContainers = document.querySelectorAll('#hero-title > div');
+                    rotatingTextContainers.forEach(container => {
+                      // Ensure fixed height to prevent layout shifts
+                      container.style.setProperty('height', '40px', 'important');
+                      container.style.setProperty('min-height', '40px', 'important');
+                      container.style.setProperty('position', 'relative', 'important');
+                      container.style.setProperty('display', 'flex', 'important');
+                      container.style.setProperty('align-items', 'center', 'important');
+                      container.style.setProperty('justify-content', 'center', 'important');
+                      
+                      // Remove any transform that might interfere with layout
+                      container.style.removeProperty('transform');
+                    });
+                    
+                    // Ensure the text inside rotating container is visible
+                    const rotatingTexts = document.querySelectorAll('#hero-title .rotating-text, #hero-title .rotating-text span');
+                    rotatingTexts.forEach(text => {
+                      text.style.setProperty('opacity', '1', 'important');
+                      text.style.setProperty('visibility', 'visible', 'important');
+                      text.style.setProperty('display', 'block', 'important');
+                    });
+                    
+                    // Fix main height issues
+                    document.querySelectorAll('.hero-content, .hero-title-container, .hero-description-container, .hero-cta-container').forEach(el => {
+                      // Critical: Remove fixed heights that cause spacing issues
+                      el.style.removeProperty('min-height');
+                      el.style.removeProperty('height');
+                      el.style.removeProperty('max-height');
+                      
+                      // Force static positioning to prevent stacking issues
+                      el.style.setProperty('position', 'static', 'important');
+                    });
+                    
+                    // Fix CTA button icon alignment specifically
+                    const ctaButtons = document.querySelectorAll('.hero-cta-container button');
+                    ctaButtons.forEach(button => {
+                      button.style.setProperty('display', 'flex', 'important');
+                      button.style.setProperty('align-items', 'center', 'important');
+                      button.style.setProperty('position', 'relative', 'important');
+                      
+                      // Find the icon container and ensure it's properly positioned
+                      const iconContainer = button.querySelector('.cta-icon-container, div[class*="absolute"]');
+                      if (iconContainer) {
+                        iconContainer.style.setProperty('position', 'absolute', 'important');
+                        iconContainer.style.setProperty('left', '0', 'important');
+                        iconContainer.style.setProperty('top', '50%', 'important');
+                        iconContainer.style.setProperty('transform', 'translateY(-50%)', 'important');
+                        iconContainer.style.setProperty('margin-left', '4px', 'important');
+                      }
+                    });
+                  }
+                  
+                  // Run initially and then after a delay to catch dynamically added styles
+                  stabilizeHeroLayout();
+                  
+                  // Run again after animations might have completed
+                  setTimeout(stabilizeHeroLayout, 500);
+                  setTimeout(stabilizeHeroLayout, 1500);
+                  
+                  // Also run on any resize events
+                  window.addEventListener('resize', stabilizeHeroLayout);
+                }
+              })();
+            `}} />
           </div>
         </div>
 

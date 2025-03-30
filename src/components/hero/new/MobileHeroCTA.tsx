@@ -130,22 +130,12 @@ export const MobileHeroCTA: React.FC = () => {
   if (showInlineSuccess) {
     return (
       <div 
-        className="w-full max-w-[250px] py-5 px-4 font-medium rounded-[14px] text-white relative flex flex-col items-center justify-center animate-fade-in"
-        style={{
-          background: 'linear-gradient(180deg, #8A42F5 0%, #7837DB 100%)',
-          color: 'white',
-          border: '1px solid rgba(255,255,255,0.2)',
-          boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(0,0,0,0.05), 0 16px 32px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15)',
-          transform: 'translateZ(0)', // Hardware acceleration
-          margin: '0 auto',
-          position: 'relative'
-        }}
+        className="w-full max-w-[250px] py-5 px-4 font-medium rounded-[14px] text-white relative flex flex-col items-center justify-center animate-fade-in mx-auto
+        bg-gradient-to-b from-[#8A42F5] to-[#7837DB] border border-white/20 shadow-xl transform-gpu"
       >
         <div 
-          className="h-14 w-14 bg-purple-50/20 rounded-full flex items-center justify-center mb-2"
-          style={{
-            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.3), 0 2px 8px rgba(0,0,0,0.2)'
-          }}
+          className="h-14 w-14 bg-purple-50/20 rounded-full flex items-center justify-center mb-2 
+          shadow-[inset_0_1px_0_rgba(255,255,255,0.3),_0_2px_8px_rgba(0,0,0,0.2)]"
         >
           <CheckCircle className="h-7 w-7 text-white" />
         </div>
@@ -172,34 +162,18 @@ export const MobileHeroCTA: React.FC = () => {
         onClick={handleButtonClick}
         className={cn(
           "w-full mx-auto font-medium rounded-[12px] text-white relative flex items-center justify-center",
-          "h-12 min-h-[48px] px-4 py-2 rounded-full", // Increased height and full rounded corners
-          "text-sm",
-          "max-w-[250px]" // Constrain width to ensure centering
+          "h-12 min-h-[48px] py-2 pl-[55px] pr-5 rounded-full", /* Adjusted padding for better text alignment */
+          "text-sm max-w-[250px] font-semibold tracking-[0.02em]",
+          "bg-gradient-to-b from-[#8A42F5] to-[#7837DB] border border-white/20",
+          "shadow-xl transform-gpu mobile-cta-button" /* Added class for specific targeting */
         )}
-        style={{
-          background: 'linear-gradient(180deg, #8A42F5 0%, #7837DB 100%)',
-          color: 'white',
-          border: '1px solid rgba(255,255,255,0.2)',
-          boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(0,0,0,0.05), 0 16px 32px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15)',
-          fontWeight: 600,
-          paddingLeft: '52px',
-          letterSpacing: '0.02em',
-          transform: 'translateZ(0)', // Hardware acceleration
-          margin: '0 auto',
-          position: 'relative'
-        }}
       >
         {/* Icon container */}
         <div 
-          className="absolute left-0 top-1/2 -translate-y-1/2 ml-4 flex items-center justify-center"
-          style={{
-            width: '32px',
-            height: '32px',
-            background: '#8A42F5', // Match the purple button color
-            border: '1px solid rgba(255,255,255,0.3)',
-            borderRadius: '10px',
-            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15)'
-          }}
+          className="absolute left-0 top-1/2 -translate-y-1/2 ml-4 flex items-center justify-center
+          w-8 h-8 bg-[#8A42F5] border border-white/30 rounded-[10px]
+          shadow-[inset_0_1px_0_rgba(255,255,255,0.35),_inset_0_-1px_0_rgba(0,0,0,0.15)]
+          cta-icon-container" /* Added class for easier targeting */
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"></path>
@@ -215,13 +189,7 @@ export const MobileHeroCTA: React.FC = () => {
   return (
     <form 
       onSubmit={handleSubmit}
-      className="w-full max-w-[250px] mx-auto relative animate-fade-in"
-      style={{
-        transform: 'translateZ(0)', // Hardware acceleration
-        margin: '0 auto',
-        position: 'relative',
-        zIndex: 30
-      }}
+      className="w-full max-w-[250px] mx-auto relative animate-fade-in transform-gpu z-30"
     >
       <div className={cn(
         "flex flex-col w-full",
@@ -236,16 +204,11 @@ export const MobileHeroCTA: React.FC = () => {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter your email"
             className={cn(
-              "w-full rounded-t-[10px] rounded-b-none text-gray-800 border border-purple-200/70 border-b-0 focus:outline-none focus:ring-2 focus:ring-purple-400/40",
-              "h-12 px-3 text-base font-medium" // Improved height and font styling
+              "w-full rounded-t-[10px] rounded-b-none text-gray-800",
+              "border border-purple-200/70 border-b-0 focus:outline-none focus:ring-2 focus:ring-purple-400/40",
+              "h-12 px-3 text-base font-medium bg-white",
+              "shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)] border-[rgba(138,66,245,0.2)]"
             )}
-            style={{
-              backgroundColor: 'white',
-              boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.03)',
-              borderWidth: '1px',
-              borderStyle: 'solid',
-              borderColor: 'rgba(138, 66, 245, 0.2)'
-            }}
             disabled={isLoading}
             required
           />
@@ -263,15 +226,11 @@ export const MobileHeroCTA: React.FC = () => {
           type="submit"
           disabled={isLoading}
           className={cn(
-            "w-full bg-gradient-to-b from-purple-600 to-purple-700 text-white font-semibold rounded-t-none rounded-b-[10px] flex items-center justify-center transition-all duration-200",
-            "h-12 text-sm" // Matching height with input
+            "w-full text-white font-semibold rounded-t-none rounded-b-[10px] flex items-center justify-center transition-all duration-200",
+            "h-12 text-sm tracking-[0.02em]",
+            "bg-gradient-to-b from-[#8A42F5] to-[#7837DB] border border-white/20",
+            "shadow-lg"
           )}
-          style={{
-            background: 'linear-gradient(180deg, #8A42F5 0%, #7837DB 100%)',
-            border: '1px solid rgba(255,255,255,0.2)',
-            boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15)',
-            letterSpacing: '0.02em'
-          }}
         >
           {isLoading ? (
             <>
