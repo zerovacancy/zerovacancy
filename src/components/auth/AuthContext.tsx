@@ -14,10 +14,12 @@ type AuthContextType = {
   isAuthenticated: boolean;
   signIn: (email: string, password: string, isAdminLogin?: boolean) => Promise<void>;
   signUp: (email: string, password: string) => Promise<void>;
+  signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
-  openAuthDialog: () => void;
+  openAuthDialog: (formType?: 'login' | 'register') => void;
   closeAuthDialog: () => void;
   isAuthDialogOpen: boolean;
+  authDialogFormType: 'login' | 'register';
   navigate: (path: string) => void;
 };
 
@@ -27,6 +29,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [user, setUser] = useState<User>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
+  const [authDialogFormType, setAuthDialogFormType] = useState<'login' | 'register'>('login');
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -57,36 +60,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const signIn = async (email: string, password: string, isAdminLogin: boolean = false): Promise<void> => {
     try {
-      // For admin login, we don't need to modify the inputs or show validation logs
-      if (!isAdminLogin) {
-        console.log('Email validation:', email && email.includes('@') && email.includes('.'));
-        console.log('Password validation:', password && password.length >= 6);
-
-        // Debugging by bypassing validation
-        console.log("Bypassing validation for debugging purposes");
-        
-        // Force values to be usable format for Supabase
-        let cleanEmail = String(email || "").trim();
-        let cleanPassword = String(password || "");
-        
-        // Make sure email has a valid format
-        if (!cleanEmail.includes('@')) {
-          console.log("Email doesn't have @ symbol, adding default domain");
-          cleanEmail = cleanEmail + "@example.com";
-        }
-        
-        // Make sure password meets minimum length
-        if (cleanPassword.length < 6) {
-          console.log("Adding padding to password to meet minimum length");
-          // Pad password if needed (for debugging only)
-          while (cleanPassword.length < 6) {
-            cleanPassword += "0";
-          }
-        }
-        
-        email = cleanEmail;
-        password = cleanPassword;
+      // Validate input only on empty values
+      if (!email || !password) {
+        throw new Error("Email and password are required");
       }
+      
+      // Trim email for consistency
+      const cleanEmail = String(email).trim();
 
       const { error, data } = await supabase.auth.signInWithPassword({ 
         email, 
@@ -125,36 +105,24 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const signUp = async (email: string, password: string): Promise<void> => {
     try {
-      console.log('AuthContext signUp called with:', { email, password: '****' });
-      console.log('Email validation:', email && email.includes('@') && email.includes('.'));
-      console.log('Password validation:', password && password.length >= 6);
-
-      // Debugging by bypassing validation
-      console.log("Bypassing validation for debugging purposes");
-      
-      // Force values to be usable format for Supabase
-      let cleanEmail = String(email || "").trim();
-      let cleanPassword = String(password || "");
-      
-      // Make sure email has a valid format
-      if (!cleanEmail.includes('@')) {
-        console.log("Email doesn't have @ symbol, adding default domain");
-        cleanEmail = cleanEmail + "@example.com";
+      // Basic validation
+      if (!email || !password) {
+        throw new Error("Email and password are required");
       }
       
-      // Make sure password meets minimum length
-      if (cleanPassword.length < 6) {
-        console.log("Adding padding to password to meet minimum length");
-        // Pad password if needed (for debugging only)
-        while (cleanPassword.length < 6) {
-          cleanPassword += "0";
-        }
+      if (!email.includes('@') || !email.includes('.')) {
+        throw new Error("Please enter a valid email address");
       }
-
-      console.log("Submitting signup with modified values:", { email: cleanEmail, password: "****" });
+      
+      if (password.length < 6) {
+        throw new Error("Password must be at least 6 characters");
+      }
+      
+      // Trim email for consistency
+      const cleanEmail = String(email).trim();
       const { error } = await supabase.auth.signUp({
         email: cleanEmail,
-        password: cleanPassword,
+        password,
         options: {
           // Ensure we have the full URL with protocol for proper redirect
           emailRedirectTo: `${window.location.origin}/auth/callback`,
@@ -192,6 +160,30 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
+  const signInWithGoogle = async (): Promise<void> => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`
+        }
+      });
+      
+      if (error) throw error;
+      
+      // Close the auth dialog once OAuth flow is initiated
+      setIsAuthDialogOpen(false);
+    } catch (error: any) {
+      toast({
+        title: "Google Sign-in Error",
+        description: error.message || "Failed to sign in with Google. Please try again.",
+        variant: "destructive",
+      });
+      throw error;
+    }
+  };
+
+
   const signOut = async (): Promise<void> => {
     try {
       const { error } = await supabase.auth.signOut();
@@ -216,7 +208,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
-  const openAuthDialog = () => setIsAuthDialogOpen(true);
+  const openAuthDialog = (formType: 'login' | 'register' = 'login') => {
+    setAuthDialogFormType(formType);
+    setIsAuthDialogOpen(true);
+  };
+  
   const closeAuthDialog = () => setIsAuthDialogOpen(false);
 
   const value = {
@@ -225,10 +221,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     isAuthenticated: !!user,
     signIn,
     signUp,
+    signInWithGoogle,
     signOut,
     openAuthDialog,
     closeAuthDialog,
     isAuthDialogOpen,
+    authDialogFormType,
     navigate,
   };
 
