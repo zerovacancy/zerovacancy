@@ -25,30 +25,51 @@ const handleNavClick = (sectionId: string) => {
 
 const ResourcesDropdown = ({ className, onClick }: { className?: string, onClick?: () => void }) => {
   const location = useLocation();
+  const [open, setOpen] = useState(false);
   
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
-        <button className={cn(
-          "text-[15px] font-medium transition-colors relative py-1.5 px-3",
-          "header-nav-link flex items-center justify-center",
-          "before:absolute before:inset-x-0 before:bottom-0 before:h-0.5 before:scale-x-0 before:origin-right",
-          "before:transition-transform before:duration-300 hover:before:scale-x-100 hover:before:origin-left",
-          "before:bg-[#9b87f5]",
-          location.pathname.startsWith('/resources')
-            ? "text-[#9b87f5] before:scale-x-100"
-            : "text-black hover:text-[#9b87f5]"
-        )}>
+        <button 
+          type="button"
+          className={cn(
+            "text-[15px] font-medium transition-colors relative py-1.5 px-3",
+            "header-nav-link flex items-center justify-center",
+            "before:absolute before:inset-x-0 before:bottom-0 before:h-0.5 before:scale-x-0 before:origin-right",
+            "before:transition-transform before:duration-300 hover:before:scale-x-100 hover:before:origin-left",
+            "before:bg-[#9b87f5]",
+            location.pathname.startsWith('/resources') || open
+              ? "text-[#9b87f5] before:scale-x-100"
+              : "text-black hover:text-[#9b87f5]"
+          )}
+        >
           Resources
           <ChevronDown className="h-4 w-4 ml-1" />
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="w-[180px] bg-white border border-gray-200 shadow-lg rounded-md mt-1 p-1">
-        <DropdownMenuItem asChild className="hover:bg-gray-50 focus:bg-gray-50 rounded-md p-2">
-          <Link to="/resources/blog" className="w-full cursor-pointer" onClick={onClick}>Blog</Link>
+      <DropdownMenuContent 
+        align="start" 
+        className="w-[180px] bg-white border border-gray-200 shadow-lg rounded-md mt-1 p-1 z-[1100]"
+      >
+        <DropdownMenuItem 
+          className="hover:bg-gray-50 focus:bg-gray-50 rounded-md p-2 cursor-pointer"
+          onClick={() => {
+            window.location.href = '/resources/blog';
+            setOpen(false);
+            if (onClick) onClick();
+          }}
+        >
+          Blog
         </DropdownMenuItem>
-        <DropdownMenuItem asChild className="hover:bg-gray-50 focus:bg-gray-50 rounded-md p-2">
-          <Link to="/resources/learn" className="w-full cursor-pointer" onClick={onClick}>Learning Center</Link>
+        <DropdownMenuItem 
+          className="hover:bg-gray-50 focus:bg-gray-50 rounded-md p-2 cursor-pointer"
+          onClick={() => {
+            window.location.href = '/resources/learn';
+            setOpen(false);
+            if (onClick) onClick();
+          }}
+        >
+          Learning Center
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
