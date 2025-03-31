@@ -64,7 +64,7 @@ const NavLinks = ({ className, onClick }: { className?: string, onClick?: () => 
     <nav className={cn("flex items-center", className)}>
       {/* Navigation Links */}
       {[
-        { to: "/#search", label: "Find Creators", sectionId: "search" },
+        { to: "/#find-creators", label: "Find Creators", sectionId: "find-creators" },
         { to: "/#how-it-works", label: "How It Works", sectionId: "how-it-works" },
         { to: "/#pricing", label: "Pricing", sectionId: "pricing" },
       ].map((link) => {
@@ -243,7 +243,7 @@ const Header = () => {
             {/* Primary navigation buttons */}
             <div className="flex flex-col space-y-3 mb-6 w-full">
               {[
-                { to: "/#search", label: "Find Creators", sectionId: "search" },
+                { to: "/#find-creators", label: "Find Creators", sectionId: "find-creators" },
                 { to: "/#how-it-works", label: "How It Works", sectionId: "how-it-works" },
                 { to: "/#pricing", label: "Pricing", sectionId: "pricing" },
               ].map((link) => (
