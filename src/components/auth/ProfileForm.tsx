@@ -27,6 +27,14 @@ const propertyTeamSchema = baseProfileSchema.extend({
   propertyCount: z.string().optional(),
 });
 
+// Schema for agencies (reusing property team schema with different role options)
+const agencySchema = baseProfileSchema.extend({
+  company: z.string().min(1, 'Agency name is required'),
+  role: z.string().min(1, 'Your role is required'),
+  propertyCount: z.string().optional(),
+  agencyType: z.string().optional(),
+});
+
 // Schema for creators
 const creatorSchema = baseProfileSchema.extend({
   specialty: z.string().min(1, 'Specialty is required'),
@@ -34,7 +42,7 @@ const creatorSchema = baseProfileSchema.extend({
   portfolioUrl: z.string().optional(),
 });
 
-type UserType = 'property_team' | 'creator';
+type UserType = 'property_team' | 'creator' | 'agency';
 
 type ProfileFormProps = {
   userType: UserType;
@@ -44,14 +52,24 @@ type ProfileFormProps = {
 
 const ProfileForm = ({ userType, onSubmit, isLoading = false }: ProfileFormProps) => {
   // Using dynamic schema based on user type
-  const schema = userType === 'property_team' ? propertyTeamSchema : creatorSchema;
+  let schema;
+  let defaultValues;
+  
+  if (userType === 'creator') {
+    schema = creatorSchema;
+    defaultValues = { fullName: '', phone: '', specialty: '', experience: '', portfolioUrl: '' };
+  } else if (userType === 'agency') {
+    schema = agencySchema;
+    defaultValues = { fullName: '', phone: '', company: '', role: '', propertyCount: '', agencyType: '' };
+  } else {
+    schema = propertyTeamSchema;
+    defaultValues = { fullName: '', phone: '', company: '', role: '', propertyCount: '' };
+  }
   
   // Set up form with the appropriate schema
   const form = useForm({
     resolver: zodResolver(schema),
-    defaultValues: userType === 'property_team' 
-      ? { fullName: '', phone: '', company: '', role: '', propertyCount: '' }
-      : { fullName: '', phone: '', specialty: '', experience: '', portfolioUrl: '' }
+    defaultValues: defaultValues
   });
 
   // Handle form submission
@@ -66,7 +84,11 @@ const ProfileForm = ({ userType, onSubmit, isLoading = false }: ProfileFormProps
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
         <h2 className="text-xl font-bold mb-4">
-          {userType === 'property_team' ? 'Property Team Profile' : 'Creator Profile'}
+          {userType === 'property_team' 
+            ? 'Property Team Profile' 
+            : userType === 'creator' 
+              ? 'Creator Profile' 
+              : 'Agency Profile'}
         </h2>
         
         <FormField
@@ -97,8 +119,8 @@ const ProfileForm = ({ userType, onSubmit, isLoading = false }: ProfileFormProps
           )}
         />
         
-        {userType === 'property_team' ? (
-          // Property Team specific fields
+        {userType === 'property_team' || userType === 'agency' ? (
+          // Property Team or Agency specific fields
           <>
             <FormField
               control={form.control}
@@ -130,11 +152,23 @@ const ProfileForm = ({ userType, onSubmit, isLoading = false }: ProfileFormProps
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="owner">Property Owner</SelectItem>
-                      <SelectItem value="manager">Property Manager</SelectItem>
-                      <SelectItem value="marketing">Marketing Manager</SelectItem>
-                      <SelectItem value="operations">Operations</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
+                      {userType === 'agency' ? (
+                        <>
+                          <SelectItem value="agency_owner">Agency Owner</SelectItem>
+                          <SelectItem value="agency_manager">Agency Manager</SelectItem>
+                          <SelectItem value="marketing_director">Marketing Director</SelectItem>
+                          <SelectItem value="content_director">Content Director</SelectItem>
+                          <SelectItem value="agency_other">Other</SelectItem>
+                        </>
+                      ) : (
+                        <>
+                          <SelectItem value="owner">Property Owner</SelectItem>
+                          <SelectItem value="manager">Property Manager</SelectItem>
+                          <SelectItem value="marketing">Marketing Manager</SelectItem>
+                          <SelectItem value="operations">Operations</SelectItem>
+                          <SelectItem value="other">Other</SelectItem>
+                        </>
+                      )}
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -142,26 +176,65 @@ const ProfileForm = ({ userType, onSubmit, isLoading = false }: ProfileFormProps
               )}
             />
             
+            {userType === 'agency' && (
+              <FormField
+                control={form.control}
+                name="agencyType"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Agency Type</FormLabel>
+                    <Select 
+                      onValueChange={field.onChange} 
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select agency type" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="marketing">Marketing Agency</SelectItem>
+                        <SelectItem value="property_management">Property Management</SelectItem>
+                        <SelectItem value="media_production">Media Production</SelectItem>
+                        <SelectItem value="digital_marketing">Digital Marketing</SelectItem>
+                        <SelectItem value="creative_agency">Creative Agency</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+            
             <FormField
               control={form.control}
               name="propertyCount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Number of Properties (optional)</FormLabel>
+                  <FormLabel>
+                    {userType === 'agency' 
+                      ? 'Number of Clients (optional)' 
+                      : 'Number of Properties (optional)'}
+                  </FormLabel>
                   <Select 
                     onValueChange={field.onChange} 
                     defaultValue={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select property count" />
+                        <SelectValue placeholder={
+                          userType === 'agency' 
+                            ? "Select client count" 
+                            : "Select property count"
+                        } />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="1-5">1-5 properties</SelectItem>
-                      <SelectItem value="6-20">6-20 properties</SelectItem>
-                      <SelectItem value="21-50">21-50 properties</SelectItem>
-                      <SelectItem value="50+">More than 50 properties</SelectItem>
+                      <SelectItem value="1-5">1-5 {userType === 'agency' ? 'clients' : 'properties'}</SelectItem>
+                      <SelectItem value="6-20">6-20 {userType === 'agency' ? 'clients' : 'properties'}</SelectItem>
+                      <SelectItem value="21-50">21-50 {userType === 'agency' ? 'clients' : 'properties'}</SelectItem>
+                      <SelectItem value="50+">More than 50 {userType === 'agency' ? 'clients' : 'properties'}</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />

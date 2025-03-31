@@ -5,6 +5,9 @@ CREATE TABLE IF NOT EXISTS profiles (
   email TEXT NOT NULL,
   full_name TEXT,
   phone TEXT,
+  company TEXT,
+  role TEXT,
+  is_verified BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -22,9 +25,13 @@ CREATE TABLE IF NOT EXISTS property_teams (
   company TEXT NOT NULL,
   role TEXT NOT NULL,
   propertyCount TEXT,
+  agencyType TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
+
+-- Create index on role to easily identify agencies
+CREATE INDEX IF NOT EXISTS idx_property_teams_role ON property_teams(role);
 
 -- Create creators table with exact field names matching the code
 CREATE TABLE IF NOT EXISTS creators (

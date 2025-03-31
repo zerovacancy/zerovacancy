@@ -14,6 +14,10 @@ const PropertyDashboard = () => {
   const [isLoadingProfile, setIsLoadingProfile] = useState(true);
   const { toast } = useToast();
   const navigate = useNavigate();
+  
+  // Get URL parameters and set agency view state
+  const searchParams = new URLSearchParams(window.location.search);
+  const [isAgency, setIsAgency] = useState(searchParams.get('view') === 'agency');
 
   // Check if user is authenticated
   useEffect(() => {
@@ -24,6 +28,7 @@ const PropertyDashboard = () => {
         variant: "destructive",
       });
       navigate('/');
+      return;
     }
   }, [isAuthenticated, isLoading, navigate, toast]);
 
@@ -55,9 +60,15 @@ const PropertyDashboard = () => {
           throw error;
         }
 
+        // Check if this is an agency by role or agencyType field
+        const isAgencyRole = data.role && (
+          data.role.includes('agency') || 
+          data.agencyType || 
+          data.user_type === 'agency'
+        );
+        setIsAgency(isAgency || isAgencyRole);
         setPropertyProfile(data);
       } catch (error: any) {
-        console.error('Error fetching property profile:', error);
         toast({
           title: "Error Loading Profile",
           description: error.message || "There was a problem loading your profile.",
@@ -71,7 +82,7 @@ const PropertyDashboard = () => {
     if (user?.id) {
       getPropertyProfile();
     }
-  }, [user, navigate, toast]);
+  }, [user, navigate, toast, isAgency]);
 
   // Show loading state
   if (isLoading || isLoadingProfile) {
@@ -103,7 +114,17 @@ const PropertyDashboard = () => {
                     {propertyProfile?.fullName?.charAt(0) || user?.email?.charAt(0) || 'P'}
                   </div>
                   <h2 className="text-lg font-semibold">{propertyProfile?.fullName || 'Property Team'}</h2>
-                  <p className="text-sm text-gray-500">{propertyProfile?.company || 'Property Management'}</p>
+                  <p className="text-sm text-gray-500">
+                    {isAgency 
+                      ? (propertyProfile?.agencyType === 'marketing' 
+                          ? 'Marketing Agency'
+                          : propertyProfile?.agencyType === 'property_management'
+                          ? 'Property Management'
+                          : propertyProfile?.agencyType === 'media_production'
+                          ? 'Media Production'
+                          : 'Digital Agency')
+                      : (propertyProfile?.company || 'Property Management')}
+                  </p>
                 </div>
                 
                 <nav className="space-y-1">
@@ -146,51 +167,108 @@ const PropertyDashboard = () => {
             {/* Main content */}
             <div className="flex-grow">
               <div className="bg-white rounded-lg shadow p-6 mb-6">
-                <h1 className="text-2xl font-bold mb-6">Property Team Dashboard</h1>
+                <h1 className="text-2xl font-bold mb-6">
+                  {isAgency ? 'Agency Dashboard' : 'Property Team Dashboard'}
+                </h1>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-                  <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
-                    <h3 className="font-semibold text-blue-600 mb-1">Active Projects</h3>
-                    <p className="text-2xl font-bold">0</p>
-                  </div>
-                  <div className="bg-purple-50 border border-purple-100 rounded-lg p-4">
-                    <h3 className="font-semibold text-brand-purple mb-1">Upcoming Shoots</h3>
-                    <p className="text-2xl font-bold">0</p>
-                  </div>
-                  <div className="bg-green-50 border border-green-100 rounded-lg p-4">
-                    <h3 className="font-semibold text-green-600 mb-1">Completed Projects</h3>
-                    <p className="text-2xl font-bold">0</p>
-                  </div>
+                  {isAgency ? (
+                    <>
+                      <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
+                        <h3 className="font-semibold text-blue-600 mb-1">Active Clients</h3>
+                        <p className="text-2xl font-bold">0</p>
+                      </div>
+                      <div className="bg-purple-50 border border-purple-100 rounded-lg p-4">
+                        <h3 className="font-semibold text-brand-purple mb-1">Active Creators</h3>
+                        <p className="text-2xl font-bold">0</p>
+                      </div>
+                      <div className="bg-green-50 border border-green-100 rounded-lg p-4">
+                        <h3 className="font-semibold text-green-600 mb-1">Total Projects</h3>
+                        <p className="text-2xl font-bold">0</p>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
+                        <h3 className="font-semibold text-blue-600 mb-1">Active Projects</h3>
+                        <p className="text-2xl font-bold">0</p>
+                      </div>
+                      <div className="bg-purple-50 border border-purple-100 rounded-lg p-4">
+                        <h3 className="font-semibold text-brand-purple mb-1">Upcoming Shoots</h3>
+                        <p className="text-2xl font-bold">0</p>
+                      </div>
+                      <div className="bg-green-50 border border-green-100 rounded-lg p-4">
+                        <h3 className="font-semibold text-green-600 mb-1">Completed Projects</h3>
+                        <p className="text-2xl font-bold">0</p>
+                      </div>
+                    </>
+                  )}
                 </div>
                 
                 <div className="mb-8">
                   <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                    <Button className="bg-brand-purple hover:bg-brand-purple-dark">
-                      <Camera className="w-4 h-4 mr-2" />
-                      Find Creators
-                    </Button>
-                    <Button variant="outline">
-                      <Building className="w-4 h-4 mr-2" />
-                      Add Property
-                    </Button>
-                    <Button variant="outline">
-                      <FileText className="w-4 h-4 mr-2" />
-                      Create Project
-                    </Button>
+                    {isAgency ? (
+                      <>
+                        <Button className="bg-brand-purple hover:bg-brand-purple-dark">
+                          <Camera className="w-4 h-4 mr-2" />
+                          Find Creators
+                        </Button>
+                        <Button variant="outline">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 mr-2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                          </svg>
+                          Add Client
+                        </Button>
+                        <Button variant="outline">
+                          <FileText className="w-4 h-4 mr-2" />
+                          Create Project
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <Button className="bg-brand-purple hover:bg-brand-purple-dark">
+                          <Camera className="w-4 h-4 mr-2" />
+                          Find Creators
+                        </Button>
+                        <Button variant="outline">
+                          <Building className="w-4 h-4 mr-2" />
+                          Add Property
+                        </Button>
+                        <Button variant="outline">
+                          <FileText className="w-4 h-4 mr-2" />
+                          Create Project
+                        </Button>
+                      </>
+                    )}
                   </div>
                 </div>
                 
                 <div className="border-t pt-6">
                   <h2 className="text-xl font-semibold mb-4">Getting Started</h2>
                   <div className="bg-gray-50 rounded-lg p-4">
-                    <p className="mb-4">Welcome to your property team dashboard! Here are some steps to get started:</p>
-                    <ol className="list-decimal list-inside space-y-2 text-gray-700">
-                      <li>Add your properties to your profile</li>
-                      <li>Browse available content creators</li>
-                      <li>Create your first project</li>
-                      <li>Schedule a booking with a creator</li>
-                    </ol>
+                    {isAgency ? (
+                      <>
+                        <p className="mb-4">Welcome to your agency dashboard! Here are some steps to get started:</p>
+                        <ol className="list-decimal list-inside space-y-2 text-gray-700">
+                          <li>Add your first client</li>
+                          <li>Connect with content creators</li>
+                          <li>Create your first project</li>
+                          <li>Invite team members to collaborate</li>
+                        </ol>
+                      </>
+                    ) : (
+                      <>
+                        <p className="mb-4">Welcome to your property team dashboard! Here are some steps to get started:</p>
+                        <ol className="list-decimal list-inside space-y-2 text-gray-700">
+                          <li>Add your properties to your profile</li>
+                          <li>Browse available content creators</li>
+                          <li>Create your first project</li>
+                          <li>Schedule a booking with a creator</li>
+                        </ol>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>

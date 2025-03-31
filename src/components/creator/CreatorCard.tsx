@@ -144,11 +144,10 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
           });
         }
       } catch (err) {
-        console.error("Confetti error:", err);
+        // Silent error handling for confetti
       }
       
     } catch (error) {
-      console.error("Error submitting email:", error);
       toast.error("Failed to join waitlist. Please try again.");
     } finally {
       setIsLoading(false);
@@ -1306,9 +1305,9 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
         forceOpen={false} // Ensure it only opens via our explicit controls
       />
       
-      {/* Confetti container - fixed position to ensure visibility */}
+      {/* Confetti container - absolute position to ensure visibility without layout issues */}
       {showInlineSuccess && (
-        <div className="fixed inset-0 pointer-events-none z-[5000]">
+        <div className="absolute inset-0 pointer-events-none z-[5000]">
           {/* This div is just a placeholder for confetti */}
         </div>
       )}

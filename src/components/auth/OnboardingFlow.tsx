@@ -9,7 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import UserTypeSelection from './UserTypeSelection';
 import ProfileForm from './ProfileForm';
 
-type UserType = 'property_team' | 'creator' | null;
+type UserType = 'property_team' | 'creator' | 'agency' | null;
 
 enum OnboardingStep {
   TYPE_SELECTION = 0,
@@ -77,34 +77,26 @@ const OnboardingFlow: React.FC = () => {
         created_at: new Date().toISOString(),
       };
 
-      console.log('Saving user profile:', userData);
-
       // Determine which table to insert into based on user type
-      const tableName = userType === 'property_team' ? 'property_teams' : 'creators';
+      let tableName;
+      if (userType === 'creator') {
+        tableName = 'creators';
+      } else {
+        // Both property_team and agency use the property_teams table
+        tableName = 'property_teams';
+      }
 
       // Insert the profile data into the appropriate table
-      console.log(`Inserting into table ${tableName} with data:`, userData);
       const { data, error } = await supabase
         .from(tableName)
         .upsert([userData])
         .select();
 
       if (error) {
-        console.error(`Error upserting to ${tableName}:`, error);
-        console.error(`Error status:`, error.code, error.message, error.details);
         throw error;
       }
-      
-      console.log(`Successfully inserted into ${tableName}:`, data);
 
       // Also save the user type in the profiles table for easier querying
-      console.log("Inserting into profiles table with data:", {
-        id: user.id,
-        user_type: userType,
-        email: user.email,
-        full_name: profileData.fullName,
-      });
-      
       const { data: profileData2, error: profileError } = await supabase
         .from('profiles')
         .upsert([{
@@ -117,11 +109,7 @@ const OnboardingFlow: React.FC = () => {
         .select();
         
       if (profileError) {
-        console.error("Error upserting to profiles:", profileError);
-        console.error("Error status:", profileError.code, profileError.message, profileError.details);
         // We're not throwing here to allow the flow to continue even if this fails
-      } else {
-        console.log("Successfully inserted into profiles:", profileData2);
       }
 
       toast({
@@ -132,7 +120,6 @@ const OnboardingFlow: React.FC = () => {
       // Move to the completed step
       setStep(OnboardingStep.COMPLETED);
     } catch (error: any) {
-      console.error('Error saving profile:', error);
       toast({
         title: "Error Saving Profile",
         description: error.message || "There was a problem saving your profile. Please try again.",
@@ -148,6 +135,9 @@ const OnboardingFlow: React.FC = () => {
     // Redirect to the appropriate dashboard based on user type
     if (userType === 'creator') {
       navigate('/creator/dashboard');
+    } else if (userType === 'agency') {
+      // For now, agencies use the property dashboard with a query param
+      navigate('/property/dashboard?view=agency');
     } else {
       navigate('/property/dashboard');
     }
@@ -252,7 +242,9 @@ const OnboardingFlow: React.FC = () => {
               <p className="text-gray-600 mb-8 max-w-md mx-auto">
                 {userType === 'property_team' 
                   ? "Your property team profile has been set up successfully. You can now start posting projects and browsing creators."
-                  : "Your creator profile has been set up successfully. You can now start browsing projects and receiving requests from property owners."}
+                  : userType === 'creator'
+                  ? "Your creator profile has been set up successfully. You can now start browsing projects and receiving requests from property owners."
+                  : "Your agency profile has been set up successfully. You can now start managing clients and connecting with creators."}
               </p>
               <Button
                 size="lg"
