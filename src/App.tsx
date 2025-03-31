@@ -15,6 +15,7 @@ import { CookieConsent } from '@/components/ui/cookie-consent';
 import FontLoader from '@/components/FontLoader';
 import CriticalPreload from '@/components/CriticalPreload';
 import { AuthProvider } from '@/components/auth/AuthContext';
+import AuthForms from '@/components/auth/AuthForms';
 
 const Index = lazy(() => import('./pages/index'));
 const PaymentConfirmation = lazy(() => import('./pages/PaymentConfirmation'));
@@ -215,6 +216,8 @@ function App() {
                   <Route path="/account" element={<Account />} />
                   <Route path="/auth/callback" element={<AuthCallback />} />
                   <Route path="/onboarding" element={<Onboarding />} />
+                  <Route path="/login" element={<Navigate to="/" replace />} />
+                  <Route path="/signup" element={<Navigate to="/" replace />} />
                   
                   {/* Dashboard Routes */}
                   <Route path="/creator/dashboard" element={<CreatorDashboard />} />
@@ -249,6 +252,7 @@ function App() {
                 duration: 3000
               }} 
             />
+            <AuthForms />
             <Analytics />
           </AuthProvider>
         </Router>

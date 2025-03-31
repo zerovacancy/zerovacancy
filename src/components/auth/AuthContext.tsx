@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { useNavigate } from 'react-router-dom';
 
 type User = {
   id: string;
@@ -31,7 +30,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
   const [authDialogFormType, setAuthDialogFormType] = useState<'login' | 'register'>('login');
   const { toast } = useToast();
-  const navigate = useNavigate();
+  
+  // Simple navigate function that doesn't depend on react-router
+  const navigate = (path: string) => {
+    window.location.href = path;
+  };
 
   useEffect(() => {
     const checkUser = async () => {
@@ -197,6 +200,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         description: "You have been successfully signed out.",
       });
       
+      // Use the navigate function
       navigate('/');
     } catch (error: any) {
       toast({

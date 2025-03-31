@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
-import Header from '../components/Header';
+import SafeHeader from '../components/SafeHeader';
 import { HeroSection } from '../components/hero/new';
 import Footer from '../components/Footer';
 import { Banner } from '@/components/ui/banner';
@@ -522,7 +522,7 @@ const Index = () => {
         structuredData={[homepageSchema, organizationSchema]}
       />
       {/* Mobile styles now handled directly by mobile-hero.css - no dynamic injection needed */}
-      <Header />
+      <SafeHeader />
       {showBanner && !isMobile && (
         <div className="relative mb-0">
           <Banner variant="purple" size="lg" action={
