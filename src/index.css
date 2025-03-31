@@ -12,6 +12,7 @@
 
 /* Import custom component CSS */
 @import './styles/header-navigation.css';
+@import './styles/mobile-menu-fix.css';
 
 /* Tailwind base layer (must be first) */
 @tailwind base;

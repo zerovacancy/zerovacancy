@@ -1,13 +1,9 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { menuItems } from '@/data/menuItems';
 import { useAuth } from '@/components/auth/AuthContext';
 import { cn } from '@/lib/utils';
-import { Magnetic } from '@/components/ui/magnetic';
 import { Button } from '@/components/ui/button';
-import { ChevronDown } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { ChevronDown, X, Menu } from 'lucide-react';
 import {
   Sheet,
   SheetContent,
@@ -32,12 +28,12 @@ const ResourcesDropdown = ({ className, onClick }: { className?: string, onClick
   
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="group">
-        <span className={cn(
-          "text-[15px] font-medium transition-colors relative py-1.5",
-          "header-nav-link flex items-center justify-center", /* Use header-nav-link class for consistent sizing */
+      <DropdownMenuTrigger asChild>
+        <button className={cn(
+          "text-[15px] font-medium transition-colors relative py-1.5 px-3",
+          "header-nav-link flex items-center justify-center",
           "before:absolute before:inset-x-0 before:bottom-0 before:h-0.5 before:scale-x-0 before:origin-right",
-          "before:transition-transform before:duration-300 group-hover:before:scale-x-100 before:origin-left",
+          "before:transition-transform before:duration-300 hover:before:scale-x-100 hover:before:origin-left",
           "before:bg-[#9b87f5]",
           location.pathname.startsWith('/resources')
             ? "text-[#9b87f5] before:scale-x-100"
@@ -45,14 +41,14 @@ const ResourcesDropdown = ({ className, onClick }: { className?: string, onClick
         )}>
           Resources
           <ChevronDown className="h-4 w-4 ml-1" />
-        </span>
+        </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="w-[180px] bg-white border border-border/40 shadow-lg">
-        <DropdownMenuItem asChild onClick={onClick} className="hover:bg-accent focus:bg-accent">
-          <Link to="/resources/blog" className="w-full cursor-pointer">Blog</Link>
+      <DropdownMenuContent align="start" className="w-[180px] bg-white border border-gray-200 shadow-lg rounded-md mt-1 p-1">
+        <DropdownMenuItem asChild className="hover:bg-gray-50 focus:bg-gray-50 rounded-md p-2">
+          <Link to="/resources/blog" className="w-full cursor-pointer" onClick={onClick}>Blog</Link>
         </DropdownMenuItem>
-        <DropdownMenuItem asChild onClick={onClick} className="hover:bg-accent focus:bg-accent">
-          <Link to="/resources/learn" className="w-full cursor-pointer">Learn</Link>
+        <DropdownMenuItem asChild className="hover:bg-gray-50 focus:bg-gray-50 rounded-md p-2">
+          <Link to="/resources/learn" className="w-full cursor-pointer" onClick={onClick}>Learning Center</Link>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -61,16 +57,21 @@ const ResourcesDropdown = ({ className, onClick }: { className?: string, onClick
 
 const NavLinks = ({ className, onClick }: { className?: string, onClick?: () => void }) => {
   const location = useLocation();
+  // Don't use conditional logic based on props, create separate components
+  const isInMobileView = className?.includes('flex-col') || false;
   
   return (
     <nav className={cn("flex items-center", className)}>
+      {/* Navigation Links */}
       {[
         { to: "/#search", label: "Find Creators", sectionId: "search" },
         { to: "/#how-it-works", label: "How It Works", sectionId: "how-it-works" },
         { to: "/#pricing", label: "Pricing", sectionId: "pricing" },
-      ].map((link) => (
-        <Magnetic key={link.to} intensity={0.5}>
+      ].map((link) => {
+        // Always render a button, but with different classes based on view
+        return (
           <button
+            key={link.to}
             onClick={() => {
               if (location.pathname === '/') {
                 handleNavClick(link.sectionId);
@@ -80,23 +81,51 @@ const NavLinks = ({ className, onClick }: { className?: string, onClick?: () => 
               if (onClick) onClick();
             }}
             className={cn(
-              "text-[15px] font-medium transition-colors relative py-1.5",
-              "header-nav-link flex items-center justify-center", /* Use header-nav-link class for consistent sizing */
-              "before:absolute before:inset-x-0 before:bottom-0 before:h-0.5 before:scale-x-0 before:origin-right",
-              "before:transition-transform before:duration-300 hover:before:scale-x-100 hover:before:origin-left",
-              "before:bg-[#9b87f5]",
+              isInMobileView
+                ? "text-[16px] font-medium transition-colors w-full text-left py-3 px-1"
+                : "text-[15px] font-medium transition-colors relative py-1.5 px-3 header-nav-link flex items-center justify-center before:absolute before:inset-x-0 before:bottom-0 before:h-0.5 before:scale-x-0 before:origin-right before:transition-transform before:duration-300 hover:before:scale-x-100 hover:before:origin-left before:bg-[#9b87f5]",
               location.pathname === link.to 
-                ? "text-[#9b87f5] before:scale-x-100" 
+                ? "text-[#9b87f5]" + (!isInMobileView ? " before:scale-x-100" : "")
                 : "text-black hover:text-[#9b87f5]"
             )}
           >
             {link.label}
           </button>
-        </Magnetic>
-      ))}
-      <Magnetic intensity={0.5}>
-        <ResourcesDropdown onClick={onClick} />
-      </Magnetic>
+        );
+      })}
+      
+      {/* Resources section */}
+      {!isInMobileView ? (
+        // Desktop version - dropdown
+        <div className="ml-1">
+          <ResourcesDropdown onClick={onClick} />
+        </div>
+      ) : (
+        // Mobile version - expandable section
+        <div className="w-full">
+          <div className="mb-2 text-[16px] font-medium py-3 px-1 border-b border-gray-100">
+            Resources
+          </div>
+          <button
+            onClick={() => {
+              window.location.href = '/resources/blog';
+              if (onClick) onClick();
+            }}
+            className="text-[15px] font-normal transition-colors w-full text-left py-2 px-3 pl-4 hover:bg-gray-50 rounded"
+          >
+            Blog
+          </button>
+          <button
+            onClick={() => {
+              window.location.href = '/resources/learn';
+              if (onClick) onClick();
+            }}
+            className="text-[15px] font-normal transition-colors w-full text-left py-2 px-3 pl-4 hover:bg-gray-50 rounded"
+          >
+            Learning Center
+          </button>
+        </div>
+      )}
     </nav>
   );
 };
@@ -161,84 +190,191 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
   
-  return (
-    <header className={`sticky top-0 z-50 w-full mobile-sticky-header ${isScrolled ? 'scrolled' : ''}`}>
-      <div className="container header-container">
-        {/* Logo */}
-        <Magnetic intensity={0.3}>
-          <Link 
-            to="/" 
-            className="flex items-center transition-opacity active:opacity-80 logo-container"
-            onClick={handleLogoInteraction}
-            onTouchStart={handleLogoInteraction}
+  // Mobile layout
+  const MobileHeader = () => (
+    <div className="flex justify-between items-center w-full h-16">
+      {/* Logo */}
+      <Link 
+        to="/" 
+        className="flex items-center transition-opacity active:opacity-80 logo-container"
+        onClick={handleLogoInteraction}
+        onTouchStart={handleLogoInteraction}
+      >
+        <img 
+          src="/logo.png"
+          alt="ZeroVacancy"
+          className="h-7 w-auto"
+        />
+      </Link>
+      
+      {/* Mobile menu button with rectangular styling */}
+      <Sheet open={isOpen} onOpenChange={setIsOpen}>
+        <SheetTrigger asChild>
+          <button 
+            type="button"
+            onClick={() => setIsOpen(true)}
+            className="mobile-menu-btn bg-white"
+            aria-label="Open menu"
           >
-            <motion.img 
-              src="/logo.png"
-              alt="ZeroVacancy"
-              initial={false}
-              animate={{ scale: isOpen ? 0.95 : 1 }}
-              className="h-7 w-auto"
-            />
-          </Link>
-        </Magnetic>
-
-        {/* Navigation - with flex alignment */}
-        <NavLinks className="hidden md:flex md:items-center" />
-
-        {/* Mobile menu */}
-        <Sheet open={isOpen} onOpenChange={setIsOpen}>
-          <SheetTrigger asChild className="md:hidden">
-            <Button variant="ghost" size="icon" className="h-[2.75rem] w-[2.75rem] rounded-full">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M4 7H20M4 12H20M4 17H20"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              <span className="sr-only">Toggle menu</span>
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="right" className="flex flex-col gap-6 pt-10">
-            <NavLinks onClick={() => setIsOpen(false)} className="flex-col items-start gap-4" />
-            <div className="flex flex-col gap-2 mt-4">
-              <Button variant="ghost" asChild className="justify-start header-btn-secondary">
-                <Link to="/login">Log In</Link>
-              </Button>
-              <Button asChild className="justify-start header-btn-primary">
-                <Link to="/signup">Sign Up</Link>
-              </Button>
+            <div className="hamburger-icon">
+              <span className="hamburger-line"></span>
+              <span className="hamburger-line"></span>
+              <span className="hamburger-line"></span>
             </div>
-          </SheetContent>
-        </Sheet>
-
-        {/* Right side buttons - with consistent height */}
-        <div className="hidden md:flex items-center gap-3 buttons-container">
-          <Magnetic intensity={0.4}>
+            <span className="menu-button-text">Menu</span>
+          </button>
+        </SheetTrigger>
+        <SheetContent side="right" className="flex flex-col pt-16 px-0 w-full max-w-[320px] bg-white">
+          {/* Close button positioned in the top-right corner */}
+          <div className="absolute top-4 right-4">
             <Button 
               variant="ghost" 
-              asChild 
-              className="header-btn-secondary flex items-center justify-center"
+              size="icon" 
+              onClick={() => setIsOpen(false)}
+              className="h-9 w-9 rounded-full focus:outline-none relative hover:bg-gray-100"
             >
-              <Link to="/login">Log In</Link>
+              <X className="h-5 w-5 text-gray-500" aria-hidden="true" />
+              <span className="sr-only">Close</span>
             </Button>
-          </Magnetic>
-          <Magnetic intensity={0.4}>
-            <Button 
-              asChild 
-              className="header-btn-primary bg-primary hover:bg-primary/90 hover:shadow-lg flex items-center justify-center"
-            >
-              <Link to="/signup">Sign Up</Link>
-            </Button>
-          </Magnetic>
+          </div>
+          
+          {/* Main navigation links - with improved styling */}
+          <div className="w-full px-5 pb-4">
+            {/* Primary navigation buttons */}
+            <div className="flex flex-col space-y-3 mb-6 w-full">
+              {[
+                { to: "/#search", label: "Find Creators", sectionId: "search" },
+                { to: "/#how-it-works", label: "How It Works", sectionId: "how-it-works" },
+                { to: "/#pricing", label: "Pricing", sectionId: "pricing" },
+              ].map((link) => (
+                <button
+                  key={link.to}
+                  onClick={() => {
+                    if (location.pathname === '/') {
+                      handleNavClick(link.sectionId);
+                    } else {
+                      window.location.href = `/#${link.sectionId}`;
+                    }
+                    setIsOpen(false);
+                  }}
+                  className="w-full py-3 px-4 text-left text-[16px] font-medium rounded-md 
+                    bg-brand-purple text-white hover:bg-brand-purple-dark transition-colors"
+                >
+                  {link.label}
+                </button>
+              ))}
+            </div>
+            
+            {/* Resources section with clearer styling */}
+            <div className="mb-6">
+              <h3 className="text-[16px] font-medium text-gray-800 mb-3 px-1">Resources</h3>
+              <div className="flex flex-col space-y-2">
+                <button
+                  onClick={() => {
+                    window.location.href = '/resources/blog';
+                    setIsOpen(false);
+                  }}
+                  className="w-full py-2.5 px-4 text-left text-[15px] font-medium rounded-md 
+                    border border-gray-200 hover:bg-gray-50 transition-colors"
+                >
+                  Blog
+                </button>
+                <button
+                  onClick={() => {
+                    window.location.href = '/resources/learn';
+                    setIsOpen(false);
+                  }}
+                  className="w-full py-2.5 px-4 text-left text-[15px] font-medium rounded-md 
+                    border border-gray-200 hover:bg-gray-50 transition-colors"
+                >
+                  Learning Center
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          {/* Login and Sign Up buttons in the mobile menu - with consistent styling */}
+          <div className="mt-auto border-t border-gray-200 pt-4 px-5 pb-8">
+            <h3 className="text-[16px] font-medium text-gray-800 mb-3">Account</h3>
+            <div className="space-y-3">
+              <Button 
+                variant="outline" 
+                className="w-full justify-center text-[15px] h-11 border-gray-300 text-gray-700 font-medium"
+                onClick={() => {
+                  openAuthDialog('login');
+                  setIsOpen(false);
+                }}
+              >
+                Log In
+              </Button>
+              <Button 
+                className="w-full justify-center text-[15px] h-11 bg-brand-purple hover:bg-brand-purple-dark font-medium"
+                onClick={() => {
+                  openAuthDialog('register');
+                  setIsOpen(false);
+                }}
+              >
+                Sign Up
+              </Button>
+            </div>
+          </div>
+        </SheetContent>
+      </Sheet>
+    </div>
+  );
+  
+  // Desktop layout
+  const DesktopHeader = () => (
+    <div className="flex items-center w-full h-[4.5rem]">
+      {/* Logo */}
+      <div className="flex-shrink-0">
+        <Link 
+          to="/" 
+          className="flex items-center transition-opacity active:opacity-80 logo-container"
+          onClick={handleLogoInteraction}
+          onTouchStart={handleLogoInteraction}
+        >
+          <img 
+            src="/logo.png"
+            alt="ZeroVacancy"
+            className="h-7 w-auto"
+          />
+        </Link>
+      </div>
+      
+      {/* Center navigation */}
+      <div className="flex justify-center flex-grow">
+        <NavLinks className="flex items-center" />
+      </div>
+      
+      {/* Auth buttons */}
+      <div className="flex items-center gap-3 buttons-container">
+        <Button 
+          variant="ghost" 
+          onClick={() => openAuthDialog('login')}
+          className="header-btn-secondary flex items-center justify-center"
+        >
+          Log In
+        </Button>
+        <Button 
+          onClick={() => openAuthDialog('register')}
+          className="header-btn-primary bg-primary hover:bg-primary/90 hover:shadow-lg flex items-center justify-center"
+        >
+          Sign Up
+        </Button>
+      </div>
+    </div>
+  );
+  
+  return (
+    <header className={`sticky top-0 z-50 w-full mobile-sticky-header ${isScrolled ? 'scrolled' : ''} bg-white border-b border-gray-100`}>
+      <div className="w-full px-4 md:container md:mx-auto md:px-6">
+        {/* Responsive header layout */}
+        <div className="md:hidden">
+          <MobileHeader />
+        </div>
+        <div className="hidden md:block">
+          <DesktopHeader />
         </div>
       </div>
     </header>
