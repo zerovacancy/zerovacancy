@@ -35,13 +35,8 @@ export const CookieConsent = () => {
   if (!isVisible) return null;
   
   return (
-    <div 
-      className={cn(
-        "fixed bottom-0 left-0 right-0 z-50",
-        "animate-fade-in"
-      )}
-    >
-      <div className="bg-white border-t border-purple-100 shadow-lg p-4 sm:p-6">
+    <div className="cookie-consent-container">
+      <div className="cookie-consent-content">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex-1">
@@ -74,7 +69,7 @@ export const CookieConsent = () => {
             
             <button 
               onClick={() => setIsVisible(false)} 
-              className="absolute top-3 right-3 sm:static text-gray-400 hover:text-gray-600"
+              className="cookie-consent-close text-gray-400 hover:text-gray-600 sm:static"
               aria-label="Close cookie consent"
             >
               <X className="h-5 w-5" />
