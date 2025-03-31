@@ -1,168 +1,138 @@
-// Quick performance optimizations that run immediately
+// Quick performance optimizations for mobile browsers
 (function() {
-  // CSS error recovery mechanism
-  function recoverFromCssErrors() {
-    // Handle CSS preload errors and missing files
-    window.addEventListener('error', function(event) {
-      const target = event.target;
-      // Check if error is from a CSS file
-      if (target && target.tagName === 'LINK' && 
-          target.rel === 'preload' && target.as === 'style' &&
-          event.target.href && event.target.href.includes('/assets/css/index-')) {
-        
-        console.warn('CSS preload failed, attempting recovery:', target.href);
-        
-        // Remove the failing preload
-        target.remove();
-        
-        // Force clear any related caches if service worker available
-        if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-          navigator.serviceWorker.controller.postMessage({
-            type: 'CLEAR_CACHE',
-            cacheNames: ['zerovacancy-css-v1']
-          });
-        }
-      }
-    }, true);
-  }
+  // Detect mobile device
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768;
   
-  // Run CSS recovery immediately
-  recoverFromCssErrors();
-  
-  // Check if we're on a mobile device
-  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
-                   window.innerWidth < 768;
-  
-  // Create utility CSS variables for consistent spacing
-  document.documentElement.style.setProperty('--mobile-section-spacing-y', '16px');
-  document.documentElement.style.setProperty('--mobile-transition-height', '40px');
-  document.documentElement.style.setProperty('--mobile-component-spacing', '8px');
-  document.documentElement.style.setProperty('--mobile-element-spacing', '4px');
-  
-  // Set custom CSS variable for viewport height (fixes iOS issues)
-  function setVhVariable() {
-    const vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty('--vh', `${vh}px`);
-    
-    // Prevent horizontal scroll on mobile
-    document.documentElement.style.width = '100%';
-    document.documentElement.style.maxWidth = '100vw';
-    document.documentElement.style.overflowX = 'hidden';
-    document.body.style.width = '100%';
-    document.body.style.maxWidth = '100vw';
-    document.body.style.overflowX = 'hidden';
-  }
-  
-  // Fix touchevents to improve responsiveness
-  function fixTouchDelay() {
-    if (isMobile) {
-      // Add empty touchstart listener to fix 300ms delay
-      document.addEventListener('touchstart', function() {}, {passive: true});
-      
-      // Add better touch action
-      document.documentElement.style.touchAction = 'manipulation';
-    }
-  }
-  
-  // Add classes to help with conditional CSS
-  function addDeviceClasses() {
-    document.documentElement.classList.add(isMobile ? 'is-mobile' : 'is-desktop');
-    
-    if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {
-      document.documentElement.classList.add('is-ios');
-    } else if (/Android/.test(navigator.userAgent)) {
-      document.documentElement.classList.add('is-android');
-    }
-  }
-  
-  // Fix section transitions and spacing
-  function fixMobileLayout() {
-    if (!isMobile) return;
-    
-    // Create a stylesheet for mobile-specific fixes
-    const styleEl = document.createElement('style');
-    styleEl.id = 'mobile-layout-fixes';
-    styleEl.innerHTML = `
-      /* Mobile layout fixes */
-      @media (max-width: 767px) {
-        /* Standardize section transitions */
-        .section-transition, 
-        [id*="transition"],
-        [class*="scroll-target"] {
-          height: var(--mobile-transition-height) !important;
-          min-height: var(--mobile-transition-height) !important;
-          max-height: var(--mobile-transition-height) !important;
-          margin: 0 !important;
-          padding: 0 !important;
-          z-index: 10 !important;
-          overflow: hidden !important;
-        }
-        
-        /* Make carousel navigation easier to tap */
-        [role="button"] {
-          min-width: 60px;
-          min-height: 60px;
-          touch-action: manipulation;
-        }
-        
-        /* Standardize section content spacing */
-        section {
-          padding-top: var(--mobile-section-spacing-y) !important;
-          padding-bottom: var(--mobile-section-spacing-y) !important;
-        }
-        
-        /* Carousel specific fixes */
-        .embla {
-          touch-action: pan-y !important;
-          overflow-x: auto !important;
-          overscroll-behavior-x: contain !important;
-        }
-        
-        /* Fix z-index layering */
-        section {
-          z-index: auto !important;
-          position: relative !important;
-        }
-        
-        /* Override margin-top on mobile sections */
-        section[class*="mt-"], 
-        [class*="section"][class*="mt-"] {
-          margin-top: 0 !important;
-        }
-      }
-    `;
-    document.head.appendChild(styleEl);
-  }
-  
-  // Run initial optimizations
-  setVhVariable();
-  fixTouchDelay();
-  addDeviceClasses();
-  fixMobileLayout();
-  
-  // Rerun on resize and orientation change
-  window.addEventListener('resize', setVhVariable, {passive: true});
-  window.addEventListener('orientationchange', setVhVariable, {passive: true});
-  
-  // Fix for carousel scrolling issues
+  // Add mobile class to body for CSS targeting
   if (isMobile) {
-    document.addEventListener('DOMContentLoaded', function() {
-      // Find carousel elements and apply fixes
-      const carouselElements = document.querySelectorAll('[class*="carousel"],[class*="embla"]');
-      carouselElements.forEach(el => {
-        el.classList.add('mobile-optimized-carousel');
-        el.style.touchAction = 'pan-y';
-        el.style.overscrollBehaviorX = 'contain';
+    document.documentElement.classList.add('mobile');
+  }
+  
+  // Create global recovery function for CSS loading failures
+  window.recoverFromCSSFailure = function() {
+    // Find all CSS links
+    const cssLinks = document.querySelectorAll('link[rel="stylesheet"]');
+    
+    // Reload each stylesheet with cache busting
+    cssLinks.forEach(link => {
+      const originalHref = link.getAttribute('href');
+      if (originalHref) {
+        // Create cache-busting URL
+        const cacheBustUrl = originalHref.includes('?') 
+          ? `${originalHref}&_cb=${Date.now()}` 
+          : `${originalHref}?_cb=${Date.now()}`;
         
-        // Ensure nav buttons are big enough
-        const navButtons = el.querySelectorAll('[role="button"]');
-        navButtons.forEach(btn => {
-          btn.classList.add('carousel-controls');
-          btn.style.minWidth = '60px';
-          btn.style.minHeight = '60px';
-          btn.style.touchAction = 'manipulation';
+        // Replace the stylesheet
+        const newLink = document.createElement('link');
+        newLink.rel = 'stylesheet';
+        newLink.href = cacheBustUrl;
+        
+        // Add to document
+        document.head.appendChild(newLink);
+        
+        // Optional: remove the original to prevent duplicates
+        // Commented out as it might cause flashing
+        // link.parentNode.removeChild(link);
+      }
+    });
+    
+    // Create emergency inline styles to ensure basic layout
+    const emergencyStyles = document.createElement('style');
+    emergencyStyles.textContent = `
+      /* Emergency styles to recover from CSS loading failure */
+      body { font-family: system-ui, sans-serif; background: #fff; color: #333; }
+      .mobile-sticky-header { position: fixed; top: 0; left: 0; right: 0; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.1); z-index: 1000; }
+      button, a { cursor: pointer; }
+      section { margin: 1rem 0; }
+      img { max-width: 100%; height: auto; }
+    `;
+    document.head.appendChild(emergencyStyles);
+    
+    console.log('Attempted recovery from CSS loading failure');
+  };
+  
+  // Early error handling - monitor for specific failures
+  let cssFailureDetected = false;
+  const originalErrorHandler = window.onerror;
+  
+  window.onerror = function(message, source, lineno, colno, error) {
+    // Check if it's a CSS loading error
+    if (message && (
+        message.includes('CSS') || 
+        message.includes('stylesheet') || 
+        message.includes('index-') && message.includes('.css')
+      )) {
+      console.warn('Potential CSS loading error detected:', message);
+      cssFailureDetected = true;
+      
+      // Attempt recovery after a short delay
+      setTimeout(function() {
+        if (cssFailureDetected) {
+          window.recoverFromCSSFailure();
+        }
+      }, 3000);
+    }
+    
+    // Call original error handler if it exists
+    if (typeof originalErrorHandler === 'function') {
+      return originalErrorHandler(message, source, lineno, colno, error);
+    }
+    
+    // Return false to allow default browser error handling
+    return false;
+  };
+  
+  // Detect white screen on mobile and attempt recovery
+  if (isMobile) {
+    // Check for white screen after page should be loaded
+    setTimeout(function() {
+      // Look for any visible content
+      const visibleContent = document.querySelector('header, main, #root > *');
+      
+      // If no visible content, attempt recovery
+      if (!visibleContent || getComputedStyle(visibleContent).opacity === '0') {
+        console.warn('Possible white screen detected - attempting recovery');
+        window.recoverFromCSSFailure();
+        
+        // Force reload only as last resort
+        setTimeout(function() {
+          // Check again if content is now visible
+          const visibleContentAfterRecovery = document.querySelector('header, main, #root > *');
+          if (!visibleContentAfterRecovery || getComputedStyle(visibleContentAfterRecovery).opacity === '0') {
+            // Clear cache and reload as last resort
+            window.location.reload(true);
+          }
+        }, 2000);
+      }
+    }, 5000);
+  }
+  
+  // Monitor resource loading
+  if (isMobile && window.performance && window.performance.getEntriesByType) {
+    window.addEventListener('load', function() {
+      // Check if any CSS resources failed
+      setTimeout(function() {
+        const resources = window.performance.getEntriesByType('resource');
+        let cssResourcesFound = false;
+        let cssFailuresFound = false;
+        
+        resources.forEach(function(resource) {
+          if (resource.name.includes('.css')) {
+            cssResourcesFound = true;
+            
+            // Check for failed resources (transferSize of 0 often indicates failure)
+            if (resource.transferSize === 0 && !resource.decodedBodySize) {
+              cssFailuresFound = true;
+              console.warn('Failed CSS resource detected:', resource.name);
+            }
+          }
         });
-      });
+        
+        // If we found CSS resources but some failed, attempt recovery
+        if (cssResourcesFound && cssFailuresFound) {
+          window.recoverFromCSSFailure();
+        }
+      }, 2000);
     });
   }
 })();

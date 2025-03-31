@@ -10,13 +10,38 @@
     <title>ZeroVacancy - AI-Driven Property Marketing & Content Creator Marketplace</title>
     <meta name="description" content="Connect with elite content creators who transform your spaces into compelling visual stories">
     
-    <!-- Critical preloads -->
+    <!-- Critical preloads - removing CSS preload which can cause issues on mobile -->
     <link rel="preload" href="/logo.png" as="image" fetchpriority="high" />
     <link rel="preload" href="/heroparallax/heroparallax1.jpg" as="image" fetchpriority="high" />
     
-    <!-- Module preloads for critical JavaScript - use relative paths -->
+    <!-- Module preloads for critical JavaScript - simplified for mobile compatibility -->
     <link rel="modulepreload" href="/src/main.tsx" />
-    <link rel="modulepreload" href="/src/App.tsx" />
+    
+    <!-- Add CSS error handling script -->
+    <script>
+      // Resource error handler - specifically for CSS
+      window.addEventListener('error', function(e) {
+        var target = e.target;
+        // Check if it's a CSS loading error
+        if (target && (target.tagName === 'LINK' && target.rel === 'stylesheet')) {
+          console.warn('CSS resource failed to load:', target.href);
+          
+          // Clear cache and reload if this is a CSS preload error
+          if (target.href && target.href.includes('/assets/css/')) {
+            console.log('Attempting to recover from CSS load failure');
+            
+            // Try to fetch the resource directly to force refresh
+            fetch(target.href, { cache: 'reload', mode: 'no-cors' })
+              .catch(() => console.log('Fetch recovery attempt completed'));
+            
+            // Create and inject a simple recovery stylesheet
+            var recoveryStyle = document.createElement('style');
+            recoveryStyle.textContent = '/* Emergency CSS recovery */';
+            document.head.appendChild(recoveryStyle);
+          }
+        }
+      }, true);
+    </script>
     
     <!-- Resource hints -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />

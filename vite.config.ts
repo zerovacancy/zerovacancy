@@ -35,7 +35,7 @@ export default defineConfig(({ mode }) => ({
     chunkSizeWarningLimit: 1000, // Increase chunk size limit
     target: ['es2020', 'edge88', 'firefox78', 'chrome87', 'safari14'], // Modern browsers only for smaller bundles
     cssMinify: true,
-    cssCodeSplit: true,
+    cssCodeSplit: false, // Disable CSS code splitting to prevent loading issues on mobile
     assetsInlineLimit: 4096, // Inline small assets to reduce HTTP requests
     rollupOptions: {
       output: {
@@ -69,10 +69,17 @@ export default defineConfig(({ mode }) => ({
             '@/components/ui/moving-border.tsx',
           ],
         },
-        // Optimize chunk creation
+        // Optimize chunk creation with more reliable naming for mobile
         chunkFileNames: 'assets/js/[name]-[hash].js',
         entryFileNames: 'assets/js/[name]-[hash].js',
-        assetFileNames: 'assets/[ext]/[name]-[hash].[ext]',
+        assetFileNames: (assetInfo) => {
+          const extType = assetInfo.name.split('.').pop();
+          if (extType === 'css') {
+            // Use a stable name for CSS files to avoid mobile preloading issues
+            return 'assets/css/styles.[ext]';
+          }
+          return `assets/${extType}/[name]-[hash].[ext]`;
+        },
       },
     },
     // Use esbuild for compression/minification
