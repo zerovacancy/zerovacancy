@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import { Building2, Camera } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -16,6 +16,13 @@ const UserTypeSelection = ({
   onTypeSelect,
   className,
 }: UserTypeSelectionProps) => {
+  // Use a safer method to handle selection to avoid React hook errors
+  const handleSelection = useCallback((type: UserType) => {
+    if (typeof onTypeSelect === 'function') {
+      onTypeSelect(type);
+    }
+  }, [onTypeSelect]);
+  
   return (
     <div className={cn("space-y-6", className)}>
       <h2 className="text-lg font-semibold text-center mb-4">I am a:</h2>
@@ -23,7 +30,7 @@ const UserTypeSelection = ({
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <button
           type="button"
-          onClick={() => onTypeSelect('property_team')}
+          onClick={() => handleSelection('property_team')}
           className={cn(
             "flex flex-col items-center justify-center p-6 border-2 rounded-xl transition-all",
             "hover:shadow-md",
@@ -48,7 +55,7 @@ const UserTypeSelection = ({
         
         <button
           type="button"
-          onClick={() => onTypeSelect('creator')}
+          onClick={() => handleSelection('creator')}
           className={cn(
             "flex flex-col items-center justify-center p-6 border-2 rounded-xl transition-all",
             "hover:shadow-md",
@@ -73,7 +80,7 @@ const UserTypeSelection = ({
         
         <button
           type="button"
-          onClick={() => onTypeSelect('agency')}
+          onClick={() => handleSelection('agency')}
           className={cn(
             "flex flex-col items-center justify-center p-6 border-2 rounded-xl transition-all",
             "hover:shadow-md",

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, ArrowRight, CheckCircle2 } from 'lucide-react';
@@ -35,27 +35,29 @@ const OnboardingFlow: React.FC = () => {
     getUser();
   }, []);
 
-  // Handle user type selection
-  const handleUserTypeSelect = (type: UserType) => {
+  // Handle user type selection with useCallback for stability
+  const handleUserTypeSelect = React.useCallback((type: UserType) => {
+    console.log("User type selected:", type);
     setUserType(type);
-  };
+  }, []);
 
-  // Go to the next step
-  const handleNextStep = () => {
+  // Go to the next step using useCallback
+  const handleNextStep = useCallback(() => {
     if (step < OnboardingStep.COMPLETED) {
       setStep(prev => (prev + 1) as OnboardingStep);
     }
-  };
+  }, [step]);
 
-  // Go to the previous step
-  const handlePrevStep = () => {
+  // Go to the previous step using useCallback
+  const handlePrevStep = useCallback(() => {
     if (step > OnboardingStep.TYPE_SELECTION) {
       setStep(prev => (prev - 1) as OnboardingStep);
     }
-  };
+  }, [step]);
 
-  // Handle profile form submission
-  const handleProfileSubmit = async (profileData: any) => {
+  // Handle profile form submission with useCallback
+  const handleProfileSubmit = useCallback(async (profileData: any) => {
+    console.log("Attempting to submit profile data");
     if (!user?.id) {
       toast({
         title: "Authentication Error",
@@ -128,10 +130,11 @@ const OnboardingFlow: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [user, toast, userType, setStep]);
 
-  // Handle completing the onboarding
-  const handleComplete = () => {
+  // Handle completing the onboarding with useCallback
+  const handleComplete = useCallback(() => {
+    console.log("Completing onboarding with user type:", userType);
     // Redirect to the appropriate dashboard based on user type
     if (userType === 'creator') {
       navigate('/creator/dashboard');
@@ -141,7 +144,7 @@ const OnboardingFlow: React.FC = () => {
     } else {
       navigate('/property/dashboard');
     }
-  };
+  }, [userType, navigate]);
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
