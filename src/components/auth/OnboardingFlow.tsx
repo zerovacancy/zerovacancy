@@ -6,8 +6,12 @@ import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
-import UserTypeSelection from './UserTypeSelection';
+// Import the feature flag from UserTypeSelection
+import UserTypeSelection, { enableAgencyOption, disableAgencyOption } from './UserTypeSelection';
 import ProfileForm from './ProfileForm';
+
+// Re-export the agency feature flag utils for easy access
+export { enableAgencyOption, disableAgencyOption };
 
 type UserType = 'property_team' | 'creator' | 'agency' | null;
 
