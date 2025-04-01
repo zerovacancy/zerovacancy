@@ -25,63 +25,50 @@ const handleNavClick = (sectionId: string) => {
   }
 };
 
-// Resources dropdown component
+// Resources dropdown component using the built-in DropdownMenu component
 const ResourcesDropdown = ({ className, onClick }: { className?: string, onClick?: () => void }) => {
   const location = useLocation();
-  const [open, setOpen] = useState(false);
-  
-  // Directly handle the navigation to blog
-  const navigateToBlog = (e: React.MouseEvent) => {
-    e.preventDefault();
-    window.location.href = '/blog';
-    setOpen(false);
-    if (onClick) onClick();
-  };
-  
-  // Directly handle the navigation to learning center
-  const navigateToLearn = (e: React.MouseEvent) => {
-    e.preventDefault();
-    window.location.href = '/blog/learn';
-    setOpen(false);
-    if (onClick) onClick();
-  };
   
   return (
-    <DropdownMenu open={open} onOpenChange={setOpen}>
+    <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button 
-          type="button"
           className={cn(
             "text-[15px] font-medium transition-colors relative py-1.5 px-3",
-            "header-nav-link flex items-center justify-center",
+            "header-nav-link flex items-center justify-center gap-1",
             "before:absolute before:inset-x-0 before:bottom-0 before:h-0.5 before:scale-x-0 before:origin-right",
             "before:transition-transform before:duration-300 hover:before:scale-x-100 hover:before:origin-left",
             "before:bg-[#9b87f5]",
-            location.pathname.startsWith('/blog') || open
+            location.pathname.startsWith('/blog')
               ? "text-[#9b87f5] before:scale-x-100"
               : "text-black hover:text-[#9b87f5]"
           )}
         >
           Resources
-          <ChevronDown className="h-4 w-4 ml-1" />
+          <ChevronDown className="h-4 w-4 transition-transform" />
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent 
-        align="start" 
-        className="w-[180px] bg-white border border-gray-200 shadow-lg rounded-md mt-1 p-1 z-[1100]"
-      >
-        <div 
-          className="hover:bg-gray-50 focus:bg-gray-50 rounded-md p-2 cursor-pointer"
-          onClick={navigateToBlog}
-        >
-          Blog
-        </div>
-        <div 
-          className="hover:bg-gray-50 focus:bg-gray-50 rounded-md p-2 cursor-pointer"
-          onClick={navigateToLearn}
-        >
-          Learning Center
-        </div>
+      <DropdownMenuContent align="start" className="w-40 mt-1 p-1">
+        <DropdownMenuItem asChild>
+          <a 
+            href="/blog" 
+            className={cn(
+              "flex cursor-pointer w-full text-sm py-1.5",
+              location.pathname.startsWith('/blog') ? "text-brand-purple font-medium" : "text-gray-700"
+            )}
+            onClick={() => {
+              if (onClick) onClick();
+            }}
+          >
+            Blog
+          </a>
+        </DropdownMenuItem>
+        <DropdownMenuItem disabled className="opacity-60 cursor-not-allowed">
+          <div className="flex items-center text-sm text-gray-500">
+            Learning Center
+            <span className="ml-1 text-xs bg-gray-100 text-gray-500 px-1 py-0.5 rounded">Soon</span>
+          </div>
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -134,31 +121,18 @@ const NavLinks = ({ className, onClick }: { className?: string, onClick?: () => 
           <ResourcesDropdown onClick={onClick} />
         </div>
       ) : (
-        // Mobile version - expandable section
+        // Mobile version - resource links
         <div className="w-full">
-          <div className="mb-2 text-[16px] font-medium py-3 px-1 border-b border-gray-100">
-            Resources
-          </div>
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              window.location.href = '/blog';
-              if (onClick) onClick();
-            }}
-            className="text-[15px] font-normal transition-colors w-full text-left py-2 px-3 pl-4 hover:bg-gray-50 rounded"
+          <a
+            href="/blog"
+            className={cn(
+              "text-[16px] font-medium transition-colors w-full block text-left py-3 px-1",
+              location.pathname.startsWith('/blog') ? "text-[#9b87f5]" : "text-black hover:text-[#9b87f5]"
+            )}
+            onClick={onClick}
           >
             Blog
-          </button>
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              window.location.href = '/blog/learn';
-              if (onClick) onClick();
-            }}
-            className="text-[15px] font-normal transition-colors w-full text-left py-2 px-3 pl-4 hover:bg-gray-50 rounded"
-          >
-            Learning Center
-          </button>
+          </a>
         </div>
       )}
     </nav>
@@ -254,32 +228,23 @@ const MobileHeaderComponent = ({
               ))}
             </div>
             
-            {/* Resources section with clearer styling */}
-            <div className="mb-6">
-              <h3 className="text-[16px] font-medium text-gray-800 mb-3 px-1">Resources</h3>
-              <div className="flex flex-col space-y-2">
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    window.location.href = '/blog';
-                    setIsOpen(false);
-                  }}
-                  className="w-full py-2.5 px-4 text-left text-[15px] font-medium rounded-md 
-                    border border-gray-200 hover:bg-gray-50 transition-colors"
-                >
-                  Blog
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    window.location.href = '/blog/learn';
-                    setIsOpen(false);
-                  }}
-                  className="w-full py-2.5 px-4 text-left text-[15px] font-medium rounded-md 
-                    border border-gray-200 hover:bg-gray-50 transition-colors"
-                >
-                  Learning Center
-                </button>
+            {/* Resources section */}
+            <div className="mb-6 space-y-3">
+              <h3 className="text-[16px] font-medium text-gray-800 mb-1">Resources</h3>
+              <a
+                href="/blog"
+                onClick={() => setIsOpen(false)}
+                className="w-full py-2.5 px-4 text-left text-[15px] font-medium rounded-md 
+                  border border-gray-200 hover:bg-gray-50 transition-colors flex items-center"
+              >
+                <span>Visit Blog</span>
+              </a>
+              <div
+                className="w-full py-2.5 px-4 text-left text-[15px] font-medium rounded-md 
+                  border border-gray-200 flex items-center opacity-60 cursor-not-allowed"
+              >
+                <span className="text-gray-400">Learning Center</span>
+                <span className="ml-2 text-xs bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded">Soon</span>
               </div>
             </div>
           </div>
