@@ -30,6 +30,22 @@ const ResourcesDropdown = ({ className, onClick }: { className?: string, onClick
   const location = useLocation();
   const [open, setOpen] = useState(false);
   
+  // Directly handle the navigation to blog
+  const navigateToBlog = (e: React.MouseEvent) => {
+    e.preventDefault();
+    window.location.href = '/blog';
+    setOpen(false);
+    if (onClick) onClick();
+  };
+  
+  // Directly handle the navigation to learning center
+  const navigateToLearn = (e: React.MouseEvent) => {
+    e.preventDefault();
+    window.location.href = '/blog/learn';
+    setOpen(false);
+    if (onClick) onClick();
+  };
+  
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
@@ -41,7 +57,7 @@ const ResourcesDropdown = ({ className, onClick }: { className?: string, onClick
             "before:absolute before:inset-x-0 before:bottom-0 before:h-0.5 before:scale-x-0 before:origin-right",
             "before:transition-transform before:duration-300 hover:before:scale-x-100 hover:before:origin-left",
             "before:bg-[#9b87f5]",
-            location.pathname.startsWith('/resources') || open
+            location.pathname.startsWith('/blog') || open
               ? "text-[#9b87f5] before:scale-x-100"
               : "text-black hover:text-[#9b87f5]"
           )}
@@ -54,26 +70,18 @@ const ResourcesDropdown = ({ className, onClick }: { className?: string, onClick
         align="start" 
         className="w-[180px] bg-white border border-gray-200 shadow-lg rounded-md mt-1 p-1 z-[1100]"
       >
-        <DropdownMenuItem 
+        <div 
           className="hover:bg-gray-50 focus:bg-gray-50 rounded-md p-2 cursor-pointer"
-          onClick={() => {
-            window.location.href = '/blog';
-            setOpen(false);
-            if (onClick) onClick();
-          }}
+          onClick={navigateToBlog}
         >
           Blog
-        </DropdownMenuItem>
-        <DropdownMenuItem 
+        </div>
+        <div 
           className="hover:bg-gray-50 focus:bg-gray-50 rounded-md p-2 cursor-pointer"
-          onClick={() => {
-            window.location.href = '/blog/learn';
-            setOpen(false);
-            if (onClick) onClick();
-          }}
+          onClick={navigateToLearn}
         >
           Learning Center
-        </DropdownMenuItem>
+        </div>
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -132,7 +140,8 @@ const NavLinks = ({ className, onClick }: { className?: string, onClick?: () => 
             Resources
           </div>
           <button
-            onClick={() => {
+            onClick={(e) => {
+              e.preventDefault();
               window.location.href = '/blog';
               if (onClick) onClick();
             }}
@@ -141,7 +150,8 @@ const NavLinks = ({ className, onClick }: { className?: string, onClick?: () => 
             Blog
           </button>
           <button
-            onClick={() => {
+            onClick={(e) => {
+              e.preventDefault();
               window.location.href = '/blog/learn';
               if (onClick) onClick();
             }}
@@ -249,7 +259,8 @@ const MobileHeaderComponent = ({
               <h3 className="text-[16px] font-medium text-gray-800 mb-3 px-1">Resources</h3>
               <div className="flex flex-col space-y-2">
                 <button
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.preventDefault();
                     window.location.href = '/blog';
                     setIsOpen(false);
                   }}
@@ -259,7 +270,8 @@ const MobileHeaderComponent = ({
                   Blog
                 </button>
                 <button
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.preventDefault();
                     window.location.href = '/blog/learn';
                     setIsOpen(false);
                   }}
