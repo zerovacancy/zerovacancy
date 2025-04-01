@@ -49,20 +49,21 @@ const ResourcesDropdown = ({ className, onClick }: { className?: string, onClick
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-40 mt-1 p-1">
-        <DropdownMenuItem asChild>
+        <div className="px-1 py-0.5">
           <a 
             href="/blog" 
             className={cn(
-              "flex cursor-pointer w-full text-sm py-1.5",
+              "flex cursor-pointer w-full text-sm py-1.5 px-2 rounded hover:bg-gray-50",
               location.pathname.startsWith('/blog') ? "text-brand-purple font-medium" : "text-gray-700"
             )}
-            onClick={() => {
+            onClick={(e) => {
+              // Allow the default navigation behavior
               if (onClick) onClick();
             }}
           >
             Blog
           </a>
-        </DropdownMenuItem>
+        </div>
         <DropdownMenuItem disabled className="opacity-60 cursor-not-allowed">
           <div className="flex items-center text-sm text-gray-500">
             Learning Center
