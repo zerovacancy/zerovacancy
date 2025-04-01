@@ -6,6 +6,15 @@
 
 export const MOBILE_BREAKPOINT = 768;
 
+// Safe mobile device detection function that works in all contexts
+export const isMobileDevice = () => {
+  if (typeof window === "undefined" || typeof navigator === "undefined") {
+    return false;
+  }
+  const userAgent = navigator.userAgent;
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent) || window.innerWidth < MOBILE_BREAKPOINT;
+};
+
 // Declare the missing properties on the Window interface
 declare global {
   interface Window {

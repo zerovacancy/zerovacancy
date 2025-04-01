@@ -1,10 +1,11 @@
-import React, { lazy, Suspense, useEffect, useCallback, useState } from 'react';
+import React, { lazy, Suspense, useEffect, useCallback, useState, useMemo } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, useNavigationType, Navigate } from 'react-router-dom';
 import { ErrorBoundary } from 'react-error-boundary';
 import ErrorFallback from './components/ErrorFallback';
 import { Toaster } from '@/components/ui/toaster';
 import { Toaster as SonnerToaster } from 'sonner';
-import { useIsMobile } from '@/hooks/use-mobile';
+// Import from mobile utils for better SSR compatibility 
+import { isMobileDevice } from '@/utils/mobile-optimization';
 import { mobileOptimizationClasses, optimizeMobileViewport, applyLandscapeOrientationFixes } from '@/utils/mobile-optimization';
 import { BottomNav } from '@/components/navigation/BottomNav';
 import { Analytics } from '@vercel/analytics/react';
@@ -70,7 +71,20 @@ const ScrollToTopComponent = () => {
 
 const ConditionalBottomNav = () => {
   const location = useLocation();
-  const isMobile = useIsMobile();
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setIsMobile(isMobileDevice());
+      
+      const handleResize = () => {
+        setIsMobile(isMobileDevice());
+      };
+      
+      window.addEventListener('resize', handleResize, { passive: true });
+      return () => window.removeEventListener('resize', handleResize);
+    }
+  }, []);
   
   if (location.pathname === "/" || !isMobile) {
     return null;
@@ -80,7 +94,23 @@ const ConditionalBottomNav = () => {
 };
 
 function App() {
-  const isMobile = useIsMobile();
+  // Use the direct function instead of the hook for better SSR compatibility
+  const [isMobile, setIsMobile] = useState(false);
+  
+  // Initialize mobile detection after mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setIsMobile(isMobileDevice());
+      
+      // Add resize listener to update mobile state
+      const handleResize = () => {
+        setIsMobile(isMobileDevice());
+      };
+      
+      window.addEventListener('resize', handleResize, { passive: true });
+      return () => window.removeEventListener('resize', handleResize);
+    }
+  }, []);
   
   const passiveEventHandler = useCallback(() => {}, []);
   

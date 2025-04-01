@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -107,8 +108,8 @@ const PropertyDashboard = () => {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row gap-8">
             {/* Sidebar */}
-            <div className="w-full md:w-64 flex-shrink-0">
-              <div className="bg-white rounded-lg shadow p-4">
+            <div className="w-full md:w-64 flex-shrink-0 mb-6 md:mb-0">
+              <div className="bg-white rounded-lg shadow p-4 sticky top-24">
                 <div className="flex flex-col items-center mb-6 pb-6 border-b">
                   <div className="w-20 h-20 bg-blue-600 text-white rounded-full flex items-center justify-center text-3xl mb-4">
                     {propertyProfile?.fullName?.charAt(0) || user?.email?.charAt(0) || 'P'}
@@ -127,38 +128,38 @@ const PropertyDashboard = () => {
                   </p>
                 </div>
                 
-                <nav className="space-y-1">
+                <nav className="flex flex-col space-y-1">
                   <a href="#" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-900 bg-gray-100 rounded-md">
                     <Home className="w-5 h-5 text-blue-600" />
-                    Dashboard
+                    <span>Dashboard</span>
                   </a>
                   <a href="#" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-md">
                     <Building className="w-5 h-5 text-gray-500" />
-                    Properties
+                    <span>Properties</span>
                   </a>
                   <a href="#" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-md">
                     <Camera className="w-5 h-5 text-gray-500" />
-                    Find Creators
+                    <span>Find Creators</span>
                   </a>
                   <a href="#" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-md">
                     <Calendar className="w-5 h-5 text-gray-500" />
-                    Bookings
+                    <span>Bookings</span>
                   </a>
                   <a href="#" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-md">
                     <FileText className="w-5 h-5 text-gray-500" />
-                    Projects
+                    <span>Projects</span>
                   </a>
                   <a href="#" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-md">
                     <CreditCard className="w-5 h-5 text-gray-500" />
-                    Billing
+                    <span>Billing</span>
                   </a>
                   <a href="#" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-md">
                     <User className="w-5 h-5 text-gray-500" />
-                    Team
+                    <span>Team</span>
                   </a>
                   <a href="#" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-md">
                     <Settings className="w-5 h-5 text-gray-500" />
-                    Settings
+                    <span>Settings</span>
                   </a>
                 </nav>
               </div>

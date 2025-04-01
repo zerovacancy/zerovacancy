@@ -1,4 +1,4 @@
-import * as React from "react"
+import React, { useState, useEffect } from "react"
 
 const MOBILE_BREAKPOINT = 768
 const TABLET_BREAKPOINT = 1024
@@ -6,9 +6,11 @@ const TABLET_BREAKPOINT = 1024
 export function useIsMobile() {
   // Start with false as default for SSR/initial render to avoid layout shifts
   // This ensures desktop view is the default until we can determine device type
-  const [isMobile, setIsMobile] = React.useState<boolean>(false)
+  const [isMobile, setIsMobile] = useState<boolean>(false)
 
-  React.useEffect(() => {
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     // Initial check at mount time
     setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
     
@@ -46,9 +48,11 @@ export function useIsMobile() {
 }
 
 export function useIsTablet() {
-  const [isTablet, setIsTablet] = React.useState<boolean | undefined>(undefined)
+  const [isTablet, setIsTablet] = useState<boolean | undefined>(undefined)
 
-  React.useEffect(() => {
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     // Use matchMedia for better performance
     const mediaQuery = window.matchMedia(
       `(min-width: ${MOBILE_BREAKPOINT}px) and (max-width: ${TABLET_BREAKPOINT - 1}px)`
@@ -92,12 +96,14 @@ export function useIsMobileOrTablet() {
 }
 
 export function useViewportSize() {
-  const [size, setSize] = React.useState<{ width: number; height: number }>({
+  const [size, setSize] = useState<{ width: number; height: number }>({
     width: typeof window !== 'undefined' ? window.innerWidth : 0,
     height: typeof window !== 'undefined' ? window.innerHeight : 0
   })
   
-  React.useEffect(() => {
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     // Throttled resize handler for better performance
     let timeoutId: ReturnType<typeof setTimeout> | null = null
     

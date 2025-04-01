@@ -4,6 +4,7 @@ import { useAuth } from '@/components/auth/AuthContext';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ChevronDown, X, Menu } from 'lucide-react';
+import AuthForms from '@/components/auth/AuthForms';
 import {
   Sheet,
   SheetContent,
@@ -16,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+// Helper function for smooth scrolling
 const handleNavClick = (sectionId: string) => {
   const element = document.getElementById(sectionId);
   if (element) {
@@ -23,6 +25,7 @@ const handleNavClick = (sectionId: string) => {
   }
 };
 
+// Resources dropdown component
 const ResourcesDropdown = ({ className, onClick }: { className?: string, onClick?: () => void }) => {
   const location = useLocation();
   const [open, setOpen] = useState(false);
@@ -76,6 +79,7 @@ const ResourcesDropdown = ({ className, onClick }: { className?: string, onClick
   );
 };
 
+// Navigation Links component
 const NavLinks = ({ className, onClick }: { className?: string, onClick?: () => void }) => {
   const location = useLocation();
   // Don't use conditional logic based on props, create separate components
@@ -151,68 +155,22 @@ const NavLinks = ({ className, onClick }: { className?: string, onClick?: () => 
   );
 };
 
-const Header = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  // Use a ref instead of state for the timeout to avoid hook dependency issues
-  const logoClickTimeoutRef = React.useRef<number | null>(null);
-  const [logoClickCount, setLogoClickCount] = useState(0);
-  const { openAuthDialog } = useAuth();
+// Mobile Header Component
+const MobileHeaderComponent = ({ 
+  isOpen, 
+  setIsOpen, 
+  handleLogoInteraction, 
+  openAuthDialog 
+}: { 
+  isOpen: boolean; 
+  setIsOpen: (open: boolean) => void; 
+  handleLogoInteraction: (e: React.MouseEvent | React.TouchEvent) => void;
+  openAuthDialog: (type: 'login' | 'register') => void;
+}) => {
+  const { isAuthenticated, signOut } = useAuth();
+  const location = useLocation();
   
-  // Handle logo click for admin access - unified handler for both click and touch
-  const handleLogoInteraction = (e: React.MouseEvent | React.TouchEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    // Reset timeout if it exists
-    if (logoClickTimeoutRef.current !== null) {
-      window.clearTimeout(logoClickTimeoutRef.current);
-    }
-    
-    // Set a new timeout to reset click count after 3 seconds of inactivity
-    logoClickTimeoutRef.current = window.setTimeout(() => {
-      setLogoClickCount(0);
-      logoClickTimeoutRef.current = null;
-    }, 3000);
-    
-    setLogoClickCount(prev => {
-      const newCount = prev + 1;
-      if (newCount >= 10) {
-        // After 10 clicks, prompt for a password
-        const secretWord = prompt('Enter admin verification word:');
-        if (secretWord === 'zerovacancy2025') { // This should be changed in production
-          // Set the admin access token before redirecting
-          sessionStorage.setItem('adminAccessToken', 'granted');
-          window.location.href = '/hidden-admin-login';
-        }
-        return 0;
-      }
-      return newCount;
-    });
-  };
-  
-  // Clean up the timeout on unmount
-  React.useEffect(() => {
-    return () => {
-      if (logoClickTimeoutRef.current !== null) {
-        window.clearTimeout(logoClickTimeoutRef.current);
-      }
-    };
-  }, []);
-  
-  // Track scroll state for enhanced header styling
-  const [isScrolled, setIsScrolled] = React.useState(false);
-  
-  React.useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
-    
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-  
-  // Mobile layout
-  const MobileHeader = () => (
+  return (
     <div className="flex justify-between items-center w-full h-16">
       {/* Logo */}
       <Link 
@@ -314,38 +272,75 @@ const Header = () => {
             </div>
           </div>
           
-          {/* Login and Sign Up buttons in the mobile menu - with consistent styling */}
+          {/* Conditional Login/Signup or Dashboard buttons in the mobile menu */}
           <div className="mt-auto border-t border-gray-200 pt-4 px-5 pb-8">
             <h3 className="text-[16px] font-medium text-gray-800 mb-3">Account</h3>
             <div className="space-y-3">
-              <Button 
-                variant="outline" 
-                className="w-full justify-center text-[15px] h-11 border-gray-300 text-gray-700 font-medium"
-                onClick={() => {
-                  openAuthDialog('login');
-                  setIsOpen(false);
-                }}
-              >
-                Log In
-              </Button>
-              <Button 
-                className="w-full justify-center text-[15px] h-11 bg-brand-purple hover:bg-brand-purple-dark font-medium"
-                onClick={() => {
-                  openAuthDialog('register');
-                  setIsOpen(false);
-                }}
-              >
-                Sign Up
-              </Button>
+              {!isAuthenticated ? (
+                <>
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-center text-[15px] h-11 border-gray-300 text-gray-700 font-medium"
+                    onClick={() => {
+                      openAuthDialog('login');
+                      setIsOpen(false);
+                    }}
+                  >
+                    Log In
+                  </Button>
+                  <Button 
+                    className="w-full justify-center text-[15px] h-11 bg-brand-purple hover:bg-brand-purple-dark font-medium"
+                    onClick={() => {
+                      openAuthDialog('register');
+                      setIsOpen(false);
+                    }}
+                  >
+                    Sign Up
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button 
+                    variant="outline"
+                    className="w-full justify-center text-[15px] h-11 bg-brand-purple text-white hover:bg-brand-purple-dark font-medium"
+                    onClick={() => {
+                      window.location.href = '/dashboard';
+                      setIsOpen(false);
+                    }}
+                  >
+                    My Dashboard
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-center text-[15px] h-11 border-gray-300 text-gray-700 font-medium"
+                    onClick={() => {
+                      signOut();
+                      setIsOpen(false);
+                    }}
+                  >
+                    Log Out
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </SheetContent>
       </Sheet>
     </div>
   );
+};
+
+// Desktop Header Component
+const DesktopHeaderComponent = ({ 
+  handleLogoInteraction, 
+  openAuthDialog 
+}: { 
+  handleLogoInteraction: (e: React.MouseEvent | React.TouchEvent) => void;
+  openAuthDialog: (type: 'login' | 'register') => void;
+}) => {
+  const { isAuthenticated, user, signOut } = useAuth();
   
-  // Desktop layout
-  const DesktopHeader = () => (
+  return (
     <div className="flex items-center w-full h-[4.5rem]">
       {/* Logo */}
       <div className="flex-shrink-0">
@@ -368,38 +363,114 @@ const Header = () => {
         <NavLinks className="flex items-center" />
       </div>
       
-      {/* Auth buttons */}
-      <div className="flex items-center gap-3 buttons-container">
-        <Button 
-          variant="ghost" 
-          onClick={() => openAuthDialog('login')}
-          className="header-btn-secondary flex items-center justify-center"
-        >
-          Log In
-        </Button>
-        <Button 
-          onClick={() => openAuthDialog('register')}
-          className="header-btn-primary bg-primary hover:bg-primary/90 hover:shadow-lg flex items-center justify-center"
-        >
-          Sign Up
-        </Button>
-      </div>
+      {/* Conditional Auth buttons or User menu */}
+      {!isAuthenticated ? (
+        <div className="flex items-center gap-3 buttons-container">
+          <Button
+            variant="outline"
+            className="text-[15px] h-10 border-gray-300 text-gray-700 font-medium"
+            onClick={() => openAuthDialog('login')}
+          >
+            Log In
+          </Button>
+          <Button 
+            className="text-[15px] h-10 bg-brand-purple hover:bg-brand-purple-dark font-medium"
+            onClick={() => openAuthDialog('register')}
+          >
+            Sign Up
+          </Button>
+        </div>
+      ) : (
+        <div className="flex items-center gap-3">
+          <Button 
+            variant="outline"
+            className="text-[15px] h-10 bg-brand-purple text-white hover:bg-brand-purple-dark font-medium"
+            onClick={() => window.location.href = '/dashboard'}
+          >
+            My Dashboard
+          </Button>
+          <Button 
+            variant="outline" 
+            className="text-[15px] h-10 border-gray-300 text-gray-700 font-medium"
+            onClick={() => signOut()}
+          >
+            Log Out
+          </Button>
+        </div>
+      )}
     </div>
-  );
-  
-  return (
-    <header className={`sticky top-0 z-50 w-full mobile-sticky-header ${isScrolled ? 'scrolled' : ''} bg-white border-b border-gray-100`}>
-      <div className="w-full px-4 md:container md:mx-auto md:px-6">
-        {/* Responsive header layout */}
-        <div className="md:hidden">
-          <MobileHeader />
-        </div>
-        <div className="hidden md:block">
-          <DesktopHeader />
-        </div>
-      </div>
-    </header>
   );
 };
 
-export default Header;
+// Main Header component
+export default function Header() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const location = useLocation();
+
+  // Monitor screen size changes to determine if mobile view should be shown
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    
+    return () => {
+      window.removeEventListener('resize', checkScreenSize);
+    };
+  }, []);
+
+  // Prevent scroll on mobile when menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
+  // Handle logo interaction
+  const handleLogoInteraction = (e: React.MouseEvent | React.TouchEvent) => {
+    // If we're already on the home page, scroll to top
+    if (location.pathname === '/') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Prevent navigation to avoid page reload
+      e.preventDefault();
+    }
+    // Otherwise, navigation occurs normally
+  };
+
+  // Use the openAuthDialog function from the auth context
+  const { openAuthDialog } = useAuth();
+
+  return (
+    <header className={cn(
+      "fixed top-0 left-0 right-0 z-50 bg-white shadow-sm", 
+      "transition-all duration-200"
+    )}>
+      <div className="container mx-auto px-4 lg:px-8">
+        {isMobile ? (
+          <MobileHeaderComponent 
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            handleLogoInteraction={handleLogoInteraction}
+            openAuthDialog={openAuthDialog}
+          />
+        ) : (
+          <DesktopHeaderComponent 
+            handleLogoInteraction={handleLogoInteraction}
+            openAuthDialog={openAuthDialog}
+          />
+        )}
+      </div>
+      
+      {/* Auth forms are already included in the App component */}
+    </header>
+  );
+}

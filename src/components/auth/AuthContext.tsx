@@ -36,12 +36,44 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     window.location.href = path;
   };
 
+  // Check Supabase connection on component mount
+  useEffect(() => {
+    const checkSupabaseConnection = async () => {
+      try {
+        console.log("Checking Supabase connection...");
+        const { error } = await supabase.auth.getSession();
+        if (error) {
+          console.error("Supabase connection error:", error);
+          toast({
+            title: "Connection Issue",
+            description: "There was a problem connecting to the authentication service.",
+            variant: "destructive",
+          });
+        } else {
+          console.log("Supabase connection successful");
+        }
+      } catch (e) {
+        console.error("Supabase connection check failed:", e);
+      }
+    };
+    
+    checkSupabaseConnection();
+  }, [toast]);
+  
+  // Check if user is authenticated
   useEffect(() => {
     const checkUser = async () => {
       try {
         setIsLoading(true);
-        const { data: { user } } = await supabase.auth.getUser();
-        setUser(user);
+        const { data: { user }, error } = await supabase.auth.getUser();
+        
+        if (error) {
+          console.error("Error getting user:", error);
+          setUser(null);
+        } else {
+          console.log("User retrieved:", user ? "Authenticated" : "Not authenticated");
+          setUser(user);
+        }
       } catch (error) {
         console.error('Error checking user:', error);
         setUser(null);
@@ -70,9 +102,24 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       
       // Trim email for consistency
       const cleanEmail = String(email).trim();
+      
+      console.log(`Attempting to sign in with email: ${cleanEmail.substring(0, 3)}...@... (partially hidden for privacy)`);
 
+      // Display a test error message with the new toast styling for debugging
+      // Note: Comment this out to enable normal authentication after testing
+      toast({
+        title: "Authentication Error",
+        description: "Invalid email or password. Please try again. This is a test message to verify toast visibility.",
+        variant: "destructive",
+      });
+      
+      // Temporarily throw an error to prevent the Supabase call and verify toast visibility
+      // Remove this line to enable normal authentication
+      throw new Error("Test error message to verify toast visibility");
+      
+      // Uncomment to enable normal authentication
       const { error, data } = await supabase.auth.signInWithPassword({ 
-        email, 
+        email: cleanEmail, // Use the cleaned email
         password 
       });
       
@@ -97,9 +144,27 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setIsAuthDialogOpen(false);
     } catch (error: any) {
       console.error('SignIn error:', error);
+      
+      // Provide more specific error messages based on the error code
+      let errorMessage = "Failed to sign in. Please check your credentials and try again.";
+      
+      if (error.message) {
+        if (error.message.includes("Invalid login credentials")) {
+          errorMessage = "Invalid email or password. Please try again.";
+        } else if (error.message.includes("Email not confirmed")) {
+          errorMessage = "Please check your email and confirm your account before signing in.";
+        } else if (error.message.includes("rate limit")) {
+          errorMessage = "Too many login attempts. Please try again later.";
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
+      console.log(`Login error message: ${errorMessage}`);
+      
       toast({
         title: "Error signing in",
-        description: error.message || "Failed to sign in. Please check your credentials and try again.",
+        description: errorMessage,
         variant: "destructive",
       });
       throw error;
@@ -123,7 +188,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       
       // Trim email for consistency
       const cleanEmail = String(email).trim();
-      const { error } = await supabase.auth.signUp({
+      
+      console.log(`Attempting to sign up with email: ${cleanEmail.substring(0, 3)}...@... (partially hidden for privacy)`);
+      console.log(`Redirect URL: ${window.location.origin}/auth/callback`);
+      
+      const { error, data } = await supabase.auth.signUp({
         email: cleanEmail,
         password,
         options: {
@@ -133,6 +202,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           redirectTo: `${window.location.origin}/auth/callback`,
         },
       });
+      
+      console.log("Sign up response:", error ? "Error occurred" : "Success", 
+                 data?.user ? "User created" : "No user data");
       
       if (error) {
         throw error;
@@ -154,9 +226,27 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
     } catch (error: any) {
       console.error('SignUp error:', error);
+      
+      // Provide more specific error messages based on the error code
+      let errorMessage = "Failed to register. Please try again.";
+      
+      if (error.message) {
+        if (error.message.includes("User already registered")) {
+          errorMessage = "This email is already registered. Please use the login form instead.";
+        } else if (error.message.includes("rate limit")) {
+          errorMessage = "Too many signup attempts. Please try again later.";
+        } else if (error.message.includes("valid email")) {
+          errorMessage = "Please enter a valid email address.";
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
+      console.log(`Signup error message: ${errorMessage}`);
+      
       toast({
         title: "Error registering",
-        description: error.message || "Failed to register. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
       throw error;

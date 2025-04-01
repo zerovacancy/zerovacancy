@@ -89,29 +89,38 @@ const AuthForms = () => {
 
   const handleLogin = async (values: LoginFormValues) => {
     try {
+      console.log("Login attempt initiated in AuthForms component");
       await signIn(values.email, values.password);
+      console.log("Login completed successfully");
       loginForm.reset();
     } catch (error) {
+      console.error("Login error caught in AuthForms:", error);
       // Error is already handled in signIn function
     }
   };
 
   const handleRegister = async (values: RegisterFormValues) => {
     try {
+      console.log("Registration attempt initiated in AuthForms component");
       await signUp(values.email, values.password);
+      console.log("Registration completed successfully");
       registerForm.reset();
       
       // Switch to login form after successful registration
       setFormType('login');
     } catch (error) {
+      console.error("Registration error caught in AuthForms:", error);
       // Error is already handled in signUp function
     }
   };
 
   const handleGoogleSignIn = async () => {
     try {
+      console.log("Google sign-in attempt initiated");
       await signInWithGoogle();
+      console.log("Google sign-in process started");
     } catch (error) {
+      console.error("Google sign-in error caught in AuthForms:", error);
       // Error is already handled in signInWithGoogle function
     }
   };

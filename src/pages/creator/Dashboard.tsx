@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -95,44 +96,44 @@ const CreatorDashboard = () => {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row gap-8">
             {/* Sidebar */}
-            <div className="w-full md:w-64 flex-shrink-0">
-              <div className="bg-white rounded-lg shadow p-4">
+            <div className="w-full md:w-64 flex-shrink-0 mb-6 md:mb-0">
+              <div className="bg-white rounded-lg shadow p-4 sticky top-24">
                 <div className="flex flex-col items-center mb-6 pb-6 border-b">
                   <div className="w-20 h-20 bg-brand-purple text-white rounded-full flex items-center justify-center text-3xl mb-4">
                     {creatorProfile?.fullName?.charAt(0) || user?.email?.charAt(0) || 'C'}
                   </div>
-                  <h2 className="text-lg font-semibold">{creatorProfile?.fullName || 'Creator'}</h2>
-                  <p className="text-sm text-gray-500">{creatorProfile?.specialty || 'Content Creator'}</p>
+                  <h2 className="text-lg font-semibold">{creatorProfile?.fullName || user?.email?.split('@')[0] || 'Creator'}</h2>
+                  <p className="text-sm text-gray-500">{creatorProfile?.specialty || 'Creator'}</p>
                 </div>
                 
-                <nav className="space-y-1">
-                  <a href="#" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-900 bg-gray-100 rounded-md">
+                <nav className="flex flex-col space-y-1">
+                  <a href="/dashboard" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-900 bg-gray-100 rounded-md">
                     <Home className="w-5 h-5 text-brand-purple" />
-                    Dashboard
+                    <span>Dashboard</span>
                   </a>
-                  <a href="#" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-md">
+                  <a href="/projects" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-md">
                     <Building className="w-5 h-5 text-gray-500" />
-                    Available Projects
+                    <span>Available Projects</span>
                   </a>
-                  <a href="#" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-md">
+                  <a href="/schedule" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-md">
                     <Calendar className="w-5 h-5 text-gray-500" />
-                    Schedule
+                    <span>Schedule</span>
                   </a>
-                  <a href="#" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-md">
+                  <a href="/bookings" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-md">
                     <Clock className="w-5 h-5 text-gray-500" />
-                    Bookings
+                    <span>Bookings</span>
                   </a>
-                  <a href="#" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-md">
+                  <a href="/portfolio" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-md">
                     <FileText className="w-5 h-5 text-gray-500" />
-                    Portfolio
+                    <span>Portfolio</span>
                   </a>
-                  <a href="#" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-md">
+                  <a href="/profile" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-md">
                     <User className="w-5 h-5 text-gray-500" />
-                    Profile
+                    <span>Profile</span>
                   </a>
-                  <a href="#" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-md">
+                  <a href="/settings" className="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-md">
                     <Settings className="w-5 h-5 text-gray-500" />
-                    Settings
+                    <span>Settings</span>
                   </a>
                 </nav>
               </div>
@@ -144,16 +145,16 @@ const CreatorDashboard = () => {
                 <h1 className="text-2xl font-bold mb-6">Creator Dashboard</h1>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-                  <div className="bg-purple-50 border border-purple-100 rounded-lg p-4">
-                    <h3 className="font-semibold text-brand-purple mb-1">Available Projects</h3>
+                  <div className="bg-purple-50 border border-purple-100 rounded-lg p-6">
+                    <h3 className="font-semibold text-brand-purple mb-2">Available Projects</h3>
                     <p className="text-2xl font-bold">0</p>
                   </div>
-                  <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
-                    <h3 className="font-semibold text-blue-600 mb-1">Upcoming Bookings</h3>
+                  <div className="bg-blue-50 border border-blue-100 rounded-lg p-6">
+                    <h3 className="font-semibold text-blue-600 mb-2">Upcoming Bookings</h3>
                     <p className="text-2xl font-bold">0</p>
                   </div>
-                  <div className="bg-green-50 border border-green-100 rounded-lg p-4">
-                    <h3 className="font-semibold text-green-600 mb-1">Completed Jobs</h3>
+                  <div className="bg-green-50 border border-green-100 rounded-lg p-6">
+                    <h3 className="font-semibold text-green-600 mb-2">Completed Jobs</h3>
                     <p className="text-2xl font-bold">0</p>
                   </div>
                 </div>
