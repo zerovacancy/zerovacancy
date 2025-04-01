@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
   Plus, 
   Search, 
@@ -9,9 +9,13 @@ import {
   FileText, 
   Filter, 
   Calendar, 
-  User 
+  User,
+  X,
+  Tag, 
+  Users, 
+  Settings,
+  LogOut
 } from 'lucide-react';
-import AdminLayout from '@/components/admin/AdminLayout';
 import { BlogService } from '@/services/BlogService';
 import { BlogPostPreview, BlogPostsFilters, BlogCategory } from '@/types/blog';
 import { formatDate } from '@/lib/utils';
@@ -89,6 +93,12 @@ const BlogAdmin = () => {
     setCurrentPage(1); // Reset to first page when filtering
   };
   
+  // Handle status filter
+  const handleStatusFilter = (status: string) => {
+    setFilters(prev => ({ ...prev, status: status === 'all' ? undefined : status }));
+    setCurrentPage(1); // Reset to first page when filtering
+  };
+  
   // Clear filters
   const clearFilters = () => {
     setFilters({});
@@ -125,37 +135,48 @@ const BlogAdmin = () => {
   // Calculate total pages for pagination
   const totalPages = Math.ceil(totalPosts / postsPerPage);
   
-  // Get status badge color
-  const getStatusBadgeColor = (publishedAt: string | null) => {
-    if (!publishedAt) {
-      return 'bg-yellow-100 text-yellow-800'; // Draft
+  // Get status badge color and text
+  const getStatusInfo = (post: BlogPostPreview) => {
+    // For drafts
+    if (!post.publishedAt) {
+      return {
+        color: 'bg-yellow-100 text-yellow-800',
+        text: 'Draft'
+      };
     }
-    return 'bg-green-100 text-green-800'; // Published
+    
+    // Check if this is a scheduled post (future publish date)
+    const publishDate = new Date(post.publishedAt);
+    const now = new Date();
+    
+    if (publishDate > now) {
+      return {
+        color: 'bg-blue-100 text-blue-800',
+        text: 'Scheduled'
+      };
+    }
+    
+    // Regular published post
+    return {
+      color: 'bg-green-100 text-green-800',
+      text: 'Published'
+    };
   };
   
-  return (
-    <AdminLayout>
+  // AdminContent component to render content directly
+  const AdminContent = () => (
+    <>
       <SEO
         title="Blog Management | ZeroVacancy Admin"
         description="Manage blog posts, categories, and content"
         noindex={true}
       />
-      <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-        <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">Blog Posts</h1>
-          
-          <Link
-            to="/admin/blog/new"
-            className="inline-flex items-center px-4 py-2 bg-brand-purple text-white rounded-md hover:bg-brand-purple-dark transition-colors"
-          >
-            <Plus size={18} className="mr-2" />
-            New Post
-          </Link>
-        </div>
+      <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-6 w-full overflow-auto">
+        {/* Remove duplicate heading as we already have one in the header */}
         
-        <div className="flex flex-col md:flex-row justify-between gap-4 mb-6">
+        <div className="flex flex-col sm:flex-row justify-between gap-4 mb-6">
           {/* Search */}
-          <form onSubmit={handleSearch} className="w-full md:w-96">
+          <form onSubmit={handleSearch} className="flex-1">
             <div className="relative">
               <input
                 type="text"
@@ -168,18 +189,33 @@ const BlogAdmin = () => {
                 size={18} 
                 className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" 
               />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-10 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  <X size={16} />
+                </button>
+              )}
+              <button
+                type="submit"
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-brand-purple"
+              >
+                <Search size={16} />
+              </button>
             </div>
           </form>
           
           {/* Filters */}
-          <div className="flex items-center gap-2">
-            <span className="text-gray-500 flex items-center">
+          <div className="flex flex-wrap items-center gap-2 shrink-0">
+            <span className="text-gray-500 flex items-center whitespace-nowrap">
               <Filter size={16} className="mr-1" />
-              Filter:
+              <span className="hidden sm:inline">Filter:</span>
             </span>
             
             <select
-              className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-1 focus:ring-brand-purple focus:border-brand-purple"
+              className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-brand-purple focus:border-brand-purple"
               value={filters.category || ''}
               onChange={(e) => handleCategoryFilter(e.target.value)}
             >
@@ -191,12 +227,24 @@ const BlogAdmin = () => {
               ))}
             </select>
             
-            {(filters.search || filters.category) && (
+            <select
+              className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-brand-purple focus:border-brand-purple"
+              value={filters.status || 'all'}
+              onChange={(e) => handleStatusFilter(e.target.value)}
+            >
+              <option value="all">All Status</option>
+              <option value="draft">Drafts</option>
+              <option value="published">Published</option>
+              <option value="scheduled">Scheduled</option>
+            </select>
+            
+            {(filters.search || filters.category || filters.status) && (
               <button
                 onClick={clearFilters}
-                className="text-gray-500 hover:text-gray-700"
+                className="text-gray-500 hover:text-gray-700 flex items-center whitespace-nowrap text-sm"
               >
-                Clear
+                <X size={14} className="mr-1" />
+                <span className="hidden sm:inline">Clear</span>
               </button>
             )}
           </div>
@@ -208,27 +256,27 @@ const BlogAdmin = () => {
             <div className="animate-spin w-8 h-8 border-4 border-brand-purple border-t-transparent rounded-full"></div>
           </div>
         ) : posts.length > 0 ? (
-          <>
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
+          <div className="w-full">
+            <div className="w-full overflow-x-auto max-w-full">
+              <table className="min-w-full w-full table-fixed divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-4/12">
                       Title
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12 hidden sm:table-cell">
                       Category
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12 hidden md:table-cell">
                       Author
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">
                       Status
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12 hidden sm:table-cell">
                       Date
                     </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">
                       Actions
                     </th>
                   </tr>
@@ -236,25 +284,29 @@ const BlogAdmin = () => {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {posts.map((post) => (
                     <tr key={post.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-start">
+                      <td className="px-6 py-4">
+                        <div className="flex items-start w-full">
                           <FileText size={18} className="text-gray-400 mr-3 flex-shrink-0 mt-1" />
-                          <div>
-                            <div className="text-sm font-medium text-gray-900 line-clamp-1">
+                          <div className="min-w-0 flex-1 w-full">
+                            <div className="text-sm font-medium text-gray-900 truncate">
                               {post.title}
                             </div>
-                            <div className="text-xs text-gray-500 line-clamp-1">
+                            <div className="text-xs text-gray-500 truncate">
                               {post.excerpt}
+                            </div>
+                            {/* Show category on mobile */}
+                            <div className="text-xs text-indigo-700 mt-1 sm:hidden">
+                              {post.category.name}
                             </div>
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-6 py-4 whitespace-nowrap hidden sm:table-cell">
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
                           {post.category.name}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-6 py-4 whitespace-nowrap hidden md:table-cell">
                         <div className="flex items-center">
                           {post.author.avatar ? (
                             <img 
@@ -269,17 +321,32 @@ const BlogAdmin = () => {
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusBadgeColor(post.publishedAt)}`}>
-                          {post.publishedAt ? 'Published' : 'Draft'}
-                        </span>
+                        {(() => {
+                          const { color, text } = getStatusInfo(post);
+                          return (
+                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${color}`}>
+                              {text}
+                            </span>
+                          );
+                        })()}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-6 py-4 whitespace-nowrap hidden sm:table-cell">
                         <div className="flex items-center text-sm text-gray-500">
                           <Calendar size={16} className="mr-1 text-gray-400" />
-                          {post.publishedAt 
-                            ? formatDate(post.publishedAt, { format: 'short' })
-                            : 'Not published'
-                          }
+                          {(() => {
+                            if (!post.publishedAt) {
+                              return 'Not published';
+                            }
+                            
+                            const publishDate = new Date(post.publishedAt);
+                            const now = new Date();
+                            
+                            if (publishDate > now) {
+                              return `Scheduled for ${formatDate(post.publishedAt, { format: 'short' })}`;
+                            }
+                            
+                            return formatDate(post.publishedAt, { format: 'short' });
+                          })()}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -316,8 +383,8 @@ const BlogAdmin = () => {
             
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="flex justify-between items-center mt-6">
-                <div className="text-sm text-gray-700">
+              <div className="flex flex-col sm:flex-row justify-between items-center mt-6 gap-4">
+                <div className="text-sm text-gray-700 text-center sm:text-left">
                   Showing <span className="font-medium">{(currentPage - 1) * postsPerPage + 1}</span> to{' '}
                   <span className="font-medium">
                     {Math.min(currentPage * postsPerPage, totalPosts)}
@@ -325,34 +392,43 @@ const BlogAdmin = () => {
                   of <span className="font-medium">{totalPosts}</span> posts
                 </div>
                 
-                <div className="flex space-x-1">
+                <div className="flex space-x-2">
                   <button
                     onClick={() => handlePageChange(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium rounded-md ${
+                    className={`relative inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 border text-sm font-medium rounded-md ${
                       currentPage === 1
                         ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                         : 'bg-white text-gray-700 hover:bg-gray-50'
                     }`}
+                    aria-label="Previous page"
                   >
-                    Previous
+                    <span className="sm:hidden">Prev</span>
+                    <span className="hidden sm:inline">Previous</span>
                   </button>
+                  
+                  <div className="flex items-center px-2">
+                    <span className="text-sm text-gray-700">
+                      Page {currentPage} of {totalPages}
+                    </span>
+                  </div>
                   
                   <button
                     onClick={() => handlePageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
-                    className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium rounded-md ${
+                    className={`relative inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 border text-sm font-medium rounded-md ${
                       currentPage === totalPages
                         ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                         : 'bg-white text-gray-700 hover:bg-gray-50'
                     }`}
+                    aria-label="Next page"
                   >
                     Next
                   </button>
                 </div>
               </div>
             )}
-          </>
+          </div>
         ) : (
           <div className="text-center py-12">
             <FileText size={48} className="mx-auto text-gray-300" />
@@ -374,7 +450,93 @@ const BlogAdmin = () => {
           </div>
         )}
       </div>
-    </AdminLayout>
+    </>
+  );
+  
+  // Navigation items
+  const location = useLocation();
+  const navItems = [
+    { label: 'Blog Posts', icon: <FileText size={18} />, path: '/admin/blog' },
+    { label: 'Categories', icon: <Tag size={18} />, path: '/admin/categories' },
+    { label: 'Authors', icon: <Users size={18} />, path: '/admin/authors' },
+    { label: 'Settings', icon: <Settings size={18} />, path: '/admin/settings' },
+  ];
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      {/* Header with navigation */}
+      <header className="bg-white shadow-sm flex items-center justify-between px-4 md:px-6 py-3">
+        <div className="flex items-center">
+          <h1 className="text-lg font-bold text-brand-purple-dark mr-8">ZeroVacancy Admin</h1>
+          <nav className="hidden md:flex items-center space-x-4">
+            {navItems.map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`flex items-center px-3 py-2 rounded-md transition-colors ${
+                  location.pathname.startsWith(item.path)
+                    ? 'bg-brand-purple-light/20 text-brand-purple-dark'
+                    : 'text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                {item.icon}
+                <span className="ml-2">{item.label}</span>
+              </Link>
+            ))}
+          </nav>
+        </div>
+        
+        <div className="flex items-center space-x-4">
+          <Link
+            to="/admin/blog/new"
+            className="inline-flex items-center px-4 py-2 bg-brand-purple text-white rounded-md hover:bg-brand-purple-dark transition-colors"
+          >
+            <Plus size={16} className="mr-2" />
+            <span className="hidden sm:inline">New Post</span>
+            <span className="sm:hidden">New</span>
+          </Link>
+          
+          <button
+            onClick={() => signOut()}
+            className="flex items-center text-gray-700 hover:text-red-600 transition-colors"
+          >
+            <LogOut size={18} />
+            <span className="ml-2 hidden md:inline">Logout</span>
+          </button>
+        </div>
+      </header>
+      
+      {/* Mobile navigation */}
+      <div className="bg-white border-t border-b md:hidden p-2">
+        <nav className="flex justify-between overflow-x-auto">
+          {navItems.map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              className={`flex flex-col items-center p-2 rounded ${
+                location.pathname.startsWith(item.path)
+                  ? 'text-brand-purple-dark'
+                  : 'text-gray-700'
+              }`}
+            >
+              {item.icon}
+              <span className="text-xs mt-1">{item.label}</span>
+            </Link>
+          ))}
+          <button
+            onClick={() => signOut()}
+            className="flex flex-col items-center p-2 text-gray-700"
+          >
+            <LogOut size={18} />
+            <span className="text-xs mt-1">Logout</span>
+          </button>
+        </nav>
+      </div>
+      
+      <main className="flex-1 p-4 md:p-6 overflow-auto">
+        <AdminContent />
+      </main>
+    </div>
   );
 };
 

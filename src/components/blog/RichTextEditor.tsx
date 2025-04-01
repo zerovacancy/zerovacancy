@@ -227,7 +227,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   }
   
   return (
-    <div className="border border-gray-300 rounded-md overflow-hidden">
+    <div className="border border-gray-300 rounded-md overflow-hidden w-full max-w-full">
       {/* Editor Toolbar */}
       <div className="border-b border-gray-300 bg-gray-50 p-2 flex flex-wrap gap-1 items-center">
         <ToolbarButton 
@@ -418,7 +418,8 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
       {/* Editor Content */}
       <EditorContent 
         editor={editor} 
-        className="prose prose-lg max-w-none p-4 min-h-[300px] focus:outline-none editor-content"
+        className="prose prose-lg max-w-none w-full p-4 min-h-[300px] focus:outline-none editor-content"
+        style={{ maxWidth: "none" }}
         onKeyDown={handleEditorKeyDown}
       />
       
@@ -429,6 +430,14 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
           color: #374151;
           line-height: 1.6;
+          width: 100%;
+          max-width: 100%;
+        }
+        
+        /* Fix width issues in all prose elements */
+        .prose {
+          max-width: none;
+          width: 100%;
         }
         
         .editor-content h1 {
@@ -541,6 +550,8 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           -webkit-font-variant-ligatures: none;
           font-variant-ligatures: none;
           font-feature-settings: "liga" 0;
+          width: 100%;
+          max-width: 100%;
         }
         
         /* Add styling for paragraphs to ensure proper spacing */
