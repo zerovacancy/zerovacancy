@@ -57,7 +57,7 @@ const ResourcesDropdown = ({ className, onClick }: { className?: string, onClick
         <DropdownMenuItem 
           className="hover:bg-gray-50 focus:bg-gray-50 rounded-md p-2 cursor-pointer"
           onClick={() => {
-            window.location.href = '/resources/blog';
+            window.location.href = '/blog';
             setOpen(false);
             if (onClick) onClick();
           }}
@@ -67,7 +67,7 @@ const ResourcesDropdown = ({ className, onClick }: { className?: string, onClick
         <DropdownMenuItem 
           className="hover:bg-gray-50 focus:bg-gray-50 rounded-md p-2 cursor-pointer"
           onClick={() => {
-            window.location.href = '/resources/learn';
+            window.location.href = '/blog/learn';
             setOpen(false);
             if (onClick) onClick();
           }}
@@ -133,7 +133,7 @@ const NavLinks = ({ className, onClick }: { className?: string, onClick?: () => 
           </div>
           <button
             onClick={() => {
-              window.location.href = '/resources/blog';
+              window.location.href = '/blog';
               if (onClick) onClick();
             }}
             className="text-[15px] font-normal transition-colors w-full text-left py-2 px-3 pl-4 hover:bg-gray-50 rounded"
@@ -142,7 +142,7 @@ const NavLinks = ({ className, onClick }: { className?: string, onClick?: () => 
           </button>
           <button
             onClick={() => {
-              window.location.href = '/resources/learn';
+              window.location.href = '/blog/learn';
               if (onClick) onClick();
             }}
             className="text-[15px] font-normal transition-colors w-full text-left py-2 px-3 pl-4 hover:bg-gray-50 rounded"
@@ -250,7 +250,7 @@ const MobileHeaderComponent = ({
               <div className="flex flex-col space-y-2">
                 <button
                   onClick={() => {
-                    window.location.href = '/resources/blog';
+                    window.location.href = '/blog';
                     setIsOpen(false);
                   }}
                   className="w-full py-2.5 px-4 text-left text-[15px] font-medium rounded-md 
@@ -260,7 +260,7 @@ const MobileHeaderComponent = ({
                 </button>
                 <button
                   onClick={() => {
-                    window.location.href = '/resources/learn';
+                    window.location.href = '/blog/learn';
                     setIsOpen(false);
                   }}
                   className="w-full py-2.5 px-4 text-left text-[15px] font-medium rounded-md 
