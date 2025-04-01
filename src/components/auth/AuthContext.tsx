@@ -2,6 +2,22 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
+// Utility function to get the appropriate redirect URL based on environment
+const getRedirectUrl = (path: string = '/auth/callback'): string => {
+  const isDevelopment = window.location.hostname === 'localhost' || 
+                        window.location.hostname === '127.0.0.1';
+  
+  // Get the production URL from Supabase or use a fallback
+  const PRODUCTION_URL = 'https://zerovacancy.app'; // Replace with your actual production URL
+  
+  // Choose the appropriate base URL
+  const baseUrl = isDevelopment 
+    ? window.location.origin // Use localhost URL in development
+    : PRODUCTION_URL;       // Use production URL in production
+    
+  return `${baseUrl}${path}`;
+};
+
 type User = {
   id: string;
   email?: string;
@@ -105,19 +121,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       
       console.log(`Attempting to sign in with email: ${cleanEmail.substring(0, 3)}...@... (partially hidden for privacy)`);
 
-      // Display a test error message with the new toast styling for debugging
-      // Note: Comment this out to enable normal authentication after testing
-      toast({
-        title: "Authentication Error",
-        description: "Invalid email or password. Please try again. This is a test message to verify toast visibility.",
-        variant: "destructive",
-      });
-      
-      // Temporarily throw an error to prevent the Supabase call and verify toast visibility
-      // Remove this line to enable normal authentication
-      throw new Error("Test error message to verify toast visibility");
-      
-      // Uncomment to enable normal authentication
+      // Normal authentication flow
       const { error, data } = await supabase.auth.signInWithPassword({ 
         email: cleanEmail, // Use the cleaned email
         password 
@@ -190,16 +194,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const cleanEmail = String(email).trim();
       
       console.log(`Attempting to sign up with email: ${cleanEmail.substring(0, 3)}...@... (partially hidden for privacy)`);
-      console.log(`Redirect URL: ${window.location.origin}/auth/callback`);
+      
+      // Get the appropriate redirect URL
+      const redirectUrl = getRedirectUrl();
+      console.log(`Signup Redirect URL: ${redirectUrl}`);
       
       const { error, data } = await supabase.auth.signUp({
         email: cleanEmail,
         password,
         options: {
-          // Ensure we have the full URL with protocol for proper redirect
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
-          // To handle various Supabase redirect formats
-          redirectTo: `${window.location.origin}/auth/callback`,
+          // Use the environment-appropriate redirect URL
+          emailRedirectTo: redirectUrl,
+          redirectTo: redirectUrl,
         },
       });
       
@@ -255,10 +261,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const signInWithGoogle = async (): Promise<void> => {
     try {
+      // Get the appropriate redirect URL
+      const redirectUrl = getRedirectUrl();
+      console.log(`Google OAuth Redirect URL: ${redirectUrl}`);
+      
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`
+          redirectTo: redirectUrl
         }
       });
       
