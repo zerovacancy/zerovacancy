@@ -90,9 +90,21 @@ const AuthForms = () => {
   const handleLogin = async (values: LoginFormValues) => {
     try {
       console.log("Login attempt initiated in AuthForms component");
-      await signIn(values.email, values.password);
-      console.log("Login completed successfully");
-      loginForm.reset();
+      
+      // Add explicit console logs for debugging in production
+      console.log(`Email: ${values.email.substring(0, 3)}... (partially hidden)`);
+      console.log(`Password length: ${values.password.length}`);
+      
+      // Wrap in setTimeout to avoid potential mobile browser issues
+      setTimeout(async () => {
+        try {
+          await signIn(values.email, values.password);
+          console.log("Login completed successfully");
+          loginForm.reset();
+        } catch (innerError) {
+          console.error("Login error in setTimeout:", innerError);
+        }
+      }, 10);
     } catch (error) {
       console.error("Login error caught in AuthForms:", error);
       // Error is already handled in signIn function
@@ -102,12 +114,24 @@ const AuthForms = () => {
   const handleRegister = async (values: RegisterFormValues) => {
     try {
       console.log("Registration attempt initiated in AuthForms component");
-      await signUp(values.email, values.password);
-      console.log("Registration completed successfully");
-      registerForm.reset();
       
-      // Switch to login form after successful registration
-      setFormType('login');
+      // Add explicit console logs for debugging in production
+      console.log(`Email: ${values.email.substring(0, 3)}... (partially hidden)`);
+      console.log(`Password length: ${values.password.length}`);
+      
+      // Wrap in setTimeout to avoid potential mobile browser issues
+      setTimeout(async () => {
+        try {
+          await signUp(values.email, values.password);
+          console.log("Registration completed successfully");
+          registerForm.reset();
+          
+          // Switch to login form after successful registration
+          setFormType('login');
+        } catch (innerError) {
+          console.error("Registration error in setTimeout:", innerError);
+        }
+      }, 10);
     } catch (error) {
       console.error("Registration error caught in AuthForms:", error);
       // Error is already handled in signUp function
@@ -168,7 +192,10 @@ const AuthForms = () => {
                     >
                       <Form {...loginForm}>
                         <form 
-                          onSubmit={loginForm.handleSubmit(handleLogin)}
+                          onSubmit={(e) => {
+                            e.preventDefault();
+                            loginForm.handleSubmit(handleLogin)(e);
+                          }}
                           className="space-y-4"
                         >
                           <FormField
@@ -244,9 +271,14 @@ const AuthForms = () => {
                           />
                           
                           <Button 
-                            type="submit" 
+                            type="button" 
                             className="w-full h-11 bg-brand-purple hover:bg-brand-purple-dark text-white font-medium rounded-lg transition-all duration-200 transform hover:translate-y-[-1px] hover:shadow-md"
                             disabled={loginForm.formState.isSubmitting}
+                            onClick={() => {
+                              console.log("Sign In button clicked");
+                              const formValues = loginForm.getValues();
+                              handleLogin(formValues);
+                            }}
                           >
                             {loginForm.formState.isSubmitting ? (
                               <div className="flex items-center justify-center">
@@ -296,7 +328,10 @@ const AuthForms = () => {
                     >
                       <Form {...registerForm}>
                         <form 
-                          onSubmit={registerForm.handleSubmit(handleRegister)}
+                          onSubmit={(e) => {
+                            e.preventDefault();
+                            registerForm.handleSubmit(handleRegister)(e);
+                          }}
                           className="space-y-4"
                         >
                           <FormField
@@ -417,9 +452,14 @@ const AuthForms = () => {
                           />
                           
                           <Button 
-                            type="submit" 
+                            type="button" 
                             className="w-full h-11 bg-brand-purple hover:bg-brand-purple-dark text-white font-medium rounded-lg transition-all duration-200 transform hover:translate-y-[-1px] hover:shadow-md"
                             disabled={registerForm.formState.isSubmitting}
+                            onClick={() => {
+                              console.log("Create Account button clicked");
+                              const formValues = registerForm.getValues();
+                              handleRegister(formValues);
+                            }}
                           >
                             {registerForm.formState.isSubmitting ? (
                               <div className="flex items-center justify-center">

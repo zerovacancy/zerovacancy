@@ -120,12 +120,37 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const cleanEmail = String(email).trim();
       
       console.log(`Attempting to sign in with email: ${cleanEmail.substring(0, 3)}...@... (partially hidden for privacy)`);
+      console.log("User agent:", navigator.userAgent);
+      console.log("Is mobile:", /iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
 
-      // Normal authentication flow
-      const { error, data } = await supabase.auth.signInWithPassword({ 
-        email: cleanEmail, // Use the cleaned email
-        password 
-      });
+      // Add device specific logs for debugging
+      const isMobileDevice = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      if (isMobileDevice) {
+        console.log("Authentication on mobile device");
+      }
+
+      // Normal authentication flow with timeout for mobile browsers
+      let authResponse;
+      try {
+        authResponse = await Promise.race([
+          supabase.auth.signInWithPassword({ 
+            email: cleanEmail,
+            password 
+          }),
+          new Promise<never>((_, reject) => 
+            setTimeout(() => reject(new Error("Authentication request timed out")), 15000)
+          )
+        ]);
+      } catch (timeoutError) {
+        console.error("Auth request timed out, retrying:", timeoutError);
+        // Retry once with increased timeout
+        authResponse = await supabase.auth.signInWithPassword({ 
+          email: cleanEmail,
+          password 
+        });
+      }
+      
+      const { error, data } = authResponse;
       
       if (error) {
         throw error;
@@ -149,6 +174,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     } catch (error: any) {
       console.error('SignIn error:', error);
       
+      // Log additional information about the error
+      console.log("Error type:", typeof error);
+      console.log("Error properties:", Object.keys(error));
+      
       // Provide more specific error messages based on the error code
       let errorMessage = "Failed to sign in. Please check your credentials and try again.";
       
@@ -159,6 +188,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           errorMessage = "Please check your email and confirm your account before signing in.";
         } else if (error.message.includes("rate limit")) {
           errorMessage = "Too many login attempts. Please try again later.";
+        } else if (error.message.includes("timed out")) {
+          errorMessage = "The authentication service is taking longer than expected. Please try again.";
         } else {
           errorMessage = error.message;
         }
@@ -194,20 +225,49 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const cleanEmail = String(email).trim();
       
       console.log(`Attempting to sign up with email: ${cleanEmail.substring(0, 3)}...@... (partially hidden for privacy)`);
+      console.log("User agent:", navigator.userAgent);
+      console.log("Is mobile:", /iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
+      
+      // Add device specific logs for debugging
+      const isMobileDevice = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      if (isMobileDevice) {
+        console.log("Registration on mobile device");
+      }
       
       // Get the appropriate redirect URL
       const redirectUrl = getRedirectUrl();
       console.log(`Signup Redirect URL: ${redirectUrl}`);
       
-      const { error, data } = await supabase.auth.signUp({
-        email: cleanEmail,
-        password,
-        options: {
-          // Use the environment-appropriate redirect URL
-          emailRedirectTo: redirectUrl,
-          redirectTo: redirectUrl,
-        },
-      });
+      // Registration with timeout for mobile browsers
+      let authResponse;
+      try {
+        authResponse = await Promise.race([
+          supabase.auth.signUp({
+            email: cleanEmail,
+            password,
+            options: {
+              emailRedirectTo: redirectUrl,
+              redirectTo: redirectUrl,
+            },
+          }),
+          new Promise<never>((_, reject) => 
+            setTimeout(() => reject(new Error("Registration request timed out")), 15000)
+          )
+        ]);
+      } catch (timeoutError) {
+        console.error("Registration request timed out, retrying:", timeoutError);
+        // Retry once with increased timeout
+        authResponse = await supabase.auth.signUp({
+          email: cleanEmail,
+          password,
+          options: {
+            emailRedirectTo: redirectUrl,
+            redirectTo: redirectUrl,
+          },
+        });
+      }
+      
+      const { error, data } = authResponse;
       
       console.log("Sign up response:", error ? "Error occurred" : "Success", 
                  data?.user ? "User created" : "No user data");
@@ -233,6 +293,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     } catch (error: any) {
       console.error('SignUp error:', error);
       
+      // Log additional information about the error
+      console.log("Error type:", typeof error);
+      console.log("Error properties:", Object.keys(error));
+      
       // Provide more specific error messages based on the error code
       let errorMessage = "Failed to register. Please try again.";
       
@@ -243,6 +307,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           errorMessage = "Too many signup attempts. Please try again later.";
         } else if (error.message.includes("valid email")) {
           errorMessage = "Please enter a valid email address.";
+        } else if (error.message.includes("timed out")) {
+          errorMessage = "The registration service is taking longer than expected. Please try again.";
         } else {
           errorMessage = error.message;
         }
@@ -264,22 +330,68 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       // Get the appropriate redirect URL
       const redirectUrl = getRedirectUrl();
       console.log(`Google OAuth Redirect URL: ${redirectUrl}`);
+      console.log("User agent:", navigator.userAgent);
+      console.log("Is mobile:", /iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
       
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: redirectUrl
-        }
-      });
+      // Add device specific logs for debugging
+      const isMobileDevice = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      if (isMobileDevice) {
+        console.log("Google OAuth on mobile device");
+      }
+      
+      // Google OAuth with timeout for mobile browsers
+      let authResponse;
+      try {
+        authResponse = await Promise.race([
+          supabase.auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+              redirectTo: redirectUrl
+            }
+          }),
+          new Promise<never>((_, reject) => 
+            setTimeout(() => reject(new Error("Google auth request timed out")), 15000)
+          )
+        ]);
+      } catch (timeoutError) {
+        console.error("Google auth request timed out, retrying:", timeoutError);
+        // Retry once with increased timeout
+        authResponse = await supabase.auth.signInWithOAuth({
+          provider: 'google',
+          options: {
+            redirectTo: redirectUrl
+          }
+        });
+      }
+      
+      const { error } = authResponse;
       
       if (error) throw error;
       
       // Close the auth dialog once OAuth flow is initiated
       setIsAuthDialogOpen(false);
     } catch (error: any) {
+      console.error('Google SignIn error:', error);
+      
+      // Log additional information about the error
+      console.log("Error type:", typeof error);
+      console.log("Error properties:", Object.keys(error));
+      
+      let errorMessage = "Failed to sign in with Google. Please try again.";
+      
+      if (error.message) {
+        if (error.message.includes("timed out")) {
+          errorMessage = "The Google authentication service is taking longer than expected. Please try again.";
+        } else if (error.message.includes("popup")) {
+          errorMessage = "The Google authentication popup was blocked. Please allow popups for this site.";
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
       toast({
         title: "Google Sign-in Error",
-        description: error.message || "Failed to sign in with Google. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
       throw error;
