@@ -33,6 +33,7 @@ interface RichTextEditorProps {
   placeholder?: string;
   postId?: string;
   onImageUpload?: (url: string) => void;
+  editorId?: string; // For persistent editor state
 }
 
 const RichTextEditor: React.FC<RichTextEditorProps> = ({ 
@@ -40,7 +41,8 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   onChange, 
   placeholder = 'Write your content here...',
   postId,
-  onImageUpload
+  onImageUpload,
+  editorId = 'default-editor' // Default ID for state persistence
 }) => {
   console.log('RichTextEditor loaded with simplified version');
   const [isLinkMenuOpen, setIsLinkMenuOpen] = useState(false);
@@ -51,7 +53,41 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
-  // Create editor
+  // State key for persistence
+  const getEditorStateKey = useCallback(() => {
+    return `editor_state_${editorId}_${postId || 'new'}`;
+  }, [editorId, postId]);
+  
+  // Functions for editor state persistence
+  const saveEditorState = useCallback((editor: any) => {
+    if (!editor) return;
+    
+    try {
+      // Save cursor position and selection for a better UX
+      const state = {
+        html: editor.getHTML(),
+        selection: editor.state.selection
+      };
+      
+      localStorage.setItem(getEditorStateKey(), JSON.stringify(state));
+    } catch (error) {
+      console.error('Error saving editor state:', error);
+    }
+  }, [getEditorStateKey]);
+  
+  const loadEditorState = useCallback(() => {
+    try {
+      const savedState = localStorage.getItem(getEditorStateKey());
+      if (savedState) {
+        return JSON.parse(savedState);
+      }
+    } catch (error) {
+      console.error('Error loading editor state:', error);
+    }
+    return null;
+  }, [getEditorStateKey]);
+  
+  // Create editor instance first
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -84,8 +120,142 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     content: value,
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML());
+      saveEditorState(editor);
+    },
+    onFocus: ({ editor }) => {
+      // When focused, try to restore selection
+      const savedState = loadEditorState();
+      if (savedState && savedState.selection) {
+        try {
+          // Only restore selection if content matches
+          if (savedState.html === editor.getHTML()) {
+            editor.commands.setTextSelection(savedState.selection);
+          }
+        } catch (error) {
+          console.error('Error restoring editor selection:', error);
+        }
+      }
+    },
+    onBlur: ({ editor }) => {
+      saveEditorState(editor);
     },
   });
+  
+  // Define UI interaction functions after editor is created
+  const openLinkMenu = useCallback(() => {
+    if (!editor) return;
+    
+    try {
+      // If there's already a link at the current position, get its URL
+      const linkMark = editor.getAttributes('link');
+      if (linkMark.href) {
+        setLinkUrl(linkMark.href);
+      }
+      
+      setIsLinkMenuOpen(true);
+    } catch (error) {
+      console.error('Error opening link menu:', error);
+    }
+  }, [editor]);
+  
+  const openImageMenu = useCallback(() => {
+    setIsImageMenuOpen(true);
+    setImageFile(null);
+    setImageUrl('');
+  }, []);
+  
+  // Setup keyboard shortcuts for the editor
+  const setupEditorKeyboardShortcuts = useCallback((editor: any) => {
+    if (!editor) return () => {};
+    
+    // Text formatting shortcuts
+    const handleBold = () => editor.chain().focus().toggleBold().run();
+    const handleItalic = () => editor.chain().focus().toggleItalic().run();
+    const handleLink = () => openLinkMenu();
+    
+    // Heading shortcuts
+    const handleH1 = () => editor.chain().focus().toggleHeading({ level: 1 }).run();
+    const handleH2 = () => editor.chain().focus().toggleHeading({ level: 2 }).run();
+    const handleH3 = () => editor.chain().focus().toggleHeading({ level: 3 }).run();
+    
+    // List shortcuts
+    const handleBulletList = () => editor.chain().focus().toggleBulletList().run();
+    const handleOrderedList = () => editor.chain().focus().toggleOrderedList().run();
+    
+    // Block shortcuts
+    const handleBlockquote = () => editor.chain().focus().toggleBlockquote().run();
+    
+    // Setup event listeners
+    const keyboardShortcuts = (e: KeyboardEvent) => {
+      // Skip shortcuts in menus
+      if (isLinkMenuOpen || isImageMenuOpen) return;
+      
+      // Don't handle shortcuts if the editor doesn't have focus
+      if (!editor.isFocused) return;
+      
+      // Control/Command key combinations
+      if (e.ctrlKey || e.metaKey) {
+        switch (e.key.toLowerCase()) {
+          case 'b':
+            e.preventDefault();
+            handleBold();
+            break;
+          case 'i':
+            e.preventDefault();
+            handleItalic();
+            break;
+          case 'k':
+            e.preventDefault();
+            handleLink();
+            break;
+        }
+        
+        // Control/Command + Alt combinations for headings
+        if (e.altKey) {
+          switch (e.key) {
+            case '1':
+              e.preventDefault();
+              handleH1();
+              break;
+            case '2':
+              e.preventDefault();
+              handleH2();
+              break;
+            case '3':
+              e.preventDefault();
+              handleH3();
+              break;
+          }
+        }
+        
+        // Control/Command + Shift combinations
+        if (e.shiftKey) {
+          switch (e.key) {
+            case '8': // Asterisk key with shift
+              e.preventDefault();
+              handleBulletList();
+              break;
+            case '9': // Opening parenthesis key with shift
+              e.preventDefault();
+              handleOrderedList();
+              break;
+            case 'b':
+              e.preventDefault();
+              handleBlockquote();
+              break;
+          }
+        }
+      }
+    };
+    
+    // Add the event listener
+    document.addEventListener('keydown', keyboardShortcuts);
+    
+    // Return cleanup function
+    return () => {
+      document.removeEventListener('keydown', keyboardShortcuts);
+    };
+  }, [isLinkMenuOpen, isImageMenuOpen, openLinkMenu]);
   
   // When external value changes, update editor content
   useEffect(() => {
@@ -97,6 +267,14 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
       }
     }
   }, [editor, value]);
+  
+  // Setup keyboard shortcuts when editor is ready
+  useEffect(() => {
+    if (!editor) return;
+    
+    const cleanup = setupEditorKeyboardShortcuts(editor);
+    return cleanup;
+  }, [editor, setupEditorKeyboardShortcuts]);
   
   // Custom function to make double newlines act like paragraph breaks
   const handleEditorKeyDown = (e: React.KeyboardEvent) => {
@@ -224,30 +402,6 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     }
   }, [editor, imageFile, imageUrl, postId, onImageUpload]);
   
-  // Open link menu - with safety checks
-  const openLinkMenu = useCallback(() => {
-    if (!editor) return;
-    
-    try {
-      // If there's already a link at the current position, get its URL
-      const linkMark = editor.getAttributes('link');
-      if (linkMark.href) {
-        setLinkUrl(linkMark.href);
-      }
-      
-      setIsLinkMenuOpen(true);
-    } catch (error) {
-      console.error('Error opening link menu:', error);
-    }
-  }, [editor]);
-  
-  // Open image menu - simple implementation
-  const openImageMenu = useCallback(() => {
-    setIsImageMenuOpen(true);
-    setImageFile(null);
-    setImageUrl('');
-  }, []);
-  
   // Handle image file selection
   const handleImageChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -291,109 +445,145 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   // Main render when editor is ready
   return (
     <div className="border border-gray-300 rounded-md overflow-hidden w-full max-w-full">
-      {/* Editor Toolbar */}
+      {/* Reorganized Toolbar - grouped by function */}
       <div className="border-b border-gray-300 bg-gray-50 p-2 flex flex-wrap gap-1 items-center">
-        <ToolbarButton 
-          icon={<Bold size={16} />} 
-          isActive={editor.isActive('bold')}
-          onClick={() => editor.chain().focus().toggleBold().run()}
-          title="Bold"
-        />
-        <ToolbarButton 
-          icon={<Italic size={16} />} 
-          isActive={editor.isActive('italic')}
-          onClick={() => editor.chain().focus().toggleItalic().run()}
-          title="Italic"
-        />
-        <div className="w-px h-6 bg-gray-300 mx-1" />
-        <ToolbarButton 
-          icon={<Heading1 size={16} />} 
-          isActive={editor.isActive('heading', { level: 1 })}
-          onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-          title="Heading 1"
-        />
-        <ToolbarButton 
-          icon={<Heading2 size={16} />} 
-          isActive={editor.isActive('heading', { level: 2 })}
-          onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-          title="Heading 2"
-        />
-        <ToolbarButton 
-          icon={<Heading3 size={16} />} 
-          isActive={editor.isActive('heading', { level: 3 })}
-          onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-          title="Heading 3"
-        />
-        <div className="w-px h-6 bg-gray-300 mx-1" />
-        <ToolbarButton 
-          icon={<List size={16} />} 
-          isActive={editor.isActive('bulletList')}
-          onClick={() => editor.chain().focus().toggleBulletList().run()}
-          title="Bullet List"
-        />
-        <ToolbarButton 
-          icon={<ListOrdered size={16} />} 
-          isActive={editor.isActive('orderedList')}
-          onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          title="Ordered List"
-        />
-        <div className="w-px h-6 bg-gray-300 mx-1" />
-        <ToolbarButton 
-          icon={<Quote size={16} />} 
-          isActive={editor.isActive('blockquote')}
-          onClick={() => editor.chain().focus().toggleBlockquote().run()}
-          title="Quote"
-        />
-        <ToolbarButton 
-          icon={<Minus size={16} />} 
-          onClick={() => editor.chain().focus().setHorizontalRule().run()}
-          title="Horizontal Rule"
-        />
-        <div className="w-px h-6 bg-gray-300 mx-1" />
-        <ToolbarButton 
-          icon={<AlignLeft size={16} />} 
-          isActive={editor.isActive({ textAlign: 'left' })}
-          onClick={() => editor.chain().focus().setTextAlign('left').run()}
-          title="Align Left"
-        />
-        <ToolbarButton 
-          icon={<AlignCenter size={16} />} 
-          isActive={editor.isActive({ textAlign: 'center' })}
-          onClick={() => editor.chain().focus().setTextAlign('center').run()}
-          title="Align Center"
-        />
-        <ToolbarButton 
-          icon={<AlignRight size={16} />} 
-          isActive={editor.isActive({ textAlign: 'right' })}
-          onClick={() => editor.chain().focus().setTextAlign('right').run()}
-          title="Align Right"
-        />
-        <div className="w-px h-6 bg-gray-300 mx-1" />
-        <ToolbarButton 
-          icon={<LinkIcon size={16} />} 
-          isActive={editor.isActive('link')}
-          onClick={openLinkMenu}
-          title="Add Link"
-        />
-        {postId && (
+        {/* Group 1: Text Formatting */}
+        <div className="flex items-center bg-white rounded border border-gray-200 shadow-sm mr-2">
           <ToolbarButton 
-            icon={<ImageIcon size={16} />} 
-            onClick={openImageMenu}
-            title="Add Image"
+            icon={<Bold size={16} />} 
+            isActive={editor.isActive('bold')}
+            onClick={() => editor.chain().focus().toggleBold().run()}
+            title="Bold (Ctrl+B)"
+            className="p-1.5 text-gray-700 hover:bg-gray-50 rounded-l"
           />
-        )}
-        <div className="ml-auto flex gap-1">
+          <ToolbarButton 
+            icon={<Italic size={16} />} 
+            isActive={editor.isActive('italic')}
+            onClick={() => editor.chain().focus().toggleItalic().run()}
+            title="Italic (Ctrl+I)"
+            className="p-1.5 text-gray-700 hover:bg-gray-50 rounded-r"
+          />
+        </div>
+        
+        {/* Group 2: Headings */}
+        <div className="flex items-center bg-white rounded border border-gray-200 shadow-sm mr-2">
+          <ToolbarButton 
+            icon={<Heading1 size={16} />} 
+            isActive={editor.isActive('heading', { level: 1 })}
+            onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+            title="Heading 1 (Ctrl+Alt+1)"
+            className="p-1.5 text-gray-700 hover:bg-gray-50 rounded-l"
+          />
+          <ToolbarButton 
+            icon={<Heading2 size={16} />} 
+            isActive={editor.isActive('heading', { level: 2 })}
+            onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+            title="Heading 2 (Ctrl+Alt+2)"
+            className="p-1.5 text-gray-700 hover:bg-gray-50"
+          />
+          <ToolbarButton 
+            icon={<Heading3 size={16} />} 
+            isActive={editor.isActive('heading', { level: 3 })}
+            onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+            title="Heading 3 (Ctrl+Alt+3)"
+            className="p-1.5 text-gray-700 hover:bg-gray-50 rounded-r"
+          />
+        </div>
+        
+        {/* Group 3: Lists */}
+        <div className="flex items-center bg-white rounded border border-gray-200 shadow-sm mr-2">
+          <ToolbarButton 
+            icon={<List size={16} />} 
+            isActive={editor.isActive('bulletList')}
+            onClick={() => editor.chain().focus().toggleBulletList().run()}
+            title="Bullet List (Ctrl+Shift+8)"
+            className="p-1.5 text-gray-700 hover:bg-gray-50 rounded-l"
+          />
+          <ToolbarButton 
+            icon={<ListOrdered size={16} />} 
+            isActive={editor.isActive('orderedList')}
+            onClick={() => editor.chain().focus().toggleOrderedList().run()}
+            title="Ordered List (Ctrl+Shift+9)"
+            className="p-1.5 text-gray-700 hover:bg-gray-50 rounded-r"
+          />
+        </div>
+        
+        {/* Group 4: Block Elements */}
+        <div className="flex items-center bg-white rounded border border-gray-200 shadow-sm mr-2">
+          <ToolbarButton 
+            icon={<Quote size={16} />} 
+            isActive={editor.isActive('blockquote')}
+            onClick={() => editor.chain().focus().toggleBlockquote().run()}
+            title="Quote (Ctrl+Shift+B)"
+            className="p-1.5 text-gray-700 hover:bg-gray-50 rounded-l"
+          />
+          <ToolbarButton 
+            icon={<Minus size={16} />} 
+            onClick={() => editor.chain().focus().setHorizontalRule().run()}
+            title="Horizontal Rule"
+            className="p-1.5 text-gray-700 hover:bg-gray-50 rounded-r"
+          />
+        </div>
+        
+        {/* Group 5: Alignment */}
+        <div className="flex items-center bg-white rounded border border-gray-200 shadow-sm mr-2">
+          <ToolbarButton 
+            icon={<AlignLeft size={16} />} 
+            isActive={editor.isActive({ textAlign: 'left' })}
+            onClick={() => editor.chain().focus().setTextAlign('left').run()}
+            title="Align Left"
+            className="p-1.5 text-gray-700 hover:bg-gray-50 rounded-l"
+          />
+          <ToolbarButton 
+            icon={<AlignCenter size={16} />} 
+            isActive={editor.isActive({ textAlign: 'center' })}
+            onClick={() => editor.chain().focus().setTextAlign('center').run()}
+            title="Align Center"
+            className="p-1.5 text-gray-700 hover:bg-gray-50"
+          />
+          <ToolbarButton 
+            icon={<AlignRight size={16} />} 
+            isActive={editor.isActive({ textAlign: 'right' })}
+            onClick={() => editor.chain().focus().setTextAlign('right').run()}
+            title="Align Right"
+            className="p-1.5 text-gray-700 hover:bg-gray-50 rounded-r"
+          />
+        </div>
+        
+        {/* Group 6: Media */}
+        <div className="flex items-center bg-white rounded border border-gray-200 shadow-sm mr-2">
+          <ToolbarButton 
+            icon={<LinkIcon size={16} />} 
+            isActive={editor.isActive('link')}
+            onClick={openLinkMenu}
+            title="Add Link (Ctrl+K)"
+            className="p-1.5 text-gray-700 hover:bg-gray-50 rounded-l"
+          />
+          {postId && (
+            <ToolbarButton 
+              icon={<ImageIcon size={16} />} 
+              onClick={openImageMenu}
+              title="Add Image"
+              className="p-1.5 text-gray-700 hover:bg-gray-50 rounded-r"
+            />
+          )}
+        </div>
+        
+        {/* Group 7: History (right aligned) */}
+        <div className="ml-auto flex items-center bg-white rounded border border-gray-200 shadow-sm">
           <ToolbarButton 
             icon={<Undo size={16} />} 
             onClick={() => editor.chain().focus().undo().run()}
             disabled={!editor.can().undo()}
-            title="Undo"
+            title="Undo (Ctrl+Z)"
+            className="p-1.5 text-gray-700 hover:bg-gray-50 rounded-l"
           />
           <ToolbarButton 
             icon={<Redo size={16} />} 
             onClick={() => editor.chain().focus().redo().run()}
             disabled={!editor.can().redo()}
-            title="Redo"
+            title="Redo (Ctrl+Shift+Z)"
+            className="p-1.5 text-gray-700 hover:bg-gray-50 rounded-r"
           />
         </div>
       </div>
@@ -683,6 +873,7 @@ interface ToolbarButtonProps {
   title?: string;
   className?: string;
   activeClassName?: string;
+  shortcutKey?: string;
 }
 
 const ToolbarButton: React.FC<ToolbarButtonProps> = ({

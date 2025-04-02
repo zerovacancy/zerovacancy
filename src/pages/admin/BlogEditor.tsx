@@ -19,7 +19,9 @@ import {
   Settings, 
   LogOut,
   CheckCircle,
-  Search
+  Search,
+  Keyboard,
+  KeyRound
 } from 'lucide-react';
 import { BlogService } from '@/services/BlogService';
 import { BlogPost, BlogCategory, BlogAuthor } from '@/types/blog';
@@ -30,7 +32,10 @@ import RichTextEditor from '@/components/blog/RichTextEditor';
 import ImageUploader from '@/components/blog/ImageUploader';
 import CategorySelector from '@/components/blog/CategorySelector';
 import SEOPanel from '@/components/blog/SEOPanel';
+import KeyboardShortcutsHelp from '@/components/blog/KeyboardShortcutsHelp';
 import { useBlogAutosave } from '@/hooks/use-blog-autosave';
+import { usePreventNavigation } from '@/hooks/use-prevent-navigation';
+import { registerShortcuts, commonEditorShortcuts, KeyboardShortcut } from '@/utils/keyboard-shortcuts';
 // Temporarily removing CSS Module usage due to loading issues
 // import styles from './BlogEditor.module.css';
 
@@ -80,6 +85,50 @@ const BlogEditor = () => {
   const [seoTitle, setSeoTitle] = useState('');
   const [seoDescription, setSeoDescription] = useState('');
   const [showSeoPanel, setShowSeoPanel] = useState(false);
+  
+  // UI enhancement states
+  const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  
+  // Track when content changes to determine if there are unsaved changes
+  useEffect(() => {
+    // If content changes after initial load, mark as having unsaved changes
+    if (id && lastSaved) {
+      setHasUnsavedChanges(true);
+    }
+  }, [title, content, excerpt, tags, coverImage, categoryId, authorId, seoTitle, seoDescription, id, lastSaved]);
+  
+  // Reset unsaved changes flag when content is saved
+  useEffect(() => {
+    if (lastSaved) {
+      setHasUnsavedChanges(false);
+    }
+  }, [lastSaved]);
+  
+  // Enhanced navigation prevention when there are unsaved changes
+  const { navigateSafely } = usePreventNavigation(
+    hasUnsavedChanges,
+    'You have unsaved changes that will be lost if you leave. Do you want to continue?'
+  );
+  
+  // Override navigation functions to use safe navigation
+  const handleSafeNavigation = (path: string) => {
+    if (hasUnsavedChanges) {
+      if (window.confirm('You have unsaved changes. Do you want to save before leaving?')) {
+        // Save and then navigate
+        handleSave(new Event('navigation') as any)
+          .then(() => navigate(path))
+          .catch((error) => {
+            console.error('Error saving before navigation:', error);
+            if (window.confirm('Failed to save changes. Continue without saving?')) {
+              navigate(path);
+            }
+          });
+        return;
+      }
+    }
+    navigateSafely(path);
+  };
   
   // UI state
   const [loading, setLoading] = useState(false);
@@ -274,7 +323,7 @@ const BlogEditor = () => {
   };
   
   // Handle save (without publishing)
-  const handleSave = async (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent | React.MouseEvent) => {
     e.preventDefault();
     setValidationError('');
     
@@ -351,7 +400,7 @@ const BlogEditor = () => {
   };
   
   // Handle publish
-  const handlePublish = async (e: React.FormEvent) => {
+  const handlePublish = async (e: React.FormEvent | React.MouseEvent) => {
     e.preventDefault();
     setValidationError('');
     
@@ -461,6 +510,33 @@ const BlogEditor = () => {
     // Optional: store the URLs of uploaded images if needed
     console.log('Content image uploaded:', url);
   };
+  
+  // Register keyboard shortcuts
+  useEffect(() => {
+    const shortcuts: KeyboardShortcut[] = [
+      ...commonEditorShortcuts({
+        save: () => handleSave(new Event('keyboardShortcut') as any),
+        publish: () => handlePublish(new Event('keyboardShortcut') as any),
+        preview: () => setPreviewMode(!previewMode),
+        cancel: () => {
+          if (showKeyboardShortcuts) {
+            setShowKeyboardShortcuts(false);
+          } else if (previewMode) {
+            setPreviewMode(false);
+          }
+        }
+      }),
+      {
+        key: 'k',
+        ctrlKey: true,
+        description: 'Show keyboard shortcuts',
+        action: () => setShowKeyboardShortcuts(true)
+      }
+    ];
+    
+    const cleanup = registerShortcuts(shortcuts);
+    return cleanup;
+  }, [previewMode, handleSave, handlePublish, showKeyboardShortcuts]);
   
   // Preview post
   const renderPreview = () => {
@@ -575,6 +651,12 @@ const BlogEditor = () => {
               <Link
                 key={item.path}
                 to={item.path}
+                onClick={(e) => {
+                  if (hasUnsavedChanges) {
+                    e.preventDefault();
+                    handleSafeNavigation(item.path);
+                  }
+                }}
                 className={`flex items-center px-3 py-2 rounded-md transition-colors ${
                   location.pathname.startsWith(item.path)
                     ? 'bg-brand-purple-light/20 text-brand-purple-dark'
@@ -588,7 +670,21 @@ const BlogEditor = () => {
           </nav>
         </div>
         <button
-          onClick={() => signOut()}
+          onClick={() => {
+            if (hasUnsavedChanges) {
+              if (window.confirm('You have unsaved changes. Do you want to save before logging out?')) {
+                handleSave(new Event('logout') as any)
+                  .then(() => signOut())
+                  .catch(() => {
+                    if (window.confirm('Failed to save changes. Continue logging out?')) {
+                      signOut();
+                    }
+                  });
+                return;
+              }
+            }
+            signOut();
+          }}
           className="flex items-center text-gray-700 hover:text-red-600 transition-colors"
         >
           <LogOut size={18} />
@@ -603,6 +699,12 @@ const BlogEditor = () => {
             <Link
               key={item.path}
               to={item.path}
+              onClick={(e) => {
+                if (hasUnsavedChanges) {
+                  e.preventDefault();
+                  handleSafeNavigation(item.path);
+                }
+              }}
               className={`flex flex-col items-center p-2 rounded ${
                 location.pathname.startsWith(item.path)
                   ? 'text-brand-purple-dark'
@@ -614,7 +716,21 @@ const BlogEditor = () => {
             </Link>
           ))}
           <button
-            onClick={() => signOut()}
+            onClick={() => {
+              if (hasUnsavedChanges) {
+                if (window.confirm('You have unsaved changes. Do you want to save before logging out?')) {
+                  handleSave(new Event('logout') as any)
+                    .then(() => signOut())
+                    .catch(() => {
+                      if (window.confirm('Failed to save changes. Continue logging out?')) {
+                        signOut();
+                      }
+                    });
+                  return;
+                }
+              }
+              signOut();
+            }}
             className="flex flex-col items-center p-2 text-gray-700"
           >
             <LogOut size={18} />
@@ -670,26 +786,43 @@ const BlogEditor = () => {
                   ? 'bg-brand-purple-light/30 border-brand-purple text-brand-purple'
                   : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'
               }`}
+              title="Toggle Preview Mode (Ctrl+E)"
             >
               <Eye size={18} className="mr-2" />
               {previewMode ? 'Edit' : 'Preview'}
             </button>
             
-            {/* Save button */}
+            {/* Save button with indicator for unsaved changes */}
             <button
               onClick={handleSave}
               disabled={saving}
-              className="flex items-center px-4 py-2 bg-gray-700 text-white rounded-md hover:bg-gray-800 disabled:opacity-70 disabled:cursor-not-allowed"
+              className={`flex items-center px-4 py-2 rounded-md disabled:opacity-70 disabled:cursor-not-allowed ${
+                hasUnsavedChanges
+                  ? 'bg-amber-600 text-white hover:bg-amber-700'
+                  : 'bg-gray-700 text-white hover:bg-gray-800'
+              }`}
+              title="Save Draft (Ctrl+S)"
             >
               <Save size={18} className="mr-2" />
-              {saving ? 'Saving...' : 'Save Draft'}
+              {saving ? 'Saving...' : (
+                <span className="flex items-center">
+                  Save Draft
+                  {hasUnsavedChanges && (
+                    <span className="relative flex h-2 w-2 ml-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-300 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-400"></span>
+                    </span>
+                  )}
+                </span>
+              )}
             </button>
             
-            {/* Publish button */}
+            {/* Publish button with shortcut hint */}
             <button
               onClick={handlePublish}
               disabled={publishing || unpublishing}
               className="flex items-center px-4 py-2 bg-brand-purple text-white rounded-md hover:bg-brand-purple-dark disabled:opacity-70 disabled:cursor-not-allowed"
+              title="Publish/Schedule (Ctrl+Shift+P)"
             >
               <Send size={18} className="mr-2" />
               {publishing ? 'Publishing...' : 
@@ -712,8 +845,7 @@ const BlogEditor = () => {
         </div>
       </div>
       
-      {/* Post status indicator */}
-      <div className="mb-6">
+      <div className="flex justify-between items-center mb-6">
         <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
           status === 'scheduled' || (status === 'published' && publishedAt && new Date(publishedAt) > new Date())
             ? 'bg-blue-100 text-blue-800' 
@@ -740,7 +872,38 @@ const BlogEditor = () => {
             </span>
           )}
         </div>
+        
+        {/* Keyboard shortcuts button */}
+        <button
+          type="button"
+          onClick={() => setShowKeyboardShortcuts(true)}
+          className="flex items-center text-gray-500 hover:text-gray-700 text-sm"
+          title="Keyboard Shortcuts (Ctrl+K)"
+        >
+          <Keyboard size={14} className="mr-1" />
+          <span className="hidden sm:inline">Keyboard Shortcuts</span>
+        </button>
       </div>
+      
+      {/* Keyboard shortcuts help dialog */}
+      <KeyboardShortcutsHelp
+        shortcuts={[
+          ...commonEditorShortcuts({
+            save: () => {}, // Dummy functions that aren't used
+            publish: () => {},
+            preview: () => {},
+            cancel: () => {}
+          }),
+          {
+            key: 'k',
+            ctrlKey: true,
+            description: 'Show keyboard shortcuts',
+            action: () => {}
+          }
+        ]}
+        isOpen={showKeyboardShortcuts}
+        onClose={() => setShowKeyboardShortcuts(false)}
+      />
       
       {/* Validation error message */}
       {validationError && (
@@ -749,6 +912,19 @@ const BlogEditor = () => {
           <div>
             <p className="font-medium">Error saving post</p>
             <p className="text-sm">{validationError}</p>
+          </div>
+        </div>
+      )}
+      
+      {/* Unsaved changes warning */}
+      {hasUnsavedChanges && (
+        <div className="mb-4 p-3 bg-amber-50 border border-amber-200 text-amber-700 rounded-md flex items-start">
+          <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0 mt-0.5" />
+          <div>
+            <p className="font-medium">You have unsaved changes</p>
+            <p className="text-sm">
+              Remember to save your work. You can press <kbd className="px-1.5 py-0.5 text-xs font-semibold bg-gray-100 border border-gray-300 rounded-md">Ctrl+S</kbd> to save.
+            </p>
           </div>
         </div>
       )}
@@ -904,10 +1080,14 @@ const BlogEditor = () => {
                     </label>
                     <RichTextEditor
                       value={content}
-                      onChange={setContent}
+                      onChange={(newContent) => {
+                        setContent(newContent);
+                        handleContentChange();
+                      }}
                       placeholder="Write your blog post content here..."
                       postId={id}
                       onImageUpload={handleContentImageUpload}
+                      editorId={`blog-editor-${id || 'new'}`}
                     />
                   </div>
                 </div>
