@@ -24,8 +24,10 @@ export type BlogPost = {
   author: BlogAuthor;
   tags?: string[];
   readingTime?: number;
-  status?: 'draft' | 'published';
+  status?: 'draft' | 'published' | 'scheduled';
   lastSaved?: string;
+  seoTitle?: string;
+  seoDescription?: string;
 };
 
 export type BlogPostPreview = Omit<BlogPost, 'content'>;
@@ -43,6 +45,7 @@ export type BlogPostsFilters = {
   category?: string;
   search?: string;
   tag?: string;
+  status?: 'draft' | 'published' | 'scheduled';
   page?: number;
   limit?: number;
 };

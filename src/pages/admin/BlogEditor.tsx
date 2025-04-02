@@ -17,7 +17,9 @@ import {
   Tag,
   Users,
   Settings, 
-  LogOut
+  LogOut,
+  CheckCircle,
+  Search
 } from 'lucide-react';
 import { BlogService } from '@/services/BlogService';
 import { BlogPost, BlogCategory, BlogAuthor } from '@/types/blog';
@@ -27,6 +29,8 @@ import { useAuth } from '@/components/auth/AuthContext';
 import RichTextEditor from '@/components/blog/RichTextEditor';
 import ImageUploader from '@/components/blog/ImageUploader';
 import CategorySelector from '@/components/blog/CategorySelector';
+import SEOPanel from '@/components/blog/SEOPanel';
+import { useBlogAutosave } from '@/hooks/use-blog-autosave';
 // Temporarily removing CSS Module usage due to loading issues
 // import styles from './BlogEditor.module.css';
 
@@ -37,23 +41,10 @@ const BlogEditor = () => {
   const isEditing = !!id;
   const [hydrated, setHydrated] = useState(false);
   
-  // Autosave timer reference
-  const autosaveTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const autoSaveInterval = 2 * 60 * 1000; // 2 minutes in milliseconds
-  
   // This helps prevent hydration errors by ensuring we only render
   // the full component after the client-side code is running
   useEffect(() => {
     setHydrated(true);
-  }, []);
-  
-  // Clean up autosave timer on unmount
-  useEffect(() => {
-    return () => {
-      if (autosaveTimerRef.current) {
-        clearTimeout(autosaveTimerRef.current);
-      }
-    };
   }, []);
   
   // Check admin access
@@ -85,6 +76,11 @@ const BlogEditor = () => {
   const [publishedAt, setPublishedAt] = useState<string | null>(null);
   const [lastSaved, setLastSaved] = useState<string | null>(null);
   
+  // SEO metadata state
+  const [seoTitle, setSeoTitle] = useState('');
+  const [seoDescription, setSeoDescription] = useState('');
+  const [showSeoPanel, setShowSeoPanel] = useState(false);
+  
   // UI state
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -93,8 +89,33 @@ const BlogEditor = () => {
   const [categories, setCategories] = useState<BlogCategory[]>([]);
   const [authors, setAuthors] = useState<BlogAuthor[]>([]);
   const [previewMode, setPreviewMode] = useState(false);
-  const [isAutosaving, setIsAutosaving] = useState(false);
-  const [lastAutosaved, setLastAutosaved] = useState<string | null>(null);
+  // isAutosaving and lastAutosaved now come from the useBlogAutosave hook
+  
+  // Use the enhanced autosave hook after state declarations
+  const { 
+    isAutosaving, 
+    lastAutosaved, 
+    showRecoveryDialog,
+    recoveryData,
+    triggerAutosave,
+    clearLocalBackup,
+    setShowRecoveryDialog,
+    handleContentChange
+  } = useBlogAutosave({
+    id,
+    title,
+    content,
+    excerpt,
+    isPublished: status === 'published',
+    onSaved: (timestamp) => {
+      setLastSaved(timestamp);
+      console.log('Auto-saved at:', new Date(timestamp).toLocaleTimeString());
+    },
+    onError: (error) => {
+      console.error('Auto-save error:', error);
+      // Don't show validation errors for auto-save failures to avoid disrupting workflow
+    }
+  });
   
   // Load post data if editing, and load categories and authors
   useEffect(() => {
@@ -128,8 +149,8 @@ const BlogEditor = () => {
             if (fullPost && fullPost.post) {
               populateForm(fullPost.post);
               
-              // Start autosave timer for existing posts
-              startAutosaveTimer();
+              // No need to manually start autosave timer anymore
+              // The useBlogAutosave hook handles this automatically
             } else {
               navigate('/admin/blog');
             }
@@ -158,6 +179,10 @@ const BlogEditor = () => {
     setAuthorId(post.author.id);
     setTags(post.tags || []);
     
+    // Set SEO metadata
+    setSeoTitle(post.seoTitle || post.title);
+    setSeoDescription(post.seoDescription || post.excerpt || '');
+    
     // Determine status based on post status or published date
     let postStatus = post.status;
     if (!postStatus) {
@@ -175,28 +200,10 @@ const BlogEditor = () => {
     setLastSaved(post.lastSaved || null);
   };
   
-  // Start autosave timer
-  const startAutosaveTimer = () => {
-    // Clear any existing timer
-    if (autosaveTimerRef.current) {
-      clearTimeout(autosaveTimerRef.current);
-    }
-    
-    // Set new timer
-    autosaveTimerRef.current = setTimeout(() => {
-      // Only autosave if we're in draft mode and editing an existing post
-      if (status === 'draft' && isEditing && id) {
-        handleAutosave();
-      }
-      
-      // Restart timer
-      startAutosaveTimer();
-    }, autoSaveInterval);
-  };
+  // Remove the old autosave functions since we're now using the hook
   
-  // Handle autosave
-  const handleAutosave = async () => {
-    // Don't autosave if already saving or publishing
+  // Function to manually trigger autosave when needed
+  const manualSave = async () => {
     if (saving || publishing) {
       return;
     }
@@ -205,30 +212,8 @@ const BlogEditor = () => {
       return; // Can't autosave new posts (they don't have an ID yet)
     }
     
-    setIsAutosaving(true);
-    
-    try {
-      // Create minimal data for autosave
-      const autosaveData: Partial<BlogPost> = {
-        title,
-        content,
-        excerpt
-      };
-      
-      // Autosave the post
-      const success = await BlogService.autosaveDraft(id, autosaveData);
-      
-      if (success) {
-        // Update last autosaved time
-        const now = new Date().toISOString();
-        setLastAutosaved(now);
-      }
-    } catch (error) {
-      console.error('Autosave failed:', error);
-      // Don't show error messages for autosave failures
-    } finally {
-      setIsAutosaving(false);
-    }
+    // Use the hook's triggerAutosave function with force=true
+    return await triggerAutosave(true);
   };
   
   // Generate slug from title
@@ -325,7 +310,9 @@ const BlogEditor = () => {
         publishedAt: null,
         category: { id: categoryId } as BlogCategory,
         author: { id: authorId } as BlogAuthor,
-        tags
+        tags,
+        seoTitle: seoTitle || title,
+        seoDescription: seoDescription || excerpt
       };
       
       console.log('Saving draft with data:', JSON.stringify({
@@ -394,7 +381,9 @@ const BlogEditor = () => {
         publishedAt: publishDate,
         category: { id: categoryId } as BlogCategory,
         author: { id: authorId } as BlogAuthor,
-        tags
+        tags,
+        seoTitle: seoTitle || title,
+        seoDescription: seoDescription || excerpt
       };
       
       console.log(`${isScheduled ? 'Scheduling' : 'Publishing'} post:`, postData);
@@ -646,20 +635,25 @@ const BlogEditor = () => {
         <div className="mb-6 flex justify-between items-center w-full flex-wrap gap-4">
           
           <div className="flex items-center space-x-4 flex-wrap gap-2">
-            {/* Autosave indicator */}
-            {isEditing && status === 'draft' && (
-              <div className="text-sm text-gray-500 flex items-center">
+            {/* Enhanced autosave indicator */}
+            {isEditing && (
+              <div className="text-sm flex items-center px-3 py-1 rounded-full">
                 {isAutosaving ? (
-                  <>
+                  <div className="text-blue-600 flex items-center bg-blue-50 px-2 py-1 rounded-full">
                     <Clock size={14} className="mr-1 animate-pulse" />
-                    Autosaving...
-                  </>
+                    <span className="whitespace-nowrap">Saving...</span>
+                  </div>
                 ) : lastAutosaved ? (
-                  <>
+                  <div className="text-green-600 flex items-center bg-green-50 px-2 py-1 rounded-full">
+                    <CheckCircle size={14} className="mr-1" />
+                    <span className="whitespace-nowrap">Saved at {new Date(lastAutosaved).toLocaleTimeString()}</span>
+                  </div>
+                ) : (
+                  <div className="text-gray-500 flex items-center">
                     <Clock size={14} className="mr-1" />
-                    Autosaved at {new Date(lastAutosaved).toLocaleTimeString()}
-                  </>
-                ) : null}
+                    <span className="whitespace-nowrap">Not saved yet</span>
+                  </div>
+                )}
               </div>
             )}
             
@@ -667,7 +661,7 @@ const BlogEditor = () => {
               onClick={() => {
                 // Save draft before showing preview
                 if (!previewMode && id) {
-                  handleAutosave();
+                  manualSave();
                 }
                 setPreviewMode(!previewMode);
               }}
@@ -755,6 +749,63 @@ const BlogEditor = () => {
           <div>
             <p className="font-medium">Error saving post</p>
             <p className="text-sm">{validationError}</p>
+          </div>
+        </div>
+      )}
+      
+      {/* Recovery dialog for unsaved changes */}
+      {showRecoveryDialog && recoveryData && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-2xl w-full m-4">
+            <h3 className="text-lg font-bold mb-2">Recover Unsaved Changes</h3>
+            <p className="text-gray-600 mb-4">
+              We found a more recent draft from {new Date(recoveryData.lastSaved).toLocaleString()}. 
+              Would you like to recover these changes?
+            </p>
+            
+            <div className="border border-gray-200 rounded-md p-4 mb-4 max-h-60 overflow-auto">
+              <h4 className="font-medium">{recoveryData.title || 'Untitled'}</h4>
+              {recoveryData.excerpt && (
+                <p className="text-sm text-gray-600 mt-2 italic">{recoveryData.excerpt}</p>
+              )}
+              <div className="text-sm mt-2 prose prose-sm max-w-none">
+                {recoveryData.content ? (
+                  <div dangerouslySetInnerHTML={{ 
+                    __html: recoveryData.content.length > 500 
+                      ? recoveryData.content.substring(0, 500) + '...' 
+                      : recoveryData.content 
+                  }} />
+                ) : (
+                  <p className="text-gray-500">No content in the recovered draft</p>
+                )}
+              </div>
+            </div>
+            
+            <div className="flex justify-end gap-3">
+              <button 
+                onClick={() => {
+                  // Discard the local backup
+                  clearLocalBackup();
+                }}
+                className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
+              >
+                Discard
+              </button>
+              <button 
+                onClick={() => {
+                  // Apply recovered data
+                  if (recoveryData.title) setTitle(recoveryData.title);
+                  if (recoveryData.content) setContent(recoveryData.content);
+                  if (recoveryData.excerpt) setExcerpt(recoveryData.excerpt);
+                  
+                  // Hide dialog and clear backup (we've applied it)
+                  setShowRecoveryDialog(false);
+                }}
+                className="px-4 py-2 bg-brand-purple text-white rounded-md hover:bg-brand-purple-dark"
+              >
+                Recover This Version
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -863,6 +914,36 @@ const BlogEditor = () => {
 
                 {/* Sidebar Column */}
                 <aside className="w-full md:w-[280px] flex-shrink-0 space-y-6" style={{ flexShrink: 0 }}>
+                  {/* SEO Toggle Button */}
+                  <button
+                    type="button"
+                    onClick={() => setShowSeoPanel(!showSeoPanel)}
+                    className={`flex items-center w-full justify-between p-2 mb-2 rounded-md border ${
+                      showSeoPanel 
+                        ? 'bg-brand-purple-light/20 border-brand-purple text-brand-purple' 
+                        : 'bg-white border-gray-200 hover:bg-gray-50'
+                    }`}
+                  >
+                    <span className="flex items-center">
+                      <Search size={16} className="mr-2" />
+                      <span className="text-sm font-medium">SEO & Search Settings</span>
+                    </span>
+                    <span className="text-xs">
+                      {showSeoPanel ? 'Hide' : 'Show'}
+                    </span>
+                  </button>
+                  
+                  {/* SEO Panel */}
+                  {showSeoPanel && (
+                    <SEOPanel
+                      title={seoTitle || title}
+                      description={seoDescription || excerpt}
+                      slug={slug}
+                      onTitleChange={setSeoTitle}
+                      onDescriptionChange={setSeoDescription}
+                    />
+                  )}
+                  
                   {/* Publish Options */}
                   <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-200">
                     <h3 className="text-sm font-semibold text-gray-900 mb-3">Publish</h3>

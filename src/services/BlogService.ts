@@ -68,6 +68,18 @@ const transformPost = async (post: any): Promise<BlogPost> => {
     bio: authorData.bio
   };
   
+  // Determine if this is a scheduled post (published in the future)
+  let status = post.status || (post.published_at ? 'published' : 'draft');
+  
+  // If the post is published but has a future date, mark it as scheduled
+  if (status === 'published' && post.published_at) {
+    const publishDate = new Date(post.published_at);
+    const now = new Date();
+    if (publishDate > now) {
+      status = 'scheduled';
+    }
+  }
+  
   return {
     id: post.id,
     title: post.title,
@@ -79,9 +91,11 @@ const transformPost = async (post: any): Promise<BlogPost> => {
     category,
     author,
     tags,
-    status: post.status || (post.published_at ? 'published' : 'draft'),
+    status,
     lastSaved: post.updated_at || post.created_at,
-    readingTime: post.reading_time || calculateReadingTime(post.content)
+    readingTime: post.reading_time || calculateReadingTime(post.content),
+    seoTitle: post.seo_title || post.title,
+    seoDescription: post.seo_description || post.excerpt || ''
   };
 };
 
@@ -109,6 +123,10 @@ export class BlogService {
     
     // Only show published posts to regular users
     query = query.eq('status', 'published');
+    
+    // Only show posts with published_at date in the past or now
+    const now = new Date().toISOString();
+    query = query.lte('published_at', now);
     
     // Apply category filter
     if (category) {
@@ -182,10 +200,13 @@ export class BlogService {
   
   // Get featured posts for homepage
   static async getFeaturedPosts(count: number = 3): Promise<BlogPostPreview[]> {
+    const now = new Date().toISOString();
+    
     const { data, error } = await supabase
       .from('blog_posts')
       .select('*')
       .eq('status', 'published')
+      .lte('published_at', now)
       .order('published_at', { ascending: false })
       .limit(count);
     
@@ -200,12 +221,21 @@ export class BlogService {
   }
   
   // Get a single blog post by slug
-  static async getPostBySlug(slug: string): Promise<BlogPostResponse | null> {
-    const { data, error } = await supabase
+  static async getPostBySlug(slug: string, isAdmin: boolean = false): Promise<BlogPostResponse | null> {
+    let query = supabase
       .from('blog_posts')
       .select('*')
-      .eq('slug', slug)
-      .single();
+      .eq('slug', slug);
+    
+    // For public access, only return published posts that are not scheduled for the future
+    if (!isAdmin) {
+      const now = new Date().toISOString();
+      query = query
+        .eq('status', 'published')
+        .lte('published_at', now);
+    }
+    
+    const { data, error } = await query.single();
     
     if (error) {
       console.error('Error fetching blog post:', error);
@@ -330,10 +360,12 @@ export class BlogService {
         content: postData.content,
         cover_image: postData.coverImage || null,
         published_at: postData.publishedAt || null,
-        status: postData.publishedAt ? 'published' : 'draft',
+        status: postData.status || (postData.publishedAt ? 'published' : 'draft'),
         category_id: postData.category?.id,
         author_id: postData.author?.id,
-        reading_time: postData.readingTime || null
+        reading_time: postData.readingTime || null,
+        seo_title: postData.seoTitle || postData.title,
+        seo_description: postData.seoDescription || postData.excerpt || null
       };
       
       // Log each field to verify it's being sent correctly
@@ -417,8 +449,8 @@ export class BlogService {
         }
       }
       
-      // Get the full post with relations
-      return this.getPostBySlug(data.slug)
+      // Get the full post with relations (using admin=true to see scheduled posts)
+      return this.getPostBySlug(data.slug, true)
         .then(response => response?.post || null);
     } catch (error) {
       console.error('Error in createPost:', error);
@@ -446,7 +478,9 @@ export class BlogService {
         content: cleanPostData.content,
         cover_image: cleanPostData.coverImage,
         reading_time: cleanPostData.readingTime,
-        updated_at: new Date().toISOString()
+        updated_at: new Date().toISOString(),
+        seo_title: cleanPostData.seoTitle,
+        seo_description: cleanPostData.seoDescription
       };
       
       // IMPORTANT: Make sure key fields are sent even if undefined
@@ -473,7 +507,12 @@ export class BlogService {
       // Handle published status
       if (isPublishing || cleanPostData.publishedAt !== undefined) {
         supabasePost.published_at = cleanPostData.publishedAt;
-        supabasePost.status = cleanPostData.publishedAt ? 'published' : 'draft';
+        
+        if (cleanPostData.status) {
+          supabasePost.status = cleanPostData.status;
+        } else {
+          supabasePost.status = cleanPostData.publishedAt ? 'published' : 'draft';
+        }
       }
       
       // Directly set status if provided
@@ -481,7 +520,7 @@ export class BlogService {
         supabasePost.status = cleanPostData.status;
         
         // Ensure published_at is set or cleared based on status
-        if (cleanPostData.status === 'published' && !supabasePost.published_at) {
+        if ((cleanPostData.status === 'published' || cleanPostData.status === 'scheduled') && !supabasePost.published_at) {
           supabasePost.published_at = new Date().toISOString();
         } else if (cleanPostData.status === 'draft' && supabasePost.published_at === undefined) {
           supabasePost.published_at = null;
@@ -603,8 +642,8 @@ export class BlogService {
         }
       }
       
-      // Get the full post with relations
-      return this.getPostBySlug(data.slug)
+      // Get the full post with relations (using admin=true to see scheduled posts)
+      return this.getPostBySlug(data.slug, true)
         .then(response => response?.post || null);
     } catch (error) {
       console.error('Error in updatePost:', error);
@@ -656,8 +695,8 @@ export class BlogService {
       
       console.log('Blog post unpublished successfully');
       
-      // Get the full post with relations
-      return this.getPostBySlug(data.slug)
+      // Get the full post with relations (using admin=true to see scheduled posts)
+      return this.getPostBySlug(data.slug, true)
         .then(response => response?.post || null);
     } catch (error) {
       console.error('Error in unpublishPost:', error);
@@ -665,12 +704,13 @@ export class BlogService {
     }
   }
   
-  // Get all blog posts for admin (including drafts)
+  // Get all blog posts for admin (including drafts and scheduled posts)
   static async getAdminPosts(filters: BlogPostsFilters = {}): Promise<BlogPosts> {
     const { 
       category, 
       search, 
-      tag, 
+      tag,
+      status,
       page = 1, 
       limit = 10 
     } = filters;
@@ -678,6 +718,19 @@ export class BlogService {
     let query = supabase
       .from('blog_posts')
       .select('*', { count: 'exact' });
+    
+    // Apply status filter if specified
+    if (status) {
+      if (status === 'scheduled') {
+        // Special case for scheduled posts (published status but future date)
+        const now = new Date().toISOString();
+        query = query
+          .eq('status', 'published')
+          .gt('published_at', now);
+      } else {
+        query = query.eq('status', status);
+      }
+    }
     
     // Admin can see all posts regardless of status
     

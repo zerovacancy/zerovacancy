@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import ImageExtension from '@tiptap/extension-image';
@@ -22,7 +22,8 @@ import {
   Quote,
   Undo,
   Redo,
-  X
+  X,
+  Loader
 } from 'lucide-react';
 import { BlogService } from '@/services/BlogService';
 
@@ -48,36 +49,9 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState('');
   const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
-  // Custom function to make double newlines act like paragraph breaks
-  const handleEditorKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey && editor) {
-      const { state } = editor;
-      const { selection } = state;
-      const { $from, empty } = selection;
-      
-      // If the cursor is at the end of a paragraph
-      if (empty && $from.parent.type.name === 'paragraph') {
-        // Check if current paragraph is empty
-        if ($from.parent.textContent === '') {
-          console.log('Creating extra paragraph for spacing');
-          
-          // Prevent default behavior and add a paragraph with spacing
-          e.preventDefault();
-          
-          // Create a double paragraph break by adding a paragraph with non-breaking space
-          editor.chain()
-            .insertContent('<p class="paragraph-spacer">&nbsp;</p>')
-            .focus()
-            .run();
-            
-          return true;
-        }
-      }
-    }
-    return false;
-  };
-  
+  // Create editor
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -90,6 +64,9 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
       ImageExtension.configure({
         inline: true,
         allowBase64: true,
+        HTMLAttributes: {
+          class: 'max-w-full rounded-md my-2',
+        },
       }),
       Link.configure({
         openOnClick: false,
@@ -113,30 +90,76 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   // When external value changes, update editor content
   useEffect(() => {
     if (editor && value !== editor.getHTML()) {
-      editor.commands.setContent(value);
+      try {
+        editor.commands.setContent(value);
+      } catch (error) {
+        console.error('Error setting editor content:', error);
+      }
     }
   }, [editor, value]);
   
-  // Insert link
-  const setLink = useCallback(() => {
-    if (!editor) return;
+  // Custom function to make double newlines act like paragraph breaks
+  const handleEditorKeyDown = (e: React.KeyboardEvent) => {
+    if (!editor) return false;
     
-    // Validate URL
-    if (linkUrl) {
-      // Add https if needed
-      const url = linkUrl.trim();
-      const validUrl = url.startsWith('http') ? url : `https://${url}`;
-      
-      editor.chain().focus().setLink({ href: validUrl }).run();
-    } else {
-      editor.chain().focus().unsetLink().run();
+    if (e.key === 'Enter' && !e.shiftKey) {
+      try {
+        const { state } = editor;
+        const { selection } = state;
+        const { $from, empty } = selection;
+        
+        // If the cursor is at the end of a paragraph
+        if (empty && $from.parent.type.name === 'paragraph') {
+          // Check if current paragraph is empty
+          if ($from.parent.textContent === '') {
+            console.log('Creating extra paragraph for spacing');
+            
+            // Prevent default behavior and add a paragraph with spacing
+            e.preventDefault();
+            
+            // Create a double paragraph break by adding a paragraph with non-breaking space
+            editor.chain()
+              .insertContent('<p class="paragraph-spacer">&nbsp;</p>')
+              .focus()
+              .run();
+              
+            return true;
+          }
+        }
+      } catch (error) {
+        console.error('Error handling key down:', error);
+      }
+    }
+    return false;
+  };
+  
+  // Insert link - simplified and safe implementation
+  const setLink = useCallback(() => {
+    if (!editor) {
+      setIsLinkMenuOpen(false);
+      return;
+    }
+    
+    try {
+      // Validate URL
+      if (linkUrl) {
+        // Add https if needed
+        const url = linkUrl.trim();
+        const validUrl = url.startsWith('http') ? url : `https://${url}`;
+        
+        editor.chain().focus().setLink({ href: validUrl }).run();
+      } else {
+        editor.chain().focus().unsetLink().run();
+      }
+    } catch (error) {
+      console.error('Error setting link:', error);
     }
     
     setIsLinkMenuOpen(false);
     setLinkUrl('');
   }, [editor, linkUrl]);
   
-  // Handle image upload
+  // Handle image upload - simplified implementation
   const handleImageUpload = useCallback(async () => {
     if (!editor) {
       console.error('Editor is not initialized');
@@ -146,12 +169,17 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     
     // Insert from URL
     if (imageUrl) {
-      editor.chain().focus().setImage({ src: imageUrl }).run();
-      setImageUrl('');
-      setIsImageMenuOpen(false);
-      
-      if (onImageUpload) {
-        onImageUpload(imageUrl);
+      try {
+        editor.chain().focus().setImage({ src: imageUrl }).run();
+        setImageUrl('');
+        setIsImageMenuOpen(false);
+        
+        if (onImageUpload) {
+          onImageUpload(imageUrl);
+        }
+      } catch (error) {
+        console.error('Error inserting image from URL:', error);
+        alert('Failed to insert image. Please try again.');
       }
       return;
     }
@@ -196,36 +224,71 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     }
   }, [editor, imageFile, imageUrl, postId, onImageUpload]);
   
-  // Open link menu
+  // Open link menu - with safety checks
   const openLinkMenu = useCallback(() => {
     if (!editor) return;
     
-    // If there's already a link at the current position, get its URL
-    const linkMark = editor.getAttributes('link');
-    if (linkMark.href) {
-      setLinkUrl(linkMark.href);
+    try {
+      // If there's already a link at the current position, get its URL
+      const linkMark = editor.getAttributes('link');
+      if (linkMark.href) {
+        setLinkUrl(linkMark.href);
+      }
+      
+      setIsLinkMenuOpen(true);
+    } catch (error) {
+      console.error('Error opening link menu:', error);
     }
-    
-    setIsLinkMenuOpen(true);
   }, [editor]);
   
-  // Open image menu
+  // Open image menu - simple implementation
   const openImageMenu = useCallback(() => {
-    if (!editor) return;
     setIsImageMenuOpen(true);
-  }, [editor]);
+    setImageFile(null);
+    setImageUrl('');
+  }, []);
   
   // Handle image file selection
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setImageFile(e.target.files[0]);
     }
-  };
+  }, []);
   
+  // Simplify image drag-and-drop 
+  const handleImageDrop = useCallback((e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    
+    try {
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+        const file = e.dataTransfer.files[0];
+        
+        // Check if it's an image
+        if (file.type.startsWith('image/')) {
+          setImageFile(file);
+          setIsImageMenuOpen(true);
+        }
+      }
+    } catch (error) {
+      console.error('Error handling image drop:', error);
+    }
+  }, []);
+  
+  // If editor is not initialized, show a loading state
   if (!editor) {
-    return null;
+    return (
+      <div className="border border-gray-300 rounded-md overflow-hidden w-full max-w-full">
+        <div className="border-b border-gray-300 bg-gray-50 p-2">
+          <div className="animate-pulse h-8 bg-gray-200 rounded w-full"></div>
+        </div>
+        <div className="min-h-[300px] flex items-center justify-center bg-gray-50">
+          <div className="text-gray-400">Loading editor...</div>
+        </div>
+      </div>
+    );
   }
   
+  // Main render when editor is ready
   return (
     <div className="border border-gray-300 rounded-md overflow-hidden w-full max-w-full">
       {/* Editor Toolbar */}
@@ -364,7 +427,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
         </div>
       )}
       
-      {/* Image Menu */}
+      {/* Simplified Image Menu */}
       {isImageMenuOpen && (
         <div className="p-3 border-b border-gray-300 bg-gray-50 space-y-3">
           <div className="flex items-center justify-between">
@@ -408,7 +471,12 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
                 disabled={isUploading || (!imageFile && !imageUrl)}
                 className="px-4 py-2 bg-brand-purple text-white rounded-md hover:bg-brand-purple-dark disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isUploading ? 'Uploading...' : 'Insert Image'}
+                {isUploading ? (
+                  <span className="flex items-center">
+                    <Loader size={16} className="animate-spin mr-2" />
+                    Uploading...
+                  </span>
+                ) : 'Insert Image'}
               </button>
             </div>
           </div>
@@ -421,6 +489,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
         className="prose prose-lg max-w-none w-full p-4 min-h-[300px] focus:outline-none editor-content"
         style={{ maxWidth: "none" }}
         onKeyDown={handleEditorKeyDown}
+        onDrop={handleImageDrop}
       />
       
       {/* Add style tag for consistent formatting with published blog post */}
@@ -581,6 +650,25 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           color: #adb5bd;
           pointer-events: none;
           height: 0;
+        }
+        
+        /* Image alignment classes */
+        .editor-content img.float-left {
+          float: left;
+          margin-right: 1rem;
+          margin-bottom: 0.5rem;
+        }
+        
+        .editor-content img.float-right {
+          float: right;
+          margin-left: 1rem;
+          margin-bottom: 0.5rem;
+        }
+        
+        .editor-content img.mx-auto {
+          margin-left: auto;
+          margin-right: auto;
+          display: block;
         }
       `}} />
     </div>
