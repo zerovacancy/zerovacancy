@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback } from 'react';
-import { Upload, X, ImageIcon, Loader } from 'lucide-react';
+import { Upload as UploadIcon, X, ImageIcon, Loader } from 'lucide-react';
 
 interface ImageUploaderProps {
   initialImage?: string;
@@ -23,8 +23,8 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   // Process the selected file
   const processFile = useCallback((file: File) => {
     // Check file size
-    if (file.size > 3 * 1024 * 1024) { // 3MB max
-      alert('Image is too large. Maximum size is 3MB.');
+    if (file.size > 2 * 1024 * 1024) { // 2MB max
+      alert('Image is too large. Maximum size is 2MB.');
       return;
     }
     
@@ -132,26 +132,27 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
       
       <div>
         {image ? (
-          <div className="relative group">
+          <div className="relative group cursor-pointer">
             <img
               src={image}
               alt="Featured"
               className="w-full h-40 object-cover rounded-md border border-gray-300"
+              onClick={triggerFileInput}
             />
             <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-opacity flex items-center justify-center opacity-0 group-hover:opacity-100">
               <div className="flex gap-2">
                 <button
                   type="button"
                   onClick={triggerFileInput}
-                  className="p-1.5 bg-white rounded-md text-gray-800 hover:bg-brand-purple hover:text-white"
+                  className="p-1.5 bg-white rounded-md text-gray-800 hover:bg-brand-purple hover:text-white cursor-pointer"
                   title="Replace image"
                 >
-                  <Upload size={18} />
+                  <UploadIcon size={18} />
                 </button>
                 <button
                   type="button"
                   onClick={removeImage}
-                  className="p-1.5 bg-white rounded-md text-red-600 hover:bg-red-600 hover:text-white"
+                  className="p-1.5 bg-white rounded-md text-red-600 hover:bg-red-600 hover:text-white cursor-pointer"
                   title="Remove image"
                 >
                   <X size={18} />
@@ -173,11 +174,12 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
+                onClick={!isUploading ? triggerFileInput : undefined}
                 className={`w-full h-40 border-2 border-dashed rounded-md flex flex-col items-center justify-center text-gray-500 transition-colors
                   ${isDragging 
                     ? 'border-brand-purple bg-brand-purple-light/10 text-brand-purple' 
                     : 'border-gray-300 hover:border-brand-purple hover:text-brand-purple'
-                  } ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  } ${isUploading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
               >
                 {isUploading ? (
                   <>
@@ -186,16 +188,16 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
                   </>
                 ) : (
                   <>
-                    <Upload size={24} className="mb-2" />
+                    <UploadIcon size={24} className="mb-2" />
                     <span className="text-sm font-medium">
                       {isDragging ? 'Drop image here' : 'Drag & drop or click to upload'}
                     </span>
-                    <span className="text-xs mt-1">JPG, PNG, or GIF (max 3MB)</span>
+                    <span className="text-xs mt-1">JPG, PNG, or GIF (max 2MB)</span>
                     <button
                       type="button"
                       onClick={triggerFileInput}
                       disabled={isUploading}
-                      className="mt-2 px-4 py-1.5 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200"
+                      className="mt-2 px-4 py-1.5 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 cursor-pointer"
                     >
                       Select File
                     </button>

@@ -42,7 +42,7 @@ import { registerShortcuts, commonEditorShortcuts, KeyboardShortcut } from '@/ut
 const BlogEditor = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const { isAuthenticated, isLoading: authLoading, signOut } = useAuth();
   const isEditing = !!id;
   const [hydrated, setHydrated] = useState(false);
   
@@ -108,27 +108,20 @@ const BlogEditor = () => {
   // Enhanced navigation prevention when there are unsaved changes
   const { navigateSafely } = usePreventNavigation(
     hasUnsavedChanges,
-    'You have unsaved changes that will be lost if you leave. Do you want to continue?'
-  );
-  
-  // Override navigation functions to use safe navigation
-  const handleSafeNavigation = (path: string) => {
-    if (hasUnsavedChanges) {
-      if (window.confirm('You have unsaved changes. Do you want to save before leaving?')) {
-        // Save and then navigate
-        handleSave(new Event('navigation') as any)
-          .then(() => navigate(path))
-          .catch((error) => {
-            console.error('Error saving before navigation:', error);
-            if (window.confirm('Failed to save changes. Continue without saving?')) {
-              navigate(path);
-            }
-          });
-        return;
+    'You have unsaved changes that will be lost if you leave. Do you want to continue?',
+    async () => {
+      try {
+        // Try to save before navigation
+        return await manualSave();
+      } catch (error) {
+        console.error('Error saving before navigation:', error);
+        return false;
       }
     }
-    navigateSafely(path);
-  };
+  );
+  
+  // Use navigateSafely directly for all navigation
+  const handleSafeNavigation = navigateSafely;
   
   // UI state
   const [loading, setLoading] = useState(false);
@@ -140,16 +133,15 @@ const BlogEditor = () => {
   const [previewMode, setPreviewMode] = useState(false);
   // isAutosaving and lastAutosaved now come from the useBlogAutosave hook
   
-  // Use the enhanced autosave hook after state declarations
+  // Use the save hook after state declarations
   const { 
     isAutosaving, 
     lastAutosaved, 
     showRecoveryDialog,
     recoveryData,
-    triggerAutosave,
+    triggerSave, // renamed from triggerAutosave
     clearLocalBackup,
-    setShowRecoveryDialog,
-    handleContentChange
+    setShowRecoveryDialog
   } = useBlogAutosave({
     id,
     title,
@@ -158,11 +150,12 @@ const BlogEditor = () => {
     isPublished: status === 'published',
     onSaved: (timestamp) => {
       setLastSaved(timestamp);
-      console.log('Auto-saved at:', new Date(timestamp).toLocaleTimeString());
+      setHasUnsavedChanges(false); // Clear unsaved changes flag when saved
+      console.log('Saved at:', new Date(timestamp).toLocaleTimeString());
     },
     onError: (error) => {
-      console.error('Auto-save error:', error);
-      // Don't show validation errors for auto-save failures to avoid disrupting workflow
+      console.error('Save error:', error);
+      // Don't show validation errors for save failures to avoid disrupting workflow
     }
   });
   
@@ -219,17 +212,17 @@ const BlogEditor = () => {
   
   // Populate form with post data
   const populateForm = (post: BlogPost) => {
-    setTitle(post.title);
-    setSlug(post.slug);
+    setTitle(post.title || '');
+    setSlug(post.slug || '');
     setExcerpt(post.excerpt || '');
-    setContent(post.content);
+    setContent(typeof post.content === 'string' ? post.content : '');
     setCoverImage(post.coverImage || '');
-    setCategoryId(post.category.id);
-    setAuthorId(post.author.id);
-    setTags(post.tags || []);
+    setCategoryId(post.category?.id || '');
+    setAuthorId(post.author?.id || '');
+    setTags(Array.isArray(post.tags) ? post.tags : []);
     
     // Set SEO metadata
-    setSeoTitle(post.seoTitle || post.title);
+    setSeoTitle(post.seoTitle || post.title || '');
     setSeoDescription(post.seoDescription || post.excerpt || '');
     
     // Determine status based on post status or published date
@@ -251,29 +244,41 @@ const BlogEditor = () => {
   
   // Remove the old autosave functions since we're now using the hook
   
-  // Function to manually trigger autosave when needed
+  // Function to manually trigger save when needed
   const manualSave = async () => {
     if (saving || publishing) {
       return;
     }
     
     if (!isEditing || !id) {
-      return; // Can't autosave new posts (they don't have an ID yet)
+      return; // Can't save new posts (they don't have an ID yet)
     }
     
-    // Use the hook's triggerAutosave function with force=true
-    return await triggerAutosave(true);
+    // Use the hook's triggerSave function
+    return await triggerSave(true);
   };
   
   // Generate slug from title
   const generateSlug = () => {
+    if (!title || title.trim() === '') {
+      setValidationError('Cannot generate slug from empty title');
+      return;
+    }
+    
     const slug = title
+      .trim()
       .toLowerCase()
       .replace(/[^\w\s-]/g, '')
       .replace(/[\s_-]+/g, '-')
       .replace(/^-+|-+$/g, '');
     
+    if (!slug || slug === '') {
+      setValidationError('Generated slug is empty. Please enter a title with alphanumeric characters.');
+      return;
+    }
+    
     setSlug(slug);
+    setValidationError(''); // Clear any validation errors
   };
   
   // Add a tag
@@ -670,16 +675,24 @@ const BlogEditor = () => {
           </nav>
         </div>
         <button
-          onClick={() => {
+          onClick={async () => {
             if (hasUnsavedChanges) {
-              if (window.confirm('You have unsaved changes. Do you want to save before logging out?')) {
-                handleSave(new Event('logout') as any)
-                  .then(() => signOut())
-                  .catch(() => {
-                    if (window.confirm('Failed to save changes. Continue logging out?')) {
-                      signOut();
-                    }
-                  });
+              const shouldSave = window.confirm('You have unsaved changes. Do you want to save before logging out?');
+              
+              if (shouldSave) {
+                try {
+                  await manualSave();
+                  signOut();
+                } catch (error) {
+                  console.error('Error saving before logout:', error);
+                  if (window.confirm('Failed to save changes. Continue logging out?')) {
+                    signOut();
+                  }
+                }
+                return;
+              }
+              
+              if (!window.confirm('Continue logging out without saving?')) {
                 return;
               }
             }
@@ -716,16 +729,24 @@ const BlogEditor = () => {
             </Link>
           ))}
           <button
-            onClick={() => {
+            onClick={async () => {
               if (hasUnsavedChanges) {
-                if (window.confirm('You have unsaved changes. Do you want to save before logging out?')) {
-                  handleSave(new Event('logout') as any)
-                    .then(() => signOut())
-                    .catch(() => {
-                      if (window.confirm('Failed to save changes. Continue logging out?')) {
-                        signOut();
-                      }
-                    });
+                const shouldSave = window.confirm('You have unsaved changes. Do you want to save before logging out?');
+                
+                if (shouldSave) {
+                  try {
+                    await manualSave();
+                    signOut();
+                  } catch (error) {
+                    console.error('Error saving before logout:', error);
+                    if (window.confirm('Failed to save changes. Continue logging out?')) {
+                      signOut();
+                    }
+                  }
+                  return;
+                }
+                
+                if (!window.confirm('Continue logging out without saving?')) {
                   return;
                 }
               }
@@ -751,7 +772,7 @@ const BlogEditor = () => {
         <div className="mb-6 flex justify-between items-center w-full flex-wrap gap-4">
           
           <div className="flex items-center space-x-4 flex-wrap gap-2">
-            {/* Enhanced autosave indicator */}
+            {/* Manual save indicator */}
             {isEditing && (
               <div className="text-sm flex items-center px-3 py-1 rounded-full">
                 {isAutosaving ? (
@@ -762,7 +783,7 @@ const BlogEditor = () => {
                 ) : lastAutosaved ? (
                   <div className="text-green-600 flex items-center bg-green-50 px-2 py-1 rounded-full">
                     <CheckCircle size={14} className="mr-1" />
-                    <span className="whitespace-nowrap">Saved at {new Date(lastAutosaved).toLocaleTimeString()}</span>
+                    <span className="whitespace-nowrap">Last saved at {new Date(lastAutosaved).toLocaleTimeString()}</span>
                   </div>
                 ) : (
                   <div className="text-gray-500 flex items-center">
@@ -931,9 +952,26 @@ const BlogEditor = () => {
       
       {/* Recovery dialog for unsaved changes */}
       {showRecoveryDialog && recoveryData && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-2xl w-full m-4">
-            <h3 className="text-lg font-bold mb-2">Recover Unsaved Changes</h3>
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+          onClick={() => setShowRecoveryDialog(false)} // Close when clicking outside the modal
+        >
+          <div 
+            className="bg-white rounded-lg p-6 max-w-2xl w-full m-4"
+            onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal
+          >
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-bold">Recover Unsaved Changes</h3>
+              <button 
+                type="button"
+                onClick={() => setShowRecoveryDialog(false)}
+                className="text-gray-400 hover:text-gray-600"
+                aria-label="Close dialog"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            
             <p className="text-gray-600 mb-4">
               We found a more recent draft from {new Date(recoveryData.lastSaved).toLocaleString()}. 
               Would you like to recover these changes?
@@ -959,23 +997,47 @@ const BlogEditor = () => {
             
             <div className="flex justify-end gap-3">
               <button 
+                type="button"
                 onClick={() => {
-                  // Discard the local backup
-                  clearLocalBackup();
+                  // Discard the local backup - using try/catch to prevent errors
+                  try {
+                    clearLocalBackup();
+                    console.log('Local backup cleared');
+                    // Force hiding the dialog even if clearLocalBackup fails
+                    setShowRecoveryDialog(false);
+                  } catch (error) {
+                    console.error('Error clearing local backup:', error);
+                    // Force hide the dialog even on error
+                    setShowRecoveryDialog(false);
+                  }
                 }}
                 className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
               >
                 Discard
               </button>
               <button 
+                type="button"
                 onClick={() => {
-                  // Apply recovered data
-                  if (recoveryData.title) setTitle(recoveryData.title);
-                  if (recoveryData.content) setContent(recoveryData.content);
-                  if (recoveryData.excerpt) setExcerpt(recoveryData.excerpt);
-                  
-                  // Hide dialog and clear backup (we've applied it)
-                  setShowRecoveryDialog(false);
+                  // Apply recovered data - using try/catch to prevent errors
+                  try {
+                    if (recoveryData.title) setTitle(recoveryData.title);
+                    if (recoveryData.content) setContent(recoveryData.content);
+                    if (recoveryData.excerpt) setExcerpt(recoveryData.excerpt);
+                    
+                    // Clear local backup since we've applied it
+                    try {
+                      clearLocalBackup();
+                    } catch (error) {
+                      console.error('Error clearing local backup after recovery:', error);
+                    }
+                    
+                    // Force hiding the dialog
+                    setShowRecoveryDialog(false);
+                  } catch (error) {
+                    console.error('Error recovering draft:', error);
+                    // Force hide the dialog even on error
+                    setShowRecoveryDialog(false);
+                  }
                 }}
                 className="px-4 py-2 bg-brand-purple text-white rounded-md hover:bg-brand-purple-dark"
               >
@@ -1010,7 +1072,25 @@ const BlogEditor = () => {
                       type="text"
                       id="title"
                       value={title}
-                      onChange={(e) => setTitle(e.target.value)}
+                      onChange={(e) => {
+                        setTitle(e.target.value);
+                        // If no slug exists, auto-generate one when typing
+                        if (!slug) {
+                          // Debounce slug generation to not regenerate on every keystroke
+                          if (e.target.value.length > 3) {
+                            const cleanTitle = e.target.value
+                              .trim()
+                              .toLowerCase()
+                              .replace(/[^\w\s-]/g, '')
+                              .replace(/[\s_-]+/g, '-')
+                              .replace(/^-+|-+$/g, '');
+                              
+                            if (cleanTitle) {
+                              setSlug(cleanTitle);
+                            }
+                          }
+                        }
+                      }}
                       onBlur={() => !slug && generateSlug()}
                       className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-brand-purple focus:border-brand-purple"
                       placeholder="Enter post title"
@@ -1081,8 +1161,13 @@ const BlogEditor = () => {
                     <RichTextEditor
                       value={content}
                       onChange={(newContent) => {
+                        // Update the content state
                         setContent(newContent);
-                        handleContentChange();
+                        
+                        // Mark as having unsaved changes
+                        if (newContent !== content) {
+                          setHasUnsavedChanges(true);
+                        }
                       }}
                       placeholder="Write your blog post content here..."
                       postId={id}
