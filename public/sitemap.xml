@@ -3,42 +3,53 @@
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://www.zerovacancy.ai/</loc>
-    <lastmod>2024-03-14</lastmod>
+    <lastmod>2025-04-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
-      <image:loc>https://www.zerovacancy.ai/og-image.png</image:loc>
+      <image:loc>https://www.zerovacancy.ai/og-image-new.webp</image:loc>
       <image:title>ZeroVacancy - Property Content Creators</image:title>
       <image:caption>Connect with elite content creators who transform your spaces into compelling visual stories</image:caption>
     </image:image>
   </url>
   <url>
+    <loc>https://www.zerovacancy.ai/blog</loc>
+    <lastmod>2025-04-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://www.zerovacancy.ai/og-image-new.webp</image:loc>
+      <image:title>ZeroVacancy Blog - Property Marketing Insights</image:title>
+      <image:caption>Expert guides, tips and insights on property content creation</image:caption>
+    </image:image>
+  </url>
+  <url>
     <loc>https://www.zerovacancy.ai/terms</loc>
-    <lastmod>2024-03-14</lastmod>
+    <lastmod>2025-04-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://www.zerovacancy.ai/account</loc>
-    <lastmod>2024-03-14</lastmod>
+    <lastmod>2025-04-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.zerovacancy.ai/payment-confirmation</loc>
-    <lastmod>2024-03-14</lastmod>
+    <lastmod>2025-04-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
     <loc>https://www.zerovacancy.ai/connect/success</loc>
-    <lastmod>2024-03-14</lastmod>
+    <lastmod>2025-04-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
     <loc>https://www.zerovacancy.ai/connect/onboarding</loc>
-    <lastmod>2024-03-14</lastmod>
+    <lastmod>2025-04-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
