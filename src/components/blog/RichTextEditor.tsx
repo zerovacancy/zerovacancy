@@ -814,7 +814,11 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     // Insert from URL
     if (imageUrl) {
       try {
-        editor.chain().focus().setImage({ src: imageUrl }).run();
+        // Use insertContent instead of setImage for better compatibility
+        editor.chain().focus().insertContent({
+          type: 'image',
+          attrs: { src: imageUrl }
+        }).run();
         setImageUrl('');
         setIsImageMenuOpen(false);
         
@@ -856,7 +860,11 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           throw new Error('Failed to get valid URL from upload service');
         }
         
-        editor.chain().focus().setImage({ src: uploadedUrl }).run();
+        // Use insertContent instead of setImage for better compatibility
+        editor.chain().focus().insertContent({
+          type: 'image',
+          attrs: { src: uploadedUrl }
+        }).run();
         
         if (onImageUpload) {
           onImageUpload(uploadedUrl);
@@ -966,7 +974,11 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
               }
               
               // Insert the image at the current cursor position
-              editor.chain().focus().setImage({ src: uploadedUrl }).run();
+              // Use insertContent instead of setImage for better compatibility
+        editor.chain().focus().insertContent({
+          type: 'image',
+          attrs: { src: uploadedUrl }
+        }).run();
               
               if (onImageUpload) {
                 onImageUpload(uploadedUrl);
