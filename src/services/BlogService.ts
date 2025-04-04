@@ -327,11 +327,18 @@ export class BlogService {
       
       // Generate slug if not provided
       if (!postData.slug) {
-        postData.slug = postData.title
+        let baseSlug = postData.title
           .toLowerCase()
           .replace(/[^\w\s-]/g, '')
           .replace(/[\s_-]+/g, '-')
           .replace(/^-+|-+$/g, '');
+        
+        // Check if slug already exists
+        postData.slug = baseSlug;
+        await this.ensureUniqueSlug(postData);
+      } else {
+        // Also check custom slugs for uniqueness
+        await this.ensureUniqueSlug(postData);
       }
       
       // Calculate reading time if not provided
@@ -1143,5 +1150,49 @@ export class BlogService {
       console.error('Error getting default author:', error);
       throw error;
     }
+  }
+
+  // Helper to ensure a blog post has a unique slug
+  static async ensureUniqueSlug(postData: any): Promise<void> {
+    if (!postData.slug) return;
+    
+    let baseSlug = postData.slug;
+    let currentSlug = baseSlug;
+    let counter = 1;
+    let isUnique = false;
+    
+    while (!isUnique) {
+      // Check if this slug exists
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .select('id')
+        .eq('slug', currentSlug)
+        .maybeSingle();
+      
+      // If updating existing post, exclude current post
+      if (data && 'id' in postData && data.id === postData.id) {
+        // This is the same post, so slug is fine
+        isUnique = true;
+        break;
+      }
+      
+      // If no existing post with this slug, we're good
+      if (!data || error) {
+        isUnique = true;
+        break;
+      }
+      
+      // Otherwise, increment counter and try again
+      currentSlug = `${baseSlug}-${counter}`;
+      counter++;
+      
+      // Safety limit to prevent infinite loops
+      if (counter > 100) {
+        throw new Error('Could not generate a unique slug after 100 attempts');
+      }
+    }
+    
+    // Set the unique slug on the post data
+    postData.slug = currentSlug;
   }
 }
