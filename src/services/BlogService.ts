@@ -366,8 +366,9 @@ export class BlogService {
         reading_time: postData.readingTime || null
       };
       
-      // TEMPORARILY REMOVE SEO FIELDS until migration is applied
-      // Do not include SEO fields to prevent schema errors
+      // SEO fields - now enabled after migration
+      supabasePost.seo_title = postData.seoTitle || postData.title;
+      supabasePost.seo_description = postData.seoDescription || postData.excerpt || null;
       
       // Log each field to verify it's being sent correctly
       console.log('Creating post with these fields:', {
@@ -482,8 +483,9 @@ export class BlogService {
         updated_at: new Date().toISOString()
       };
       
-      // TEMPORARILY REMOVE SEO FIELDS until migration is applied
-      // Do not include SEO fields to prevent schema errors
+      // SEO fields - now enabled after migration
+      supabasePost.seo_title = cleanPostData.seoTitle;
+      supabasePost.seo_description = cleanPostData.seoDescription;
       
       // IMPORTANT: Make sure key fields are sent even if undefined
       // This fixes issues where fields weren't being updated
