@@ -10,6 +10,7 @@ import TableRow from '@tiptap/extension-table-row';
 import TableCell from '@tiptap/extension-table-cell';
 import TableHeader from '@tiptap/extension-table-header';
 import CodeBlock from '@tiptap/extension-code-block';
+import { Extension } from '@tiptap/core';
 import { 
   Bold, 
   Italic, 
@@ -40,9 +41,52 @@ import {
   Crop,
   MoveHorizontal,
   MoveVertical,
-  ChevronsLeftRight
+  ChevronsLeftRight,
+  Sparkles,
+  Type
 } from 'lucide-react';
 import { BlogService } from '@/services/BlogService';
+
+// Let's create a button for manual formatting instead
+const formatTitleCase = (text) => {
+  if (!text) return text;
+  
+  return text.replace(/\b\w+/g, word => {
+    // Skip small words (prepositions, articles, etc.)
+    const smallWords = ['a', 'an', 'the', 'and', 'but', 'or', 'for', 'nor', 'on', 'at', 'to', 'by', 'from'];
+    if (smallWords.includes(word.toLowerCase())) {
+      return word;
+    }
+    return word.charAt(0).toUpperCase() + word.slice(1);
+  });
+};
+
+const formatAltText = (src) => {
+  if (!src) return '';
+  
+  try {
+    // Extract a decent alt text from filename
+    const url = new URL(src);
+    const filename = url.pathname.split('/').pop() || '';
+    const baseName = filename.split('.')[0] || '';
+    
+    // Clean up filename to create decent alt text
+    const cleanedName = baseName
+      .replace(/[-_]/g, ' ')
+      .replace(/([a-z])([A-Z])/g, '$1 $2') // Handle camelCase
+      .trim();
+    
+    if (cleanedName) {
+      // Capitalize first letter
+      return cleanedName.charAt(0).toUpperCase() + cleanedName.slice(1);
+    }
+  } catch (e) {
+    // If URL parsing fails, just continue
+    console.log('Could not auto-format image alt text:', e);
+  }
+  
+  return 'Image';
+};
 
 // Resizable Image Component
 const ResizableImageComponent = ({ node, updateAttributes, selected, extension }) => {
@@ -634,6 +678,33 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
       setIsCodeBlockMenuOpen(true);
     };
     
+    // Format selection shortcut
+    const handleFormatSelection = () => {
+      // Handle formatting like the button
+      const { state } = editor;
+      const { selection } = state;
+      
+      // For headings, apply title case
+      if (editor.isActive('heading')) {
+        const { from, to } = selection;
+        const text = state.doc.textBetween(from, to, ' ');
+        const formattedText = formatTitleCase(text);
+        
+        if (formattedText !== text) {
+          editor.chain().focus().insertContent(formattedText).run();
+        }
+      }
+      
+      // For images, improve alt text if selected
+      else if (editor.isActive('image')) {
+        const node = state.doc.nodeAt(selection.from);
+        if (node && (!node.attrs.alt || node.attrs.alt === 'Image')) {
+          const betterAlt = formatAltText(node.attrs.src);
+          editor.chain().focus().setImageAttributes({ alt: betterAlt }).run();
+        }
+      }
+    };
+    
     // Setup event listeners
     const keyboardShortcuts = (e: KeyboardEvent) => {
       // Skip shortcuts if any menus are open
@@ -664,6 +735,10 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           case 'j':
             e.preventDefault();
             handleCodeBlock();
+            break;
+          case 'f':
+            e.preventDefault();
+            handleFormatSelection();
             break;
         }
         
@@ -1370,9 +1445,129 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
               icon={<ImageIcon size={16} />} 
               onClick={openImageMenu}
               title="Add Image"
-              className="p-1.5 text-gray-700 hover:bg-gray-50 rounded-r"
+              className="p-1.5 text-gray-700 hover:bg-gray-50"
             />
           )}
+          <ToolbarButton 
+            icon={<Sparkles size={16} />} 
+            onClick={() => {
+              try {
+                // For headings - check if we have a heading element selected
+                if (editor.isActive('heading')) {
+                  // Get the current selection
+                  const { state } = editor;
+                  const { selection } = state;
+                  
+                  // Make sure we have a selection
+                  if (selection.empty) {
+                    // Select the entire heading if nothing is selected
+                    const headingNode = state.doc.nodeAt(selection.from);
+                    if (headingNode) {
+                      const headingText = headingNode.textContent;
+                      const formattedText = formatTitleCase(headingText);
+                      
+                      // Replace the entire heading content
+                      const pos = selection.from;
+                      const resolvedPos = state.doc.resolve(pos);
+                      const headingStart = resolvedPos.start();
+                      const headingEnd = resolvedPos.end();
+                      
+                      editor.chain()
+                        .focus()
+                        .deleteRange({ from: headingStart, to: headingEnd })
+                        .insertContentAt(headingStart, formattedText)
+                        .run();
+                      
+                      alert("Title formatted to title case!");
+                      return;
+                    }
+                  } else {
+                    // Format the selected text
+                    const { from, to } = selection;
+                    const text = state.doc.textBetween(from, to, ' ');
+                    const formattedText = formatTitleCase(text);
+                    
+                    // Only update if there's a change
+                    if (formattedText !== text) {
+                      // Use replaceWith for better compatibility
+                      editor.chain()
+                        .focus()
+                        .deleteRange({ from, to })
+                        .insertContentAt(from, formattedText)
+                        .run();
+                      
+                      alert("Selection formatted to title case!");
+                      return;
+                    } else {
+                      alert("Text already formatted correctly.");
+                      return;
+                    }
+                  }
+                }
+                
+                // For images - use DOM selection as fallback
+                const images = document.querySelectorAll('.ProseMirror img');
+                let imageFormatted = false;
+                
+                // Check each image to see if it's selected (has a specific class or style)
+                images.forEach(img => {
+                  // Check if this is the selected image
+                  if (img === selectedImage || 
+                      img.classList.contains('ProseMirror-selectednode') || 
+                      img.parentElement?.classList.contains('ProseMirror-selectednode')) {
+                    
+                    // Generate better alt text
+                    const src = img.getAttribute('src');
+                    if (src) {
+                      const betterAlt = formatAltText(src);
+                      
+                      // Set it directly on the DOM
+                      img.setAttribute('alt', betterAlt);
+                      
+                      // Force a selection of the image to ensure we can modify it
+                      const imgPos = editor.view.posAtDOM(img, 0);
+                      if (imgPos) {
+                        // Select the node
+                        editor.view.dispatch(
+                          editor.view.state.tr.setSelection(
+                            editor.view.state.selection.constructor.create(
+                              editor.view.state.doc, imgPos
+                            )
+                          )
+                        );
+                        
+                        // Set the attributes
+                        editor.chain()
+                          .focus()
+                          .command(({ tr }) => {
+                            tr.setNodeMarkup(imgPos, undefined, { 
+                              ...editor.view.state.selection.node.attrs,
+                              alt: betterAlt 
+                            });
+                            return true;
+                          })
+                          .run();
+                      }
+                      
+                      alert("Image alt text updated to: " + betterAlt);
+                      imageFormatted = true;
+                      return;
+                    }
+                  }
+                });
+                
+                // If we didn't format anything, show the instruction message
+                if (!imageFormatted) {
+                  alert("Format Tool Usage:\n\n1. For Headings: Select text in a heading and click this button to auto-capitalize titles.\n\n2. For Images: Click on an image first, then click this button to generate better alt text.");
+                }
+              } catch (error) {
+                console.error("Error in auto-formatting:", error);
+                alert("An error occurred while formatting. Please try again.");
+              }
+            }}
+            title="Auto-Format Selection (Format titles and image descriptions)"
+            className="p-1.5 text-gray-700 hover:bg-gray-50 rounded-r"
+          />
         </div>
         
         {/* Group 7: History (right aligned) */}
