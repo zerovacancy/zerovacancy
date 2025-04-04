@@ -1,7 +1,36 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+/* Fonts loaded dynamically by FontLoader component - no import needed here */
+/* @import removed to prevent duplicate loading and optimization issues */
+
+/* Font variables */
+:root {
+  /* Base font stacks - used as fallbacks before web fonts load */
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, sans-serif;
+  --font-serif: Georgia, "Times New Roman", Times, serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  
+  /* ZeroVacancy specific fonts */
+  --font-inter: "Inter", var(--font-sans);
+  --font-jakarta: "Plus Jakarta Sans", var(--font-sans);
+  --font-space: "Space Grotesk", var(--font-mono);
+}
+
+/* Font loading state indicator */
+.fonts-loading {
+  /* Styles applied during font loading */
+}
+
+.fonts-loaded {
+  /* Styles applied after fonts are loaded */
+}
 
 @layer base {
+  /* Setting content-visibility: auto on non-critical text to improve performance */
+  .content-below-fold {
+    content-visibility: auto;
+    contain-intrinsic-size: 0 500px; /* Approximate space reservation */
+  }
+  
   h1 {
     @apply text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight font-jakarta text-brand-purple-dark;
   }
@@ -40,6 +69,17 @@
 
   small {
     @apply text-sm text-brand-text-light;
+  }
+  
+  /* Font metrics adjustment to prevent layout shifts */
+  @supports (font-size-adjust: 100%) {
+    h1, h2, h3, h4, h5, h6 {
+      font-size-adjust: 0.5;
+    }
+    
+    p, li, input, textarea, button {
+      font-size-adjust: 0.5;
+    }
   }
 }
 
