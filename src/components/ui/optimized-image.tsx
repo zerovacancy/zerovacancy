@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
+import { optimizeImageAlt } from '@/utils/seo-utils';
 
 interface OptimizedImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   src: string;
@@ -12,6 +13,8 @@ interface OptimizedImageProps extends React.ImgHTMLAttributes<HTMLImageElement> 
   blurPlaceholder?: boolean;
   sizes?: string;
   quality?: 'low' | 'medium' | 'high';
+  lcpCandidate?: boolean; // Flag for potential LCP image
+  seoKeywords?: string[]; // SEO keywords for optimizing alt text
 }
 
 export function OptimizedImage({
@@ -25,6 +28,8 @@ export function OptimizedImage({
   blurPlaceholder = true,
   sizes,
   quality = 'medium',
+  lcpCandidate = false,
+  seoKeywords,
   ...props
 }: OptimizedImageProps) {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -40,8 +45,14 @@ export function OptimizedImage({
   useEffect(() => {
     setIsMobile(window.innerWidth < 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
     
+    // For LCP images or priority images, always load immediately
+    if (priority || lcpCandidate) {
+      setIsVisible(true);
+      return;
+    }
+    
     // Set up intersection observer for better performance
-    if (imgRef.current && !priority) {
+    if (imgRef.current) {
       observerRef.current = new IntersectionObserver(
         (entries) => {
           if (entries[0].isIntersecting) {
@@ -50,7 +61,8 @@ export function OptimizedImage({
           }
         },
         {
-          rootMargin: '200px', // Start loading when image is 200px from viewport
+          // Larger rootMargin for above-the-fold images for faster loading
+          rootMargin: '300px', // Start loading when image is 300px from viewport
           threshold: 0.01
         }
       );
@@ -60,7 +72,7 @@ export function OptimizedImage({
     } else {
       setIsVisible(true);
     }
-  }, [priority]);
+  }, [priority, lcpCandidate]);
 
   // Create WebP version path from original
   const getWebPPath = (originalPath: string) => {
@@ -167,12 +179,12 @@ export function OptimizedImage({
             {srcSet && <source srcSet={srcSet} sizes={sizes || '100vw'} />}
             <img
               src={src}
-              alt={alt}
+              alt={seoKeywords ? optimizeImageAlt(alt, seoKeywords) : alt}
               width={width}
               height={height}
               loading={loading}
               decoding="async"
-              fetchPriority={priority ? "high" : "auto"}
+              fetchPriority={(priority || lcpCandidate) ? "high" : "auto"}
               onLoad={handleLoad}
               onError={handleError}
               className={cn(
@@ -187,12 +199,12 @@ export function OptimizedImage({
         ) : (
           <img
             src={src}
-            alt={alt}
+            alt={seoKeywords ? optimizeImageAlt(alt, seoKeywords) : alt}
             width={width}
             height={height}
             loading={loading}
             decoding="async"
-            fetchPriority={priority ? "high" : "auto"}
+            fetchPriority={(priority || lcpCandidate) ? "high" : "auto"}
             onLoad={handleLoad}
             onError={handleError}
             className={cn(

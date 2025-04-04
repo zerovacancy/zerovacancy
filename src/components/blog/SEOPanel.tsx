@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Globe, Share2, AlertCircle, Check, XCircle } from 'lucide-react';
+import { Search, Globe, Share2, AlertCircle, Check, XCircle, Info, Star, Lightbulb } from 'lucide-react';
 
 interface SEOPanelProps {
   title: string;
@@ -8,6 +8,7 @@ interface SEOPanelProps {
   onTitleChange?: (value: string) => void;
   onDescriptionChange?: (value: string) => void;
   baseUrl?: string;
+  suggestedKeywords?: string[];
 }
 
 const SEOPanel: React.FC<SEOPanelProps> = ({
@@ -16,7 +17,8 @@ const SEOPanel: React.FC<SEOPanelProps> = ({
   slug,
   onTitleChange,
   onDescriptionChange,
-  baseUrl = 'https://zerovacancy.com/blog'
+  baseUrl = 'https://zerovacancy.ai/blog',
+  suggestedKeywords = ['property marketing', 'real estate content', 'property photography', 'content creation']
 }) => {
   // Character limits
   const TITLE_MAX_LENGTH = 60;
@@ -224,6 +226,81 @@ const SEOPanel: React.FC<SEOPanelProps> = ({
             </div>
           </div>
         )}
+        
+        {/* Keyword suggestions */}
+        <div className="pt-3 border-t border-gray-200 mt-4">
+          <div className="flex gap-2 items-center mb-2">
+            <Lightbulb size={14} className="text-amber-500" />
+            <h4 className="text-xs font-medium text-gray-700">Suggested Keywords</h4>
+          </div>
+          
+          <div className="flex flex-wrap gap-2 mt-2">
+            {suggestedKeywords.map((keyword, index) => (
+              <div 
+                key={index}
+                className="px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded-full text-xs text-gray-700 cursor-pointer transition-colors duration-200"
+                onClick={() => {
+                  // Check if keyword is in title or description
+                  const titleContains = seoTitle.toLowerCase().includes(keyword.toLowerCase());
+                  const descriptionContains = seoDescription.toLowerCase().includes(keyword.toLowerCase());
+                  
+                  // If not in title and there's room, suggest adding to title
+                  if (!titleContains && (seoTitle.length + keyword.length + 3) <= TITLE_MAX_LENGTH) {
+                    if (confirm(`Add "${keyword}" to your SEO title?`)) {
+                      const newTitle = `${seoTitle}${seoTitle ? ' - ' : ''}${keyword}`;
+                      setSeoTitle(newTitle);
+                      if (onTitleChange) onTitleChange(newTitle);
+                    }
+                  }
+                  // If not in description and there's room, suggest adding to description
+                  else if (!descriptionContains && (seoDescription.length + keyword.length + 3) <= DESCRIPTION_MAX_LENGTH) {
+                    if (confirm(`Add "${keyword}" to your meta description?`)) {
+                      const newDesc = `${seoDescription}${seoDescription ? '. ' : ''}Learn more about ${keyword}.`;
+                      setSeoDescription(newDesc);
+                      if (onDescriptionChange) onDescriptionChange(newDesc);
+                    }
+                  }
+                  // If already in both, show that it's being used
+                  else if (titleContains && descriptionContains) {
+                    alert(`"${keyword}" is already used in both your title and description. Great job!`);
+                  }
+                  // If in one but not the other with no room, alert user
+                  else {
+                    alert(`There's not enough space to add "${keyword}". Try shortening your title or description first.`);
+                  }
+                }}
+              >
+                {keyword}
+                {seoTitle.toLowerCase().includes(keyword.toLowerCase()) && 
+                 seoDescription.toLowerCase().includes(keyword.toLowerCase()) && 
+                  <span className="ml-1 text-green-500">✓</span>
+                }
+              </div>
+            ))}
+          </div>
+          <p className="mt-2 text-xs text-gray-500">
+            Click on a keyword to add it to your title or description. Keywords used in both get better rankings.
+          </p>
+        </div>
+        
+        {/* Structured data preview */}
+        <div className="pt-3 border-t border-gray-200 mt-4">
+          <div className="flex gap-2 items-center mb-2">
+            <Info size={14} className="text-blue-500" />
+            <h4 className="text-xs font-medium text-gray-700">Structured Data</h4>
+          </div>
+          <p className="text-xs text-gray-600">
+            Your post will include BlogPosting structured data for better search engine visibility and rich results.
+          </p>
+          <div className="mt-2 p-2 bg-gray-50 rounded border border-gray-200 text-xs font-mono overflow-auto max-h-24">
+            {`{
+  "@type": "BlogPosting",
+  "headline": "${seoTitle || title}",
+  "description": "${seoDescription || description}",
+  "url": "${baseUrl}/${slug}"
+}`}
+          </div>
+        </div>
       </div>
     </div>
   );

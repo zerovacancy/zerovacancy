@@ -11,6 +11,9 @@ export interface SEOProps {
   ogImageAlt?: string;
   noindex?: boolean;
   structuredData?: object | object[];
+  hreflang?: Array<{rel: string, hreflang: string, href: string}>;
+  keywords?: string;
+  author?: string;
 }
 
 export const helmetContext = {};
@@ -28,6 +31,9 @@ const SEO: React.FC<SEOProps> = ({
   ogImageAlt = 'ZeroVacancy - The premium marketplace for real estate content creators',
   noindex = false,
   structuredData,
+  hreflang,
+  keywords = 'property marketing, content creators, real estate photography, property staging, virtual staging',
+  author = 'ZeroVacancy Team',
 }) => {
   const canonical = formatCanonicalURL(canonicalPath);
   
@@ -38,6 +44,23 @@ const SEO: React.FC<SEOProps> = ({
       <meta name="description" content={description} />
       <link rel="canonical" href={canonical} />
       {noindex && <meta name="robots" content="noindex, nofollow" />}
+      {!noindex && <meta name="robots" content="index, follow" />}
+      <meta name="keywords" content={keywords} />
+      <meta name="author" content={author} />
+      
+      {/* Mobile Optimization */}
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+      <meta name="theme-color" content="#ffffff" />
+      
+      {/* International Support (hreflang) */}
+      {hreflang && hreflang.map((item, index) => (
+        <link 
+          key={`hreflang-${index}`}
+          rel={item.rel}
+          hrefLang={item.hreflang}
+          href={item.href}
+        />
+      ))}
       
       {/* Open Graph Tags */}
       <meta property="og:title" content={title} />
@@ -57,6 +80,11 @@ const SEO: React.FC<SEOProps> = ({
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={ogImage} />
       <meta name="twitter:image:alt" content={ogImageAlt} />
+      
+      {/* DNS Prefetch for Performance */}
+      <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+      <link rel="dns-prefetch" href="//fonts.gstatic.com" />
+      <link rel="dns-prefetch" href="//www.googletagmanager.com" />
       
       {/* Structured Data JSON-LD */}
       {structuredData && Array.isArray(structuredData) ? (

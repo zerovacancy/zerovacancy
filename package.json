@@ -13,7 +13,10 @@
         "quick-optimize": "node quick-optimize.mjs",
         "optimize-images": "node optimize-images.js",
         "update-image-refs": "node update-image-references.js",
-        "perf-images": "npm run optimize-images && npm run update-image-refs"
+        "perf-images": "npm run optimize-images && npm run update-image-refs",
+        "generate-sitemap": "ts-node src/scripts/generate-sitemap.ts",
+        "seo-audit": "ts-node src/scripts/verify-seo.ts",
+        "seo-check": "npm run seo-audit && npm run generate-sitemap"
     },
     "dependencies": {
         "@hookform/resolvers": "^3.9.0",

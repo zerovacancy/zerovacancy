@@ -97,3 +97,46 @@ export const generateFAQSchema = (faqs: Array<{question: string, answer: string}
     }))
   };
 };
+
+// Breadcrumb structured data
+export const generateBreadcrumbSchema = (breadcrumbs: Array<{name: string, url: string}>) => {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": breadcrumbs.map((crumb, index) => ({
+      "@type": "ListItem",
+      "position": index + 1,
+      "name": crumb.name,
+      "item": crumb.url
+    }))
+  };
+};
+
+// Property listing structured data generator
+export const generatePropertyListingSchema = (property: {
+  name: string;
+  description: string;
+  image: string;
+  address: string;
+  price?: string;
+  amenities?: string[];
+  url: string;
+}) => {
+  return {
+    "@context": "https://schema.org",
+    "@type": "RealEstateListing",
+    "name": property.name,
+    "description": property.description,
+    "image": property.image,
+    "url": property.url,
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": property.address
+    },
+    ...(property.price && { "price": property.price }),
+    ...(property.amenities && { "amenityFeature": property.amenities.map(amenity => ({
+      "@type": "LocationFeatureSpecification",
+      "name": amenity
+    }))})    
+  };
+};

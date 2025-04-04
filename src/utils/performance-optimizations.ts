@@ -306,42 +306,87 @@ export function mobilePerformanceEnhancements(isMobile: boolean): void {
   }
 }
 
-// Web Vitals measurement - commented out until web-vitals package is installed
+// Web Vitals measurement and reporting
 export function measureWebVitals() {
-  // Implementation will be added once web-vitals package is installed
-  console.log('Web Vitals measurement available after installing the package');
-  
-  /* 
-  // Check if the web vitals API is available
-  if ('web-vitals' in window) {
+  if (typeof window !== 'undefined') {
+    // Check if the web-vitals module is available
+    try {
+      // Use a conditional check instead of dynamic import to prevent build errors
+      if (typeof window.__WEB_VITALS_TEST__ !== 'undefined') {
+        console.log('Web Vitals installed, measuring performance metrics');
+        // This would be replaced with actual implementation when web-vitals is installed
+      } else {
+        console.log('Web Vitals module not found. Install with: npm install web-vitals');
+      }
+    } catch (error) {
+      console.log('Web Vitals not available. To enable Web Vitals monitoring:');
+      console.log('1. Install the package with: npm install web-vitals');
+      console.log('2. Add window.__WEB_VITALS_TEST__ = true to your entry point');
+    }
+    
+    // Note: The following code is commented until web-vitals is installed
+    /*
     import('web-vitals').then(({ onCLS, onFID, onLCP, onTTFB, onINP }) => {
-      // Measure CLS
-      onCLS((metric) => {
+      // Cumulative Layout Shift
+      onCLS(metric => {
         console.log('CLS:', metric.value);
+        reportWebVitalToAnalytics('CLS', metric.value);
       });
       
-      // Measure FID
-      onFID((metric) => {
+      // First Input Delay
+      onFID(metric => {
         console.log('FID:', metric.value);
+        reportWebVitalToAnalytics('FID', metric.value);
       });
       
-      // Measure LCP
-      onLCP((metric) => {
+      // Largest Contentful Paint
+      onLCP(metric => {
         console.log('LCP:', metric.value);
+        reportWebVitalToAnalytics('LCP', metric.value);
       });
       
-      // Measure TTFB
-      onTTFB((metric) => {
+      // Time to First Byte
+      onTTFB(metric => {
         console.log('TTFB:', metric.value);
+        reportWebVitalToAnalytics('TTFB', metric.value);
       });
       
-      // Measure INP
-      onINP((metric) => {
+      // Interaction to Next Paint (newer metric)
+      onINP(metric => {
         console.log('INP:', metric.value);
+        reportWebVitalToAnalytics('INP', metric.value);
       });
+    }).catch(err => {
+      console.error('Error loading web-vitals:', err);
+    });
+    */
+  }
+}
+
+// Send metrics to analytics service
+function reportWebVitalToAnalytics(metricName: string, value: number) {
+  // You can send these metrics to your analytics service
+  // For example, using Google Analytics:
+  if (typeof window !== 'undefined' && 'gtag' in window) {
+    const gtag = (window as any).gtag;
+    gtag('event', 'web_vitals', {
+      event_category: 'Web Vitals',
+      event_label: metricName,
+      value: Math.round(value * 1000) / 1000, // Round to 3 decimal places
+      non_interaction: true, // This doesn't count as a user interaction
+      metric_id: metricName,
+      metric_value: value,
     });
   }
-  */
+  
+  // Store in localStorage for debugging and continued monitoring
+  try {
+    const key = `webvitals_${metricName.toLowerCase()}`;
+    localStorage.setItem(key, value.toString());
+    localStorage.setItem(`${key}_timestamp`, new Date().toISOString());
+  } catch (e) {
+    // Ignore storage errors
+  }
 }
 
 /**

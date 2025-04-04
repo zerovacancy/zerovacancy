@@ -1,4 +1,36 @@
 User-agent: *
 Allow: /
+Disallow: /admin/
+Disallow: /connect/refresh
+Disallow: /auth-callback
+Disallow: /payment-confirmation
+
+# Block staging environments
+User-agent: *
+Disallow: /staging/
+
+# Block specific crawlers from heavy resources
+User-agent: Baiduspider
+Disallow: /images/
+Disallow: /*.jpg$
+Disallow: /*.jpeg$
+Disallow: /*.png$
+Disallow: /*.gif$
+Disallow: /*.webp$
+
+User-agent: Yandex
+Disallow: /images/
+Disallow: /*.jpg$
+Disallow: /*.jpeg$
+Disallow: /*.png$
+Disallow: /*.gif$
+Disallow: /*.webp$
+
+# Allow primary crawlers full access to content
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
 
 Sitemap: https://www.zerovacancy.ai/sitemap.xml
