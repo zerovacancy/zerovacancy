@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Globe, Share2, AlertCircle, Check } from 'lucide-react';
+import { Search, Globe, Share2, AlertCircle, Check, XCircle } from 'lucide-react';
 
 interface SEOPanelProps {
   title: string;
@@ -31,8 +31,14 @@ const SEOPanel: React.FC<SEOPanelProps> = ({
   const titleCharCount = seoTitle.length;
   const descriptionCharCount = seoDescription.length;
   
-  // Update title function
+  // SEO functionality temporarily disabled
+  const seoFeatureDisabled = true;
+  
+  // Update title function (disabled for now)
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // SEO feature temporarily disabled
+    if (seoFeatureDisabled) return;
+    
     const newValue = e.target.value;
     setSeoTitle(newValue);
     if (onTitleChange) {
@@ -40,8 +46,11 @@ const SEOPanel: React.FC<SEOPanelProps> = ({
     }
   };
   
-  // Update description function
+  // Update description function (disabled for now)
   const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    // SEO feature temporarily disabled
+    if (seoFeatureDisabled) return;
+    
     const newValue = e.target.value;
     setSeoDescription(newValue);
     if (onDescriptionChange) {
@@ -121,19 +130,28 @@ const SEOPanel: React.FC<SEOPanelProps> = ({
         </div>
       </div>
       
-      {/* SEO fields */}
-      <div className="space-y-4">
+      {/* SEO Feature Temporarily Disabled Notice */}
+      <div className="bg-amber-50 border border-amber-200 rounded-md p-4 mb-4">
+        <div className="flex items-center gap-2 mb-2">
+          <XCircle size={18} className="text-amber-500" />
+          <h3 className="text-sm font-medium text-amber-800">SEO Feature Temporarily Disabled</h3>
+        </div>
+        <p className="text-xs text-amber-700">
+          The SEO enhancement feature is temporarily unavailable due to database schema updates. 
+          The blog post will use the main title and excerpt for SEO purposes. 
+          This feature will be enabled in a future update.
+        </p>
+      </div>
+      
+      {/* SEO fields - Disabled */}
+      <div className="space-y-4 opacity-50 pointer-events-none">
         {/* Title field */}
         <div>
           <div className="flex justify-between">
             <label htmlFor="seo-title" className="block text-sm font-medium text-gray-700">
-              SEO Title
+              SEO Title (Disabled)
             </label>
-            <span 
-              className={`text-xs ${
-                titleCharCount > TITLE_MAX_LENGTH ? 'text-red-500 font-medium' : 'text-gray-500'
-              }`}
-            >
+            <span className="text-xs text-gray-500">
               {titleCharCount}/{TITLE_MAX_LENGTH}
             </span>
           </div>
@@ -141,16 +159,12 @@ const SEOPanel: React.FC<SEOPanelProps> = ({
             type="text"
             id="seo-title"
             value={seoTitle}
-            onChange={handleTitleChange}
-            className={`mt-1 block w-full border rounded-md shadow-sm py-2 px-3 sm:text-sm ${
-              titleCharCount > TITLE_MAX_LENGTH 
-                ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
-                : 'border-gray-300 focus:ring-brand-purple focus:border-brand-purple'
-            }`}
-            placeholder="Title for search engines (defaults to post title)"
+            disabled
+            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm bg-gray-100"
+            placeholder="Feature temporarily disabled"
           />
           <p className="mt-1 text-xs text-gray-500">
-            This appears as the clickable headline in search results
+            This feature will be available soon
           </p>
         </div>
         
@@ -158,30 +172,22 @@ const SEOPanel: React.FC<SEOPanelProps> = ({
         <div>
           <div className="flex justify-between">
             <label htmlFor="seo-description" className="block text-sm font-medium text-gray-700">
-              Meta Description
+              Meta Description (Disabled)
             </label>
-            <span 
-              className={`text-xs ${
-                descriptionCharCount > DESCRIPTION_MAX_LENGTH ? 'text-red-500 font-medium' : 'text-gray-500'
-              }`}
-            >
+            <span className="text-xs text-gray-500">
               {descriptionCharCount}/{DESCRIPTION_MAX_LENGTH}
             </span>
           </div>
           <textarea
             id="seo-description"
             value={seoDescription}
-            onChange={handleDescriptionChange}
+            disabled
             rows={3}
-            className={`mt-1 block w-full border rounded-md shadow-sm py-2 px-3 sm:text-sm ${
-              descriptionCharCount > DESCRIPTION_MAX_LENGTH 
-                ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
-                : 'border-gray-300 focus:ring-brand-purple focus:border-brand-purple'
-            }`}
-            placeholder="Description that appears in search results (defaults to post excerpt)"
+            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 sm:text-sm bg-gray-100"
+            placeholder="Feature temporarily disabled"
           />
           <p className="mt-1 text-xs text-gray-500">
-            The description influences click-through rates from search results
+            This feature will be available soon
           </p>
         </div>
         

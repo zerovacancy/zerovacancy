@@ -366,25 +366,8 @@ export class BlogService {
         reading_time: postData.readingTime || null
       };
       
-      // Only include SEO fields if they exist in the schema
-      try {
-        // Check if SEO columns exist in the database by trying a simple query first
-        const { error } = await supabase
-          .from('blog_posts')
-          .select('seo_title, seo_description')
-          .limit(1);
-        
-        // If no error, the columns exist, so include them
-        if (!error) {
-          console.log('SEO columns exist, including them in create');
-          supabasePost.seo_title = postData.seoTitle || postData.title;
-          supabasePost.seo_description = postData.seoDescription || postData.excerpt || null;
-        } else {
-          console.warn('SEO columns not found in schema, skipping in create', error.message);
-        }
-      } catch (err) {
-        console.warn('Error checking for SEO columns, will skip them in create', err);
-      }
+      // TEMPORARILY REMOVE SEO FIELDS until migration is applied
+      // Do not include SEO fields to prevent schema errors
       
       // Log each field to verify it's being sent correctly
       console.log('Creating post with these fields:', {
@@ -499,25 +482,8 @@ export class BlogService {
         updated_at: new Date().toISOString()
       };
       
-      // Only include SEO fields if they exist in the schema
-      try {
-        // Check if SEO columns exist in the database by trying a simple query first
-        const { error } = await supabase
-          .from('blog_posts')
-          .select('seo_title, seo_description')
-          .limit(1);
-        
-        // If no error, the columns exist, so include them
-        if (!error) {
-          console.log('SEO columns exist, including them in update');
-          supabasePost.seo_title = cleanPostData.seoTitle;
-          supabasePost.seo_description = cleanPostData.seoDescription;
-        } else {
-          console.warn('SEO columns not found in schema, skipping', error);
-        }
-      } catch (err) {
-        console.warn('Error checking for SEO columns, will skip them', err);
-      }
+      // TEMPORARILY REMOVE SEO FIELDS until migration is applied
+      // Do not include SEO fields to prevent schema errors
       
       // IMPORTANT: Make sure key fields are sent even if undefined
       // This fixes issues where fields weren't being updated
