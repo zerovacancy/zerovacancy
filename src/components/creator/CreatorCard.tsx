@@ -568,7 +568,7 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                       <img 
                         src={example}
                         alt={`${creator.name}'s work ${index + 1}`}
-                        className="object-cover w-full h-full"
+                        className="w-full h-full"
                         style={{
                           width: '100%',
                           height: '100%',

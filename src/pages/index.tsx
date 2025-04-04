@@ -681,17 +681,14 @@ const Index = () => {
               paddingTop: '0', // Removed top padding for proper centering
               paddingBottom: '0', // Removed bottom padding for proper centering
               minHeight: 'auto',
-              height: 'auto', // Allow the section to size to its content
               marginBottom: '-30px', // Add negative margin to eliminate gap
               position: 'relative',
               zIndex: 70, // Consistent z-index with mobile
               width: '100%', // Ensure full width
               maxWidth: '100%', // Prevent overflow
               height: '650px', // Match the height to the CSS
-              minHeight: '650px' // Consistent minimum height
             })
           }}
-          data-hero-section="true"
           className={cn(
             "w-full bg-[#F9F6EC]", // Tan/gold background for hero section (desktop)
             !isMobile && "flex items-center justify-center pt-0 pb-0", // Reduced vertical padding

@@ -578,7 +578,6 @@ export const Hero = () => {
   return (
     <section
       id="hero" 
-      data-hero-section="true"
       ref={sectionRef}
       className="flex flex-col items-center w-full bg-[#F9F6EC] relative"
       style={{
