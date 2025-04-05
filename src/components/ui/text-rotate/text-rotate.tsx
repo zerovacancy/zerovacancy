@@ -40,10 +40,10 @@ const TextRotate = forwardRef<TextRotateRef, TextRotateProps>(
         ease: "easeInOut" // Smoother easing
       } : transition;
     
-    // Simple fade transitions for mobile without vertical movement
-    const adaptedInitial = isMobile ? { opacity: 0 } : initial;
-    const adaptedAnimate = isMobile ? { opacity: 1 } : animate;
-    const adaptedExit = isMobile ? { opacity: 0 } : exit;
+    // Simpler but still visible transitions for mobile
+    const adaptedInitial = isMobile ? { opacity: 0, y: 10 } : initial;
+    const adaptedAnimate = isMobile ? { opacity: 1, y: 0 } : animate;
+    const adaptedExit = isMobile ? { opacity: 0, y: -10 } : exit;
 
     const {
       currentTextIndex,

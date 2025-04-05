@@ -93,7 +93,7 @@ export const HeroTitle: React.FC<HeroTitleProps> = ({
             duration: 0.3,
             ease: "easeInOut"
           }}
-          auto={!isMobile} // Only auto-rotate on desktop
+          auto={true} // Enable auto-rotation on all devices
         />
       </div>
     </h1>

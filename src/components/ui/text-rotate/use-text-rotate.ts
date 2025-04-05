@@ -97,8 +97,8 @@ export function useTextRotate(
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
     
-    // Use a longer delay for mobile for better performance and readability
-    const delay = isMobile ? rotationInterval + 800 : rotationInterval;
+    // Use a standard delay for mobile - too long can make it seem broken
+    const delay = rotationInterval;
     
     // Use a simple timeout for consistent timing
     timeoutRef.current = setTimeout(() => {
