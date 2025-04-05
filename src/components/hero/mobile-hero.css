@@ -30,6 +30,12 @@
   --space-md: calc(var(--space-unit) * 3);   /* 24px - USED FOR HERO CONTENT GAP */
   --space-lg: calc(var(--space-unit) * 4);   /* 32px */
   --space-xl: calc(var(--space-unit) * 6);   /* 48px */
+  
+  /* Device safety margins */
+  --safe-area-inset-top: env(safe-area-inset-top, 0px);
+  --safe-area-inset-right: env(safe-area-inset-right, 0px);
+  --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-inset-left: env(safe-area-inset-left, 0px);
 }
 
 /* Base styles for both mobile and desktop */
@@ -64,13 +70,13 @@ section#hero {
 
 /* Mobile-specific styles */
 @media (max-width: 768px) {
-  /* 1. Root Hero Container - Fixed height with vertical centering */
+  /* 1. Root Hero Container - Responsive height with vertical centering */
   section#hero,
   [data-hero-section="true"] {
-    /* CRITICAL: Fixed height of 450px using CSS variable - enforced with !important to prevent any JavaScript overrides */
-    height: var(--hero-mobile-height) !important;
-    min-height: var(--hero-mobile-height) !important;
-    max-height: var(--hero-mobile-height) !important;
+    /* Responsive height based on viewport - will use the smaller of 450px or 85vh */
+    height: min(var(--hero-mobile-height), 85vh) !important;
+    min-height: min(var(--hero-mobile-height), 85vh) !important;
+    max-height: min(var(--hero-mobile-height), 85vh) !important;
     
     /* IMPORTANT: Explicitly block any JavaScript from setting 500px heights */
     --js-override-block: none !important;
@@ -114,7 +120,12 @@ section#hero {
     
     /* Centered horizontal alignment */
     margin: 0 auto !important;
-    padding: 0 !important;
+    
+    /* Safe area-aware padding for notched devices */
+    padding-left: max(16px, var(--safe-area-inset-left)) !important;
+    padding-right: max(16px, var(--safe-area-inset-right)) !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
     
     /* Flexbox for vertical layout with centering */
     display: flex !important;
@@ -174,30 +185,34 @@ section#hero {
     flex-direction: column !important;
     align-items: center !important;
     
-    /* Internal spacing between title and description */
-    gap: 8px !important;
+    /* Increased internal spacing between title and description */
+    gap: 16px !important; /* Increased from 8px to 16px */
   }
   
   /* Title container with dedicated min-height for stability */
   .hero-title-container {
     width: 100% !important;
-    min-height: 40px !important;
+    min-height: 44px !important; /* Increased from 40px */
     display: block !important;
   }
   
-  /* Title element styling */
+  /* Title element styling - Enhanced typography */
   #hero-title {
     position: static !important;
-    margin: 0 !important;
+    margin: 0 0 8px 0 !important; /* Added bottom margin for additional spacing */
     padding: 0 !important;
+    font-size: 1.75rem !important; /* Defined size for static text */
+    letter-spacing: 0.02em !important; /* Added letter spacing for readability */
   }
   
   /* Critical: Rotating text container with stable height */
   #hero-title > div {
-    /* CRITICAL: Fixed 40px height for the rotating text container only */
-    height: 40px !important;
-    min-height: 40px !important;
-    max-height: 40px !important;
+    /* Increased height for the rotating text container */
+    height: 44px !important; /* Increased from 40px */
+    min-height: 44px !important; /* Increased from 40px */
+    max-height: 44px !important; /* Increased from 40px */
+    font-size: 2rem !important; /* Larger font for rotating text for emphasis */
+    font-weight: 700 !important; /* Bolder rotating text for emphasis */
     
     /* Stable positioning that won't cause layout shifts */
     position: relative !important;
@@ -236,7 +251,7 @@ section#hero {
     z-index: 5 !important;
   }
   
-  /* Description container */
+  /* Description container - Enhanced for readability and spacing */
   .hero-description-container,
   .auto-height-container {
     width: 100% !important;
@@ -244,8 +259,18 @@ section#hero {
     height: auto !important;
     min-height: auto !important;
     max-height: none !important;
+    margin-top: 10px !important; /* Added top margin for additional spacing */
     /* Prevent any JavaScript from setting a 500px height */
     --min-height: auto !important;
+  }
+  
+  /* Enhanced typography for description text */
+  .hero-description-container p {
+    font-size: 0.95rem !important; /* Slightly smaller text */
+    line-height: 1.5 !important; /* Tighter line height */
+    max-width: 310px !important; /* Control line length for readability */
+    margin: 0 auto !important; /* Center the text block */
+    letter-spacing: 0.01em !important; /* Subtle letter spacing for readability */
   }
   
   /* CTA container */
@@ -258,31 +283,55 @@ section#hero {
   
   /* 5. CTA Button and Icon Alignment */
   
-  /* CTA Button styling */
+  /* CTA Button styling - Enhanced for better accessibility */
   .hero-cta-container button,
   .mobile-cta-button {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
     position: relative !important;
-    padding-left: 55px !important;
-    padding-right: 16px !important;
+    padding-left: 60px !important; /* Increased from 55px for better spacing */
+    padding-right: 18px !important; /* Slightly increased from 16px */
+    min-height: 54px !important; /* Increased from 48px for better tap target */
+    border-radius: 14px !important; /* Increased from 12px for better visual */
   }
   
-  /* Icon container positioning */
+  /* Icon container positioning - Enhanced for visibility */
   .hero-cta-container button > div[class*="absolute"],
   .mobile-cta-button > div[class*="absolute"],
   .cta-icon-container {
     position: absolute !important;
-    left: 4px !important;
+    left: 6px !important; /* Moved slightly more to the right */
     top: 50% !important;
     transform: translateY(-50%) !important;
     margin-left: 0 !important;
-    width: 32px !important;
-    height: 32px !important;
+    width: 36px !important; /* Increased from 32px */
+    height: 36px !important; /* Increased from 32px */
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+  }
+  
+  /* Touch feedback states for mobile interactions */
+  
+  /* CTA Button active state */
+  .mobile-cta-button:active {
+    transform: translateY(1px) !important;
+    background-image: linear-gradient(to bottom, #7837DB, #6e32c8) !important;
+    transition: transform 0.1s ease !important;
+  }
+  
+  /* Form submit button active state */
+  form button[type="submit"]:active {
+    transform: translateY(1px) !important;
+    background-image: linear-gradient(to bottom, #7837DB, #6e32c8) !important;
+    transition: transform 0.1s ease !important;
+  }
+  
+  /* Email input focus state */
+  form input[type="email"]:focus {
+    border-color: rgba(138, 66, 245, 0.4) !important;
+    box-shadow: 0 0 0 2px rgba(138, 66, 245, 0.2) !important;
   }
   
   /* Prevent any transforms or z-index issues that might break layout */

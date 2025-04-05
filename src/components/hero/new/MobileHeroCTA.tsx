@@ -126,29 +126,30 @@ export const MobileHeroCTA: React.FC = () => {
     }
   }, [showInlineSuccess]);
 
-  // Render success state after submission
+  // Render success state after submission - Enhanced for better visibility and safe area handling
   if (showInlineSuccess) {
     return (
       <div 
-        className="w-full max-w-[250px] py-5 px-4 font-medium rounded-[14px] text-white relative flex flex-col items-center justify-center animate-fade-in mx-auto
-        bg-gradient-to-b from-[#8A42F5] to-[#7837DB] border border-white/20 shadow-xl transform-gpu"
+        className="w-full max-w-[280px] py-6 px-5 font-medium rounded-[14px] text-white relative flex flex-col items-center justify-center animate-fade-in mx-auto
+        bg-gradient-to-b from-[#9B51E0] to-[#7837DB] border border-white/20 shadow-[0_10px_25px_rgba(138,66,245,0.25)] transform-gpu"
+        style={{ marginLeft: 'max(16px, env(safe-area-inset-left))', marginRight: 'max(16px, env(safe-area-inset-right))' }}
       >
         <div 
-          className="h-14 w-14 bg-purple-50/20 rounded-full flex items-center justify-center mb-2 
+          className="h-16 w-16 bg-white/25 rounded-full flex items-center justify-center mb-3 
           shadow-[inset_0_1px_0_rgba(255,255,255,0.3),_0_2px_8px_rgba(0,0,0,0.2)]"
         >
-          <CheckCircle className="h-7 w-7 text-white" />
+          <CheckCircle className="h-8 w-8 text-white" />
         </div>
-        <h3 className="text-base font-bold text-white mb-1">
+        <h3 className="text-lg font-bold text-white mb-2">
           {alreadySubscribed ? 'Already Subscribed' : 'Success!'}
         </h3>
-        <p className="text-white/90 text-center text-sm max-w-[24rem] mb-1">
+        <p className="text-white/95 text-center text-sm max-w-[24rem] mb-2">
           {alreadySubscribed 
             ? `${submittedEmail} is already on our waitlist.`
             : `We've added ${submittedEmail} to our waitlist.`
           }
         </p>
-        <p className="text-white/80 text-xs">
+        <p className="text-white/90 text-xs font-medium">
           We'll notify you as soon as we launch.
         </p>
       </div>
@@ -189,14 +190,14 @@ export const MobileHeroCTA: React.FC = () => {
   return (
     <form 
       onSubmit={handleSubmit}
-      className="w-full max-w-[250px] mx-auto relative animate-fade-in transform-gpu z-30"
+      className="w-full max-w-[280px] mx-auto relative animate-fade-in transform-gpu z-30"
     >
       <div className={cn(
         "flex flex-col w-full",
         "shadow-lg" // Add shadow to the entire form container
       )}>
         <div className="relative">
-          {/* Email input */}
+          {/* Email input - Enhanced for better usability */}
           <input
             ref={inputRef}
             type="email"
@@ -206,7 +207,7 @@ export const MobileHeroCTA: React.FC = () => {
             className={cn(
               "w-full rounded-t-[10px] rounded-b-none text-gray-800",
               "border border-purple-200/70 border-b-0 focus:outline-none focus:ring-2 focus:ring-purple-400/40",
-              "h-12 px-3 text-base font-medium bg-white",
+              "h-[52px] px-4 text-base font-medium bg-white",
               "shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)] border-[rgba(138,66,245,0.2)]"
             )}
             disabled={isLoading}
@@ -221,28 +222,28 @@ export const MobileHeroCTA: React.FC = () => {
           )}
         </div>
         
-        {/* Submit button */}
+        {/* Submit button - Enhanced for better usability */}
         <button
           type="submit"
           disabled={isLoading}
           className={cn(
             "w-full text-white font-semibold rounded-t-none rounded-b-[10px] flex items-center justify-center transition-all duration-200",
-            "h-12 text-sm tracking-[0.02em]",
+            "h-[52px] text-[0.9rem] tracking-[0.02em]",
             "bg-gradient-to-b from-[#8A42F5] to-[#7837DB] border border-white/20",
             "shadow-lg"
           )}
         >
           {isLoading ? (
-            <>
+            <div className="flex items-center justify-center h-full w-full">
               <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-              <span>Joining...</span>
-            </>
+              <span className="text-white font-medium">Adding you...</span>
+            </div>
           ) : (
-            <>
+            <div className="flex items-center justify-center h-full w-full">
               <ShieldCheck className="w-5 h-5 mr-2" />
-              <span>JOIN WAITLIST</span>
+              <span className="text-white font-medium">JOIN WAITLIST</span>
               <ArrowRight className="w-4 h-4 ml-2" />
-            </>
+            </div>
           )}
         </button>
       </div>

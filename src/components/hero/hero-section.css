@@ -500,6 +500,27 @@ section[data-hero-section="true"] .hero-content {
   }
 }
 
+/* Mobile-only scroll indicator animation */
+@media (max-width: 768px) {
+  /* Subtle bounce animation for scroll indicator */
+  @keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+      transform: translateY(0);
+    }
+    40% {
+      transform: translateY(5px);
+    }
+    60% {
+      transform: translateY(3px);
+    }
+  }
+  
+  /* Apply animation to scroll indicator */
+  .flex.flex-col.items-center.opacity-60.mt-2 svg {
+    animation: bounce 2s infinite ease-in-out;
+  }
+}
+
 /* Target with high specificity instead of !important */
 section[data-hero-section="true"] .hero-description-container,
 div[data-hero-section="true"] .hero-description-container,
