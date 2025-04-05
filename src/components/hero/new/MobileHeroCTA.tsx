@@ -163,8 +163,8 @@ export const MobileHeroCTA: React.FC = () => {
         onClick={handleButtonClick}
         className={cn(
           "w-full mx-auto font-medium rounded-[12px] text-white relative flex items-center justify-center",
-          "h-12 min-h-[48px] py-2 pl-[55px] pr-5 rounded-full", /* Adjusted padding for better text alignment */
-          "text-sm max-w-[250px] font-semibold tracking-[0.02em]",
+          "h-12 min-h-[54px] py-2 pl-[55px] pr-5 rounded-full", /* Increased height */
+          "text-sm max-w-[280px] font-semibold tracking-[0.01em] whitespace-nowrap", /* Added whitespace-nowrap and increased max-width */
           "bg-gradient-to-b from-[#8A42F5] to-[#7837DB] border border-white/20",
           "shadow-xl transform-gpu mobile-cta-button" /* Added class for specific targeting */
         )}
