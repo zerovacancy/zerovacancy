@@ -196,23 +196,26 @@ section#hero {
     display: block !important;
   }
   
-  /* Title element styling - Enhanced typography */
+  /* Title element styling - Optimized typography */
   #hero-title {
     position: static !important;
-    margin: 0 0 8px 0 !important; /* Added bottom margin for additional spacing */
+    margin: 0 0 12px 0 !important; /* Increased bottom margin for better spacing */
     padding: 0 !important;
-    font-size: 1.75rem !important; /* Defined size for static text */
-    letter-spacing: 0.02em !important; /* Added letter spacing for readability */
+    font-size: 1.5rem !important; /* Reduced size for better balance */
+    letter-spacing: 0.02em !important; /* Maintained letter spacing for readability */
+    line-height: 1.2 !important; /* Added explicit line height */
   }
   
   /* Critical: Rotating text container with stable height */
   #hero-title > div {
-    /* Increased height for the rotating text container */
-    height: 44px !important; /* Increased from 40px */
-    min-height: 44px !important; /* Increased from 40px */
-    max-height: 44px !important; /* Increased from 40px */
-    font-size: 2rem !important; /* Larger font for rotating text for emphasis */
-    font-weight: 700 !important; /* Bolder rotating text for emphasis */
+    /* Maintained increased height for the rotating text container */
+    height: 44px !important;
+    min-height: 44px !important;
+    max-height: 44px !important;
+    margin-top: 4px !important; /* Added space between static and rotating text */
+    margin-bottom: 8px !important; /* Added space after the rotating text */
+    font-size: 2rem !important; /* Maintained larger font for rotating text for emphasis */
+    font-weight: 700 !important; /* Maintained bolder rotating text for emphasis */
     
     /* Stable positioning that won't cause layout shifts */
     position: relative !important;
@@ -259,7 +262,7 @@ section#hero {
     height: auto !important;
     min-height: auto !important;
     max-height: none !important;
-    margin-top: 10px !important; /* Added top margin for additional spacing */
+    margin-top: 16px !important; /* Increased top margin for better separation */
     /* Prevent any JavaScript from setting a 500px height */
     --min-height: auto !important;
   }
