@@ -74,49 +74,22 @@ export function OptimizedImage({
     }
   }, [priority, lcpCandidate]);
 
-  // Create WebP version path from original
+  // Simplified WebP conversion - only use WebP for paths that already end in .webp
   const getWebPPath = (originalPath: string) => {
-    // Don't process urls with query parameters
-    if (originalPath.includes('?')) return null;
-    
-    const extension = originalPath.split('.').pop()?.toLowerCase();
-    if (!extension || !['jpg', 'jpeg', 'png'].includes(extension)) {
-      return null;
+    // Only use paths that already end with .webp - no conversion
+    // This ensures we only use WebP where it definitely exists
+    if (originalPath.endsWith('.webp')) {
+      return originalPath;
     }
-    return originalPath.replace(new RegExp(`\\.${extension}$`), '.webp');
+    
+    // For all other paths, don't try to convert to WebP
+    return null;
   };
 
-  // Create responsive srcSet
+  // Extremely simplified srcSet - don't use srcSet at all for now
   const getSrcSet = (imagePath: string) => {
-    // Don't create srcset for SVGs or data URLs
-    if (imagePath.endsWith('.svg') || imagePath.startsWith('data:')) {
-      return undefined;
-    }
-    
-    // Don't create srcset for external domains
-    if (imagePath.startsWith('http') && !imagePath.includes('zerovacancy.ai')) {
-      return undefined;
-    }
-    
-    // For local images, we can generate srcset
-    const qualityParam = isMobile ? 
-      (quality === 'low' ? '?q=60' : quality === 'medium' ? '?q=70' : '?q=80') : 
-      (quality === 'low' ? '?q=70' : quality === 'medium' ? '?q=80' : '?q=90');
-    
-    try {
-      // Create a base path without extension
-      const basePath = imagePath.substring(0, imagePath.lastIndexOf('.'));
-      const extension = imagePath.split('.').pop();
-      
-      // Generate srcSet with different widths
-      return `${basePath}-480.${extension}${qualityParam} 480w,
-              ${basePath}-768.${extension}${qualityParam} 768w,
-              ${basePath}-1024.${extension}${qualityParam} 1024w,
-              ${imagePath}${qualityParam} 1280w`;
-    } catch (err) {
-      // If there's any error in generating srcSet, return undefined
-      return undefined;
-    }
+    // For development mode, don't use srcSet at all to ensure images load properly
+    return undefined;
   };
 
   const webpSrc = getWebPPath(src);
@@ -130,6 +103,7 @@ export function OptimizedImage({
 
   // Handle image error
   const handleError = () => {
+    console.warn(`Image failed to load: ${src}`);
     setError(true);
   };
 
@@ -189,7 +163,7 @@ export function OptimizedImage({
               onError={handleError}
               className={cn(
                 'max-w-full h-auto object-cover will-change-[opacity] transition-opacity duration-300',
-                isLoaded ? 'opacity-100' : 'opacity-0',
+                'opacity-100', // Always show images
                 error ? 'opacity-0' : ''
               )}
               sizes={sizes || '100vw'}
@@ -209,7 +183,7 @@ export function OptimizedImage({
             onError={handleError}
             className={cn(
               'max-w-full h-auto object-cover will-change-[opacity] transition-opacity duration-300',
-              isLoaded ? 'opacity-100' : 'opacity-0',
+              'opacity-100', // Always show images
               error ? 'opacity-0' : ''
             )}
             sizes={sizes || '100vw'}

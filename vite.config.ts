@@ -3,6 +3,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
+import reactSingleton from "./src/plugins/vite-react-singleton";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -14,6 +15,9 @@ export default defineConfig(({ mode }) => ({
     historyApiFallback: true,
   },
   plugins: [
+    // Handle React properly
+    reactSingleton(),
+    
     react({
       // More aggressive optimizations in production
       transformOptions: {
@@ -39,35 +43,50 @@ export default defineConfig(({ mode }) => ({
     assetsInlineLimit: 4096, // Inline small assets to reduce HTTP requests
     rollupOptions: {
       output: {
-        // Improved code splitting strategy
-        manualChunks: {
-          'react-core': ['react', 'react-dom'],
-          'react-router': ['react-router-dom'],
-          'ui-core': ['framer-motion'],
-          'ui-radix': [
-            '@radix-ui/react-dialog', 
-            '@radix-ui/react-toast',
-            '@radix-ui/react-accordion', 
-            '@radix-ui/react-alert-dialog',
-            '@radix-ui/react-avatar',
-            '@radix-ui/react-checkbox',
-            '@radix-ui/react-dropdown-menu',
-            '@radix-ui/react-label',
-            '@radix-ui/react-popover',
-            '@radix-ui/react-slot',
-          ],
-          'ui-components': [
-            '@/components/ui/button.tsx',
-            '@/components/ui/toast.tsx',
-            '@/components/ui/dialog.tsx',
-            '@/components/ui/tabs.tsx',
-          ],
-          'animations': [
-            '@/components/ui/animated-grid.tsx',
-            '@/components/ui/spotlight.tsx',
-            '@/components/ui/optimized-spotlight.tsx',
-            '@/components/ui/moving-border.tsx',
-          ],
+        // Function-based manual chunks for better React deduplication
+        manualChunks: function(id) {
+          // Always put React in its own chunk
+          if (id.includes('node_modules/react/') || 
+              id.includes('node_modules/react-dom/')) {
+            return 'react-core';
+          }
+          
+          // React Router
+          if (id.includes('node_modules/react-router') || 
+              id.includes('node_modules/@remix-run/router')) {
+            return 'react-router';
+          }
+          
+          // UI Core libraries
+          if (id.includes('node_modules/framer-motion')) {
+            return 'ui-core';
+          }
+          
+          // Radix UI components
+          if (id.includes('node_modules/@radix-ui/react-')) {
+            return 'ui-radix';
+          }
+          
+          // Our UI components
+          if (id.includes('/components/ui/')) {
+            // Animations
+            if (id.includes('animated-grid') || 
+                id.includes('spotlight') || 
+                id.includes('moving-border')) {
+              return 'animations';
+            }
+            
+            // Basic UI components
+            if (id.includes('button.tsx') || 
+                id.includes('toast.tsx') || 
+                id.includes('dialog.tsx') || 
+                id.includes('tabs.tsx')) {
+              return 'ui-components';
+            }
+          }
+          
+          // Let other modules use default chunking
+          return null;
         },
         // Optimize chunk creation with more reliable naming for mobile
         chunkFileNames: 'assets/js/[name]-[hash].js',

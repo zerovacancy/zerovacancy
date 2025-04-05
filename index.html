@@ -5,6 +5,144 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     
+    <!-- Inline critical CSS to prevent FOUC / Visual Jump -->
+    <style>
+      /* Critical rendering styles */
+      html, body {
+        margin: 0;
+        padding: 0;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        background-color: #ffffff;
+        width: 100%;
+        height: 100%;
+        overflow-x: hidden;
+      }
+      
+      /* Pre-style root container to avoid layout shift */
+      #root {
+        min-height: 100vh;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      /* Critical header & navigation styles */
+      header {
+        width: 100%;
+        background-color: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+      
+      /* Critical hero section styles */
+      .hero, section[class*="hero"] {
+        min-height: 60vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 2rem 1rem;
+      }
+      
+      /* Critical button styles */
+      button, .button, [class*="btn"] {
+        background: linear-gradient(135deg, #6741d9 0%, #8a57de 100%);
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        padding: 0.5rem 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+      
+      /* Image placeholders to prevent layout shift - fixed initial visibility */
+      img {
+        width: 100%;
+        height: auto;
+        opacity: 1; /* Changed from 0 to 1 to ensure images are visible immediately */
+        transition: opacity 0.3s ease;
+      }
+      
+      img[loaded] {
+        opacity: 1;
+      }
+      
+      /* Simple loading state (subtle) */
+      .loading-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        z-index: 9999;
+        background-color: rgba(103, 65, 217, 0.1);
+        overflow: hidden;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+      }
+      
+      .loading-bar {
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #6741d9 0%, #8a57de 100%);
+        transform-origin: left;
+        /* Animation handled directly in JS for better synchronization with page load */
+      }
+    </style>
+    
+    <!-- Optimized loading indicator - simplified implementation -->
+    <script>
+      (function() {
+        // Progressive loading indicator that runs before page fully loads
+        document.addEventListener('DOMContentLoaded', function() {
+          // Create a simple loading bar at the top of the page
+          const loadingContainer = document.createElement('div');
+          loadingContainer.className = 'loading-container';
+          
+          const loadingBar = document.createElement('div');
+          loadingBar.className = 'loading-bar';
+          loadingBar.style.transform = 'scaleX(0.1)'; // Start with slight progress
+          loadingBar.style.transformOrigin = 'left';
+          loadingBar.style.transition = 'transform 0.3s ease-out';
+          
+          loadingContainer.appendChild(loadingBar);
+          document.body.appendChild(loadingContainer);
+          
+          // Gradually increase the loading bar width
+          let progress = 10;
+          const updateProgress = function() {
+            progress += (95 - progress) * 0.1;
+            loadingBar.style.transform = `scaleX(${progress/100})`;
+            
+            if (progress < 90) {
+              setTimeout(updateProgress, 200);
+            }
+          };
+          
+          // Start updating progress
+          updateProgress();
+          
+          // Complete and hide on page load
+          window.addEventListener('load', function() {
+            loadingBar.style.transform = 'scaleX(1)';
+            
+            setTimeout(function() {
+              loadingContainer.style.opacity = '0';
+              setTimeout(function() {
+                if (loadingContainer.parentNode) {
+                  loadingContainer.parentNode.removeChild(loadingContainer);
+                }
+              }, 300);
+            }, 500);
+          });
+        });
+      })();
+    </script>
+    
     <!-- Blog Editor Layout Fix -->
     <script>
       document.addEventListener('DOMContentLoaded', function() {
@@ -103,6 +241,18 @@
     
     <!-- Ultra-fast mobile optimization script - runs immediately -->
     <script src="/quick-perf.js"></script>
+    
+    <!-- Development-only image path checker -->
+    <script>
+      // Only load image checker in development
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        const imageChecker = document.createElement('script');
+        imageChecker.src = '/check-images.js';
+        imageChecker.async = true;
+        document.head.appendChild(imageChecker);
+        console.info('Image path checker enabled (development only)');
+      }
+    </script>
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -300,17 +450,31 @@
     <script>
       // Delayed Stripe loading to improve initial page performance
       document.addEventListener('DOMContentLoaded', function() {
+        // Get Stripe script and safely extract delay
+        const stripeScript = document.querySelector('script[src*="stripe"]');
+        const loadDelay = stripeScript && stripeScript.hasAttribute('data-load-delay') 
+          ? parseInt(stripeScript.getAttribute('data-load-delay'), 10) 
+          : 2000;
+        
+        // Mark as loaded after delay
         setTimeout(function() {
-          const stripeScript = document.querySelector('script[src*="stripe"]');
-          stripeScript.setAttribute('data-loaded', 'true');
-        }, parseInt(document.querySelector('script[src*="stripe"]').getAttribute('data-load-delay') || '2000'));
+          if (stripeScript) {
+            stripeScript.setAttribute('data-loaded', 'true');
+          }
+        }, loadDelay);
       });
     </script>
   </head>
   <body>
-    <!-- Initial loading state -->
+    <!-- Initial loading state - visible immediately -->
     <div id="page-loader" class="page-loader">
       <div class="spinner"></div>
+      <!-- Add branded elements to enhance loading experience -->
+      <div style="text-align: center; margin-top: 20px; opacity: 0.8;">
+        <div style="font-family: system-ui, -apple-system, sans-serif; font-size: 16px; color: #6741d9; margin-top: 16px;">
+          Loading ZeroVacancy...
+        </div>
+      </div>
     </div>
     
     <div id="root"></div>
@@ -375,35 +539,44 @@
         }
       })();
       
-      // Hide loader with optimized animation
+      // Simpler, more reliable loader handling that doesn't interfere with React
       const hideLoader = () => {
         const loader = document.getElementById('page-loader');
         if (!loader) return;
         
-        // Use requestAnimationFrame for smoother transition
-        requestAnimationFrame(() => {
-          loader.style.opacity = '0';
-          loader.style.transition = 'opacity 0.3s ease';
-          
-          // Clean up after animation completes
-          loader.addEventListener('transitionend', () => {
-            loader.style.display = 'none';
-          }, { once: true });
-        });
+        // Wait briefly to ensure the page starts rendering
+        setTimeout(() => {
+          if (loader) {
+            // Add transition if it doesn't exist
+            if (!loader.style.transition) {
+              loader.style.transition = 'opacity 0.5s ease';
+            }
+            
+            // Start fade out
+            loader.style.opacity = '0';
+            
+            // Remove from DOM after animation completes
+            loader.addEventListener('transitionend', () => {
+              if (loader.parentNode) {
+                loader.parentNode.removeChild(loader);
+              }
+            }, { once: true });
+          }
+        }, 500); // Short delay to allow React initialization
       };
       
-      // Hide loader once DOM is ready
+      // Apply loader handling after DOM is initially ready
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', hideLoader);
       } else {
         hideLoader();
       }
       
-      // Fallback timeout in case DOMContentLoaded doesn't fire
+      // Backup timeout to ensure loader disappears even if animation fails
       setTimeout(() => {
         const loader = document.getElementById('page-loader');
-        if (loader && loader.style.display !== 'none') {
-          loader.style.display = 'none';
+        if (loader && loader.parentNode) {
+          loader.parentNode.removeChild(loader);
         }
       }, 3000);
     </script>
