@@ -1,191 +1,413 @@
-<\!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
   <title>ZeroVacancy Improved Email Preview - Property Owner</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { margin: 0; padding: 20px; font-family: sans-serif; }
-    iframe { width: 100%; height: 800px; border: 1px solid #ccc; }
+    body { 
+      margin: 0; 
+      padding: 20px; 
+      font-family: sans-serif;
+      background-color: #f6f5ff;
+    }
+    
+    .email-container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .page-title {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #333;
+    }
+    
+    .card {
+      background-color: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(103, 65, 217, 0.15);
+      margin-bottom: 40px;
+    }
+    
+    .header {
+      text-align: center;
+      position: relative;
+    }
+    
+    .header {
+      border-top-left-radius: 16px;
+      border-top-right-radius: 16px;
+      overflow: hidden;
+    }
+    
+    .header img {
+      width: 100%;
+      display: block;
+    }
+    
+    .logo {
+      height: auto;
+      max-width: 220px;
+      margin-bottom: 20px;
+    }
+    
+    h1 {
+      margin: 0;
+      font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif;
+      font-size: 36px;
+      line-height: 1.2;
+      letter-spacing: -0.5px;
+      font-weight: 700;
+      color: white;
+    }
+    
+    .stats-pill {
+      display: inline-block;
+      margin-top: 15px;
+      background-color: rgba(255, 255, 255, 0.15);
+      padding: 8px 16px;
+      border-radius: 50px;
+    }
+    
+    .stats-pill p {
+      margin: 0;
+      font-family: 'Inter', Arial, sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      color: white;
+    }
+    
+    .stats-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: #5cffc7;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+    
+    .content {
+      padding: 20px 30px 20px 30px;
+      background-color: white;
+    }
+    
+    .intro {
+      margin: 0 0 20px 0;
+      font-family: 'Inter', Arial, sans-serif;
+      font-size: 16px;
+      line-height: 26px;
+      color: #333333;
+      text-align: center;
+    }
+    
+    .highlight {
+      font-weight: 600;
+    }
+    
+    .purple {
+      color: #6741d9;
+    }
+    
+    .light-purple {
+      color: #8a57de;
+    }
+    
+    .mint {
+      color: #8a57de;
+    }
+    
+    .benefits {
+      display: flex;
+      justify-content: space-between;
+      margin: 0 auto 25px auto;
+    }
+    
+    .benefit-box {
+      flex: 1;
+      background-color: #f9f8ff;
+      border-radius: 12px;
+      padding: 20px 15px;
+      text-align: center;
+      border: 1px solid #eeeaf9;
+      margin: 0 5px;
+    }
+    
+    .benefit-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #6741d9 0%, #8a57de 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 10px auto;
+      color: white;
+      font-weight: bold;
+      font-size: 20px;
+    }
+    
+    .benefit-title {
+      margin: 0 0 5px 0;
+      font-family: 'Space Grotesk', Arial, sans-serif;
+      font-size: 16px;
+      color: #6741d9;
+      font-weight: 600;
+    }
+    
+    .benefit-desc {
+      margin: 0;
+      font-family: 'Inter', Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.4;
+      color: #666;
+    }
+    
+    .testimonial {
+      margin: 0 auto 25px auto;
+      background-color: #f9f8ff;
+      border-radius: 12px;
+      padding: 25px;
+      border-left: 4px solid #6741d9;
+      position: relative;
+    }
+    
+    .quote-mark {
+      position: absolute;
+      top: 15px;
+      left: 20px;
+      font-size: 40px;
+      color: #d4ccea;
+      font-family: Georgia, serif;
+      line-height: 1;
+    }
+    
+    .quote-text {
+      margin: 0 0 10px 0;
+      font-family: 'Inter', Arial, sans-serif;
+      font-size: 15px;
+      line-height: 24px;
+      color: #333;
+      padding-left: 20px;
+      font-style: italic;
+    }
+    
+    .quote-author {
+      margin: 0;
+      font-family: 'Space Grotesk', Arial, sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: #6741d9;
+      padding-left: 20px;
+    }
+    
+    .cta {
+      text-align: center;
+      margin: 30px 0 20px 0;
+    }
+    
+    .button {
+      display: inline-block;
+      background: linear-gradient(135deg, #6741d9 0%, #8a57de 100%);
+      padding: 16px 32px;
+      font-family: 'Space Grotesk', Arial, sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(138, 87, 222, 0.3);
+    }
+    
+    .notification {
+      margin: 15px 0 0 0;
+      font-family: 'Inter', Arial, sans-serif;
+      font-size: 14px;
+      color: #666666;
+      text-align: center;
+    }
+    
+    .footer {
+      padding: 30px 20px;
+      text-align: center;
+      background-color: #f6f5ff;
+    }
+    
+    .footer-logo {
+      display: inline-block;
+      margin-bottom: 15px;
+    }
+    
+    .footer-logo img {
+      width: 180px;
+      height: auto;
+    }
+    
+    .tagline {
+      margin: 0 0 15px 0;
+      font-family: 'Inter', Arial, sans-serif;
+      font-size: 14px;
+      color: #666;
+      font-weight: 500;
+    }
+    
+    .social-links {
+      margin-bottom: 15px;
+    }
+    
+    .social-link {
+      display: inline-block;
+      margin: 0 5px;
+    }
+    
+    .social-link img {
+      width: 24px;
+      height: 24px;
+      border: 0;
+    }
+    
+    .legal {
+      margin: 0;
+      font-family: 'Inter', Arial, sans-serif;
+      font-size: 13px;
+      line-height: 1.5;
+      color: #888888;
+    }
+    
+    .legal-link {
+      color: #6741d9;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    
+    @media (max-width: 600px) {
+      .benefits {
+        flex-direction: column;
+      }
+      
+      .benefit-box {
+        margin: 0 0 10px 0;
+      }
+      
+      h1 {
+        font-size: 28px;
+        line-height: 1.2;
+      }
+      
+      .content {
+        padding: 25px 20px;
+      }
+    }
   </style>
 </head>
 <body>
-  <h1>Improved Property Owner Email Template Preview</h1>
-  <iframe srcdoc='
-    <center style="width: 100%; background-color: #f8f5ff; text-align: left;">
-      <div style="display: none; font-size: 1px; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden; mso-hide: all; font-family: sans-serif;">
-        🏠 Welcome to ZeroVacancy\! Your waitlist spot is confirmed. We're excited to connect you with top-tier content creators.
+  <h1 class="page-title">Improved Property Owner Email Template Preview</h1>
+  
+  <div class="email-container">
+    <!-- Main email content -->
+    <div class="card">
+      <!-- Header section with background image -->
+      <a href="https://www.zerovacancy.ai" style="text-decoration: none; display: block;">
+        <div class="header">
+          <img src="../public/og-image-email.png" alt="ZeroVacancy" />
+        </div>
+      </a>
+      
+      <!-- White content area -->
+      <div class="content" style="padding-top: 20px;">
+        <h1 style="margin: 0 0 18px 0; color: #6741d9; text-align: center; font-size: 32px; line-height: 1.1;">YOU'RE ON THE WAITLIST!</h1>
+        
+        <p class="intro">
+          Thank you for joining the ZeroVacancy waitlist! We're building the ultimate marketplace for property content that 
+          <span class="highlight purple">converts</span>, 
+          <span class="highlight light-purple">captivates</span>, and 
+          <span class="highlight mint">closes</span>.
+        </p>
+        
+        <!-- Three benefits boxes -->
+        <div class="benefits">
+          <!-- Box 1 -->
+          <div class="benefit-box">
+            <div class="benefit-icon">1</div>
+            <h3 class="benefit-title">Early Access</h3>
+            <p class="benefit-desc">First to know when we launch</p>
+          </div>
+          
+          <!-- Box 2 -->
+          <div class="benefit-box">
+            <div class="benefit-icon">2</div>
+            <h3 class="benefit-title">Premium Content</h3>
+            <p class="benefit-desc">Top-tier content creators</p>
+          </div>
+          
+          <!-- Box 3 -->
+          <div class="benefit-box">
+            <div class="benefit-icon">3</div>
+            <h3 class="benefit-title">Special Pricing</h3>
+            <p class="benefit-desc">Exclusive waitlist discounts</p>
+          </div>
+        </div>
+        
+        <!-- Testimonial box -->
+        <div class="testimonial">
+          <!-- Quote mark -->
+          <div class="quote-mark">"</div>
+          
+          <p class="quote-text">
+            I'm excited to join ZeroVacancy because finding quality content creators for my properties has always been challenging. Looking forward to the launch!
+          </p>
+          <p class="quote-author">
+            — Sarah T., Property Manager
+          </p>
+        </div>
+        
+        <!-- CTA button -->
+        <div class="cta">
+          <a href="https://www.zerovacancy.ai" class="button">
+            Visit Our Website →
+          </a>
+          <p class="notification">
+            We'll notify you when we're ready to launch
+          </p>
+        </div>
       </div>
-      <div class="email-container" style="max-width: 600px; margin: 0 auto;">
-        <table style="margin: 0 auto;" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" align="center">
-          <tr>
-            <td style="padding: 40px 0 30px 0; text-align: center; background: linear-gradient(135deg, #f0e9ff 0%, #e6dbff 100%);">
-              <a href="https://www.zerovacancy.ai">
-                <img style="height: auto; display: block; margin: 0 auto; border: 0; max-width: 320px;" width="320" alt="ZeroVacancy" src="https://www.zerovacancy.ai/logo.png">
-              </a>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <div style="position: relative; border-radius: 12px; overflow: hidden; margin: 0 10px;">
-                <\!-- Border gradient animation effect -->
-                <div style="position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; border-radius: 14px; background: linear-gradient(45deg, #8A57DE, #6366F1, #8A57DE); background-size: 200% 200%; z-index: -1; animation: gradient 4s ease infinite;"></div>
-                
-                <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="background: linear-gradient(to bottom, #ffffff, #fafbff); border-radius: 12px; box-shadow: 0 4px 20px rgba(138, 87, 222, 0.15);">
-                  <tr>
-                    <td class="mobile-padding" style="padding: 40px 30px 20px 30px; text-align: center;">
-                      <h1 style="margin: 0; font-family: \"Space Grotesk\", Arial, sans-serif; font-size: 32px; line-height: 40px; color: #5425B3; font-weight: bold; text-shadow: 0 1px 2px rgba(84, 37, 179, 0.1);">You're on the waitlist\! 🎉</h1>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="mobile-padding" style="padding: 0 30px 20px 30px;">
-                      <p class="mobile-font" style="margin: 0; font-family: \"Inter\", Arial, sans-serif; font-size: 16px; line-height: 26px; color: #333333; text-align: center;">
-                        Thank you for joining the ZeroVacancy waitlist\! We're building the ultimate marketplace for property content that <span style="color: #5425B3; font-weight: 500;">converts</span>, <span style="color: #7928CA; font-weight: 500;">captivates</span>, and <span style="color: #3151D3; font-weight: 500;">closes</span>.
-                      </p>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style="padding: 0 30px;">
-                      <div style="background: linear-gradient(to right, rgba(138, 87, 222, 0.08), rgba(138, 87, 222, 0.03)); border-radius: 8px; padding: 20px; margin-bottom: 30px;">
-                        <p class="mobile-font" style="margin: 0 0 15px 0; font-family: \"Space Grotesk\", Arial, sans-serif; font-size: 18px; line-height: 24px; color: #222222; text-align: center; font-weight: bold;">
-                          What happens next:
-                        </p>
-                        <table style="max-width: 400px; margin: 0 auto;" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
-                          <tr>
-                            <td style="text-align: left; padding: 8px 0;">
-                              <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
-                                <tr>
-                                  <td style="vertical-align: top;" width="36">
-                                    <div style="background: linear-gradient(135deg, #8A57DE, #6366F1); width: 24px; height: 24px; border-radius: 50%; margin-top: 2px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(138, 87, 222, 0.2);">
-                                      <span style="color: white; font-family: \"Inter\", Arial, sans-serif; font-size: 14px; font-weight: bold;">1</span>
-                                    </div>
-                                  </td>
-                                  <td class="mobile-font" style="font-family: \"Inter\", Arial, sans-serif; font-size: 16px; line-height: 24px; color: #333333; padding-left: 10px;">
-                                    <strong style="color: #5425B3;">Early Access:</strong> You'll be among the first to know when we launch
-                                  </td>
-                                </tr>
-                              </table>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td style="text-align: left; padding: 8px 0;">
-                              <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
-                                <tr>
-                                  <td style="vertical-align: top;" width="36">
-                                    <div style="background: linear-gradient(135deg, #8A57DE, #6366F1); width: 24px; height: 24px; border-radius: 50%; margin-top: 2px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(138, 87, 222, 0.2);">
-                                      <span style="color: white; font-family: \"Inter\", Arial, sans-serif; font-size: 14px; font-weight: bold;">2</span>
-                                    </div>
-                                  </td>
-                                  <td class="mobile-font" style="font-family: \"Inter\", Arial, sans-serif; font-size: 16px; line-height: 24px; color: #333333; padding-left: 10px;">
-                                    <strong style="color: #5425B3;">VIP Features:</strong> Exclusive access to our premium platform
-                                  </td>
-                                </tr>
-                              </table>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td style="text-align: left; padding: 8px 0;">
-                              <table width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation">
-                                <tr>
-                                  <td style="vertical-align: top;" width="36">
-                                    <div style="background: linear-gradient(135deg, #8A57DE, #6366F1); width: 24px; height: 24px; border-radius: 50%; margin-top: 2px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(138, 87, 222, 0.2);">
-                                      <span style="color: white; font-family: \"Inter\", Arial, sans-serif; font-size: 14px; font-weight: bold;">3</span>
-                                    </div>
-                                  </td>
-                                  <td class="mobile-font" style="font-family: \"Inter\", Arial, sans-serif; font-size: 16px; line-height: 24px; color: #333333; padding-left: 10px;">
-                                    <strong style="color: #5425B3;">Special Pricing:</strong> Exclusive discounts for waitlist members
-                                  </td>
-                                </tr>
-                              </table>
-                            </td>
-                          </tr>
-                        </table>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style="text-align: center; padding: 0 30px 20px 30px;">
-                      <div style="background-color: rgba(138, 87, 222, 0.08); border-radius: 6px; padding: 12px; display: inline-block; max-width: 300px; margin: 0 auto;">
-                        <p style="margin: 0; font-family: \"Inter\", Arial, sans-serif; font-size: 14px; color: #5425B3;">
-                          <strong>2,100+</strong> property owners have already joined
-                        </p>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="mobile-padding" style="padding: 0 30px 30px 30px;">
-                      <p class="mobile-font" style="margin: 0; font-family: \"Inter\", Arial, sans-serif; font-size: 16px; line-height: 26px; color: #333333; text-align: center;">
-                        We can't wait to connect you with top-tier content creators for your property marketing needs.
-                      </p>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="mobile-padding" style="padding: 0 30px 40px 30px; text-align: center;">
-                      <a style="background: linear-gradient(to right, #8A57DE, #6366F1); font-family: \"Space Grotesk\", Arial, sans-serif; font-size: 16px; font-weight: bold; text-decoration: none; padding: 16px 30px; color: #ffffff; border-radius: 8px; display: inline-block; mso-padding-alt: 0; text-underline-color: #8A57DE; box-shadow: 0 4px 10px rgba(138, 87, 222, 0.3);" href="https://www.zerovacancy.ai">
-                        <span style="mso-text-raise: 10pt;">Visit Our Website &rarr;</span>
-                      </a>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td style="padding: 40px 0; text-align: center; background: linear-gradient(135deg, #f0e9ff 0%, #e6dbff 100%);">
-              <table style="margin: 0 auto;" width="280" border="0" cellpadding="0" cellspacing="0" role="presentation">
-                <tr>
-                  <td style="text-align: center; padding-bottom: 15px;">
-                    <a href="https://twitter.com/zerovacancy" style="display: inline-block; margin: 0 10px;"><img src="https://cdn4.iconfinder.com/data/icons/social-media-icons-the-circle-set/48/twitter_circle-512.png" alt="Twitter" width="24" height="24" style="border: 0;"></a>
-                    <a href="https://instagram.com/zerovacancy" style="display: inline-block; margin: 0 10px;"><img src="https://cdn4.iconfinder.com/data/icons/social-media-icons-the-circle-set/48/instagram_circle-512.png" alt="Instagram" width="24" height="24" style="border: 0;"></a>
-                    <a href="https://linkedin.com/company/zerovacancy" style="display: inline-block; margin: 0 10px;"><img src="https://cdn4.iconfinder.com/data/icons/social-media-icons-the-circle-set/48/linkedin_circle-512.png" alt="LinkedIn" width="24" height="24" style="border: 0;"></a>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="text-align: center;">
-                    <p style="margin: 0; font-family: \"Inter\", Arial, sans-serif; font-size: 14px; line-height: 20px; color: #666666;">
-                      © 2025 ZeroVacancy. All rights reserved.
-                    </p>
-                    <p style="margin: 10px 0 0 0; font-family: \"Inter\", Arial, sans-serif; font-size: 14px; line-height: 20px; color: #666666;">
-                      <a style="color: #5425B3; text-decoration: none; font-weight: 500;" href="https://www.zerovacancy.ai/terms">Terms</a> &nbsp;|&nbsp;
-                      <a style="color: #5425B3; text-decoration: none; font-weight: 500;" href="https://www.zerovacancy.ai/privacy">Privacy</a> &nbsp;|&nbsp;
-                      <a style="color: #5425B3; text-decoration: none; font-weight: 500;" href="[Unsubscribe_Link]">Unsubscribe</a>
-                    </p>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-        </table>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+      <!-- Logo -->
+      <a href="https://www.zerovacancy.ai" class="footer-logo">
+        <img src="../public/logo.png" alt="ZeroVacancy" style="width: 180px; height: auto;">
+      </a>
+      
+      <!-- Tagline -->
+      <p class="tagline">
+        Connecting property teams with top-tier content creators
+      </p>
+      
+      <!-- Social media icons -->
+      <div class="social-links">
+        <a href="https://twitter.com/zerovacancy" class="social-link">
+          <img src="https://cdn4.iconfinder.com/data/icons/social-media-icons-the-circle-set/48/twitter_circle-512.png" alt="Twitter">
+        </a>
+        <a href="https://instagram.com/zerovacancy" class="social-link">
+          <img src="https://cdn4.iconfinder.com/data/icons/social-media-icons-the-circle-set/48/instagram_circle-512.png" alt="Instagram">
+        </a>
+        <a href="https://linkedin.com/company/zerovacancy" class="social-link">
+          <img src="https://cdn4.iconfinder.com/data/icons/social-media-icons-the-circle-set/48/linkedin_circle-512.png" alt="LinkedIn">
+        </a>
       </div>
       
-      <style>
-        @media (max-width: 600px) {
-          .mobile-padding {
-            padding-left: 20px \!important;
-            padding-right: 20px \!important;
-          }
-          .mobile-font {
-            font-size: 15px \!important;
-          }
-          h1 {
-            font-size: 28px \!important;
-            line-height: 32px \!important;
-          }
-        }
-        
-        @keyframes gradient {
-          0% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-          100% {
-            background-position: 0% 50%;
-          }
-        }
-      </style>
-    </center>
-  '></iframe>
+      <!-- Legal & unsubscribe -->
+      <p class="legal">
+        © 2025 ZeroVacancy. All rights reserved.<br>
+        <a href="https://www.zerovacancy.ai/terms" class="legal-link">Terms</a> • 
+        <a href="https://www.zerovacancy.ai/privacy" class="legal-link">Privacy</a> • 
+        <a href="[Unsubscribe_Link]" class="legal-link">Unsubscribe</a>
+      </p>
+    </div>
+  </div>
 </body>
 </html>

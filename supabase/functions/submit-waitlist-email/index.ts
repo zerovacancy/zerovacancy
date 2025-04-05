@@ -375,7 +375,7 @@ function generateEmailTemplate(userName: string) {
           padding: 0;
           font-family: 'Inter', Arial, sans-serif;
           -webkit-font-smoothing: antialiased;
-          background-color: #F5F0FF;
+          background-color: #f6f5ff;
         }
         
         .content {
@@ -394,14 +394,6 @@ function generateEmailTemplate(userName: string) {
         }
         
         h1, h2, h3 {
-          font-family: 'Space Grotesk', Arial, sans-serif;
-        }
-        
-        .font-inter {
-          font-family: 'Inter', Arial, sans-serif;
-        }
-        
-        .font-space {
           font-family: 'Space Grotesk', Arial, sans-serif;
         }
         
@@ -424,10 +416,10 @@ function generateEmailTemplate(userName: string) {
         }
       </style>
     </head>
-    <body style="margin: 0; padding: 0; width: 100%; word-break: break-word; -webkit-font-smoothing: antialiased; background-color: #F5F0FF;">
-      <div style="display: none; line-height: 0; font-size: 0;">You're on the ZeroVacancy waitlist! Connect with talented property content creators to boost your listings.</div>
+    <body style="margin: 0; padding: 0; width: 100%; word-break: break-word; -webkit-font-smoothing: antialiased; background-color: #f6f5ff;">
+      <div style="display: none; line-height: 0; font-size: 0;">🏠 Welcome to ZeroVacancy! Your waitlist spot is confirmed. You're joining property teams connecting with top-tier content creators.</div>
       
-      <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin: 0; padding: 0; width: 100%; background-color: #F5F0FF;">
+      <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin: 0; padding: 0; width: 100%; background-color: #f6f5ff;">
         <tr>
           <td align="center" style="vertical-align: top; padding: 20px 0;">
             <!--[if mso]>
@@ -437,7 +429,7 @@ function generateEmailTemplate(userName: string) {
             <![endif]-->
             
             <!-- Email Container: 600px max-width -->
-            <table class="container" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin: 0 auto; padding: 0; max-width: 600px; background-color: #F5F0FF;">
+            <table class="container" align="center" width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin: 0 auto; padding: 0; max-width: 600px; background-color: #f6f5ff;">
               
               <!-- Logo Header -->
               <tr>
@@ -447,8 +439,8 @@ function generateEmailTemplate(userName: string) {
                       <td align="center" style="padding: 25px 0 15px;">
                         <!-- Logo Container -->
                         <div style="position: relative; padding: 24px 0; border-radius: 16px; background-color: #F9F6FF;">
-                          <!-- Logo Container -->
-                          <img src="https://www.zerovacancy.ai/logo.png" width="240" alt="ZeroVacancy" style="display: block; height: auto; margin: 0 auto; border: 0;">
+                          <!-- Logo -->
+                          <img src="https://www.zerovacancy.ai/logo.png" width="180" alt="ZeroVacancy" style="display: block; height: auto; margin: 0 auto; border: 0;">
                         </div>
                       </td>
                     </tr>
@@ -459,132 +451,82 @@ function generateEmailTemplate(userName: string) {
               <!-- Main Content Container -->
               <tr>
                 <td style="padding: 0 15px;">
-                  <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background: #FFFFFF; border-radius: 12px; overflow: hidden; box-shadow: 0 6px 18px rgba(138, 87, 222, 0.08);">
+                  <div style="background-color: white; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px rgba(103, 65, 217, 0.15);">
                     
-                    <!-- Hero Section with Property Illustration -->
-                    <tr>
-                      <td>
-                        <div style="position: relative; text-align: center; padding: 40px 30px 30px; background: linear-gradient(135deg, #F8F5FF 0%, #F0E9FF 100%);">
-                          <!-- Headline with animated highlight effect -->
-                          <h1 style="margin: 0 0 15px; font-family: 'Space Grotesk', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 32px; line-height: 1.1; color: #2D1A66; font-weight: 800; letter-spacing: -0.02em;">
-                            <span style="display: block;">YOU'RE ON THE</span>
-                            <span style="display: inline-block; position: relative; padding: 0 5px;">
-                              <span style="position: relative; z-index: 1;">WAITLIST!</span>
-                              <span style="position: absolute; bottom: 4px; left: 0; right: 0; height: 10px; background-color: rgba(138, 87, 222, 0.2); border-radius: 5px; z-index: 0;"></span>
-                            </span>
-                          </h1>
+                    <!-- Header section with background image -->
+                    <a href="https://www.zerovacancy.ai" style="text-decoration: none; display: block;">
+                      <div style="overflow: hidden; border-top-left-radius: 16px; border-top-right-radius: 16px;">
+                        <img src="https://www.zerovacancy.ai/og-image-email.png" alt="ZeroVacancy" width="600" style="width: 100%; display: block; border: 0;">
+                      </div>
+                    </a>
+                    
+                    <!-- White content area -->
+                    <div style="padding: 20px 30px;">
+                      <h1 style="margin: 0 0 18px 0; color: #6741d9; text-align: center; font-size: 32px; line-height: 1.1; font-family: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif; font-weight: 700;">YOU'RE ON THE WAITLIST!</h1>
+                      
+                      <p style="margin: 0 0 20px 0; font-family: 'Inter', Arial, sans-serif; font-size: 16px; line-height: 26px; color: #333333; text-align: center;">
+                        Thank you for joining the ZeroVacancy waitlist! We're building the ultimate marketplace for property content that 
+                        <span style="color: #6741d9; font-weight: 600;">converts</span>, 
+                        <span style="color: #8a57de; font-weight: 600;">captivates</span>, and 
+                        <span style="color: #8a57de; font-weight: 600;">closes</span>.
+                      </p>
+                      
+                      <!-- Three benefits boxes -->
+                      <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin-bottom: 25px;">
+                        <tr>
+                          <!-- Box 1 -->
+                          <td width="33.33%" style="padding: 0 5px;">
+                            <div style="background-color: #f9f8ff; border-radius: 12px; padding: 20px 15px; text-align: center; border: 1px solid #eeeaf9;">
+                              <div style="margin-bottom: 10px; display: inline-block; width: 48px; height: 48px; background: linear-gradient(135deg, #6741d9 0%, #8a57de 100%); border-radius: 50%; text-align: center; line-height: 48px; color: white; font-weight: bold; font-size: 20px;">1</div>
+                              <h3 style="margin: 0 0 5px 0; font-family: 'Space Grotesk', Arial, sans-serif; font-size: 16px; color: #6741d9; font-weight: 600;">Early Access</h3>
+                              <p style="margin: 0; font-family: 'Inter', Arial, sans-serif; font-size: 14px; line-height: 1.4; color: #666;">First to know when we launch</p>
+                            </div>
+                          </td>
                           
-                          <!-- Waitlist count badge -->
-                          <div style="display: inline-block; padding: 8px 16px; background-color: rgba(138, 87, 222, 0.15); border-radius: 30px; margin-top: 5px;">
-                            <p style="margin: 0; font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: #5425B3; font-weight: 600;">
-                              <span style="font-weight: 700;">2,100+</span> property teams already joined
-                            </p>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    
-                    <!-- Main Content Section -->
-                    <tr>
-                      <td style="padding: 30px 30px 25px;">
-                        <!-- Welcome Message -->
-                        <p style="margin: 0 0 20px; font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 1.6; color: #45455A; text-align: center;">
-                          Thank you for joining the ZeroVacancy waitlist! We're building the ultimate marketplace for property content that 
-                          <span style="color: #5425B3; font-weight: 600;">converts</span>, 
-                          <span style="color: #7928CA; font-weight: 600;">captivates</span>, and 
-                          <span style="color: #3151D3; font-weight: 600;">closes</span>.
+                          <!-- Box 2 -->
+                          <td width="33.33%" style="padding: 0 5px;">
+                            <div style="background-color: #f9f8ff; border-radius: 12px; padding: 20px 15px; text-align: center; border: 1px solid #eeeaf9;">
+                              <div style="margin-bottom: 10px; display: inline-block; width: 48px; height: 48px; background: linear-gradient(135deg, #6741d9 0%, #8a57de 100%); border-radius: 50%; text-align: center; line-height: 48px; color: white; font-weight: bold; font-size: 20px;">2</div>
+                              <h3 style="margin: 0 0 5px 0; font-family: 'Space Grotesk', Arial, sans-serif; font-size: 16px; color: #6741d9; font-weight: 600;">Premium Content</h3>
+                              <p style="margin: 0; font-family: 'Inter', Arial, sans-serif; font-size: 14px; line-height: 1.4; color: #666;">Top-tier content creators</p>
+                            </div>
+                          </td>
+                          
+                          <!-- Box 3 -->
+                          <td width="33.33%" style="padding: 0 5px;">
+                            <div style="background-color: #f9f8ff; border-radius: 12px; padding: 20px 15px; text-align: center; border: 1px solid #eeeaf9;">
+                              <div style="margin-bottom: 10px; display: inline-block; width: 48px; height: 48px; background: linear-gradient(135deg, #6741d9 0%, #8a57de 100%); border-radius: 50%; text-align: center; line-height: 48px; color: white; font-weight: bold; font-size: 20px;">3</div>
+                              <h3 style="margin: 0 0 5px 0; font-family: 'Space Grotesk', Arial, sans-serif; font-size: 16px; color: #6741d9; font-weight: 600;">Special Pricing</h3>
+                              <p style="margin: 0; font-family: 'Inter', Arial, sans-serif; font-size: 14px; line-height: 1.4; color: #666;">Exclusive waitlist discounts</p>
+                            </div>
+                          </td>
+                        </tr>
+                      </table>
+                      
+                      <!-- Testimonial box -->
+                      <div style="margin: 0 auto 25px auto; background-color: #f9f8ff; border-radius: 12px; padding: 25px; border-left: 4px solid #6741d9; position: relative;">
+                        <!-- Quote mark -->
+                        <div style="position: absolute; top: 15px; left: 20px; font-size: 40px; color: #d4ccea; font-family: Georgia, serif; line-height: 1;">"</div>
+                        
+                        <p style="margin: 0 0 10px 0; font-family: 'Inter', Arial, sans-serif; font-size: 15px; line-height: 24px; color: #333; padding-left: 20px; font-style: italic;">
+                          I'm excited to join ZeroVacancy because finding quality content creators for my properties has always been challenging. Looking forward to the launch!
                         </p>
-                        
-                        <!-- Feature Cards Section -->
-                        <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
-                          <tr>
-                            <!-- Card 1: Early Access -->
-                            <td width="33.33%" style="padding: 5px;">
-                              <div style="background-color: #F9F7FF; border-radius: 10px; padding: 15px 10px; text-align: center; height: 100%;">
-                                <!-- Title -->
-                                <p style="margin: 0 0 5px; font-family: 'Space Grotesk', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 15px; font-weight: 700; color: #2D1A66;">Early Access</p>
-                                <!-- Description -->
-                                <p style="margin: 0; font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; line-height: 1.4; color: #5A5A72;">First to know when we launch</p>
-                              </div>
-                            </td>
-                            
-                            <!-- Card 2: Premium Content -->
-                            <td width="33.33%" style="padding: 5px;">
-                              <div style="background-color: #F9F7FF; border-radius: 10px; padding: 15px 10px; text-align: center; height: 100%;">
-                                <!-- Title -->
-                                <p style="margin: 0 0 5px; font-family: 'Space Grotesk', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 15px; font-weight: 700; color: #2D1A66;">Premium Content</p>
-                                <!-- Description -->
-                                <p style="margin: 0; font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; line-height: 1.4; color: #5A5A72;">Top-tier content creators</p>
-                              </div>
-                            </td>
-                            
-                            <!-- Card 3: Special Pricing -->
-                            <td width="33.33%" style="padding: 5px;">
-                              <div style="background-color: #F9F7FF; border-radius: 10px; padding: 15px 10px; text-align: center; height: 100%;">
-                                <!-- Title -->
-                                <p style="margin: 0 0 5px; font-family: 'Space Grotesk', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 15px; font-weight: 700; color: #2D1A66;">Special Pricing</p>
-                                <!-- Description -->
-                                <p style="margin: 0; font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; line-height: 1.4; color: #5A5A72;">Exclusive waitlist discounts</p>
-                              </div>
-                            </td>
-                          </tr>
-                        </table>
-                      </td>
-                    </tr>
-                    
-                    <!-- Testimonial Section -->
-                    <tr>
-                      <td style="padding: 0 30px 25px;">
-                        <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background: linear-gradient(135deg, #F5F0FF 0%, #F0E9FF 100%); border-radius: 10px; padding: 10px;">
-                          <tr>
-                            <td style="padding: 5px 10px;">
-                              <!-- Quote mark -->
-                              <div style="text-align: center; margin-bottom: 5px;">
-                                <span style="font-family: 'Georgia', serif; font-size: 28px; color: #8A57DE; font-weight: bold;">&ldquo;</span>
-                              </div>
-                              
-                              <!-- Testimonial text -->
-                              <p style="margin: 0 0 8px; font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; line-height: 1.5; color: #45455A; text-align: center; font-style: italic;">
-                                I'm excited to join ZeroVacancy because finding quality content creators for my properties has always been challenging. Looking forward to the launch!
-                              </p>
-                              
-                              <!-- Attribution -->
-                              <p style="margin: 0; font-family: 'Space Grotesk', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; color: #5425B3; font-weight: 600; text-align: center;">
-                                — Sarah T., Property Manager
-                              </p>
-                            </td>
-                          </tr>
-                        </table>
-                      </td>
-                    </tr>
-                    
-                    <!-- Primary CTA Button -->
-                    <tr>
-                      <td style="padding: 0 30px 40px; text-align: center;">
-                        <!-- Button Container -->
-                        <div>
-                          <!--[if mso]>
-                          <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="https://www.zerovacancy.ai" style="height:52px;v-text-anchor:middle;width:240px;" arcsize="25%" stroke="f" fillcolor="#8A57DE">
-                            <w:anchorlock/>
-                            <center>
-                          <![endif]-->
-                          <a href="https://www.zerovacancy.ai" target="_blank" style="display: inline-block; padding: 16px 35px; color: #FFFFFF; background: linear-gradient(to right, #8A57DE, #6366F1); border-radius: 8px; font-family: 'Space Grotesk', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 700; text-decoration: none; text-align: center; min-width: 170px; box-shadow: 0 4px 11px rgba(138, 87, 222, 0.25);">
-                            Visit Our Website
-                            <span style="display: inline-block; margin-left: 5px;">&rarr;</span>
-                          </a>
-                          <!--[if mso]>
-                            </center>
-                          </v:roundrect>
-                          <![endif]-->
-                        </div>
-                        
-                        <!-- Secondary message -->
-                        <p style="margin: 15px 0 0; font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: #6E6E87;">
+                        <p style="margin: 0; font-family: 'Space Grotesk', Arial, sans-serif; font-size: 14px; font-weight: 600; color: #6741d9; padding-left: 20px;">
+                          — Sarah T., Property Manager
+                        </p>
+                      </div>
+                      
+                      <!-- CTA button -->
+                      <div style="text-align: center; margin: 30px 0 20px 0;">
+                        <a href="https://www.zerovacancy.ai" style="display: inline-block; background: linear-gradient(135deg, #6741d9 0%, #8a57de 100%); padding: 16px 32px; font-family: 'Space Grotesk', Arial, sans-serif; font-size: 16px; font-weight: 600; color: white; text-decoration: none; border-radius: 8px; box-shadow: 0 4px 10px rgba(138, 87, 222, 0.3);">
+                          Visit Our Website →
+                        </a>
+                        <p style="margin: 15px 0 0 0; font-family: 'Inter', Arial, sans-serif; font-size: 14px; color: #666666; text-align: center;">
                           We'll notify you when we're ready to launch
                         </p>
-                      </td>
-                    </tr>
-                  </table>
+                      </div>
+                    </div>
+                  </div>
                 </td>
               </tr>
               
@@ -595,44 +537,41 @@ function generateEmailTemplate(userName: string) {
                     <!-- Company Info -->
                     <tr>
                       <td style="padding: 0 0 15px; text-align: center;">
-                        <img src="https://www.zerovacancy.ai/logo.png" width="150" alt="ZeroVacancy" style="display: block; height: auto; margin: 0 auto 10px; border: 0;">
-                        <p style="margin: 0; font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 13px; line-height: 1.5; color: #6E6E87;">
+                        <a href="https://www.zerovacancy.ai" style="display: inline-block; margin-bottom: 15px; text-decoration: none;">
+                          <img src="https://www.zerovacancy.ai/logo.png" width="180" alt="ZeroVacancy" style="border: 0;">
+                        </a>
+                        <p style="margin: 0; font-family: 'Inter', Arial, sans-serif; font-size: 14px; line-height: 1.5; color: #666; font-weight: 500;">
                           Connecting property teams with top-tier content creators
                         </p>
+                      </td>
+                    </tr>
+                    
+                    <!-- Social Links -->
+                    <tr>
+                      <td style="padding: 0 0 15px; text-align: center;">
+                        <a href="https://twitter.com/zerovacancy" style="display: inline-block; margin: 0 5px; text-decoration: none;">
+                          <img src="https://cdn4.iconfinder.com/data/icons/social-media-icons-the-circle-set/48/twitter_circle-512.png" width="24" height="24" alt="Twitter" style="border: 0;">
+                        </a>
+                        <a href="https://instagram.com/zerovacancy" style="display: inline-block; margin: 0 5px; text-decoration: none;">
+                          <img src="https://cdn4.iconfinder.com/data/icons/social-media-icons-the-circle-set/48/instagram_circle-512.png" width="24" height="24" alt="Instagram" style="border: 0;">
+                        </a>
+                        <a href="https://linkedin.com/company/zerovacancy" style="display: inline-block; margin: 0 5px; text-decoration: none;">
+                          <img src="https://cdn4.iconfinder.com/data/icons/social-media-icons-the-circle-set/48/linkedin_circle-512.png" width="24" height="24" alt="LinkedIn" style="border: 0;">
+                        </a>
                       </td>
                     </tr>
                     
                     <!-- Copyright & Legal -->
                     <tr>
                       <td style="padding: 0; text-align: center;">
-                        <p style="margin: 0 0 10px; font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; line-height: 1.5; color: #8894A8;">
-                          &copy; 2024 ZeroVacancy. All rights reserved.
+                        <p style="margin: 0 0 10px; font-family: 'Inter', Arial, sans-serif; font-size: 13px; line-height: 1.5; color: #888888;">
+                          &copy; 2025 ZeroVacancy. All rights reserved.
                         </p>
-                        
-                        <table align="center" cellpadding="0" cellspacing="0" role="presentation">
-                          <tr>
-                            <!-- Terms -->
-                            <td style="padding: 0 8px;">
-                              <a href="https://www.zerovacancy.ai/terms" target="_blank" style="font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; color: #5425B3; text-decoration: none;">
-                                Terms
-                              </a>
-                            </td>
-                            
-                            <!-- Privacy -->
-                            <td style="padding: 0 8px;">
-                              <a href="https://www.zerovacancy.ai/privacy" target="_blank" style="font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; color: #5425B3; text-decoration: none;">
-                                Privacy
-                              </a>
-                            </td>
-                            
-                            <!-- Unsubscribe -->
-                            <td style="padding: 0 8px;">
-                              <a href="mailto:unsubscribe@zerovacancy.ai?subject=Unsubscribe%20from%20waitlist" target="_blank" style="font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; color: #5425B3; text-decoration: none;">
-                                Unsubscribe
-                              </a>
-                            </td>
-                          </tr>
-                        </table>
+                        <p style="margin: 0; font-family: 'Inter', Arial, sans-serif; font-size: 13px; line-height: 1.5; color: #888888;">
+                          <a href="https://www.zerovacancy.ai/terms" target="_blank" style="color: #6741d9; text-decoration: none; font-weight: 500; margin: 0 5px;">Terms</a> • 
+                          <a href="https://www.zerovacancy.ai/privacy" target="_blank" style="color: #6741d9; text-decoration: none; font-weight: 500; margin: 0 5px;">Privacy</a> • 
+                          <a href="[Unsubscribe_Link]" target="_blank" style="color: #6741d9; text-decoration: none; font-weight: 500; margin: 0 5px;">Unsubscribe</a>
+                        </p>
                       </td>
                     </tr>
                   </table>
