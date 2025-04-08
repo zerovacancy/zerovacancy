@@ -1,10 +1,11 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
+import FontFaceObserver from 'fontfaceobserver';
 
 /**
  * Optimized font loader component that prevents layout shifts and
  * implements performance best practices for web font loading
  */
-const FontLoader = () => {
+const FontLoader: React.FC = () => {
   useEffect(() => {
     // 1. Apply system font fallbacks first to prevent layout shifts
     const fallbackStyle = document.createElement('style');
@@ -37,12 +38,11 @@ const FontLoader = () => {
     `;
     document.head.appendChild(fallbackStyle);
     
-    // 2. Preload the critical font files using the Link API
+    // 2. Preload the critical font files
+    // Updated font URLs to the current versions
     const criticalFonts = [
-      // Primary heading font - most critical weight
-      'https://fonts.gstatic.com/s/plusjakartasans/v8/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_KU7NSg.woff2',
-      // Primary body font - most critical weight
-      'https://fonts.gstatic.com/s/inter/v13/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7.woff2'
+      'https://fonts.gstatic.com/s/plusjakartasans/v13/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA.woff2', // Plus Jakarta Sans Bold
+      'https://fonts.gstatic.com/s/inter/v13/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7.woff2' // Inter Regular
     ];
     
     criticalFonts.forEach(fontUrl => {
@@ -79,7 +79,7 @@ const FontLoader = () => {
     // 4. Load Google Fonts with display=swap parameter
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap&display=swap';
+    link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap';
     document.head.appendChild(link);
     
     // 5. Add the final font stack after fonts are loaded
@@ -112,12 +112,15 @@ const FontLoader = () => {
       }
     `;
     
-    // 6. Use font loading API when available for better control
+    // 6. Use font loading API with FontFaceObserver for better control
+    const fontObserverPlusJakarta = new FontFaceObserver('Plus Jakarta Sans', { weight: 700 });
+    const fontObserverInter = new FontFaceObserver('Inter', { weight: 400 });
+    
     if ('fonts' in document) {
       // Use Promise.all to track when all fonts are loaded
       Promise.all([
-        document.fonts.load('700 1em "Plus Jakarta Sans"'),
-        document.fonts.load('400 1em "Inter"')
+        fontObserverPlusJakarta.load(null, 3000), // 3 second timeout
+        fontObserverInter.load(null, 3000)
       ]).then(() => {
         document.head.appendChild(loadedFontsStyle);
         document.documentElement.classList.add('fonts-loaded');

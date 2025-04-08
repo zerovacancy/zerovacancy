@@ -5,6 +5,7 @@ import App from './App.tsx';
 import './index.css';
 import ErrorFallback from './components/ErrorFallback.tsx';
 import { initializePerformanceOptimizations, mobilePerformanceEnhancements } from './utils/performance-optimizations';
+import setupCSSContainment from './utils/css-optimization/init-containment';
 
 /**
  * Initialize performance optimizations early
@@ -19,6 +20,9 @@ if (typeof window !== 'undefined') {
   
   // Apply mobile-specific optimizations
   mobilePerformanceEnhancements(isMobile);
+  
+  // Initialize CSS containment optimizations
+  setupCSSContainment();
   
   // Mark the start time for performance measurement
   window.performance.mark('app-init-start');
