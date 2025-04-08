@@ -13,6 +13,8 @@
   z-index: 1100 !important;
   /* Animation */
   animation: slide-in-from-bottom 0.5s ease-out forwards;
+  /* Safe area insets */
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 /* Ensure cookie banner content has proper styling */
@@ -39,8 +41,8 @@
   .cookie-consent-content {
     /* Subtle rounded corners */
     border-radius: 16px 16px 0 0;
-    /* Add bottom safe area padding for modern mobile browsers */
-    padding-bottom: calc(1rem + env(safe-area-inset-bottom, 1rem));
+    /* Bottom padding is handled by container now */
+    padding-bottom: 1rem;
   }
   
   /* Close button positioning */

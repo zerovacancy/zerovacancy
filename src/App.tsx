@@ -6,7 +6,9 @@ import { Toaster } from '@/components/ui/toaster';
 import { Toaster as SonnerToaster } from 'sonner';
 // Import from mobile utils for better SSR compatibility 
 import { isMobileDevice } from '@/utils/mobile-optimization';
-import { mobileOptimizationClasses, optimizeMobileViewport, applyLandscapeOrientationFixes } from '@/utils/mobile-optimization';
+import { mobileOptimizationClasses, optimizeMobileViewport, applyLandscapeOrientationFixes, reduceAnimationComplexity } from '@/utils/mobile-optimization';
+import { initMobileSafety } from '@/utils/mobile-safety';
+import { SharedIntersectionObserver, initJavaScriptOptimizations } from '@/utils/js-optimization';
 import { BottomNav } from '@/components/navigation/BottomNav';
 import { Analytics } from '@vercel/analytics/react';
 import { SEOProvider } from '@/components/SEO';
@@ -164,7 +166,15 @@ function App() {
     `;
     document.head.appendChild(heroHeightOverride);
     
+    // Initialize mobile optimizations - in order of importance
     optimizeMobileViewport();
+    initMobileSafety();
+    reduceAnimationComplexity();
+    
+    // Initialize all JavaScript optimizations 
+    // This includes the shared intersection observer, event handling,
+    // and performance monitoring
+    initJavaScriptOptimizations();
     
     const cleanupLandscapeFixes = applyLandscapeOrientationFixes();
     

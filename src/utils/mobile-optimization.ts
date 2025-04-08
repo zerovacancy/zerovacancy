@@ -97,14 +97,14 @@ export const optimizeMobileViewport = () => {
       `;
       document.head.appendChild(safeAreaStyle);
       
-      // Force hardware acceleration for all animations
+      // Optimized hardware acceleration for mobile
       const style = document.createElement('style');
       style.innerHTML = `
+        /* Optimize GPU-accelerated elements for better performance 
+         * For mobile, we're more selective about what gets GPU acceleration
+         * to avoid overwhelming the GPU
+         */
         .gpu-accelerated, 
-        .animated, 
-        .animate-fade-in, 
-        .animate-fade-in-up,
-        .animate-slide-in,
         .transform-gpu {
           -webkit-transform: translateZ(0);
           transform: translateZ(0);
@@ -112,7 +112,30 @@ export const optimizeMobileViewport = () => {
           backface-visibility: hidden;
           -webkit-perspective: 1000;
           perspective: 1000;
-          will-change: transform, opacity;
+          /* Only set will-change for truly changing elements to avoid memory issues */
+          will-change: transform;
+        }
+        
+        /* For animations, we're using a simplified approach on mobile */
+        .animated, 
+        .animate-fade-in, 
+        .animate-fade-in-up,
+        .animate-slide-in {
+          /* No 3D transforms for general animations on mobile - better performance */
+          -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+          /* Only use will-change for opacity - much lighter than transform */
+          will-change: opacity;
+        }
+        
+        /* Disable heavy blur effects on mobile */
+        .blur-xl, .blur-2xl, .blur-3xl {
+          filter: blur(6px) !important;
+        }
+        
+        /* Reduce shadow complexity on mobile */
+        .shadow-xl, .shadow-2xl {
+          box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
         }
       `;
       document.head.appendChild(style);
@@ -189,6 +212,115 @@ export const mobileSpacingUtils = {
 };
 
 // Helper classes to conditionally apply to components
+/**
+ * Reduces the complexity of animations and visual effects based on device capability
+ * This is critical for mobile performance improvements
+ */
+export function reduceAnimationComplexity() {
+  if (typeof document === 'undefined') return;
+  
+  // Get device capability using our own function instead of importing it
+  let deviceCapability: 'high' | 'medium' | 'low' = 'medium';
+  
+  // Simple device capability detection without relying on external function
+  if (typeof navigator !== 'undefined') {
+    const memory = (navigator as any).deviceMemory || 4; // Default to 4GB
+    const cores = navigator.hardwareConcurrency || 4; // Default to 4 cores
+    
+    // Low-end device detection
+    if (memory <= 2 || cores <= 2) {
+      deviceCapability = 'low';
+    } else if (memory >= 8 && cores >= 6) {
+      deviceCapability = 'high';
+    }
+  }
+  
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  
+  // Always respect user preference for reduced motion
+  if (prefersReducedMotion) {
+    document.documentElement.classList.add('reduce-motion');
+    document.documentElement.classList.add('reduce-effects');
+  }
+  
+  // For low and medium capability devices, reduce animation complexity
+  if (deviceCapability === 'low' || isMobileDevice()) {
+    document.documentElement.classList.add('reduce-effects');
+    
+    // Add a style element with more aggressive optimizations
+    const style = document.createElement('style');
+    style.innerHTML = `
+      /* Remove all backdrop blur effects - extremely expensive on mobile */
+      .backdrop-blur, 
+      .backdrop-blur-sm, 
+      .backdrop-blur-md, 
+      .backdrop-blur-lg, 
+      .backdrop-blur-xl, 
+      .backdrop-blur-2xl,
+      .backdrop-blur-3xl {
+        backdrop-filter: none !important;
+      }
+      
+      /* Disable gradient animations - very expensive */
+      .animate-gradient,
+      .moving-gradient,
+      [class*="animate-gradient"],
+      [class*="moving-gradient"] {
+        animation: none !important;
+        background: linear-gradient(to right, #8a63ff, #6c4cd6) !important;
+      }
+      
+      /* Reduce animation durations */
+      .animate-spin,
+      .animate-pulse,
+      .animate-bounce,
+      [class*="animate-"] {
+        animation-duration: 1s !important;
+      }
+      
+      /* Disable parallax effects */
+      .parallax,
+      [class*="parallax-"],
+      [data-parallax] {
+        transform: none !important;
+        transition: opacity 0.3s ease !important;
+      }
+      
+      /* Simplify transitions */
+      .transition-all {
+        transition-property: opacity !important;
+        transition-duration: 0.3s !important;
+      }
+      
+      /* Disable hover effects */
+      .hover:shadow-lg,
+      .hover:scale-105,
+      .hover:rotate-1,
+      .group-hover:scale-105,
+      .group-hover:shadow-lg {
+        transform: none !important;
+        box-shadow: none !important;
+      }
+      
+      /* Remove any expensive background effects */
+      .bg-mesh-gradient,
+      .bg-noise,
+      .bg-glass,
+      [class*="bg-mesh"],
+      [class*="bg-glass"],
+      [class*="bg-blur"] {
+        background: transparent !important;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+  
+  // For medium capability devices, use moderate optimizations
+  if (deviceCapability === 'medium') {
+    document.documentElement.classList.add('optimize-effects');
+  }
+}
+
 export const mobileOptimizationClasses = {
   // Hide elements completely on mobile
   hideOnMobile: "sm:block hidden",

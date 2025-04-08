@@ -1,11 +1,12 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Home, Search, MessageSquare, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { mobileOptimizationClasses } from '@/utils/mobile-optimization';
 import { GlowDialog } from '@/components/ui/glow-dialog';
+import { addBottomNavSpacer } from '@/utils/mobile-safety';
 
 interface NavItemProps {
   icon: 'home' | 'search' | 'message' | 'user';
@@ -54,10 +55,25 @@ export const BottomNav = () => {
   if (!isMobile || location.pathname === "/" || location.pathname === "") return null;
   
   const [showGlowDialog, setShowGlowDialog] = useState(false);
+  
+  // Add bottom spacer to prevent content from being hidden behind the nav
+  useEffect(() => {
+    // Add spacer when the component mounts
+    addBottomNavSpacer();
+    
+    // Add class to body to enable proper padding
+    document.body.classList.add('has-fixed-bottom');
+    
+    // Clean up when component unmounts
+    return () => {
+      document.body.classList.remove('has-fixed-bottom');
+      // We don't remove the spacer as it might be needed by other fixed elements
+    };
+  }, []);
 
   return (
     <>
-      <nav className={`fixed bottom-0 left-0 right-0 z-50 border-t border-purple-100 ${improvedShadowMobile} ${gradientBgMobile} rounded-t-xl`}>
+      <nav className={`fixed bottom-0 left-0 right-0 z-50 border-t border-purple-100 ${improvedShadowMobile} ${gradientBgMobile} rounded-t-xl fixed-bottom`}>
         <div className="flex items-center justify-around w-full mx-auto h-16 px-2">
           <NavItem icon="home" label="Home" to="/" />
           

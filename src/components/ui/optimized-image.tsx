@@ -1,6 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, memo } from 'react';
 import { cn } from '@/lib/utils';
 import { optimizeImageAlt } from '@/utils/seo-utils';
+import { 
+  preloadImage, 
+  getOptimizedImageUrl, 
+  getOptimalImageFormat,
+  createImagePlaceholder,
+  generateSrcSet,
+  calculateSizes
+} from '@/utils/image-loader';
+import { observeElement } from '@/utils/js-optimization';
 
 interface OptimizedImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   src: string;
@@ -15,9 +24,13 @@ interface OptimizedImageProps extends React.ImgHTMLAttributes<HTMLImageElement> 
   quality?: 'low' | 'medium' | 'high';
   lcpCandidate?: boolean; // Flag for potential LCP image
   seoKeywords?: string[]; // SEO keywords for optimizing alt text
+  objectFit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
+  placeholderColor?: string;
+  withWebp?: boolean; // Automatically use WebP when available
+  useSrcSet?: boolean; // Use srcSet for responsive images
 }
 
-export function OptimizedImage({
+export const OptimizedImage = memo(function OptimizedImage({
   src,
   alt,
   className,
@@ -30,71 +43,100 @@ export function OptimizedImage({
   quality = 'medium',
   lcpCandidate = false,
   seoKeywords,
+  objectFit = 'cover',
+  placeholderColor,
+  withWebp = true,
+  useSrcSet = true,
   ...props
 }: OptimizedImageProps) {
+  // Manage image loading states
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-  const imgRef = useRef<HTMLImageElement>(null);
-  const observerRef = useRef<IntersectionObserver | null>(null);
-  const placeholderColor = useRef(`hsl(${Math.floor(Math.random() * 360)}, 20%, 95%)`);
+  const [isVisible, setIsVisible] = useState(priority || lcpCandidate);
+  const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const [placeholderSrc, setPlaceholderSrc] = useState<string>('');
+  
+  // Refs
+  const containerRef = useRef<HTMLDivElement>(null);
+  const cleanupRef = useRef<() => void>(() => {});
+  const generatedColor = useRef<string>(`hsl(${Math.floor(Math.random() * 360)}, 20%, 95%)`);
 
-  // Determine if we're on a mobile device
-  const [isMobile, setIsMobile] = useState(false);
-
+  // Calculate optimized image path with appropriate format
+  const optimizedSrc = withWebp ? getOptimizedImageUrl(src) : src;
+  const imageFormat = getOptimalImageFormat();
+  
+  // Get sizes for responsive image loading
+  const responsiveSizes = sizes || calculateSizes({
+    mobile: '100vw',
+    tablet: '70vw', 
+    desktop: '50vw'
+  });
+  
+  // Get srcSet for responsive images if enabled
+  const srcSet = useSrcSet ? generateSrcSet(optimizedSrc) : undefined;
+  
+  // Effect to create and set image placeholder
   useEffect(() => {
-    setIsMobile(window.innerWidth < 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+    const color = placeholderColor || generatedColor.current;
+    const placeholder = createImagePlaceholder(src, color);
+    setPlaceholderSrc(placeholder);
+  }, [src, placeholderColor]);
+  
+  // Set up intersection observer for better performance
+  useEffect(() => {
+    // Don't observe if already visible or if it's a priority image
+    if (isVisible || priority || lcpCandidate) return;
     
-    // For LCP images or priority images, always load immediately
-    if (priority || lcpCandidate) {
-      setIsVisible(true);
-      return;
-    }
+    // Define the loading strategy based on image importance
+    const rootMargin = lcpCandidate ? '800px' : priority ? '500px' : '300px';
     
-    // Set up intersection observer for better performance
-    if (imgRef.current) {
-      observerRef.current = new IntersectionObserver(
-        (entries) => {
-          if (entries[0].isIntersecting) {
+    if (containerRef.current) {
+      // Use the shared intersection observer for performance
+      const cleanup = observeElement(
+        containerRef.current,
+        (isIntersecting) => {
+          if (isIntersecting) {
             setIsVisible(true);
-            observerRef.current?.disconnect();
           }
         },
-        {
-          // Larger rootMargin for above-the-fold images for faster loading
-          rootMargin: '300px', // Start loading when image is 300px from viewport
-          threshold: 0.01
-        }
+        { rootMargin, threshold: 0.01 }
       );
       
-      observerRef.current.observe(imgRef.current);
-      return () => observerRef.current?.disconnect();
-    } else {
-      setIsVisible(true);
+      cleanupRef.current = cleanup;
+      return cleanup;
     }
-  }, [priority, lcpCandidate]);
-
-  // Simplified WebP conversion - only use WebP for paths that already end in .webp
-  const getWebPPath = (originalPath: string) => {
-    // Only use paths that already end with .webp - no conversion
-    // This ensures we only use WebP where it definitely exists
-    if (originalPath.endsWith('.webp')) {
-      return originalPath;
-    }
+  }, [isVisible, priority, lcpCandidate]);
+  
+  // Load the image when visible
+  useEffect(() => {
+    if (!isVisible || !src) return;
     
-    // For all other paths, don't try to convert to WebP
-    return null;
-  };
-
-  // Extremely simplified srcSet - don't use srcSet at all for now
-  const getSrcSet = (imagePath: string) => {
-    // For development mode, don't use srcSet at all to ensure images load properly
-    return undefined;
-  };
-
-  const webpSrc = getWebPPath(src);
-  const srcSet = getSrcSet(src);
-  const webpSrcSet = webpSrc ? getSrcSet(webpSrc) : undefined;
+    const loadImage = async () => {
+      try {
+        // Use our preloadImage utility to handle image loading
+        await preloadImage(optimizedSrc, {
+          priority: priority || lcpCandidate ? 'high' : 'medium',
+          timeout: 10000
+        });
+        
+        // Set the image source to trigger the actual image display
+        setImageSrc(optimizedSrc);
+        setIsLoaded(true);
+      } catch (error) {
+        console.warn(`Failed to load image: ${src}`, error);
+        setError(true);
+      }
+    };
+    
+    loadImage();
+  }, [src, optimizedSrc, isVisible, priority, lcpCandidate]);
+  
+  // Clear cleanup functions on unmount
+  useEffect(() => {
+    return () => {
+      cleanupRef.current();
+    };
+  }, []);
   
   // Handle image load event
   const handleLoad = () => {
@@ -107,14 +149,6 @@ export function OptimizedImage({
     setError(true);
   };
 
-  // Pre-load the image if it has priority
-  useEffect(() => {
-    if (priority && src) {
-      const img = new Image();
-      img.src = src;
-    }
-  }, [priority, src]);
-
   // Fixed placeholder styles to show immediately without causing layout shifts
   const aspectRatioStyle = width && height 
     ? { aspectRatio: `${width} / ${height}` }
@@ -123,36 +157,55 @@ export function OptimizedImage({
   return (
     <div 
       className={cn(
-        'relative overflow-hidden bg-gray-100',
+        'relative overflow-hidden',
         className
       )}
       style={{ 
         width: width ? `${width}px` : '100%',
         height: height ? `${height}px` : 'auto',
         ...aspectRatioStyle,
-        backgroundColor: placeholderColor.current,
+        backgroundColor: placeholderColor || generatedColor.current,
       }}
-      ref={imgRef}
+      ref={containerRef}
     >
-      {/* Placeholder/skeleton shown while image is loading */}
+      {/* Placeholder shown while image is loading */}
       {!isLoaded && !error && blurPlaceholder && (
         <div 
-          className="absolute inset-0 bg-gradient-to-r from-gray-200 to-gray-300 animate-pulse" 
+          className={cn(
+            "absolute inset-0",
+            isVisible ? "animate-pulse" : ""
+          )}
           style={{ 
             width: '100%', 
             height: '100%',
+            backgroundImage: `url(${placeholderSrc})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
           }}
         />
       )}
       
-      {/* Only load the actual image when it's near the viewport */}
-      {isVisible && (
-        webpSrc ? (
+      {/* Actual image - only loaded when visible */}
+      {isVisible && imageSrc && (
+        imageFormat === 'webp' || imageFormat === 'avif' ? (
           <picture>
-            {webpSrcSet && <source srcSet={webpSrcSet} type="image/webp" sizes={sizes || '100vw'} />}
-            {srcSet && <source srcSet={srcSet} sizes={sizes || '100vw'} />}
+            {/* Provide appropriate source for modern formats with fallbacks */}
+            {imageFormat === 'avif' && (
+              <source 
+                type="image/avif" 
+                srcSet={srcSet?.replace(/\.(jpe?g|png|webp)(\s+\d+w)/g, '.avif$2')} 
+                sizes={responsiveSizes} 
+              />
+            )}
+            {imageFormat === 'webp' && (
+              <source 
+                type="image/webp" 
+                srcSet={srcSet?.replace(/\.(jpe?g|png)(\s+\d+w)/g, '.webp$2')} 
+                sizes={responsiveSizes} 
+              />
+            )}
             <img
-              src={src}
+              src={imageSrc}
               alt={seoKeywords ? optimizeImageAlt(alt, seoKeywords) : alt}
               width={width}
               height={height}
@@ -162,17 +215,20 @@ export function OptimizedImage({
               onLoad={handleLoad}
               onError={handleError}
               className={cn(
-                'max-w-full h-auto object-cover will-change-[opacity] transition-opacity duration-300',
-                'opacity-100', // Always show images
+                'max-w-full h-auto w-full',
+                `object-${objectFit}`,
+                'transition-opacity duration-300 ease-in-out',
+                isLoaded ? 'opacity-100' : 'opacity-0',
                 error ? 'opacity-0' : ''
               )}
-              sizes={sizes || '100vw'}
+              sizes={responsiveSizes}
+              srcSet={srcSet}
               {...props}
             />
           </picture>
         ) : (
           <img
-            src={src}
+            src={imageSrc}
             alt={seoKeywords ? optimizeImageAlt(alt, seoKeywords) : alt}
             width={width}
             height={height}
@@ -182,11 +238,13 @@ export function OptimizedImage({
             onLoad={handleLoad}
             onError={handleError}
             className={cn(
-              'max-w-full h-auto object-cover will-change-[opacity] transition-opacity duration-300',
-              'opacity-100', // Always show images
+              'max-w-full h-auto w-full',
+              `object-${objectFit}`,
+              'transition-opacity duration-300 ease-in-out',
+              isLoaded ? 'opacity-100' : 'opacity-0',
               error ? 'opacity-0' : ''
             )}
-            sizes={sizes || '100vw'}
+            sizes={responsiveSizes}
             srcSet={srcSet}
             {...props}
           />
@@ -196,9 +254,9 @@ export function OptimizedImage({
       {/* Show error state */}
       {error && (
         <div className="absolute inset-0 flex items-center justify-center bg-gray-200 text-gray-500">
-          <span>Failed to load</span>
+          <span className="text-sm">Image failed to load</span>
         </div>
       )}
     </div>
   );
-}
+});
