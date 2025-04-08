@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import FontFaceObserver from 'fontfaceobserver';
 
 /**
  * Optimized font loader component that prevents layout shifts and
@@ -7,6 +6,9 @@ import FontFaceObserver from 'fontfaceobserver';
  */
 const FontLoader: React.FC = () => {
   useEffect(() => {
+    // Skip font loading on server side
+    if (typeof window === 'undefined' || typeof document === 'undefined') return;
+    
     // 1. Apply system font fallbacks first to prevent layout shifts
     const fallbackStyle = document.createElement('style');
     fallbackStyle.textContent = `
@@ -112,15 +114,12 @@ const FontLoader: React.FC = () => {
       }
     `;
     
-    // 6. Use font loading API with FontFaceObserver for better control
-    const fontObserverPlusJakarta = new FontFaceObserver('Plus Jakarta Sans', { weight: 700 });
-    const fontObserverInter = new FontFaceObserver('Inter', { weight: 400 });
-    
+    // 6. Use font loading API with a simpler approach
     if ('fonts' in document) {
       // Use Promise.all to track when all fonts are loaded
       Promise.all([
-        fontObserverPlusJakarta.load(null, 3000), // 3 second timeout
-        fontObserverInter.load(null, 3000)
+        document.fonts.load('700 1em "Plus Jakarta Sans"'),
+        document.fonts.load('400 1em "Inter"')
       ]).then(() => {
         document.head.appendChild(loadedFontsStyle);
         document.documentElement.classList.add('fonts-loaded');
