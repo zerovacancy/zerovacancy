@@ -41,16 +41,33 @@ self.addEventListener('activate', (event) => {
 
 // Special handling for CSS files to prevent caching issues
 const handleCssRequest = async (request) => {
+  // Validate request scheme before proceeding
+  const url = new URL(request.url);
+  const protocol = url.protocol;
+  if (!['http:', 'https:'].includes(protocol)) {
+    // Skip any non-HTTP(S) requests
+    console.log('Skipping CSS handling for non-HTTP request:', protocol);
+    return fetch(request);
+  }
+  
   // Try network first for CSS files
   try {
     const networkResponse = await fetch(request);
-    // Clone the response to save in cache
-    const responseToCache = networkResponse.clone();
     
-    // Update the cache with fresh CSS
-    caches.open(CACHE_NAME).then(cache => {
-      cache.put(request, responseToCache);
-    });
+    // Only cache successful, complete responses
+    if (networkResponse.status === 200 && networkResponse.ok) {
+      // Clone the response to save in cache
+      const responseToCache = networkResponse.clone();
+      
+      // Update the cache with fresh CSS
+      caches.open(CACHE_NAME).then(cache => {
+        try {
+          cache.put(request, responseToCache);
+        } catch (cacheError) {
+          console.warn('Failed to cache CSS response:', cacheError);
+        }
+      });
+    }
     
     return networkResponse;
   } catch (error) {
@@ -69,57 +86,82 @@ const handleCssRequest = async (request) => {
 
 // Fetch event - network first for CSS, cache first for other assets
 self.addEventListener('fetch', (event) => {
-  const url = new URL(event.request.url);
-  
-  // Handle CSS files specially
-  if (url.pathname.endsWith('.css') || url.pathname.includes('/assets/css/')) {
-    event.respondWith(handleCssRequest(event.request));
-    return;
-  }
-  
-  // For other requests, use cache first, then network
-  event.respondWith(
-    caches.match(event.request)
-      .then((response) => {
-        // Return the cached response if we have it
-        if (response) {
-          return response;
-        }
-        
-        // Otherwise try to fetch from network
-        return fetch(event.request).then(
-          (networkResponse) => {
-            // Don't cache if not a GET request
-            if (event.request.method !== 'GET') {
+  try {
+    const url = new URL(event.request.url);
+    const protocol = url.protocol;
+
+    // Skip non-HTTP requests entirely
+    if (!['http:', 'https:'].includes(protocol)) {
+      // Just pass through without service worker handling
+      return;
+    }
+    
+    // Handle CSS files specially
+    if (url.pathname.endsWith('.css') || url.pathname.includes('/assets/css/')) {
+      event.respondWith(handleCssRequest(event.request));
+      return;
+    }
+    
+    // For other requests, use cache first, then network
+    event.respondWith(
+      caches.match(event.request)
+        .then((response) => {
+          // Return the cached response if we have it
+          if (response) {
+            return response;
+          }
+          
+          // Otherwise try to fetch from network
+          return fetch(event.request).then(
+            (networkResponse) => {
+              // Don't cache if not a GET request
+              if (event.request.method !== 'GET') {
+                return networkResponse;
+              }
+              
+              // Only cache successful complete responses
+              if (networkResponse.status !== 200 || !networkResponse.ok) {
+                return networkResponse;
+              }
+              
+              // Clone the response to save in cache and return the original
+              const responseToCache = networkResponse.clone();
+              
+              caches.open(CACHE_NAME)
+                .then((cache) => {
+                  try {
+                    cache.put(event.request, responseToCache);
+                  } catch (cacheError) {
+                    console.warn('Failed to cache response:', cacheError);
+                  }
+                });
+              
               return networkResponse;
             }
-            
-            // Clone the response to save in cache and return the original
-            const responseToCache = networkResponse.clone();
-            
-            caches.open(CACHE_NAME)
-              .then((cache) => {
-                cache.put(event.request, responseToCache);
-              });
-            
-            return networkResponse;
+          );
+        })
+        .catch((error) => {
+          console.warn('Fetch handler error:', error);
+          
+          // If both cache and network fail for resources like images, 
+          // return an empty response with appropriate content type
+          const url = new URL(event.request.url);
+          if (url.pathname.match(/\.(jpg|jpeg|png|gif|webp|svg)$/)) {
+            return new Response('', {
+              headers: { 'Content-Type': 'image/svg+xml' }
+            });
           }
-        );
-      })
-      .catch(() => {
-        // If both cache and network fail for resources like images, 
-        // return an empty response with appropriate content type
-        const url = new URL(event.request.url);
-        if (url.pathname.match(/\.(jpg|jpeg|png|gif|webp|svg)$/)) {
-          return new Response('', {
-            headers: { 'Content-Type': 'image/svg+xml' }
-          });
-        }
-        
-        // Let the browser handle other failed requests
-        return;
-      })
-  );
+          
+          // Let the browser handle other failed requests
+          return;
+        })
+    );
+  } catch (parseError) {
+    // Handle URL parsing errors or other exceptions
+    console.error('Service worker fetch handler error:', parseError);
+    // Continue without service worker intervention
+    return;
+  }
 });
 
 // Listen for messages from the main page
@@ -132,10 +174,30 @@ self.addEventListener('message', (event) => {
   // Handle prefetch request
   if (event.data && event.data.type === 'PREFETCH_RESOURCES' && event.data.resources) {
     // Prefetch resources in the background
-    event.data.resources.forEach(url => {
-      fetch(url, { mode: 'no-cors' }).catch(() => {
-        // Silently fail prefetch attempts
-      });
+    event.data.resources.forEach(urlString => {
+      try {
+        // Validate URL before fetching
+        const url = new URL(urlString);
+        const protocol = url.protocol;
+        
+        // Only prefetch HTTP/HTTPS resources
+        if (['http:', 'https:'].includes(protocol)) {
+          fetch(urlString, { mode: 'no-cors' })
+            .then(response => {
+              // Only cache successful responses
+              if (response.status === 200 && response.ok) {
+                // We could cache these responses, but for now just warm up the browser cache
+                console.log('Prefetched resource: ' + urlString);
+              }
+            })
+            .catch(() => {
+              // Silently fail prefetch attempts
+            });
+        }
+      } catch (error) {
+        // Silently handle invalid URLs
+        console.warn('Invalid prefetch URL: ' + urlString);
+      }
     });
   }
 });
