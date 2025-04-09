@@ -17,6 +17,7 @@ import { ScrollProgress } from '@/components/ui/scroll-progress';
 import { CookieConsent } from '@/components/ui/cookie-consent';
 import FontLoader from '@/components/FontLoader';
 import CriticalPreload from '@/components/CriticalPreload';
+import FOUCPrevention from '@/components/FOUCPrevention';
 import { AuthProvider } from '@/components/auth/AuthContext';
 import AuthForms from '@/components/auth/AuthForms';
 
@@ -236,6 +237,7 @@ function App() {
         <Router>
           <AuthProvider>
             {/* Critical performance components */}
+            <FOUCPrevention />
             <FontLoader />
             <CriticalPreload />
             <ScrollToTop />

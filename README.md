@@ -6,6 +6,17 @@
 Some legacy assets have been moved to the `public/archived-assets` directory. These include:
 - `heroparallax/*` images - Previously used in the old `ParallaxHero` component but no longer referenced in current components
 
+### FOUC Prevention
+This project includes a comprehensive FOUC (Flash of Unstyled Content) prevention system that:
+- Prevents outdated heroparallax images from flashing during page load
+- Ensures smooth transitions during page render
+- Blocks any attempts to load archived assets
+- Optimizes mobile performance
+
+For details, see the [FOUC-PREVENTION.md](./FOUC-PREVENTION.md) documentation.
+
+To verify the FOUC prevention is working correctly, use the [verify-fouc-prevention.js](./verify-fouc-prevention.js) script.
+
 **URL**: https://lovable.dev/projects/8ba18415-1001-43ee-816e-9d9e8b4857a9
 
 ## How can I edit this code?

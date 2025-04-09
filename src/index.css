@@ -316,6 +316,37 @@
 /* Tailwind utilities layer */
 @tailwind utilities;
 
+/* FOUC Prevention Styles */
+html.loading {
+  visibility: visible;
+}
+
+html.loading img {
+  opacity: 0 !important;
+  transition: none !important;
+}
+
+html.content-loaded img {
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
+[src*="heroparallax"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  position: absolute !important;
+  width: 0 !important;
+  height: 0 !important;
+  top: -9999px !important;
+  left: -9999px !important;
+}
+
+[style*="heroparallax"] {
+  background-image: none !important;
+}
+
 /* Custom utility styles */
 @layer utilities {
   /* Animation utilities */
