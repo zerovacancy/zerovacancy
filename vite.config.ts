@@ -97,6 +97,12 @@ export default defineConfig(({ mode }) => ({
             // Use a stable name for CSS files to avoid mobile preloading issues
             return 'assets/css/styles.[ext]';
           }
+          
+          // Skip archived assets from being included in the build
+          if (assetInfo.name && assetInfo.name.includes('archived-assets')) {
+            return `excluded/[name]-[hash].[ext]`; // This puts them in a directory that's easy to filter out
+          }
+          
           return `assets/${extType}/[name]-[hash].[ext]`;
         },
       },
@@ -107,6 +113,22 @@ export default defineConfig(({ mode }) => ({
       legalComments: 'none',
       pure: mode === 'production' ? ['console.log', 'console.info', 'console.debug'] : [],
     },
+    // Custom plugin to exclude archived assets from build
+    plugins: [
+      {
+        name: 'exclude-archived-assets',
+        enforce: 'post',
+        apply: 'build',
+        generateBundle(outputOptions, bundle) {
+          Object.keys(bundle).forEach(key => {
+            if (key.includes('archived-assets/') || key.includes('excluded/')) {
+              delete bundle[key];
+              console.log(`Excluded archived asset: ${key}`);
+            }
+          });
+        }
+      }
+    ]
   },
   // Improve file system case sensitivity handling and dependency optimization
   optimizeDeps: {

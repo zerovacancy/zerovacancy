@@ -16,7 +16,10 @@
     "perf-images": "npm run optimize-images && npm run update-image-refs",
     "generate-sitemap": "ts-node src/scripts/generate-sitemap.ts",
     "seo-audit": "ts-node src/scripts/verify-seo.ts",
-    "seo-check": "npm run seo-audit && npm run generate-sitemap"
+    "seo-check": "npm run seo-audit && npm run generate-sitemap",
+    "audit-assets": "./simplified-asset-audit.sh",
+    "archive-unused": "./archive-unused-assets.sh",
+    "asset-cleanup": "npm run audit-assets && npm run archive-unused"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
