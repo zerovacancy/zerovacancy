@@ -4,6 +4,7 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 import reactSingleton from "./src/plugins/vite-react-singleton";
+import excludeArchivedAssets from "./vite-exclude-archived-plugin.js";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -17,6 +18,9 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     // Handle React properly
     reactSingleton(),
+    
+    // Plugin to exclude archived assets from the build
+    excludeArchivedAssets(),
     
     react({
       // More aggressive optimizations in production
