@@ -2,6 +2,10 @@
 
 ## Project info
 
+### Note About Archived Assets
+Some legacy assets have been moved to the `public/archived-assets` directory. These include:
+- `heroparallax/*` images - Previously used in the old `ParallaxHero` component but no longer referenced in current components
+
 **URL**: https://lovable.dev/projects/8ba18415-1001-43ee-816e-9d9e8b4857a9
 
 ## How can I edit this code?

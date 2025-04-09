@@ -8,11 +8,6 @@
   // List of critical images to verify
   const criticalImages = [
     '/logo.png',
-    '/heroparallax/heroparallax1.jpg',
-    '/heroparallax/heroparallax2.jpg',
-    '/heroparallax/heroparallax2.webp',
-    '/heroparallax/heroparallax6.jpg',
-    '/heroparallax/heroparallax6.webp',
     '/emilyprofilephoto.webp',
     '/janesub.jpg',
     '/janesub2.png',

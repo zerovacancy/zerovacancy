@@ -670,10 +670,12 @@
     width: 1px;
     height: 1px;
     background: transparent;
-    bottom: 0;
+    bottom: auto; /* Changed from 0 to auto to prevent layout issues */
     right: 0;
+    top: 0; /* Use top instead of bottom */
     z-index: -9999;
     will-change: transform;
+    pointer-events: none;
   }
   
   /* Ensure all scrollable containers don't trap scrolling */
@@ -691,11 +693,22 @@
   [class*="h-["], [class*="max-h-["], [class*="min-h-["], 
   [style*="height:"], [style*="max-height:"], [style*="min-height:"],
   .h-screen, .min-h-screen, .h-full, .min-h-full,
-  .fixed, .absolute, .sticky:not(header) {
+  .absolute, .sticky:not(header) {
     touch-action: pan-y !important;
     overscroll-behavior: none !important;
     -webkit-overflow-scrolling: touch !important;
     pointer-events: auto !important;
+  }
+  
+  /* Fix for fixed elements - ensure proper positioning */
+  .fixed {
+    touch-action: pan-y !important;
+    overscroll-behavior: none !important;
+    -webkit-overflow-scrolling: touch !important;
+    pointer-events: auto !important;
+    bottom: auto !important; /* Force auto bottom to prevent layout issues */
+    transform: translateZ(0);
+    will-change: transform;
   }
   
   /* Ensure header always stays sticky */

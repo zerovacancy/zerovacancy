@@ -6,15 +6,21 @@
 /* Base cookie consent container */
 .cookie-consent-container {
   position: fixed;
-  bottom: 0;
+  bottom: auto; /* Changed from 0 to auto to prevent layout issues */
   left: 0;
   right: 0;
+  /* Use height and top instead of bottom for better mobile compatibility */
+  height: auto;
+  top: auto;
   /* Higher z-index than header (which is 1000) */
   z-index: 1100 !important;
   /* Animation */
   animation: slide-in-from-bottom 0.5s ease-out forwards;
   /* Safe area insets */
   padding-bottom: env(safe-area-inset-bottom, 0px);
+  /* Add transform properties for better hardware acceleration */
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 /* Ensure cookie banner content has proper styling */

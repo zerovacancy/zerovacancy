@@ -495,8 +495,23 @@ const Index = () => {
         #__next > div > .fixed,
         #root > div > .fixed,
         main > .fixed,
-        [data-hero-section="true"] ~ .fixed {
+        [data-hero-section="true"] ~ .fixed,
+        .fixed[style*="bottom:"],
+        .fixed[style*="bottom"] {
           bottom: auto !important;
+          top: auto !important;
+          position: fixed !important;
+          transform: translateZ(0) !important;
+          will-change: transform !important;
+        }
+
+        /* Fix cookie consent container */
+        .cookie-consent-container {
+          position: fixed !important;
+          bottom: auto !important;
+          height: auto !important;
+          transform: translateY(0) !important;
+          will-change: transform !important;
         }
 
         /* Add special diagnostic code to count fixed elements */

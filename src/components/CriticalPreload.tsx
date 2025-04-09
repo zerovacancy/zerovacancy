@@ -82,11 +82,10 @@ export const CriticalPreload = () => {
     `;
     document.head.appendChild(criticalCSS);
 
-    // 2. LCP optimizations - preload the hero image and logo with highest priority
+    // 2. LCP optimizations - preload the logo with highest priority
     const criticalImages = [
-      // Logo and hero images that appear in the initial viewport - prefer WebP format
-      '/logo.png',
-      isMobile ? '/heroparallax/heroparallax1.jpg' : '/heroparallax/heroparallax2.webp'
+      // Logo that appears in the initial viewport
+      '/logo.png'
     ];
 
     // Preload critical images with high priority
