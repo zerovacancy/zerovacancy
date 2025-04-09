@@ -2,6 +2,7 @@ import React from 'react';
 import { BlogPost, BlogPostPreview } from '@/types/blog';
 import { Link } from 'react-router-dom';
 import { formatDate } from '@/lib/utils';
+import { OptimizedImage } from '@/components/ui/optimized-image';
 
 interface BlogPostContentProps {
   post: BlogPost;
@@ -36,10 +37,15 @@ const BlogPostContent = ({ post, relatedPosts = [] }: BlogPostContentProps) => {
           By {post.author?.name || 'Team Zero'} • {formattedDate}
         </div>
         <div className="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden">
-          <img 
+          <OptimizedImage 
             src={post.coverImage} 
-            alt={post.title} 
-            className="w-full h-full object-cover"
+            alt={post.title}
+            objectFit="cover"
+            useSrcSet={true}
+            withWebp={true}
+            lcpCandidate={true}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 85vw, 75vw"
+            className="w-full h-full"
           />
         </div>
       </div>

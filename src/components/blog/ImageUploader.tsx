@@ -1,5 +1,8 @@
 import React, { useState, useRef, useCallback } from 'react';
-import { Upload as UploadIcon, X, ImageIcon, Loader } from 'lucide-react';
+import { Upload as UploadIcon, X, ImageIcon, Loader, Maximize2, Crop, Check, RotateCcw } from 'lucide-react';
+import { OptimizedImage } from '@/components/ui/optimized-image';
+import ReactCrop, { Crop as CropType, PixelCrop, centerCrop, makeAspectCrop } from 'react-image-crop';
+import 'react-image-crop/dist/ReactCrop.css';
 
 interface ImageUploaderProps {
   initialImage?: string;
@@ -13,12 +16,88 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   initialImage,
   postId,
   onImageChange,
+  aspectRatio = 16/9,
   type = 'cover',
 }) => {
   const [image, setImage] = useState<string | null>(initialImage || null);
   const [isUploading, setIsUploading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [showCrop, setShowCrop] = useState(false);
+  const [crop, setCrop] = useState<CropType>();
+  const [completedCrop, setCompletedCrop] = useState<PixelCrop | null>(null);
+  const [originalImage, setOriginalImage] = useState<string | null>(null);
+  
+  const imgRef = useRef<HTMLImageElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  const onImageLoad = useCallback((e: React.SyntheticEvent<HTMLImageElement>) => {
+    const { width, height } = e.currentTarget;
+    
+    // Make the crop an initial centered square covering ~80% of the image
+    const crop = centerCrop(
+      makeAspectCrop(
+        {
+          unit: '%',
+          width: 80,
+        },
+        aspectRatio,
+        width,
+        height
+      ),
+      width,
+      height
+    );
+    
+    setCrop(crop);
+  }, [aspectRatio]);
+  
+  // Apply the current crop to the image
+  const applyCurrentCrop = useCallback(() => {
+    if (!completedCrop || !imgRef.current || !canvasRef.current || !originalImage) return;
+    
+    const image = imgRef.current;
+    const canvas = canvasRef.current;
+    const crop = completedCrop;
+    
+    const scaleX = image.naturalWidth / image.width;
+    const scaleY = image.naturalHeight / image.height;
+    
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    
+    // Set canvas dimensions to crop dimensions
+    canvas.width = crop.width;
+    canvas.height = crop.height;
+    
+    // Draw the cropped image onto the canvas
+    ctx.drawImage(
+      image,
+      crop.x * scaleX,
+      crop.y * scaleY,
+      crop.width * scaleX,
+      crop.height * scaleY,
+      0,
+      0,
+      crop.width,
+      crop.height
+    );
+    
+    // Convert canvas to data URL
+    const croppedImage = canvas.toDataURL('image/jpeg', 0.92);
+    setImage(croppedImage);
+    onImageChange(croppedImage);
+    setShowCrop(false);
+  }, [completedCrop, originalImage, onImageChange]);
+  
+  // Cancel crop operation
+  const cancelCrop = useCallback(() => {
+    if (originalImage) {
+      setImage(originalImage);
+      onImageChange(originalImage);
+    }
+    setShowCrop(false);
+  }, [originalImage, onImageChange]);
   
   // Process the selected file
   const processFile = useCallback((file: File) => {
@@ -47,10 +126,16 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
         img.onload = () => {
           console.log(`Image loaded: ${img.width}x${img.height}`);
           
-          // Set the image directly
+          // Set the image and original image (for crop cancellation)
+          setOriginalImage(dataUrl);
           setImage(dataUrl);
           onImageChange(dataUrl);
           setIsUploading(false);
+          
+          // Show crop interface if aspectRatio is provided
+          if (aspectRatio) {
+            setShowCrop(true);
+          }
         };
         
         img.onerror = () => {
@@ -70,7 +155,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
     };
     
     reader.readAsDataURL(file);
-  }, [onImageChange]);
+  }, [onImageChange, aspectRatio]);
   
   // Handle file selection from input
   const handleFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -130,13 +215,77 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
         className="hidden"
       />
       
+      {/* Hidden canvas for image processing */}
+      <canvas
+        ref={canvasRef}
+        className="hidden"
+      />
+      
       <div>
-        {image ? (
+        {showCrop && image ? (
+          <div className="space-y-4">
+            <div className="relative border border-gray-300 rounded-md p-2 bg-gray-50">
+              <h4 className="text-sm font-medium mb-2 text-gray-700 flex items-center">
+                <Crop size={16} className="inline mr-2 text-brand-purple" />
+                Crop Image
+              </h4>
+              
+              <div className="crop-container">
+                <ReactCrop
+                  crop={crop}
+                  onChange={(c) => setCrop(c)}
+                  onComplete={(c) => setCompletedCrop(c)}
+                  aspect={aspectRatio}
+                  className="max-h-[400px] mx-auto"
+                >
+                  <img 
+                    ref={imgRef}
+                    alt="Crop"
+                    src={image}
+                    onLoad={onImageLoad}
+                    className="max-w-full max-h-[400px]"
+                  />
+                </ReactCrop>
+              </div>
+              
+              <div className="flex justify-between mt-3">
+                <div className="text-xs text-gray-500">
+                  Adjust the selection to crop your image. 
+                  <br />
+                  We recommend a {aspectRatio === 16/9 ? "16:9" : aspectRatio} aspect ratio.
+                </div>
+                
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={cancelCrop}
+                    className="px-3 py-1.5 border border-gray-300 text-gray-600 rounded-md text-sm hover:bg-gray-100"
+                  >
+                    <RotateCcw size={14} className="inline mr-1" />
+                    Cancel
+                  </button>
+                  
+                  <button
+                    type="button"
+                    onClick={applyCurrentCrop}
+                    className="px-3 py-1.5 bg-brand-purple text-white rounded-md text-sm hover:bg-brand-purple-dark"
+                  >
+                    <Check size={14} className="inline mr-1" />
+                    Apply Crop
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : image ? (
           <div className="relative group cursor-pointer">
-            <img
+            <OptimizedImage
               src={image}
               alt="Featured"
-              className="w-full h-40 object-cover rounded-md border border-gray-300"
+              className="w-full h-40 rounded-md border border-gray-300"
+              objectFit="cover"
+              useSrcSet={true}
+              withWebp={true}
               onClick={triggerFileInput}
             />
             <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-opacity flex items-center justify-center opacity-0 group-hover:opacity-100">
@@ -148,6 +297,14 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
                   title="Replace image"
                 >
                   <UploadIcon size={18} />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowCrop(true)}
+                  className="p-1.5 bg-white rounded-md text-brand-purple hover:bg-brand-purple hover:text-white cursor-pointer"
+                  title="Crop image"
+                >
+                  <Crop size={18} />
                 </button>
                 <button
                   type="button"
@@ -210,10 +367,24 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
       </div>
       
       {/* Instructions */}
-      {image && (
-        <p className="text-xs text-gray-500 mt-2">
-          Tip: Images work best with a 16:9 aspect ratio for cover images.
-        </p>
+      {image && !showCrop && (
+        <div className="mt-2 space-y-1">
+          <p className="text-xs text-gray-500">
+            <strong>Image Preview:</strong> The image above shows exactly how it will appear in the published blog.
+          </p>
+          <p className="text-xs text-gray-500">
+            Tip: Images work best with a 16:9 aspect ratio for cover images. Recommended size: 1200×675px.
+            <button 
+              onClick={() => setShowCrop(true)}
+              className="ml-1 text-brand-purple hover:text-brand-purple-dark underline"
+            >
+              Crop image
+            </button>
+          </p>
+          <div className="bg-blue-50 p-2 rounded text-xs text-blue-700">
+            <strong>New:</strong> We've improved image handling! Your featured image will now maintain consistent quality across all devices.
+          </div>
+        </div>
       )}
     </div>
   );

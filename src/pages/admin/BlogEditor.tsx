@@ -23,6 +23,7 @@ import {
   Keyboard,
   KeyRound
 } from 'lucide-react';
+import { OptimizedImage } from '@/components/ui/optimized-image';
 import { BlogService } from '@/services/BlogService';
 import { BlogPost, BlogCategory, BlogAuthor } from '@/types/blog';
 import { formatDate } from '@/lib/utils';
@@ -578,19 +579,27 @@ const BlogEditor = () => {
         
         {coverImage && (
           <>
-            <img 
-              src={coverImage} 
-              alt={title} 
-              className="w-full rounded-lg object-cover mb-6 max-h-[400px]"
-              onError={(e) => {
-                console.error('Image failed to load in preview:', e);
-                console.log('Cover image data length:', coverImage.length);
-                console.log('Cover image data starts with:', coverImage.substring(0, 50) + '...');
-                (e.target as HTMLImageElement).style.border = '2px solid red';
-                (e.target as HTMLImageElement).style.backgroundColor = '#ffeeee';
-              }}
-              onLoad={() => console.log('Image loaded successfully in preview')}
-            />
+            <div className="w-full mb-6 rounded-lg overflow-hidden" style={{ maxHeight: '400px' }}>
+              <OptimizedImage
+                src={coverImage} 
+                alt={title} 
+                objectFit="cover"
+                useSrcSet={true}
+                withWebp={true}
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 85vw, 75vw"
+                lcpCandidate={true}
+                className="w-full"
+                onError={(e) => {
+                  console.error('Image failed to load in preview:', e);
+                  console.log('Cover image data length:', coverImage.length);
+                  console.log('Cover image data starts with:', coverImage.substring(0, 50) + '...');
+                  const img = e.target as HTMLImageElement;
+                  img.style.border = '2px solid red';
+                  img.style.backgroundColor = '#ffeeee';
+                }}
+                onLoad={() => console.log('Image loaded successfully in preview')}
+              />
+            </div>
           </>
         )}
         
