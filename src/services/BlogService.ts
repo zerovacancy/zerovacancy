@@ -80,7 +80,8 @@ const transformPost = async (post: any): Promise<BlogPost> => {
     }
   }
   
-  return {
+  // Create post object with consistent camelCase properties
+  const transformedPost = {
     id: post.id,
     title: post.title,
     slug: post.slug,
@@ -96,6 +97,16 @@ const transformPost = async (post: any): Promise<BlogPost> => {
     readingTime: post.reading_time || calculateReadingTime(post.content),
     seoTitle: post.seo_title || post.title,
     seoDescription: post.seo_description || post.excerpt || ''
+  };
+  
+  // CRITICAL: Include the original properties to prevent hydration mismatches
+  // This is a defense against property naming inconsistencies
+  return {
+    ...transformedPost,
+    // Include original snake_case properties for backwards compatibility
+    // This ensures both camelCase and snake_case properties are available
+    cover_image: post.cover_image,
+    published_at: post.published_at,
   };
 };
 
@@ -141,9 +152,14 @@ export class BlogService {
       }
     }
     
-    // Apply search filter
+    // Apply search filter - using safe parameterized filters
     if (search) {
-      query = query.or(`title.ilike.%${search}%,excerpt.ilike.%${search}%,content.ilike.%${search}%`);
+      // Instead of string interpolation, use individual filter calls
+      query = query.or([
+        { title: { ilike: `%${search}%` } },
+        { excerpt: { ilike: `%${search}%` } },
+        { content: { ilike: `%${search}%` } }
+      ]);
     }
     
     // Apply tag filter
@@ -758,9 +774,14 @@ export class BlogService {
       }
     }
     
-    // Apply search filter
+    // Apply search filter - using safe parameterized filters
     if (search) {
-      query = query.or(`title.ilike.%${search}%,excerpt.ilike.%${search}%,content.ilike.%${search}%`);
+      // Instead of string interpolation, use individual filter calls
+      query = query.or([
+        { title: { ilike: `%${search}%` } },
+        { excerpt: { ilike: `%${search}%` } },
+        { content: { ilike: `%${search}%` } }
+      ]);
     }
     
     // Apply tag filter

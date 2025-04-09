@@ -28,6 +28,12 @@ export type BlogPost = {
   lastSaved?: string;
   seoTitle?: string;
   seoDescription?: string;
+  
+  // These properties are added to prevent hydration mismatches
+  // They're included because the API returns snake_case properties
+  // but our code uses camelCase
+  cover_image?: string;  // Duplicate of coverImage for API compatibility
+  published_at?: string | null; // Duplicate of publishedAt for API compatibility
 };
 
 export type BlogPostPreview = Omit<BlogPost, 'content'>;

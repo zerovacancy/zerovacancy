@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { BookOpen, ChevronRight } from 'lucide-react';
 import { BlogService } from '@/services/BlogService';
 import { BlogPost as BlogPostType } from '@/types/blog';
-import BlogPostContent from '@/components/blog/BlogPostContent';
+import SafeBlogPostContent from '@/components/blog/SafeBlogPostContent';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import SEO from '@/components/SEO';
+import { ErrorBoundary } from 'react-error-boundary';
+import { setupBlogErrorDetection } from '@/utils/blog-error-detector';
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -16,33 +18,96 @@ const BlogPost = () => {
   const [relatedPosts, setRelatedPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   
+  // Error handler for fallback
+  const handleError = useCallback((error: Error) => {
+    console.error('Error in BlogPost component:', error);
+    // Log error to analytics service if available
+    if (typeof window !== 'undefined' && window.gtag) {
+      // @ts-ignore
+      window.gtag('event', 'blog_error', {
+        error_message: error.message,
+        url: window.location.href,
+        slug
+      });
+    }
+  }, [slug]);
+
+  // Set up error detection in development mode
   useEffect(() => {
-    const fetchPost = async () => {
-      if (!slug) return;
-      
-      setLoading(true);
-      
-      try {
-        const response = await BlogService.getPostBySlug(slug);
-        
-        if (!response) {
-          // Post not found, redirect to blog index
-          navigate('/blog', { replace: true });
-          return;
-        }
-        
-        setPost(response.post);
-        setRelatedPosts(response.related || []);
-      } catch (error) {
-        console.error('Error fetching blog post:', error);
-        navigate('/blog', { replace: true });
-      } finally {
-        setLoading(false);
-      }
-    };
+    if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'production') {
+      setupBlogErrorDetection();
+      console.log('Blog post error detection active for:', slug);
+    }
+  }, [slug]);
+  
+  // Memoized blog post fetcher
+  const fetchPost = useCallback(async () => {
+    if (!slug) return;
     
+    setLoading(true);
+    
+    try {
+      const response = await BlogService.getPostBySlug(slug);
+      
+      if (!response) {
+        // Post not found, redirect to blog index
+        navigate('/blog', { replace: true });
+        return;
+      }
+      
+      // Validate critical fields to avoid rendering errors
+      const normalizedPost = response.post;
+      
+      // Defensive data normalization to ensure consistent properties
+      // This is critical for preventing React hydration mismatches
+      const safePost = {
+        ...normalizedPost,
+        // Ensure required props
+        id: normalizedPost.id || `fallback-${Date.now()}`,
+        title: normalizedPost.title || 'Untitled Post',
+        slug: normalizedPost.slug || 'untitled-post',
+        content: normalizedPost.content || '',
+        
+        // Handle common mismatches between API response and TypeScript types
+        coverImage: normalizedPost.coverImage || (normalizedPost as any).cover_image || '',
+        publishedAt: normalizedPost.publishedAt || (normalizedPost as any).published_at || null,
+        
+        // Ensure category and author objects
+        category: normalizedPost.category || { 
+          id: 'default', 
+          name: 'Uncategorized', 
+          slug: 'uncategorized' 
+        },
+        author: normalizedPost.author || { 
+          id: 'default', 
+          name: 'Team' 
+        },
+        
+        // Ensure optional fields
+        excerpt: normalizedPost.excerpt || '',
+        tags: normalizedPost.tags || [],
+        readingTime: normalizedPost.readingTime || 3
+      };
+      
+      setPost(safePost);
+      setRelatedPosts(response.related || []);
+      
+      // In development, log data for debugging
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('Blog post data received:', safePost);
+      }
+    } catch (error) {
+      console.error('Error fetching blog post:', error);
+      handleError(error as Error);
+      navigate('/blog', { replace: true });
+    } finally {
+      setLoading(false);
+    }
+  }, [slug, navigate, handleError]);
+  
+  useEffect(() => {
     fetchPost();
-  }, [slug, navigate]);
+  }, [fetchPost]);
   
   if (loading) {
     return (
@@ -151,8 +216,26 @@ const BlogPost = () => {
             <span className="text-brand-text-primary truncate max-w-[200px]">{post.title}</span>
           </div>
           
-          {/* Blog post content */}
-          <BlogPostContent post={post} relatedPosts={relatedPosts} />
+          {/* Blog post content with error boundary */}
+          <ErrorBoundary 
+            fallback={
+              <div className="my-8 p-6 bg-red-50 border border-red-200 rounded-lg">
+                <h3 className="text-lg font-semibold text-red-800 mb-2">We ran into a problem</h3>
+                <p className="text-gray-700 mb-4">
+                  Sorry, we couldn't display this blog post correctly. You can try refreshing the page.
+                </p>
+                <button
+                  onClick={() => window.location.reload()}
+                  className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                >
+                  Refresh the page
+                </button>
+              </div>
+            }
+            onError={handleError}
+          >
+            <SafeBlogPostContent post={post} relatedPosts={relatedPosts} />
+          </ErrorBoundary>
         </div>
       </main>
       
