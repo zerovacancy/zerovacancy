@@ -5,6 +5,40 @@
  * and helps identify patterns that could lead to recursion or performance issues.
  */
 
+// Update service worker if available
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.ready.then(registration => {
+    // Send update message to force service worker refresh
+    registration.active.postMessage({ type: 'SKIP_WAITING' });
+    
+    console.log('[Event Diagnostics] Service worker update requested');
+  }).catch(err => {
+    console.warn('[Event Diagnostics] Service worker update failed:', err);
+  });
+}
+
+// Hook monitoring for admin pages
+if (window.location.pathname.includes('/admin/')) {
+  console.log('[Event Diagnostics] Running admin page diagnostics');
+  
+  // Add React hook consistency monitoring
+  window.__REACT_HOOK_MONITOR = {
+    hookCalls: {},
+    logHookCall: function(componentName, hookName) {
+      if (!this.hookCalls[componentName]) {
+        this.hookCalls[componentName] = {};
+      }
+      if (!this.hookCalls[componentName][hookName]) {
+        this.hookCalls[componentName][hookName] = 0;
+      }
+      this.hookCalls[componentName][hookName]++;
+    },
+    reset: function() {
+      this.hookCalls = {};
+    }
+  };
+}
+
 (function() {
   console.log('[Event Diagnostics] Initializing event listener monitoring');
   

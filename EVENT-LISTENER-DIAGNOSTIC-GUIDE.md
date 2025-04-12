@@ -1,13 +1,21 @@
-# Event Listener Diagnostic Guide
+# Event Listener & React Hook Diagnostic Guide
 
 ## Problem Overview
 
-The ZeroVacancy website has experienced JavaScript errors on mobile devices related to event listener recursion. The root issue appears to be multiple scripts attempting to override `addEventListener`, resulting in infinite recursion and browser crashes.
+The ZeroVacancy website has experienced several issues:
 
-Primary error observed:
+1. **JavaScript errors on mobile devices** related to event listener recursion. The root issue appears to be multiple scripts attempting to override `addEventListener`, resulting in infinite recursion and browser crashes.
+
+2. **React hook errors in the blog editor** causing login issues and component failures. These errors are related to hook ordering, dependency arrays, and potentially multiple React instances.
+
+Primary errors observed:
 ```
 RangeError: Maximum call stack size exceeded
 at Da.window.addEventListener (index-BYAtUjMk.js:51:2771)
+```
+
+```
+Warning: Invalid hook call. Hooks can only be called inside of the body of a function component.
 ```
 
 ## Diagnostic Tools Added
@@ -127,10 +135,45 @@ The guard status report includes:
    - Be cautious about registering event listeners within event handlers
    - Ensure event registration is idempotent (safe to call multiple times)
 
+## Recent React Hook Fixes
+
+The following fixes were applied to address React hook issues in the blog editor and admin section:
+
+### 1. Service Worker Improvements
+   - Excluded admin routes from service worker caching to prevent login issues
+   - Added error handling for invalid or incomplete responses
+   - Implemented cache fallbacks for critical resources
+   - Added proper error handling around URL parsing
+   - Added explicit exclusion for admin paths to avoid caching login issues
+
+### 2. React Hook Ordering Fixes
+
+We've fixed several components with hook ordering issues:
+
+#### BottomNav Component
+   - Moved state declarations to the top of the component
+   - Moved early return statements after all hooks
+   - Added proper dependency arrays to useEffect
+   - Fixed conditional hook execution with guard clauses
+
+#### AdminLogin Component
+   - Fixed incomplete dependency arrays
+   - Added timeout for navigation to prevent render cycle issues
+   - Improved cleanup in useEffect hooks
+   - Enhanced error handling for authentication
+
+### 3. React Hook Monitoring
+   - Added `__REACT_HOOK_MONITOR` to track hook calls by component
+   - Implemented hook call detection and counting
+   - Added analysis for potential hook ordering issues
+   - Enhanced diagnostics for admin pages
+
 ## Next Steps
 
 1. Continue monitoring the console logs for recursion warnings
-2. If recursion is detected, check which scripts are interacting
+2. If hook errors persist, check for missing dependency arrays
 3. Consider permanently incorporating these diagnostic tools for production
 4. Refactor `js-optimization.ts` to avoid overriding native browser methods
 5. Implement a central event bus for better event management
+6. Ensure all components follow React's Rules of Hooks consistently
+7. Consider implementing ESLint with the React Hooks plugin for prevention

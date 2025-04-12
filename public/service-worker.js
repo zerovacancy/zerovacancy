@@ -86,14 +86,42 @@ const handleCssRequest = async (request) => {
 
 // Fetch event - network first for CSS, cache first for other assets
 self.addEventListener('fetch', (event) => {
+  // Don't handle event if there's no respondWith method (Firefox private browsing, etc.)
+  if (!event.respondWith) {
+    return;
+  }
+  
+  // Safety check to prevent errors if the fetch event is already handled
+  if (event.handled === true) {
+    return;
+  }
+  
+  // Mark event as handled to prevent duplicate processing
+  event.handled = true;
+  
   try {
-    const url = new URL(event.request.url);
+    // Safely parse URL - if this fails, we'll skip SW processing
+    let url;
+    try {
+      url = new URL(event.request.url);
+    } catch (urlError) {
+      console.warn('Invalid URL in fetch handler:', event.request.url);
+      return; // Skip service worker handling for invalid URLs
+    }
+    
     const protocol = url.protocol;
 
     // Skip non-HTTP requests entirely
     if (!['http:', 'https:'].includes(protocol)) {
       // Just pass through without service worker handling
       return;
+    }
+    
+    // For admin pages or Supabase URLs, skip service worker handling completely
+    if (url.pathname.includes('/admin/') || 
+        url.hostname.includes('supabase.co') ||
+        url.hostname.includes('supabase.in')) {
+      return; // Let browser handle admin and API requests directly
     }
     
     // Handle CSS files specially
@@ -112,15 +140,15 @@ self.addEventListener('fetch', (event) => {
           }
           
           // Otherwise try to fetch from network
-          return fetch(event.request).then(
-            (networkResponse) => {
+          return fetch(event.request)
+            .then(networkResponse => {
               // Don't cache if not a GET request
               if (event.request.method !== 'GET') {
                 return networkResponse;
               }
               
               // Only cache successful complete responses
-              if (networkResponse.status !== 200 || !networkResponse.ok) {
+              if (!networkResponse || networkResponse.status !== 200 || !networkResponse.ok) {
                 return networkResponse;
               }
               
@@ -134,32 +162,45 @@ self.addEventListener('fetch', (event) => {
                   } catch (cacheError) {
                     console.warn('Failed to cache response:', cacheError);
                   }
+                })
+                .catch(err => {
+                  console.warn('Cache open failed:', err);
                 });
               
               return networkResponse;
-            }
-          );
+            })
+            .catch(fetchError => {
+              console.warn('Network fetch failed:', fetchError);
+              
+              // Check if this is an image and return a placeholder if so
+              if (url.pathname.match(/\.(jpg|jpeg|png|gif|webp|svg)$/)) {
+                return new Response('', {
+                  status: 200,
+                  headers: { 'Content-Type': 'image/svg+xml' }
+                });
+              }
+              
+              // For API or other failures, let browser handle the error
+              throw fetchError;
+            });
         })
         .catch((error) => {
-          console.warn('Fetch handler error:', error);
-          
-          // If both cache and network fail for resources like images, 
-          // return an empty response with appropriate content type
-          const url = new URL(event.request.url);
-          if (url.pathname.match(/\.(jpg|jpeg|png|gif|webp|svg)$/)) {
-            return new Response('', {
-              headers: { 'Content-Type': 'image/svg+xml' }
-            });
-          }
-          
-          // Let the browser handle other failed requests
-          return;
+          console.warn('Cache match error:', error);
+          // Let the browser handle other failed requests by passing through
+          return fetch(event.request).catch(() => {
+            // Last resort fallback for critical resources
+            if (url.pathname === '/' || url.pathname === '/index.html') {
+              return caches.match('/index.html');
+            }
+            // Let browser handle the error for other resources
+            throw error;
+          });
         })
     );
   } catch (parseError) {
-    // Handle URL parsing errors or other exceptions
+    // Handle any exceptions in the fetch handler
     console.error('Service worker fetch handler error:', parseError);
-    // Continue without service worker intervention
+    // Allow the browser to handle the request normally
     return;
   }
 });
@@ -169,6 +210,13 @@ self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
     // This allows the service worker to become active immediately
     self.skipWaiting();
+  }
+  
+  // Handle unregister request
+  if (event.data && event.data.type === 'UNREGISTER') {
+    self.registration.unregister()
+      .then(() => console.log('Service worker unregistered successfully'))
+      .catch(err => console.error('Service worker unregister failed:', err));
   }
   
   // Handle prefetch request

@@ -1,3 +1,6 @@
+// React hooks fix applied via package.json resolutions 
+// and ensuring a single version of React is used
+
 
 import { createRoot } from 'react-dom/client';
 import { ErrorBoundary } from 'react-error-boundary';

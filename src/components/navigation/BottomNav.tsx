@@ -51,25 +51,29 @@ export const BottomNav = () => {
   const location = useLocation();
   const { gradientBgMobile, improvedShadowMobile } = mobileOptimizationClasses;
   
-  // Explicitly hide on index route
-  if (!isMobile || location.pathname === "/" || location.pathname === "") return null;
-  
+  // Always declare state variables at the top level
   const [showGlowDialog, setShowGlowDialog] = useState(false);
   
   // Add bottom spacer to prevent content from being hidden behind the nav
   useEffect(() => {
-    // Add spacer when the component mounts
-    addBottomNavSpacer();
-    
-    // Add class to body to enable proper padding
-    document.body.classList.add('has-fixed-bottom');
-    
-    // Clean up when component unmounts
-    return () => {
-      document.body.classList.remove('has-fixed-bottom');
-      // We don't remove the spacer as it might be needed by other fixed elements
-    };
-  }, []);
+    // Only run this effect on mobile and non-index routes
+    if (isMobile && location.pathname !== "/" && location.pathname !== "") {
+      // Add spacer when the component mounts
+      addBottomNavSpacer();
+      
+      // Add class to body to enable proper padding
+      document.body.classList.add('has-fixed-bottom');
+      
+      // Clean up when component unmounts
+      return () => {
+        document.body.classList.remove('has-fixed-bottom');
+        // We don't remove the spacer as it might be needed by other fixed elements
+      };
+    }
+  }, [isMobile, location.pathname]);
+  
+  // Early return after all hooks are called
+  if (!isMobile || location.pathname === "/" || location.pathname === "") return null;
 
   return (
     <>

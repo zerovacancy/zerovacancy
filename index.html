@@ -243,6 +243,9 @@
     <script src="/event-listener-guard.js"></script>
     <script src="/event-listener-diagnostics.js"></script>
     
+    <!-- Fix for admin pages - run before other scripts to unregister service worker for admin routes -->
+    <script src="/admin-sw-fix.js"></script>
+    
     <!-- Ultra-fast mobile optimization script - runs immediately -->
     <script src="/quick-perf.js"></script>
     

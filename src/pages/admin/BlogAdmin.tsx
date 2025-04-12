@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { ErrorBoundary } from 'react-error-boundary';
 import { 
   Plus, 
   Search, 
@@ -21,6 +22,7 @@ import { BlogPostPreview, BlogPostsFilters, BlogCategory } from '@/types/blog';
 import { formatDate } from '@/lib/utils';
 import SEO from '@/components/SEO';
 import { useAuth } from '@/components/auth/AuthContext';
+import AdminErrorFallback from '@/components/admin/AdminErrorFallback';
 
 const BlogAdmin = () => {
   const navigate = useNavigate();
@@ -463,9 +465,13 @@ const BlogAdmin = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      {/* Header with navigation */}
-      <header className="bg-white shadow-sm flex items-center justify-between px-4 md:px-6 py-3">
+    <ErrorBoundary
+      FallbackComponent={AdminErrorFallback}
+      onReset={() => window.location.reload()}
+    >
+      <div className="min-h-screen bg-gray-50 flex flex-col">
+        {/* Header with navigation */}
+        <header className="bg-white shadow-sm flex items-center justify-between px-4 md:px-6 py-3">
         <div className="flex items-center">
           <h1 className="text-lg font-bold text-brand-purple-dark mr-8">ZeroVacancy Admin</h1>
           <nav className="hidden md:flex items-center space-x-4">
@@ -497,7 +503,12 @@ const BlogAdmin = () => {
           </Link>
           
           <button
-            onClick={() => signOut()}
+            onClick={() => {
+              // Clear auth tokens
+              sessionStorage.removeItem('adminAccessToken');
+              // Redirect to login
+              navigate('/admin/login');
+            }}
             className="flex items-center text-gray-700 hover:text-red-600 transition-colors"
           >
             <LogOut size={18} />
@@ -524,7 +535,12 @@ const BlogAdmin = () => {
             </Link>
           ))}
           <button
-            onClick={() => signOut()}
+            onClick={() => {
+              // Clear auth tokens
+              sessionStorage.removeItem('adminAccessToken');
+              // Redirect to login
+              navigate('/admin/login');
+            }}
             className="flex flex-col items-center p-2 text-gray-700"
           >
             <LogOut size={18} />
@@ -536,7 +552,8 @@ const BlogAdmin = () => {
       <main className="flex-1 p-4 md:p-6 overflow-auto">
         <AdminContent />
       </main>
-    </div>
+      </div>
+    </ErrorBoundary>
   );
 };
 
