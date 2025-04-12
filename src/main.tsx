@@ -1,5 +1,5 @@
-// React hooks fix applied via package.json resolutions 
-// and ensuring a single version of React is used
+// React hooks fix applied via package.json resolutions
+// No need for complex singleton pattern
 
 
 import { createRoot } from 'react-dom/client';
