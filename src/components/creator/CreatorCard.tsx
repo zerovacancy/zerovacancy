@@ -288,13 +288,11 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
             <div className="w-full px-4 pt-3 pb-2 flex flex-col relative z-10 flex-grow flex-1" style={{ display: 'flex', flexDirection: 'column' }}>
               {/* Creator info section with minimized spacing */}
               <div className="pb-0 mb-1">
-                {/* Creator name and location with more compact styling */}
+                {/* Creator name and location - vertical stack for mobile */}
                 <div 
-                  className="flex justify-between mb-1 py-0.5 px-0"
+                  className="flex flex-col mb-1 py-0.5 px-0"
                   style={{
                     transform: 'translateZ(0)', // Hardware acceleration
-                    display: 'flex', 
-                    alignItems: 'center',
                     borderBottom: '1px solid rgba(220, 215, 240, 0.3)'
                   }}
                 >
@@ -302,12 +300,12 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     {creator.name}
                     <span className="absolute -top-0.5 -right-0.5 w-12 h-6 bg-gradient-to-br from-purple-100/40 to-transparent blur-sm rounded-full"></span>
                   </h3>
-                  <p className="text-gray-600 text-xs flex items-center max-w-[140px]">
+                  <p className="text-gray-600 text-xs flex items-center mt-1">
                     <svg className="w-3 h-3 mr-1 flex-shrink-0 text-purple-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                       <circle cx="12" cy="10" r="3"></circle>
                     </svg>
-                    <span className="truncate whitespace-normal line-clamp-1">{creator.location}</span>
+                    <span className="truncate line-clamp-1">{creator.location}</span>
                   </p>
                 </div>
                 
