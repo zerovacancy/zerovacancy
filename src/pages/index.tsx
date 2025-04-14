@@ -1107,33 +1107,7 @@ const Index = () => {
           />
         </div>
 
-        {!isMobile && (
-          <div className="fixed right-6 top-1/2 transform -translate-y-1/2 z-[100] hidden lg:flex flex-col items-center gap-3">
-            {['find-creators', 'how-it-works', 'features', 'pricing', 'blog'].map((section, index) => {
-              const isActive = visibleSections[index + 1];
-              return (
-                <button
-                  key={section}
-                  onClick={() => scrollToSection(section)}
-                  style={{
-                    boxShadow: isActive 
-                      ? '0 0 0 2px rgba(255,255,255,0.15), 0 0 10px rgba(138,66,245,0.5)' 
-                      : '0 0 0 1px rgba(255,255,255,0.1)',
-                    position: 'relative',
-                    zIndex: 100
-                  }}
-                  className={cn(
-                    "w-3 h-3 rounded-full transition-all duration-200",
-                    isActive 
-                      ? "bg-purple-600 scale-125" 
-                      : "bg-purple-300/70 hover:bg-purple-400"
-                  )}
-                  aria-label={`Scroll to ${section.replace('-', ' ')}`}
-                />
-              );
-            })}
-          </div>
-        )}
+        {/* Navigation dots removed to prevent UI issues */}
 
         <Footer />
       </main>
