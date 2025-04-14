@@ -22,18 +22,25 @@ import {
   DialogTitle,
 } from "../ui/dialog";
 
-export const PricingContainer = () => {
+interface PricingContainerProps {
+  showStickyHeader?: boolean;
+}
+
+export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: PricingContainerProps = {}) => {
   const isMobile = useIsMobile();
   const { isYearly, currentPrices, getSavings, setIsYearly, animateChange } = usePricing();
   const [expandedFeatures, setExpandedFeatures] = useState<{[key: number]: boolean}>({});
   const [expandedDescriptions, setExpandedDescriptions] = useState<{[key: number]: boolean}>({});
-  const [showStickyHeader, setShowStickyHeader] = useState(false);
+  const [localStickyHeader, setLocalStickyHeader] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [processingPlan, setProcessingPlan] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   
+  // Use external sticky header state if provided, otherwise use local state
+  const showStickyHeader = externalStickyHeader !== undefined ? externalStickyHeader : localStickyHeader;
+  
   useEffect(() => {
-    if (!isMobile) return;
+    if (!isMobile || externalStickyHeader !== undefined) return;
     
     const handleScroll = () => {
       if (!containerRef.current) return;
@@ -41,12 +48,12 @@ export const PricingContainer = () => {
       const scrollPosition = window.scrollY;
       const headerOffset = containerRef.current.offsetTop + 100; // Adjust based on your layout
       
-      setShowStickyHeader(scrollPosition > headerOffset);
+      setLocalStickyHeader(scrollPosition > headerOffset);
     };
     
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [isMobile]);
+  }, [isMobile, externalStickyHeader]);
   
   const toggleFeatures = (index: number) => {
     setExpandedFeatures(prev => ({
@@ -255,6 +262,7 @@ export const PricingContainer = () => {
               isYearly={isYearly}
               setIsYearly={setIsYearly}
               animateChange={animateChange}
+              showStickyHeader={showStickyHeader}
             />
           </motion.div>
         )}

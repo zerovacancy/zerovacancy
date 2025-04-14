@@ -14,6 +14,7 @@ const PricingContent = () => {
   const { isYearly, setIsYearly, animateChange } = usePricing();
   const isMobile = useIsMobile();
   const [isLandscape, setIsLandscape] = useState(false);
+  const [showStickyHeader, setShowStickyHeader] = useState(false);
   
   // Update landscape state when orientation changes
   useEffect(() => {
@@ -34,6 +35,21 @@ const PricingContent = () => {
     };
   }, []);
   
+  // Track sticky header visibility for coordination with PricingContainer
+  useEffect(() => {
+    if (!isMobile) return;
+    
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      const headerOffset = 200; // Approximate offset where sticky header appears
+      
+      setShowStickyHeader(scrollPosition > headerOffset);
+    };
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isMobile]);
+  
   return (
     <>
       <div className={cn(
@@ -48,6 +64,7 @@ const PricingContent = () => {
           isYearly={isYearly}
           setIsYearly={setIsYearly}
           animateChange={animateChange}
+          showStickyHeader={showStickyHeader}
         />
       </div>
       
@@ -57,7 +74,7 @@ const PricingContent = () => {
         !isMobile && "mx-auto rounded-xl shadow-sm max-w-[95%] py-8 px-4", // Only apply container div on desktop
         isLandscape && "landscape-content-fix mt-2 mb-2 py-2" // Apply landscape specific fixes
       )}>
-        <PricingContainer />
+        <PricingContainer showStickyHeader={showStickyHeader} />
       </div>
       
       {/* Small copy text replacing the CommonFeatures component */}

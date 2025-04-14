@@ -13,6 +13,7 @@ interface PricingHeaderProps {
   isYearly?: boolean;
   setIsYearly?: (isYearly: boolean) => void;
   animateChange?: boolean;
+  showStickyHeader?: boolean;
 }
 
 const PricingHeader = ({
@@ -21,7 +22,8 @@ const PricingHeader = ({
   isSticky = false,
   isYearly = true,
   setIsYearly = () => {},
-  animateChange = false
+  animateChange = false,
+  showStickyHeader = false
 }: PricingHeaderProps) => {
   const isMobile = useIsMobile();
 
@@ -71,11 +73,14 @@ const PricingHeader = ({
         
         {/* Conditionally render the appropriate toggle based on device */}
         {isMobile ? (
-          <MobilePricingToggle 
-            isYearly={isYearly}
-            setIsYearly={setIsYearly}
-            animateChange={animateChange}
-          />
+          // Only render mobile toggle if this is a sticky header OR if there's no sticky header showing
+          (!isSticky || (isSticky && showStickyHeader)) && (
+            <MobilePricingToggle 
+              isYearly={isYearly}
+              setIsYearly={setIsYearly}
+              animateChange={animateChange}
+            />
+          )
         ) : (
           <div className={cn(
             "flex items-center overflow-hidden rounded-full transition-all duration-300 w-full max-w-md mx-auto",
