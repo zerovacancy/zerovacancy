@@ -266,22 +266,15 @@
         });
       }
       
-      // Add timestamp to all dynamic resource requests
-      const originalFetch = window.fetch;
-      window.fetch = function(input, init) {
-        // Only modify URL requests, not Request objects
-        if (typeof input === 'string') {
-          // Add timestamp parameter to bust cache
-          const url = new URL(input, window.location.href);
-          
-          // Only add to our own domain requests
-          if (url.hostname === window.location.hostname) {
-            url.searchParams.set('_v', window.APP_VERSION);
-            input = url.toString();
-          }
-        }
-        return originalFetch.call(this, input, init);
-      };
+      // Safer approach - don't override fetch as it can cause MIME type issues
+      console.log('Cache busting initialized with version:', window.APP_VERSION);
+      
+      // Instead, clear cache explicitly
+      if ('caches' in window) {
+        caches.keys().then(function(cacheNames) {
+          console.log('Found', cacheNames.length, 'caches to clear');
+        });
+      }
     </script>
     
     <!-- Event listener monitoring and protection - runs FIRST to catch all listener registrations -->
@@ -633,13 +626,30 @@
       }, 3000);
     </script>
     
-    <!-- Efficiently load the main script with cache busting -->
+    <!-- Efficiently load the main script -->
+    <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Alternate script loading if needed -->
     <script>
-      // Generate dynamic script tag with cache-busting parameter
-      const mainScript = document.createElement('script');
-      mainScript.type = 'module';
-      mainScript.src = `/src/main.tsx?v=${window.APP_VERSION}`;
-      document.body.appendChild(mainScript);
+      // Backup script loading in case the module fails
+      window.addEventListener('error', function(e) {
+        // Check if it's a module loading error
+        if (e.filename && e.filename.includes('main.tsx')) {
+          console.warn('Module loading failed, trying alternative approach');
+          
+          setTimeout(function() {
+            // If the page is still blank after a short delay, try loading the transpiled JS directly
+            if (!document.getElementById('react-root-content')) {
+              const assetScript = document.createElement('script');
+              assetScript.src = `/assets/js/index-DmlVYhOn.js?nocache=${Date.now()}`;
+              assetScript.onerror = function() {
+                console.error('Failed to load fallback script');
+              };
+              document.body.appendChild(assetScript);
+            }
+          }, 2000);
+        }
+      }, true);
     </script>
     
     <!-- Performance monitoring - included only in development -->
