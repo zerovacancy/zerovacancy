@@ -299,27 +299,7 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
     <div className="w-full pb-10 relative" 
       ref={containerRef} 
       style={{ touchAction: 'auto' }}>
-      <AnimatePresence>
-        {isMobile && showStickyHeader && (
-          <motion.div
-            initial={{ y: -100, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -100, opacity: 0 }}
-            className="fixed top-0 left-0 right-0 py-2 px-4 z-30 bg-white/95 border-b border-indigo-100 shadow-sm"
-            style={{ touchAction: 'auto' }}
-          >
-            <PricingHeader 
-              title="Pricing" 
-              subtitle=""
-              isSticky={true}
-              isYearly={isYearly}
-              setIsYearly={setIsYearly}
-              animateChange={animateChange}
-              showStickyHeader={showStickyHeader}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Sticky header removed completely to eliminate duplicate toggle */}
       
       {isMobile ? (
         <div className="w-full overflow-hidden flex flex-col items-center">
