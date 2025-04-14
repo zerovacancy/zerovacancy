@@ -299,17 +299,6 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
     <div className="w-full pb-10 relative" 
       ref={containerRef} 
       style={{ touchAction: 'auto' }}>
-      {/* Enhanced mobile-only section divider with more prominent blue branding */}
-      {isMobile && (
-        <div className="relative w-full overflow-hidden mb-6 mt-2">
-          <div className="absolute left-0 right-0 top-0 h-[8px] bg-gradient-to-r from-blue-100 via-blue-200 to-blue-100"></div>
-          <div className="px-6 py-2 flex justify-center">
-            <div className="w-16 h-1 bg-blue-300 rounded-full shadow-sm"></div>
-          </div>
-          {/* Visual indicator to reinforce this is a different section */}
-          <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-[5px] h-[5px] bg-blue-400 rounded-full"></div>
-        </div>
-      )}
       <AnimatePresence>
         {isMobile && showStickyHeader && (
           <motion.div
@@ -334,16 +323,6 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
       
       {isMobile ? (
         <div className="w-full overflow-hidden flex flex-col items-center">
-          {/* Mobile pricing toggle - only show if not in sticky header mode */}
-          {!showStickyHeader && (
-            <div className="w-full flex justify-center mb-6 mt-2">
-              <MobilePricingToggle 
-                isYearly={isYearly}
-                setIsYearly={setIsYearly}
-                animateChange={animateChange}
-              />
-            </div>
-          )}
           
           <div className="w-full flex flex-col items-center space-y-10">
             {pricingTiers.map((tier, index) => {

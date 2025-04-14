@@ -2,7 +2,7 @@
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Calendar, CalendarDays } from "lucide-react";
+import { Calendar, CalendarDays, Check } from "lucide-react";
 import { MobilePricingToggle } from "./MobilePricingToggle";
 import { mobileOptimizationClasses as moc } from "@/utils/mobile-optimization";
 
@@ -91,14 +91,11 @@ const PricingHeader = ({
         
         {/* Conditionally render the appropriate toggle based on device */}
         {isMobile ? (
-          // Only render mobile toggle when in sticky header mode to avoid duplication
-          (isSticky && showStickyHeader) && (
-            <MobilePricingToggle 
-              isYearly={isYearly}
-              setIsYearly={setIsYearly}
-              animateChange={animateChange}
-            />
-          )
+          <MobilePricingToggle 
+            isYearly={isYearly}
+            setIsYearly={setIsYearly}
+            animateChange={animateChange}
+          />
         ) : (
           <div className={cn(
             "flex items-center overflow-hidden rounded-full transition-all duration-300 w-full max-w-md mx-auto",

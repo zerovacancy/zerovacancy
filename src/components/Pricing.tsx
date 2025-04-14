@@ -4,6 +4,7 @@ import { useSubscription } from "@/hooks/use-subscription";
 import PricingHeader from "./pricing/PricingHeader";
 import { PricingProvider, usePricing } from "./pricing/PricingContext";
 import { PricingContainer } from "./pricing/PricingContainer";
+import { MobilePricingToggle } from "./pricing/MobilePricingToggle";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { isLandscapeMode } from "@/utils/mobile-optimization";
 import { useEffect, useState } from "react";
@@ -59,7 +60,7 @@ const PricingContent = () => {
         isMobile && "bg-gradient-to-b from-white via-white to-blue-50/30",
         isLandscape && "py-3 mb-2"
       )}>
-        {/* Enhanced header with toggle now integrated */}
+        {/* Header and toggle integrated directly */}
         <PricingHeader 
           title="PRICING PLANS" 
           subtitle="Select the package that fits your property's marketing needs"
