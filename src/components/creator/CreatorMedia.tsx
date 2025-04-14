@@ -19,10 +19,10 @@ const MEDIA_MAPPING = {
   'Emily Johnson': { type: 'image', src: '/emilyprofilephoto.webp' },
   'Jane Cooper': { type: 'image', src: '/janeprofile.png' },
   'Michael Brown': { 
-    type: 'video', // Use video type for desktop
-    src: '/placeholder.svg', // Use placeholder as fallback
+    type: 'image', // Changed to image to fix missing profile
+    src: '/creatorcontent/michael-brown/work-1.webp', // Use a known good image
     videoSrc: '/michaelprofile.mov',
-    fallback: 'https://images.unsplash.com/photo-1581092795360-fd1ca04f0952'
+    fallback: '/creatorcontent/michael-brown/work-1.jpg'
   }
 };
 

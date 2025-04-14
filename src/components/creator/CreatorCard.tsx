@@ -302,12 +302,12 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     {creator.name}
                     <span className="absolute -top-0.5 -right-0.5 w-12 h-6 bg-gradient-to-br from-purple-100/40 to-transparent blur-sm rounded-full"></span>
                   </h3>
-                  <p className="text-gray-600 text-xs flex items-center max-w-[120px]">
+                  <p className="text-gray-600 text-xs flex items-center max-w-[140px]">
                     <svg className="w-3 h-3 mr-1 flex-shrink-0 text-purple-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                       <circle cx="12" cy="10" r="3"></circle>
                     </svg>
-                    <span className="truncate">{creator.location}</span>
+                    <span className="truncate whitespace-normal line-clamp-1">{creator.location}</span>
                   </p>
                 </div>
                 
