@@ -20,7 +20,6 @@ import { CookieConsent } from '@/components/ui/cookie-consent';
 import FontLoader from '@/components/FontLoader';
 import CriticalPreload from '@/components/CriticalPreload';
 import FOUCPrevention from '@/components/FOUCPrevention';
-import MobileTestStyles from '@/components/MobileTestStyles';
 import { AuthProvider } from '@/components/auth/AuthContext';
 import AuthForms from '@/components/auth/AuthForms';
 
@@ -318,7 +317,6 @@ function App() {
               }} 
             />
             <AuthForms />
-            <MobileTestStyles />
             <Analytics />
           </AuthProvider>
         </Router>
