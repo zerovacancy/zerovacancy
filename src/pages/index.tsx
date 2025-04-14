@@ -354,7 +354,16 @@ const Index = () => {
           'div[style*="background: #EBE3FF"]',
           'div:not([id]):not([class])[style*="393 x"]',
           'div[style*=" x "]',
-          'body > div:not([id]):not([class])'
+          'body > div:not([id]):not([class])',
+          // More aggressive selectors to catch any debug overlays
+          'div[style*="position: absolute"][style*="z-index: 9999"]',
+          'div[style*="position:absolute"][style*="z-index:9999"]',
+          'div:not([id]):not([class])',
+          'body > div:empty',
+          // Target any elements displaying CSS class names
+          'div[style*="393"]',
+          'div[style*="bg-gradient"]',
+          'div:not([id]):not([class]):not([role])'
         ];
         
         const debugOverlays = document.querySelectorAll(debugSelectors.join(','));
@@ -374,6 +383,11 @@ const Index = () => {
             content.includes('w-full') ||
             content.includes('overflow-') ||
             content.includes('px') ||
+            content.includes('bg-gradient') ||
+            content.includes('div.') ||
+            content.includes('[8px]') ||
+            content.includes('ACCESSIBILITY') ||
+            content.includes('/30.via') ||
             // Special check for Lovable tool debug output which shows component dimensions
             (content.match(/\d+(\.\d+)? x \d+(\.\d+)?/) !== null)
           ) {
@@ -390,6 +404,24 @@ const Index = () => {
               el.style.position = 'absolute';
               el.style.pointerEvents = 'none';
               el.style.zIndex = '-9999';
+            }
+          }
+        });
+        
+        // Also target by element position - especially useful for mobile
+        const allDivs = document.querySelectorAll('div');
+        allDivs.forEach(div => {
+          const rect = div.getBoundingClientRect();
+          // Check if this is a small overlay element at the top of the viewport
+          if (rect.top < 100 && rect.height < 50 && rect.width > 300 && div.textContent && 
+              (div.textContent.includes('bg-gradient') || div.textContent.includes(' x ') || div.textContent.includes('div.'))) {
+            try {
+              if (div.parentNode) {
+                div.parentNode.removeChild(div);
+              }
+            } catch (e) {
+              div.style.display = 'none';
+              div.style.visibility = 'hidden';
             }
           }
         });

@@ -43,7 +43,8 @@ header[class*="z-"] {
   background-color: rgba(255, 255, 255, 0.98); /* Slightly translucent */
   backdrop-filter: blur(8px); /* Modern glass effect */
   -webkit-backdrop-filter: blur(8px); /* For Safari */
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+  /* Removed box-shadow to eliminate the thin blue line between header and hero */
+  box-shadow: none;
   transition: height 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
