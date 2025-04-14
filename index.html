@@ -239,6 +239,51 @@
     <!-- Font optimization script temporarily disabled
     <script src="/font-optimization-script.js"></script> -->
     
+    <!-- Cache buster script to force refresh of cached assets - placed at the top for immediate effect -->
+    <script>
+      // Add version number as cache-busting parameter
+      window.APP_VERSION = '1.0.2-' + Date.now();
+      
+      // Force clear service worker cache and all browser caches
+      if ('caches' in window) {
+        caches.keys().then(function(cacheNames) {
+          console.log('Clearing all caches to refresh fixed navigation dots');
+          cacheNames.forEach(function(cacheName) {
+            caches.delete(cacheName).then(() => {
+              console.log('Cache deleted:', cacheName);
+            });
+          });
+        });
+      }
+      
+      // Force service worker update if available
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          registrations.forEach(function(registration) {
+            registration.update();
+            console.log('Updating service worker');
+          });
+        });
+      }
+      
+      // Add timestamp to all dynamic resource requests
+      const originalFetch = window.fetch;
+      window.fetch = function(input, init) {
+        // Only modify URL requests, not Request objects
+        if (typeof input === 'string') {
+          // Add timestamp parameter to bust cache
+          const url = new URL(input, window.location.href);
+          
+          // Only add to our own domain requests
+          if (url.hostname === window.location.hostname) {
+            url.searchParams.set('_v', window.APP_VERSION);
+            input = url.toString();
+          }
+        }
+        return originalFetch.call(this, input, init);
+      };
+    </script>
+    
     <!-- Event listener monitoring and protection - runs FIRST to catch all listener registrations -->
     <script src="/event-listener-guard.js"></script>
     <script src="/event-listener-diagnostics.js"></script>
@@ -588,8 +633,14 @@
       }, 3000);
     </script>
     
-    <!-- Efficiently load the main script -->
-    <script type="module" src="/src/main.tsx"></script>
+    <!-- Efficiently load the main script with cache busting -->
+    <script>
+      // Generate dynamic script tag with cache-busting parameter
+      const mainScript = document.createElement('script');
+      mainScript.type = 'module';
+      mainScript.src = `/src/main.tsx?v=${window.APP_VERSION}`;
+      document.body.appendChild(mainScript);
+    </script>
     
     <!-- Performance monitoring - included only in development -->
     <script>

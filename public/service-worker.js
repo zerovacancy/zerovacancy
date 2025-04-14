@@ -1,5 +1,5 @@
 // Service Worker with improved CSS handling
-const CACHE_NAME = 'zerovacancy-cache-v1';
+const CACHE_NAME = 'zerovacancy-cache-v2';
 
 // Assets that need special handling
 const CRITICAL_ASSETS = [
