@@ -86,8 +86,17 @@ export function stabilizeDynamicHeightElements() {
 export function stabilizeFixedElements() {
   if (typeof document === 'undefined') return;
   
-  // Find elements with position fixed
-  const fixedElements = Array.from(document.querySelectorAll('.fixed, [style*="position: fixed"], [style*="position:fixed"]'));
+  // Find elements with position fixed, excluding specific elements like scroll-to-top buttons
+  const fixedElements = Array.from(document.querySelectorAll('.fixed, [style*="position: fixed"], [style*="position:fixed"]'))
+    .filter(el => {
+      // Exclude elements that are specifically for navigation or UI elements that shouldn't affect layout
+      const isScrollToTopButton = el.classList.contains('scroll-to-top') || 
+                               (el as HTMLElement).getAttribute('aria-label') === 'Back to top';
+      const isFooterElement = el.closest('footer') !== null;
+      
+      // Don't add padding for UI elements like scroll-to-top buttons or footer elements
+      return !isScrollToTopButton && !isFooterElement;
+    });
   
   fixedElements.forEach(element => {
     // Ensure fixed elements don't cause layout shifts by using transform for animations
@@ -97,10 +106,17 @@ export function stabilizeFixedElements() {
     // If element has fixed bottom positioning, ensure it's consistent between mobile and desktop
     const computedStyle = window.getComputedStyle(element);
     if (computedStyle.bottom && computedStyle.bottom !== 'auto') {
-      // Reserve space equal to element height to prevent page jumping
-      const height = element.getBoundingClientRect().height;
-      if (height > 0) {
-        document.body.style.paddingBottom = `${height}px`;
+      // Don't add padding for specific UI elements
+      const isUIElement = (element as HTMLElement).getAttribute('aria-label') === 'Back to top' ||
+                        element.classList.contains('scroll-to-top') ||
+                        element.closest('[role="dialog"]') !== null;
+      
+      if (!isUIElement) {
+        // Reserve space equal to element height to prevent page jumping
+        const height = element.getBoundingClientRect().height;
+        if (height > 0) {
+          document.body.style.paddingBottom = `${height}px`;
+        }
       }
     }
   });
