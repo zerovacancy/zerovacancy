@@ -1,0 +1,176 @@
+/**
+ * Mobile Viewport Configuration
+ * 
+ * A clean, systematic approach to resolving mobile viewport and layout issues.
+ * This file focuses on proper viewport configuration without relying on !important
+ * overrides or hacky solutions.
+ */
+
+/* Root Custom Properties - Defines proper viewport sizes without !important */
+:root {
+  /* Common viewport sizes */
+  --viewport-width: 100%;
+  --screen-width: 100vw;
+  
+  /* Safe areas for notched devices */
+  --safe-area-inset-top: env(safe-area-inset-top, 0px);
+  --safe-area-inset-right: env(safe-area-inset-right, 0px);
+  --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-inset-left: env(safe-area-inset-left, 0px);
+  
+  /* Mobile navigation heights */
+  --mobile-header-height: 60px;
+  --mobile-bottom-nav-height: 64px;
+  
+  /* Container sizing */
+  --mobile-container-padding: 16px;
+  --mobile-side-margin: 16px;
+  
+  /* Mobile z-index system */
+  --z-index-base: 1;
+  --z-index-dropdown: 100;
+  --z-index-sticky: 200;
+  --z-index-fixed: 300;
+  --z-index-modal: 400;
+  --z-index-popover: 500;
+  --z-index-toast: 600;
+  
+  /* Standard touch targets */
+  --touch-target-size: 44px;
+}
+
+/* Mobile-specific viewport rules (without !important) */
+@media (max-width: 767px) {
+  /* Base HTML/Body configuration */
+  html, body {
+    width: var(--viewport-width);
+    max-width: var(--viewport-width);
+    overflow-x: hidden;
+    position: relative;
+    margin: 0;
+    padding: 0;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: none;
+    touch-action: manipulation;
+  }
+  
+  /* Container elements */
+  .mobile-container {
+    width: 100%;
+    max-width: 100%;
+    padding-left: var(--mobile-container-padding);
+    padding-right: var(--mobile-container-padding);
+    box-sizing: border-box;
+  }
+  
+  /* Fixed header with proper positioning */
+  .mobile-fixed-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--mobile-header-height);
+    z-index: var(--z-index-sticky);
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    align-items: center;
+    background-color: white;
+    /* Proper box-shadow instead of borders */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Safe area padding utilities */
+  .safe-area-top {
+    padding-top: var(--safe-area-inset-top);
+  }
+  
+  .safe-area-right {
+    padding-right: var(--safe-area-inset-right);
+  }
+  
+  .safe-area-bottom {
+    padding-bottom: var(--safe-area-inset-bottom);
+  }
+  
+  .safe-area-left {
+    padding-left: var(--safe-area-inset-left);
+  }
+  
+  .safe-area-inset {
+    padding-top: var(--safe-area-inset-top);
+    padding-right: var(--safe-area-inset-right);
+    padding-bottom: var(--safe-area-inset-bottom);
+    padding-left: var(--safe-area-inset-left);
+  }
+  
+  /* Touch target sizing */
+  .touch-target {
+    min-height: var(--touch-target-size);
+    min-width: var(--touch-target-size);
+  }
+  
+  /* Prevent overflow issues with fixed positioning */
+  .overflow-fix {
+    position: relative;
+    max-width: 100%;
+    width: 100%;
+    overflow-x: hidden;
+  }
+  
+  /* Center content horizontally */
+  .center-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+  }
+}
+
+/* Proper containment strategy for fixed elements */
+@media (max-width: 767px) {
+  /* Applied to fixed position elements to prevent layout issues */
+  .viewport-contained {
+    width: 100%;
+    max-width: 100%;
+    left: 0;
+    right: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Fixed header with proper z-index and positioning */
+  header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-width: 100%;
+    z-index: var(--z-index-sticky);
+    box-sizing: border-box;
+  }
+  
+  /* Proper content area with header offset */
+  main {
+    padding-top: var(--mobile-header-height);
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
+  }
+  
+  /* Proper positioning for fixed buttons */
+  .fixed-button {
+    position: fixed;
+    z-index: var(--z-index-fixed);
+    max-width: calc(100% - 32px);
+    box-sizing: border-box;
+  }
+}
+
+/* Hardware acceleration optimization */
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}

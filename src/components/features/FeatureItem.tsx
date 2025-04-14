@@ -99,24 +99,21 @@ export const FeatureItem = ({
     <motion.button
       className={cn(
         "relative w-full text-left group h-full flex flex-col",
-        "rounded-xl sm:rounded-2xl transition-all duration-300",
+        "rounded-xl transition-all duration-300",
         isMobile ? `${cardColorScheme.bg} hover:bg-opacity-100` : "bg-white hover:bg-white/95",
-        // Enhanced border - more visible with color matching the icon theme
-        `border border-${borderColorBase}-200/40`,
-        // Consistent shadow
-        "shadow-sm hover:shadow-md",
-        // Left border accent
-        `before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:rounded-l-xl before:bg-gradient-to-b ${cardColorScheme.from} ${cardColorScheme.to} before:opacity-0 group-hover:before:opacity-100 before:transition-opacity`,
-        // Consistent padding
-        "p-4 sm:p-5",
+        // Border that works with dynamic colors
+        "border border-gray-200",
+        // Simplified shadow that renders more efficiently
+        "shadow-sm",
+        // Simplified left border accent for mobile
+        isMobile ? "" : `before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:rounded-l-xl before:bg-gradient-to-b ${cardColorScheme.from} ${cardColorScheme.to} before:opacity-0 group-hover:before:opacity-100 before:transition-opacity`,
+        // Consistent padding - slightly reduced on mobile
+        isMobile ? "p-4" : "p-5",
         "focus:outline-none focus:ring-2 focus:ring-primary/20",
-        // Less pronounced hover on mobile for better performance
-        isMobile ? "active:translate-y-0" : "hover:-translate-y-1.5 hover:border-transparent",
+        // Simpler hover on mobile
         "transition-all duration-300",
         // For partially visible card
-        isPartiallyVisible && "opacity-80 shadow-none",
-        // Add mobile-optimize class from App.css
-        isMobile && "mobile-optimize"
+        isPartiallyVisible && "opacity-80 shadow-none"
       )}
       onClick={handleClick}
       aria-expanded={isExpanded}
@@ -138,45 +135,37 @@ export const FeatureItem = ({
         <div 
           className={cn(
             "flex items-center justify-center",
-            "w-12 h-12 sm:w-14 sm:h-14",
+            "w-10 h-10 sm:w-14 sm:h-14", // Smaller size on mobile
             "rounded-xl",
-            "transition-all duration-300",
             "bg-gradient-to-br",
             `${cardColorScheme.from} ${cardColorScheme.to}`,
-            "opacity-95",
-            "group-hover:shadow-md",
-            "border border-opacity-20",
-            `border-${borderColorBase}-100`,
+            "shadow-sm"
           )}
         >
-          <Icon className={cn(
-            "w-6 h-6 sm:w-7 sm:h-7",
-            "text-white",
-            "transition-all duration-300",
-            "group-hover:scale-110",
-            !isMobile && "group-hover:animate-subtle-bounce" 
-          )} />
+          <Icon className="w-5 h-5 sm:w-7 sm:h-7 text-white" />
         </div>
         
         <div className="text-left w-full flex-grow flex flex-col">
           {/* Title */}
           <h3 className={cn(
-            "text-base sm:text-lg font-bold leading-tight font-jakarta mb-2",
-            "text-gray-900",
-            "transition-colors duration-300"
+            "font-bold leading-tight font-jakarta mb-2",
+            isMobile ? "text-base" : "text-lg",
+            "text-gray-900"
           )}>
             {title}
           </h3>
           
           <div className={cn(
-            "w-10 h-0.5 mb-2 sm:mb-3 bg-gradient-to-r",
+            "w-10 h-0.5 mb-2 bg-gradient-to-r",
             `${cardColorScheme.from} ${cardColorScheme.to}`,
-            "rounded-full transition-all duration-300 transform origin-left",
-            "group-hover:w-16"
+            "rounded-full"
           )} />
           
           {/* Description with truncation */}
-          <p className="text-xs sm:text-sm text-gray-600 font-inter leading-relaxed group-hover:text-gray-700">
+          <p className={cn(
+            "text-gray-600 font-inter leading-relaxed",
+            isMobile ? "text-xs" : "text-sm"
+          )}>
             {isExpanded || !isLongDesc ? 
               description : 
               (<>
@@ -187,13 +176,9 @@ export const FeatureItem = ({
           </p>
           
           {/* Learn more link */}
-          <div className={cn(
-            "mt-3 text-xs font-medium flex items-center gap-1.5", 
-            `text-${borderColorBase}-600`,
-            "transition-opacity duration-300"
-          )}>
+          <div className="mt-3 text-xs font-medium flex items-center gap-1.5 text-indigo-600">
             {isExpanded ? "Show less" : "Learn more"} <ChevronRight className={cn(
-              "w-3 h-3 transition-transform duration-300",
+              "w-3 h-3",
               isExpanded ? "rotate-90" : ""
             )} />
           </div>

@@ -194,65 +194,126 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
   ];
   
   const getColorScheme = (color: string) => {
-    switch (color) {
-      case "blue":
-        return {
-          bg: "bg-blue-50",
-          border: "border-blue-200",
-          text: "text-blue-700",
-          accent: "bg-blue-500",
-          button: "bg-gradient-to-br from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-md shadow-blue-500/20",
-          highlight: "bg-blue-50",
-          gradient: mobileOptimizationClasses.pricingGradientBasic,
-          cardBg: "bg-gradient-to-b from-blue-50/50 to-white"
-        };
-      case "purple":
-        return {
-          bg: "bg-brand-purple/10",
-          border: "border-brand-purple/30",
-          text: "text-brand-purple-dark",
-          accent: "bg-brand-purple",
-          button: "bg-gradient-to-br from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-md shadow-purple-500/20",
-          highlight: "bg-purple-50",
-          gradient: mobileOptimizationClasses.pricingGradientPro,
-          cardBg: "bg-gradient-to-b from-purple-50/50 to-white"
-        };
-      case "emerald":
-        return {
-          bg: "bg-emerald-50",
-          border: "border-emerald-200",
-          text: "text-emerald-700",
-          accent: "bg-emerald-500",
-          button: "bg-gradient-to-br from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-md shadow-blue-500/20",
-          highlight: "bg-emerald-50",
-          gradient: mobileOptimizationClasses.pricingGradientPremium,
-          cardBg: "bg-gradient-to-b from-emerald-50/50 to-white"
-        };
-      default:
-        return {
-          bg: "bg-gray-50",
-          border: "border-gray-200",
-          text: "text-gray-700",
-          accent: "bg-gray-500",
-          button: "bg-gray-500 hover:bg-gray-600",
-          highlight: "bg-gray-50",
-          gradient: "",
-          cardBg: "bg-gradient-to-b from-gray-50/50 to-white"
-        };
+    // For mobile, we'll use a more differentiated color scheme focused on blues/indigos 
+    // to clearly separate pricing from features
+    if (isMobile) {
+      switch (color) {
+        case "blue":
+          return {
+            bg: "bg-blue-50",
+            border: "border-blue-200",
+            text: "text-blue-700",
+            accent: "bg-blue-500",
+            button: "bg-gradient-to-br from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-md shadow-blue-500/20",
+            highlight: "bg-blue-50",
+            gradient: "bg-gradient-to-br from-blue-500 to-indigo-600",
+            cardBg: "bg-gradient-to-b from-white to-blue-50/50"
+          };
+        case "purple":
+          return {
+            bg: "bg-indigo-50",
+            border: "border-indigo-200",
+            text: "text-indigo-700",
+            accent: "bg-indigo-500",
+            button: "bg-gradient-to-br from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 shadow-md shadow-indigo-500/20",
+            highlight: "bg-indigo-50",
+            gradient: "bg-gradient-to-br from-indigo-600 to-blue-600",
+            cardBg: "bg-gradient-to-b from-white to-indigo-50/70"
+          };
+        case "emerald":
+          return {
+            bg: "bg-cyan-50",
+            border: "border-cyan-200",
+            text: "text-cyan-700",
+            accent: "bg-cyan-500",
+            button: "bg-gradient-to-br from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 shadow-md shadow-cyan-500/20",
+            highlight: "bg-cyan-50",
+            gradient: "bg-gradient-to-br from-cyan-600 to-blue-600",
+            cardBg: "bg-gradient-to-b from-white to-cyan-50/50"
+          };
+        default:
+          return {
+            bg: "bg-slate-50",
+            border: "border-slate-200",
+            text: "text-slate-700",
+            accent: "bg-slate-500",
+            button: "bg-slate-500 hover:bg-slate-600",
+            highlight: "bg-slate-50",
+            gradient: "",
+            cardBg: "bg-gradient-to-b from-white to-slate-50/50"
+          };
+      }
+    } else {
+      // Original desktop color scheme
+      switch (color) {
+        case "blue":
+          return {
+            bg: "bg-blue-50",
+            border: "border-blue-200",
+            text: "text-blue-700",
+            accent: "bg-blue-500",
+            button: "bg-gradient-to-br from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-md shadow-blue-500/20",
+            highlight: "bg-blue-50",
+            gradient: mobileOptimizationClasses.pricingGradientBasic,
+            cardBg: "bg-gradient-to-b from-blue-50/50 to-white"
+          };
+        case "purple":
+          return {
+            bg: "bg-brand-purple/10",
+            border: "border-brand-purple/30",
+            text: "text-brand-purple-dark",
+            accent: "bg-brand-purple",
+            button: "bg-gradient-to-br from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-md shadow-purple-500/20",
+            highlight: "bg-purple-50",
+            gradient: mobileOptimizationClasses.pricingGradientPro,
+            cardBg: "bg-gradient-to-b from-purple-50/50 to-white"
+          };
+        case "emerald":
+          return {
+            bg: "bg-emerald-50",
+            border: "border-emerald-200",
+            text: "text-emerald-700",
+            accent: "bg-emerald-500",
+            button: "bg-gradient-to-br from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 shadow-md shadow-blue-500/20",
+            highlight: "bg-emerald-50",
+            gradient: mobileOptimizationClasses.pricingGradientPremium,
+            cardBg: "bg-gradient-to-b from-emerald-50/50 to-white"
+          };
+        default:
+          return {
+            bg: "bg-gray-50",
+            border: "border-gray-200",
+            text: "text-gray-700",
+            accent: "bg-gray-500",
+            button: "bg-gray-500 hover:bg-gray-600",
+            highlight: "bg-gray-50",
+            gradient: "",
+            cardBg: "bg-gradient-to-b from-gray-50/50 to-white"
+          };
+      }
     }
   };
   
   return (
-    <div className="w-full pb-10" 
+    <div className="w-full pb-10 relative" 
       ref={containerRef} 
       style={{ touchAction: 'auto' }}>
+      {/* Mobile-only section divider */}
+      {isMobile && (
+        <div className="relative w-full overflow-hidden mb-6 mt-2">
+          <div className="absolute left-0 right-0 top-0 h-[8px] bg-gradient-to-r from-blue-50 via-indigo-100 to-blue-50"></div>
+          <div className="px-6 py-2 flex justify-center">
+            <div className="w-16 h-1 bg-indigo-200 rounded-full"></div>
+          </div>
+        </div>
+      )}
       <AnimatePresence>
         {isMobile && showStickyHeader && (
           <motion.div
             initial={{ y: -100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -100, opacity: 0 }}
-            className="fixed top-0 left-0 right-0 py-2 px-4 z-30"
+            className="fixed top-0 left-0 right-0 py-2 px-4 z-30 bg-white/95 border-b border-indigo-100 shadow-sm"
             style={{ touchAction: 'auto' }}
           >
             <PricingHeader 
@@ -269,7 +330,7 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
       </AnimatePresence>
       
       {isMobile ? (
-        <div className="px-4 max-w-full overflow-x-hidden">
+        <div className="w-full overflow-hidden flex flex-col items-center space-y-10">
           {pricingTiers.map((tier, index) => {
             const colorScheme = getColorScheme(tier.color);
             const isExpanded = !!expandedFeatures[index];
@@ -279,46 +340,40 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
               <motion.div
                 key={tier.title}
                 className={cn(
-                  "rounded-xl overflow-visible transition-all mt-10 relative group mx-auto w-full",
-                  // Remove fixed width and make responsive
-                  "max-w-[95%] sm:max-w-[280px]",
-                  tier.popularPlan ? (isMobile ? "shadow-lg" : "border-brand-purple shadow-lg") : (isMobile ? "" : "border-slate-200"),
-                  tier.popularPlan && "relative",
+                  "rounded-xl overflow-visible transition-all relative group w-[92%] max-w-[340px]",
+                  "border border-gray-200",
+                  tier.popularPlan && "relative shadow-md",
                   colorScheme.cardBg,
-                  "shadow-sm hover:shadow-md",
-                  isMobile && "mobile-optimize touch-action-pan-y overscroll-behavior-none",
-                  "before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:rounded-l-xl",
-                  `before:bg-gradient-to-b ${colorScheme.gradient.split(' ')[0]} ${colorScheme.gradient.split(' ')[1]} before:opacity-0 group-hover:before:opacity-100 before:transition-opacity`,
-                  // Add glowing border for Professional plan on mobile
-                  tier.title === "Professional" && "ring-3 ring-purple-400/20 ring-offset-0 shadow-[0_0_12px_rgba(139,92,246,0.3)]"
+                  // Use simpler shadow for better performance
+                  "shadow-sm",
+                  // Add stronger visual highlighting for the Professional plan
+                  tier.title === "Professional" && "ring-2 ring-purple-400/20 shadow-[0_2px_10px_rgba(139,92,246,0.15)]"
                 )}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                style={{ touchAction: 'pan-y', overscrollBehavior: 'none' }}
               >
                 {tier.popularPlan && (
-                  <div className="absolute -top-5 inset-x-0 flex justify-center z-20">
-                    <div className="py-1 px-3 flex items-center gap-1 rounded-full bg-gradient-to-r from-brand-purple-medium to-brand-purple text-white text-xs font-semibold shadow-md">
+                  <div className="absolute -top-4 inset-x-0 flex justify-center z-20">
+                    <div className="py-1 px-3 flex items-center gap-1 rounded-full bg-gradient-to-r from-brand-purple-medium to-brand-purple text-white text-xs font-semibold shadow-sm">
                       <Sparkles className="h-3 w-3" />
                       <span>POPULAR</span>
                     </div>
                   </div>
                 )}
                 <div className={cn(
-                  "p-4 flex justify-between items-start gap-2"
+                  "p-5 flex justify-between items-start gap-3"
                 )}>
                   <div className="flex-1 min-w-0">
                     <h3 className={cn(
-                      "text-lg font-bold font-jakarta truncate",
+                      "text-lg font-bold font-jakarta",
                       colorScheme.text
                     )}>
                       {tier.title}
                     </h3>
-                    <div className="mt-1">
+                    <div className="mt-2">
                       <p className={cn(
-                        "text-xs text-brand-text-secondary font-inter leading-relaxed relative",
-                        isMobile && "pl-0.5",
+                        "text-xs text-brand-text-secondary font-inter leading-relaxed",
                         !isDescriptionExpanded && "line-clamp-3"
                       )}>
                         {tier.valueProposition}
@@ -332,7 +387,11 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
                             e.stopPropagation();
                             toggleDescription(index);
                           }}
-                          className="mt-1 text-[10px] font-medium text-brand-purple flex items-center gap-1 focus:outline-none"
+                          className={cn(
+                            "mt-1.5 text-xs font-medium flex items-center gap-1 focus:outline-none touch-manipulation",
+                            colorScheme.text
+                          )}
+                          style={{ touchAction: 'manipulation' }}
                         >
                           {isDescriptionExpanded ? "Read less" : "Read more"}
                           <ChevronDown 
@@ -358,24 +417,27 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
                     </div>
                     
                     {isYearly && tier.savings && (
-                      <div className="mt-1.5 inline-block bg-green-50 text-green-600 px-2 py-0.5 rounded-full text-[10px] font-medium font-space whitespace-nowrap">
+                      <div className="mt-1.5 inline-block bg-green-50 text-green-600 px-2.5 py-1 rounded-full text-xs font-medium font-space whitespace-nowrap">
                         Save ${tier.savings}/year
                       </div>
                     )}
                   </div>
                 </div>
                 
-                <div className="px-4 pb-2 pt-3">
+                <div className="px-5 pb-3 pt-2">
                   <Button 
                     className={cn(
-                      "w-full py-2 rounded-xl font-medium text-sm transition-all h-auto min-h-10",
+                      "w-full py-3 rounded-xl font-medium text-sm transition-all",
                       "px-4",
+                      // Better touch target height
+                      "h-[48px] min-h-[48px]",
                       colorScheme.button,
-                      tier.popularPlan && "ring-2 ring-brand-purple/30 ring-offset-1",
+                      tier.popularPlan && "ring-1 ring-brand-purple/20",
                       (isProcessingPayment && processingPlan === tier.title) && "opacity-80 cursor-not-allowed"
                     )}
                     disabled={isProcessingPayment}
                     onClick={() => handlePlanSelect(tier.title)}
+                    style={{ touchAction: 'manipulation' }}
                   >
                     {(isProcessingPayment && processingPlan === tier.title) ? (
                       <div className="flex items-center justify-center gap-2">
@@ -388,21 +450,24 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
                   </Button>
                 </div>
                 
-                <div className="px-4 pb-4">
+                <div className="px-5 pb-5">
                   <button
                     onClick={() => toggleFeatures(index)}
                     className={cn(
-                      "mt-3 flex items-center justify-center w-auto mx-auto px-3 py-1",
-                      "text-[10px] font-medium text-brand-text-primary rounded-full",
+                      "mt-2 flex items-center justify-center w-auto mx-auto px-4 py-1.5",
+                      "text-xs font-medium text-brand-text-primary rounded-full",
                       "border border-slate-200 bg-slate-50 hover:bg-slate-100",
-                      "transition-colors duration-200"
+                      "transition-colors duration-200",
+                      // Better touch target
+                      "min-h-[36px]"
                     )}
+                    style={{ touchAction: 'manipulation' }}
                   >
                     <span className="font-inter whitespace-nowrap">
                       {isExpanded ? "Hide features" : "Show features"}
                     </span>
                     <ChevronDown className={cn(
-                      "h-3 w-3 ml-1 text-brand-text-light transition-transform",
+                      "h-3.5 w-3.5 ml-1 text-brand-text-light transition-transform",
                       isExpanded && "rotate-180"
                     )} />
                   </button>
@@ -414,36 +479,39 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.3 }}
-                        className="overflow-hidden touch-action-pan-y overscroll-behavior-none"
-                        style={{ touchAction: 'pan-y', overscrollBehavior: 'none' }}
+                        className="overflow-hidden touch-action-pan-y"
+                        style={{ touchAction: 'pan-y' }}
                       >
                         <div className={cn(
-                          "pt-4 pb-2 space-y-4",
-                          isMobile && "px-0.5"
+                          "pt-5 pb-2 space-y-5"
                         )}>
                           {Object.entries(tier.features).map(([category, features], catIndex) => (
-                            <div key={`${tier.title}-${category}`} className="space-y-2">
+                            <div key={`${tier.title}-${category}`} className="space-y-3">
                               {category !== "Core Features" && (
                                 <h4 className={cn(
-                                  "text-xs font-medium font-jakarta px-2 py-1 rounded inline-block",
-                                  isMobile && "ml-0.5",
+                                  "text-xs font-semibold font-jakarta px-3 py-1 rounded-md inline-block",
                                   colorScheme.bg
                                 )}>
                                   {category}
                                 </h4>
                               )}
                               
-                              <div className="space-y-2">
+                              <div className="space-y-3 ml-1">
                                 {features.map((feature, featIndex) => (
                                   <div 
                                     key={`${tier.title}-${category}-${featIndex}`}
-                                    className="flex items-start gap-2"
+                                    className="flex items-start gap-3"
                                   >
-                                    <Check className={cn(
-                                      isMobile ? "h-3.5 w-3.5 mt-0.5 ml-0.5 flex-shrink-0" : "h-4 w-4 mt-0.5 flex-shrink-0", 
-                                      colorScheme.text
-                                    )} />
-                                    <span className="text-xs leading-snug text-brand-text-primary font-inter">{feature.text}</span>
+                                    <div className={cn(
+                                      "flex-shrink-0 rounded-full p-0.5 mt-0.5",
+                                      colorScheme.bg
+                                    )}>
+                                      <Check className={cn(
+                                        "h-3.5 w-3.5 flex-shrink-0", 
+                                        colorScheme.text
+                                      )} />
+                                    </div>
+                                    <span className="text-xs leading-relaxed text-brand-text-primary font-inter">{feature.text}</span>
                                   </div>
                                 ))}
                               </div>

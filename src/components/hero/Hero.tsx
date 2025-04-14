@@ -27,15 +27,6 @@ const MobileHeroCTA = () => {
   const [submittedEmail, setSubmittedEmail] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   
-  // Safely handle confetti
-  useEffect(() => {
-    // Avoid modifying window object directly, which can cause issues
-    // Just ensure confetti is available for our component's use
-    if (typeof window !== 'undefined') {
-      // We'll use the imported confetti directly instead of assigning to window
-    }
-  }, []);
-  
   // Validate email as user types
   useEffect(() => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -157,34 +148,20 @@ const MobileHeroCTA = () => {
   if (showInlineSuccess) {
     return (
       <>
-        <div className="w-full max-w-[250px] py-5 px-4 font-medium rounded-[14px] text-white relative flex flex-col items-center justify-center animate-fade-in"
-          style={{
-            background: 'linear-gradient(180deg, #8A42F5 0%, #7837DB 100%)',
-            color: 'white',
-            border: '1px solid rgba(255,255,255,0.2)',
-            boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(0,0,0,0.05), 0 16px 32px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15)',
-            transform: 'translateZ(0)', // Hardware acceleration
-            willChange: 'transform', // Optimize for animations
-            margin: '0 auto',
-            position: 'relative'
-          }}
-        >
-          <div className="h-14 w-14 bg-purple-50/20 rounded-full flex items-center justify-center mb-2"
-            style={{
-              boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.3), 0 2px 8px rgba(0,0,0,0.2)'
-            }}>
+        <div className="mobile-card w-full max-w-[250px] py-space-md px-space-sm mobile-card-gradient text-white relative flex flex-col items-center justify-center animate-fade-in gpu-accelerated">
+          <div className="h-14 w-14 bg-purple-50/20 rounded-full flex items-center justify-center mb-space-xs">
             <CheckCircle className="h-7 w-7 text-white" />
           </div>
-          <h3 className="text-base font-bold text-white mb-1">
+          <h3 className="mobile-text-lg mobile-heading text-white mb-1">
             {alreadySubscribed ? "Already Subscribed" : "Success!"}
           </h3>
-          <p className="text-white/90 text-center text-sm max-w-[24rem] mb-1">
+          <p className="mobile-text-sm text-white/90 text-center max-w-[24rem] mb-1">
             {alreadySubscribed 
               ? `${submittedEmail} is already on our waitlist.`
               : `We've added ${submittedEmail} to our waitlist.`
             }
           </p>
-          <p className="text-white/80 text-xs">
+          <p className="mobile-text-xs text-white/80">
             We'll notify you as soon as we launch.
           </p>
         </div>
@@ -198,35 +175,20 @@ const MobileHeroCTA = () => {
       <button
         onClick={handleButtonClick}
         className={cn(
-          "w-full mx-auto font-medium rounded-[12px] text-white relative flex items-center justify-center",
-          "h-12 min-h-[48px] px-4 py-2 rounded-full", // Increased height and full rounded corners
-          "text-sm",
-          "max-w-[250px]" // Constrain width to ensure centering
+          "mobile-button mobile-touch-target w-full mx-auto font-medium text-white relative flex items-center justify-center",
+          "max-w-[250px] rounded-[var(--mobile-border-radius)]",
+          "bg-gradient-to-b from-[#8A42F5] to-[#7837DB]",
+          "gpu-accelerated"
         )}
         style={{
-          background: 'linear-gradient(180deg, #8A42F5 0%, #7837DB 100%)',
-          color: 'white',
-          border: '1px solid rgba(255,255,255,0.2)',
-          boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), 0 8px 16px rgba(0,0,0,0.05), 0 16px 32px rgba(0,0,0,0.03), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15)',
-          fontWeight: 600,
-          paddingLeft: '52px',
-          letterSpacing: '0.02em',
-          transform: 'translateZ(0)', // Hardware acceleration
-          willChange: 'transform', // Optimize for animations
-          margin: '0 auto',
-          position: 'relative'
+          paddingLeft: '52px'
         }}
       >
         {/* Icon container */}
-        <div 
-          className="absolute left-0 top-1/2 -translate-y-1/2 ml-4 flex items-center justify-center"
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 ml-4 flex items-center justify-center bg-[#8A42F5] rounded-lg border border-white/30"
           style={{
             width: '32px',
-            height: '32px',
-            background: '#8A42F5', // Match the purple button color
-            border: '1px solid rgba(255,255,255,0.3)',
-            borderRadius: '10px',
-            boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15)'
+            height: '32px'
           }}
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -234,7 +196,7 @@ const MobileHeroCTA = () => {
             <path d="M20 12v4H6a2 2 0 0 0-2 2c0 1.1.9 2 2 2h12v-4"></path>
           </svg>
         </div>
-        RESERVE EARLY ACCESS
+        <span className="mobile-text-base font-semibold">RESERVE EARLY ACCESS</span>
       </button>
     );
   }
@@ -244,37 +206,20 @@ const MobileHeroCTA = () => {
     <>
       <form 
         onSubmit={handleSubmit}
-        className="w-full max-w-[250px] mx-auto relative animate-fade-in"
-        style={{
-          transform: 'translateZ(0)', // Hardware acceleration
-          willChange: 'transform', // Optimize for animations
-          margin: '0 auto',
-          position: 'relative',
-          zIndex: 30
-        }}
+        className="w-full max-w-[250px] mx-auto relative animate-fade-in gpu-accelerated z-30"
       >
-        <div className={cn(
-          "flex flex-col w-full",
-          "shadow-lg" // Add shadow to the entire form container
-        )}>
+        <div className="flex flex-col w-full shadow-lg">
           <div className="relative">
-            {/* Email input - improved styling */}
+            {/* Email input with mobile styling */}
             <input
               ref={inputRef}
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
-              className={cn(
-                "w-full rounded-t-[10px] rounded-b-none text-gray-800 border border-purple-200/70 border-b-0 focus:outline-none focus:ring-2 focus:ring-purple-400/40",
-                "h-12 px-3 text-base font-medium" // Improved height and font styling
-              )}
+              className="mobile-input w-full rounded-t-[var(--mobile-border-radius)] rounded-b-none text-gray-800 border border-purple-200/70 border-b-0 focus:outline-none focus:ring-2 focus:ring-purple-400/40"
               style={{
-                backgroundColor: 'white',
-                boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.03)',
-                borderWidth: '1px',
-                borderStyle: 'solid',
-                borderColor: 'rgba(138, 66, 245, 0.2)'
+                backgroundColor: 'white'
               }}
               disabled={isLoading}
               required
@@ -288,30 +233,21 @@ const MobileHeroCTA = () => {
             )}
           </div>
           
-          {/* Submit button - improved styling */}
+          {/* Submit button with mobile styling */}
           <button
             type="submit"
             disabled={isLoading}
-            className={cn(
-              "w-full bg-gradient-to-b from-purple-600 to-purple-700 text-white font-semibold rounded-t-none rounded-b-[10px] flex items-center justify-center transition-all duration-200",
-              "h-12 text-sm" // Matching height with input
-            )}
-            style={{
-              background: 'linear-gradient(180deg, #8A42F5 0%, #7837DB 100%)',
-              border: '1px solid rgba(255,255,255,0.2)',
-              boxShadow: '0 1px 2px rgba(0,0,0,0.07), 0 4px 8px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.35), inset 0 -1px 0 rgba(0,0,0,0.15)',
-              letterSpacing: '0.02em'
-            }}
+            className="mobile-button bg-gradient-to-b from-[#8A42F5] to-[#7837DB] text-white font-semibold rounded-t-none rounded-b-[var(--mobile-border-radius)] flex items-center justify-center"
           >
             {isLoading ? (
               <>
                 <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                <span>Joining...</span>
+                <span className="mobile-text-base">Joining...</span>
               </>
             ) : (
               <>
                 <ShieldCheck className="w-5 h-5 mr-2" />
-                <span>JOIN WAITLIST</span>
+                <span className="mobile-text-base">JOIN WAITLIST</span>
                 <ArrowRight className="w-4 h-4 ml-2" />
               </>
             )}
@@ -321,9 +257,8 @@ const MobileHeroCTA = () => {
       
       {/* Fire confetti when showConfetti is true */}
       {showConfetti && (
-        <div className="fixed inset-0 pointer-events-none z-[5000]" style={{ position: 'fixed' }}>
-          {/* Using script tags with dangerouslySetInnerHTML inside React can cause issues */}
-          {/* Removed problematic script tag */}
+        <div className="fixed inset-0 pointer-events-none z-[5000]">
+          {/* Confetti handled via the confetti library */}
         </div>
       )}
     </>
@@ -579,51 +514,35 @@ export const Hero = () => {
     <section
       id="hero" 
       ref={sectionRef}
-      className="flex flex-col items-center w-full bg-[#F9F6EC] relative"
-      style={{
-        height: 'auto',
-        minHeight: 'auto',
-        maxHeight: 'none',
-        paddingTop: isMobile ? '80px' : '60px', // More padding on mobile for nav
-        paddingBottom: isMobile ? '90px' : '60px', // Extra padding at bottom on mobile
-        margin: 0,
-        marginBottom: '20px !important',
-        overflow: 'visible',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: isMobile ? 'flex-start' : 'center',
-        alignItems: 'center'
-      }}
+      className={cn(
+        "flex flex-col items-center w-full bg-[#F9F6EC] relative",
+        isMobile ? "pt-[var(--mobile-header-height)] pb-space-xl" : "pt-[60px] pb-[60px]",
+        "gpu-accelerated"
+      )}
       aria-labelledby="hero-title"
     >
-      
       <div 
         className={cn(
-          "flex flex-col items-center w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center",
+          "flex flex-col items-center w-full max-w-7xl",
+          isMobile ? "px-container-padding-mobile" : "px-4 sm:px-6 lg:px-8",
+          "text-center",
           isInView ? "animate-fade-in delay-100" : "opacity-0"
         )}
-        style={{
-          width: '100%',
-          maxWidth: '100%',
-          margin: '0 auto'
-        }}
       >
-        <div className="flex flex-col items-center w-full" style={{
-          width: '100%',
-          maxWidth: '920px',
-          margin: '0 auto 20px',
-          textAlign: 'center'
-        }}>
+        <div className="flex flex-col items-center w-full text-center" 
+          style={{
+            maxWidth: isMobile ? '100%' : '920px'
+          }}
+        >
           {/* Main heading - both screen-reader friendly and visually styled */}
-          <h1 id="hero-title" className="tracking-tight font-bold font-jakarta text-center w-full flex flex-col items-center"
-          style={{ 
-            margin: '0 0 30px 0',
-            padding: '0',
-            width: '100%'
-          }}>
+          <h1 id="hero-title" className={cn(
+            "tracking-tight font-bold text-center w-full flex flex-col items-center",
+            "mobile-heading",
+            isMobile ? "mb-space-md" : "mb-[30px]"
+          )}>
             <span 
               className={cn(
-                isMobile ? "text-[2rem]" : "text-4xl sm:text-5xl lg:text-6xl",
+                isMobile ? "mobile-text-2xl" : "text-4xl sm:text-5xl lg:text-6xl",
                 "tracking-[-0.02em]",
                 "font-jakarta mb-2",
                 "bg-clip-text text-transparent",
@@ -631,11 +550,6 @@ export const Hero = () => {
                 "font-bold",
                 "w-full mx-auto text-center"
               )}
-              style={{ 
-                letterSpacing: "-0.02em",
-                lineHeight: "1.3",
-                margin: '0 0 8px 0'
-              }}
             >
               PROPERTY CONTENT THAT
             </span>
@@ -643,10 +557,7 @@ export const Hero = () => {
             <div 
               className="flex justify-center w-full text-center"
               style={{ 
-                width: "100%",
-                height: isMobile ? "60px" : "70px",
-                margin: '0',
-                padding: '0'
+                height: isMobile ? "60px" : "70px"
               }}
             >
               <TextRotate
@@ -660,7 +571,7 @@ export const Hero = () => {
                 rotationInterval={3000}
                 splitLevelClassName="overflow-visible"
                 elementLevelClassName={cn(
-                  isMobile ? "text-[2.4rem]" : "text-4xl sm:text-5xl lg:text-6xl",
+                  isMobile ? "mobile-text-3xl" : "text-4xl sm:text-5xl lg:text-6xl",
                   "font-bold font-jakarta tracking-[-0.03em]",
                   "bg-clip-text text-transparent", 
                   "bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1]",
@@ -681,17 +592,12 @@ export const Hero = () => {
           </h1>
         </div>
 
-        <p 
-          className="text-gray-700 text-center font-inter"
-          style={{
-            width: '100%',
-            maxWidth: isMobile ? '95%' : '650px',
-            margin: '0 auto 40px', // SIGNIFICANT spacing before buttons
-            padding: '0 16px',
-            lineHeight: '1.6',
-            fontSize: isMobile ? '0.95rem' : '1rem'
-          }}
-        >
+        <p className={cn(
+          isMobile ? "mobile-text-base mobile-body" : "text-gray-700 font-inter",
+          "text-center",
+          "w-full",
+          isMobile ? "max-w-[95%] mb-space-lg" : "max-w-[650px] mb-10"
+        )}>
           {isMobile ? (
             "Connect with top creators who transform your spaces with professional photography, video, and 3D tours that showcase your property's potential."
           ) : (
@@ -705,24 +611,15 @@ export const Hero = () => {
           "flex flex-col items-center w-full",
           isInView ? "animate-fade-in delay-100" : "opacity-0"
         )}
-        style={{
-          width: '100%',
-          margin: '0 auto',
-          padding: '0'
-        }}
       >
         {!isMobile && (
-          <div className="flex flex-col items-center w-full" id="hero-cta-section" style={{
-              width: '100%',
-              maxWidth: '680px', 
-              margin: '0 auto',
-              padding: '0'
-            }}>
+          <div className="flex flex-col items-center w-full" id="hero-cta-section" 
+            style={{
+              maxWidth: '680px'
+            }}
+          >
             {/* Container for both buttons in a row with fixed width and centering */}
-            <div className="flex flex-row justify-center items-center w-full" style={{
-              gap: '24px',
-              marginBottom: '24px'
-            }}>
+            <div className="flex flex-row justify-center items-center w-full gap-6 mb-6">
               {/* Reserve Your Spot button - fixed width */}
               <div style={{ width: '260px' }}>
                 <WaitlistCTA 
@@ -757,10 +654,7 @@ export const Hero = () => {
             </div>
             
             {/* Social proof below both buttons */}
-            <div className="flex justify-center items-center w-full" style={{
-              marginTop: '0',
-              marginBottom: '0'
-            }}>
+            <div className="flex justify-center items-center w-full">
               <SocialProof className="mx-auto" />
             </div>
           </div>
@@ -768,54 +662,32 @@ export const Hero = () => {
         
         {isMobile && (
           <>
-            <div className="flex flex-col items-center w-full" 
+            <div className="flex flex-col items-center w-full gap-space-sm" 
               id="mobile-hero-cta-section"
               style={{ 
-                width: '100%',
-                maxWidth: '280px',
-                margin: '0 auto',
-                padding: '0',
-                minHeight: 'auto',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '16px',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginTop: '8px',
-                marginBottom: '16px' // SOLUTION: Explicit, controlled bottom margin
-              }}>
+                maxWidth: '280px'
+              }}
+            >
               {/* Mobile CTA with inline email form expansion */}
-              <div className="w-full flex justify-center items-center" style={{ 
-                marginBottom: '4px !important', 
-                padding: '0 !important',
-                marginTop: '0 !important'
-              }}>
+              <div className="w-full flex justify-center items-center">
                 <MobileHeroCTA />
               </div>
               
               {/* Centered social proof */}
-              <div className="flex justify-center items-center w-full" style={{ 
-                marginBottom: '0 !important', 
-                marginTop: '8px !important',
-                padding: '0 !important'
-              }}>
+              <div className="flex justify-center items-center w-full mt-space-xs">
                 <SocialProof 
                   className="mx-auto"
                   style={{
-                    margin: '0 auto !important',
-                    width: 'auto',
                     padding: '6px 10px',
                     borderRadius: '10px',
-                    fontSize: '11px',
-                    marginTop: '0 !important',
-                    marginBottom: '0 !important'
+                    fontSize: '11px'
                   }}
                 />
               </div>
               
               {/* Scroll indicator */}
-              <div className="flex flex-col items-center opacity-60" style={{ marginTop: '8px !important', marginBottom: '8px !important' }}>
-                <span className="text-[11px] text-purple-600 mb-1 font-medium">Scroll to explore</span>
+              <div className="flex flex-col items-center opacity-60 mt-space-sm">
+                <span className="mobile-text-xs text-purple-600 mb-1 font-medium">Scroll to explore</span>
                 <svg width="16" height="8" viewBox="0 0 20 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M1 1L10 9L19 1" stroke="#8A2BE2" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>

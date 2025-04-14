@@ -4,7 +4,6 @@ import { Link, useLocation } from 'react-router-dom';
 import { Home, Search, MessageSquare, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { mobileOptimizationClasses } from '@/utils/mobile-optimization';
 import { GlowDialog } from '@/components/ui/glow-dialog';
 import { addBottomNavSpacer } from '@/utils/mobile-safety';
 
@@ -29,8 +28,8 @@ const NavItem = ({ icon, label, to = '/' }: NavItemProps) => {
     <Link
       to={to}
       className={cn(
-        "flex flex-col items-center gap-1 py-2 px-3",
-        "touch-manipulation select-none active:scale-95",
+        "mobile-touch-target flex flex-col items-center gap-1 py-space-xs px-space-sm",
+        "touch-manipulation select-none mobile-active-state",
         "transition-all duration-200 rounded-lg",
         isActive 
           ? "text-white bg-gradient-to-r from-brand-purple to-brand-purple-medium" 
@@ -41,7 +40,7 @@ const NavItem = ({ icon, label, to = '/' }: NavItemProps) => {
         "w-5 h-5",
         isActive ? "text-white" : "text-brand-purple"
       )} />
-      <span className="text-[10px] font-medium">{label}</span>
+      <span className="mobile-text-xs font-medium">{label}</span>
     </Link>
   );
 };
@@ -49,7 +48,6 @@ const NavItem = ({ icon, label, to = '/' }: NavItemProps) => {
 export const BottomNav = () => {
   const isMobile = useIsMobile();
   const location = useLocation();
-  const { gradientBgMobile, improvedShadowMobile } = mobileOptimizationClasses;
   
   // Always declare state variables at the top level
   const [showGlowDialog, setShowGlowDialog] = useState(false);
@@ -77,51 +75,62 @@ export const BottomNav = () => {
 
   return (
     <>
-      <nav className={`fixed bottom-0 left-0 right-0 z-50 border-t border-purple-100 ${improvedShadowMobile} ${gradientBgMobile} rounded-t-xl fixed-bottom`}>
-        <div className="flex items-center justify-around w-full mx-auto h-16 px-2">
+      <nav className="fixed bottom-0 left-0 right-0 z-[var(--z-index-fixed)] mobile-card border-t border-purple-100 rounded-t-xl fixed-bottom safe-area-inset"
+        style={{
+          height: 'var(--mobile-bottom-nav-height)',
+          boxShadow: '0 -2px 10px rgba(0, 0, 0, 0.05)',
+          background: 'linear-gradient(to bottom, #ffffff, #fafafa)'
+        }}
+      >
+        <div className="flex items-center justify-around w-full mx-auto h-full px-space-xs">
           <NavItem icon="home" label="Home" to="/" />
           
-          {/* Use <a> with onClick handler for waitlist registration instead */}
+          {/* Discover link with mobile styling */}
           <a 
             href="#"
-            className="flex flex-col items-center gap-1 py-2 px-3 touch-manipulation select-none active:scale-95 transition-all duration-200 rounded-lg text-brand-purple-dark hover:bg-purple-50"
+            className="mobile-touch-target flex flex-col items-center gap-1 py-space-xs px-space-sm mobile-active-state 
+              transition-all duration-200 rounded-lg text-brand-purple-dark hover:bg-purple-50"
             onClick={(e) => {
               e.preventDefault();
               setShowGlowDialog(true);
             }}
           >
             <Search className="w-5 h-5 text-brand-purple" />
-            <span className="text-[10px] font-medium">
+            <span className="mobile-text-xs font-medium">
               Discover
               <span className="text-[8px] ml-0.5 opacity-75">Soon</span>
             </span>
           </a>
           
+          {/* Messages link with mobile styling */}
           <a 
             href="#"
-            className="flex flex-col items-center gap-1 py-2 px-3 touch-manipulation select-none active:scale-95 transition-all duration-200 rounded-lg text-brand-purple-dark hover:bg-purple-50"
+            className="mobile-touch-target flex flex-col items-center gap-1 py-space-xs px-space-sm mobile-active-state 
+              transition-all duration-200 rounded-lg text-brand-purple-dark hover:bg-purple-50"
             onClick={(e) => {
               e.preventDefault();
               setShowGlowDialog(true);
             }}
           >
             <MessageSquare className="w-5 h-5 text-brand-purple" />
-            <span className="text-[10px] font-medium">
+            <span className="mobile-text-xs font-medium">
               Messages
               <span className="text-[8px] ml-0.5 opacity-75">Soon</span>
             </span>
           </a>
           
+          {/* Profile link with mobile styling */}
           <a 
             href="#"
-            className="flex flex-col items-center gap-1 py-2 px-3 touch-manipulation select-none active:scale-95 transition-all duration-200 rounded-lg text-brand-purple-dark hover:bg-purple-50"
+            className="mobile-touch-target flex flex-col items-center gap-1 py-space-xs px-space-sm mobile-active-state 
+              transition-all duration-200 rounded-lg text-brand-purple-dark hover:bg-purple-50"
             onClick={(e) => {
               e.preventDefault();
               setShowGlowDialog(true);
             }}
           >
             <User className="w-5 h-5 text-brand-purple" />
-            <span className="text-[10px] font-medium">
+            <span className="mobile-text-xs font-medium">
               Profile
               <span className="text-[8px] ml-0.5 opacity-75">Soon</span>
             </span>

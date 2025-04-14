@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { cn } from '@/lib/utils';
 import SectionHeaderSimple from './SectionHeaderSimple';
 import MobileStepsGridSimple from './MobileStepsGridSimple';
 import DesktopStepsGridSimple from './DesktopStepsGridSimple';
@@ -54,12 +55,17 @@ const OptimizedHowItWorks: React.FC = () => {
     <section 
       id="how-it-works-section" 
       aria-labelledby="design-title"
-      className={`pt-16 pb-20 w-full ${!isMobile ? "bg-[#EDF7F2]" : ""}`} // Pale mint background
+      className={cn(
+        "relative w-full overflow-hidden",
+        isMobile ? "py-8" : "py-16 bg-[#EDF7F2]" // Match other sections' padding
+      )}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className={`w-full relative transition-all duration-700 ${isVisible ? 'opacity-100' : 'opacity-0 translate-y-10'}`} 
-             style={{ willChange: 'transform, opacity' }}>
-          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+        <div className="w-full relative">
+          <div className={cn(
+            "text-center",
+            isMobile ? "mb-8" : "mb-12 sm:mb-14 lg:mb-16" // Match FeatureHeader spacing
+          )}>
             <SectionHeaderSimple 
               title="SIMPLE BY DESIGN" 
               subtitle="From booking to delivery in four straightforward steps:"

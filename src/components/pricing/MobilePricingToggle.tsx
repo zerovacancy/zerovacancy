@@ -25,23 +25,24 @@ export const MobilePricingToggle = ({
   return (
     <div className="flex flex-col items-center"
       style={{ touchAction: 'auto' }}>
-      {/* Label text */}
+      {/* Label text with improved spacing */}
       <div className="mb-2 flex items-center justify-center gap-6 text-sm font-medium">
         <span className={!isYearly ? "text-brand-purple-dark font-semibold" : "text-slate-600"}>
           Monthly
         </span>
         
-        {/* The actual toggle switch - styled as a single toggle */}
+        {/* The original toggle switch with improved touch target */}
         <button 
           onClick={() => setIsYearly(!isYearly)}
           className={cn(
-            "relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple focus-visible:ring-offset-2",
+            "relative inline-flex h-7 w-12 items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple focus-visible:ring-offset-2",
             isYearly ? "bg-brand-purple" : "bg-slate-200",
             "border border-slate-300 shadow-sm",
           )}
           type="button"
           role="switch"
           aria-checked={isYearly}
+          style={{ touchAction: 'manipulation' }}
         >
           <span 
             className={cn(
@@ -56,7 +57,7 @@ export const MobilePricingToggle = ({
         </span>
       </div>
       
-      {/* Savings label for annual billing */}
+      {/* Savings label for annual billing with better styling */}
       {isYearly && (
         <motion.div
           initial={{ opacity: 0, y: -10 }}
@@ -64,7 +65,11 @@ export const MobilePricingToggle = ({
           exit={{ opacity: 0, y: -10 }}
           className="mt-1"
         >
-          <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium text-emerald-700 bg-emerald-50 rounded-full shadow-sm">
+          <span className={cn(
+            "inline-flex items-center px-3 py-1 text-xs font-medium rounded-full",
+            "text-emerald-700 bg-emerald-50 shadow-sm",
+            animateChange ? "animate-pulse" : ""
+          )}>
             <Check className="h-3.5 w-3.5 mr-1 text-emerald-600" />
             Save up to 20% with annual billing
           </span>

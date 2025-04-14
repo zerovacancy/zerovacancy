@@ -6,7 +6,8 @@ import { Toaster } from '@/components/ui/toaster';
 import { Toaster as SonnerToaster } from 'sonner';
 // Import from mobile utils for better SSR compatibility 
 import { isMobileDevice } from '@/utils/mobile-optimization';
-import { mobileOptimizationClasses, optimizeMobileViewport, applyLandscapeOrientationFixes, reduceAnimationComplexity } from '@/utils/mobile-optimization';
+import { mobileOptimizationClasses, reduceAnimationComplexity } from '@/utils/mobile-optimization';
+import { initializeViewport } from '@/utils/viewport-config';
 import { initMobileSafety } from '@/utils/mobile-safety';
 import { SharedIntersectionObserver, initJavaScriptOptimizations } from '@/utils/js-optimization';
 import { initMobileImageOptimization } from '@/utils/mobile-image-optimizer';
@@ -19,6 +20,7 @@ import { CookieConsent } from '@/components/ui/cookie-consent';
 import FontLoader from '@/components/FontLoader';
 import CriticalPreload from '@/components/CriticalPreload';
 import FOUCPrevention from '@/components/FOUCPrevention';
+import MobileTestStyles from '@/components/MobileTestStyles';
 import { AuthProvider } from '@/components/auth/AuthContext';
 import AuthForms from '@/components/auth/AuthForms';
 
@@ -169,7 +171,7 @@ function App() {
     document.head.appendChild(heroHeightOverride);
     
     // Initialize mobile optimizations - in order of importance
-    optimizeMobileViewport();
+    initializeViewport();
     initMobileSafety();
     reduceAnimationComplexity();
     
@@ -197,7 +199,8 @@ function App() {
       }).catch(err => console.warn('Failed to initialize Web Vitals reporting:', err));
     }
     
-    const cleanupLandscapeFixes = applyLandscapeOrientationFixes();
+    // Initialize viewport configuration which handles landscape mode
+    const cleanupViewport = initializeViewport();
     
     const timer = setTimeout(() => {
       import('./pages/index');
@@ -244,7 +247,7 @@ function App() {
         heroHeightStyle.parentNode.removeChild(heroHeightStyle);
       }
       
-      if (cleanupLandscapeFixes) cleanupLandscapeFixes();
+      if (cleanupViewport) cleanupViewport();
       
       window.removeEventListener('resize', setVh);
       window.removeEventListener('orientationchange', setVh);
@@ -315,6 +318,7 @@ function App() {
               }} 
             />
             <AuthForms />
+            <MobileTestStyles />
             <Analytics />
           </AuthProvider>
         </Router>

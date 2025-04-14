@@ -4,77 +4,96 @@
 
 /* Rectangular menu button with rounded corners */
 .mobile-menu-btn.bg-white {
-  height: 40px !important;
-  width: auto !important; /* Allow width to fit content */
-  min-width: 40px !important;
-  padding: 0 12px !important;
-  border-radius: 8px !important; /* Rounded corners */
-  background-color: white !important;
-  background-image: none !important;
-  border: 1px solid #e5e7eb !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
-  margin: 0 !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  position: relative !important;
-  cursor: pointer !important;
-  z-index: 50 !important;
-  transition: all 0.2s ease-out !important;
+  /* Size and positioning */
+  height: 40px;
+  width: auto;
+  min-width: 40px;
+  max-width: calc(100% - 8px); /* Prevent overflow */
+  padding: 0 12px;
+  
+  /* Appearance */
+  border-radius: 8px;
+  background-color: white;
+  background-image: none;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  
+  /* Layout */
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  
+  /* Behavior */
+  cursor: pointer;
+  z-index: 50;
+  transition: all 0.2s ease-out;
+  
+  /* Text handling */
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .mobile-menu-btn.bg-white:hover {
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1) !important;
-  border-color: #d1d5db !important;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-color: #d1d5db;
 }
 
 .mobile-menu-btn.bg-white:active {
-  transform: scale(0.98) !important;
+  transform: scale(0.98);
 }
 
 /* Hamburger lines container */
 .hamburger-icon {
-  width: 18px !important;
-  height: 14px !important;
-  position: relative !important;
-  display: block !important;
-  pointer-events: none !important;
+  width: 18px;
+  height: 14px;
+  position: relative;
+  display: block;
+  pointer-events: none;
 }
 
 /* Individual hamburger lines - use the brand purple color */
 .hamburger-line {
-  position: absolute !important;
-  height: 2px !important;
-  width: 100% !important;
-  background-color: #8B5CF6 !important; /* Brand purple */
-  left: 0 !important;
-  border-radius: 1px !important;
-  transition: transform 0.2s ease-out !important;
+  position: absolute;
+  height: 2px;
+  width: 100%;
+  background-color: #8B5CF6; /* Brand purple */
+  left: 0;
+  border-radius: 1px;
+  transition: transform 0.2s ease-out;
 }
 
 /* Position the three lines */
 .hamburger-line:nth-child(1) {
-  top: 0 !important;
+  top: 0;
 }
 
 .hamburger-line:nth-child(2) {
-  top: 6px !important;
+  top: 6px;
 }
 
 .hamburger-line:nth-child(3) {
-  top: 12px !important; 
+  top: 12px; 
 }
 
 /* Override the global button style for this specific button */
 button.mobile-menu-btn.bg-white {
-  background-image: none !important;
-  background-color: white !important;
+  background-image: none;
+  background-color: white;
 }
 
 /* Add text label next to hamburger icon for button */
 .menu-button-text {
-  margin-left: 8px !important;
-  font-size: 14px !important;
-  font-weight: 500 !important;
-  color: #8B5CF6 !important; /* Brand purple */
+  margin-left: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #8B5CF6; /* Brand purple */
+  
+  /* Ensure text doesn't overflow */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: calc(100% - 26px); /* Account for hamburger icon */
 }

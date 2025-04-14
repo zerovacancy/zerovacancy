@@ -28,7 +28,10 @@ export function FeaturesSectionWithHoverEffects() {
     <section 
       id="features-section" 
       aria-labelledby="features-title"
-      className="relative py-4 sm:py-6 lg:py-8 mt-1 overflow-hidden"
+      className={cn(
+        "relative overflow-hidden",
+        isMobile ? "py-8" : "py-12"
+      )}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <FeatureHeader 
@@ -36,10 +39,10 @@ export function FeaturesSectionWithHoverEffects() {
           description="Professional visual content that drives interest and reduces vacancy periods"
         />
 
-        {/* Features grid - reduced gap on mobile */}
+        {/* Features grid */}
         <div className={cn(
-          "grid grid-cols-1 gap-3 sm:gap-6",
-          isMobile ? "sm:grid-cols-2" : "sm:grid-cols-2 lg:grid-cols-4"
+          "grid",
+          isMobile ? "grid-cols-1 gap-5" : "sm:grid-cols-2 lg:grid-cols-4 gap-6"
         )}>
           {visibleFeatures.map((feature, index) => (
             <FeatureItem
@@ -56,7 +59,7 @@ export function FeaturesSectionWithHoverEffects() {
 
         {/* View all services button (only on mobile and when cards are collapsed) */}
         {isMobile && (
-          <div className="w-full mt-6 flex justify-center">
+          <div className="w-full mt-8 flex justify-center">
             <AnimatePresence mode="wait">
               {!showAllCards ? (
                 <motion.div
@@ -71,12 +74,12 @@ export function FeaturesSectionWithHoverEffects() {
                     size="lg" 
                     className={cn(
                       "bg-gradient-to-r from-indigo-600 to-brand-purple",
-                      "hover:from-indigo-700 hover:to-brand-purple/90 text-white font-medium",
-                      "h-9 px-5 shadow-md rounded-lg flex items-center justify-center"
+                      "text-white font-medium",
+                      "h-12 px-6 rounded-xl flex items-center justify-center" // Larger touch target
                     )}
                     onClick={toggleShowAllCards}
                   >
-                    <span className="flex items-center">
+                    <span className="flex items-center text-base"> {/* Larger text */}
                       View complete arsenal
                       <ArrowRight className="ml-2 h-4 w-4 inline-flex" />
                     </span>
@@ -94,12 +97,12 @@ export function FeaturesSectionWithHoverEffects() {
                     variant="outline" 
                     size="lg"
                     className={cn(
-                      "border-indigo-300 hover:border-indigo-500 hover:bg-indigo-50/70",
-                      "text-indigo-600 font-medium h-9 px-5 rounded-lg flex items-center justify-center"
+                      "border-indigo-300 text-indigo-600 font-medium",
+                      "h-12 px-6 rounded-xl flex items-center justify-center" // Larger touch target
                     )}
                     onClick={toggleShowAllCards}
                   >
-                    <span className="flex items-center">
+                    <span className="flex items-center text-base"> {/* Larger text */}
                       Show less
                       <ChevronDown className="ml-2 h-4 w-4 rotate-180 inline-flex" />
                     </span>

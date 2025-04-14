@@ -29,8 +29,11 @@ const PricingHeader = ({
 
   return (
     <div className={cn(
-      "text-center mx-auto transition-all duration-300",
-      isSticky ? "max-w-full py-3 bg-white/95 backdrop-blur-sm shadow-md z-20" : "max-w-3xl py-0"
+      "text-center mx-auto transition-all duration-300 w-full",
+      isSticky ? 
+        "max-w-full py-3 bg-white/95 backdrop-blur-sm shadow-sm z-20 border-b border-gray-100" : 
+        "max-w-3xl py-0",
+      isMobile ? "px-4" : ""
     )}
     style={{ touchAction: 'auto' }}>
       <motion.div
@@ -40,34 +43,49 @@ const PricingHeader = ({
         transition={{ duration: 0.5 }}
         className={cn(
           "flex flex-col items-center",
-          isSticky ? "gap-2" : "gap-4"
+          isSticky ? "gap-2" : isMobile ? "gap-6" : "gap-4"
         )}
       >
         {!isSticky && (
           <>
-            {/* Main title - decorative blurs removed */}
+            {/* Main title with distinctive styling for the pricing section */}
             <h2 className={cn(
-              "font-bold text-brand-purple-dark font-jakarta",
-              moc.headingLarge, // Standardized mobile heading
-              moc.spacingBetweenBlocks, // Standardized spacing
-              isMobile ? "mt-3" : "text-3xl sm:text-4xl mt-3"
+              "font-bold font-jakarta w-full text-center",
+              moc.headingLarge, 
+              isMobile ? 
+                "text-3xl mt-6 text-indigo-700 relative" : 
+                "text-3xl sm:text-4xl mt-4 text-brand-purple-dark"
             )}>
               {title}
+              {isMobile && (
+                <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-indigo-500 uppercase tracking-wider bg-indigo-50 px-3 py-1 rounded-full">
+                  Plans & Options
+                </span>
+              )}
             </h2>
             
-            {/* Decorative element under the heading */}
-            <div className="w-20 h-1.5 bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1] rounded-full mx-auto mb-4" />
+            {/* Enhanced decorative element for pricing section */}
+            <div className={cn(
+              isMobile ? 
+                "bg-gradient-to-r from-blue-400 via-indigo-500 to-blue-400 rounded-full mx-auto" : 
+                "bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1] rounded-full mx-auto",
+              isMobile ? "w-24 h-1.5" : "w-20 h-1.5",
+              isMobile ? "-mt-4 mb-3" : "mb-4"
+            )} />
             
-            {/* Subtitle */}
-            <p className={cn(
-              "mx-auto text-brand-text-secondary font-inter",
-              moc.bodyText, // Standardized body text
-              moc.textContainer, // Control max-width for readability
-              moc.spacingHeadingToContent, // Standardized spacing
-              isMobile ? "px-4" : "text-base"
-            )}>
-              {subtitle}
-            </p>
+            {/* Subtitle - improved for readability */}
+            {subtitle && (
+              <p className={cn(
+                "mx-auto text-brand-text-secondary font-inter text-center",
+                moc.bodyText,
+                moc.textContainer,
+                isMobile ? 
+                  "text-base leading-relaxed max-w-[90%] mb-2" : 
+                  "text-base max-w-xl mb-4"
+              )}>
+                {subtitle}
+              </p>
+            )}
           </>
         )}
         

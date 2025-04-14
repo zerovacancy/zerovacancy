@@ -32,35 +32,44 @@ export const BackgroundEffects = () => {
         </>
       )}
       
-      {/* Mobile-specific background effects remain unchanged */}
+      {/* Mobile-specific background with distinct color scheme */}
       {isMobile && (
         <>
-          {/* Top-right purple blob */}
-          <motion.div 
-            initial={{ opacity: 0.5 }}
-            animate={{ opacity: 0.8 }}
-            transition={{ duration: 3, repeat: Infinity, repeatType: "reverse" }}
-            className="absolute -top-24 -right-24 w-96 h-96 bg-gradient-to-br from-purple-100/80 to-violet-100/70 rounded-full blur-3xl" 
+          {/* Full-width background with distinct color */}
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-50 to-blue-50/50" />
+          
+          {/* Top edge visual divider */}
+          <div className="absolute top-0 left-0 right-0 h-[6px] bg-gradient-to-r from-indigo-200 via-blue-300 to-indigo-200 opacity-60" />
+          
+          {/* Subtle pattern overlay specific to pricing */}
+          <div className="absolute inset-0 opacity-10" 
+               style={{
+                 backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'64\' height=\'64\' viewBox=\'0 0 64 64\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M8 16L56 16\' stroke=\'%23334155\' stroke-opacity=\'0.3\' stroke-width=\'0.8\'/%3E%3Cpath d=\'M8 32L56 32\' stroke=\'%23334155\' stroke-opacity=\'0.3\' stroke-width=\'0.8\'/%3E%3Cpath d=\'M8 48L56 48\' stroke=\'%23334155\' stroke-opacity=\'0.3\' stroke-width=\'0.8\'/%3E%3Cpath d=\'M16 8L16 56\' stroke=\'%23334155\' stroke-opacity=\'0.3\' stroke-width=\'0.8\'/%3E%3Cpath d=\'M32 8L32 56\' stroke=\'%23334155\' stroke-opacity=\'0.3\' stroke-width=\'0.8\'/%3E%3Cpath d=\'M48 8L48 56\' stroke=\'%23334155\' stroke-opacity=\'0.3\' stroke-width=\'0.8\'/%3E%3C/svg%3E")',
+                 backgroundSize: '32px 32px'
+               }}
           />
           
-          {/* Middle-left blue blob */}
+          {/* Distinctive pricing section blobs with cooler, more blue-based colors */}
           <motion.div 
             initial={{ opacity: 0.4 }}
             animate={{ opacity: 0.7 }}
-            transition={{ duration: 4, repeat: Infinity, repeatType: "reverse", delay: 1 }}
-            className="absolute top-1/2 -left-24 w-80 h-80 bg-gradient-to-tr from-blue-100/70 to-indigo-100/60 rounded-full blur-3xl" 
+            transition={{ duration: 3, repeat: Infinity, repeatType: "reverse" }}
+            className="absolute -top-24 -right-24 w-96 h-96 bg-gradient-to-br from-blue-100/80 to-indigo-100/70 rounded-full blur-3xl" 
           />
           
-          {/* Bottom-right emerald blob */}
           <motion.div 
             initial={{ opacity: 0.3 }}
             animate={{ opacity: 0.6 }}
-            transition={{ duration: 3.5, repeat: Infinity, repeatType: "reverse", delay: 2 }}
-            className="absolute -bottom-24 right-1/4 w-64 h-64 bg-gradient-to-tl from-emerald-100/60 to-teal-100/50 rounded-full blur-3xl" 
+            transition={{ duration: 4, repeat: Infinity, repeatType: "reverse", delay: 1 }}
+            className="absolute top-1/2 -left-24 w-80 h-80 bg-gradient-to-tr from-slate-100/70 to-blue-100/60 rounded-full blur-3xl" 
           />
           
-          {/* Subtle grid pattern overlay */}
-          <div className="absolute inset-0 bg-grid-slate-100/[0.05] bg-[size:20px_20px]"></div>
+          <motion.div 
+            initial={{ opacity: 0.2 }}
+            animate={{ opacity: 0.5 }}
+            transition={{ duration: 3.5, repeat: Infinity, repeatType: "reverse", delay: 2 }}
+            className="absolute -bottom-24 right-1/4 w-64 h-64 bg-gradient-to-tl from-indigo-100/60 to-blue-100/50 rounded-full blur-3xl" 
+          />
         </>
       )}
     </div>
