@@ -14,6 +14,7 @@ import { PricingService } from "@/services/PricingService";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/components/auth/AuthContext";
+import { MobilePricingToggle } from "./MobilePricingToggle";
 import {
   Dialog,
   DialogContent,
@@ -204,32 +205,32 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
             border: "border-blue-200",
             text: "text-blue-700",
             accent: "bg-blue-500",
-            button: "bg-gradient-to-br from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-md shadow-blue-500/20",
+            button: "bg-gradient-to-br from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 shadow-md shadow-blue-500/20",
             highlight: "bg-blue-50",
-            gradient: "bg-gradient-to-br from-blue-500 to-indigo-600",
-            cardBg: "bg-gradient-to-b from-white to-blue-50/50"
+            gradient: "bg-gradient-to-br from-blue-500 to-blue-400",
+            cardBg: "bg-gradient-to-b from-white to-blue-50/60"
           };
         case "purple":
           return {
-            bg: "bg-indigo-50",
-            border: "border-indigo-200",
-            text: "text-indigo-700",
-            accent: "bg-indigo-500",
-            button: "bg-gradient-to-br from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 shadow-md shadow-indigo-500/20",
-            highlight: "bg-indigo-50",
-            gradient: "bg-gradient-to-br from-indigo-600 to-blue-600",
-            cardBg: "bg-gradient-to-b from-white to-indigo-50/70"
+            bg: "bg-blue-100",
+            border: "border-blue-300",
+            text: "text-blue-800",
+            accent: "bg-blue-600",
+            button: "bg-gradient-to-br from-blue-700 to-blue-500 hover:from-blue-800 hover:to-blue-600 shadow-md shadow-blue-500/20",
+            highlight: "bg-blue-100",
+            gradient: "bg-gradient-to-br from-blue-700 to-blue-500",
+            cardBg: "bg-gradient-to-b from-white to-blue-100/70"
           };
         case "emerald":
           return {
-            bg: "bg-cyan-50",
-            border: "border-cyan-200",
-            text: "text-cyan-700",
-            accent: "bg-cyan-500",
-            button: "bg-gradient-to-br from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 shadow-md shadow-cyan-500/20",
-            highlight: "bg-cyan-50",
-            gradient: "bg-gradient-to-br from-cyan-600 to-blue-600",
-            cardBg: "bg-gradient-to-b from-white to-cyan-50/50"
+            bg: "bg-sky-50",
+            border: "border-sky-200",
+            text: "text-sky-700",
+            accent: "bg-sky-500",
+            button: "bg-gradient-to-br from-sky-600 to-blue-600 hover:from-sky-700 hover:to-blue-700 shadow-md shadow-sky-500/20",
+            highlight: "bg-sky-50",
+            gradient: "bg-gradient-to-br from-sky-600 to-blue-600",
+            cardBg: "bg-gradient-to-b from-white to-sky-50/60"
           };
         default:
           return {
@@ -298,13 +299,15 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
     <div className="w-full pb-10 relative" 
       ref={containerRef} 
       style={{ touchAction: 'auto' }}>
-      {/* Mobile-only section divider */}
+      {/* Enhanced mobile-only section divider with more prominent blue branding */}
       {isMobile && (
         <div className="relative w-full overflow-hidden mb-6 mt-2">
-          <div className="absolute left-0 right-0 top-0 h-[8px] bg-gradient-to-r from-blue-50 via-indigo-100 to-blue-50"></div>
+          <div className="absolute left-0 right-0 top-0 h-[8px] bg-gradient-to-r from-blue-100 via-blue-200 to-blue-100"></div>
           <div className="px-6 py-2 flex justify-center">
-            <div className="w-16 h-1 bg-indigo-200 rounded-full"></div>
+            <div className="w-16 h-1 bg-blue-300 rounded-full shadow-sm"></div>
           </div>
+          {/* Visual indicator to reinforce this is a different section */}
+          <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-[5px] h-[5px] bg-blue-400 rounded-full"></div>
         </div>
       )}
       <AnimatePresence>
@@ -330,201 +333,214 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
       </AnimatePresence>
       
       {isMobile ? (
-        <div className="w-full overflow-hidden flex flex-col items-center space-y-10">
-          {pricingTiers.map((tier, index) => {
-            const colorScheme = getColorScheme(tier.color);
-            const isExpanded = !!expandedFeatures[index];
-            const isDescriptionExpanded = !!expandedDescriptions[index];
-            
-            return (
-              <motion.div
-                key={tier.title}
-                className={cn(
-                  "rounded-xl overflow-visible transition-all relative group w-[92%] max-w-[340px]",
-                  "border border-gray-200",
-                  tier.popularPlan && "relative shadow-md",
-                  colorScheme.cardBg,
-                  // Use simpler shadow for better performance
-                  "shadow-sm",
-                  // Add stronger visual highlighting for the Professional plan
-                  tier.title === "Professional" && "ring-2 ring-purple-400/20 shadow-[0_2px_10px_rgba(139,92,246,0.15)]"
-                )}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-              >
-                {tier.popularPlan && (
-                  <div className="absolute -top-4 inset-x-0 flex justify-center z-20">
-                    <div className="py-1 px-3 flex items-center gap-1 rounded-full bg-gradient-to-r from-brand-purple-medium to-brand-purple text-white text-xs font-semibold shadow-sm">
-                      <Sparkles className="h-3 w-3" />
-                      <span>POPULAR</span>
+        <div className="w-full overflow-hidden flex flex-col items-center">
+          {/* Mobile pricing toggle - only show if not in sticky header mode */}
+          {!showStickyHeader && (
+            <div className="w-full flex justify-center mb-6 mt-2">
+              <MobilePricingToggle 
+                isYearly={isYearly}
+                setIsYearly={setIsYearly}
+                animateChange={animateChange}
+              />
+            </div>
+          )}
+          
+          <div className="w-full flex flex-col items-center space-y-10">
+            {pricingTiers.map((tier, index) => {
+              const colorScheme = getColorScheme(tier.color);
+              const isExpanded = !!expandedFeatures[index];
+              const isDescriptionExpanded = !!expandedDescriptions[index];
+              
+              return (
+                <motion.div
+                  key={tier.title}
+                  className={cn(
+                    "rounded-xl overflow-visible transition-all relative group w-[92%] max-w-[340px]",
+                    "border border-gray-200",
+                    tier.popularPlan && "relative shadow-md",
+                    colorScheme.cardBg,
+                    // Use simpler shadow for better performance
+                    "shadow-sm",
+                    // Add stronger visual highlighting for the Professional plan
+                    tier.title === "Professional" && "ring-2 ring-purple-400/20 shadow-[0_2px_10px_rgba(139,92,246,0.15)]"
+                  )}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  {tier.popularPlan && (
+                    <div className="absolute -top-4 inset-x-0 flex justify-center z-20">
+                      <div className="py-1 px-3 flex items-center gap-1 rounded-full bg-gradient-to-r from-brand-purple-medium to-brand-purple text-white text-xs font-semibold shadow-sm">
+                        <Sparkles className="h-3 w-3" />
+                        <span>POPULAR</span>
+                      </div>
                     </div>
-                  </div>
-                )}
-                <div className={cn(
-                  "p-5 flex justify-between items-start gap-3"
-                )}>
-                  <div className="flex-1 min-w-0">
-                    <h3 className={cn(
-                      "text-lg font-bold font-jakarta",
-                      colorScheme.text
-                    )}>
-                      {tier.title}
-                    </h3>
-                    <div className="mt-2">
-                      <p className={cn(
-                        "text-xs text-brand-text-secondary font-inter leading-relaxed",
-                        !isDescriptionExpanded && "line-clamp-3"
+                  )}
+                  <div className={cn(
+                    "p-5 flex justify-between items-start gap-3"
+                  )}>
+                    <div className="flex-1 min-w-0">
+                      <h3 className={cn(
+                        "text-lg font-bold font-jakarta",
+                        colorScheme.text
                       )}>
-                        {tier.valueProposition}
-                        {!isDescriptionExpanded && tier.valueProposition.length > 120 && (
-                          <span className="inline-block text-brand-purple-medium"> ...</span>
-                        )}
-                      </p>
-                      {tier.valueProposition.length > 120 && (
-                        <button 
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleDescription(index);
-                          }}
-                          className={cn(
-                            "mt-1.5 text-xs font-medium flex items-center gap-1 focus:outline-none touch-manipulation",
-                            colorScheme.text
+                        {tier.title}
+                      </h3>
+                      <div className="mt-2">
+                        <p className={cn(
+                          "text-xs text-brand-text-secondary font-inter leading-relaxed",
+                          !isDescriptionExpanded && "line-clamp-3"
+                        )}>
+                          {tier.valueProposition}
+                          {!isDescriptionExpanded && tier.valueProposition.length > 120 && (
+                            <span className="inline-block text-brand-purple-medium"> ...</span>
                           )}
-                          style={{ touchAction: 'manipulation' }}
-                        >
-                          {isDescriptionExpanded ? "Read less" : "Read more"}
-                          <ChevronDown 
+                        </p>
+                        {tier.valueProposition.length > 120 && (
+                          <button 
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleDescription(index);
+                            }}
                             className={cn(
-                              "h-3 w-3 transition-transform", 
-                              isDescriptionExpanded && "rotate-180"
-                            )} 
-                          />
-                        </button>
+                              "mt-1.5 text-xs font-medium flex items-center gap-1 focus:outline-none touch-manipulation",
+                              colorScheme.text
+                            )}
+                            style={{ touchAction: 'manipulation' }}
+                          >
+                            {isDescriptionExpanded ? "Read less" : "Read more"}
+                            <ChevronDown 
+                              className={cn(
+                                "h-3 w-3 transition-transform", 
+                                isDescriptionExpanded && "rotate-180"
+                              )} 
+                            />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                    
+                    <div className="text-right">
+                      <div className="flex flex-col items-end">
+                        <div className="flex items-baseline gap-1">
+                          <span className="text-2xl font-bold text-brand-purple-dark font-space">${tier.price}</span>
+                          <span className="text-xs text-brand-text-light font-space">/mo</span>
+                        </div>
+                        <div className="text-xs text-brand-text-light font-space leading-tight">
+                          {isYearly && "billed annually"}
+                        </div>
+                      </div>
+                      
+                      {isYearly && tier.savings && (
+                        <div className="mt-1.5 inline-block bg-green-50 text-green-600 px-2.5 py-1 rounded-full text-xs font-medium font-space whitespace-nowrap">
+                          Save ${tier.savings}/year
+                        </div>
                       )}
                     </div>
                   </div>
                   
-                  <div className="text-right">
-                    <div className="flex flex-col items-end">
-                      <div className="flex items-baseline gap-1">
-                        <span className="text-2xl font-bold text-brand-purple-dark font-space">${tier.price}</span>
-                        <span className="text-xs text-brand-text-light font-space">/mo</span>
-                      </div>
-                      <div className="text-xs text-brand-text-light font-space leading-tight">
-                        {isYearly && "billed annually"}
-                      </div>
-                    </div>
-                    
-                    {isYearly && tier.savings && (
-                      <div className="mt-1.5 inline-block bg-green-50 text-green-600 px-2.5 py-1 rounded-full text-xs font-medium font-space whitespace-nowrap">
-                        Save ${tier.savings}/year
-                      </div>
-                    )}
-                  </div>
-                </div>
-                
-                <div className="px-5 pb-3 pt-2">
-                  <Button 
-                    className={cn(
-                      "w-full py-3 rounded-xl font-medium text-sm transition-all",
-                      "px-4",
-                      // Better touch target height
-                      "h-[48px] min-h-[48px]",
-                      colorScheme.button,
-                      tier.popularPlan && "ring-1 ring-brand-purple/20",
-                      (isProcessingPayment && processingPlan === tier.title) && "opacity-80 cursor-not-allowed"
-                    )}
-                    disabled={isProcessingPayment}
-                    onClick={() => handlePlanSelect(tier.title)}
-                    style={{ touchAction: 'manipulation' }}
-                  >
-                    {(isProcessingPayment && processingPlan === tier.title) ? (
-                      <div className="flex items-center justify-center gap-2">
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                        <span>Processing...</span>
-                      </div>
-                    ) : (
-                      tier.cta
-                    )}
-                  </Button>
-                </div>
-                
-                <div className="px-5 pb-5">
-                  <button
-                    onClick={() => toggleFeatures(index)}
-                    className={cn(
-                      "mt-2 flex items-center justify-center w-auto mx-auto px-4 py-1.5",
-                      "text-xs font-medium text-brand-text-primary rounded-full",
-                      "border border-slate-200 bg-slate-50 hover:bg-slate-100",
-                      "transition-colors duration-200",
-                      // Better touch target
-                      "min-h-[36px]"
-                    )}
-                    style={{ touchAction: 'manipulation' }}
-                  >
-                    <span className="font-inter whitespace-nowrap">
-                      {isExpanded ? "Hide features" : "Show features"}
-                    </span>
-                    <ChevronDown className={cn(
-                      "h-3.5 w-3.5 ml-1 text-brand-text-light transition-transform",
-                      isExpanded && "rotate-180"
-                    )} />
-                  </button>
-                  
-                  <AnimatePresence>
-                    {isExpanded && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="overflow-hidden touch-action-pan-y"
-                        style={{ touchAction: 'pan-y' }}
-                      >
-                        <div className={cn(
-                          "pt-5 pb-2 space-y-5"
-                        )}>
-                          {Object.entries(tier.features).map(([category, features], catIndex) => (
-                            <div key={`${tier.title}-${category}`} className="space-y-3">
-                              {category !== "Core Features" && (
-                                <h4 className={cn(
-                                  "text-xs font-semibold font-jakarta px-3 py-1 rounded-md inline-block",
-                                  colorScheme.bg
-                                )}>
-                                  {category}
-                                </h4>
-                              )}
-                              
-                              <div className="space-y-3 ml-1">
-                                {features.map((feature, featIndex) => (
-                                  <div 
-                                    key={`${tier.title}-${category}-${featIndex}`}
-                                    className="flex items-start gap-3"
-                                  >
-                                    <div className={cn(
-                                      "flex-shrink-0 rounded-full p-0.5 mt-0.5",
-                                      colorScheme.bg
-                                    )}>
-                                      <Check className={cn(
-                                        "h-3.5 w-3.5 flex-shrink-0", 
-                                        colorScheme.text
-                                      )} />
-                                    </div>
-                                    <span className="text-xs leading-relaxed text-brand-text-primary font-inter">{feature.text}</span>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          ))}
+                  <div className="px-5 pb-3 pt-2">
+                    <Button 
+                      className={cn(
+                        "w-full py-3 rounded-xl font-medium text-sm transition-all",
+                        "px-4",
+                        // Better touch target height
+                        "h-[48px] min-h-[48px]",
+                        colorScheme.button,
+                        tier.popularPlan && "ring-1 ring-brand-purple/20",
+                        (isProcessingPayment && processingPlan === tier.title) && "opacity-80 cursor-not-allowed"
+                      )}
+                      disabled={isProcessingPayment}
+                      onClick={() => handlePlanSelect(tier.title)}
+                      style={{ touchAction: 'manipulation' }}
+                    >
+                      {(isProcessingPayment && processingPlan === tier.title) ? (
+                        <div className="flex items-center justify-center gap-2">
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          <span>Processing...</span>
                         </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              </motion.div>
-            );
-          })}
+                      ) : (
+                        tier.cta
+                      )}
+                    </Button>
+                  </div>
+                  
+                  <div className="px-5 pb-5">
+                    <button
+                      onClick={() => toggleFeatures(index)}
+                      className={cn(
+                        "mt-2 flex items-center justify-center w-auto mx-auto px-4 py-1.5",
+                        "text-xs font-medium text-brand-text-primary rounded-full",
+                        "border border-slate-200 bg-slate-50 hover:bg-slate-100",
+                        "transition-colors duration-200",
+                        // Better touch target
+                        "min-h-[36px]"
+                      )}
+                      style={{ touchAction: 'manipulation' }}
+                    >
+                      <span className="font-inter whitespace-nowrap">
+                        {isExpanded ? "Hide features" : "Show features"}
+                      </span>
+                      <ChevronDown className={cn(
+                        "h-3.5 w-3.5 ml-1 text-brand-text-light transition-transform",
+                        isExpanded && "rotate-180"
+                      )} />
+                    </button>
+                    
+                    <AnimatePresence>
+                      {isExpanded && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="overflow-hidden touch-action-pan-y"
+                          style={{ touchAction: 'pan-y' }}
+                        >
+                          <div className={cn(
+                            "pt-5 pb-2 space-y-5"
+                          )}>
+                            {Object.entries(tier.features).map(([category, features], catIndex) => (
+                              <div key={`${tier.title}-${category}`} className="space-y-3">
+                                {category !== "Core Features" && (
+                                  <h4 className={cn(
+                                    "text-xs font-semibold font-jakarta px-3 py-1 rounded-md inline-block",
+                                    colorScheme.bg
+                                  )}>
+                                    {category}
+                                  </h4>
+                                )}
+                                
+                                <div className="space-y-3 ml-1">
+                                  {features.map((feature, featIndex) => (
+                                    <div 
+                                      key={`${tier.title}-${category}-${featIndex}`}
+                                      className="flex items-start gap-3"
+                                    >
+                                      <div className={cn(
+                                        "flex-shrink-0 rounded-full p-0.5 mt-0.5",
+                                        colorScheme.bg
+                                      )}>
+                                        <Check className={cn(
+                                          "h-3.5 w-3.5 flex-shrink-0", 
+                                          colorScheme.text
+                                        )} />
+                                      </div>
+                                      <span className="text-xs leading-relaxed text-brand-text-primary font-inter">{feature.text}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
         </div>
       ) : (
         <div className="flex flex-col items-center">

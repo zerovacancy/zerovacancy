@@ -54,12 +54,14 @@ const PricingContent = () => {
     <>
       <div className={cn(
         "w-full",
-        isMobile && "bg-slate-50/70 border border-slate-200/70 rounded-2xl px-4 pt-5 pb-6 shadow-sm mb-6 mt-2",
+        isMobile && "bg-white border border-blue-200/50 rounded-2xl px-4 pt-5 pb-6 shadow-md mb-6 mt-2",
+        // Add distinctive blue gradient background for better differentiation from Features section
+        isMobile && "bg-gradient-to-b from-white via-white to-blue-50/30",
         isLandscape && "py-3 mb-2"
       )}>
         {/* Enhanced header with toggle now integrated */}
         <PricingHeader 
-          title="PRICING TIERS" 
+          title="PRICING PLANS" 
           subtitle="Select the package that fits your property's marketing needs"
           isYearly={isYearly}
           setIsYearly={setIsYearly}
@@ -80,11 +82,11 @@ const PricingContent = () => {
       {/* Small copy text replacing the CommonFeatures component */}
       <div className={cn(
         "text-center text-sm text-slate-500 max-w-2xl mx-auto mt-3 mb-10",
-        isMobile && "px-4 mb-8 bg-slate-50/50 py-4 rounded-xl border border-slate-100",
+        isMobile && "px-4 mb-8 bg-blue-50/40 py-4 rounded-xl border border-blue-100/50 shadow-sm",
         isLandscape && "mt-1 mb-4 landscape-text-fix" // Reduce margins in landscape mode
       )}>
         <p className={cn(
-          "text-xs font-light",
+          "text-xs font-light text-blue-700",
           isLandscape && "mt-[-10px]" // Adjust top margin in landscape
         )}>
           All plans include: High-resolution images, dedicated support, property website, mobile-optimized, digital downloads, no watermarks. Custom plans available for agencies and teams. 
@@ -128,13 +130,21 @@ const Pricing = () => {
     <PricingProvider>
       <div className={cn(
         "relative w-full overflow-visible",
-        !isMobile && "bg-[#EEF3F9]", // Soft blue-grey
+        !isMobile && "bg-[#E5F0FD]", // Updated to match new index.tsx background
+        isMobile && "pricing-section", // Add identifier class for mobile
         isLandscape && "landscape-pricing sm:py-4" // Apply landscape specific classes
-      )}
-      >
+      )}>
+        {/* Mobile-only decorative element to enhance visual distinction */}
+        {isMobile && (
+          <div className="absolute top-[-10px] left-0 right-0 flex justify-center opacity-70">
+            <div className="w-[85%] h-[25px] bg-blue-100/30 rounded-full blur-xl transform translate-y-[-50%]"></div>
+          </div>
+        )}
+        
         <div className={cn(
           "relative z-10 transition-all duration-500",
-          isLandscape && "px-2 sm:px-3" // Reduce padding in landscape mode
+          isLandscape && "px-2 sm:px-3", // Reduce padding in landscape mode
+          isMobile && "pt-2" // Add slight top padding on mobile
         )} style={{ willChange: 'transform, opacity' }}>
           <PricingContent />
         </div>

@@ -27,7 +27,7 @@ export const MobilePricingToggle = ({
       style={{ touchAction: 'auto' }}>
       {/* Label text with improved spacing */}
       <div className="mb-2 flex items-center justify-center gap-6 text-sm font-medium">
-        <span className={!isYearly ? "text-brand-purple-dark font-semibold" : "text-slate-600"}>
+        <span className={!isYearly ? "text-blue-700 font-semibold" : "text-slate-600"}>
           Monthly
         </span>
         
@@ -36,7 +36,7 @@ export const MobilePricingToggle = ({
           onClick={() => setIsYearly(!isYearly)}
           className={cn(
             "relative inline-flex h-7 w-12 items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple focus-visible:ring-offset-2",
-            isYearly ? "bg-brand-purple" : "bg-slate-200",
+            isYearly ? "bg-blue-600" : "bg-slate-200",
             "border border-slate-300 shadow-sm",
           )}
           type="button"
@@ -52,7 +52,7 @@ export const MobilePricingToggle = ({
           />
         </button>
         
-        <span className={isYearly ? "text-brand-purple-dark font-semibold" : "text-slate-600"}>
+        <span className={isYearly ? "text-blue-700 font-semibold" : "text-slate-600"}>
           Annual
         </span>
       </div>
@@ -67,10 +67,10 @@ export const MobilePricingToggle = ({
         >
           <span className={cn(
             "inline-flex items-center px-3 py-1 text-xs font-medium rounded-full",
-            "text-emerald-700 bg-emerald-50 shadow-sm",
+            "text-blue-700 bg-blue-50 shadow-sm",
             animateChange ? "animate-pulse" : ""
           )}>
-            <Check className="h-3.5 w-3.5 mr-1 text-emerald-600" />
+            <Check className="h-3.5 w-3.5 mr-1 text-blue-600" />
             Save up to 20% with annual billing
           </span>
         </motion.div>

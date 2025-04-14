@@ -53,12 +53,12 @@ const PricingHeader = ({
               "font-bold font-jakarta w-full text-center",
               moc.headingLarge, 
               isMobile ? 
-                "text-3xl mt-6 text-indigo-700 relative" : 
+                "text-3xl mt-6 text-blue-600 relative" : 
                 "text-3xl sm:text-4xl mt-4 text-brand-purple-dark"
             )}>
               {title}
               {isMobile && (
-                <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-indigo-500 uppercase tracking-wider bg-indigo-50 px-3 py-1 rounded-full">
+                <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-blue-500 uppercase tracking-wider bg-blue-50 px-3 py-1 rounded-full shadow-sm">
                   Plans & Options
                 </span>
               )}
@@ -67,7 +67,7 @@ const PricingHeader = ({
             {/* Enhanced decorative element for pricing section */}
             <div className={cn(
               isMobile ? 
-                "bg-gradient-to-r from-blue-400 via-indigo-500 to-blue-400 rounded-full mx-auto" : 
+                "bg-gradient-to-r from-blue-300 via-blue-500 to-blue-300 rounded-full mx-auto" : 
                 "bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1] rounded-full mx-auto",
               isMobile ? "w-24 h-1.5" : "w-20 h-1.5",
               isMobile ? "-mt-4 mb-3" : "mb-4"
@@ -91,8 +91,8 @@ const PricingHeader = ({
         
         {/* Conditionally render the appropriate toggle based on device */}
         {isMobile ? (
-          // Only render mobile toggle if this is a sticky header OR if there's no sticky header showing
-          (!isSticky || (isSticky && showStickyHeader)) && (
+          // Only render mobile toggle when in sticky header mode to avoid duplication
+          (isSticky && showStickyHeader) && (
             <MobilePricingToggle 
               isYearly={isYearly}
               setIsYearly={setIsYearly}

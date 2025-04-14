@@ -979,11 +979,16 @@ const Index = () => {
           }
           className={cn(
             "relative w-full pt-16 pb-20", // Standardized vertical spacing (reduced)
-            "bg-[#E7E9FF]", // Rich periwinkle - now applied to both mobile and desktop
+            "bg-[#E3E4FF]", // Slightly lighter periwinkle for better differentiation
             isMobile && cn("py-8", moc.sectionPaddingMain, "touch-action-pan-y overscroll-behavior-none"), // Standardized mobile padding with scroll fix
             moc.sectionWrapper // Standardized section wrapper
           )}
         >
+          {/* Subtle top accent for better section definition on mobile */}
+          {isMobile && (
+            <div className="absolute top-0 left-0 right-0 h-[8px] bg-gradient-to-r from-indigo-300/30 via-indigo-400/50 to-indigo-300/30 z-10"></div>
+          )}
+          
           <div className={cn(
             "w-full max-w-7xl mx-auto overflow-hidden", 
             moc.contentPadding // Standardized content padding
@@ -994,15 +999,15 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Section Transition: Features to Pricing - Cohesive flow */}
+        {/* Section Transition: Features to Pricing - Enhanced for better visual differentiation */}
         <div style={{ 
           marginTop: isMobile ? '-30px' : '-50px', // Adjusted for different devices
           position: 'relative',
           zIndex: 30
         }}>
           <SectionTransition 
-            fromColor="#E7E9FF" 
-            toColor="#EEF3F9" 
+            fromColor="#E3E4FF" 
+            toColor="#E5F0FD" // More distinct color for pricing section
             height={40} // Reduced height significantly
           />
         </div>
@@ -1029,11 +1034,20 @@ const Index = () => {
           }
           className={cn(
             "relative w-full pt-16 pb-20", // Standardized vertical spacing (reduced)
-            "bg-[#EEF3F9]", // Soft blue-grey - now applied to both mobile and desktop
+            "bg-[#E5F0FD]", // Lighter blue for better differentiation from features
             isMobile && cn("py-8", moc.sectionPaddingMain), // Standardized mobile padding
             moc.sectionWrapper // Standardized section wrapper
           )}
         >
+          {/* Distinctive section divider specifically for mobile */}
+          {isMobile && (
+            <div className="absolute top-0 left-0 right-0 overflow-hidden">
+              <div className="h-[6px] bg-gradient-to-r from-blue-200 via-blue-300/60 to-blue-200 w-full"></div>
+              <div className="flex justify-center -mt-3 pt-4 pb-1">
+                <div className="w-16 h-1 bg-blue-300/50 rounded-full"></div>
+              </div>
+            </div>
+          )}
           <div className={cn(
             "w-full max-w-7xl mx-auto overflow-hidden", 
             moc.contentPadding // Standardized content padding
