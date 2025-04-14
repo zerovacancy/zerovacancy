@@ -18,12 +18,9 @@ const Footer = () => {
   };
 
   return (
-    <footer className="w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-t border-border/40 pt-12 sm:pt-16 lg:pt-20 pb-20 sm:pb-12 relative">
+    <footer className="w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-t border-border/40 pt-12 sm:pt-16 lg:pt-20 pb-16 relative">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className={cn(
-          "grid gap-8 sm:gap-12", 
-          isMobile ? "grid-cols-1 sm:grid-cols-2" : "md:grid-cols-4"
-        )}>
+        <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
           {/* Column 1: Company Info */}
           <div className="space-y-4">
             <h3 
@@ -217,17 +214,11 @@ const Footer = () => {
 
         {/* Bottom row with copyright and legal links */}
         <div className="pt-8 mt-8 border-t border-border/40">
-          <div className={cn(
-            "flex justify-between items-center gap-4",
-            isMobile ? "flex-col" : "sm:flex-row"
-          )}>
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
             <p className="text-brand-text-light text-sm font-inter">
               © {currentYear} ZeroVacancy. All rights reserved.
             </p>
-            <div className={cn(
-              "flex items-center",
-              isMobile ? "flex-col space-y-3 mt-3" : "gap-6"
-            )}>
+            <div className="flex flex-col sm:flex-row items-center gap-6 sm:mt-0 mt-3">
               <button
                 onClick={() => setShowTerms(true)}
                 className="text-brand-text-light hover:text-brand-purple-medium text-sm transition-colors flex items-center font-inter"
@@ -235,16 +226,6 @@ const Footer = () => {
                 <span>Terms & Conditions</span>
                 <ExternalLink className="ml-1 w-3 h-3 text-gray-400" />
               </button>
-              <a
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setShowTerms(true);
-                }}
-                className="text-brand-text-light hover:text-brand-purple-medium text-sm transition-colors font-inter"
-              >
-                Terms & Conditions
-              </a>
               <a
                 href="#"
                 onClick={(e) => {
@@ -263,7 +244,7 @@ const Footer = () => {
       <button 
         onClick={scrollToTop}
         className={cn(
-          "fixed bottom-6 right-6 w-10 h-10 rounded-full bg-white shadow-md",
+          "fixed bottom-8 right-8 sm:bottom-6 sm:right-6 w-10 h-10 rounded-full bg-white shadow-md",
           "flex items-center justify-center hover:bg-gray-50 transition-colors",
           "border border-gray-200",
           "touch-manipulation", // Better mobile handling
