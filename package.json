@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "build:dev": "vite build --mode development",
+    "build:perf": "vite build && npm run extract-critical-css",
     "lint": "eslint .",
     "preview": "vite preview",
     "generate-og": "node generate-og-image-direct.js",
@@ -19,7 +20,12 @@
     "seo-check": "npm run seo-audit && npm run generate-sitemap",
     "audit-assets": "./simplified-asset-audit.sh",
     "archive-unused": "./archive-unused-assets.sh",
-    "asset-cleanup": "npm run audit-assets && npm run archive-unused"
+    "asset-cleanup": "npm run audit-assets && npm run archive-unused",
+    "extract-critical-css": "node scripts/critical-css.js",
+    "analyze-web-vitals": "vite preview --port 8080 & sleep 2 && open http://localhost:8080?debug=vitals",
+    "perf-build": "npm run optimize-images && npm run build:perf",
+    "perf-test": "npm run perf-build && npm run analyze-web-vitals",
+    "perf-full": "npm run asset-cleanup && npm run perf-images && npm run perf-build"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
@@ -98,6 +104,7 @@
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.9.3",
+    "web-vitals": "^4.2.4",
     "zod": "^3.23.8"
   },
   "devDependencies": {

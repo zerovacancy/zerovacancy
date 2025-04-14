@@ -177,6 +177,21 @@ function App() {
     // and performance monitoring
     initJavaScriptOptimizations();
     
+    // Initialize Web Vitals monitoring - only in development
+    if (process.env.NODE_ENV === 'development') {
+      import('./utils/web-vitals').then(({ initWebVitalsMonitoring }) => {
+        initWebVitalsMonitoring();
+      }).catch(err => console.warn('Failed to initialize Web Vitals monitoring:', err));
+    } else {
+      // In production, we still want to report vitals but not show the UI
+      import('./utils/web-vitals').then(({ reportWebVitals }) => {
+        reportWebVitals(undefined, { 
+          samplingRate: 0.1, // Only track 10% of users in production
+          debug: false 
+        });
+      }).catch(err => console.warn('Failed to initialize Web Vitals reporting:', err));
+    }
+    
     const cleanupLandscapeFixes = applyLandscapeOrientationFixes();
     
     const timer = setTimeout(() => {

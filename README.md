@@ -6,14 +6,36 @@
 Some legacy assets have been moved to the `public/archived-assets` directory. These include:
 - `heroparallax/*` images - Previously used in the old `ParallaxHero` component but no longer referenced in current components
 
-### FOUC Prevention
-This project includes a comprehensive FOUC (Flash of Unstyled Content) prevention system that:
+### Performance Optimizations
+
+This project includes comprehensive performance optimizations for Core Web Vitals and improved user experience:
+
+- **Layout Shift Prevention**: Stabilizes elements during page load to minimize CLS
+- **Font Loading Optimization**: Uses size-adjusted font fallbacks to prevent text movement
+- **Image Optimization**: Automatically uses modern formats and responsive techniques
+- **Critical CSS Extraction**: Inlines critical styles to improve initial page load
+- **Web Vitals Monitoring**: Real-time monitoring of performance metrics
+- **FOUC Prevention**: Prevents flashing of unstyled content during page load
+
+For performance details, see the [PERFORMANCE-SUMMARY.md](./PERFORMANCE-SUMMARY.md) documentation.
+
+To test performance optimizations:
+```bash
+# Run full performance optimization build
+npm run perf-full
+
+# Test optimized build with Web Vitals monitoring
+npm run perf-test
+```
+
+#### FOUC Prevention
+The FOUC prevention system specifically:
 - Prevents outdated heroparallax images from flashing during page load
 - Ensures smooth transitions during page render
 - Blocks any attempts to load archived assets
 - Optimizes mobile performance
 
-For details, see the [FOUC-PREVENTION.md](./FOUC-PREVENTION.md) documentation.
+For FOUC details, see the [FOUC-PREVENTION.md](./FOUC-PREVENTION.md) documentation.
 
 To verify the FOUC prevention is working correctly, use the [verify-fouc-prevention.js](./verify-fouc-prevention.js) script.
 
