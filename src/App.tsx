@@ -9,6 +9,7 @@ import { isMobileDevice } from '@/utils/mobile-optimization';
 import { mobileOptimizationClasses, optimizeMobileViewport, applyLandscapeOrientationFixes, reduceAnimationComplexity } from '@/utils/mobile-optimization';
 import { initMobileSafety } from '@/utils/mobile-safety';
 import { SharedIntersectionObserver, initJavaScriptOptimizations } from '@/utils/js-optimization';
+import { initMobileImageOptimization } from '@/utils/mobile-image-optimizer';
 import { BottomNav } from '@/components/navigation/BottomNav';
 import { Analytics } from '@vercel/analytics/react';
 import { SEOProvider } from '@/components/SEO';
@@ -176,6 +177,10 @@ function App() {
     // This includes the shared intersection observer, event handling,
     // and performance monitoring
     initJavaScriptOptimizations();
+    
+    // Initialize mobile image optimization
+    // This sets up responsive images and uses mobile-specific versions
+    initMobileImageOptimization();
     
     // Initialize Web Vitals monitoring - only in development
     if (process.env.NODE_ENV === 'development') {

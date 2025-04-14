@@ -13,8 +13,9 @@
     "generate-og": "node generate-og-image-direct.js",
     "quick-optimize": "node quick-optimize.mjs",
     "optimize-images": "node optimize-images.js",
+    "optimize-creator-images": "node optimize-creator-images.js",
     "update-image-refs": "node update-image-references.js",
-    "perf-images": "npm run optimize-images && npm run update-image-refs",
+    "perf-images": "npm run optimize-images && npm run optimize-creator-images && npm run update-image-refs",
     "generate-sitemap": "ts-node src/scripts/generate-sitemap.ts",
     "seo-audit": "ts-node src/scripts/verify-seo.ts",
     "seo-check": "npm run seo-audit && npm run generate-sitemap",
@@ -23,9 +24,10 @@
     "asset-cleanup": "npm run audit-assets && npm run archive-unused",
     "extract-critical-css": "node scripts/critical-css.js",
     "analyze-web-vitals": "vite preview --port 8080 & sleep 2 && open http://localhost:8080?debug=vitals",
-    "perf-build": "npm run optimize-images && npm run build:perf",
+    "perf-build": "npm run optimize-images && npm run optimize-creator-images && npm run build:perf",
     "perf-test": "npm run perf-build && npm run analyze-web-vitals",
-    "perf-full": "npm run asset-cleanup && npm run perf-images && npm run perf-build"
+    "perf-full": "npm run asset-cleanup && npm run perf-images && npm run build:perf",
+    "mobile-perf": "npm run optimize-creator-images && npm run build:perf"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
