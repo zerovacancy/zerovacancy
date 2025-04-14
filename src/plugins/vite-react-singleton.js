@@ -1,61 +1,38 @@
-/**
- * Vite Plugin: React Singleton
- * 
- * This plugin ensures that only one copy of React is used throughout the application
- * by properly handling React externalization in Vite.
- * 
- * Usage:
- * Add this plugin to your vite.config.ts
- */
+// vite-react-singleton.js
+// This plugin ensures only one copy of React is used
+
+import path from 'path';
 
 export default function reactSingleton() {
   return {
     name: 'vite-plugin-react-singleton',
     
+    // Configure React modules
     config(config) {
-      // Ensure optimizeDeps includes React packages
+      const projectRoot = process.cwd();
+      const singletonPath = path.resolve(projectRoot, 'src/utils/react-singleton.js');
+      
+      // Ensure resolve.alias exists
+      config.resolve = config.resolve || {};
+      config.resolve.alias = config.resolve.alias || {};
+      
+      // Add React singleton aliases with absolute path
+      Object.assign(config.resolve.alias, {
+        'react': singletonPath,
+        'react-dom': singletonPath,
+        'react-dom/client': singletonPath
+      });
+      
+      // Make sure these modules are pre-bundled
       config.optimizeDeps = config.optimizeDeps || {};
-      config.optimizeDeps.include = [
-        ...(config.optimizeDeps.include || []),
-        'react',
-        'react-dom',
-        'react/jsx-runtime',
-        'react/jsx-dev-runtime',
-      ];
+      config.optimizeDeps.include = config.optimizeDeps.include || [];
       
-      // Ensure build options correctly handle React
-      if (!config.build) config.build = {};
-      if (!config.build.rollupOptions) config.build.rollupOptions = {};
-      if (!config.build.rollupOptions.output) config.build.rollupOptions.output = {};
+      if (!config.optimizeDeps.include.includes('react')) {
+        config.optimizeDeps.include.push('react');
+      }
       
-      // Ensure React is bundled in the react-core chunk
-      const output = config.build.rollupOptions.output;
-      if (!output.manualChunks) {
-        output.manualChunks = (id) => {
-          if (id.includes('node_modules/react/') || 
-              id.includes('node_modules/react-dom/')) {
-            return 'react-core';
-          }
-          return null;
-        };
-      } else if (typeof output.manualChunks === 'object') {
-        // Convert object-style manualChunks to function
-        const originalChunks = { ...output.manualChunks };
-        output.manualChunks = (id) => {
-          if (id.includes('node_modules/react/') || 
-              id.includes('node_modules/react-dom/')) {
-            return 'react-core';
-          }
-          
-          // Check original chunks
-          for (const [name, modules] of Object.entries(originalChunks)) {
-            if (Array.isArray(modules) && modules.some(m => id.includes(m))) {
-              return name;
-            }
-          }
-          
-          return null;
-        };
+      if (!config.optimizeDeps.include.includes('react-dom')) {
+        config.optimizeDeps.include.push('react-dom');
       }
       
       return config;

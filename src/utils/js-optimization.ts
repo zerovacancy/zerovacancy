@@ -503,17 +503,43 @@ export function isTouch(): boolean {
 export function setupPerformantEventListeners(): void {
   if (typeof window === 'undefined') return;
   
+  // DIAGNOSTIC: Add a flag to check if setup has already been called
+  if ((window as any).__performantEventListenersSetup) {
+    console.warn('[Diagnostic] setupPerformantEventListeners called multiple times. Skipping to prevent recursion.');
+    return;
+  }
+  
+  // Mark that setup has been performed
+  (window as any).__performantEventListenersSetup = true;
+  
+  // DIAGNOSTIC: Add listener count tracking
+  (window as any).__eventListenerCount = (window as any).__eventListenerCount || {};
+  
+  console.log('[Diagnostic] Setting up performant event listeners');
+  
   // Events that should be passive for better scrolling performance
   const passiveEvents = ['touchstart', 'touchmove', 'wheel', 'mousewheel', 'scroll'];
   
   // Add passive listeners for these events to document
   passiveEvents.forEach(event => {
     document.addEventListener(event, () => {}, { passive: true });
+    
+    // DIAGNOSTIC: Track listener
+    (window as any).__eventListenerCount[event] = ((window as any).__eventListenerCount[event] || 0) + 1;
+    console.log(`[Diagnostic] Added passive listener for ${event}. Count: ${(window as any).__eventListenerCount[event]}`);
   });
+  
+  // DIAGNOSTIC: Check if addEventListener has already been modified
+  if ((window as any).originalAddEventListener) {
+    console.warn('[Diagnostic] window.addEventListener already overridden! Using existing override to prevent recursion.');
+    return;
+  }
   
   // Add window resize throttle wrapper for better performance
   const originalAddEventListener = window.addEventListener;
   (window as any).originalAddEventListener = originalAddEventListener;
+  
+  console.log('[Diagnostic] Stored original addEventListener');
   
   // Replace addEventListener to automatically throttle resize/scroll events
   window.addEventListener = function(
@@ -521,29 +547,56 @@ export function setupPerformantEventListeners(): void {
     listener: EventListenerOrEventListenerObject,
     options?: boolean | AddEventListenerOptions
   ): void {
-    // For resize and scroll events, automatically throttle them
-    if (type === 'resize' || type === 'scroll') {
-      // If it's an object event listener
-      if (typeof listener === 'object' && listener.handleEvent) {
-        const originalHandleEvent = listener.handleEvent.bind(listener);
-        const throttledHandler = throttle((event: Event) => {
-          originalHandleEvent(event);
-        }, 100);
-        const newListener = {
-          ...listener,
-          handleEvent: throttledHandler,
-        };
-        (window as any).originalAddEventListener.call(this, type, newListener, options);
-      } else if (typeof listener === 'function') {
-        // If it's a function listener
-        const throttledFunction = throttle(listener as EventListener, 100);
-        (window as any).originalAddEventListener.call(this, type, throttledFunction, options);
+    // DIAGNOSTIC: Track event listener registration
+    (window as any).__eventListenerCount[type] = ((window as any).__eventListenerCount[type] || 0) + 1;
+    
+    // Add safety check for recursive calls
+    if ((window as any).__inAddEventListener) {
+      console.error(`[Diagnostic] Recursive addEventListener call detected for ${type}. Using original to prevent stack overflow.`);
+      return originalAddEventListener.call(this, type, listener, options);
+    }
+    
+    // Set recursion guard
+    (window as any).__inAddEventListener = true;
+    
+    try {
+      // For resize and scroll events, automatically throttle them
+      if (type === 'resize' || type === 'scroll') {
+        // If it's an object event listener
+        if (typeof listener === 'object' && listener.handleEvent) {
+          const originalHandleEvent = listener.handleEvent.bind(listener);
+          const throttledHandler = throttle((event: Event) => {
+            originalHandleEvent(event);
+          }, 100);
+          const newListener = {
+            ...listener,
+            handleEvent: throttledHandler,
+          };
+          console.log(`[Diagnostic] Adding throttled object handler for ${type}. Count: ${(window as any).__eventListenerCount[type]}`);
+          (window as any).originalAddEventListener.call(this, type, newListener, options);
+        } else if (typeof listener === 'function') {
+          // If it's a function listener
+          const throttledFunction = throttle(listener as EventListener, 100);
+          console.log(`[Diagnostic] Adding throttled function for ${type}. Count: ${(window as any).__eventListenerCount[type]}`);
+          (window as any).originalAddEventListener.call(this, type, throttledFunction, options);
+        }
+      } else {
+        // For all other events, proceed normally
+        console.log(`[Diagnostic] Adding normal listener for ${type}. Count: ${(window as any).__eventListenerCount[type]}`);
+        (window as any).originalAddEventListener.call(this, type, listener, options);
       }
-    } else {
-      // For all other events, proceed normally
-      (window as any).originalAddEventListener.call(this, type, listener, options);
+    } finally {
+      // Clear recursion guard
+      (window as any).__inAddEventListener = false;
     }
   };
+  
+  // DIAGNOSTIC: Add a method to check listener stats
+  (window as any).getEventListenerStats = function() {
+    return { ...(window as any).__eventListenerCount };
+  };
+  
+  console.log('[Diagnostic] Replaced addEventListener with optimized version');
   
   // Optimize RAF for animation frames
   setupOptimizedRAF();
@@ -601,25 +654,88 @@ export function setupOptimizedRAF(): void {
 
 /**
  * Master function to initialize all JavaScript performance optimizations
+ * This function now includes safety checks to prevent duplicate initializations
+ * and recursion detection
  */
 export function initJavaScriptOptimizations(): void {
   if (typeof window === 'undefined') return;
   
-  console.log('Initializing JavaScript optimizations');
+  // Safety check - don't initialize twice
+  if ((window as any).__jsOptimizationsInitialized) {
+    console.warn('[JS Optimization] JavaScript optimizations already initialized. Skipping to prevent conflicts.');
+    return;
+  }
   
-  // Initialize shared IntersectionObserver
-  SharedIntersectionObserver.getInstance();
+  console.log('[JS Optimization] Initializing JavaScript optimizations');
+  (window as any).__jsOptimizationsInitialized = true;
   
-  // Set up optimized event listeners
-  setupPerformantEventListeners();
+  // Check for mobile device to apply appropriate optimizations
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                  window.innerWidth < 768;
   
-  // Optimize localStorage operations
-  optimizeLocalStorage();
-  
-  // Monitor for long tasks
-  monitorLongTasks();
-  
-  console.log('JavaScript optimizations initialized');
+  try {
+    // Initialize shared IntersectionObserver - safe for both mobile and desktop
+    SharedIntersectionObserver.getInstance();
+    console.log('[JS Optimization] Shared IntersectionObserver initialized');
+    
+    // Check for diagnostic tools - these take precedence if present
+    const hasDiagnostics = typeof (window as any).__eventDiagnostics !== 'undefined' || 
+                          typeof (window as any).__guardOriginalEventMethods !== 'undefined';
+    
+    // Only set up optimized event listeners if no diagnostics are running
+    // and we're not on mobile (where it's known to cause issues)
+    if (!hasDiagnostics && !isMobile) {
+      console.log('[JS Optimization] Setting up performant event listeners (desktop mode)');
+      setupPerformantEventListeners();
+    } else if (isMobile) {
+      console.log('[JS Optimization] Mobile device detected, using simplified event optimizations');
+      // For mobile, just add passive event listeners directly
+      const passiveEvents = ['touchstart', 'touchmove', 'wheel', 'mousewheel', 'scroll'];
+      passiveEvents.forEach(event => {
+        document.addEventListener(event, () => {}, { passive: true });
+        window.addEventListener(event, () => {}, { passive: true });
+      });
+    } else {
+      console.log('[JS Optimization] Event diagnostics active, skipping event listener optimizations');
+    }
+    
+    // Safe optimizations for all devices
+    optimizeLocalStorage();
+    console.log('[JS Optimization] localStorage optimizations applied');
+    
+    // Only monitor long tasks on desktop for performance reasons
+    if (!isMobile) {
+      monitorLongTasks();
+      console.log('[JS Optimization] Long task monitoring enabled (desktop only)');
+    }
+    
+    // Use optimized RAF only on desktop - causes issues on some mobile browsers
+    if (!isMobile) {
+      setupOptimizedRAF();
+      console.log('[JS Optimization] RAF optimizations enabled (desktop only)');
+    }
+    
+    console.log('[JS Optimization] JavaScript optimizations successfully initialized');
+    
+    // Expose API to check initialization status
+    (window as any).getJsOptimizationStatus = function() {
+      return {
+        initialized: true,
+        timestamp: new Date().toISOString(),
+        device: isMobile ? 'mobile' : 'desktop',
+        features: {
+          eventListenerOptimized: !isMobile && !hasDiagnostics,
+          localStorageOptimized: true,
+          longTasksMonitored: !isMobile,
+          rafOptimized: !isMobile,
+          intersectionObserverShared: true
+        }
+      };
+    };
+  } catch (error) {
+    console.error('[JS Optimization] Error initializing JavaScript optimizations:', error);
+    (window as any).__jsOptimizationsError = error;
+  }
 }
 
 /**

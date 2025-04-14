@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/components/auth/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase, getErrorMessage } from '@/integrations/supabase/client-enhanced';
 import SEO from '@/components/SEO';
 import { LockKeyhole, AlertCircle } from 'lucide-react';
 
@@ -41,13 +41,20 @@ const AdminLogin = () => {
     };
   }, []);
   
-  // Check if already authenticated
+  // Check if already authenticated - as a separate effect with complete deps array
   useEffect(() => {
     // Only run this effect if authentication state is loaded and component is mounted
-    if (!isLoading && mountedRef.current && isAuthenticated) {
-      navigate('/admin/blog');
+    if (!isLoading && isAuthenticated) {
+      // Use a small timeout to avoid immediate navigation during render
+      const redirectTimeout = setTimeout(() => {
+        if (mountedRef.current) {
+          navigate('/admin/blog');
+        }
+      }, 0);
+      
+      return () => clearTimeout(redirectTimeout);
     }
-  }, [isAuthenticated, navigate, isLoading]);
+  }, [isAuthenticated, navigate, isLoading, mountedRef]);
 
   // Handle the login form submission
   const handleSubmit = async (e: React.FormEvent) => {
@@ -62,13 +69,18 @@ const AdminLogin = () => {
     setError('');
     
     try {
-      // Sign in with Supabase
+      console.log('Attempting Supabase authentication...');
+      
+      // Sign in with Supabase directly - skip the test request that was causing CORS issues
       const { error, data } = await supabase.auth.signInWithPassword({
         email,
         password
       });
       
-      if (error) throw error;
+      if (error) {
+        console.error('Authentication error:', error);
+        throw error;
+      }
       
       // Set admin token to grant access
       sessionStorage.setItem('adminAccessToken', 'granted');
@@ -83,7 +95,21 @@ const AdminLogin = () => {
       navigate('/admin/blog');
     } catch (err: any) {
       console.error('Login error:', err);
-      setError(err.message || 'Failed to sign in');
+      
+      // Get a user-friendly error message
+      const friendlyError = getErrorMessage(err);
+      
+      // Show specific error message based on error type
+      if (err.message?.includes('fetch') || err.message?.includes('network')) {
+        setError('Network error connecting to the database. Please check your connection and try again.');
+      } else if (err.message?.includes('timeout')) {
+        setError('Connection timed out. The server may be busy or experiencing issues.');
+      } else if (err.message?.includes('auth/invalid-credential') || err.message?.includes('Invalid login credentials')) {
+        setError('Invalid email or password.');
+      } else {
+        setError(friendlyError || 'Failed to sign in');
+      }
+      
       sessionStorage.removeItem('adminAccessToken');
     } finally {
       setLoading(false);

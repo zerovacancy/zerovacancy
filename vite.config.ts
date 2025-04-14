@@ -3,8 +3,8 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
-import reactSingleton from "./src/plugins/vite-react-singleton";
 import excludeArchivedAssets from "./vite-exclude-archived-plugin.js";
+import viteTipTapPlugin from "./vite-tiptap-plugin.js";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -16,11 +16,11 @@ export default defineConfig(({ mode }) => ({
     historyApiFallback: true,
   },
   plugins: [
-    // Handle React properly
-    reactSingleton(),
-    
     // Plugin to exclude archived assets from the build
     excludeArchivedAssets(),
+    
+    // Plugin to properly handle TipTap dependencies
+    viteTipTapPlugin(),
     
     react({
       // More aggressive optimizations in production
@@ -36,6 +36,7 @@ export default defineConfig(({ mode }) => ({
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
+    dedupe: ["react", "react-dom", "react/jsx-runtime", "react/jsx-dev-runtime"],
   },
   build: {
     sourcemap: mode === 'development', // Only generate sourcemaps in development
@@ -142,6 +143,28 @@ export default defineConfig(({ mode }) => ({
       treeShaking: true,
       legalComments: 'none',
     },
+    timeout: 60000, // Increase timeout to 60 seconds for TipTap dependencies
+    include: [
+      // React and React DOM for consistent deduplication
+      'react',
+      'react-dom',
+      'react/jsx-runtime',
+      'react/jsx-dev-runtime',
+      
+      // Pre-bundle these TipTap dependencies to prevent optimization timeouts
+      '@tiptap/react',
+      '@tiptap/core',
+      '@tiptap/starter-kit',
+      '@tiptap/extension-image',
+      '@tiptap/extension-link',
+      '@tiptap/extension-placeholder',
+      '@tiptap/extension-text-align',
+      '@tiptap/extension-table',
+      '@tiptap/extension-table-row',
+      '@tiptap/extension-table-cell',
+      '@tiptap/extension-table-header',
+      '@tiptap/extension-code-block'
+    ],
   },
   // Additional performance optimizations
   esbuild: {
