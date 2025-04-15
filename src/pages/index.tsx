@@ -1016,10 +1016,7 @@ const Index = () => {
             moc.sectionWrapper // Standardized section wrapper
           )}
         >
-          {/* Subtle top accent for better section definition on mobile */}
-          {isMobile && (
-            <div className="absolute top-0 left-0 right-0 h-[8px] bg-gradient-to-r from-indigo-300/30 via-indigo-400/50 to-indigo-300/30 z-10"></div>
-          )}
+          {/* Removed the purple gradient line that was appearing between header and hero */}
           
           <div className={cn(
             "w-full max-w-7xl mx-auto overflow-hidden", 
@@ -1031,18 +1028,34 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Section Transition: Features to Pricing - Enhanced for better visual differentiation */}
-        <div style={{ 
-          marginTop: isMobile ? '-30px' : '-50px', // Adjusted for different devices
-          position: 'relative',
-          zIndex: 30
-        }}>
-          <SectionTransition 
-            fromColor="#E3E4FF" 
-            toColor="#E5F0FD" // More distinct color for pricing section
-            height={40} // Reduced height significantly
-          />
-        </div>
+        {/* Section Transition: Features to Pricing - Mobile uses simpler edge */}
+        {isMobile ? (
+          <div style={{ 
+            height: '20px',
+            overflow: 'hidden',
+            position: 'relative',
+            zIndex: 30
+          }}>
+            {/* Simple color transition for mobile */}
+            <div style={{ 
+              background: 'linear-gradient(to bottom, #E3E4FF 0%, #E0F5F5 100%)',
+              height: '100%',
+              width: '100%'
+            }} />
+          </div>
+        ) : (
+          <div style={{ 
+            marginTop: '-50px',
+            position: 'relative',
+            zIndex: 30
+          }}>
+            <SectionTransition 
+              fromColor="#E3E4FF" 
+              toColor="#E0F5F5"
+              height={40}
+            />
+          </div>
+        )}
 
         {/* Scroll Target for Pricing */}
         <ScrollTarget id="pricing" height={0} />
@@ -1066,20 +1079,12 @@ const Index = () => {
           }
           className={cn(
             "relative w-full pt-16 pb-20", // Standardized vertical spacing (reduced)
-            "bg-[#E5F0FD]", // Lighter blue for better differentiation from features
+            "bg-[#E0F5F5]", // Light aqua for clear differentiation from features section
             isMobile && cn("py-8", moc.sectionPaddingMain), // Standardized mobile padding
             moc.sectionWrapper // Standardized section wrapper
           )}
         >
-          {/* Distinctive section divider specifically for mobile */}
-          {isMobile && (
-            <div className="absolute top-0 left-0 right-0 overflow-hidden">
-              <div className="h-[6px] bg-gradient-to-r from-blue-200 via-blue-300/60 to-blue-200 w-full"></div>
-              <div className="flex justify-center -mt-3 pt-4 pb-1">
-                <div className="w-16 h-1 bg-blue-300/50 rounded-full"></div>
-              </div>
-            </div>
-          )}
+          {/* No section divider for pricing - removed completely */}
           <div className={cn(
             "w-full max-w-7xl mx-auto overflow-hidden", 
             moc.contentPadding // Standardized content padding
@@ -1097,7 +1102,7 @@ const Index = () => {
           zIndex: 30
         }}>
           <SectionTransition 
-            fromColor="#EEF3F9" 
+            fromColor="#E0F5F5" 
             toColor="#F9F6EC" 
             height={40} // Reduced height significantly
           />

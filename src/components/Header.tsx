@@ -429,8 +429,9 @@ export default function Header() {
 
   return (
     <header className={cn(
-      "fixed top-0 left-0 right-0 z-50 bg-white shadow-sm", 
-      "transition-all duration-200"
+      "fixed top-0 left-0 right-0 z-50 bg-white", 
+      "transition-all duration-200",
+      "border-b border-[#F9F6EC]" // Add explicit border matching hero background
     )}>
       <div className="container mx-auto px-4 lg:px-8">
         {isMobile ? (

@@ -481,6 +481,19 @@ html.content-loaded img {
     transition-duration: 0.3s !important;
     will-change: auto !important;
   }
+  
+  /* Fix purple line between header and hero */
+  header {
+    border-bottom: 1px solid #F9F6EC !important;
+    box-shadow: none !important;
+    background-color: #FFFFFF !important;
+  }
+  
+  /* Ensure hero section connects perfectly with header */
+  section#hero {
+    margin-top: 0 !important;
+    border-top: none !important;
+  }
 
   /* Selective blur on mobile - apply where needed */
   .selective-blur-mobile {

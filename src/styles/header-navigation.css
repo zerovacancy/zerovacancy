@@ -40,10 +40,11 @@ header[class*="z-"] {
   top: 0;
   z-index: 1000; /* High z-index to stay above content */
   width: 100%;
-  background-color: rgba(255, 255, 255, 0.98); /* Slightly translucent */
+  background-color: rgba(255, 255, 255, 1); /* Fully opaque to prevent theme color bleed */
   backdrop-filter: blur(8px); /* Modern glass effect */
   -webkit-backdrop-filter: blur(8px); /* For Safari */
-  /* Removed box-shadow to eliminate the thin blue line between header and hero */
+  /* Add border-bottom matching hero background to create seamless transition */
+  border-bottom: 1px solid #F9F6EC;
   box-shadow: none;
   transition: height 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
 }
