@@ -36,6 +36,8 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [processingPlan, setProcessingPlan] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const [activeCardIndex, setActiveCardIndex] = useState(1); // Default to Pro (middle card)
   
   // Use external sticky header state if provided, otherwise use local state
   const showStickyHeader = externalStickyHeader !== undefined ? externalStickyHeader : localStickyHeader;
@@ -295,6 +297,125 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
     }
   };
   
+  // Add function to navigate between carousel cards
+  const navigateCarousel = useCallback((direction: 'prev' | 'next') => {
+    if (!carouselRef.current) return;
+    
+    const newIndex = direction === 'next' 
+      ? Math.min(activeCardIndex + 1, pricingTiers.length - 1)
+      : Math.max(activeCardIndex - 1, 0);
+      
+    setActiveCardIndex(newIndex);
+    
+    // Get all cards and scroll to the active one
+    const cards = carouselRef.current.querySelectorAll('.pricing-card');
+    if (cards[newIndex]) {
+      cards[newIndex].scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'center'
+      });
+    }
+  }, [activeCardIndex, pricingTiers.length]);
+  
+  // Add function to directly jump to a specific card
+  const jumpToCard = (index: number) => {
+    if (!carouselRef.current) return;
+    setActiveCardIndex(index);
+    
+    const cards = carouselRef.current.querySelectorAll('.pricing-card');
+    if (cards[index]) {
+      cards[index].scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'center'
+      });
+    }
+  };
+  
+  // Handle scroll events to update active card indicator
+  useEffect(() => {
+    if (!carouselRef.current || !isMobile) return;
+    
+    const handleScroll = () => {
+      if (!carouselRef.current) return;
+      
+      const containerWidth = carouselRef.current.clientWidth;
+      const scrollPosition = carouselRef.current.scrollLeft;
+      
+      // Calculate which card is most visible based on scroll position
+      const cardIndex = Math.round(scrollPosition / (containerWidth * 0.85 + 16)); // Account for card width and margin
+      if (cardIndex !== activeCardIndex && cardIndex >= 0 && cardIndex < pricingTiers.length) {
+        setActiveCardIndex(cardIndex);
+      }
+    };
+    
+    const carousel = carouselRef.current;
+    carousel.addEventListener('scroll', handleScroll, { passive: true });
+    
+    return () => {
+      if (carousel) {
+        carousel.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, [activeCardIndex, isMobile, pricingTiers.length]);
+  
+  // Implement proper touch handling for better swipe detection
+  useEffect(() => {
+    if (!carouselRef.current || !isMobile) return;
+    
+    let startX = 0;
+    let isDragging = false;
+    
+    const handleTouchStart = (e: TouchEvent) => {
+      startX = e.touches[0].clientX;
+      isDragging = true;
+    };
+    
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!isDragging) return;
+      
+      const currentX = e.touches[0].clientX;
+      const diff = startX - currentX;
+      
+      // Prevent page scrolling when swiping carousel
+      if (Math.abs(diff) > 5) {
+        e.preventDefault();
+      }
+    };
+    
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (!isDragging) return;
+      
+      const currentX = e.changedTouches[0].clientX;
+      const diff = startX - currentX;
+      
+      // Determine swipe direction and threshold
+      if (Math.abs(diff) > 50) { // 50px threshold for swipe
+        if (diff > 0) {
+          navigateCarousel('next');
+        } else {
+          navigateCarousel('prev');
+        }
+      }
+      
+      isDragging = false;
+    };
+    
+    const carousel = carouselRef.current;
+    carousel.addEventListener('touchstart', handleTouchStart, { passive: true });
+    carousel.addEventListener('touchmove', handleTouchMove, { passive: false });
+    carousel.addEventListener('touchend', handleTouchEnd, { passive: true });
+    
+    return () => {
+      if (carousel) {
+        carousel.removeEventListener('touchstart', handleTouchStart);
+        carousel.removeEventListener('touchmove', handleTouchMove);
+        carousel.removeEventListener('touchend', handleTouchEnd);
+      }
+    };
+  }, [isMobile, navigateCarousel]);
+  
   return (
     <div className="w-full pb-10 relative" 
       ref={containerRef} 
@@ -306,8 +427,50 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
           
           {/* Replace vertical stack with horizontal carousel */}
           <div className="w-full overflow-hidden relative">
-            {/* Swipeable carousel container */}
-            <div className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-4 pt-2 px-2 -mx-2">
+            {/* Navigation buttons */}
+            <div className="absolute top-1/2 left-0 right-0 flex justify-between transform -translate-y-1/2 z-20 pointer-events-none px-1">
+              <button 
+                onClick={() => navigateCarousel('prev')}
+                disabled={activeCardIndex === 0}
+                className={`w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center pointer-events-auto
+                  ${activeCardIndex === 0 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-gray-50 active:bg-gray-100'}`}
+                aria-label="Previous plan"
+              >
+                <ChevronDown className="h-5 w-5 text-blue-600 rotate-90" />
+              </button>
+              
+              <button 
+                onClick={() => navigateCarousel('next')}
+                disabled={activeCardIndex === pricingTiers.length - 1}
+                className={`w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center pointer-events-auto
+                  ${activeCardIndex === pricingTiers.length - 1 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-gray-50 active:bg-gray-100'}`}
+                aria-label="Next plan"
+              >
+                <ChevronDown className="h-5 w-5 text-blue-600 -rotate-90" />
+              </button>
+            </div>
+            
+            {/* Swipeable carousel container - now with proper ref and touch handling */}
+            <div 
+              ref={carouselRef}
+              className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-4 pt-2 px-2 -mx-2" 
+              style={{ 
+                scrollBehavior: 'smooth',
+                WebkitOverflowScrolling: 'touch',
+                scrollSnapType: 'x mandatory',
+                touchAction: 'pan-x'
+              }}
+              tabIndex={-1}
+              role="region"
+              aria-label="Pricing plans carousel"
+              onKeyDown={(e) => {
+                if (e.key === 'ArrowLeft') {
+                  navigateCarousel('prev');
+                } else if (e.key === 'ArrowRight') {
+                  navigateCarousel('next');
+                }
+              }}
+            >
               {pricingTiers.map((tier, index) => {
                 const colorScheme = getColorScheme(tier.color);
                 const isExpanded = !!expandedFeatures[index];
@@ -317,18 +480,22 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
                   <motion.div
                     key={tier.title}
                     className={cn(
-                      "rounded-xl overflow-visible transition-all relative group flex-shrink-0 w-[85%] snap-center mx-2",
+                      "rounded-xl overflow-visible transition-all relative group flex-shrink-0 w-[85%] snap-center mx-2 pricing-card",
                       "border border-gray-200",
                       tier.popularPlan && "relative shadow-md",
                       colorScheme.cardBg,
                       // Use simpler shadow for better performance
                       "shadow-sm",
                       // Add stronger visual highlighting for the Professional plan
-                      tier.title === "Professional" && "ring-2 ring-blue-400/30 shadow-[0_2px_10px_rgba(139,92,246,0.15)]"
+                      tier.title === "Professional" && "ring-2 ring-blue-400/30 shadow-[0_2px_10px_rgba(139,92,246,0.15)]",
+                      // Highlight active card
+                      activeCardIndex === index && "ring-2 ring-blue-500/30"
                     )}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
+                    id={`pricing-card-${index}`}
+                    tabIndex={0}
                   >
                   {tier.popularPlan && (
                     <div className="absolute -top-4 inset-x-0 flex justify-center z-20">
@@ -545,23 +712,37 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
             })}
             </div>
             
-            {/* Add carousel indicators */}
-            <div className="flex justify-center mt-4 space-x-2">
+            {/* Interactive carousel indicators */}
+            <div className="flex justify-center mt-4 space-x-3">
               {pricingTiers.map((tier, i) => (
                 <button
                   key={tier.title}
-                  className={`w-2.5 h-2.5 rounded-full ${
-                    i === 1 ? 'bg-blue-600' : 'bg-gray-300'
+                  onClick={() => jumpToCard(i)}
+                  className={`w-3 h-3 rounded-full transition-all ${
+                    i === activeCardIndex ? 'bg-blue-600 scale-110' : 'bg-gray-300 hover:bg-gray-400'
                   }`}
                   aria-label={`View ${tier.title} plan`}
+                  aria-pressed={i === activeCardIndex}
+                  tabIndex={0}
                 />
               ))}
             </div>
             
+            {/* Navigation assistance text */}
+            <div className="text-center mt-2 mb-4">
+              <p className="text-xs text-gray-500">
+                <span className="inline-flex items-center">
+                  <ChevronDown className="h-3 w-3 rotate-90 mr-1" />
+                  <ChevronDown className="h-3 w-3 -rotate-90 mr-1" />
+                  Swipe or use arrows to navigate
+                </span>
+              </p>
+            </div>
+            
             {/* Add comparison info for mobile */}
-            <div className="mt-6 mb-4 mx-auto text-center">
+            <div className="mt-4 mb-4 mx-auto text-center">
               <button
-                className="inline-flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 border border-blue-100 rounded-lg"
+                className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 text-sm font-medium text-blue-600 bg-blue-50 border border-blue-100 rounded-lg shadow-sm"
               >
                 <span>Compare all features</span>
                 <ChevronRight className="h-4 w-4" />
