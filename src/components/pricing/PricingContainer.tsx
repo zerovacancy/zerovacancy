@@ -304,29 +304,32 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
       {isMobile ? (
         <div className="w-full overflow-hidden flex flex-col items-center">
           
-          <div className="w-full flex flex-col items-center space-y-10">
-            {pricingTiers.map((tier, index) => {
-              const colorScheme = getColorScheme(tier.color);
-              const isExpanded = !!expandedFeatures[index];
-              const isDescriptionExpanded = !!expandedDescriptions[index];
-              
-              return (
-                <motion.div
-                  key={tier.title}
-                  className={cn(
-                    "rounded-xl overflow-visible transition-all relative group w-[92%] max-w-[340px]",
-                    "border border-gray-200",
-                    tier.popularPlan && "relative shadow-md",
-                    colorScheme.cardBg,
-                    // Use simpler shadow for better performance
-                    "shadow-sm",
-                    // Add stronger visual highlighting for the Professional plan
-                    tier.title === "Professional" && "ring-2 ring-purple-400/20 shadow-[0_2px_10px_rgba(139,92,246,0.15)]"
-                  )}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                >
+          {/* Replace vertical stack with horizontal carousel */}
+          <div className="w-full overflow-hidden relative">
+            {/* Swipeable carousel container */}
+            <div className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-4 pt-2 px-2 -mx-2">
+              {pricingTiers.map((tier, index) => {
+                const colorScheme = getColorScheme(tier.color);
+                const isExpanded = !!expandedFeatures[index];
+                const isDescriptionExpanded = !!expandedDescriptions[index];
+                
+                return (
+                  <motion.div
+                    key={tier.title}
+                    className={cn(
+                      "rounded-xl overflow-visible transition-all relative group flex-shrink-0 w-[85%] snap-center mx-2",
+                      "border border-gray-200",
+                      tier.popularPlan && "relative shadow-md",
+                      colorScheme.cardBg,
+                      // Use simpler shadow for better performance
+                      "shadow-sm",
+                      // Add stronger visual highlighting for the Professional plan
+                      tier.title === "Professional" && "ring-2 ring-blue-400/30 shadow-[0_2px_10px_rgba(139,92,246,0.15)]"
+                    )}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                  >
                   {tier.popularPlan && (
                     <div className="absolute -top-4 inset-x-0 flex justify-center z-20">
                       <div className="py-1 px-3 flex items-center gap-1 rounded-full bg-gradient-to-r from-brand-purple-medium to-brand-purple text-white text-xs font-semibold shadow-sm">
@@ -335,78 +338,74 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
                       </div>
                     </div>
                   )}
-                  <div className={cn(
-                    "p-5 flex justify-between items-start gap-3"
-                  )}>
-                    <div className="flex-1 min-w-0">
-                      <h3 className={cn(
-                        "text-lg font-bold font-jakarta",
-                        colorScheme.text
-                      )}>
-                        {tier.title}
-                      </h3>
-                      <div className="mt-2">
-                        <p className={cn(
-                          "text-xs text-brand-text-secondary font-inter leading-relaxed",
-                          !isDescriptionExpanded && "line-clamp-3"
+                  <div className="p-5 flex flex-col">
+                    {/* Plan title with better hierarchy */}
+                    <div className="mb-4 flex items-start justify-between">
+                      <div>
+                        <h3 className={cn(
+                          "text-xl font-bold font-jakarta",
+                          colorScheme.text
                         )}>
-                          {tier.valueProposition}
-                          {!isDescriptionExpanded && tier.valueProposition.length > 120 && (
-                            <span className="inline-block text-brand-purple-medium"> ...</span>
-                          )}
-                        </p>
-                        {tier.valueProposition.length > 120 && (
-                          <button 
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              toggleDescription(index);
-                            }}
-                            className={cn(
-                              "mt-1.5 text-xs font-medium flex items-center gap-1 focus:outline-none touch-manipulation",
-                              colorScheme.text
-                            )}
-                            style={{ touchAction: 'manipulation' }}
-                          >
-                            {isDescriptionExpanded ? "Read less" : "Read more"}
-                            <ChevronDown 
-                              className={cn(
-                                "h-3 w-3 transition-transform", 
-                                isDescriptionExpanded && "rotate-180"
-                              )} 
-                            />
-                          </button>
+                          {tier.title}
+                        </h3>
+                        
+                        {tier.title === "Professional" && (
+                          <span className="inline-block mt-1 text-xs px-2 py-0.5 bg-blue-50 text-blue-600 rounded-full font-medium">
+                            Most Popular
+                          </span>
                         )}
                       </div>
-                    </div>
-                    
-                    <div className="text-right">
-                      <div className="flex flex-col items-end">
-                        <div className="flex items-baseline gap-1">
-                          <span className="text-2xl font-bold text-brand-purple-dark font-space">${tier.price}</span>
-                          <span className="text-xs text-brand-text-light font-space">/mo</span>
-                        </div>
-                        <div className="text-xs text-brand-text-light font-space leading-tight">
-                          {isYearly && "billed annually"}
-                        </div>
-                      </div>
                       
-                      {isYearly && tier.savings && (
-                        <div className="mt-1.5 inline-block bg-green-50 text-green-600 px-2.5 py-1 rounded-full text-xs font-medium font-space whitespace-nowrap">
-                          Save ${tier.savings}/year
-                        </div>
+                      {/* Plan ribbon for premium */}
+                      {tier.title === "Premium" && (
+                        <span className="inline-block text-xs px-2 py-0.5 bg-sky-50 text-sky-600 rounded-full font-medium">
+                          Best Value
+                        </span>
                       )}
                     </div>
+                    
+                    {/* Clearer pricing display */}
+                    <div className="mb-4 flex items-baseline">
+                      <span className="text-3xl font-extrabold text-blue-800 font-space">${tier.price}</span>
+                      <span className="ml-1.5 text-gray-500 font-medium">/mo</span>
+                      
+                      {/* Billing period note */}
+                      <span className="ml-2 text-sm text-gray-500">
+                        {isYearly ? "billed annually" : "monthly billing"}
+                      </span>
+                    </div>
+                    
+                    {/* Show savings more prominently */}
+                    {isYearly && tier.savings && (
+                      <div className="mb-4 flex items-center px-3 py-2 bg-green-50 border border-green-100 rounded-lg">
+                        <div className="mr-2 p-1 bg-green-100 rounded-full">
+                          <Check className="h-4 w-4 text-green-600" />
+                        </div>
+                        <span className="text-sm font-medium text-green-700">
+                          Save ${tier.savings}/year with annual billing
+                        </span>
+                      </div>
+                    )}
+                    
+                    {/* Simpler description with no expandable behavior */}
+                    <p className="text-sm text-gray-600 mb-5 leading-relaxed">
+                      {/* Shortened version - no need for expandable behavior */}
+                      {tier.valueProposition.length > 120 
+                        ? tier.valueProposition.substring(0, 120) + "..."
+                        : tier.valueProposition
+                      }
+                    </p>
                   </div>
                   
-                  <div className="px-5 pb-3 pt-2">
+                  <div className="px-5 pb-4 pt-2">
                     <Button 
                       className={cn(
-                        "w-full py-3 rounded-xl font-medium text-sm transition-all",
+                        "w-full py-4 rounded-xl font-medium text-base transition-all",
                         "px-4",
-                        // Better touch target height
-                        "h-[48px] min-h-[48px]",
+                        // Larger touch target height
+                        "h-[56px] min-h-[56px]",
                         colorScheme.button,
-                        tier.popularPlan && "ring-1 ring-brand-purple/20",
+                        tier.popularPlan && "ring-2 ring-blue-400/30",
                         (isProcessingPayment && processingPlan === tier.title) && "opacity-80 cursor-not-allowed"
                       )}
                       disabled={isProcessingPayment}
@@ -415,33 +414,80 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
                     >
                       {(isProcessingPayment && processingPlan === tier.title) ? (
                         <div className="flex items-center justify-center gap-2">
-                          <Loader2 className="h-4 w-4 animate-spin" />
+                          <Loader2 className="h-5 w-5 animate-spin" />
                           <span>Processing...</span>
                         </div>
                       ) : (
-                        tier.cta
+                        <>
+                          {tier.title === "Professional" ? (
+                            <div className="flex items-center justify-center">
+                              <Sparkles className="h-4 w-4 mr-1.5 text-white/80" />
+                              <span>{tier.cta}</span>
+                            </div>
+                          ) : (
+                            tier.cta
+                          )}
+                        </>
                       )}
                     </Button>
+                    
+                    {/* Add guarantee note under the button */}
+                    {tier.title !== "Basic (Free)" && (
+                      <p className="text-xs text-center text-gray-500 mt-2">
+                        {tier.title === "Premium" ? "30-day money-back guarantee" : "7-day free trial"}
+                      </p>
+                    )}
                   </div>
                   
                   <div className="px-5 pb-5">
+                    {/* Key features section - always visible */}
+                    <div className="mt-3 pt-3 border-t border-slate-100">
+                      <h4 className="text-xs font-semibold text-gray-700 mb-3">Key Features:</h4>
+                      <div className="space-y-2.5">
+                        {/* Show only 3-4 key features */}
+                        {(() => {
+                          // Extract top features across categories
+                          const allFeatures = Object.values(tier.features).flat();
+                          const topFeatures = allFeatures.slice(0, 4);
+                          
+                          return topFeatures.map((feature, featIndex) => (
+                            <div 
+                              key={`${tier.title}-key-${featIndex}`}
+                              className="flex items-start gap-2.5"
+                            >
+                              <div className={cn(
+                                "flex-shrink-0 rounded-full p-0.5 mt-0.5",
+                                colorScheme.bg
+                              )}>
+                                <Check className={cn(
+                                  "h-4 w-4 flex-shrink-0", 
+                                  colorScheme.text
+                                )} />
+                              </div>
+                              <span className="text-sm leading-tight text-gray-700 font-inter">{feature.text}</span>
+                            </div>
+                          ));
+                        })()}
+                      </div>
+                    </div>
+                    
+                    {/* See all features expander - better touch target */}
                     <button
                       onClick={() => toggleFeatures(index)}
                       className={cn(
-                        "mt-2 flex items-center justify-center w-auto mx-auto px-4 py-1.5",
-                        "text-xs font-medium text-brand-text-primary rounded-full",
-                        "border border-slate-200 bg-slate-50 hover:bg-slate-100",
+                        "mt-4 flex items-center justify-center w-full mx-auto px-4 py-2.5",
+                        "text-sm font-medium text-blue-600 rounded-lg",
+                        "border border-blue-100 bg-blue-50 hover:bg-blue-100",
                         "transition-colors duration-200",
-                        // Better touch target
-                        "min-h-[36px]"
+                        "min-h-[44px]"
                       )}
                       style={{ touchAction: 'manipulation' }}
                     >
                       <span className="font-inter whitespace-nowrap">
-                        {isExpanded ? "Hide features" : "Show features"}
+                        {isExpanded ? "Hide all features" : "See all features"}
                       </span>
                       <ChevronDown className={cn(
-                        "h-3.5 w-3.5 ml-1 text-brand-text-light transition-transform",
+                        "h-4 w-4 ml-1.5 text-blue-500 transition-transform",
                         isExpanded && "rotate-180"
                       )} />
                     </button>
@@ -453,17 +499,15 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
                           animate={{ height: "auto", opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
                           transition={{ duration: 0.3 }}
-                          className="overflow-hidden touch-action-pan-y"
+                          className="overflow-hidden touch-action-pan-y mt-4 pt-4 border-t border-slate-100"
                           style={{ touchAction: 'pan-y' }}
                         >
-                          <div className={cn(
-                            "pt-5 pb-2 space-y-5"
-                          )}>
+                          <div className="space-y-6">
                             {Object.entries(tier.features).map(([category, features], catIndex) => (
                               <div key={`${tier.title}-${category}`} className="space-y-3">
                                 {category !== "Core Features" && (
                                   <h4 className={cn(
-                                    "text-xs font-semibold font-jakarta px-3 py-1 rounded-md inline-block",
+                                    "text-sm font-semibold font-jakarta px-3 py-1 rounded-md inline-block",
                                     colorScheme.bg
                                   )}>
                                     {category}
@@ -474,18 +518,18 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
                                   {features.map((feature, featIndex) => (
                                     <div 
                                       key={`${tier.title}-${category}-${featIndex}`}
-                                      className="flex items-start gap-3"
+                                      className="flex items-start gap-2.5"
                                     >
                                       <div className={cn(
                                         "flex-shrink-0 rounded-full p-0.5 mt-0.5",
                                         colorScheme.bg
                                       )}>
                                         <Check className={cn(
-                                          "h-3.5 w-3.5 flex-shrink-0", 
+                                          "h-4 w-4 flex-shrink-0", 
                                           colorScheme.text
                                         )} />
                                       </div>
-                                      <span className="text-xs leading-relaxed text-brand-text-primary font-inter">{feature.text}</span>
+                                      <span className="text-sm leading-tight text-gray-700 font-inter">{feature.text}</span>
                                     </div>
                                   ))}
                                 </div>
@@ -499,6 +543,30 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
                 </motion.div>
               );
             })}
+            </div>
+            
+            {/* Add carousel indicators */}
+            <div className="flex justify-center mt-4 space-x-2">
+              {pricingTiers.map((tier, i) => (
+                <button
+                  key={tier.title}
+                  className={`w-2.5 h-2.5 rounded-full ${
+                    i === 1 ? 'bg-blue-600' : 'bg-gray-300'
+                  }`}
+                  aria-label={`View ${tier.title} plan`}
+                />
+              ))}
+            </div>
+            
+            {/* Add comparison info for mobile */}
+            <div className="mt-6 mb-4 mx-auto text-center">
+              <button
+                className="inline-flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 border border-blue-100 rounded-lg"
+              >
+                <span>Compare all features</span>
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
           </div>
         </div>
       ) : (

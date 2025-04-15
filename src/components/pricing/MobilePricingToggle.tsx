@@ -23,55 +23,57 @@ export const MobilePricingToggle = ({
   }, []);
   
   return (
-    <div className="flex flex-col items-center"
+    <div className="flex flex-col items-center w-full my-4"
       style={{ touchAction: 'auto' }}>
-      {/* Label text with improved spacing */}
-      <div className="mb-2 flex items-center justify-center gap-6 text-sm font-medium">
-        <span className={!isYearly ? "text-blue-700 font-semibold" : "text-slate-600"}>
-          Monthly
-        </span>
-        
-        {/* The original toggle switch with improved touch target */}
-        <button 
-          onClick={() => setIsYearly(!isYearly)}
+      
+      {/* Redesigned toggle using buttons with better touch targets */}
+      <div className="flex justify-center items-center gap-2 mb-2 bg-white p-1.5 rounded-full shadow-sm border border-blue-100 max-w-[280px] mx-auto w-full">
+        <button
+          onClick={() => setIsYearly(false)}
           className={cn(
-            "relative inline-flex h-7 w-12 items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple focus-visible:ring-offset-2",
-            isYearly ? "bg-blue-600" : "bg-slate-200",
-            "border border-slate-300 shadow-sm",
+            "flex-1 px-6 py-3 rounded-full text-sm font-medium transition-all min-h-[44px]",
+            !isYearly 
+              ? "bg-blue-600 text-white shadow-sm" 
+              : "bg-transparent text-gray-500 hover:bg-blue-50"
           )}
-          type="button"
-          role="switch"
-          aria-checked={isYearly}
           style={{ touchAction: 'manipulation' }}
         >
-          <span 
-            className={cn(
-              "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition-transform",
-              isYearly ? "translate-x-5" : "translate-x-0.5"
-            )}
-          />
+          Monthly
         </button>
-        
-        <span className={isYearly ? "text-blue-700 font-semibold" : "text-slate-600"}>
+        <button
+          onClick={() => setIsYearly(true)}
+          className={cn(
+            "flex-1 px-6 py-3 rounded-full text-sm font-medium transition-all min-h-[44px] flex items-center justify-center",
+            isYearly 
+              ? "bg-blue-600 text-white shadow-sm" 
+              : "bg-transparent text-gray-500 hover:bg-blue-50"
+          )}
+          style={{ touchAction: 'manipulation' }}
+        >
           Annual
-        </span>
+          {isYearly && (
+            <span className="ml-1.5 text-xs font-bold bg-green-100 text-green-800 px-1.5 py-0.5 rounded-full">
+              Save 20%
+            </span>
+          )}
+        </button>
       </div>
       
-      {/* Savings label for annual billing with better styling */}
+      {/* Larger savings callout for annual billing */}
       {isYearly && (
         <motion.div
-          initial={{ opacity: 0, y: -10 }}
+          initial={{ opacity: 0, y: -5 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          className="mt-1"
+          exit={{ opacity: 0, y: -5 }}
+          className="mt-2"
         >
           <span className={cn(
-            "inline-flex items-center px-3 py-1 text-xs font-medium rounded-full",
-            "text-blue-700 bg-blue-50 shadow-sm",
+            "inline-flex items-center px-4 py-1.5 text-sm font-medium rounded-full",
+            "text-green-700 bg-green-50 border border-green-100 shadow-sm",
             animateChange ? "animate-pulse" : ""
           )}>
-            <Check className="h-3.5 w-3.5 mr-1 text-blue-600" />
-            Save up to 20% with annual billing
+            <Check className="h-4 w-4 mr-1.5 text-green-600" />
+            Save up to $79/year with annual billing
           </span>
         </motion.div>
       )}
