@@ -206,9 +206,11 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
   
   // Get color scheme based on tier color and mobile state
   const getColorScheme = (color: string) => {
-    // For mobile, we'll use a more differentiated color scheme focused on blues/indigos 
-    // to clearly separate pricing from features
+    // For mobile, use the main website CTA color from hero
     if (isMobile) {
+      // All tiers use the same primary CTA color on mobile - same as hero waitlist button
+      const mobilePrimaryCTA = "bg-gradient-to-b from-[#8A42F5] to-[#7837DB] text-white hover:from-[#9553FF] hover:to-[#6A31C7] shadow-md border border-white/10";
+      
       switch (color) {
         case "blue":
           return {
@@ -216,10 +218,11 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
             border: "border-blue-200",
             text: "text-blue-700",
             accent: "bg-blue-500",
-            button: "bg-gradient-to-br from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 shadow-md shadow-blue-500/20",
+            button: mobilePrimaryCTA,
             highlight: "bg-blue-50",
             gradient: "bg-gradient-to-br from-blue-500 to-blue-400",
-            cardBg: "bg-gradient-to-b from-white to-blue-50/60"
+            cardBg: "bg-gradient-to-b from-white to-blue-50/60",
+            secondaryCTA: "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
           };
         case "purple":
           return {
@@ -227,10 +230,11 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
             border: "border-blue-300",
             text: "text-blue-800",
             accent: "bg-blue-600",
-            button: "bg-gradient-to-br from-blue-700 to-blue-500 hover:from-blue-800 hover:to-blue-600 shadow-md shadow-blue-500/20",
+            button: mobilePrimaryCTA,
             highlight: "bg-blue-100",
             gradient: "bg-gradient-to-br from-blue-700 to-blue-500",
-            cardBg: "bg-gradient-to-b from-white to-blue-100/70"
+            cardBg: "bg-gradient-to-b from-white to-blue-100/70",
+            secondaryCTA: "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
           };
         case "emerald":
           return {
@@ -238,10 +242,11 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
             border: "border-sky-200",
             text: "text-sky-700",
             accent: "bg-sky-500",
-            button: "bg-gradient-to-br from-sky-600 to-blue-600 hover:from-sky-700 hover:to-blue-700 shadow-md shadow-sky-500/20",
+            button: mobilePrimaryCTA,
             highlight: "bg-sky-50",
             gradient: "bg-gradient-to-br from-sky-600 to-blue-600",
-            cardBg: "bg-gradient-to-b from-white to-sky-50/60"
+            cardBg: "bg-gradient-to-b from-white to-sky-50/60",
+            secondaryCTA: "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
           };
         default:
           return {
@@ -249,10 +254,11 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
             border: "border-slate-200",
             text: "text-slate-700",
             accent: "bg-slate-500",
-            button: "bg-slate-500 hover:bg-slate-600",
+            button: mobilePrimaryCTA,
             highlight: "bg-slate-50",
             gradient: "",
-            cardBg: "bg-gradient-to-b from-white to-slate-50/50"
+            cardBg: "bg-gradient-to-b from-white to-slate-50/50",
+            secondaryCTA: "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
           };
       }
     } else {
@@ -531,9 +537,10 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
                     <div className="px-4 pb-4">
                       <Button 
                         className={cn(
-                          "w-full py-2 rounded-lg font-medium text-sm text-white",
+                          "w-full py-2 rounded-lg font-medium text-sm",
                           "min-h-[44px]",
                           colorScheme.button,
+                          isMobile && "text-white mb-1",
                           (isProcessingPayment && processingPlan === tier.title) && "opacity-70 cursor-not-allowed"
                         )}
                         disabled={isProcessingPayment}
@@ -550,12 +557,16 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
                       {/* See all features link */}
                       <button
                         onClick={() => toggleFeatures(index)}
-                        className="w-full mt-2 text-xs text-blue-600 font-medium flex items-center justify-center"
+                        className={cn(
+                          "w-full mt-2 text-xs font-medium rounded-md py-1.5 flex items-center justify-center",
+                          isMobile ? colorScheme.secondaryCTA : "text-blue-600 border border-blue-100"
+                        )}
                       >
                         <span>{isExpanded ? "Hide features" : "See all features"}</span>
                         <ChevronDown className={cn(
                           "h-3 w-3 ml-1",
-                          isExpanded && "rotate-180"
+                          isExpanded && "rotate-180",
+                          isMobile ? "text-gray-700" : "text-blue-600"
                         )} />
                       </button>
                     </div>
@@ -608,9 +619,17 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
           <div className="mt-6 mb-8 text-center">
             <Dialog>
               <DialogTrigger asChild>
-                <button className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg border border-blue-100">
+                <button className={cn(
+                  "inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-lg",
+                  isMobile 
+                    ? "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50" 
+                    : "text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-100"
+                )}>
                   Compare all features
-                  <ChevronRight className="ml-1 h-4 w-4" />
+                  <ChevronRight className={cn(
+                    "ml-1 h-4 w-4",
+                    isMobile ? "text-gray-700" : "text-blue-600"
+                  )} />
                 </button>
               </DialogTrigger>
               
