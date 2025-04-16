@@ -144,12 +144,16 @@ export default defineConfig(({ mode }) => ({
       legalComments: 'none',
     },
     timeout: 60000, // Increase timeout to 60 seconds for TipTap dependencies
-    include: [
-      // React and React DOM for consistent deduplication
-      'react',
-      'react-dom',
-      'react/jsx-runtime',
-      'react/jsx-dev-runtime',
+      include: [
+        // React and React DOM for consistent deduplication
+        'react',
+        'react-dom',
+        // React 18 client entry must be pre-bundled separately
+        'react-dom/client',
+        'react/jsx-runtime',
+        'react/jsx-dev-runtime',
+        // Error boundary package
+        'react-error-boundary',
       
       // Pre-bundle these TipTap dependencies to prevent optimization timeouts
       '@tiptap/react',

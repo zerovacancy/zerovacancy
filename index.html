@@ -196,8 +196,11 @@
     
     <!-- Critical preloads - optimized for First Contentful Paint -->
     <link rel="preload" href="/logo.png" as="image" fetchpriority="high" />
-    <!-- No additional image preloads for unused assets -->
-    <link rel="preload" href="/assets/css/styles.css" as="style" />
+    <!-- Preload and immediately apply main stylesheet to prevent FOUC -->
+    <link rel="preload" href="/assets/css/styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+      <link rel="stylesheet" href="/assets/css/styles.css">
+    </noscript>
     
     <!-- Module preloads for critical JavaScript - simplified for mobile compatibility -->
     <link rel="modulepreload" href="/src/main.tsx" />
