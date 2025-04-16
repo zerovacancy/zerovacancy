@@ -54,23 +54,15 @@ const PricingContent = () => {
   
   return (
     <>
-      <div className={cn(
-        "w-full",
-        isMobile && "bg-white border border-blue-200/50 rounded-2xl px-4 pt-5 pb-4 shadow-md mb-3 mt-4",
-        // Add distinctive blue gradient background for better differentiation from Features section
-        isMobile && "bg-gradient-to-b from-white via-white to-blue-50/30",
-        isLandscape && "py-3 mb-2"
-      )}>
-        {/* Header and toggle integrated directly */}
-        <PricingHeader 
-          title="PRICING PLANS" 
-          subtitle="Select the package that fits your property's marketing needs"
-          isYearly={isYearly}
-          setIsYearly={setIsYearly}
-          animateChange={animateChange}
-          showStickyHeader={showStickyHeader}
-        />
-      </div>
+      {/* Header and toggle without container */}
+      <PricingHeader 
+        title="PRICING PLANS" 
+        subtitle="Select the package that fits your property's marketing needs"
+        isYearly={isYearly}
+        setIsYearly={setIsYearly}
+        animateChange={animateChange}
+        showStickyHeader={showStickyHeader}
+      />
       
       {/* Removed wrapping div around PricingContainer for mobile */}
       <div className={cn(

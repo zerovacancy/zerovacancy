@@ -23,18 +23,18 @@ export const MobilePricingToggle = ({
   }, []);
   
   return (
-    <div className="flex flex-col items-center w-full my-4"
+    <div className="flex flex-col items-center w-full my-2"
       style={{ touchAction: 'auto' }}>
       
-      {/* Redesigned toggle using buttons with better touch targets */}
-      <div className="flex justify-center items-center gap-2 mb-2 bg-white p-1.5 rounded-full shadow-sm border border-blue-100 max-w-[280px] mx-auto w-full">
+      {/* Compact toggle with smaller size */}
+      <div className="flex justify-center items-center gap-1 bg-white p-1 rounded-full shadow-sm border border-gray-200 max-w-[200px] mx-auto w-full">
         <button
           onClick={() => setIsYearly(false)}
           className={cn(
-            "flex-1 px-6 py-3 rounded-full text-sm font-medium transition-all min-h-[44px]",
+            "flex-1 px-3 py-1.5 rounded-full text-xs font-medium transition-all min-h-[32px]",
             !isYearly 
               ? "bg-blue-600 text-white shadow-sm" 
-              : "bg-transparent text-gray-500 hover:bg-blue-50"
+              : "bg-transparent text-gray-500"
           )}
           style={{ touchAction: 'manipulation' }}
         >
@@ -43,39 +43,27 @@ export const MobilePricingToggle = ({
         <button
           onClick={() => setIsYearly(true)}
           className={cn(
-            "flex-1 px-6 py-3 rounded-full text-sm font-medium transition-all min-h-[44px] flex items-center justify-center",
+            "flex-1 px-3 py-1.5 rounded-full text-xs font-medium transition-all min-h-[32px] flex items-center justify-center",
             isYearly 
               ? "bg-blue-600 text-white shadow-sm" 
-              : "bg-transparent text-gray-500 hover:bg-blue-50"
+              : "bg-transparent text-gray-500"
           )}
           style={{ touchAction: 'manipulation' }}
         >
           Annual
           {isYearly && (
-            <span className="ml-1.5 text-xs font-bold bg-green-100 text-green-800 px-1.5 py-0.5 rounded-full">
-              Save 20%
+            <span className="ml-1 text-[10px] bg-green-100 text-green-800 px-1 py-0.5 rounded-full">
+              -20%
             </span>
           )}
         </button>
       </div>
       
-      {/* Larger savings callout for annual billing */}
+      {/* Compact savings callout */}
       {isYearly && (
-        <motion.div
-          initial={{ opacity: 0, y: -5 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -5 }}
-          className="mt-2"
-        >
-          <span className={cn(
-            "inline-flex items-center px-4 py-1.5 text-sm font-medium rounded-full",
-            "text-green-700 bg-green-50 border border-green-100 shadow-sm",
-            animateChange ? "animate-pulse" : ""
-          )}>
-            <Check className="h-4 w-4 mr-1.5 text-green-600" />
-            Save up to $79/year with annual billing
-          </span>
-        </motion.div>
+        <div className="mt-1 text-xs text-green-700">
+          Save up to $79/year with annual billing
+        </div>
       )}
     </div>
   );

@@ -442,278 +442,153 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
       {/* Sticky header removed completely to eliminate duplicate toggle */}
       
       {isMobile ? (
-        <div className="w-full overflow-hidden flex flex-col items-center">
-          
-          {/* Replace vertical stack with horizontal carousel */}
-          <div className="w-full overflow-hidden relative">
-            {/* Navigation buttons */}
-            <div className="absolute top-1/2 left-0 right-0 flex justify-between transform -translate-y-1/2 z-20 pointer-events-none px-1">
-              <button 
-                onClick={() => navigateCarousel('prev')}
-                disabled={activeCardIndex === 0}
-                className={`w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center pointer-events-auto
-                  ${activeCardIndex === 0 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-gray-50 active:bg-gray-100'}`}
-                aria-label="Previous plan"
-              >
-                <ChevronDown className="h-5 w-5 text-blue-600 rotate-90" />
-              </button>
+        <div className="w-full flex flex-col items-center max-w-md mx-auto">
+          {/* Simple vertical stack of simplified cards */}
+          <div className="w-full space-y-4 px-4">
+            {pricingTiers.map((tier, index) => {
+              const colorScheme = getColorScheme(tier.color);
+              const isExpanded = !!expandedFeatures[index];
               
-              <button 
-                onClick={() => navigateCarousel('next')}
-                disabled={activeCardIndex === pricingTiers.length - 1}
-                className={`w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center pointer-events-auto
-                  ${activeCardIndex === pricingTiers.length - 1 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:bg-gray-50 active:bg-gray-100'}`}
-                aria-label="Next plan"
-              >
-                <ChevronDown className="h-5 w-5 text-blue-600 -rotate-90" />
-              </button>
-            </div>
-            
-            {/* Swipeable carousel container - now with proper ref and touch handling */}
-            <div 
-              ref={carouselRef}
-              className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-4 pt-2 px-2 -mx-2" 
-              style={{ 
-                scrollBehavior: 'smooth',
-                WebkitOverflowScrolling: 'touch',
-                scrollSnapType: 'x mandatory',
-                touchAction: 'pan-x'
-              }}
-              tabIndex={-1}
-              role="region"
-              aria-label="Pricing plans carousel"
-              onKeyDown={(e) => {
-                if (e.key === 'ArrowLeft') {
-                  navigateCarousel('prev');
-                } else if (e.key === 'ArrowRight') {
-                  navigateCarousel('next');
-                }
-              }}
-            >
-              {pricingTiers.map((tier, index) => {
-                const colorScheme = getColorScheme(tier.color);
-                const isExpanded = !!expandedFeatures[index];
-                const isDescriptionExpanded = !!expandedDescriptions[index];
-                
-                return (
-                  <div key={tier.title} className="relative flex-shrink-0 w-[85%] snap-center mx-2 pricing-card-wrapper isolate">
-                    {/* The card itself without the popular tag inside */}
-                    {/* Popular tag as a standalone component - positioned above card */}
-                    {tier.popularPlan && (
-                      <PricingPopularTag isMobile={true} text="POPULAR" />
+              // Get top 3 features for this plan
+              const topFeatures = Object.values(tier.features).flat().slice(0, 3);
+              
+              return (
+                <div key={tier.title} className="relative w-full">
+                  {/* Popular tag */}
+                  {tier.popularPlan && (
+                    <div className="absolute -top-2 left-0 right-0 flex justify-center z-10">
+                      <span className="px-3 py-1 bg-blue-600 text-white text-xs font-bold rounded-full shadow-sm">
+                        MOST POPULAR
+                      </span>
+                    </div>
+                  )}
+                  
+                  {/* Simplified card */}
+                  <div 
+                    className={cn(
+                      "rounded-xl border overflow-hidden relative w-full",
+                      "shadow-sm hover:shadow",
+                      tier.popularPlan ? "border-blue-200 mt-3" : "border-gray-200",
+                      tier.title === "Professional" && "ring-1 ring-blue-300",
+                      colorScheme.cardBg
                     )}
-                    
-                    <motion.div
-                      className={cn(
-                        "rounded-xl overflow-visible transition-all relative group w-full pricing-card",
-                        "border border-gray-200",
-                        tier.popularPlan && "shadow-md",
-                        colorScheme.cardBg,
-                        // Use simpler shadow for better performance
-                        "shadow-sm",
-                        // Add stronger visual highlighting for the Professional plan
-                        tier.title === "Professional" && "ring-2 ring-blue-400/30 shadow-[0_2px_10px_rgba(139,92,246,0.15)]",
-                        // Highlight active card
-                        activeCardIndex === index && "ring-2 ring-blue-500/30"
-                      )}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      id={`pricing-card-${index}`}
-                      tabIndex={0}
-                    >
-                  <div className="p-5 flex flex-col">
-                    {/* Plan title with better hierarchy */}
-                    <div className="mb-4 flex items-start justify-between">
-                      <div>
+                  >
+                    {/* Card header */}
+                    <div className="p-4 pb-3">
+                      <div className="flex justify-between items-start">
                         <h3 className={cn(
-                          "text-xl font-bold font-jakarta",
+                          "text-lg font-bold",
                           colorScheme.text
                         )}>
                           {tier.title}
                         </h3>
                         
-                        {tier.title === "Professional" && (
-                          <span className="inline-block mt-1 text-xs px-2 py-0.5 bg-blue-50 text-blue-600 rounded-full font-medium">
-                            Most Popular
+                        {tier.title === "Premium" && (
+                          <span className="text-xs px-2 py-0.5 bg-sky-50 text-sky-600 rounded-full font-medium">
+                            Best Value
                           </span>
                         )}
                       </div>
                       
-                      {/* Plan ribbon for premium */}
-                      {tier.title === "Premium" && (
-                        <span className="inline-block text-xs px-2 py-0.5 bg-sky-50 text-sky-600 rounded-full font-medium">
-                          Best Value
+                      {/* Price display */}
+                      <div className="mt-3 flex items-baseline">
+                        <span className="text-2xl font-bold text-gray-900">${tier.price}</span>
+                        <span className="ml-1 text-sm text-gray-500">/mo</span>
+                        <span className="ml-2 text-xs text-gray-500">
+                          {isYearly ? "billed annually" : "monthly"}
                         </span>
-                      )}
-                    </div>
-                    
-                    {/* Clearer pricing display */}
-                    <div className="mb-4 flex items-baseline">
-                      <span className="text-3xl font-extrabold text-blue-800 font-space">${tier.price}</span>
-                      <span className="ml-1.5 text-gray-500 font-medium">/mo</span>
+                      </div>
                       
-                      {/* Billing period note */}
-                      <span className="ml-2 text-sm text-gray-500">
-                        {isYearly ? "billed annually" : "monthly billing"}
-                      </span>
+                      {/* Savings badge */}
+                      {isYearly && tier.savings && (
+                        <div className="mt-2 inline-flex items-center text-xs font-medium text-green-700 bg-green-50 px-2 py-0.5 rounded">
+                          <Check className="h-3 w-3 mr-1" />
+                          Save ${tier.savings}/year
+                        </div>
+                      )}
                     </div>
                     
-                    {/* Show savings more prominently */}
-                    {isYearly && tier.savings && (
-                      <div className="mb-4 flex items-center px-3 py-2 bg-green-50 border border-green-100 rounded-lg">
-                        <div className="mr-2 p-1 bg-green-100 rounded-full">
-                          <Check className="h-4 w-4 text-green-600" />
-                        </div>
-                        <span className="text-sm font-medium text-green-700">
-                          Save ${tier.savings}/year with annual billing
-                        </span>
-                      </div>
-                    )}
-                    
-                    {/* Simpler description with no expandable behavior */}
-                    <p className="text-sm text-gray-600 mb-5 leading-relaxed">
-                      {/* Shortened version - no need for expandable behavior */}
-                      {tier.valueProposition.length > 120 
-                        ? tier.valueProposition.substring(0, 120) + "..."
-                        : tier.valueProposition
-                      }
-                    </p>
-                  </div>
-                  
-                  <div className="px-5 pb-4 pt-2">
-                    <Button 
-                      className={cn(
-                        "w-full py-4 rounded-xl font-medium text-base transition-all",
-                        "px-4",
-                        // Larger touch target height
-                        "h-[56px] min-h-[56px]",
-                        colorScheme.button,
-                        tier.popularPlan && "ring-2 ring-blue-400/30",
-                        (isProcessingPayment && processingPlan === tier.title) && "opacity-80 cursor-not-allowed"
-                      )}
-                      disabled={isProcessingPayment}
-                      onClick={() => handlePlanSelect(tier.title)}
-                      style={{ touchAction: 'manipulation' }}
-                    >
-                      {(isProcessingPayment && processingPlan === tier.title) ? (
-                        <div className="flex items-center justify-center gap-2">
-                          <Loader2 className="h-5 w-5 animate-spin" />
-                          <span>Processing...</span>
-                        </div>
-                      ) : (
-                        <>
-                          {tier.title === "Professional" ? (
-                            <div className="flex items-center justify-center">
-                              <Sparkles className="h-4 w-4 mr-1.5 text-white/80" />
-                              <span>{tier.cta}</span>
-                            </div>
-                          ) : (
-                            tier.cta
-                          )}
-                        </>
-                      )}
-                    </Button>
-                    
-                    {/* Add guarantee note under the button */}
-                    {tier.title !== "Basic (Free)" && (
-                      <p className="text-xs text-center text-gray-500 mt-2">
-                        {tier.title === "Premium" ? "30-day money-back guarantee" : "7-day free trial"}
-                      </p>
-                    )}
-                  </div>
-                  
-                  <div className="px-5 pb-5">
-                    {/* Key features section - always visible */}
-                    <div className="mt-3 pt-3 border-t border-slate-100">
-                      <h4 className="text-xs font-semibold text-gray-700 mb-3">Key Features:</h4>
-                      <div className="space-y-2.5">
-                        {/* Show only 3-4 key features */}
-                        {(() => {
-                          // Extract top features across categories
-                          const allFeatures = Object.values(tier.features).flat();
-                          const topFeatures = allFeatures.slice(0, 4);
-                          
-                          return topFeatures.map((feature, featIndex) => (
+                    {/* Key features - just 3 most important ones */}
+                    <div className="px-4 pb-3">
+                      <div className="border-t border-gray-100 pt-3 pb-1">
+                        <div className="space-y-2">
+                          {topFeatures.map((feature, featIndex) => (
                             <div 
-                              key={`${tier.title}-key-${featIndex}`}
-                              className="flex items-start gap-2.5"
+                              key={`${tier.title}-feat-${featIndex}`}
+                              className="flex items-start gap-2"
                             >
-                              <div className={cn(
-                                "flex-shrink-0 rounded-full p-0.5 mt-0.5",
-                                colorScheme.bg
-                              )}>
-                                <Check className={cn(
-                                  "h-4 w-4 flex-shrink-0", 
-                                  colorScheme.text
-                                )} />
+                              <div className="mt-0.5 rounded-full bg-blue-50 p-0.5">
+                                <Check className="h-3 w-3 text-blue-600" />
                               </div>
-                              <span className="text-sm leading-tight text-gray-700 font-inter">{feature.text}</span>
+                              <span className="text-sm text-gray-600">{feature.text}</span>
                             </div>
-                          ));
-                        })()}
+                          ))}
+                        </div>
                       </div>
                     </div>
                     
-                    {/* See all features expander - better touch target */}
-                    <button
-                      onClick={() => toggleFeatures(index)}
-                      className={cn(
-                        "mt-4 flex items-center justify-center w-full mx-auto px-4 py-2.5",
-                        "text-sm font-medium text-blue-600 rounded-lg",
-                        "border border-blue-100 bg-blue-50 hover:bg-blue-100",
-                        "transition-colors duration-200",
-                        "min-h-[44px]"
-                      )}
-                      style={{ touchAction: 'manipulation' }}
-                    >
-                      <span className="font-inter whitespace-nowrap">
-                        {isExpanded ? "Hide all features" : "See all features"}
-                      </span>
-                      <ChevronDown className={cn(
-                        "h-4 w-4 ml-1.5 text-blue-500 transition-transform",
-                        isExpanded && "rotate-180"
-                      )} />
-                    </button>
+                    {/* CTA button */}
+                    <div className="px-4 pb-4">
+                      <Button 
+                        className={cn(
+                          "w-full py-2 rounded-lg font-medium text-sm text-white",
+                          "min-h-[44px]",
+                          colorScheme.button,
+                          (isProcessingPayment && processingPlan === tier.title) && "opacity-70 cursor-not-allowed"
+                        )}
+                        disabled={isProcessingPayment}
+                        onClick={() => handlePlanSelect(tier.title)}
+                      >
+                        {(isProcessingPayment && processingPlan === tier.title) ? (
+                          <div className="flex items-center justify-center gap-2">
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                            <span>Processing...</span>
+                          </div>
+                        ) : tier.cta}
+                      </Button>
+                      
+                      {/* See all features link */}
+                      <button
+                        onClick={() => toggleFeatures(index)}
+                        className="w-full mt-2 text-xs text-blue-600 font-medium flex items-center justify-center"
+                      >
+                        <span>{isExpanded ? "Hide features" : "See all features"}</span>
+                        <ChevronDown className={cn(
+                          "h-3 w-3 ml-1",
+                          isExpanded && "rotate-180"
+                        )} />
+                      </button>
+                    </div>
                     
+                    {/* Expandable features section */}
                     <AnimatePresence>
                       {isExpanded && (
                         <motion.div
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: "auto", opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.3 }}
-                          className="overflow-hidden touch-action-pan-y mt-4 pt-4 border-t border-slate-100"
-                          style={{ touchAction: 'pan-y' }}
+                          transition={{ duration: 0.2 }}
+                          className="px-4 pb-4 bg-gray-50 border-t border-gray-100"
                         >
-                          <div className="space-y-6">
+                          <div className="pt-3 space-y-4">
                             {Object.entries(tier.features).map(([category, features], catIndex) => (
-                              <div key={`${tier.title}-${category}`} className="space-y-3">
+                              <div key={`${tier.title}-${category}`}>
                                 {category !== "Core Features" && (
-                                  <h4 className={cn(
-                                    "text-sm font-semibold font-jakarta px-3 py-1 rounded-md inline-block",
-                                    colorScheme.bg
-                                  )}>
+                                  <h4 className="text-xs font-semibold text-gray-700 mb-2">
                                     {category}
                                   </h4>
                                 )}
                                 
-                                <div className="space-y-3 ml-1">
+                                <div className="space-y-2">
                                   {features.map((feature, featIndex) => (
                                     <div 
                                       key={`${tier.title}-${category}-${featIndex}`}
-                                      className="flex items-start gap-2.5"
+                                      className="flex items-start gap-2"
                                     >
-                                      <div className={cn(
-                                        "flex-shrink-0 rounded-full p-0.5 mt-0.5",
-                                        colorScheme.bg
-                                      )}>
-                                        <Check className={cn(
-                                          "h-4 w-4 flex-shrink-0", 
-                                          colorScheme.text
-                                        )} />
+                                      <div className="mt-0.5 rounded-full bg-blue-50 p-0.5">
+                                        <Check className="h-3 w-3 text-blue-600" />
                                       </div>
-                                      <span className="text-sm leading-tight text-gray-700 font-inter">{feature.text}</span>
+                                      <span className="text-sm text-gray-600">{feature.text}</span>
                                     </div>
                                   ))}
                                 </div>
@@ -724,48 +599,54 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
                       )}
                     </AnimatePresence>
                   </div>
-                </motion.div>
-              </div>
+                </div>
               );
             })}
-            </div>
-            
-            {/* Interactive carousel indicators */}
-            <div className="flex justify-center mt-4 space-x-3">
-              {pricingTiers.map((tier, i) => (
-                <button
-                  key={tier.title}
-                  onClick={() => jumpToCard(i)}
-                  className={`w-3 h-3 rounded-full transition-all ${
-                    i === activeCardIndex ? 'bg-blue-600 scale-110' : 'bg-gray-300 hover:bg-gray-400'
-                  }`}
-                  aria-label={`View ${tier.title} plan`}
-                  aria-pressed={i === activeCardIndex}
-                  tabIndex={0}
-                />
-              ))}
-            </div>
-            
-            {/* Navigation assistance text */}
-            <div className="text-center mt-2 mb-4">
-              <p className="text-xs text-gray-500">
-                <span className="inline-flex items-center">
-                  <ChevronDown className="h-3 w-3 rotate-90 mr-1" />
-                  <ChevronDown className="h-3 w-3 -rotate-90 mr-1" />
-                  Swipe or use arrows to navigate
-                </span>
-              </p>
-            </div>
-            
-            {/* Add comparison info for mobile */}
-            <div className="mt-4 mb-4 mx-auto text-center">
-              <button
-                className="inline-flex items-center justify-center gap-1.5 px-5 py-2.5 text-sm font-medium text-blue-600 bg-blue-50 border border-blue-100 rounded-lg shadow-sm"
-              >
-                <span>Compare all features</span>
-                <ChevronRight className="h-4 w-4" />
-              </button>
-            </div>
+          </div>
+          
+          {/* Compare features button */}
+          <div className="mt-6 mb-8 text-center">
+            <Dialog>
+              <DialogTrigger asChild>
+                <button className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg border border-blue-100">
+                  Compare all features
+                  <ChevronRight className="ml-1 h-4 w-4" />
+                </button>
+              </DialogTrigger>
+              
+              <DialogContent className="p-0 w-[calc(100vw-32px)] max-w-md rounded-lg">
+                <div className="flex items-center justify-between p-4 border-b">
+                  <h3 className="text-base font-bold">Compare Plans</h3>
+                  <DialogClose asChild>
+                    <button className="p-1 rounded-full hover:bg-gray-100">
+                      <X className="h-4 w-4 text-gray-500" />
+                    </button>
+                  </DialogClose>
+                </div>
+                
+                <ScrollArea className="max-h-[70vh] p-4">
+                  <div className="space-y-6">
+                    <div>
+                      <h4 className="text-xs font-bold mb-3 bg-blue-50 px-2 py-1 rounded inline-block">Core Features</h4>
+                      <div className="space-y-3">
+                        <div className="grid grid-cols-4 text-xs">
+                          <div className="col-span-1 font-medium">Feature</div>
+                          <div className="col-span-1 text-center">Basic</div>
+                          <div className="col-span-1 text-center">Pro</div>
+                          <div className="col-span-1 text-center">Premium</div>
+                        </div>
+                        <div className="grid grid-cols-4 items-center border-b pb-2">
+                          <div className="col-span-1 text-xs">Request Proposals</div>
+                          <div className="col-span-1 text-center"><X className="h-3 w-3 mx-auto text-gray-400" /></div>
+                          <div className="col-span-1 text-center"><Check className="h-3 w-3 mx-auto text-blue-600" /></div>
+                          <div className="col-span-1 text-center"><Check className="h-3 w-3 mx-auto text-blue-600" /></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </ScrollArea>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
       ) : (

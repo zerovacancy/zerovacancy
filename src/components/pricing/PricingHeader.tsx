@@ -34,17 +34,17 @@ const PricingHeader = ({
       isSticky ? 
         "max-w-full py-3 bg-white/95 backdrop-blur-sm shadow-sm z-20 border-b border-gray-100" : 
         "max-w-3xl py-0",
-      isMobile ? "px-4" : ""
+      isMobile ? "px-3" : ""
     )}
     style={{ touchAction: 'auto' }}>
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 10 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.4 }}
         className={cn(
           "flex flex-col items-center w-full",
-          isSticky ? "gap-2" : isMobile ? "gap-4" : "gap-4" // Reduced gap for mobile
+          isSticky ? "gap-2" : isMobile ? "gap-2" : "gap-4" // Reduced gap for mobile
         )}
       >
         {!isSticky && (
@@ -54,12 +54,12 @@ const PricingHeader = ({
               "font-bold font-jakarta w-full text-center",
               moc.headingLarge, 
               isMobile ? 
-                "text-3xl mt-6 text-blue-600 relative" : 
+                "text-2xl mt-4 text-blue-600 relative" : 
                 "text-3xl sm:text-4xl mt-4 text-brand-purple-dark"
             )}>
               {title}
               {isMobile && (
-                <span className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs font-medium text-blue-500 uppercase tracking-wider bg-blue-50 px-3 py-1 rounded-full shadow-sm">
+                <span className="absolute -top-5 left-1/2 transform -translate-x-1/2 text-xs font-medium text-blue-500 uppercase tracking-wider bg-blue-50 px-2 py-0.5 rounded-full shadow-sm">
                   Plans & Options
                 </span>
               )}
@@ -70,8 +70,8 @@ const PricingHeader = ({
               isMobile ? 
                 "bg-gradient-to-r from-blue-300 via-blue-500 to-blue-300 rounded-full mx-auto" : 
                 "bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1] rounded-full mx-auto",
-              isMobile ? "w-24 h-1.5" : "w-20 h-1.5",
-              isMobile ? "-mt-4 mb-3" : "mb-4"
+              isMobile ? "w-16 h-1" : "w-20 h-1.5",
+              isMobile ? "-mt-2 mb-2" : "mb-4"
             )} />
             
             {/* Subtitle - improved for readability */}
@@ -81,7 +81,7 @@ const PricingHeader = ({
                 moc.bodyText,
                 moc.textContainer,
                 isMobile ? 
-                  "text-base leading-relaxed max-w-[90%] mb-2" : 
+                  "text-sm leading-relaxed max-w-[85%] mb-1" : 
                   "text-base max-w-xl mb-4"
               )}>
                 {subtitle}
