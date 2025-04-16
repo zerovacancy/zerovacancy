@@ -12,7 +12,10 @@ import { initMobileSafety } from '@/utils/mobile-safety';
 import { SharedIntersectionObserver, initJavaScriptOptimizations } from '@/utils/js-optimization';
 import { initMobileImageOptimization } from '@/utils/mobile-image-optimizer';
 import { BottomNav } from '@/components/navigation/BottomNav';
-import { Analytics } from '@vercel/analytics/react';
+// Lazy-load Analytics to reduce initial bundle size
+const LazyAnalytics = React.lazy(() =>
+  import('@vercel/analytics/react').then(mod => ({ default: mod.Analytics }))
+);
 import { SEOProvider } from '@/components/SEO';
 import { ScrollToTop } from '@/components/ui/scroll-to-top';
 import { ScrollProgress } from '@/components/ui/scroll-progress';
@@ -317,7 +320,9 @@ function App() {
               }} 
             />
             <AuthForms />
-            <Analytics />
+            <Suspense fallback={null}>
+              <LazyAnalytics />
+            </Suspense>
           </AuthProvider>
         </Router>
       </SEOProvider>
