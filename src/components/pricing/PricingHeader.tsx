@@ -1,4 +1,5 @@
 
+import * as React from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -42,8 +43,8 @@ const PricingHeader = ({
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
         className={cn(
-          "flex flex-col items-center",
-          isSticky ? "gap-2" : isMobile ? "gap-6" : "gap-4"
+          "flex flex-col items-center w-full",
+          isSticky ? "gap-2" : isMobile ? "gap-4" : "gap-4" // Reduced gap for mobile
         )}
       >
         {!isSticky && (

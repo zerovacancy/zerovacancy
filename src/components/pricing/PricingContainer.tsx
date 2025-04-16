@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from "react";
+import * as React from "react";
+const { useState, useEffect, useRef, useCallback } = React;
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { motion, AnimatePresence } from "framer-motion";
@@ -6,6 +7,7 @@ import { usePricing } from "./PricingContext";
 import PricingHeader from "./PricingHeader";
 import { PLAN_DESCRIPTIONS, VALUE_PROPOSITIONS, PLAN_CTAS, FEATURES } from "./pricingData";
 import { ChevronDown, Check, X, ChevronRight, Sparkles, Loader2 } from "lucide-react";
+import { PricingPopularTag } from "./PricingPopularTag";
 import { PricingFeature } from "./types";
 import { Button } from "../ui/button";
 import { mobileOptimizationClasses } from "@/utils/mobile-optimization";
@@ -28,6 +30,7 @@ interface PricingContainerProps {
 }
 
 export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: PricingContainerProps = {}) => {
+  // Component state and hooks
   const isMobile = useIsMobile();
   const { isYearly, currentPrices, getSavings, setIsYearly, animateChange } = usePricing();
   const [expandedFeatures, setExpandedFeatures] = useState<{[key: number]: boolean}>({});
@@ -42,6 +45,9 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
   // Use external sticky header state if provided, otherwise use local state
   const showStickyHeader = externalStickyHeader !== undefined ? externalStickyHeader : localStickyHeader;
   
+  const { isAuthenticated, user, openAuthDialog } = useAuth();
+  
+  // Scroll detection for sticky header
   useEffect(() => {
     if (!isMobile || externalStickyHeader !== undefined) return;
     
@@ -58,6 +64,68 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
     return () => window.removeEventListener('scroll', handleScroll);
   }, [isMobile, externalStickyHeader]);
   
+  // Group features by category helper function
+  function groupFeaturesByCategory(features: PricingFeature[]) {
+    const result: {[key: string]: PricingFeature[]} = {};
+    let currentCategory = "Core Features";
+    
+    features.forEach(feature => {
+      if (typeof feature.text === 'string' && feature.text.startsWith("**") && feature.text.endsWith("**")) {
+        currentCategory = feature.text.slice(2, -2);
+        if (!result[currentCategory]) {
+          result[currentCategory] = [];
+        }
+      } else {
+        if (!result[currentCategory]) {
+          result[currentCategory] = [];
+        }
+        result[currentCategory].push(feature);
+      }
+    });
+    
+    return result;
+  }
+  
+  // Pricing tiers data
+  const pricingTiers = [
+    {
+      title: "Basic (Free)",
+      price: 0,
+      description: PLAN_DESCRIPTIONS.starter,
+      valueProposition: VALUE_PROPOSITIONS.starter,
+      features: groupFeaturesByCategory(FEATURES.free),
+      cta: "Start for Free",
+      color: "blue",
+      popularPlan: false,
+      footerText: "🚀 Upgrade to unlock project requests and premium content!"
+    },
+    {
+      title: "Professional",
+      price: currentPrices.pro,
+      description: PLAN_DESCRIPTIONS.pro,
+      valueProposition: VALUE_PROPOSITIONS.pro,
+      features: groupFeaturesByCategory(FEATURES.pro),
+      cta: "Choose Professional",
+      color: "purple",
+      popularPlan: true,
+      savings: getSavings('pro'),
+      footerText: "🚀 Upgrade to Premium for more revisions, deeper insights, and content that works across all marketing channels."
+    },
+    {
+      title: "Premium",
+      price: currentPrices.premium,
+      description: PLAN_DESCRIPTIONS.premium,
+      valueProposition: VALUE_PROPOSITIONS.premium,
+      features: groupFeaturesByCategory(FEATURES.premium),
+      cta: "Upgrade to Premium",
+      color: "emerald",
+      popularPlan: false,
+      savings: getSavings('premium'),
+      footerText: PLAN_CTAS.premium
+    }
+  ];
+
+  // Toggle features expansion
   const toggleFeatures = (index: number) => {
     setExpandedFeatures(prev => ({
       ...prev,
@@ -65,14 +133,13 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
     }));
   };
   
+  // Toggle description expansion
   const toggleDescription = (index: number) => {
     setExpandedDescriptions(prev => ({
       ...prev,
       [index]: !prev[index]
     }));
   };
-  
-  const { isAuthenticated, user, openAuthDialog } = useAuth();
 
   // Handle plan selection
   const handlePlanSelect = async (planName: string) => {
@@ -137,65 +204,7 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
     }
   };
   
-  const groupFeaturesByCategory = (features: PricingFeature[]) => {
-    const result: {[key: string]: PricingFeature[]} = {};
-    let currentCategory = "Core Features";
-    
-    features.forEach(feature => {
-      if (typeof feature.text === 'string' && feature.text.startsWith("**") && feature.text.endsWith("**")) {
-        currentCategory = feature.text.slice(2, -2);
-        if (!result[currentCategory]) {
-          result[currentCategory] = [];
-        }
-      } else {
-        if (!result[currentCategory]) {
-          result[currentCategory] = [];
-        }
-        result[currentCategory].push(feature);
-      }
-    });
-    
-    return result;
-  };
-
-  const pricingTiers = [
-    {
-      title: "Basic (Free)",
-      price: 0,
-      description: PLAN_DESCRIPTIONS.starter,
-      valueProposition: VALUE_PROPOSITIONS.starter,
-      features: groupFeaturesByCategory(FEATURES.free),
-      cta: "Start for Free",
-      color: "blue",
-      popularPlan: false,
-      footerText: "🚀 Upgrade to unlock project requests and premium content!"
-    },
-    {
-      title: "Professional",
-      price: currentPrices.pro,
-      description: PLAN_DESCRIPTIONS.pro,
-      valueProposition: VALUE_PROPOSITIONS.pro,
-      features: groupFeaturesByCategory(FEATURES.pro),
-      cta: "Choose Professional",
-      color: "purple",
-      popularPlan: true,
-      savings: getSavings('pro'),
-      footerText: "🚀 Upgrade to Premium for more revisions, deeper insights, and content that works across all marketing channels."
-    },
-    {
-      title: "Premium",
-      price: currentPrices.premium,
-      description: PLAN_DESCRIPTIONS.premium,
-      valueProposition: VALUE_PROPOSITIONS.premium,
-      features: groupFeaturesByCategory(FEATURES.premium),
-      cta: "Upgrade to Premium",
-      color: "emerald",
-      popularPlan: false,
-      savings: getSavings('premium'),
-      footerText: PLAN_CTAS.premium
-    }
-  ];
-  
+  // Get color scheme based on tier color and mobile state
   const getColorScheme = (color: string) => {
     // For mobile, we'll use a more differentiated color scheme focused on blues/indigos 
     // to clearly separate pricing from features
@@ -308,12 +317,17 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
     setActiveCardIndex(newIndex);
     
     // Get all cards and scroll to the active one
-    const cards = carouselRef.current.querySelectorAll('.pricing-card');
+    const cards = carouselRef.current.querySelectorAll('.pricing-card-wrapper');
     if (cards[newIndex]) {
-      cards[newIndex].scrollIntoView({
-        behavior: 'smooth',
-        block: 'nearest',
-        inline: 'center'
+      // Calculate the exact scroll position needed
+      const containerWidth = carouselRef.current.clientWidth;
+      const cardWidth = containerWidth * 0.85; // Card takes 85% of container width
+      const scrollPosition = newIndex * (cardWidth + 16); // Add margin (16px) between cards
+      
+      // Programmatically scroll to exact position instead of using scrollIntoView
+      carouselRef.current.scrollTo({
+        left: scrollPosition,
+        behavior: 'smooth'
       });
     }
   }, [activeCardIndex, pricingTiers.length]);
@@ -323,12 +337,17 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
     if (!carouselRef.current) return;
     setActiveCardIndex(index);
     
-    const cards = carouselRef.current.querySelectorAll('.pricing-card');
+    const cards = carouselRef.current.querySelectorAll('.pricing-card-wrapper');
     if (cards[index]) {
-      cards[index].scrollIntoView({
-        behavior: 'smooth',
-        block: 'nearest',
-        inline: 'center'
+      // Calculate the exact scroll position needed
+      const containerWidth = carouselRef.current.clientWidth;
+      const cardWidth = containerWidth * 0.85; // Card takes 85% of container width
+      const scrollPosition = index * (cardWidth + 16); // Add margin (16px) between cards
+      
+      // Programmatically scroll to exact position instead of using scrollIntoView
+      carouselRef.current.scrollTo({
+        left: scrollPosition,
+        behavior: 'smooth'
       });
     }
   };
@@ -344,7 +363,7 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
       const scrollPosition = carouselRef.current.scrollLeft;
       
       // Calculate which card is most visible based on scroll position
-      const cardIndex = Math.round(scrollPosition / (containerWidth * 0.85 + 16)); // Account for card width and margin
+      const cardIndex = Math.round(scrollPosition / (containerWidth * 0.85 + 16)); // Account for card wrapper width and margin
       if (cardIndex !== activeCardIndex && cardIndex >= 0 && cardIndex < pricingTiers.length) {
         setActiveCardIndex(cardIndex);
       }
@@ -477,34 +496,32 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
                 const isDescriptionExpanded = !!expandedDescriptions[index];
                 
                 return (
-                  <motion.div
-                    key={tier.title}
-                    className={cn(
-                      "rounded-xl overflow-visible transition-all relative group flex-shrink-0 w-[85%] snap-center mx-2 pricing-card",
-                      "border border-gray-200",
-                      tier.popularPlan && "relative shadow-md",
-                      colorScheme.cardBg,
-                      // Use simpler shadow for better performance
-                      "shadow-sm",
-                      // Add stronger visual highlighting for the Professional plan
-                      tier.title === "Professional" && "ring-2 ring-blue-400/30 shadow-[0_2px_10px_rgba(139,92,246,0.15)]",
-                      // Highlight active card
-                      activeCardIndex === index && "ring-2 ring-blue-500/30"
+                  <div key={tier.title} className="relative flex-shrink-0 w-[85%] snap-center mx-2 pricing-card-wrapper isolate">
+                    {/* The card itself without the popular tag inside */}
+                    {/* Popular tag as a standalone component - positioned above card */}
+                    {tier.popularPlan && (
+                      <PricingPopularTag isMobile={true} text="POPULAR" />
                     )}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    id={`pricing-card-${index}`}
-                    tabIndex={0}
-                  >
-                  {tier.popularPlan && (
-                    <div className="absolute -top-4 inset-x-0 flex justify-center z-20">
-                      <div className="py-1 px-3 flex items-center gap-1 rounded-full bg-gradient-to-r from-brand-purple-medium to-brand-purple text-white text-xs font-semibold shadow-sm">
-                        <Sparkles className="h-3 w-3" />
-                        <span>POPULAR</span>
-                      </div>
-                    </div>
-                  )}
+                    
+                    <motion.div
+                      className={cn(
+                        "rounded-xl overflow-visible transition-all relative group w-full pricing-card",
+                        "border border-gray-200",
+                        tier.popularPlan && "shadow-md",
+                        colorScheme.cardBg,
+                        // Use simpler shadow for better performance
+                        "shadow-sm",
+                        // Add stronger visual highlighting for the Professional plan
+                        tier.title === "Professional" && "ring-2 ring-blue-400/30 shadow-[0_2px_10px_rgba(139,92,246,0.15)]",
+                        // Highlight active card
+                        activeCardIndex === index && "ring-2 ring-blue-500/30"
+                      )}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      id={`pricing-card-${index}`}
+                      tabIndex={0}
+                    >
                   <div className="p-5 flex flex-col">
                     {/* Plan title with better hierarchy */}
                     <div className="mb-4 flex items-start justify-between">
@@ -708,6 +725,7 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
                     </AnimatePresence>
                   </div>
                 </motion.div>
+              </div>
               );
             })}
             </div>
@@ -757,34 +775,31 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
               const colorScheme = getColorScheme(tier.color);
               
               return (
-                <motion.div
-                  key={tier.title}
-                  className={cn(
-                    "rounded-xl border overflow-visible transition-all mt-12 relative group",
-                    tier.popularPlan 
-                      ? `border-brand-purple shadow-xl ${colorScheme.border} scale-105 z-10` 
-                      : "border-slate-200",
-                    tier.popularPlan && "relative",
-                    colorScheme.cardBg,
-                    "shadow-sm hover:shadow-md",
-                    isMobile && "mobile-optimize",
-                    "before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:rounded-l-xl",
-                    `before:bg-gradient-to-b ${colorScheme.gradient.split(' ')[0]} ${colorScheme.gradient.split(' ')[1]} before:opacity-0 group-hover:before:opacity-100 before:transition-opacity`,
-                    // Add glowing border for Professional plan
-                    tier.title === "Professional" && "ring-4 ring-purple-400/20 ring-offset-0 shadow-[0_0_15px_rgba(139,92,246,0.3)]"
-                  )}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                >
+                <div key={tier.title} className="relative mt-12 isolate">
+                  {/* The card itself without the popular tag inside */}
+                  {/* Popular tag as a standalone component - positioned above card */}
                   {tier.popularPlan && (
-                    <div className="absolute -top-6 inset-x-0 flex justify-center z-20">
-                      <div className="py-1.5 px-4 flex items-center gap-1 rounded-full bg-gradient-to-r from-brand-purple-medium to-brand-purple text-white text-sm font-semibold shadow-md">
-                        <Sparkles className="h-3.5 w-3.5" />
-                        <span>MOST POPULAR</span>
-                      </div>
-                    </div>
+                    <PricingPopularTag isMobile={false} text="MOST POPULAR" />
                   )}
+                  
+                  <motion.div
+                    className={cn(
+                      "rounded-xl border overflow-visible transition-all relative group",
+                      tier.popularPlan 
+                        ? `border-brand-purple shadow-xl ${colorScheme.border} scale-105 z-10` 
+                        : "border-slate-200",
+                      colorScheme.cardBg,
+                      "shadow-sm hover:shadow-md",
+                      isMobile && "mobile-optimize",
+                      "before:content-[''] before:absolute before:left-0 before:top-0 before:bottom-0 before:w-1 before:rounded-l-xl",
+                      `before:bg-gradient-to-b ${colorScheme.gradient.split(' ')[0]} ${colorScheme.gradient.split(' ')[1]} before:opacity-0 group-hover:before:opacity-100 before:transition-opacity`,
+                      // Add glowing border for Professional plan
+                      tier.title === "Professional" && "ring-4 ring-purple-400/20 ring-offset-0 shadow-[0_0_15px_rgba(139,92,246,0.3)]"
+                    )}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                  >
                   <div className="p-4 sm:p-6">
                     <div className="mb-4">
                       <h3 className={cn(
@@ -875,6 +890,7 @@ export const PricingContainer = ({ showStickyHeader: externalStickyHeader }: Pri
                     )}
                   </div>
                 </motion.div>
+              </div>
               );
             })}
           </div>

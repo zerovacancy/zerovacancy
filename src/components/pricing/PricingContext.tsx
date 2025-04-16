@@ -1,5 +1,7 @@
 
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import * as React from "react";
+const { createContext, useContext, useState } = React;
+type ReactNode = React.ReactNode;
 import { PRICING, SAVINGS } from "./pricingData";
 
 interface PricingContextType {
