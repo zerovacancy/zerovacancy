@@ -5,6 +5,22 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     
+    <!-- Fix to remove carousel indicators -->
+    <style>
+      /* Hide carousel indicators at bottom of creator cards */
+      section#find-creators .flex.justify-center.mt-space-md.space-x-space-xs,
+      .mt-space-md.space-x-space-xs,
+      div[class*="mt-space-md"][class*="space-x-space-xs"] {
+        display: none !important;
+        height: 0 !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+      }
+    </style>
+    
     <!-- Inline critical CSS to prevent FOUC / Visual Jump -->
     <style>
       /* Critical rendering styles */
@@ -290,17 +306,8 @@
     <!-- Ultra-fast mobile optimization script - runs immediately -->
     <script src="/quick-perf.js"></script>
     
-    <!-- Development-only image path checker -->
-    <script>
-      // Only load image checker in development
-      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        const imageChecker = document.createElement('script');
-        imageChecker.src = '/check-images.js';
-        imageChecker.async = true;
-        document.head.appendChild(imageChecker);
-        console.info('Image path checker enabled (development only)');
-      }
-    </script>
+    <!-- Development-only image path checker removed to prevent floating UI elements -->
+    <!-- No image checker to prevent CLS and clean up UI -->
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -412,29 +419,19 @@
         isolation: isolate;
       }
       
-      /* Loading spinner */
-      .page-loader {
-        position: fixed;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: #fff;
-        z-index: 9999;
-      }
-      
-      .spinner {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        border: 4px solid #f5f5f5;
-        border-top-color: #6633ff;
-        animation: spin 1s linear infinite;
-      }
-      
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+      /* Spinner styles removed to eliminate CLS */
+      .page-loader, .spinner {
+        display: none !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        position: absolute !important;
+        height: 0 !important;
+        width: 0 !important;
+        overflow: hidden !important;
+        clip: rect(0, 0, 0, 0) !important;
+        margin: -1px !important;
+        padding: 0 !important;
+        border: 0 !important;
       }
       
       /* Mobile performance and layout fixes */
@@ -514,16 +511,8 @@
     </script>
   </head>
   <body>
-    <!-- Initial loading state - visible immediately -->
-    <div id="page-loader" class="page-loader">
-      <div class="spinner"></div>
-      <!-- Add branded elements to enhance loading experience -->
-      <div style="text-align: center; margin-top: 20px; opacity: 0.8;">
-        <div style="font-family: system-ui, -apple-system, sans-serif; font-size: 16px; color: #6741d9; margin-top: 16px;">
-          Loading ZeroVacancy...
-        </div>
-      </div>
-    </div>
+    <!-- Loading elements completely removed to eliminate CLS -->
+    <!-- No spinners or loaders to prevent layout shifts -->
     
     <div id="root"></div>
     
@@ -587,46 +576,7 @@
         }
       })();
       
-      // Simpler, more reliable loader handling that doesn't interfere with React
-      const hideLoader = () => {
-        const loader = document.getElementById('page-loader');
-        if (!loader) return;
-        
-        // Wait briefly to ensure the page starts rendering
-        setTimeout(() => {
-          if (loader) {
-            // Add transition if it doesn't exist
-            if (!loader.style.transition) {
-              loader.style.transition = 'opacity 0.5s ease';
-            }
-            
-            // Start fade out
-            loader.style.opacity = '0';
-            
-            // Remove from DOM after animation completes
-            loader.addEventListener('transitionend', () => {
-              if (loader.parentNode) {
-                loader.parentNode.removeChild(loader);
-              }
-            }, { once: true });
-          }
-        }, 500); // Short delay to allow React initialization
-      };
-      
-      // Apply loader handling after DOM is initially ready
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', hideLoader);
-      } else {
-        hideLoader();
-      }
-      
-      // Backup timeout to ensure loader disappears even if animation fails
-      setTimeout(() => {
-        const loader = document.getElementById('page-loader');
-        if (loader && loader.parentNode) {
-          loader.parentNode.removeChild(loader);
-        }
-      }, 3000);
+      // Loader code completely removed to eliminate CLS
     </script>
     
     <!-- Efficiently load the main script -->
