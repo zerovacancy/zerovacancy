@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/components/auth/AuthContext';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -16,6 +16,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import styles from '@/styles/header.module.css';
 
 // Helper function for smooth scrolling
 const handleNavClick = (sectionId: string) => {
@@ -78,11 +79,12 @@ const ResourcesDropdown = ({ className, onClick }: { className?: string, onClick
 // Navigation Links component
 const NavLinks = ({ className, onClick }: { className?: string, onClick?: () => void }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   // Don't use conditional logic based on props, create separate components
   const isInMobileView = className?.includes('flex-col') || false;
   
   return (
-    <nav className={cn("flex items-center", className)}>
+    <nav className={cn(styles.nav, className)}>
       {/* Navigation Links */}
       {[
         { to: "/#find-creators", label: "Find Creators", sectionId: "find-creators" },
@@ -97,17 +99,20 @@ const NavLinks = ({ className, onClick }: { className?: string, onClick?: () => 
               if (location.pathname === '/') {
                 handleNavClick(link.sectionId);
               } else {
-                window.location.href = `/#${link.sectionId}`;
+                navigate(`/#${link.sectionId}`);
               }
               if (onClick) onClick();
             }}
             className={cn(
               isInMobileView
-                ? "text-[16px] font-medium transition-colors w-full text-left py-3 px-1"
-                : "text-[15px] font-medium transition-colors relative py-1.5 px-3 header-nav-link flex items-center justify-center before:absolute before:inset-x-0 before:bottom-0 before:h-0.5 before:scale-x-0 before:origin-right before:transition-transform before:duration-300 hover:before:scale-x-100 hover:before:origin-left before:bg-[#9b87f5]",
+                ? styles.mobileNavItem
+                : cn(
+                    styles.navItem,
+                    styles.navItemWithIndicator
+                  ),
               location.pathname === link.to 
-                ? "text-[#9b87f5]" + (!isInMobileView ? " before:scale-x-100" : "")
-                : "text-black hover:text-[#9b87f5]"
+                ? styles.navItemActive
+                : ""
             )}
           >
             {link.label}
@@ -127,8 +132,8 @@ const NavLinks = ({ className, onClick }: { className?: string, onClick?: () => 
           <a
             href="/blog"
             className={cn(
-              "text-[16px] font-medium transition-colors w-full block text-left py-3 px-1",
-              location.pathname.startsWith('/blog') ? "text-[#9b87f5]" : "text-black hover:text-[#9b87f5]"
+              styles.mobileNavItem,
+              location.pathname.startsWith('/blog') ? styles.navItemActive : ""
             )}
             onClick={onClick}
           >
@@ -153,6 +158,7 @@ const MobileHeaderComponent = ({
   openAuthDialog: (type: 'login' | 'register') => void;
 }) => {
   const { isAuthenticated, signOut } = useAuth();
+  const navigate = useNavigate();
   const location = useLocation();
   
   return (
@@ -160,7 +166,7 @@ const MobileHeaderComponent = ({
       {/* Logo */}
       <Link 
         to="/" 
-        className="flex items-center transition-opacity active:opacity-80 logo-container"
+        className={cn("flex items-center transition-opacity active:opacity-80", styles.logoContainer)}
         onClick={handleLogoInteraction}
         onTouchStart={handleLogoInteraction}
       >
@@ -177,7 +183,7 @@ const MobileHeaderComponent = ({
           <button 
             type="button"
             onClick={() => setIsOpen(true)}
-            className="mobile-menu-btn bg-white"
+            className={cn("bg-white", styles.mobileMenuButton)}
             aria-label="Open menu"
           >
             <div className="hamburger-icon">
@@ -188,7 +194,7 @@ const MobileHeaderComponent = ({
             <span className="menu-button-text">Menu</span>
           </button>
         </SheetTrigger>
-        <SheetContent side="right" className="flex flex-col pt-16 px-0 w-full max-w-[320px] bg-white">
+        <SheetContent side="right" className={cn("flex flex-col pt-16 px-0 w-full max-w-[320px] bg-white", styles.mobileMenu)}>
           {/* Close button positioned in the top-right corner */}
           <div className="absolute top-4 right-4">
             <Button 
@@ -217,7 +223,7 @@ const MobileHeaderComponent = ({
                     if (location.pathname === '/') {
                       handleNavClick(link.sectionId);
                     } else {
-                      window.location.href = `/#${link.sectionId}`;
+                      navigate(`/#${link.sectionId}`);
                     }
                     setIsOpen(false);
                   }}
@@ -258,7 +264,7 @@ const MobileHeaderComponent = ({
                 <>
                   <Button 
                     variant="outline" 
-                    className="w-full justify-center text-[15px] h-11 border-gray-300 text-gray-700 font-medium"
+                    className={cn("w-full justify-center text-[15px] h-11 border-gray-300 text-gray-700 font-medium", styles.mobileButton)}
                     onClick={() => {
                       openAuthDialog('login');
                       setIsOpen(false);
@@ -267,7 +273,7 @@ const MobileHeaderComponent = ({
                     Log In
                   </Button>
                   <Button 
-                    className="w-full justify-center text-[15px] h-11 bg-brand-purple hover:bg-brand-purple-dark font-medium"
+                    className={cn("w-full justify-center text-[15px] h-11 bg-brand-purple hover:bg-brand-purple-dark font-medium", styles.mobileButton)}
                     onClick={() => {
                       openAuthDialog('register');
                       setIsOpen(false);
@@ -280,9 +286,9 @@ const MobileHeaderComponent = ({
                 <>
                   <Button 
                     variant="outline"
-                    className="w-full justify-center text-[15px] h-11 bg-brand-purple text-white hover:bg-brand-purple-dark font-medium"
+                    className={cn("w-full justify-center text-[15px] h-11 bg-brand-purple text-white hover:bg-brand-purple-dark font-medium", styles.mobileButton)}
                     onClick={() => {
-                      window.location.href = '/dashboard';
+                      navigate('/dashboard');
                       setIsOpen(false);
                     }}
                   >
@@ -290,7 +296,7 @@ const MobileHeaderComponent = ({
                   </Button>
                   <Button 
                     variant="outline" 
-                    className="w-full justify-center text-[15px] h-11 border-gray-300 text-gray-700 font-medium"
+                    className={cn("w-full justify-center text-[15px] h-11 border-gray-300 text-gray-700 font-medium", styles.mobileButton)}
                     onClick={() => {
                       signOut();
                       setIsOpen(false);
@@ -317,6 +323,7 @@ const DesktopHeaderComponent = ({
   openAuthDialog: (type: 'login' | 'register') => void;
 }) => {
   const { isAuthenticated, user, signOut } = useAuth();
+  const navigate = useNavigate();
   
   return (
     <div className="flex items-center w-full h-[4.5rem]">
@@ -324,7 +331,7 @@ const DesktopHeaderComponent = ({
       <div className="flex-shrink-0">
         <Link 
           to="/" 
-          className="flex items-center transition-opacity active:opacity-80 logo-container"
+          className={cn("flex items-center transition-opacity active:opacity-80", styles.logoContainer)}
           onClick={handleLogoInteraction}
           onTouchStart={handleLogoInteraction}
         >
@@ -343,33 +350,36 @@ const DesktopHeaderComponent = ({
       
       {/* Conditional Auth buttons or User menu */}
       {!isAuthenticated ? (
-        <div className="flex items-center gap-3 buttons-container">
+        <div className={cn("flex items-center gap-3", styles.buttonsContainer)}>
           <Button
             variant="outline"
-            className="text-[15px] h-10 border-gray-300 text-gray-700 font-medium"
+            className={cn("text-[15px] border-gray-300 text-gray-700 font-medium", styles.buttonBase)}
             onClick={() => openAuthDialog('login')}
           >
             Log In
           </Button>
           <Button 
-            className="text-[15px] h-10 bg-brand-purple hover:bg-brand-purple-dark font-medium"
+            className={cn("text-[15px] bg-brand-purple hover:bg-brand-purple-dark font-medium", 
+                          styles.buttonBase, styles.buttonPrimary)}
             onClick={() => openAuthDialog('register')}
           >
             Sign Up
           </Button>
         </div>
       ) : (
-        <div className="flex items-center gap-3">
+        <div className={cn("flex items-center gap-3", styles.buttonsContainer)}>
           <Button 
             variant="outline"
-            className="text-[15px] h-10 bg-brand-purple text-white hover:bg-brand-purple-dark font-medium"
-            onClick={() => window.location.href = '/dashboard'}
+            className={cn("text-[15px] bg-brand-purple text-white hover:bg-brand-purple-dark font-medium", 
+                        styles.buttonBase)}
+            onClick={() => navigate('/dashboard')}
           >
             My Dashboard
           </Button>
           <Button 
             variant="outline" 
-            className="text-[15px] h-10 border-gray-300 text-gray-700 font-medium"
+            className={cn("text-[15px] border-gray-300 text-gray-700 font-medium", 
+                        styles.buttonBase)}
             onClick={() => signOut()}
           >
             Log Out
@@ -384,33 +394,72 @@ const DesktopHeaderComponent = ({
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
 
   // Monitor screen size changes to determine if mobile view should be shown
   useEffect(() => {
-    const checkScreenSize = () => {
-      setIsMobile(window.innerWidth < 768);
+    // Add media query based detection
+    const mediaQuery = window.matchMedia("(max-width: 767px)");
+    
+    const handleMediaChange = (e: MediaQueryListEvent | MediaQueryList) => {
+      setIsMobile(e.matches);
     };
     
-    checkScreenSize();
-    window.addEventListener('resize', checkScreenSize);
+    // Initial check
+    handleMediaChange(mediaQuery);
+    
+    // Modern browsers
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener("change", handleMediaChange);
+    } 
+    // Fallback for older browsers
+    else {
+      const checkScreenSize = () => {
+        setIsMobile(window.innerWidth < 768);
+      };
+      window.addEventListener('resize', checkScreenSize);
+    }
     
     return () => {
-      window.removeEventListener('resize', checkScreenSize);
+      if (mediaQuery.removeEventListener) {
+        mediaQuery.removeEventListener("change", handleMediaChange);
+      } else {
+        window.removeEventListener('resize', 'checkScreenSize');
+      }
+    };
+  }, []);
+
+  // Detect scroll for header styling changes
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
   // Prevent scroll on mobile when menu is open
   useEffect(() => {
     if (isOpen) {
+      // Store the current body overflow and position
+      const originalStyle = {
+        overflow: document.body.style.overflow,
+      };
+      
+      // Prevent scrolling
       document.body.style.overflow = 'hidden';
+      
+      return () => {
+        // Restore original body styles
+        document.body.style.overflow = originalStyle.overflow;
+      };
     } else {
       document.body.style.overflow = '';
     }
-    
-    return () => {
-      document.body.style.overflow = '';
-    };
   }, [isOpen]);
 
   // Handle logo interaction
@@ -428,12 +477,8 @@ export default function Header() {
   const { openAuthDialog } = useAuth();
 
   return (
-    <header className={cn(
-      "fixed top-0 left-0 right-0 z-50 bg-white", 
-      "transition-all duration-200",
-      "border-b border-[#F9F6EC]" // Add explicit border matching hero background
-    )}>
-      <div className="container mx-auto px-4 lg:px-8">
+    <header className={cn(styles.header, isScrolled && styles.headerScrolled)}>
+      <div className={styles.container}>
         {isMobile ? (
           <MobileHeaderComponent 
             isOpen={isOpen}
@@ -448,8 +493,6 @@ export default function Header() {
           />
         )}
       </div>
-      
-      {/* Auth forms are already included in the App component */}
     </header>
   );
 }

@@ -166,7 +166,8 @@ export function FOUCPrevention() {
     // 7. Add debug info for development
     if (process.env.NODE_ENV === 'development') {
       const debugInfo = document.createElement('div');
-      debugInfo.style.cssText = 'position:fixed;bottom:0;right:0;background:rgba(0,0,0,0.7);color:white;padding:10px;z-index:9999;font-size:12px;';
+      debugInfo.style.cssText = 'position:fixed;top:auto;bottom:0;right:0;background:rgba(0,0,0,0.7);color:white;padding:10px;z-index:9999;font-size:12px;transform:translateZ(0);contain:none;';
+      debugInfo.setAttribute('data-contain-force', 'false');
       debugInfo.textContent = 'FOUC Prevention Active';
       document.body.appendChild(debugInfo);
     }

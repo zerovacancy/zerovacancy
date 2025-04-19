@@ -8,9 +8,9 @@
  * Based on Material Design, Apple Human Interface, and common web practices
  */
 :root {
-  /* Base header dimensions */
-  --header-height: 3.5rem; /* 56px - standard mobile header height */
-  --header-height-sm: 4rem; /* 64px - standard desktop header height */
+  /* Base header dimensions - updated to match banner */
+  --header-height: 3.25rem; /* 52px - matches banner height on mobile */
+  --header-height-sm: 3.5rem; /* 56px - matches banner height on desktop */
   
   /* Navigation item dimensions */
   --nav-item-height: 2.5rem; /* 40px - optimal touch target height */
@@ -27,33 +27,41 @@
 }
 
 /* 1. Optimize header container for industry-standard dimensions and styling */
+header,
+header.fixed,
 header.sticky,
-header.mobile-sticky-header,
-header[class*="z-"] {
+header[class*="z-"],
+header[class*="fixed"],
+header[class*="top-0"] {
   height: var(--header-height); /* Default mobile height */
   min-height: var(--header-height);
   max-height: var(--header-height);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: sticky;
+  position: fixed; /* Fixed instead of sticky - critical difference! */
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 1000; /* High z-index to stay above content */
-  width: 100%;
+  width: calc(100% - 15px); /* Adjusted to account for scrollbar width */
   background-color: rgba(255, 255, 255, 1); /* Fully opaque to prevent theme color bleed */
   backdrop-filter: blur(8px); /* Modern glass effect */
   -webkit-backdrop-filter: blur(8px); /* For Safari */
   /* Add border-bottom matching hero background to create seamless transition */
   border-bottom: 1px solid #F9F6EC;
-  box-shadow: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   transition: height 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 /* Desktop adjustments */
 @media (min-width: 640px) {
+  header,
+  header.fixed,
   header.sticky,
-  header.mobile-sticky-header,
-  header[class*="z-"] {
+  header[class*="z-"],
+  header[class*="fixed"],
+  header[class*="top-0"] {
     height: var(--header-height-sm); /* Desktop height */
     min-height: var(--header-height-sm);
     max-height: var(--header-height-sm);
@@ -202,18 +210,18 @@ header a[role="button"],
 header [class*="h-["],
 header .h-10,
 header .h-11 {
-  height: var(--header-btn-height) !important;
-  min-height: var(--header-btn-height) !important;
-  max-height: var(--header-btn-height) !important;
-  padding-left: var(--header-btn-padding-x) !important;
-  padding-right: var(--header-btn-padding-x) !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
+  height: var(--header-btn-height);
+  min-height: var(--header-btn-height);
+  max-height: var(--header-btn-height);
+  padding-left: var(--header-btn-padding-x);
+  padding-right: var(--header-btn-padding-x);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 0.9375rem; /* 15px - optimal button text size */
   font-weight: 500; /* Medium weight for buttons */
   border-radius: 0.375rem; /* Slightly rounder than nav links */
-  transition: all 0.2s ease !important; /* Smooth transitions */
+  transition: all 0.2s ease; /* Smooth transitions */
   position: relative;
   line-height: 1;
   letter-spacing: -0.01em; /* Subtle letter spacing adjustment */
@@ -223,26 +231,26 @@ header .h-11 {
 .header-btn-secondary,
 header button[variant="ghost"],
 header button[variant="outline"] {
-  color: #333 !important;
-  background-color: transparent !important;
-  border: 1px solid transparent !important;
+  color: #333;
+  background-color: transparent;
+  border: 1px solid transparent;
 }
 
 .header-btn-secondary:hover,
 header button[variant="ghost"]:hover,
 header button[variant="outline"]:hover {
-  background-color: rgba(0, 0, 0, 0.05) !important;
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 /* Primary action button - optimized for conversions */
 .header-btn-primary,
 header button:not([variant="ghost"]):not([variant="outline"]),
 header a[role="button"].bg-primary {
-  height: calc(var(--header-btn-height) + 0.25rem) !important; /* Slightly taller for visual hierarchy */
-  min-height: calc(var(--header-btn-height) + 0.25rem) !important;
-  max-height: calc(var(--header-btn-height) + 0.25rem) !important;
-  padding-left: calc(var(--header-btn-padding-x) + 0.25rem) !important;
-  padding-right: calc(var(--header-btn-padding-x) + 0.25rem) !important;
+  height: calc(var(--header-btn-height) + 0.25rem); /* Slightly taller for visual hierarchy */
+  min-height: calc(var(--header-btn-height) + 0.25rem);
+  max-height: calc(var(--header-btn-height) + 0.25rem);
+  padding-left: calc(var(--header-btn-padding-x) + 0.25rem);
+  padding-right: calc(var(--header-btn-padding-x) + 0.25rem);
   font-weight: 600; /* Slightly bolder for emphasis */
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* Subtle shadow for depth */
   letter-spacing: 0; /* Normal letter spacing for primary CTA */
@@ -261,11 +269,25 @@ nav button span.absolute {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
+/* Add body padding to account for fixed header - exact match for header height */
+body {
+  padding-top: var(--header-height-sm); /* Add padding equal to header height */
+  margin-top: 0; /* Reset any margin */
+  padding-bottom: 0; /* Reset any bottom padding */
+}
+
+/* Mobile body padding */
+@media (max-width: 767px) {
+  body {
+    padding-top: var(--header-height); /* Mobile header height */
+  }
+}
+
 /* 12. Comprehensive mobile menu optimization */
 @media (max-width: 767px) {
   /* Mobile sheet container */
   header .sheet-content {
-    padding: 1.5rem !important;
+    padding: 1.5rem;
   }
   
   /* Mobile navigation layout */
@@ -280,7 +302,7 @@ nav button span.absolute {
   /* Mobile nav items */
   header .sheet-content nav a,
   header .sheet-content nav button {
-    height: 3rem !important; /* 48px - larger touch targets for mobile */
+    height: 3rem; /* 48px - larger touch targets for mobile */
     width: 100%;
     justify-content: flex-start;
     padding: 0 0.75rem;
@@ -303,7 +325,7 @@ nav button span.absolute {
   /* Mobile buttons */
   header .sheet-content .buttons-container button,
   header .sheet-content .buttons-container a[role="button"] {
-    height: 3rem !important; /* 48px - optimal mobile touch target */
+    height: 3rem; /* 48px - optimal mobile touch target */
     width: 100%;
     justify-content: center;
     font-weight: 600;

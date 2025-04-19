@@ -97,9 +97,11 @@ section#hero {
     /* Ensure proper box model */
     box-sizing: border-box !important;
     
-    /* Ensure proper stacking context */
+    /* Proper stacking context that won't interfere with header */
     position: relative !important;
-    z-index: 1 !important;
+    z-index: 1 !important; /* Lower than header's z-index */
+    
+    /* REMOVED: No contain properties that would create new stacking context */
     
     /* CRITICAL: Prevent any JavaScript animations from modifying layout */
     will-change: opacity !important;

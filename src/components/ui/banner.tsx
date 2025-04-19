@@ -52,8 +52,8 @@ export function Banner({
     variant,
     size,
     layout
-  }), "min-h-[2.75rem] sm:min-h-[3rem]", "shadow-[0_3px_10px_rgba(0,0,0,0.1)]", "relative z-40", "mt-0 mb-0",
-  // Add a small margin to create visual separation from header
+  }), "min-h-[2.75rem] sm:min-h-[3rem]", "shadow-[0_3px_10px_rgba(0,0,0,0.1)]", "relative z-40", "mt-0 mb-0", 
+  // Ensure banner connects with header with no gap
   className)} {...props}>
       {/* Enhanced pattern overlay for visual interest */}
       <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.15)_1px,transparent_0)] bg-[length:20px_20px] z-0"></div>

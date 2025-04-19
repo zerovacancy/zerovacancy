@@ -11,7 +11,10 @@ import { initializeViewport } from '@/utils/viewport-config';
 import { initMobileSafety } from '@/utils/mobile-safety';
 import { SharedIntersectionObserver, initJavaScriptOptimizations } from '@/utils/js-optimization';
 import { initMobileImageOptimization } from '@/utils/mobile-image-optimizer';
+import { initRenderingSystem, auditFixedElements } from '@/utils/rendering-system';
 import { BottomNav } from '@/components/navigation/BottomNav';
+// Import CSS module for header styling
+import './styles/header-navigation.css';
 // Lazy-load Analytics to reduce initial bundle size
 const LazyAnalytics = React.lazy(() =>
   import('@vercel/analytics/react').then(mod => ({ default: mod.Analytics }))
@@ -177,6 +180,14 @@ function App() {
     initMobileSafety();
     reduceAnimationComplexity();
     
+    // Initialize the rendering system to fix header positioning issues
+    initRenderingSystem();
+    
+    // Run audit for fixed elements with bottom values
+    setTimeout(() => {
+      auditFixedElements();
+    }, 2000);
+    
     // Initialize all JavaScript optimizations 
     // This includes the shared intersection observer, event handling,
     // and performance monitoring
@@ -268,7 +279,10 @@ function App() {
             <ScrollToTop />
             <ScrollProgress />
             <ScrollToTopComponent />
-            <div className="relative landscape-container">
+            
+            {/* Main content area - modified to ensure header works correctly */}
+            <div className="min-h-screen flex flex-col relative">
+              {/* Nothing in this div has overflow:hidden or contain properties */}
               <Suspense fallback={<PageLoader />}>
                 <Routes>
                   {/* Public Routes */}
@@ -308,9 +322,10 @@ function App() {
               </Suspense>
               <ConditionalBottomNav />
             </div>
+            
+            {/* UI elements that should be outside any containment */}
             <CookieConsent />
             <Toaster />
-            {/* Only use SonnerToaster for error notifications, not for success */}
             <SonnerToaster 
               position="top-right" 
               closeButton 

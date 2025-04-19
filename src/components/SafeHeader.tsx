@@ -15,7 +15,7 @@ const SafeHeader: React.FC = () => {
     console.error('AuthContext not available yet, not rendering Header:', error);
     // Return a minimal header if auth context is not ready
     return (
-      <header className="sticky top-0 z-50 w-full bg-white border-b border-gray-100 h-16">
+      <header className="fixed top-0 left-0 right-0 z-[1000] w-full bg-white border-b border-gray-100 h-16 shadow-sm">
         <div className="w-full px-4 md:container md:mx-auto md:px-6">
           <div className="flex justify-between items-center w-full h-16">
             <a href="/" className="flex items-center">
