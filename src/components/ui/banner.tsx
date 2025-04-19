@@ -4,7 +4,7 @@ import { Star, Sparkle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "./button";
 import { useIsMobile } from "@/hooks/use-mobile";
-const bannerVariants = cva("relative w-full flex items-center justify-between gap-2 overflow-hidden px-3 py-2.5 sm:px-6 sm:py-3", {
+const bannerVariants = cva("relative w-full flex items-center justify-between gap-2 overflow-hidden px-3 py-2.5 sm:px-6 sm:py-3 flex-nowrap", {
   variants: {
     variant: {
       default: "bg-primary text-primary-foreground",
@@ -52,14 +52,14 @@ export function Banner({
     variant,
     size,
     layout
-  }), "min-h-[2.75rem] sm:min-h-[3rem]", "shadow-[0_3px_10px_rgba(0,0,0,0.1)]", "relative z-40", "mt-0 mb-0", 
-  // Ensure banner connects with header with no gap
+  }), "min-h-[2.75rem] sm:min-h-[3rem] h-[2.75rem] sm:h-[3rem]", "shadow-[0_3px_10px_rgba(0,0,0,0.1)]", "relative z-40", "mt-0 mb-0", 
+  // Ensure banner connects with header with no gap and vertically centers content
   className)} {...props}>
       {/* Enhanced pattern overlay for visual interest */}
       <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.15)_1px,transparent_0)] bg-[length:20px_20px] z-0"></div>
       
-      <div className={cn("flex items-center justify-center gap-4 sm:gap-6 flex-1 flex-nowrap px-2 sm:px-4 relative z-10", isMobile && "justify-between")}>
-        <div className={cn("flex items-center gap-3 justify-center", isMobile ? "text-left justify-start" : "text-center")}>
+      <div className={cn("flex items-center justify-center gap-4 sm:gap-6 flex-1 flex-nowrap px-2 sm:px-4 relative z-10 h-full", isMobile && "justify-between")}>
+        <div className={cn("flex items-center gap-3 justify-center my-auto", isMobile ? "text-left justify-start" : "text-center")}>
           {children}
         </div>
 
@@ -67,7 +67,7 @@ export function Banner({
             {icon}
           </span>}
 
-        {action && <div className="flex-shrink-0">
+        {action && <div className="flex-shrink-0 flex items-center my-auto">
             <div className="scale-95 sm:scale-100 transform hover:scale-105 transition-all duration-300 bg-[brand-purple-dark] bg-transparent">
               {action}
             </div>
