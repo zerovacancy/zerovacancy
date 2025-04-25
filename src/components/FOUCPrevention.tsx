@@ -116,7 +116,7 @@ export function FOUCPrevention() {
     const observer = new MutationObserver((mutations) => {
       let heroImageFound = false;
       
-      for (let mutation of mutations) {
+      for (const mutation of mutations) {
         if (mutation.type === 'childList') {
           mutation.addedNodes.forEach(node => {
             // Check if it's an element and then look for heroparallax images

@@ -171,9 +171,9 @@ export function initRenderingSystem() {
     observer.disconnect();
     
     // Clean up any containment observer
-    if (window && (window as any).__containmentObserver) {
-      (window as any).__containmentObserver.disconnect();
-      delete (window as any).__containmentObserver;
+    if (window && window.__containmentObserver) {
+      window.__containmentObserver.disconnect();
+      delete window.__containmentObserver;
     }
   };
 }

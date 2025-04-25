@@ -125,7 +125,7 @@ function setupCSSContainment(): void {
     });
     
     // Store observer reference for cleanup
-    (window as any).__containmentObserver = observer;
+    window.__containmentObserver = observer;
   }
 }
 
@@ -150,7 +150,7 @@ function initContainmentWithTimeout(): void {
 
   // Use requestIdleCallback when available for better performance
   if ('requestIdleCallback' in window) {
-    (window as any).requestIdleCallback(() => {
+    window.requestIdleCallback(() => {
       initializeContainment();
     }, { timeout: 2000 });
   } else {
@@ -384,10 +384,10 @@ function applyContainmentToCommonPatterns(): void {
  * Audits the page for fixed elements with bottom positioning
  * This can help identify potential stacking context issues and z-index problems
  */
-function auditFixedElements(): Record<string, any>[] {
+function auditFixedElements(): Record<string, unknown>[] {
   if (typeof document === 'undefined') return [];
   
-  const results: Record<string, any>[] = [];
+  const results: Record<string, unknown>[] = [];
   
   // Get all elements
   const allElements = document.querySelectorAll('*');
