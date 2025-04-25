@@ -5,6 +5,14 @@ interface Window {
   // Web Vitals testing property
   __WEB_VITALS_TEST__?: boolean;
   
+  // CSS Containment
+  __containmentObserver?: MutationObserver;
+  containmentUpdateTimer?: number;
+  
+  // RequestIdleCallback API
+  requestIdleCallback(callback: () => void, options?: { timeout: number }): number;
+  cancelIdleCallback(handle: number): void;
+  
   // Google Analytics
-  gtag?: (...args: any[]) => void;
+  gtag?: (...args: unknown[]) => void;
 }
