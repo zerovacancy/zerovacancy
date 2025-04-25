@@ -1,0 +1,225 @@
+/* 
+ * Hero component CSS module
+ * Carefully organized to prevent CLS without overreliance on !important
+ */
+
+/* Component variables */
+:root {
+  --hero-content-max-width: 90%;
+  --hero-desktop-height: 650px;
+  --hero-mobile-height: 450px;
+  --hero-effective-height: min(var(--hero-mobile-height), 85vh);
+  
+  /* Spacing scale */
+  --space-unit: 8px;
+  --space-xs: calc(var(--space-unit) * 1);   /* 8px */
+  --space-sm: calc(var(--space-unit) * 2);   /* 16px */
+  --space-md: calc(var(--space-unit) * 3);   /* 24px */
+  --space-lg: calc(var(--space-unit) * 4);   /* 32px */
+  --space-xl: calc(var(--space-unit) * 6);   /* 48px */
+  
+  /* Device safety margins */
+  --safe-area-inset-top: env(safe-area-inset-top, 0px);
+  --safe-area-inset-right: env(safe-area-inset-right, 0px);
+  --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-inset-left: env(safe-area-inset-left, 0px);
+}
+
+/* Base hero container */
+.heroContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* Content wrapper */
+.wrapper {
+  width: 100%;
+  max-width: var(--hero-content-max-width);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  margin: 0 auto;
+  box-sizing: border-box;
+  gap: var(--space-md);
+}
+
+/* Desktop styles */
+@media (min-width: 769px) {
+  .heroContainer {
+    height: var(--hero-desktop-height);
+    min-height: var(--hero-desktop-height);
+  }
+  
+  .wrapper {
+    padding-top: var(--space-xl);
+    padding-bottom: var(--space-lg);
+  }
+  
+  .descriptionContainer {
+    max-width: 650px;
+  }
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  /* CRITICAL: Fixed height is essential for mobile to prevent CLS */
+  .heroContainer {
+    /* One of the few places where !important is justified for CLS prevention */
+    height: var(--hero-effective-height) !important;
+    min-height: var(--hero-effective-height) !important;
+    max-height: var(--hero-effective-height) !important;
+    overflow: visible;
+    z-index: 1;
+    will-change: opacity;
+    transform: none;
+    transition: none;
+  }
+  
+  .wrapper {
+    max-width: 90%;
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    padding-left: max(16px, var(--safe-area-inset-left));
+    padding-right: max(16px, var(--safe-area-inset-right));
+    gap: 24px;
+    position: static;
+    transform: none;
+    will-change: opacity;
+  }
+  
+  .content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    position: static;
+    transform: none;
+  }
+  
+  .titleContainer {
+    width: 100%;
+    min-height: 44px;
+    display: block;
+    height: auto;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    position: static;
+    transform: none;
+  }
+  
+  .title {
+    position: static;
+    margin: 0 0 12px 0;
+    padding: 0;
+    font-size: 1.5rem;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+    height: auto;
+    min-height: 0;
+    max-height: none;
+    transform: none;
+  }
+  
+  /* CRITICAL: Rotating text container needs fixed height to prevent CLS */
+  .rotatingTextContainer {
+    /* Only place where !important is necessary for layout stability */
+    height: 44px !important;
+    min-height: 44px !important;
+    max-height: 44px !important;
+    
+    margin-top: 4px;
+    margin-bottom: 8px;
+    font-size: 2rem;
+    font-weight: 700;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+    transform: none;
+    animation: none;
+    transition: none;
+  }
+  
+  .rotatingText {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    animation: none;
+    transition-property: opacity;
+    z-index: 5;
+  }
+  
+  .descriptionContainer {
+    width: 100%;
+    max-width: 90%;
+    height: auto;
+    min-height: auto;
+    max-height: none;
+    margin-top: 16px;
+  }
+  
+  .description {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    max-width: 310px;
+    margin: 0 auto;
+    letter-spacing: 0.01em;
+  }
+  
+  .ctaContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .ctaButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding-left: 60px;
+    padding-right: 18px;
+    min-height: 54px;
+    border-radius: 14px;
+  }
+  
+  .iconContainer {
+    position: absolute;
+    left: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-left: 0;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .ctaButtonActive {
+    transform: translateY(1px);
+    background-image: linear-gradient(to bottom, #7837DB, #6e32c8);
+    transition: transform 0.1s ease;
+  }
+}

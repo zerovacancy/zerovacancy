@@ -8,7 +8,7 @@ import App from './App.tsx';
 import './index.css';
 import ErrorFallback from './components/ErrorFallback.tsx';
 import { initializePerformanceOptimizations, mobilePerformanceEnhancements } from './utils/performance-optimizations';
-import setupCSSContainment from './utils/css-optimization/init-containment';
+import { setupCSSContainment } from './utils/css-optimization/init-containment';
 
 /**
  * Initialize performance optimizations early
