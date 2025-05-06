@@ -5,6 +5,7 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 import excludeArchivedAssets from "./vite-exclude-archived-plugin.js";
 import viteTipTapPlugin from "./vite-tiptap-plugin.js";
+import { configDefaults } from "vitest/config";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -175,5 +176,37 @@ export default defineConfig(({ mode }) => ({
     legalComments: 'none',
     target: 'es2020',
     treeShaking: true,
+  },
+  // Vitest configuration
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: ['./src/tests/setup.ts'],
+    css: true, // Handle CSS imports
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
+      exclude: [
+        ...configDefaults.coverage.exclude,
+        '**/*.d.ts',
+        '**/tests/**',
+        '**/*.test.{ts,tsx}',
+        '**/__mocks__/**',
+        '**/node_modules/**',
+      ],
+      thresholds: {
+        lines: 70,
+        functions: 70,
+        branches: 60,
+        statements: 70,
+      }
+    },
+    include: ['src/**/*.{test,spec}.{ts,tsx}'],
+    exclude: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/cypress/**',
+      '**/.{idea,git,cache,output,temp}/**'
+    ],
   },
 }));

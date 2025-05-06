@@ -26,11 +26,11 @@ This document is both a README and a live checklist for the full refactor of thi
 **Goals:** Establish a reliable CI pipeline, test coverage, and consistent environment setup.
 
 **Tasks:**  
-- [ ] Standardize on Vitest as test runner; configure in `vite.config.ts` under `test`.  
-- [ ] Add coverage thresholds (e.g., 80%+ branches) and fail CI on regressions.  
-- [ ] Integrate MSW (Mock Service Worker) to stub Supabase and other external APIs in tests.  
-- [ ] Create a `.env.example` with all required variables documented.  
-- [ ] Update CI (GitHub Actions / your CI) to run lint, tests, and coverage checks on every PR.  
+- [x] Standardize on Vitest as test runner; configure in `vite.config.ts` under `test`.  
+- [x] Add coverage thresholds (e.g., 80%+ branches) and fail CI on regressions.  
+- [x] Integrate MSW (Mock Service Worker) to stub Supabase and other external APIs in tests.  
+- [x] Create a `.env.example` with all required variables documented.  
+- [x] Update CI (GitHub Actions / your CI) to run lint, tests, and coverage checks on every PR.  
 
 ---
 
@@ -81,9 +81,17 @@ Use this file as the single source of truth. As each task completes, replace its
 ```
 
 ## Current Status
-- Phase: 1 - Secure & Stabilize ✅ COMPLETED
-- Next phase: Phase 2 - Test & Environment
+- Phase: 2 - Test & Environment ✅ COMPLETED
+- Next phase: Phase 3 - Core Refactoring
 - Last updated: 2025-05-06
+
+### Phase 2 Summary
+- Set up Vitest as test runner with JSDOM environment
+- Configured test coverage thresholds (70% lines, functions, statements, 60% branches)
+- Added MSW for API mocking, particularly for Supabase endpoints
+- Created reusable test utilities for component testing
+- Set up GitHub Actions CI workflow for linting, type checking, and testing
+- Added sample tests for Button component and AuthContext
 
 ### Phase 1 Summary
 - Moved all Supabase API keys and URLs to environment variables
