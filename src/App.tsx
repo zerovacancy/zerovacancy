@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect, useCallback, useState, useMemo } from 'react';
+import React, { lazy, Suspense, useEffect, useCallback, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, useNavigationType, Navigate } from 'react-router-dom';
 import { ErrorBoundary } from 'react-error-boundary';
 import ErrorFallback from './components/ErrorFallback';
@@ -6,19 +6,26 @@ import { Toaster } from '@/components/ui/toaster';
 import { Toaster as SonnerToaster } from 'sonner';
 // Import from mobile utils for better SSR compatibility 
 import { isMobileDevice } from '@/utils/mobile-optimization';
-import { mobileOptimizationClasses, reduceAnimationComplexity } from '@/utils/mobile-optimization';
+import { reduceAnimationComplexity } from '@/utils/mobile-optimization';
 import { initializeViewport } from '@/utils/viewport-config';
 import { initMobileSafety } from '@/utils/mobile-safety';
-import { SharedIntersectionObserver, initJavaScriptOptimizations } from '@/utils/js-optimization';
+import { initJavaScriptOptimizations } from '@/utils/js-optimization';
 import { initMobileImageOptimization } from '@/utils/mobile-image-optimizer';
 import { initRenderingSystem, auditFixedElements } from '@/utils/rendering-system';
-import { BottomNav } from '@/components/navigation/BottomNav';
+// Import ConditionalBottomNav component
+import ConditionalBottomNav from '@/components/ConditionalBottomNav';
 // Import CSS module for header styling
 import './styles/header-navigation.css';
 // Lazy-load Analytics to reduce initial bundle size
-const LazyAnalytics = React.lazy(() =>
-  import('@vercel/analytics/react').then(mod => ({ default: mod.Analytics }))
-);
+// Only load if explicitly enabled in environment
+const LazyAnalytics = React.lazy(() => {
+  // Check if analytics is enabled via environment variable
+  const analyticsEnabled = import.meta.env.VITE_ENABLE_ANALYTICS === 'true';
+  
+  return analyticsEnabled 
+    ? import('@vercel/analytics/react').then(mod => ({ default: mod.Analytics }))
+    : Promise.resolve({ default: () => null }); // Return empty component if disabled
+});
 import { SEOProvider } from '@/components/SEO';
 import { ScrollToTop } from '@/components/ui/scroll-to-top';
 import { ScrollProgress } from '@/components/ui/scroll-progress';
@@ -80,50 +87,35 @@ const ScrollToTopComponent = () => {
   return null;
 };
 
-const ConditionalBottomNav = () => {
-  const location = useLocation();
-  const [isMobile, setIsMobile] = useState(false);
-  
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setIsMobile(isMobileDevice());
-      
-      const handleResize = () => {
-        setIsMobile(isMobileDevice());
-      };
-      
-      window.addEventListener('resize', handleResize, { passive: true });
-      return () => window.removeEventListener('resize', handleResize);
-    }
-  }, []);
-  
-  if (location.pathname === "/" || !isMobile) {
-    return null;
-  }
-  
-  return <BottomNav />;
-};
 
 function App() {
   // Use the direct function instead of the hook for better SSR compatibility
   const [isMobile, setIsMobile] = useState(false);
   
-  // Initialize mobile detection after mount
+  // Initialize mobile detection after mount - memoize the resize handler
+  const handleResize = useCallback(() => {
+    setIsMobile(isMobileDevice());
+  }, []);
+  
+  // Define setVh callback outside of useEffect
+  const setVh = useCallback(() => {
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  }, []);
+  
+  // Create passive event handler outside of useEffect
+  const passiveEventHandler = useCallback(() => {}, []);
+  
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      // Set initial mobile state
       setIsMobile(isMobileDevice());
       
       // Add resize listener to update mobile state
-      const handleResize = () => {
-        setIsMobile(isMobileDevice());
-      };
-      
       window.addEventListener('resize', handleResize, { passive: true });
       return () => window.removeEventListener('resize', handleResize);
     }
-  }, []);
-  
-  const passiveEventHandler = useCallback(() => {}, []);
+  }, [handleResize]);
   
   useEffect(() => {
     // Add a direct style override for hero heights
@@ -197,16 +189,20 @@ function App() {
     // This sets up responsive images and uses mobile-specific versions
     initMobileImageOptimization();
     
-    // Initialize Web Vitals monitoring - only in development
-    if (process.env.NODE_ENV === 'development') {
+    // Initialize Web Vitals monitoring based on environment
+    if (import.meta.env.DEV || import.meta.env.VITE_DEBUG_VITALS === 'true') {
       import('./utils/web-vitals').then(({ initWebVitalsMonitoring }) => {
         initWebVitalsMonitoring();
       }).catch(err => console.warn('Failed to initialize Web Vitals monitoring:', err));
     } else {
       // In production, we still want to report vitals but not show the UI
       import('./utils/web-vitals').then(({ reportWebVitals }) => {
+        const samplingRate = import.meta.env.VITE_VITALS_SAMPLING_RATE 
+          ? parseFloat(import.meta.env.VITE_VITALS_SAMPLING_RATE) 
+          : 0.1; // Default to tracking 10% of users
+        
         reportWebVitals(undefined, { 
-          samplingRate: 0.1, // Only track 10% of users in production
+          samplingRate,
           debug: false 
         });
       }).catch(err => console.warn('Failed to initialize Web Vitals reporting:', err));
@@ -234,12 +230,10 @@ function App() {
       document.body.classList.remove('optimize-animations-mobile');
     }
     
-    const setVh = () => {
-      const vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty('--vh', `${vh}px`);
-    };
-    
+    // Set viewport height initially
     setVh();
+    
+    // Add event listeners for viewport height changes
     window.addEventListener('resize', setVh, { passive: true });
     window.addEventListener('orientationchange', setVh, { passive: true });
     
@@ -265,7 +259,7 @@ function App() {
       window.removeEventListener('resize', setVh);
       window.removeEventListener('orientationchange', setVh);
     };
-  }, [isMobile, passiveEventHandler]);
+  }, [isMobile, passiveEventHandler, setVh]);
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>

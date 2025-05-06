@@ -50,8 +50,15 @@ export function reportWebVitals(onPerfEntry?: (metric: Metric) => void, config?:
   if (typeof window === 'undefined') return;
 
   // Dynamically import the web-vitals library
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let webVitalsLib: any = null;
+  // Use a more specific type for the web-vitals library
+  let webVitalsLib: {
+    onCLS: (cb: (metric: Metric) => void) => void;
+    onFID: (cb: (metric: Metric) => void) => void;
+    onLCP: (cb: (metric: Metric) => void) => void;
+    onINP: (cb: (metric: Metric) => void) => void;
+    onTTFB: (cb: (metric: Metric) => void) => void;
+    onFCP: (cb: (metric: Metric) => void) => void;
+  } | null = null;
   
   try {
     // Use dynamic import instead of require to avoid ESLint errors
@@ -294,7 +301,7 @@ export function getCurrentMetrics() {
  * @param delay Optional delay between calls (defaults to rAF timing)
  * @returns A throttled event handler function
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 export function createThrottledScrollHandler<T extends (...args: unknown[]) => unknown>(
   callback: T, 
   delay?: number
@@ -332,7 +339,7 @@ export function createThrottledScrollHandler<T extends (...args: unknown[]) => u
  * @param delay Optional delay between calls (in ms)
  * @param deps Dependencies array for the callback
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 export function useThrottledScroll<T extends (...args: unknown[]) => unknown>(
   callback: T,
   delay?: number,
@@ -342,10 +349,9 @@ export function useThrottledScroll<T extends (...args: unknown[]) => unknown>(
   const callbackRef = useRef(callback);
   
   // Update the callback ref when dependencies change
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     callbackRef.current = callback;
-  }, [callback, ...deps]);
+  }, [callback, ...(deps || [])]);
   
   // Memoize the throttled handler
   const throttledHandler = useCallback(
@@ -375,7 +381,7 @@ export function useThrottledScroll<T extends (...args: unknown[]) => unknown>(
  * @param delay Optional delay between calls (in ms)
  * @returns A throttled event handler function
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 export function createThrottledResizeHandler<T extends (...args: unknown[]) => unknown>(
   callback: T,
   delay = 100

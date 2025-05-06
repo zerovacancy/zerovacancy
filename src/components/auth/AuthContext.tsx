@@ -7,8 +7,8 @@ const getRedirectUrl = (path: string = '/auth/callback'): string => {
   const isDevelopment = window.location.hostname === 'localhost' || 
                         window.location.hostname === '127.0.0.1';
   
-  // Get the production URL from Supabase or use a fallback
-  const PRODUCTION_URL = 'https://zerovacancy.app'; // Replace with your actual production URL
+  // Get the production URL from environment variables
+  const PRODUCTION_URL = import.meta.env.VITE_PRODUCTION_URL || 'https://zerovacancy.app';
   
   // Choose the appropriate base URL
   const baseUrl = isDevelopment 
