@@ -1,7 +1,8 @@
 // React hooks fix applied via package.json resolutions
 // No need for complex singleton pattern
 
-
+// Import React explicitly to ensure proper singleton instance is used
+import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { ErrorBoundary } from 'react-error-boundary';
 import App from './App.tsx';
@@ -65,6 +66,15 @@ try {
       <App />
     </ErrorBoundary>
   );
+  
+  // Load text-fouc-fix.js after the app is mounted and only in production
+  if (process.env.NODE_ENV === 'production') {
+    // Ensure the header is mounted before applying FOUC fix
+    setTimeout(() => {
+      import('/public/text-fouc-fix.js')
+        .catch(err => console.warn('Failed to load text-fouc-fix.js:', err));
+    }, 100);
+  }
 } catch (error) {
   console.error("Error during initial render:", error);
   

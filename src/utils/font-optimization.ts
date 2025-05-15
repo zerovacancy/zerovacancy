@@ -181,7 +181,7 @@ const generateFontUrls = (fonts: FontDefinition[], isMobile: boolean): string[] 
 // Generate preload links for critical fonts
 const generatePreloadLinks = (fonts: FontDefinition[], isMobile: boolean): HTMLLinkElement[] => {
   const criticalFonts = fonts.filter(f => f.strategy === FontLoadStrategy.CRITICAL);
-  
+
   return criticalFonts.flatMap(font => {
     return font.variants
       // For mobile, only preload regular and bold weights
@@ -191,20 +191,22 @@ const generatePreloadLinks = (fonts: FontDefinition[], isMobile: boolean): HTMLL
         const weight = variant.weight || 400;
         const style = variant.style || 'normal';
         
-        // Approximate URL for Google Fonts file - in production you'd use a more precise mapping
-        const fontUrl = `https://fonts.gstatic.com/s/${font.family.toLowerCase().replace(/\s+/g, '')}/${
-          font.subset === SubsetStrategy.LATIN ? 'v13' : 'v8'
-        }/${
-          weight === 400 && style === 'normal' ? 'regular' : weight + (style === 'italic' ? 'i' : '')
-        }.woff2`;
+        // Disable direct font file preloading - use Google Fonts instead
+        // Google will handle providing the correct font files
+        const fontUrl = '';
         
+        // Only create preload link if we have a valid URL
+        if (!fontUrl) {
+          return null; // Skip if no URL
+        }
+
         const preload = document.createElement('link');
         preload.rel = 'preload';
         preload.href = fontUrl;
         preload.as = 'font';
         preload.type = 'font/woff2';
         preload.crossOrigin = 'anonymous';
-        
+
         return preload;
       });
   });
@@ -274,10 +276,20 @@ export const initOptimizedFonts = (options: {
   `;
   document.head.appendChild(fallbackStyle);
   
-  // 2. Preload critical font files if enabled
+  // 2. We're not preloading individual font files anymore
+  // Instead, we rely on the Google Fonts stylesheet which handles this for us
   if (preloadCritical) {
-    const preloadLinks = generatePreloadLinks(optimizedFonts, isMobile);
-    preloadLinks.forEach(link => document.head.appendChild(link));
+    console.log('Font preloading is handled by Google Fonts stylesheet');
+    // Generate preload links but filter out null/empty ones
+    const preloadLinks = generatePreloadLinks(optimizedFonts, isMobile)
+      .filter(link => link !== null && link.href); // Only add links with valid URLs
+
+    // Add the valid preload links (there should be none with our current config)
+    preloadLinks.forEach(link => {
+      if (link && link.href) {
+        document.head.appendChild(link);
+      }
+    });
   }
   
   // 3. Add font-face declarations with font-display strategy

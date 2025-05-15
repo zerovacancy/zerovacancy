@@ -1,0 +1,156 @@
+/**
+ * CLS-safe CSS Variables
+ * 
+ * These variables provide standardized dimensions for components 
+ * to prevent Cumulative Layout Shift. Use these instead of hard-coded
+ * values to maintain consistency.
+ * 
+ * These variables work in conjunction with viewport-height-fix.js and text-fouc-fix.js
+ * to prevent layout shifts on mobile devices.
+ */
+
+:root {
+  /* CLS-CRITICAL: Hero section dimensions for stability */
+  --hero-mobile-height: 450px;
+  --hero-desktop-height: auto;
+  --hero-min-mobile-height: 450px;
+  --hero-min-desktop-height: 70vh;
+
+  /* CLS-CRITICAL: Header dimensions */
+  --header-height: 64px;
+  --header-mobile-height: 56px;
+  --bottom-nav-height: 56px;
+
+  /* CLS-CRITICAL: Text container heights */
+  --rotating-text-height-mobile: 44px;
+  --rotating-text-height-desktop: 64px;
+  
+  /* CLS-CRITICAL: Button dimensions */
+  --cta-button-height: 56px;
+  --cta-button-mobile-height: 54px;
+  
+  /* CLS-CRITICAL: Form input heights */
+  --input-height: 56px;
+  --input-mobile-height: 48px;
+  
+  /* CLS-CRITICAL: Image aspect ratios as padding-bottom percentages */
+  --aspect-ratio-16-9: 56.25%; /* 9/16 = 0.5625 = 56.25% */
+  --aspect-ratio-4-3: 75%;     /* 3/4 = 0.75 = 75% */
+  --aspect-ratio-1-1: 100%;    /* 1/1 = 1 = 100% */
+  --aspect-ratio-3-2: 66.66%;  /* 2/3 = 0.6666 = 66.66% */
+  
+  /* Border radius values */
+  --mobile-border-radius: 12px;
+  --desktop-border-radius: 12px;
+  
+  /* CLS-safe animation durations */
+  --animation-duration-fast: 0.2s;
+  --animation-duration-normal: 0.3s;
+  --animation-duration-slow: 0.5s;
+  
+  /* CLS-safe spacing - header offsets */
+  --content-padding-top: calc(var(--header-height) + 16px);
+  --mobile-content-padding-top: calc(var(--header-mobile-height) + 16px);
+  
+  /* CLS-safe responsive heights with viewports */
+  --vh: 1vh; /* This will be updated by viewport-height-fix.js */
+  --vw: 1vw; /* This will be updated by text-fouc-fix.js integration */
+  --mobile-vh-100: calc(var(--vh, 1vh) * 100);
+  --window-height: 100vh; /* This will be set by JS with actual pixel height */
+  
+  /* CLS-CRITICAL: Card dimensions */
+  --card-min-height: 240px;
+  --card-mobile-min-height: 200px;
+  
+  /* Stacking context z-indices */
+  --z-index-modal: 1000;
+  --z-index-sticky: 100;
+  --z-index-dropdown: 50;
+  --z-index-header: 999;
+  --z-index-footer: 10;
+  
+  /* Title container height for consistent spacing */
+  --title-container-height: 120px;
+  --mobile-title-container-height: 90px;
+}
+
+/* Media query for mobile devices */
+@media (max-width: 768px) {
+  :root {
+    /* Adjust any variables that need different values on mobile */
+    --header-height: var(--header-mobile-height);
+    --rotating-text-height: var(--rotating-text-height-mobile);
+    --cta-button-height: var(--cta-button-mobile-height);
+    --input-height: var(--input-mobile-height);
+    --title-container-height: var(--mobile-title-container-height);
+    
+    /* CLS-optimized mobile hero heights using viewport units */
+    --hero-height: calc(var(--vh, 1vh) * 100);
+    --hero-min-height: var(--hero-mobile-height);
+  }
+  
+  /* Handle iOS Safari's environment variables */
+  @supports (padding-top: env(safe-area-inset-top)) {
+    :root {
+      --safe-area-inset-top: env(safe-area-inset-top);
+      --safe-area-inset-right: env(safe-area-inset-right);
+      --safe-area-inset-bottom: env(safe-area-inset-bottom);
+      --safe-area-inset-left: env(safe-area-inset-left);
+      
+      /* Adjusted header height accounting for notches */
+      --header-height: calc(var(--header-mobile-height) + var(--safe-area-inset-top, 0px));
+      --content-padding-top: calc(var(--header-height) + 16px + var(--safe-area-inset-top, 0px));
+    }
+  }
+  
+  /* Class applied by viewport-height-fix.js for iOS */
+  html.ios-device {
+    --hero-mobile-height: calc(var(--vh, 1vh) * 100 - var(--header-mobile-height));
+    --hero-min-mobile-height: calc(var(--vh, 1vh) * 100 - var(--header-mobile-height));
+  }
+}
+
+/* Define custom vh variable for mobile browsers */
+:root {
+  --mobile-header-height: 56px;
+  --mobile-bottom-nav-height: 56px;
+}
+
+/* Special container for fixing height of hero on mobile */
+section[data-hero-section="true"] {
+  height: var(--hero-mobile-height) !important;
+  min-height: var(--hero-mobile-height) !important;
+  max-height: var(--hero-mobile-height) !important;
+  
+  /* Hardware acceleration */
+  transform: translateZ(0) !important;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+}
+
+/* Rotating text container fixed height */
+.rotating-text-container {
+  height: var(--rotating-text-height-mobile) !important;
+  min-height: var(--rotating-text-height-mobile) !important;
+  max-height: var(--rotating-text-height-mobile) !important;
+  position: relative !important;
+  
+  /* Hardware acceleration */
+  transform: translateZ(0) !important;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+}
+
+@media (min-width: 769px) {
+  .rotating-text-container {
+    height: var(--rotating-text-height-desktop) !important;
+    min-height: var(--rotating-text-height-desktop) !important;
+    max-height: var(--rotating-text-height-desktop) !important;
+  }
+  
+  section[data-hero-section="true"] {
+    height: auto !important;
+    min-height: auto !important;
+    max-height: none !important;
+  }
+}

@@ -27,13 +27,16 @@ const FontLoader: React.FC = () => {
         fonts: [
           {
             family: 'Plus Jakarta Sans',
-            // Load only bold weight for headings on mobile
-            url: 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700&display=swap',
+            // Using Google Fonts with weights 400 and 700
+            url: 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap',
             strategy: FontLoadStrategy.CRITICAL,
             display: FontDisplay.SWAP,
             subset: SubsetStrategy.LATIN,
             fallbacks: ['system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
-            variants: [{ weight: 700 }] // Only bold
+            variants: [
+              { weight: 400 },
+              { weight: 700 }
+            ]
           },
           {
             family: 'Inter',

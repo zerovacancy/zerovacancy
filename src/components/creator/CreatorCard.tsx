@@ -168,45 +168,79 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
   return (
     <>
       {isMobile ? (
-        <div className="relative w-full h-full flex">
-          {/* Main container with standardized border radius */}
+        <div className="relative w-full h-full flex creator-card-container">
+          {/* Main container with standardized border radius and enhanced hardware acceleration */}
           <Card className={cn(
             "overflow-hidden flex flex-col w-full",
             "bg-transparent",
-            "border-0", 
-            "relative transition-all duration-300 hover:translate-y-[-2px] active:scale-[0.99]",
-            isSelected && "ring-1 ring-[rgba(118,51,220,0.25)] ring-opacity-100"
+            "border-0",
+            "relative hover:translate-y-[-2px] active:scale-[0.99]",
+            isSelected && "ring-1 ring-[rgba(118,51,220,0.25)] ring-opacity-100",
+            "hardware-accelerated" // New class for debugging
           )}
             style={{
-              transform: 'translateZ(0)', // Hardware acceleration
-              willChange: 'transform, box-shadow', // Optimization hint for transitions
-              transition: 'all 0.3s ease',
-              // Gradient background matching CTA styling for consistency
+              // Advanced hardware acceleration techniques
+              transform: 'translate3d(0, 0, 0)', // More effective hardware acceleration than translateZ
+              willChange: 'transform, opacity', // Optimization hint for transitions - only animate these properties
+              // Only transition transform and opacity properties to prevent layout shifts
+              transitionProperty: 'transform, opacity, box-shadow',
+              transitionDuration: '300ms',
+              transitionTimingFunction: 'cubic-bezier(0.2, 0, 0.15, 1)', // Improved easing curve for smoother motion
+              
+              // Improve rendering performance
+              backfaceVisibility: 'hidden',
+              WebkitBackfaceVisibility: 'hidden',
+              
+              // Stable, pre-rendered gradient backgrounds with hardware acceleration
               background: isSelected 
                 ? 'linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(245, 245, 247, 0.9) 100%)' // Slightly brighter when selected
                 : 'linear-gradient(180deg, rgba(255, 255, 255, 0.85) 0%, rgba(245, 245, 250, 0.85) 100%)', // Subtle vertical gradient
-              backdropFilter: 'blur(6px)', // Enhanced glass effect 
-              WebkitBackdropFilter: 'blur(6px)', // Safari support
-              borderRadius: '16px', // THE STANDARD border radius
-              overflow: 'hidden', // Ensure content respects border-radius
-              maxHeight: '85vh', // Limit maximum height on mobile
-              height: 'auto', // Allow content to determine height within max limit
               
-              // Simplified border with consistent styling
+              // Glass effect with explicit hints to browser
+              backdropFilter: 'blur(6px)',
+              WebkitBackdropFilter: 'blur(6px)', // Safari support
+              
+              // Fixed dimensions with explicit radius and overflow control
+              borderRadius: '16px', 
+              overflow: 'hidden',
+              maxHeight: '85vh',
+              height: 'auto',
+              
+              // Simplified, consistent border that won't change dimensions
               border: '1px solid rgba(0, 0, 0, 0.06)',
               
-              // Simplified shadow system with subtle highlights
+              // Simplified shadow system pre-computed for better performance
               boxShadow: `
                 0 2px 8px rgba(118, 51, 220, 0.06),
                 0 4px 12px rgba(0, 0, 0, 0.03),
                 inset 0 1px 0 rgba(255, 255, 255, 0.8)
               `,
               
-              // Prevent content from overflowing
-              contain: 'paint',
-              // Enhanced 3D effect
-              transformStyle: 'preserve-3d'
-            }}>
+              // Reduce layout calculations and painting operations
+              contain: 'layout paint style',
+
+              // Enhanced 3D effect - pre-rendered on GPU
+              transformStyle: 'preserve-3d',
+              
+              // Prevent any margin-based CLS
+              margin: 0,
+              
+              // Force compositing layer for animation
+              zIndex: 1,
+              
+              // Box sizing to prevent dimension changes
+              boxSizing: 'border-box',
+              
+              // Prevent interaction causing reflows
+              touchAction: 'manipulation',
+              
+              // Prevent tap highlight
+              WebkitTapHighlightColor: 'transparent',
+              
+              // Prevent forced repaints during scrolling
+              overscrollBehavior: 'none'
+            }}
+            data-selected={isSelected ? 'true' : 'false'}>
             
             {/* Simplified glass effect with single element and gradient background - now matching CTA styling */}
             {/* Simplified inner light effect */}
@@ -335,6 +369,17 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     if (isVisualStyle) bgColor = "bg-[rgba(239,240,236,0.8)] border-[rgba(239,240,236,0.9)] text-gray-700"; // Changed from violet
                     if (isSpecialty) bgColor = "bg-[rgba(239,240,236,0.8)] border-[rgba(239,240,236,0.9)] text-gray-700"; // Changed from teal
                     
+                    // Precompute service tag dimensions to prevent CLS
+                    // This ensures a stable layout with fixed dimensions for tags
+                    const tagHeight = 24; // Fixed height in pixels
+                    const tagMinWidth = 40; // Minimum width
+                    
+                    // Pre-compute width based on text content to prevent layout shifts
+                    // These are estimates based on character counts to reserve space
+                    const charWidth = 7; // Approximate width of a character in pixels
+                    const iconWidth = service.includes('TikTok') || service.includes('Instagram') ? 20 : 0; // Add space for potential icons
+                    const estimatedWidth = Math.min(120, Math.max(tagMinWidth, service.length * charWidth + iconWidth));
+                    
                     // Only show the first 3 services to save more space on mobile
                     if (index < 3) {
                       return (
@@ -350,19 +395,40 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                             border: '1px solid rgba(118, 51, 220, 0.15)',
                             // Standardized shadow with top/left highlights
                             boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.9), inset 1px 0 0 rgba(255,255,255,0.8), 0 1px 2px rgba(0,0,0,0.04)',
-                            // Better sizing
-                            minHeight: '24px',
-                            minWidth: '40px',
+                            // Explicit sizing with fixed height to prevent CLS
+                            height: `${tagHeight}px`,
+                            minHeight: `${tagHeight}px`,
+                            maxHeight: `${tagHeight}px`,
+                            minWidth: `${tagMinWidth}px`,
+                            width: forceWrap ? `${estimatedWidth}px` : 'auto', // Fixed width for wrapped items
                             // Hardware acceleration
                             transform: 'translateZ(0)',
-                            // Improved spacing
-                            margin: '1px'
+                            // Improved spacing with exact pixel values
+                            margin: '1px',
+                            // Prevent any transitions affecting size
+                            transition: 'opacity 0.2s ease',
+                            // Contain sizing to prevent text from affecting dimensions
+                            contain: 'layout paint',
+                            // Set explicit line height
+                            lineHeight: '1',
+                            // Fix text overflow
+                            textOverflow: 'ellipsis',
+                            // Box sizing
+                            boxSizing: 'border-box',
+                            // Prevent pointer events from causing layout
+                            pointerEvents: 'none'
                           }}
+                          data-service={service}
+                          data-service-type={isPlatform ? 'platform' : isHashtag ? 'hashtag' : isVisualStyle ? 'visual' : isSpecialty ? 'specialty' : 'general'}
                         >
                           <span className="truncate flex items-center">{service}</span>
                         </span>
                       );
                     } else if (index === 3) {
+                      // The "more" indicator with fixed dimensions
+                      const moreText = `+${creator.services.length - 3} more`;
+                      const moreWidth = Math.max(tagMinWidth, moreText.length * charWidth + 8);
+                      
                       return (
                         <span 
                           key={index} 
@@ -376,16 +442,28 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                             border: '1px solid rgba(118, 51, 220, 0.15)',
                             // Standardized shadow with top/left highlights
                             boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.9), inset 1px 0 0 rgba(255,255,255,0.8), 0 1px 2px rgba(0,0,0,0.04)',
-                            // Better sizing
-                            minHeight: '24px',
-                            minWidth: '40px',
+                            // Explicit sizing with fixed height and estimated width
+                            height: `${tagHeight}px`,
+                            minHeight: `${tagHeight}px`,
+                            maxHeight: `${tagHeight}px`,
+                            width: `${moreWidth}px`,
+                            minWidth: `${moreWidth}px`,
                             // Hardware acceleration
                             transform: 'translateZ(0)',
-                            // Improved spacing
-                            margin: '1px'
+                            // Improved spacing with exact pixel values
+                            margin: '1px',
+                            // Prevent any transitions affecting size
+                            transition: 'opacity 0.2s ease',
+                            // Contain sizing to prevent text from affecting dimensions
+                            contain: 'layout paint',
+                            // Set explicit line height
+                            lineHeight: '1',
+                            // Prevent pointer events from causing layout
+                            pointerEvents: 'none'
                           }}
+                          data-more-count={creator.services.length - 3}
                         >
-                          <span className="flex items-center">+{creator.services.length - 3} more</span>
+                          <span className="flex items-center">{moreText}</span>
                         </span>
                       );
                     }
@@ -402,9 +480,9 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     willChange: 'transform', // Optimization hint
                     gap: '4px' // Reduced gap between components
                   }}>
-                  {/* Star rating with review count, enhanced glass effect */}
+                  {/* Star rating with review count - fixed dimensions for CLS prevention */}
                   <div 
-                    className="flex items-center py-1 px-3 rounded-full"
+                    className="flex items-center py-1 px-3 rounded-full rating-badge"
                     style={{
                       // Standardized glass effect matching card and CTA
                       background: 'rgba(245, 245, 247, 0.92)',
@@ -415,40 +493,86 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                       // Standardized shadow with top/left highlights
                       boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.9), inset 1px 0 0 rgba(255,255,255,0.8), 0 1px 3px rgba(0,0,0,0.05)',
                       
-                      // Hardware acceleration and interaction improvements
+                      // Hardware acceleration
                       transform: 'translateZ(0)', 
-                      transition: 'all 0.2s ease',
+                      // Only transition opacity to prevent layout shifts
+                      transition: 'opacity 0.2s ease',
+                      
+                      // Fixed dimensions to prevent CLS - critical for preventing layout shifts
                       minHeight: '28px',
+                      height: '28px',
+                      // Pre-calculate width based on content to prevent shifts
+                      // Ratings typically follow a pattern like "4.9 (127)" - ~70px accommodates this
+                      minWidth: '70px',
+                      width: '70px',
+                      
+                      // Guarantee space for review count
+                      maxWidth: '70px',
+                      
+                      // Ensure content doesn't affect layout
+                      contain: 'layout paint',
+                      
+                      // Mobile interaction optimizations
                       touchAction: 'manipulation',
                       WebkitTapHighlightColor: 'transparent',
+                      
+                      // Flex layout for internal content
                       display: 'flex',
-                      alignItems: 'center'
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      
+                      // Box sizing to ensure border doesn't change dimensions
+                      boxSizing: 'border-box',
+                      
+                      // Overflow handling
+                      overflow: 'hidden',
+                      
+                      // Prevent margin-induced shifts
+                      margin: 0,
+                      
+                      // Disable pointer events - ratings badge is not interactive
+                      pointerEvents: 'none'
                     }}
+                    data-rating={creator.rating.toFixed(1)}
+                    data-reviews={creator.reviews}
                   >
-                    {/* Add subtle inner glow to star icon */}
-                    <div className="relative">
+                    {/* Add subtle inner glow to star icon with fixed dimensions */}
+                    <div className="relative" style={{ width: '16px', height: '16px', flexShrink: 0 }}>
                       <Star className="w-4 h-4 text-yellow-500 fill-yellow-500 mr-1 relative z-10" 
                         style={{
                           filter: 'drop-shadow(0 0 1px rgba(252, 211, 77, 0.4))',
-                          transform: 'translateZ(1px)' // Subtle 3D lift
+                          transform: 'translateZ(1px)', // Subtle 3D lift
+                          width: '16px',
+                          height: '16px',
+                          position: 'absolute',
+                          top: 0,
+                          left: 0
                         }} 
                       />
-                      {/* Subtle glow behind star */}
+                      {/* Subtle glow behind star with fixed position/size */}
                       <div className="absolute -inset-1 bg-yellow-100/30 rounded-full blur-sm -z-0"></div>
                     </div>
                     <span className="text-xs font-medium text-gray-800 whitespace-nowrap"
                       style={{
-                        letterSpacing: '0.01em' // Slightly improved letter spacing
+                        letterSpacing: '0.01em', // Slightly improved letter spacing
+                        // Prevent text from causing layout shifts
+                        lineHeight: 1,
+                        // Fixed width for text content
+                        width: '50px',
+                        // Flex layout for consistent alignment
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
                       }}
                     >
-                      {creator.rating.toFixed(1)} <span className="text-gray-600">({creator.reviews})</span>
+                      {creator.rating.toFixed(1)} <span className="text-gray-600 ml-1 whitespace-nowrap">({creator.reviews})</span>
                     </span>
                   </div>
                   
-                  {/* Availability indicator with enhanced glass effect */}
+                  {/* Availability indicator with fixed dimensions */}
                   {creator.availabilityStatus && (
                     <div 
-                      className="flex items-center py-1 px-3 rounded-full"
+                      className="flex items-center py-1 px-3 rounded-full availability-badge"
                       style={{
                         // Standardized glass effect
                         background: 'rgba(239, 240, 236, 0.85)',
@@ -459,32 +583,109 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                         // Standardized shadow with top/left highlights
                         boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.9), inset 1px 0 0 rgba(255,255,255,0.8), 0 1px 3px rgba(0,0,0,0.05)',
                         
-                        // Hardware acceleration and interaction improvements  
+                        // Hardware acceleration
                         transform: 'translateZ(0)',
-                        transition: 'all 0.2s ease',
+                        
+                        // Only transition opacity for CLS prevention
+                        transition: 'opacity 0.2s ease',
+                        
+                        // Fixed dimensions based on the status text to prevent CLS
                         minHeight: '28px',
+                        height: '28px',
+                        // Dynamic width based on status - careful pre-computation of space
+                        minWidth: creator.availabilityStatus === 'available-now' ? '110px' :
+                                 creator.availabilityStatus === 'available-tomorrow' ? '115px' : 
+                                 '110px', // premium-only
+                        width: creator.availabilityStatus === 'available-now' ? '110px' :
+                              creator.availabilityStatus === 'available-tomorrow' ? '115px' : 
+                              '110px', // premium-only
+                        
+                        // Limiting max width to prevent unexpected shifts
+                        maxWidth: '115px',
+                        
+                        // Ensure content doesn't affect layout
+                        contain: 'layout paint',
+                        
+                        // Mobile interaction optimizations
                         touchAction: 'manipulation',
                         WebkitTapHighlightColor: 'transparent',
+                        
+                        // Flex layout for internal content
                         display: 'flex',
                         alignItems: 'center',
-                        justifyContent: 'center'
+                        justifyContent: 'center',
+                        
+                        // Box sizing to ensure border doesn't change dimensions
+                        boxSizing: 'border-box',
+                        
+                        // Overflow handling
+                        overflow: 'hidden',
+                        
+                        // Prevent margin-induced shifts
+                        margin: 0,
+                        
+                        // Disable pointer events - availability is not interactive
+                        pointerEvents: 'none'
                       }}
+                      data-availability={creator.availabilityStatus}
                     >
                       {creator.availabilityStatus === 'available-now' && (
-                        <span className="flex items-center text-emerald-700 whitespace-nowrap text-xs font-medium">
-                          <div className="w-2 h-2 rounded-full bg-emerald-500 mr-1.5 animate-pulse shadow-[0_0_4px_rgba(16,185,129,0.6)]"></div>
+                        <span className="flex items-center text-emerald-700 whitespace-nowrap text-xs font-medium"
+                          style={{ 
+                            display: 'flex', 
+                            alignItems: 'center',
+                            width: '100%', 
+                            justifyContent: 'center'
+                          }}
+                        >
+                          <div className="w-2 h-2 rounded-full bg-emerald-500 mr-1.5 animate-pulse shadow-[0_0_4px_rgba(16,185,129,0.6)]"
+                            style={{ 
+                              width: '8px', 
+                              height: '8px', 
+                              flexShrink: 0,
+                              margin: '0 6px 0 0'
+                            }}
+                          ></div>
                           <span className="flex items-center">Available Now</span>
                         </span>
                       )}
                       {creator.availabilityStatus === 'available-tomorrow' && (
-                        <span className="flex items-center text-amber-700 whitespace-nowrap text-xs font-medium">
-                          <Clock className="w-4 h-4 mr-1.5 text-amber-500" />
+                        <span className="flex items-center text-amber-700 whitespace-nowrap text-xs font-medium"
+                          style={{ 
+                            display: 'flex', 
+                            alignItems: 'center',
+                            width: '100%', 
+                            justifyContent: 'center'
+                          }}
+                        >
+                          <Clock className="w-4 h-4 mr-1.5 text-amber-500" 
+                            style={{ 
+                              width: '16px', 
+                              height: '16px', 
+                              flexShrink: 0,
+                              margin: '0 6px 0 0'
+                            }}
+                          />
                           <span className="flex items-center">Available Soon</span>
                         </span>
                       )}
                       {creator.availabilityStatus === 'premium-only' && (
-                        <span className="flex items-center text-gray-700 whitespace-nowrap text-xs font-medium">
-                          <Crown className="w-4 h-4 mr-1.5 text-gray-500" />
+                        <span className="flex items-center text-gray-700 whitespace-nowrap text-xs font-medium"
+                          style={{ 
+                            display: 'flex', 
+                            alignItems: 'center',
+                            width: '100%', 
+                            justifyContent: 'center'
+                          }}
+                        >
+                          <Crown className="w-4 h-4 mr-1.5 text-gray-500" 
+                            style={{ 
+                              width: '16px', 
+                              height: '16px', 
+                              flexShrink: 0,
+                              margin: '0 6px 0 0'
+                            }}
+                          />
                           <span className="flex items-center">Premium Only</span>
                         </span>
                       )}
@@ -826,30 +1027,37 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
             </Card>
           </div>
       ) : (
-          <article className="group select-text h-full w-full">
-            <div className="relative h-full w-full rounded-xl overflow-hidden">
-              {/* Completely removed glass morphism glow effect */}
-              
-              {/* Desktop CTA with proper positioning */}
-              <div className="absolute bottom-4 left-0 right-0 z-10 px-6">
+          <article className="group select-text h-full w-full desktop-creator-card-container">
+            <div className="relative h-full w-full rounded-xl overflow-hidden hardware-accelerated">
+              {/* Desktop CTA with proper positioning and enhanced hardware acceleration */}
+              <div className="absolute bottom-4 left-0 right-0 z-10 px-6 desktop-cta-container" style={{
+                // Force hardware acceleration on container
+                transform: 'translate3d(0, 0, 0)',
+                backfaceVisibility: 'hidden',
+                WebkitBackfaceVisibility: 'hidden',
+                // Prevent layout shifts from button hover/tap
+                contain: 'layout paint'
+              }}>
                 {/* Subtle visual indicator with reduced spacing */}
                 <div className="mb-1 mx-auto w-6 h-0.5 rounded-full bg-gradient-to-r from-purple-200/30 via-purple-300/30 to-purple-200/30"></div>
                 
                 <button 
                   onClick={handleCTAClick}
                   aria-label={`Join as creator with ${creator.name}`}
-                  className="w-full flex items-center justify-center rounded-[12px] font-semibold transition-all duration-300 relative hover:scale-[1.02] active:scale-[0.97]"
+                  className="w-full flex items-center justify-center rounded-[12px] font-semibold relative desktop-cta-button hardware-accelerated"
                   style={{
+                    // Enhanced glass effect
                     background: 'rgba(245, 245, 247, 0.92)', // Neutral light gray that matches card design
                     backdropFilter: 'blur(10px)', // Enhanced glass-like blur matching thumbnails
                     WebkitBackdropFilter: 'blur(10px)', // For Safari support
                     color: '#555555', // Neutral dark gray text for better contrast
+                    // Consistent border
                     border: '1px solid rgba(118, 51, 220, 0.18)', // Match thumbnail border exactly
                     borderTop: '1px solid rgba(255, 255, 255, 0.9)', // Subtle top highlight
                     borderLeft: '1px solid rgba(255, 255, 255, 0.8)', // Subtle left highlight
                     borderRight: '1px solid rgba(200, 200, 200, 0.2)', // Neutral right edge
                     borderBottom: '1px solid rgba(200, 200, 200, 0.25)', // Neutral bottom edge
-                    // Consistent shadow matching the thumbnails
+                    // Simplified shadow
                     boxShadow: 
                       /* Matching thumbnail shadows for visual continuity */
                       '0 2px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.03),' +
@@ -857,18 +1065,69 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                       /* Standardized inner highlight pattern matching thumbnails */
                       'inset 0 1px 0 rgba(255, 255, 255, 0.9), inset 1px 0 0 rgba(255, 255, 255, 0.8)', // Right inner shadow
                     
+                    // Typography 
                     fontSize: '13px',
                     fontWeight: 600, // Medium weight
                     fontFamily: 'var(--font-sans)', // Use website's standard font
-                    transform: 'translateY(-2px) translateZ(0)', // Lifted appearance with hardware acceleration
-                    willChange: 'transform, box-shadow', // Optimization hint
+                    
+                    // Advanced hardware acceleration
+                    transform: 'translateY(-2px) translate3d(0, 0, 0)', // Lifted appearance with hardware acceleration
+                    willChange: 'transform, opacity', // Only hint properties that will change - better for performance
+                    // Transition only properties that won't cause layout shifts
+                    transitionProperty: 'transform, opacity, box-shadow',
+                    transitionDuration: '300ms',
+                    transitionTimingFunction: 'cubic-bezier(0.2, 0, 0.15, 1)', // Improved timing function
+                    
+                    // Additional rendering optimizations
+                    backfaceVisibility: 'hidden',
+                    WebkitBackfaceVisibility: 'hidden',
                     transformStyle: 'preserve-3d', // Enhance 3D appearance
-                    transition: 'all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)', // Custom bezier for smoother motion
+                    
+                    // Positioning and layout
                     position: 'relative', // For pseudo-elements
                     overflow: 'hidden', // For glass effect containment
                     paddingLeft: '54px', // Reduced space for icon
                     paddingRight: '12px', // Reduced padding
-                    height: '44px' // Reduced height from 60px to 44px
+                    height: '44px', // Reduced height from 60px to 44px
+                    
+                    // Box model optimizations
+                    boxSizing: 'border-box',
+                    
+                    // Mobile interaction optimizations
+                    touchAction: 'manipulation',
+                    WebkitTapHighlightColor: 'transparent',
+                    
+                    // Scale transforms for hover/active states - applied via classes
+                    '&:hover': {
+                      transform: 'translateY(-2px) translate3d(0, 0, 0) scale(1.02)'
+                    },
+                    '&:active': {
+                      transform: 'translateY(-2px) translate3d(0, 0, 0) scale(0.97)'
+                    }
+                  }}
+                  onMouseEnter={(e) => {
+                    // Apply scale transform via direct style manipulation for better performance
+                    if (e.currentTarget) {
+                      e.currentTarget.style.transform = 'translateY(-2px) translate3d(0, 0, 0) scale(1.02)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    // Reset transform
+                    if (e.currentTarget) {
+                      e.currentTarget.style.transform = 'translateY(-2px) translate3d(0, 0, 0)';
+                    }
+                  }}
+                  onMouseDown={(e) => {
+                    // Apply active transform
+                    if (e.currentTarget) {
+                      e.currentTarget.style.transform = 'translateY(-2px) translate3d(0, 0, 0) scale(0.97)';
+                    }
+                  }}
+                  onMouseUp={(e) => {
+                    // Reapply hover transform
+                    if (e.currentTarget) {
+                      e.currentTarget.style.transform = 'translateY(-2px) translate3d(0, 0, 0) scale(1.02)';
+                    }
                   }}
                 >
                   {/* Subtle reflective glow effect for top-left corner */}
@@ -944,35 +1203,52 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
               </div>
               
               <Card className={cn(
-                "overflow-hidden flex flex-col w-full h-full",
-                "will-change-transform transition-all duration-300",
-                "hover:translate-y-[-3px]", // Slightly more lift on hover
-                "hover:scale-[1.01]", // Subtle scale on hover
+                "overflow-hidden flex flex-col h-full",
                 "bg-transparent", // Transparent background for glass effect
                 "border-0 relative", // Remove default border for custom styling
                 "block", // Force block display
                 "pb-18", // Increased padding to ensure CTA is not cut off
                 "max-w-[380px]", // Add maximum width constraint
-                "mx-auto" // Center the card in its container
+                "mx-auto", // Center the card in its container
+                "desktop-creator-card hardware-accelerated" // For debugging and targeting
               )}
               style={{
+                // Flex layout with explicit direction for better rendering
                 display: 'flex',
                 flexDirection: 'column',
                 position: 'relative',
-                transform: 'translateZ(0)', // Hardware acceleration
-                willChange: 'transform, box-shadow', // Optimization hint for transitions
-                transition: 'all 0.3s ease',
-                background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(245, 245, 250, 0.92) 100%)', // Slightly higher opacity gradient
-                backdropFilter: 'blur(8px)', // Enhanced glass effect for desktop
-                WebkitBackdropFilter: 'blur(8px)', // Safari support
-                borderRadius: '16px', // Refined radius for more modern look
-                overflow: 'hidden',
-                height: '100%', // Ensure full height
-                minHeight: '580px', // Minimum height for desktop cards
-                maxHeight: '620px', // Add maximum height constraint
                 
-                // Simplified border with consistent width
+                // Advanced hardware acceleration
+                transform: 'translate3d(0, 0, 0)', // More effective hardware acceleration than translateZ
+                backfaceVisibility: 'hidden',
+                WebkitBackfaceVisibility: 'hidden',
+                
+                // Only animate properties that don't cause layout shifts
+                transitionProperty: 'transform, opacity, box-shadow',
+                transitionDuration: '300ms',
+                transitionTimingFunction: 'cubic-bezier(0.2, 0, 0.15, 1)', // Custom easing for smoother transforms
+                
+                // Only mark properties that will actually change
+                willChange: 'transform, opacity',
+                
+                // Stable, pre-rendered gradient background
+                background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(245, 245, 250, 0.92) 100%)', // Slightly higher opacity gradient for better contrast
+                
+                // Glass effects with improved rendering
+                backdropFilter: 'blur(8px)', 
+                WebkitBackdropFilter: 'blur(8px)', // Safari support
+                
+                // Fixed dimensions that won't cause layout shifts
+                borderRadius: '16px',
+                overflow: 'hidden',
+                height: '100%', 
+                minHeight: '580px',
+                maxHeight: '620px',
+                
+                // Simplified border with consistent styling
                 border: '1px solid rgba(0, 0, 0, 0.06)',
+                
+                // Pre-calculated box shadow
                 boxShadow: `
                   0 4px 12px rgba(118, 51, 220, 0.06),
                   0 8px 24px rgba(0, 0, 0, 0.04),
@@ -980,7 +1256,34 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                 `,
                 
                 // Enhanced 3D effect for desktop
-                transformStyle: 'preserve-3d'
+                transformStyle: 'preserve-3d',
+                
+                // Ensure box-sizing doesn't change layout
+                boxSizing: 'border-box'
+
+                // Removed: contain: 'layout paint style' - was restricting proper layout
+                // Removed: margin: 0 - allows container to control margin
+              }}
+              // Apply hover/active effects via inline handlers for better performance
+              onMouseEnter={(e) => {
+                if (e.currentTarget) {
+                  e.currentTarget.style.transform = 'translate3d(0, -3px, 0) scale(1.01)';
+                  e.currentTarget.style.boxShadow = `
+                    0 8px 20px rgba(118, 51, 220, 0.08),
+                    0 12px 28px rgba(0, 0, 0, 0.06),
+                    0 2px 4px rgba(0, 0, 0, 0.03)
+                  `;
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (e.currentTarget) {
+                  e.currentTarget.style.transform = 'translate3d(0, 0, 0)';
+                  e.currentTarget.style.boxShadow = `
+                    0 4px 12px rgba(118, 51, 220, 0.06),
+                    0 8px 24px rgba(0, 0, 0, 0.04),
+                    0 1px 3px rgba(0, 0, 0, 0.02)
+                  `;
+                }
               }}>
                 {/* Simplified inner highlight */}
                 <div className="absolute inset-0 pointer-events-none" 

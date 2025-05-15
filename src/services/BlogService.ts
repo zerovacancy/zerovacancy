@@ -343,7 +343,7 @@ export class BlogService {
       
       // Generate slug if not provided
       if (!postData.slug) {
-        let baseSlug = postData.title
+        const baseSlug = postData.title
           .toLowerCase()
           .replace(/[^\w\s-]/g, '')
           .replace(/[\s_-]+/g, '-')
@@ -427,7 +427,7 @@ export class BlogService {
         for (const tagName of tags) {
           try {
             // Check if tag exists
-            let { data: existingTag, error: tagLookupError } = await supabase
+            const { data: existingTag, error: tagLookupError } = await supabase
               .from('blog_tags')
               .select('id')
               .eq('name', tagName)
@@ -619,7 +619,7 @@ export class BlogService {
           for (const tagName of tags) {
             try {
               // Check if tag exists
-              let { data: existingTag, error: tagLookupError } = await supabase
+              const { data: existingTag, error: tagLookupError } = await supabase
                 .from('blog_tags')
                 .select('id')
                 .eq('name', tagName)
@@ -1177,7 +1177,7 @@ export class BlogService {
   static async ensureUniqueSlug(postData: any): Promise<void> {
     if (!postData.slug) return;
     
-    let baseSlug = postData.slug;
+    const baseSlug = postData.slug;
     let currentSlug = baseSlug;
     let counter = 1;
     let isUnique = false;

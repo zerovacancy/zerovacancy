@@ -4,6 +4,7 @@ import globals from "globals";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
+import * as clsRules from "./eslint-cls-rules.js";
 
 export default tseslint.config(
   { ignores: ["dist"] },
@@ -23,6 +24,7 @@ export default tseslint.config(
     plugins: {
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,
+      "cls": clsRules,
     },
     rules: {
       // Stricter enforcement of React hooks rules
@@ -33,6 +35,11 @@ export default tseslint.config(
         { allowConstantExport: true },
       ],
       "@typescript-eslint/no-unused-vars": "warn",
+      
+      // CLS prevention rules
+      "cls/img-explicit-dimensions": "warn",
+      "cls/safe-fixed-positioning": "warn",
+      "cls/safe-animations": "warn"
     },
   }
 );

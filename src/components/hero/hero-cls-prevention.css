@@ -1,0 +1,270 @@
+/* ==========================
+ * Hero CLS Prevention Styles
+ * Consolidated from multiple sources for consistency 
+ * This file prioritizes layout stability across all devices
+ * ========================== */
+
+:root {
+  /* Core dimensions for rotating text - single source of truth */
+  --rotating-text-height-mobile: 44px;
+  --rotating-text-height-desktop: 64px;
+  
+  /* Hero height variables */
+  --hero-mobile-height: 450px;
+  --hero-desktop-height: 650px;
+  
+  /* CTA button dimensions */
+  --cta-button-mobile-height: 54px;
+  --cta-button-mobile-width: 250px;
+  --cta-button-desktop-height: 54px;
+  
+  /* Viewport height variable - updated by JavaScript */
+  --vh: 1vh;
+  --hero-vh-height: calc(var(--vh, 1vh) * 100);
+  --hero-vh-fallback: min(var(--hero-mobile-height), calc(85 * var(--vh, 1vh)));
+}
+
+/* =========================
+ * 1. CORE HERO STRUCTURE
+ * ========================= */
+
+/* Base hero section styling with strong CLS prevention */
+section[id="hero"],
+section[data-hero-section="true"] {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 1;
+  
+  /* Critical for CLS prevention */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  will-change: opacity; /* Only animate opacity, not layout properties */
+  
+  /* Prevent layout shifts with content containment */
+  contain: paint style layout;
+  
+  /* Ensure stable rendering */
+  content-visibility: visible;
+}
+
+/* Hardware acceleration for all critical components */
+.gpu-accelerated,
+[data-hero-section="true"] .gpu-accelerated {
+  transform: translateZ(0) !important;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+  will-change: opacity !important;
+  contain: paint style !important;
+}
+
+/* =========================
+ * 2. TEXT ROTATION CONTAINER
+ * ========================= */
+
+/* Critical: Rotating text container with fixed dimensions */
+.rotating-text-container,
+[data-rotating-text="true"],
+div[data-rotating-text="true"] {
+  position: relative;
+  overflow: visible;
+  width: 100%;
+  
+  /* Only animate opacity, not layout properties */
+  transition-property: opacity !important;
+  transition-duration: var(--animation-duration-normal, 0.3s) !important;
+  transition-timing-function: ease-in-out !important;
+  
+  /* Hardware acceleration */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  will-change: opacity;
+  
+  /* CLS prevention */
+  contain: paint style;
+}
+
+/* =========================
+ * 3. MOBILE HERO OPTIMIZATIONS
+ * ========================= */
+
+@media (max-width: 768px) {
+  /* Mobile hero container */
+  section[id="hero"],
+  section[data-hero-section="true"] {
+    height: var(--hero-mobile-height) !important;
+    min-height: var(--hero-mobile-height) !important;
+    max-height: var(--hero-vh-height, 100vh) !important;
+    padding-top: 80px !important;
+    padding-bottom: 60px !important;
+  }
+  
+  /* Mobile rotating text */
+  .rotating-text-container,
+  [data-rotating-text="true"],
+  div[data-rotating-text="true"] {
+    height: var(--rotating-text-height-mobile) !important;
+    min-height: var(--rotating-text-height-mobile) !important;
+    max-height: var(--rotating-text-height-mobile) !important;
+  }
+  
+  /* Mobile hero title */
+  #hero-title {
+    min-height: calc(var(--rotating-text-height-mobile) + 48px) !important;
+    margin-bottom: 30px !important;
+  }
+
+  /* Mobile CTA container */
+  #mobile-hero-cta-section {
+    width: 100% !important;
+    max-width: 280px !important;
+    min-height: var(--cta-button-mobile-height) !important;
+    height: var(--cta-button-mobile-height) !important;
+  }
+  
+  /* Mobile CTA Button */
+  #mobile-hero-cta-section button,
+  .mobile-cta-button {
+    height: var(--cta-button-mobile-height) !important;
+    min-height: var(--cta-button-mobile-height) !important;
+    transition: opacity 0.3s ease, background-color 0.3s ease !important;
+  }
+  
+  /* Mobile form styles */
+  #mobile-hero-cta-section form {
+    height: var(--cta-button-mobile-height) !important;
+    min-height: var(--cta-button-mobile-height) !important;
+    width: 100% !important;
+    max-width: var(--cta-button-mobile-width) !important;
+    contain: layout style !important;
+  }
+  
+  /* Mobile form input */
+  #mobile-hero-cta-section input {
+    height: calc(var(--cta-button-mobile-height) / 2) !important;
+    min-height: calc(var(--cta-button-mobile-height) / 2) !important;
+    box-sizing: border-box !important;
+  }
+  
+  /* Mobile form button */
+  #mobile-hero-cta-section form button {
+    height: calc(var(--cta-button-mobile-height) / 2) !important;
+    min-height: calc(var(--cta-button-mobile-height) / 2) !important;
+    box-sizing: border-box !important;
+    transition: opacity 0.3s ease, background-color 0.3s ease !important;
+  }
+}
+
+/* =========================
+ * 4. DESKTOP HERO OPTIMIZATIONS
+ * ========================= */
+
+@media (min-width: 769px) {
+  /* Desktop hero container */
+  section[id="hero"],
+  section[data-hero-section="true"] {
+    height: auto !important;
+    min-height: var(--hero-desktop-height, 650px) !important;
+    padding-top: 60px !important;
+    padding-bottom: 60px !important;
+  }
+
+  /* Desktop rotating text */
+  .rotating-text-container,
+  [data-rotating-text="true"],
+  div[data-rotating-text="true"] {
+    height: var(--rotating-text-height-desktop) !important;
+    min-height: var(--rotating-text-height-desktop) !important;
+    max-height: var(--rotating-text-height-desktop) !important;
+  }
+
+  /* Desktop CTA section */
+  #hero-cta-section {
+    width: 100% !important;
+    max-width: 680px !important;
+  }
+  
+  /* Desktop CTA button container */
+  #hero-cta-section .flex.flex-row {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 24px !important;
+    margin-bottom: 16px !important;
+  }
+}
+
+/* =========================
+ * 5. ANIMATION AND TRANSITION OPTIMIZATIONS
+ * ========================= */
+
+/* Ensure all animations only affect opacity, not layout */
+.animate-fade-in,
+.delay-100,
+.delay-200,
+.hero-fade {
+  will-change: opacity !important;
+  transition-property: opacity !important;
+  animation-name: fade-in !important;
+  animation-duration: 0.3s !important;
+  animation-timing-function: ease-in-out !important;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Ensure confetti doesn't cause layout shifts */
+.confetti-container {
+  position: fixed !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+  z-index: 9999 !important;
+  transform: translateZ(0) !important;
+  will-change: opacity !important;
+}
+
+/* =========================
+ * 6. FORM TRANSITION STABILITY
+ * ========================= */
+
+/* Form container stability */
+form.mobile-hero-form,
+#mobile-hero-cta-section form,
+.mobile-hero-form-container {
+  width: 100% !important;
+  max-width: 250px !important;
+  position: relative !important;
+  transition: opacity 0.3s ease-in-out !important;
+  contain: layout style !important;
+}
+
+/* Success message stability */
+.success-message, 
+.mobile-card {
+  width: 100% !important;
+  max-width: 250px !important;
+  position: relative !important;
+  contain: layout style !important;
+  transform: translateZ(0) !important;
+  transition: opacity 0.3s ease-in-out !important;
+}
+
+/* =========================
+ * 7. HARDWARE ACCELERATION
+ * ========================= */
+
+/* Apply hardware acceleration to critical elements */
+.gpu-accelerated,
+.transform-gpu,
+.backface-hidden {
+  transform: translateZ(0) !important;
+  transform-style: preserve-3d !important;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+  perspective: 1000px !important;
+  -webkit-perspective: 1000px !important;
+}

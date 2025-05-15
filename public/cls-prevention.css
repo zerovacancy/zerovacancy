@@ -1,0 +1,300 @@
+/**
+ * CLS Prevention Core Styles
+ * 
+ * This file contains critical CSS for preventing Cumulative Layout Shift (CLS).
+ * It should be loaded as early as possible in the document head.
+ */
+
+/* CSS Variables for CLS-critical dimensions */
+:root {
+  /* Viewport height variables - will be set by JS */
+  --vh: 1vh;
+  --window-height: 100vh;
+  --viewport-width: 100vw;
+  
+  /* Header dimensions */
+  --header-height: 60px;
+  --header-height-safe: calc(60px + var(--safe-area-inset-top, 0px));
+  
+  /* Bottom nav dimensions */
+  --mobile-bottom-nav-height: 64px;
+  --bottom-nav-height-safe: calc(64px + var(--safe-area-inset-bottom, 0px));
+  
+  /* Hero section dimensions */
+  --hero-mobile-height: 450px;
+  --hero-desktop-height: auto;
+  --hero-min-mobile-height: 450px;
+  --hero-min-desktop-height: 70vh;
+  
+  /* Safe area insets (will be set by JS on iOS) */
+  --safe-area-inset-top: 0px;
+  --safe-area-inset-right: 0px;
+  --safe-area-inset-bottom: 0px;
+  --safe-area-inset-left: 0px;
+  
+  /* Content padding */
+  --content-bottom-padding: var(--bottom-nav-height-safe);
+  --content-top-padding: var(--header-height-safe);
+  
+  /* Z-index layers for stacking contexts */
+  --z-index-fixed: 1000;
+  --z-index-header: 2000;
+  --z-index-modal: 3000;
+  --z-index-toast: 4000;
+  --z-index-tooltip: 5000;
+}
+
+/* === Pre-stabilization containment === */
+/* Hide content until styles are applied to prevent initial layout shift */
+html.cls-pre-stabilization * {
+  transition-property: none !important;
+  animation: none !important;
+}
+
+html.cls-stabilized * {
+  /* Re-enable transitions once stabilized */
+  transition-property: initial;
+  animation: initial;
+}
+
+/* === Fixed Header Positioning === */
+header,
+.header,
+[role="banner"],
+.fixed-top {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  height: var(--header-height) !important;
+  min-height: var(--header-height) !important;
+  z-index: var(--z-index-header) !important;
+  
+  /* Force stable rendering */
+  transform: translateZ(0) !important;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+  will-change: transform !important;
+  
+  /* Disable containment on header to prevent layout issues */
+  contain: none !important;
+  
+  /* Prevent unwanted bottom values */
+  bottom: auto !important;
+}
+
+/* Body spacing for fixed header */
+body.has-fixed-header {
+  padding-top: var(--header-height, 60px) !important;
+  margin-top: 0 !important;
+}
+
+/* === Fixed Bottom Nav Positioning === */
+.bottom-nav-container,
+.fixed-bottom,
+nav[style*="position:fixed"][style*="bottom"],
+div[style*="position:fixed"][style*="bottom"] {
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  top: auto !important;
+  width: 100% !important;
+  z-index: var(--z-index-fixed) !important;
+  
+  /* Force stable rendering */
+  transform: translateZ(0) !important;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+  will-change: transform !important;
+  
+  /* Prevent unwanted containment */
+  contain: none !important;
+}
+
+/* Body spacing for fixed bottom nav */
+body.has-fixed-bottom {
+  padding-bottom: var(--content-bottom-padding) !important;
+  margin-bottom: 0 !important;
+}
+
+/* Stable transition for bottom nav - prevent flashing */
+.bottom-nav-container {
+  opacity: 0;
+  transition: opacity 0.15s ease-in-out;
+}
+
+.bottom-nav-container.stabilized {
+  opacity: 1;
+}
+
+/* === Hero Section Stability === */
+section#hero, 
+section.hero, 
+section[data-hero-section="true"] {
+  /* Desktop values */
+  min-height: var(--hero-min-desktop-height, auto) !important;
+  height: var(--hero-desktop-height, auto) !important;
+  
+  /* Force stability with hardware acceleration */
+  transform: translateZ(0) !important;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+  will-change: transform !important;
+  
+  /* Safe containment values that won't cause CLS */
+  content-visibility: auto !important;
+  contain: layout !important;
+}
+
+/* Mobile hero heights */
+@media (max-width: 768px) {
+  section#hero, 
+  section.hero, 
+  section[data-hero-section="true"] {
+    min-height: var(--hero-min-mobile-height, 450px) !important;
+    height: var(--hero-mobile-height, 450px) !important;
+    max-height: var(--hero-mobile-height, 450px) !important;
+  }
+  
+  /* Prevent small/large text shifts in hero sections */
+  #hero h1, .hero h1, h1[data-hero-title="true"] {
+    min-height: 2.5em;
+    height: auto;
+  }
+}
+
+/* === Image Container Aspect Ratios === */
+/* Prevent layout shifts for image containers */
+.img-container, 
+[class*="image-container"], 
+.card-image, 
+.hero-image, 
+.thumbnail {
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* Common aspect ratios */
+.aspect-16-9, [data-aspect="16-9"] {
+  padding-bottom: 56.25% !important; /* 9/16 = 0.5625 = 56.25% */
+}
+
+.aspect-4-3, [data-aspect="4-3"] {
+  padding-bottom: 75% !important; /* 3/4 = 0.75 = 75% */
+}
+
+.aspect-1-1, [data-aspect="1-1"] {
+  padding-bottom: 100% !important; /* 1/1 = 1 = 100% */
+}
+
+/* === Text FOUC Prevention === */
+.text-rotate-container, 
+[data-rotating-text="true"], 
+.rotating-text-container {
+  height: var(--rotating-text-height-desktop, 64px) !important;
+  min-height: var(--rotating-text-height-desktop, 64px) !important;
+}
+
+@media (max-width: 768px) {
+  .text-rotate-container, 
+  [data-rotating-text="true"], 
+  .rotating-text-container {
+    height: var(--rotating-text-height-mobile, 44px) !important;
+    min-height: var(--rotating-text-height-mobile, 44px) !important;
+  }
+}
+
+/* === iOS Specific Fixes === */
+.ios-device {
+  /* Fix 100vh issues on iOS */
+  .full-height {
+    height: 100vh; /* Fallback */
+    height: calc(var(--vh, 1vh) * 100);
+  }
+  
+  /* Apply safe area insets to fixed elements */
+  .fixed-top {
+    padding-top: var(--safe-area-inset-top) !important;
+  }
+  
+  .fixed-bottom {
+    padding-bottom: var(--safe-area-inset-bottom) !important;
+  }
+}
+
+/* === Media Queries for Different Viewports === */
+/* Small mobile - extreme space constraints */
+@media (max-height: 550px) {
+  section#hero, 
+  section.hero, 
+  section[data-hero-section="true"] {
+    min-height: calc(var(--vh, 1vh) * 100) !important;
+    height: calc(var(--vh, 1vh) * 100) !important;
+  }
+}
+
+/* Landscape specific fixes */
+@media (orientation: landscape) and (max-height: 500px) {
+  .landscape-mode {
+    /* Create more compact spacing in landscape */
+    --compact-spacing: 0.5rem;
+  }
+  
+  section#hero, 
+  section.hero, 
+  section[data-hero-section="true"] {
+    min-height: auto !important;
+    height: auto !important;
+    max-height: none !important;
+    padding: var(--compact-spacing, 0.5rem) !important;
+  }
+  
+  /* Allow scrolling in landscape */
+  body.landscape-mode {
+    height: auto !important;
+    overflow-y: auto !important;
+  }
+  
+  /* Ensure fixed positions are maintained */
+  .fixed-top, .fixed-bottom {
+    position: fixed !important;
+  }
+}
+
+/* === Debug Classes === */
+/* Visual indicators for CLS debugging */
+.cls-debug [data-cls-fixed="true"] {
+  outline: 2px dashed blue !important;
+}
+
+.cls-debug [data-cls-problematic="true"] {
+  outline: 2px dashed red !important;
+}
+
+/* === Additional Utilities === */
+/* Hardware acceleration classes */
+.transform-gpu,
+.gpu-accelerated {
+  transform: translateZ(0) !important;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
+  will-change: transform !important;
+}
+
+/* Reduced motion for accessibility and performance */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition-duration: 0.1s !important;
+    animation-duration: 0.1s !important;
+  }
+  
+  .animated, 
+  .animate-fade-in, 
+  .animate-fade-in-up,
+  .animate-slide-in {
+    animation: none !important;
+    transition: opacity 0.1s ease-out !important;
+  }
+}

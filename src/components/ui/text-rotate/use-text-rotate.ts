@@ -13,42 +13,48 @@ export function useTextRotate(
   staggerDuration: number = 0,
   onNext?: (index: number) => void
 ) {
+  // Validate inputs to prevent unnecessary re-renders
+  const validatedTexts = useMemo(() => (Array.isArray(texts) ? texts : [""]), [texts]);
+  const validatedSplitBy = useMemo(() => splitBy || "characters", [splitBy]);
+  const validatedLoop = useMemo(() => Boolean(loop), [loop]);
+  const validatedAuto = useMemo(() => Boolean(auto), [auto]);
+  const validatedInterval = useMemo(() => rotationInterval || 2000, [rotationInterval]);
+  const validatedStaggerFrom = useMemo(() => staggerFrom || "first", [staggerFrom]);
+  const validatedStaggerDuration = useMemo(() => staggerDuration || 0, [staggerDuration]);
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const animationFrameRef = useRef<number | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const isMobile = useIsMobile();
   
-  // Validate texts array
-  const safeTexts = useMemo(() => {
-    return Array.isArray(texts) && texts.length > 0 ? texts : [""];
-  }, [texts]);
+  // Use the validated texts array
+  const safeTexts = validatedTexts;
 
   // Memoize elements generation with optimizations for mobile
   const elements = useMemo(() => {
-    const currentText = safeTexts[currentTextIndex];
-    
+    const currentText = safeTexts[currentTextIndex] || "";
+
     // For mobile, use a simpler splitting strategy to reduce animation complexity
     if (isMobile) {
       // Just return the whole word as a single element for mobile to reduce animation load
-      return splitBy === "characters" ? 
-        [{ characters: [currentText], needsSpace: false }] : 
+      return validatedSplitBy === "characters" ?
+        [{ characters: [currentText], needsSpace: false }] :
         [currentText];
     }
-    
+
     // Desktop behavior remains the same with more complex animations
-    if (splitBy === "characters") {
+    if (validatedSplitBy === "characters") {
       const text = currentText.split(" ");
       return text.map((word, i) => ({
         characters: splitIntoCharacters(word),
         needsSpace: i !== text.length - 1,
       }));
     }
-    return splitBy === "words"
+    return validatedSplitBy === "words"
       ? currentText.split(" ")
-      : splitBy === "lines"
+      : validatedSplitBy === "lines"
         ? currentText.split("\n")
-        : currentText.split(splitBy);
-  }, [safeTexts, currentTextIndex, splitBy, isMobile]);
+        : currentText.split(validatedSplitBy);
+  }, [safeTexts, currentTextIndex, validatedSplitBy, isMobile]);
 
   // Helper function to handle index changes and trigger callback
   const handleIndexChange = useCallback((newIndex: number) => {
@@ -58,23 +64,23 @@ export function useTextRotate(
 
   const next = useCallback(() => {
     const nextIndex = currentTextIndex === safeTexts.length - 1
-      ? (loop ? 0 : currentTextIndex)
+      ? (validatedLoop ? 0 : currentTextIndex)
       : currentTextIndex + 1;
-    
+
     if (nextIndex !== currentTextIndex) {
       handleIndexChange(nextIndex);
     }
-  }, [currentTextIndex, safeTexts.length, loop, handleIndexChange]);
+  }, [currentTextIndex, safeTexts.length, validatedLoop, handleIndexChange]);
 
   const previous = useCallback(() => {
     const prevIndex = currentTextIndex === 0
-      ? (loop ? safeTexts.length - 1 : currentTextIndex)
+      ? (validatedLoop ? safeTexts.length - 1 : currentTextIndex)
       : currentTextIndex - 1;
-    
+
     if (prevIndex !== currentTextIndex) {
       handleIndexChange(prevIndex);
     }
-  }, [currentTextIndex, safeTexts.length, loop, handleIndexChange]);
+  }, [currentTextIndex, safeTexts.length, validatedLoop, handleIndexChange]);
 
   const jumpTo = useCallback((index: number) => {
     const validIndex = Math.max(0, Math.min(index, safeTexts.length - 1));
@@ -91,15 +97,15 @@ export function useTextRotate(
 
   // Auto-rotation effect with optimized debouncing for mobile
   useEffect(() => {
-    if (!auto) return;
-    
+    if (!validatedAuto) return;
+
     // Clear any existing timers and animation frames
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
-    
+
     // Use a standard delay for mobile - too long can make it seem broken
-    const delay = rotationInterval;
-    
+    const delay = validatedInterval;
+
     // Use a simple timeout for consistent timing
     timeoutRef.current = setTimeout(() => {
       // For mobile, avoid RAF to reduce potential jank
@@ -114,21 +120,21 @@ export function useTextRotate(
         });
       }
     }, delay);
-    
+
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
       if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
     };
-  }, [next, rotationInterval, auto, isMobile]);
+  }, [next, validatedInterval, validatedAuto, isMobile]);
 
   const calculateStaggerDelay = useCallback((wordIndex: number, charIndex: number, wordArray: WordObject[]) => {
     // Skip stagger calculation for mobile completely
-    if (isMobile || staggerDuration === 0) return 0;
-    
+    if (isMobile || validatedStaggerDuration === 0) return 0;
+
     const previousCharsCount = wordArray
       .slice(0, wordIndex)
       .reduce((sum, word) => sum + word.characters.length, 0);
-    
+
     const totalChars = wordArray.reduce(
       (sum, word) => sum + word.characters.length, 0
     );
@@ -136,10 +142,10 @@ export function useTextRotate(
     return getStaggerDelay(
       previousCharsCount + charIndex,
       totalChars,
-      staggerFrom,
-      staggerDuration
+      validatedStaggerFrom,
+      validatedStaggerDuration
     );
-  }, [staggerFrom, staggerDuration, isMobile]);
+  }, [validatedStaggerFrom, validatedStaggerDuration, isMobile]);
 
   return {
     currentTextIndex,

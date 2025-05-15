@@ -1,6 +1,6 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="cls-pre-stabilization">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/favicon.png" />
@@ -176,6 +176,12 @@
       }
     </style>
     
+    <!-- Early CLS prevention styles - Load before any rendering -->
+    <link rel="stylesheet" href="/cls-prevention.css">
+    
+    <!-- Viewport height fix for CLS prevention - Load early -->
+    <script src="/viewport-height-fix.js"></script>
+    
     <!-- Optimized loading indicator - simplified implementation -->
     <script>
       (function() {
@@ -316,6 +322,7 @@
     <!-- Resource hints - optimized for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet">
     <link rel="preconnect" href="https://pozblfzhjqlsxkakhowp.supabase.co" crossorigin />
     <link rel="dns-prefetch" href="https://pozblfzhjqlsxkakhowp.supabase.co" />
     <link rel="preconnect" href="https://js.stripe.com" crossorigin />
@@ -362,7 +369,7 @@
       }
     </script>
     
-    <!-- Emergency header fix - must run FIRST to ensure header is fixed properly -->
+    <!-- Emergency header fix with viewport height integration for CLS prevention -->
     <script src="/text-fouc-fix.js"></script>
     
     <!-- Event listener monitoring and protection -->
@@ -374,6 +381,11 @@
     
     <!-- Ultra-fast mobile optimization script - runs immediately -->
     <script src="/quick-perf.js"></script>
+    
+    <!-- CLS verification and monitoring tools -->
+    <script src="/verify-cls-improvements.js"></script>
+    <script src="/verify-cls-prevention.js"></script>
+    <script src="/cls-display.js"></script>
     
     <!-- Development-only image path checker removed to prevent floating UI elements -->
     <!-- No image checker to prevent CLS and clean up UI -->
@@ -682,11 +694,26 @@
     
     <!-- Performance monitoring - included only in development -->
     <script>
-      // Only load in development environments
-      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        console.info('Performance monitoring enabled (development only)');
-        // Avoid loading non-existent script
-        // Performance monitoring is handled by web-vitals.ts imported in App.tsx
+      // Performance monitoring enabled in development and via URL parameter
+      if (window.location.hostname === 'localhost' || 
+          window.location.hostname === '127.0.0.1' || 
+          window.location.search.includes('debug=')) {
+        console.info('Performance monitoring enabled');
+        
+        // Enable CLS monitoring
+        if (typeof window.__clsMonitoring === 'undefined' && typeof window.__enableClsMonitoring === 'function') {
+          // Call the function exposed by text-fouc-fix.js
+          window.__enableClsMonitoring();
+          console.info('CLS monitoring enabled. Access with window.__clsMonitoring in console.');
+        } else {
+          console.info('CLS monitoring already initialized by text-fouc-fix.js');
+        }
+        
+        if (window.location.search.includes('debug=cls') || window.location.search.includes('debug=all')) {
+          // Add debug class to body for visual indicators
+          document.body.classList.add('cls-debug');
+          console.info('CLS debug mode enabled. Elements causing shifts will be highlighted.');
+        }
       }
     </script>
     

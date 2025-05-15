@@ -1,5 +1,5 @@
 /* ==========================
- * Mobile Hero Section - Final Unified Version
+ * Mobile Hero Section - Enhanced CLS Prevention Version
  * For devices with max-width: 768px
  * 
  * This CSS ensures a stable, vertically centered hero layout by:
@@ -8,6 +8,7 @@
  * - Using gaps instead of margins for consistent spacing
  * - Removing all fixed heights from inner elements
  * - Using !important flags to prevent overrides from JavaScript
+ * - Implementing advanced CLS prevention techniques
  * ========================== */
 
 /* Define spacing and sizing variables */
@@ -19,6 +20,12 @@
   --hero-content-max-width: 90%;
   --hero-desktop-height: 650px;
   --hero-mobile-height: 450px; /* CRITICAL: Fixed mobile height variable at 450px */
+  --hero-mobile-min-height: 450px; /* CRITICAL: Fixed minimum height for mobile */
+  
+  /* VH-based calculations - uses custom property for iOS Safari compatibility */
+  --vh: 1vh; /* This gets set dynamically in JavaScript */
+  --hero-vh-height: calc(var(--vh, 1vh) * 100);
+  --hero-vh-fallback: min(var(--hero-mobile-height), calc(85 * var(--vh, 1vh)));
   
   /* IMPORTANT: Block any 500px heights that might be set via JavaScript */
   --block-500px-height: none;
@@ -36,12 +43,17 @@
   --safe-area-inset-right: env(safe-area-inset-right, 0px);
   --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
   --safe-area-inset-left: env(safe-area-inset-left, 0px);
+  
+  /* Rotated text dimensions - single source of truth */
+  --rotating-text-height-mobile: 44px;
+  --rotating-text-height-desktop: 64px;
 }
 
 /* Base styles for both mobile and desktop */
 section[data-hero-section="true"],
 div[data-hero-section="true"],
-section#hero {
+section#hero,
+.hero-section {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -52,6 +64,19 @@ section#hero {
   padding: 0;
   box-sizing: border-box;
   position: relative;
+  
+  /* Important for CLS prevention */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  will-change: opacity;
+  
+  /* Explicitly set z-index to prevent stacking issues */
+  z-index: 1;
+  
+  /* Optimize rendering */
+  content-visibility: auto;
+  contain-intrinsic-size: 0 450px; /* Hint for layout during load */
 }
 
 /* Content wrapper - unified block that contains all hero content */
@@ -66,17 +91,27 @@ section#hero {
   margin: 0 auto;
   box-sizing: border-box;
   gap: var(--space-md); /* 24px gap between hero-content and CTA */
+  
+  /* CLS prevention - ensure stable rendering */
+  position: relative;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  z-index: 2;
 }
 
-/* Mobile-specific styles */
+/* Mobile-specific styles with enhanced CLS prevention */
 @media (max-width: 768px) {
-  /* 1. Root Hero Container - Responsive height with vertical centering */
+  /* 1. Root Hero Container - Fixed height with vertical centering */
   section#hero,
+  section[data-hero-section="true"],
+  div[data-hero-section="true"],
+  .hero-section,
   [data-hero-section="true"] {
-    /* Responsive height based on viewport - will use the smaller of 450px or 85vh */
-    height: min(var(--hero-mobile-height), 85vh) !important;
-    min-height: min(var(--hero-mobile-height), 85vh) !important;
-    max-height: min(var(--hero-mobile-height), 85vh) !important;
+    /* CRITICAL: Fixed height with custom property fallback for maximum stability */
+    height: var(--hero-mobile-height) !important;
+    min-height: var(--hero-mobile-height) !important;
+    max-height: var(--hero-mobile-height) !important;
     
     /* IMPORTANT: Explicitly block any JavaScript from setting 500px heights */
     --js-override-block: none !important;
@@ -101,16 +136,32 @@ section#hero {
     position: relative !important;
     z-index: 1 !important; /* Lower than header's z-index */
     
-    /* REMOVED: No contain properties that would create new stacking context */
-    
     /* CRITICAL: Prevent any JavaScript animations from modifying layout */
     will-change: opacity !important;
-    transform: none !important;
+    transform: translateZ(0) !important;
+    backface-visibility: hidden !important;
+    -webkit-backface-visibility: hidden !important;
     transition: none !important;
+    
+    /* Explicitly remove any animations */
+    animation: none !important;
+    
+    /* Enhanced containment - prevent layout shifts, but not size containment */
+    contain: layout !important;
+    
+    /* Force immediate paint for critical above the fold content */
+    content-visibility: visible !important;
+    
+    /* Set intrinsic size hint for layout calculation */
+    contain-intrinsic-size: 0 450px !important;
   }
   
-  /* 2. Hero Wrapper - Container for all hero content with consistent spacing */
-  .hero-wrapper {
+  /* 2. Hero Wrapper - Container for all hero content with enhanced stability */
+  .hero-wrapper,
+  section#hero > .hero-wrapper,
+  section[data-hero-section="true"] > .hero-wrapper,
+  div[data-hero-section="true"] > .hero-wrapper,
+  .hero-section > .hero-wrapper {
     /* Width constraints with 90% max-width */
     width: 100% !important;
     max-width: 90% !important;
@@ -143,18 +194,25 @@ section#hero {
     box-sizing: border-box !important;
     
     /* Prevent stacking context issues */
-    position: static !important;
+    position: relative !important;
+    z-index: 2 !important;
     
     /* IMPORTANT: Prevent any transform animations from affecting layout */
-    transform: none !important;
+    transform: translateZ(0) !important;
+    backface-visibility: hidden !important;
+    -webkit-backface-visibility: hidden !important;
     will-change: opacity !important;
+    
+    /* No transitions on layout properties */
+    transition: none !important;
   }
   
-  /* 3. Nested Elements - Reset heights and spacing */
+  /* 3. Nested Elements - Reset heights and ensure stable layout */
   .hero-content,
   .hero-title-container,
   .hero-description-container,
   .hero-cta-container,
+  #hero-title,
   h1#hero-title {
     /* CRITICAL: Remove all fixed height constraints including any accidental 500px values */
     height: auto !important;
@@ -173,12 +231,29 @@ section#hero {
     
     /* IMPORTANT: Prevent any transforms from affecting layout */
     transform: none !important;
+    
+    /* Set width to 100% to ensure proper containment */
+    width: 100% !important;
+    
+    /* Prevent any browser auto-correction that could cause shifts */
+    text-size-adjust: 100% !important;
+    -webkit-text-size-adjust: 100% !important;
+    
+    /* No transitions on layout properties */
+    transition: none !important;
+    
+    /* No animations */
+    animation: none !important;
   }
   
   /* 4. Content-specific styles */
   
   /* Hero content container with title and description */
-  .hero-content {
+  .hero-content,
+  div.hero-content,
+  section#hero .hero-content,
+  section[data-hero-section="true"] .hero-content,
+  .hero-section .hero-content {
     /* Width control */
     width: 100% !important;
     
@@ -189,35 +264,109 @@ section#hero {
     
     /* Increased internal spacing between title and description */
     gap: 16px !important; /* Increased from 8px to 16px */
+    
+    /* Reset any potential problematic properties */
+    position: static !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    
+    /* Ensure content always takes the available space */
+    min-width: 100% !important;
+    
+    /* Additional CLS prevention */
+    transform: translateZ(0) !important;
+    backface-visibility: hidden !important;
+    -webkit-backface-visibility: hidden !important;
   }
   
   /* Title container with dedicated min-height for stability */
-  .hero-title-container {
+  .hero-title-container,
+  div.hero-title-container,
+  #hero .hero-title-container,
+  [data-hero-section="true"] .hero-title-container {
     width: 100% !important;
-    min-height: 44px !important; /* Increased from 40px */
+    min-height: calc(var(--rotating-text-height-mobile) + 48px) !important; /* Height of rotating text + extra space */
     display: block !important;
+    
+    /* Reset potential problem properties */
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    
+    /* Prevent unexpected positioning */
+    position: relative !important;
+    
+    /* Ensure no transforms affect layout */
+    transform: none !important;
+    
+    /* Additional stability enhancements */
+    backface-visibility: hidden !important;
+    -webkit-backface-visibility: hidden !important;
+    
+    /* No transitions on layout properties */
+    transition: none !important;
+    
+    /* Force normal rendering */
+    opacity: 1 !important;
+    visibility: visible !important;
   }
   
-  /* Title element styling - Optimized typography */
-  #hero-title {
+  /* Title element styling - Optimized typography with enhanced stability */
+  #hero-title,
+  h1#hero-title,
+  .hero-title-container #hero-title,
+  .hero-content #hero-title {
     position: static !important;
     margin: 0 0 12px 0 !important; /* Increased bottom margin for better spacing */
     padding: 0 !important;
-    font-size: 1.5rem !important; /* Reduced size for better balance */
+    font-size: 1.5rem !important; /* Calibrated size for better balance */
     letter-spacing: 0.02em !important; /* Maintained letter spacing for readability */
     line-height: 1.2 !important; /* Added explicit line height */
+    width: 100% !important;
+    
+    /* Complete reset of problematic properties */
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    
+    /* Prevent stacking context issues */
+    z-index: 2 !important;
+    
+    /* Ensure text renders immediately and clearly */
+    text-rendering: optimizeSpeed !important;
+    -webkit-font-smoothing: antialiased !important;
+    
+    /* Prevent font-related layout shifts */
+    font-display: block !important;
+    
+    /* Ensure no transforms affect layout */
+    transform: none !important;
+    transform-style: flat !important;
+    
+    /* Prevent animation frameworks from affecting layout */
+    animation: none !important;
+    transition: none !important;
   }
   
-  /* Critical: Rotating text container with stable height */
-  #hero-title > div {
-    /* Maintained increased height for the rotating text container */
-    height: 44px !important;
-    min-height: 44px !important;
-    max-height: 44px !important;
-    margin-top: 4px !important; /* Added space between static and rotating text */
-    margin-bottom: 8px !important; /* Added space after the rotating text */
-    font-size: 2rem !important; /* Maintained larger font for rotating text for emphasis */
-    font-weight: 700 !important; /* Maintained bolder rotating text for emphasis */
+  /* Critical: Rotating text container with stable height - THE most critical CLS fix */
+  #hero-title > div,
+  #hero-title .rotating-text-container,
+  .hero-title-container > h1 > div,
+  div[class*="rotating"],
+  .rotating-container {
+    /* CRITICAL: Fixed height ensures layout stability during text rotation */
+    height: var(--rotating-text-height-mobile, 44px) !important;
+    min-height: var(--rotating-text-height-mobile, 44px) !important;
+    max-height: var(--rotating-text-height-mobile, 44px) !important;
+    
+    /* Spacing adjustments for better text alignment */
+    margin-top: 4px !important; /* Space between static and rotating text */
+    margin-bottom: 8px !important; /* Space after the rotating text */
+    
+    /* Typography settings */
+    font-size: 2rem !important; /* Larger font for rotating text for emphasis */
+    font-weight: 700 !important; /* Bolder rotating text for emphasis */
+    line-height: 1.2 !important; /* Consistent line height */
     
     /* Stable positioning that won't cause layout shifts */
     position: relative !important;
@@ -227,26 +376,44 @@ section#hero {
     align-items: center !important;
     justify-content: center !important;
     
-    /* Ensure text isn't clipped */
+    /* Ensure text isn't clipped but don't allow overflow to affect layout */
     overflow: visible !important;
+    
+    /* Full width container */
+    width: 100% !important;
     
     /* IMPORTANT: Prevent transforms from affecting layout */
     transform: none !important;
+    transform-style: flat !important;
+    
+    /* Enhanced 3D rendering */
+    backface-visibility: hidden !important;
+    -webkit-backface-visibility: hidden !important;
     
     /* IMPORTANT: Prevent animation frameworks from overriding */
     animation: none !important;
     transition: none !important;
+    
+    /* Ensure proper z-index */
+    z-index: 3 !important;
+    
+    /* No contain property that might affect visibility */
+    contain: none !important;
   }
   
-  /* Ensure rotating text elements are visible and stable */
+  /* Individual rotating text spans - ensure they don't cause shifts */
   #hero-title .rotating-text,
-  #hero-title .rotating-text span {
+  #hero-title .rotating-text span,
+  .rotating-text,
+  .rotating-text span,
+  span[class*="rotating"] {
     display: block !important;
     opacity: 1 !important;
     visibility: visible !important;
     
     /* CRITICAL: Prevent any transforms from causing layout shifts */
     transform: none !important;
+    transform-style: flat !important;
     
     /* Prevent any animations from affecting visibility */
     animation: none !important;
@@ -254,89 +421,216 @@ section#hero {
     
     /* Prevent text from being layered below other elements */
     z-index: 5 !important;
+    
+    /* Consistent font sizing */
+    font-size: inherit !important;
+    line-height: inherit !important;
+    font-weight: inherit !important;
+    
+    /* Enhanced rendering */
+    backface-visibility: hidden !important;
+    -webkit-backface-visibility: hidden !important;
+    
+    /* Ensure text doesn't get cut off */
+    margin: 0 !important;
+    padding: 0 !important;
   }
   
-  /* Description container - Enhanced for readability and spacing */
+  /* Description container - Enhanced for readability and stability */
   .hero-description-container,
-  .auto-height-container {
+  div.hero-description-container,
+  .auto-height-container,
+  .content-driven-height,
+  .hero-content > .hero-description-container {
+    /* Width control */
     width: 100% !important;
     max-width: 90% !important;
+    
+    /* CRITICAL: Content-driven height */
     height: auto !important;
     min-height: auto !important;
     max-height: none !important;
-    margin-top: 16px !important; /* Increased top margin for better separation */
+    
+    /* Spacing */
+    margin: 0 auto !important;
+    padding: 0 !important;
+    
     /* Prevent any JavaScript from setting a 500px height */
     --min-height: auto !important;
+    
+    /* Ensure proper stacking order */
+    position: relative !important;
+    z-index: 2 !important;
+    
+    /* Enhanced stability */
+    transform: translateZ(0) !important;
+    backface-visibility: hidden !important;
+    -webkit-backface-visibility: hidden !important;
+    
+    /* Define rendering behavior */
+    contain: content !important;
   }
   
   /* Enhanced typography for description text */
-  .hero-description-container p {
-    font-size: 0.95rem !important; /* Slightly smaller text */
-    line-height: 1.5 !important; /* Tighter line height */
-    max-width: 310px !important; /* Control line length for readability */
-    margin: 0 auto !important; /* Center the text block */
+  .hero-description-container p,
+  .hero-description-container div,
+  .hero-description p,
+  #hero .hero-description-container p {
+    /* Typography */
+    font-size: 0.95rem !important; /* Calibrated text size */
+    line-height: 1.5 !important; /* Proper line height */
     letter-spacing: 0.01em !important; /* Subtle letter spacing for readability */
+    
+    /* Width control */
+    max-width: 310px !important; /* Control line length for readability */
+    
+    /* Spacing */
+    margin: 0 auto !important; /* Center the text block */
+    padding: 0 !important;
+    
+    /* Prevent text clipping */
+    overflow: visible !important;
+    
+    /* Ensure proper rendering */
+    text-rendering: optimizeSpeed !important;
+    -webkit-font-smoothing: antialiased !important;
+    
+    /* Set explicit width to prevent wrapping-related layout shifts */
+    width: 100% !important;
+    
+    /* Content-based height */
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    
+    /* Font loading optimization to prevent FOUT layout shifts */
+    font-display: swap !important;
   }
   
-  /* CTA container */
-  .hero-cta-container {
+  /* CTA container - ensure proper spacing and layout stability */
+  .hero-cta-container,
+  div.hero-cta-container,
+  #hero .hero-cta-container,
+  .hero-content ~ .hero-cta-container {
+    /* Width control */
     width: 100% !important;
+    
+    /* Layout */
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
+    
+    /* Spacing */
+    margin: 0 !important;
+    padding: 0 !important;
+    
+    /* Auto height based on content */
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    
+    /* Ensure proper stacking */
+    position: relative !important;
+    z-index: 4 !important;
+    
+    /* Enhanced stability */
+    transform: translateZ(0) !important;
+    backface-visibility: hidden !important;
+    -webkit-backface-visibility: hidden !important;
   }
   
-  /* 5. CTA Button and Icon Alignment */
+  /* 5. CTA Button and Icon Alignment - Enhanced for touch and CLS prevention */
   
-  /* CTA Button styling - Enhanced for better accessibility */
+  /* CTA Button styling - Optimized for touch and stability */
   .hero-cta-container button,
-  .mobile-cta-button {
+  button.mobile-cta-button,
+  .cta-button,
+  .hero-wrapper .hero-cta-container button {
+    /* Layout */
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
     position: relative !important;
-    padding-left: 60px !important; /* Increased from 55px for better spacing */
-    padding-right: 18px !important; /* Slightly increased from 16px */
-    min-height: 54px !important; /* Increased from 48px for better tap target */
-    border-radius: 14px !important; /* Increased from 12px for better visual */
+    
+    /* Sizing and spacing */
+    padding-left: 60px !important; /* Space for icon */
+    padding-right: 18px !important; /* Text padding */
+    min-height: 54px !important; /* Increased tap target */
+    min-width: 200px !important; /* Ensure consistent width */
+    width: auto !important; /* Allow natural width based on content */
+    
+    /* Visual */
+    border-radius: 14px !important; /* Rounded corners */
+    
+    /* Rendering optimization */
+    transform: translateZ(0) !important;
+    backface-visibility: hidden !important;
+    -webkit-backface-visibility: hidden !important;
+    
+    /* Touch handling */
+    touch-action: manipulation !important; /* Optimize for touch */
+    -webkit-tap-highlight-color: transparent !important; /* Remove tap highlight */
+    
+    /* Prevent layout shifts during interaction */
+    will-change: transform, opacity !important;
+    transition: transform 0.2s ease, opacity 0.2s ease !important;
   }
   
-  /* Icon container positioning - Enhanced for visibility */
+  /* Icon container positioning - Enhanced for visibility and layout stability */
   .hero-cta-container button > div[class*="absolute"],
   .mobile-cta-button > div[class*="absolute"],
-  .cta-icon-container {
+  .cta-icon-container,
+  .cta-button > div:first-child {
+    /* Positioning */
     position: absolute !important;
-    left: 6px !important; /* Moved slightly more to the right */
+    left: 6px !important; /* Icon positioning */
     top: 50% !important;
     transform: translateY(-50%) !important;
     margin-left: 0 !important;
-    width: 36px !important; /* Increased from 32px */
-    height: 36px !important; /* Increased from 32px */
+    
+    /* Sizing */
+    width: 36px !important; /* Fixed width */
+    height: 36px !important; /* Fixed height */
+    
+    /* Layout */
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+    
+    /* Enhanced rendering */
+    transform: translateY(-50%) translateZ(0) !important;
+    backface-visibility: hidden !important;
+    -webkit-backface-visibility: hidden !important;
+    
+    /* Ensure icon is visible */
+    z-index: 2 !important;
   }
   
   /* Touch feedback states for mobile interactions */
   
-  /* CTA Button active state */
-  .mobile-cta-button:active {
-    transform: translateY(1px) !important;
+  /* CTA Button active state - Only animate transform/opacity, not layout properties */
+  .mobile-cta-button:active,
+  .hero-cta-container button:active,
+  .cta-button:active {
+    transform: translateY(1px) translateZ(0) !important;
     background-image: linear-gradient(to bottom, #7837DB, #6e32c8) !important;
-    transition: transform 0.1s ease !important;
+    transition: transform 0.1s ease, background-image 0.1s ease !important;
+    opacity: 0.95 !important;
   }
   
-  /* Form submit button active state */
+  /* Form submit button active state - Consistent with CTA */
   form button[type="submit"]:active {
-    transform: translateY(1px) !important;
+    transform: translateY(1px) translateZ(0) !important;
     background-image: linear-gradient(to bottom, #7837DB, #6e32c8) !important;
-    transition: transform 0.1s ease !important;
+    transition: transform 0.1s ease, background-image 0.1s ease !important;
+    opacity: 0.95 !important;
   }
   
-  /* Email input focus state */
+  /* Email input focus state - Enhanced focus indication without layout shifts */
   form input[type="email"]:focus {
     border-color: rgba(138, 66, 245, 0.4) !important;
     box-shadow: 0 0 0 2px rgba(138, 66, 245, 0.2) !important;
+    outline: none !important;
   }
   
   /* Prevent any transforms or z-index issues that might break layout */
@@ -346,12 +640,43 @@ section#hero {
     z-index: auto !important;
   }
   
-  /* Remove any pseudo-elements that might create overlays */
+  /* Remove any pseudo-elements that might create overlays or affect layout */
   section#hero::after,
   section#hero::before,
   [data-hero-section="true"]::after,
-  [data-hero-section="true"]::before {
+  [data-hero-section="true"]::before,
+  .hero-section::after,
+  .hero-section::before {
     display: none !important;
+  }
+  
+  /* 6. Animation classes - ONLY affect opacity, not layout */
+  .hero-fade-in,
+  .hero-delay-100,
+  .hero-delay-200,
+  div.hero-fade-in,
+  .hero-content.hero-fade-in,
+  .hero-cta-container.hero-fade-in {
+    /* CRITICAL: Ensure animations never affect layout properties */
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    width: 100% !important;
+    
+    /* Prevent position changes during animation */
+    position: relative !important;
+    
+    /* Only animate opacity, not transform (to prevent layout shifts) */
+    transition-property: opacity !important;
+    will-change: opacity !important;
+    
+    /* Prevent transforms from affecting layout */
+    transform: none !important;
+    transform-style: flat !important;
+    
+    /* Optimization for smoother animation */
+    backface-visibility: hidden !important;
+    -webkit-backface-visibility: hidden !important;
   }
 }
 
@@ -361,17 +686,42 @@ section#hero {
 @media (min-width: calc(var(--breakpoint-mobile) + 1px)) {
   section[data-hero-section="true"],
   div[data-hero-section="true"],
-  section#hero {
+  section#hero,
+  .hero-section {
     height: var(--hero-desktop-height);
     min-height: var(--hero-desktop-height);
+    max-height: var(--hero-desktop-height);
+    
+    /* Enhanced stability for desktop */
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    will-change: opacity;
   }
   
   .hero-wrapper {
     padding-top: var(--space-xl);
     padding-bottom: var(--space-lg);
+    
+    /* Enhanced rendering */
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
   }
   
   .hero-description-container {
     max-width: 650px;
+  }
+  
+  /* Rotating text container with stable height for desktop */
+  #hero-title > div,
+  #hero-title .rotating-text-container,
+  .hero-title-container > h1 > div,
+  div[class*="rotating"],
+  .rotating-container {
+    /* CRITICAL: Fixed height for desktop */
+    height: var(--rotating-text-height-desktop, 64px) !important;
+    min-height: var(--rotating-text-height-desktop, 64px) !important;
+    max-height: var(--rotating-text-height-desktop, 64px) !important;
   }
 }
