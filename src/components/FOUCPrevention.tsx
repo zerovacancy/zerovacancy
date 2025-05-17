@@ -4,7 +4,7 @@
  * This component prevents Flash of Unstyled Content (FOUC) on page load, particularly
  * focusing on preventing old images appearing briefly during mobile page load.
  */
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 export function FOUCPrevention() {
   useEffect(() => {
@@ -108,9 +108,8 @@ export function FOUCPrevention() {
     document.addEventListener('DOMContentLoaded', removeHeroparallaxImages);
     
     // And once more after everything is loaded (belt and suspenders)
-    window.addEventListener('load', () => {
-      setTimeout(removeHeroparallaxImages, 100);
-    });
+    const delayedCleanup = () => setTimeout(removeHeroparallaxImages, 100);
+    window.addEventListener('load', delayedCleanup);
 
     // 6. Monitor and handle any dynamically added images
     const observer = new MutationObserver((mutations) => {
@@ -176,7 +175,7 @@ export function FOUCPrevention() {
     return () => {
       window.removeEventListener('load', markAsLoaded);
       document.removeEventListener('DOMContentLoaded', removeHeroparallaxImages);
-      window.removeEventListener('load', () => setTimeout(removeHeroparallaxImages, 100));
+      window.removeEventListener('load', delayedCleanup);
       observer.disconnect();
       
       // Remove the style element

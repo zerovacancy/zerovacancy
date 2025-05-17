@@ -3,6 +3,18 @@
 <html lang="en" class="cls-pre-stabilization">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      // Add loading class but make sure it's removed within 1 second
+      document.documentElement.classList.add('loading');
+      setTimeout(function() {
+        document.documentElement.classList.remove('loading');
+        document.documentElement.classList.add('content-loaded');
+      }, 1000);
+    </script>
+    <style>
+      /* Hide just heroparallax elements which are known to cause problems */
+      [src*="heroparallax"] { display: none !important; }
+    </style>
     <link rel="icon" type="image/png" href="/favicon.png" />
     
     <!-- Fix to remove carousel indicators -->
@@ -145,7 +157,7 @@
       img {
         width: 100%;
         height: auto;
-        opacity: 1; /* Changed from 0 to 1 to ensure images are visible immediately */
+        opacity: 1; /* Keep images visible while debugging */
         transition: opacity 0.3s ease;
       }
       
@@ -666,6 +678,9 @@
       // Loader code completely removed to eliminate CLS
     </script>
     
+    <!-- Simple debug script -->
+    <script src="/debug-page.js"></script>
+    
     <!-- Efficiently load the main script -->
     <script type="module" src="/src/main.tsx"></script>
     
@@ -813,6 +828,22 @@
             });
         });
       }
+    </script>
+    
+    <!-- Remove loading class when content is loaded -->
+    <script>
+      window.addEventListener('load', function() {
+        // Remove loading class to show images
+        document.documentElement.classList.remove('loading');
+        // Add content-loaded class
+        document.documentElement.classList.add('content-loaded');
+      });
+      
+      // Fallback - force show images after 2 seconds regardless of load event
+      setTimeout(function() {
+        document.documentElement.classList.remove('loading');
+        document.documentElement.classList.add('content-loaded');
+      }, 2000);
     </script>
   </body>
 </html>

@@ -14,8 +14,17 @@ import { setupCSSContainment } from './utils/css-optimization/init-containment';
 /**
  * Initialize performance optimizations early
  */
-// Check if we're on a mobile device
-const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+// Determine if we're on a mobile device
+let isMobile = false;
+
+// Access window and navigator safely to avoid ReferenceErrors in non-browser environments
+if (typeof window !== 'undefined' && typeof navigator !== 'undefined') {
+  isMobile =
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    ) ||
+    window.innerWidth < 768;
+}
 
 // Apply performance optimizations
 if (typeof window !== 'undefined') {
