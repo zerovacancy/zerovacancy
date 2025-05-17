@@ -32,17 +32,17 @@
       /* Hide just heroparallax elements which are known to cause problems */
       [src*="heroparallax"] { display: none !important; }
       
-      /* EMERGENCY FIX: Ensure content is always visible regardless of loading state */
+      /* Ensure content visibility during page load */
       html.loading * {
-        visibility: visible !important;
-        opacity: 1 !important;
+        visibility: visible;
+        opacity: 1;
       }
       
       /* Ensure the root element is always visible */
       #root {
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
+        display: block;
+        visibility: visible;
+        opacity: 1;
       }
     </style>
     <link rel="icon" type="image/png" href="/favicon.png" />
@@ -187,7 +187,7 @@
       img {
         width: 100%;
         height: auto;
-        opacity: 1; /* Keep images visible while debugging */
+        opacity: 1; /* Default visibility */
         transition: opacity 0.3s ease;
       }
       
@@ -1041,29 +1041,14 @@
     }
     </script>
     
-    <!-- Performance monitoring - included only in development -->
+    <!-- Performance monitoring in development environment only -->
     <script>
-      // Performance monitoring enabled in development and via URL parameter
-      if (window.location.hostname === 'localhost' || 
-          window.location.hostname === '127.0.0.1' || 
-          window.location.search.includes('debug=')) {
-        console.info('Performance monitoring enabled');
-        
-        // Enable CLS monitoring
-        if (typeof window.__clsMonitoring === 'undefined' && typeof window.__enableClsMonitoring === 'function') {
-          // Call the function exposed by text-fouc-fix.js
-          window.__enableClsMonitoring();
-          console.info('CLS monitoring enabled. Access with window.__clsMonitoring in console.');
-        } else {
-          console.info('CLS monitoring already initialized by text-fouc-fix.js');
-        }
-        
-        if (window.location.search.includes('debug=cls') || window.location.search.includes('debug=all')) {
-          // Add debug class to body for visual indicators
-          document.body.classList.add('cls-debug');
-          console.info('CLS debug mode enabled. Elements causing shifts will be highlighted.');
-        }
-      }
+      // Basic performance marks for monitoring page load
+      performance.mark('body-loaded');
+      window.addEventListener('load', function() {
+        performance.mark('page-loaded');
+        performance.measure('total-load-time', 'app-init-start', 'page-loaded');
+      });
     </script>
     
     <!-- Cookie consent positioning fix -->
@@ -1082,11 +1067,10 @@
       });
     </script>
     
-    <!-- TEMPORARILY DISABLED: Service worker registration disabled for emergency fix -->
+    <!-- Service worker registration -->
     <script>
-      // Service worker with improved cache control - TEMPORARILY DISABLED
-      // EMERGENCY FIX: Completely disable service worker registration until issues are resolved
-      if (false) { // Disabled for emergency fix
+      // Service worker registration controlled by environment
+      if (window.__isProductionEnvironment && window.__isProductionEnvironment()) { // Only enable in production
         // Detect if desktop for enhanced caching
         const isDesktop = window.innerWidth >= 768 && 
                         !(/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
