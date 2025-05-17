@@ -1,8 +1,43 @@
 
 <!DOCTYPE html>
-<html lang="en" class="cls-pre-stabilization">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <!-- CRITICAL EMERGENCY FIX: Static fallback content -->
+    <style>
+      /* Minimal styling for core content visibility */
+      #fallback-content {
+        display: block;
+        font-family: system-ui, -apple-system, sans-serif;
+        max-width: 800px;
+        margin: 100px auto 20px;
+        padding: 20px;
+        text-align: center;
+      }
+      #fallback-content h1 {
+        font-size: 32px;
+        margin-bottom: 20px;
+        color: #6741d9;
+      }
+      #fallback-content p {
+        font-size: 18px;
+        margin-bottom: 30px;
+        color: #333;
+      }
+      #fallback-content .cta-button {
+        display: inline-block;
+        padding: 12px 24px;
+        background: #6741d9;
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+        font-weight: bold;
+      }
+      body.js-loaded #fallback-content {
+        display: none;
+      }
+    </style>
+    
     <!-- EMERGENCY FIX: Immediately unregister any service workers to prevent blank page -->
     <script>
       // Immediate, synchronous check to prevent blank page
@@ -23,6 +58,11 @@
           }
         });
       }
+    </script>
+    
+    <!-- EMERGENCY FIX: Reset any loading classes that might hide content -->
+    <script>
+      document.documentElement.className = '';
     </script>
     <!-- Debug script -->
     <script src="/debug-blank-page.js"></script>
@@ -723,10 +763,26 @@
     </script>
   </head>
   <body>
-    <!-- Loading elements completely removed to eliminate CLS -->
-    <!-- No spinners or loaders to prevent layout shifts -->
+    <!-- EMERGENCY FIX: Static fallback content that always shows up -->
+    <div id="fallback-content">
+      <h1>ZeroVacancy</h1>
+      <p>Connect with elite content creators who transform your spaces into compelling visual stories</p>
+      <a href="/" class="cta-button">Refresh Page</a>
+      <p style="margin-top: 40px; font-size: 14px; color: #777;">
+        If you continue to see this screen, please try clearing your browser cache or using a different browser.
+      </p>
+    </div>
     
+    <!-- Normal React root -->
     <div id="root"></div>
+    
+    <!-- Script to hide fallback content when the app loads -->
+    <script>
+      // Mark when JS loads and hide fallback
+      setTimeout(function() {
+        document.body.classList.add('js-loaded');
+      }, 1000);
+    </script>
     
     <!-- Critical initialization JavaScript -->
     <script>
@@ -892,11 +948,11 @@
       });
     </script>
     
-    <!-- Enhanced service worker registration with desktop optimization - PRODUCTION ONLY -->
+    <!-- TEMPORARILY DISABLED: Service worker registration disabled for emergency fix -->
     <script>
-      // Service worker with improved cache control - STRICTLY PRODUCTION ONLY
-      // Use the shared isProductionEnvironment function for consistent environment detection
-      if ('serviceWorker' in navigator && typeof isProductionEnvironment === 'function' && isProductionEnvironment()) {
+      // Service worker with improved cache control - TEMPORARILY DISABLED
+      // EMERGENCY FIX: Completely disable service worker registration until issues are resolved
+      if (false) { // Disabled for emergency fix
         // Detect if desktop for enhanced caching
         const isDesktop = window.innerWidth >= 768 && 
                         !(/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
