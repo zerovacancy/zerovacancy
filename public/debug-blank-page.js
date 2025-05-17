@@ -2,6 +2,20 @@
 (function() {
   console.log('Running enhanced blank page debug script');
   
+  // Add DOM elements safely when body is available
+  function safelyAppendToBody(element) {
+    if (document.body) {
+      document.body.appendChild(element);
+    } else {
+      // If body isn't available yet, wait for it
+      document.addEventListener('DOMContentLoaded', function() {
+        if (document.body) {
+          document.body.appendChild(element);
+        }
+      });
+    }
+  }
+
   // Add visual indicator
   const debugIndicator = document.createElement('div');
   debugIndicator.id = 'debug-indicator';
@@ -16,7 +30,7 @@
   debugIndicator.style.boxShadow = '0 2px 5px rgba(0,0,0,0.3)';
   debugIndicator.style.fontSize = '12px';
   debugIndicator.textContent = 'Debug Mode';
-  document.body.appendChild(debugIndicator);
+  safelyAppendToBody(debugIndicator);
   
   // Create debug log that will be visible on the page
   const debugLog = document.createElement('div');
@@ -34,7 +48,7 @@
   debugLog.style.padding = '10px';
   debugLog.style.borderRadius = '4px';
   debugLog.style.zIndex = '999998';
-  document.body.appendChild(debugLog);
+  safelyAppendToBody(debugLog);
   
   function addToDebugLog(message) {
     const entry = document.createElement('div');
