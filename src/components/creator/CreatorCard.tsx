@@ -1086,8 +1086,10 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     // Positioning and layout
                     position: 'relative', // For pseudo-elements
                     overflow: 'hidden', // For glass effect containment
-                    paddingLeft: '54px', // Reduced space for icon
-                    paddingRight: '12px', // Reduced padding
+                    padding: '0 16px', // Even padding on both sides since we're using flex for icon
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                     height: '44px', // Reduced height from 60px to 44px
                     
                     // Box model optimizations
@@ -1147,13 +1149,13 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                     ></div>
                   </div>
                   
-                  {/* Enhanced icon container with matching lighting effects */}
+                  {/* Enhanced icon container with proper flex alignment instead of absolute positioning */}
                   <div 
-                    className="absolute top-0 bottom-0 left-[20px] flex items-center justify-center"
+                    className="flex items-center justify-center mr-2"
                     style={{
-                      margin: 'auto 0', // Center vertically
                       width: '28px',
                       height: '28px',
+                      flexShrink: 0, // Prevent the icon container from shrinking
                       background: 'rgba(245, 245, 247, 0.85)', // Match the neutral button background
                       border: '1px solid rgba(118,51,220,0.18)', // Match button border
                       borderTop: '1px solid rgba(255,255,255,0.9)', // Match button's top highlight
@@ -1195,10 +1197,12 @@ export const CreatorCard: React.FC<CreatorCardProps> = ({
                       </svg>
                     )}
                   </div>
-                  <span className="text-center font-semibold text-sm text-gray-700 flex items-center">
-                    <span className="leading-none tracking-normal">JOIN AS CREATOR</span>
-                    <ArrowRight className="w-3.5 h-3.5 ml-1.5 text-purple-500" />
-                  </span>
+                  <div className="flex items-center justify-center">
+                    <span className="font-semibold text-sm text-gray-700 flex items-center">
+                      <span className="leading-none tracking-normal inline-flex items-center">JOIN AS CREATOR</span>
+                      <ArrowRight className="w-3.5 h-3.5 ml-1.5 text-purple-500 flex-shrink-0" style={{ marginTop: '1px' }} />
+                    </span>
+                  </div>
                 </button>
               </div>
               

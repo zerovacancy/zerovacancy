@@ -93,6 +93,8 @@ export const optimizeMobileViewport = () => {
         
         body {
           padding-bottom: calc(var(--safe-area-inset-bottom) + 0.5rem);
+          /* Ensure no top padding is added */
+          padding-top: 0 !important;
         }
       `;
       document.head.appendChild(safeAreaStyle);

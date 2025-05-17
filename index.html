@@ -3,69 +3,23 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <!-- CRITICAL EMERGENCY FIX: Static fallback content -->
-    <style>
-      /* Minimal styling for core content visibility */
-      #fallback-content {
-        display: block;
-        font-family: system-ui, -apple-system, sans-serif;
-        max-width: 800px;
-        margin: 100px auto 20px;
-        padding: 20px;
-        text-align: center;
-      }
-      #fallback-content h1 {
-        font-size: 32px;
-        margin-bottom: 20px;
-        color: #6741d9;
-      }
-      #fallback-content p {
-        font-size: 18px;
-        margin-bottom: 30px;
-        color: #333;
-      }
-      #fallback-content .cta-button {
-        display: inline-block;
-        padding: 12px 24px;
-        background: #6741d9;
-        color: white;
-        text-decoration: none;
-        border-radius: 6px;
-        font-weight: bold;
-      }
-      body.js-loaded #fallback-content {
-        display: none;
-      }
-    </style>
     
-    <!-- EMERGENCY FIX: Immediately unregister any service workers to prevent blank page -->
+    <!-- Service worker management - normal operation -->
     <script>
-      // Immediate, synchronous check to prevent blank page
+      // Service worker management for production
       if ('serviceWorker' in navigator) {
-        console.log('EMERGENCY FIX: Immediately unregistering all service workers');
-        navigator.serviceWorker.getRegistrations().then(function(registrations) {
-          registrations.forEach(function(registration) {
-            registration.unregister();
-            console.log('Service worker unregistered via emergency fix');
-          });
-          if ('caches' in window) {
-            caches.keys().then(function(cacheNames) {
-              cacheNames.forEach(function(cacheName) {
-                caches.delete(cacheName);
-                console.log('Cache cleared via emergency fix:', cacheName);
-              });
-            });
-          }
-        });
+        // Normal service worker management - no emergency unregistration
+        console.log('Service worker management initialized');
       }
     </script>
     
-    <!-- EMERGENCY FIX: Reset any loading classes that might hide content -->
+    <!-- Initialize document classes -->
     <script>
+      // Clean initialization of document classes
       document.documentElement.className = '';
     </script>
-    <!-- Debug script -->
-    <script src="/debug-blank-page.js"></script>
+    <!-- Debug script removed for production -->
+    <!-- <script src="/debug-blank-page.js"></script> -->
     <script>
       // Add loading class but make sure it's removed within 1 second
       document.documentElement.classList.add('loading');
@@ -307,12 +261,22 @@
             loadingBar.style.transform = 'scaleX(1)';
             
             setTimeout(function() {
-              loadingContainer.style.opacity = '0';
-              setTimeout(function() {
-                if (loadingContainer.parentNode) {
-                  loadingContainer.parentNode.removeChild(loadingContainer);
-                }
-              }, 300);
+              if (loadingContainer) {
+                loadingContainer.style.opacity = '0';
+                setTimeout(function() {
+                  try {
+                    if (loadingContainer && loadingContainer.parentNode) {
+                      loadingContainer.parentNode.removeChild(loadingContainer);
+                    }
+                  } catch (e) {
+                    console.log('Non-critical error removing loading container:', e);
+                    // Alternative removal method
+                    if (loadingContainer) {
+                      loadingContainer.style.display = 'none';
+                    }
+                  }
+                }, 300);
+              }
             }, 500);
           });
         });
@@ -420,7 +384,8 @@
     <link rel="preload" href="/logo.png" as="image" fetchpriority="high" />
     
     <!-- Module preloads for critical JavaScript - simplified for mobile compatibility -->
-    <link rel="modulepreload" href="/src/main.tsx" />
+    <!-- Let Vite handle script injection during build -->
+    <script type="module" src="/src/main.tsx"></script>
     
     <!-- Add CSS error handling script -->
     <script>
@@ -498,8 +463,8 @@
       }
     </script>
     
-    <!-- Emergency header fix with viewport height integration for CLS prevention -->
-    <script src="/text-fouc-fix.js"></script>
+    <!-- Emergency header fix with viewport height integration for CLS prevention - removed for production -->
+    <!-- <script src="/text-fouc-fix.js"></script> -->
     
     <!-- Event listener monitoring and protection -->
     <script src="/event-listener-guard.js"></script>
@@ -508,13 +473,13 @@
     <!-- Fix for admin pages - run before other scripts to unregister service worker for admin routes -->
     <script src="/admin-sw-fix.js"></script>
     
-    <!-- Ultra-fast mobile optimization script - runs immediately -->
-    <script src="/quick-perf.js"></script>
+    <!-- Ultra-fast mobile optimization script - removed for production -->
+    <!-- <script src="/quick-perf.js"></script> -->
     
-    <!-- CLS verification and monitoring tools -->
-    <script src="/verify-cls-improvements.js"></script>
-    <script src="/verify-cls-prevention.js"></script>
-    <script src="/cls-display.js"></script>
+    <!-- CLS verification and monitoring tools - removed for production -->
+    <!-- <script src="/verify-cls-improvements.js"></script> -->
+    <!-- <script src="/verify-cls-prevention.js"></script> -->
+    <!-- <script src="/cls-display.js"></script> -->
     
     <!-- Development-only image path checker removed to prevent floating UI elements -->
     <!-- No image checker to prevent CLS and clean up UI -->
@@ -647,9 +612,9 @@
       
       /* Mobile performance and layout fixes */
       @media (max-width: 767px) {
-        /* Add padding to body for fixed header */
+        /* Header is already handled by fixed positioning */
         body {
-          padding-top: 60px !important; /* Match header height */
+          padding-top: 0 !important; /* Remove excessive padding */
         }
         
         /* Standardize section spacing */
@@ -740,43 +705,68 @@
       if ('serviceWorker' in navigator && !isProductionEnvironment()) {
         console.log('Non-production environment detected - unregistering all service workers');
         
-        // First unregister all service workers
-        navigator.serviceWorker.getRegistrations().then(function(registrations) {
-          if (registrations.length === 0) {
-            console.log('No service workers found to unregister');
-            return Promise.resolve();
-          }
-          
-          const unregisterPromises = registrations.map(registration => {
-            console.log('Unregistering service worker:', registration.scope);
-            return registration.unregister();
-          });
-          
-          // After all are unregistered, clear caches to ensure clean state
-          return Promise.all(unregisterPromises).then(() => {
-            if ('caches' in window) {
-              return caches.keys().then(function(cacheNames) {
-                if (cacheNames.length === 0) {
-                  console.log('No caches found to clear');
-                  return;
-                }
-                
-                return Promise.all(
-                  cacheNames.map(function(cacheName) {
-                    console.log('Clearing cache:', cacheName);
-                    return caches.delete(cacheName);
-                  })
-                ).then(() => {
-                  console.log('All caches cleared successfully');
-                });
-              });
+        try {
+          // First unregister all service workers
+          navigator.serviceWorker.getRegistrations().then(function(registrations) {
+            if (!registrations || registrations.length === 0) {
+              console.log('No service workers found to unregister');
+              return Promise.resolve();
             }
-          }).then(() => {
-            console.log('All service workers unregistered and caches cleared');
+            
+            // Create promises for each service worker unregistration with error handling
+            const unregisterPromises = registrations.map(registration => {
+              if (!registration) return Promise.resolve();
+              
+              console.log('Unregistering service worker:', registration.scope);
+              return registration.unregister().catch(err => {
+                console.warn('Failed to unregister service worker (continuing):', err);
+                return Promise.resolve(); // Continue with other operations even if one fails
+              });
+            });
+            
+            // After all are unregistered, clear caches to ensure clean state
+            return Promise.all(unregisterPromises).then(() => {
+              if ('caches' in window) {
+                return caches.keys().then(function(cacheNames) {
+                  if (!cacheNames || cacheNames.length === 0) {
+                    console.log('No caches found to clear');
+                    return Promise.resolve();
+                  }
+                  
+                  // Map through cache names with error handling for each
+                  return Promise.all(
+                    cacheNames.map(function(cacheName) {
+                      if (!cacheName) return Promise.resolve();
+                      
+                      console.log('Clearing cache:', cacheName);
+                      return caches.delete(cacheName).catch(err => {
+                        console.warn('Failed to clear cache (continuing):', cacheName, err);
+                        return Promise.resolve(); // Continue with other operations
+                      });
+                    })
+                  ).then(() => {
+                    console.log('Cache clearing complete');
+                  }).catch(err => {
+                    console.warn('Error in cache clearing (non-critical):', err);
+                    return Promise.resolve();
+                  });
+                }).catch(err => {
+                  console.warn('Error getting cache keys (non-critical):', err);
+                  return Promise.resolve();
+                });
+              }
+              return Promise.resolve();
+            }).then(() => {
+              console.log('Service worker cleanup complete');
+            }).catch(err => {
+              console.warn('Non-critical error in service worker cleanup:', err);
+            });
+          }).catch(error => {
+            console.warn('Error getting service worker registrations (non-critical):', error);
           });
-        }).catch(error => {
-          console.error('Error unregistering service workers:', error);
-        });
+        } catch (e) {
+          console.warn('Error in service worker unregistration process (non-critical):', e);
+        }
       }
       
       // Make isProductionEnvironment available for the service worker registration script below
@@ -804,26 +794,10 @@
     </script>
   </head>
   <body>
-    <!-- EMERGENCY FIX: Static fallback content that always shows up -->
-    <div id="fallback-content">
-      <h1>ZeroVacancy</h1>
-      <p>Connect with elite content creators who transform your spaces into compelling visual stories</p>
-      <a href="/" class="cta-button">Refresh Page</a>
-      <p style="margin-top: 40px; font-size: 14px; color: #777;">
-        If you continue to see this screen, please try clearing your browser cache or using a different browser.
-      </p>
-    </div>
     
     <!-- Normal React root -->
     <div id="root"></div>
     
-    <!-- Script to hide fallback content when the app loads -->
-    <script>
-      // Mark when JS loads and hide fallback
-      setTimeout(function() {
-        document.body.classList.add('js-loaded');
-      }, 1000);
-    </script>
     
     <!-- Critical initialization JavaScript -->
     <script>
@@ -888,136 +862,183 @@
       // Loader code completely removed to eliminate CLS
     </script>
     
-    <!-- Simple debug script -->
-    <script src="/debug-page.js"></script>
+    <!-- Simple debug script - removed for production -->
+    <!-- <script src="/debug-page.js"></script> -->
     
-    <!-- EMERGENCY FIX: Ensure React app is loaded with fallbacks -->
-    <script>
-      // Create a recovery div that will show if React doesn't load
-      document.addEventListener('DOMContentLoaded', function() {
-        const root = document.getElementById('root');
-        if (root) {
-          const recoveryDiv = document.createElement('div');
-          recoveryDiv.id = 'emergency-content';
-          recoveryDiv.style.display = 'none';
-          recoveryDiv.innerHTML = `
-            <div style="padding: 20px; font-family: system-ui, sans-serif; max-width: 600px; margin: 100px auto; text-align: center;">
-              <h1>ZeroVacancy</h1>
-              <p>Connect with elite content creators who transform your spaces into compelling visual stories</p>
-              <div style="margin: 20px 0;">
-                <a href="/" style="display: inline-block; padding: 10px 20px; background: #6741d9; color: white; text-decoration: none; border-radius: 4px;">Refresh Page</a>
-              </div>
-            </div>
-          `;
-          root.appendChild(recoveryDiv);
-          
-          // Show recovery content if React doesn't render within 5 seconds
-          setTimeout(function() {
-            if (root.children.length <= 1) { // Only the recovery div exists
-              recoveryDiv.style.display = 'block';
-              console.log('Emergency content displayed - React failed to load');
-            }
-          }, 5000);
-        }
-      });
-    </script>
     
     <!-- PRODUCTION ONLY: Load actual Vite asset paths -->
     <script>
-      // Wait for body to be available before appending scripts
+      // Wait for body to be available before appending scripts - enhanced with error protection
       function loadScript(src, type, isModule) {
-        function appendScript() {
-          if (!document.body) {
-            setTimeout(appendScript, 50);
-            return;
-          }
-          
-          const script = document.createElement('script');
-          script.src = src + '?t=' + Date.now(); // Cache busting
-          
-          if (isModule) {
-            script.type = 'module';
-          } else if (type) {
-            script.type = type;
-          }
-          
-          script.onerror = () => console.error('Failed to load script:', src);
-          script.async = false; // Maintain execution order
-          
-          document.body.appendChild(script);
-          console.log('Added script:', src);
+        if (!src) {
+          console.warn('Invalid script source provided');
+          return;
         }
         
+        function appendScript() {
+          try {
+            if (!document.body) {
+              setTimeout(appendScript, 50);
+              return;
+            }
+            
+            // Check if script already exists to prevent duplicates
+            const existingScript = document.querySelector(`script[src*="${src}"]`);
+            if (existingScript) {
+              console.log('Script already loaded, skipping:', src);
+              return;
+            }
+            
+            const script = document.createElement('script');
+            script.src = src + '?t=' + Date.now(); // Cache busting
+            
+            if (isModule) {
+              script.type = 'module';
+            } else if (type) {
+              script.type = type;
+            }
+            
+            script.onerror = (e) => {
+              console.warn('Failed to load script (non-critical):', src, e);
+              // Keep the element in the DOM but mark as failed
+              script.dataset.loadFailed = 'true';
+            };
+            script.async = false; // Maintain execution order
+            
+            try {
+              document.body.appendChild(script);
+              console.log('Added script:', src);
+            } catch (appendErr) {
+              console.warn('Error appending script (non-critical):', src, appendErr);
+              
+              // Try alternative approach if direct append fails
+              setTimeout(() => {
+                try {
+                  if (document.body) {
+                    document.body.appendChild(script);
+                    console.log('Added script (retry):', src);
+                  }
+                } catch (retryErr) {
+                  console.warn('Failed to append script on retry (non-critical):', src);
+                }
+              }, 500);
+            }
+          } catch (e) {
+            console.warn('Error in script loading process (non-critical):', src, e);
+          }
+        }
+        
+        // Start the append process
         appendScript();
       }
       
-      // Determine environment
-      const isProduction = window.location.hostname !== 'localhost' && 
-                          window.location.hostname !== '127.0.0.1';
-      
-      if (isProduction) {
+      // Determine environment with more robust checks
+      try {
+        const isProduction = window.location.hostname !== 'localhost' && 
+                            window.location.hostname !== '127.0.0.1';
+        
+        if (isProduction) {
         // In production, load the exact asset paths Vite generates
         console.log('Production environment - loading Vite assets');
         
         // Try loading the standard Vite output assets
         const loadProductionAssets = () => {
-          // EXACT PATHS generated by Vite in production
-          const bundles = [
-            // Common Vite v4+ output patterns
-            '/assets/index.js',
-            '/assets/index-[hash].js',
-            // Vite v3 paths with our explicit config
-            '/assets/js/index.js',
-            '/assets/js/main.js',
-            // Hash pattern paths from our vite.config.ts
-            '/assets/js/main-[hash].js',
-            '/assets/js/index-[hash].js'
-          ];
-          
-          // Look for the entry point script in the HTML - this is what Vite generates
-          const scripts = document.querySelectorAll('script[src*="assets"]');
-          if (scripts.length > 0) {
-            console.log('Found Vite-generated scripts:', scripts.length);
+          try {
+            // EXACT PATHS generated by Vite in production
+            const bundles = [
+              // Common Vite v4+ output patterns
+              '/assets/index.js',
+              '/assets/index-[hash].js',
+              // Vite v3 paths with our explicit config
+              '/assets/js/index.js',
+              '/assets/js/main.js',
+              // Hash pattern paths from our vite.config.ts
+              '/assets/js/main-[hash].js',
+              '/assets/js/index-[hash].js'
+            ];
             
-            // Use those scripts first
-            scripts.forEach(script => {
-              console.log('Using existing Vite script:', script.src);
-            });
-          } else {
-            // If no scripts found, try to load from common paths
-            console.log('No Vite scripts found, trying common paths');
+            // Look for the entry point script in the HTML - this is what Vite generates
+            const scripts = document.querySelectorAll('script[src*="assets"]');
+            if (scripts && scripts.length > 0) {
+              console.log('Found Vite-generated scripts:', scripts.length);
+              
+              // Use those scripts first
+              scripts.forEach(script => {
+                if (script && script.src) {
+                  console.log('Using existing Vite script:', script.src);
+                }
+              });
+            } else {
+              // If no scripts found, try to load from common paths
+              console.log('No Vite scripts found, trying common paths');
+              
+              // Use non-module script tags for production bundles
+              bundles.forEach(bundle => {
+                if (bundle) {
+                  loadScript(bundle, 'text/javascript', false);
+                }
+              });
+            }
+          } catch (assetErr) {
+            console.warn('Error loading production assets (non-critical):', assetErr);
             
-            // Use non-module script tags for production bundles
-            bundles.forEach(bundle => {
-              loadScript(bundle, 'text/javascript', false);
-            });
+            // Fallback: just try a few key paths
+            try {
+              loadScript('/assets/index.js', 'text/javascript', false);
+            } catch (e) {
+              console.warn('Fallback script loading failed (non-critical):', e);
+            }
           }
         };
         
         // Begin loading assets when document is ready
-        if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', loadProductionAssets);
-        } else {
-          loadProductionAssets();
+        try {
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadProductionAssets);
+          } else {
+            loadProductionAssets();
+          }
+        } catch (readyErr) {
+          console.warn('Error in readyState handler (non-critical):', readyErr);
+          // Try loading anyway
+          setTimeout(loadProductionAssets, 100);
         }
       } else {
         // Development mode - use Vite development server
         console.log('Development environment - using Vite dev server');
-        loadScript('/src/main.tsx', null, true);
+        try {
+          loadScript('/src/main.tsx', null, true);
+        } catch (devErr) {
+          console.warn('Error loading development script (non-critical):', devErr);
+        }
       }
       
       // Safety fallback - handle any cases where primary loading strategy fails
       setTimeout(() => {
-        const rootContent = document.getElementById('root');
-        if (rootContent && rootContent.children.length <= 1) {
-          console.log('Root still empty after timeout, trying additional loading strategies');
-          
-          // For production, load a simple JS file as non-module
-          if (isProduction) {
-            loadScript('/index.js', 'text/javascript', false);
+        try {
+          const rootContent = document.getElementById('root');
+          if (rootContent && rootContent.children && rootContent.children.length <= 1) {
+            console.log('Root still empty after timeout, trying additional loading strategies');
+            
+            // For production, load a simple JS file as non-module
+            if (isProduction) {
+              loadScript('/index.js', 'text/javascript', false);
+            }
           }
+        } catch (fallbackErr) {
+          console.warn('Error in fallback script loading (non-critical):', fallbackErr);
         }
       }, 3000);
+    } catch (envErr) {
+      console.warn('Error in environment detection (non-critical):', envErr);
+      
+      // Ultra-fallback - just try to load the main script
+      try {
+        loadScript('/src/main.tsx', 'module', true);
+      } catch (ultraErr) {
+        console.warn('Ultra-fallback failed (non-critical):', ultraErr);
+      }
+    }
     </script>
     
     <!-- Performance monitoring - included only in development -->

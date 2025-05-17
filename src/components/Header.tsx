@@ -45,8 +45,10 @@ const ResourcesDropdown = ({ className, onClick }: { className?: string, onClick
               : "text-black hover:text-[#9b87f5]"
           )}
         >
-          Resources
-          <ChevronDown className="h-4 w-4 transition-transform" />
+          <span className="flex items-center justify-center">
+            <span className="leading-none">Resources</span>
+            <ChevronDown className="h-4 w-4 ml-1 transition-transform inline-flex flex-shrink-0" style={{ marginTop: '1px' }} />
+          </span>
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-40 mt-1 p-1">
@@ -163,17 +165,23 @@ const MobileHeaderComponent = ({
   
   return (
     <div className="flex justify-between items-center w-full h-16">
-      {/* Logo */}
+      {/* Logo with improved alignment */}
       <Link 
         to="/" 
-        className={cn("flex items-center transition-opacity active:opacity-80", styles.logoContainer)}
+        className={cn("flex items-center justify-center transition-opacity active:opacity-80", styles.logoContainer)}
         onClick={handleLogoInteraction}
         onTouchStart={handleLogoInteraction}
+        style={{ 
+          height: '100%', 
+          display: 'flex',
+          alignItems: 'center',
+        }}
       >
         <img 
-          src="/logo.png"
+          src="/logo.png" srcSet="/logo.webp" type="image/webp"
           alt="ZeroVacancy"
           className="h-7 w-auto"
+          style={{ display: 'block' }}
         />
       </Link>
       
@@ -336,7 +344,7 @@ const DesktopHeaderComponent = ({
           onTouchStart={handleLogoInteraction}
         >
           <img 
-            src="/logo.png"
+            src="/logo.png" srcSet="/logo.webp" type="image/webp"
             alt="ZeroVacancy"
             className="h-7 w-auto"
           />

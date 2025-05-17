@@ -84,9 +84,11 @@ header,
   bottom: auto !important;
 }
 
-/* Body spacing for fixed header */
+/* Body spacing for fixed header - disabled for now */
 body.has-fixed-header {
-  padding-top: var(--header-height, 60px) !important;
+  /* Removed padding-top as it causes excessive whitespace */
+  /* padding-top: var(--header-height, 60px) !important; */
+  padding-top: 0 !important;
   margin-top: 0 !important;
 }
 

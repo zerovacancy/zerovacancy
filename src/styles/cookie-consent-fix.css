@@ -1,17 +1,16 @@
 /* 
- * Cookie Consent fixes for mobile devices
- * Ensures the cookie banner appears properly without being obscured by the header
+ * Cookie Consent fixes for mobile and desktop devices
+ * Ensures the cookie banner appears properly without being obscured or cut off
  */
 
 /* Base cookie consent container */
 .cookie-consent-container {
   position: fixed;
-  bottom: auto; /* Changed from 0 to auto to prevent layout issues */
+  bottom: 0; /* Position at bottom */
   left: 0;
   right: 0;
-  /* Use height and top instead of bottom for better mobile compatibility */
+  /* Use height auto to adjust to content */
   height: auto;
-  top: auto;
   /* Higher z-index than header (which is 1000) */
   z-index: 1100 !important;
   /* Animation */
@@ -21,6 +20,9 @@
   /* Add transform properties for better hardware acceleration */
   transform: translateZ(0);
   will-change: transform;
+  /* Ensure full width */
+  width: 100%;
+  max-width: 100%;
 }
 
 /* Ensure cookie banner content has proper styling */
@@ -29,6 +31,39 @@
   border-top: 1px solid rgba(139, 92, 246, 0.2);
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
   padding: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+/* Desktop-specific adjustments */
+@media (min-width: 768px) {
+  .cookie-consent-container {
+    /* Ensure it stays at the bottom */
+    bottom: 0;
+    /* Limited height for desktop */
+    max-height: 30vh;
+    /* Ensure it's not taking all space */
+    height: auto;
+  }
+  
+  .cookie-consent-content {
+    /* Flat top for desktop */
+    border-radius: 0;
+    /* Use flex layout for buttons */
+    display: flex;
+    flex-direction: column;
+    /* Add space for scrollbar width */
+    padding-right: calc(1rem + 15px);
+  }
+  
+  /* Close button positioning for desktop */
+  .cookie-consent-close {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 /* Mobile-specific adjustments */
@@ -69,4 +104,26 @@
     transform: translateY(0);
     opacity: 1;
   }
+}
+
+/* Ensure cookie consent is not cut off at various widths */
+@media (min-width: 1024px) {
+  .cookie-consent-container {
+    /* Add spacing on both sides for larger screens */
+    margin: 0 auto;
+    /* Set max-width for very wide screens */
+    max-width: 100%;
+  }
+  
+  .cookie-consent-content > div {
+    /* Ensure content max-width is centered */
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+}
+
+/* Fix for screens with a scrollbar */
+html.has-scrollbar .cookie-consent-container {
+  /* Account for scrollbar width */
+  width: calc(100% - var(--scrollbar-width, 15px));
 }
