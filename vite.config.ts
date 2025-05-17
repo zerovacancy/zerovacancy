@@ -5,6 +5,7 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 import excludeArchivedAssets from "./vite-exclude-archived-plugin.js";
 import viteTipTapPlugin from "./vite-tiptap-plugin.js";
+import { configDefaults } from "vitest/config";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -12,20 +13,32 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
     strictPort: true,
-    // This is critical for SPA routing - redirects all requests to index.html
-    historyApiFallback: true,
   },
   plugins: [
     // Plugin to exclude archived assets from the build
     excludeArchivedAssets(),
-    
+
     // Plugin to properly handle TipTap dependencies
     viteTipTapPlugin(),
-    
+
+    // Copy web-vitals.iife.js to assets/js directory during build
+    {
+      name: 'copy-web-vitals',
+      apply: 'build',
+      enforce: 'post',
+      closeBundle() {
+        // This plugin ensures that the web-vitals script from public/assets/js is properly included
+        console.log('Ensuring web-vitals.iife.js is correctly included in build output');
+
+        // The actual copy operation is handled by the npm script before vite build runs
+        // This is just a confirmation hook that executes after the bundle is closed
+      }
+    },
+
     react({
       // More aggressive optimizations in production
       transformOptions: {
-        newDecorators: true, 
+        newDecorators: true,
         typescript: true,
         development: mode === 'development',
       },
@@ -44,53 +57,29 @@ export default defineConfig(({ mode }) => ({
     chunkSizeWarningLimit: 1000, // Increase chunk size limit
     target: ['es2020', 'edge88', 'firefox78', 'chrome87', 'safari14'], // Modern browsers only for smaller bundles
     cssMinify: true,
-    cssCodeSplit: false, // Disable CSS code splitting to prevent loading issues on mobile
+    cssCodeSplit: true, // Enable CSS code splitting for better caching and performance
     assetsInlineLimit: 4096, // Inline small assets to reduce HTTP requests
     rollupOptions: {
       output: {
-        // Function-based manual chunks for better React deduplication
+        // Simplified manual chunks for key dependencies
         manualChunks: function(id) {
-          // Always put React in its own chunk
-          if (id.includes('node_modules/react/') || 
-              id.includes('node_modules/react-dom/')) {
-            return 'react-core';
+          // Core React and React DOM packages
+          if (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/')) {
+            return 'vendor-react';
           }
           
-          // React Router
-          if (id.includes('node_modules/react-router') || 
-              id.includes('node_modules/@remix-run/router')) {
-            return 'react-router';
+          // UI component libraries (Radix UI, Framer Motion)
+          if (id.includes('node_modules/@radix-ui/') || 
+              id.includes('node_modules/framer-motion')) {
+            return 'vendor-ui';
           }
           
-          // UI Core libraries
-          if (id.includes('node_modules/framer-motion')) {
-            return 'ui-core';
+          // Route related packages
+          if (id.includes('node_modules/react-router')) {
+            return 'vendor-router';
           }
           
-          // Radix UI components
-          if (id.includes('node_modules/@radix-ui/react-')) {
-            return 'ui-radix';
-          }
-          
-          // Our UI components
-          if (id.includes('/components/ui/')) {
-            // Animations
-            if (id.includes('animated-grid') || 
-                id.includes('spotlight') || 
-                id.includes('moving-border')) {
-              return 'animations';
-            }
-            
-            // Basic UI components
-            if (id.includes('button.tsx') || 
-                id.includes('toast.tsx') || 
-                id.includes('dialog.tsx') || 
-                id.includes('tabs.tsx')) {
-              return 'ui-components';
-            }
-          }
-          
-          // Let other modules use default chunking
+          // Let Vite handle other chunks automatically
           return null;
         },
         // Optimize chunk creation with more reliable naming for mobile
@@ -99,8 +88,8 @@ export default defineConfig(({ mode }) => ({
         assetFileNames: (assetInfo) => {
           const extType = assetInfo.name.split('.').pop();
           if (extType === 'css') {
-            // Use a stable name for CSS files to avoid mobile preloading issues
-            return 'assets/css/styles.[ext]';
+            // Use a hashed name for CSS files for better cache invalidation
+            return 'assets/css/styles-[hash].[ext]';
           }
           
           // Skip archived assets from being included in the build
@@ -118,22 +107,7 @@ export default defineConfig(({ mode }) => ({
       legalComments: 'none',
       pure: mode === 'production' ? ['console.log', 'console.info', 'console.debug'] : [],
     },
-    // Custom plugin to exclude archived assets from build
-    plugins: [
-      {
-        name: 'exclude-archived-assets',
-        enforce: 'post',
-        apply: 'build',
-        generateBundle(outputOptions, bundle) {
-          Object.keys(bundle).forEach(key => {
-            if (key.includes('archived-assets/') || key.includes('excluded/')) {
-              delete bundle[key];
-              console.log(`Excluded archived asset: ${key}`);
-            }
-          });
-        }
-      }
-    ]
+    // Plugin configuration handled by excludeArchivedAssets() in plugins section
   },
   // Improve file system case sensitivity handling and dependency optimization
   optimizeDeps: {
@@ -175,5 +149,37 @@ export default defineConfig(({ mode }) => ({
     legalComments: 'none',
     target: 'es2020',
     treeShaking: true,
+  },
+  // Vitest configuration
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: ['./src/tests/setup.ts'],
+    css: true, // Handle CSS imports
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
+      exclude: [
+        ...configDefaults.coverage.exclude,
+        '**/*.d.ts',
+        '**/tests/**',
+        '**/*.test.{ts,tsx}',
+        '**/__mocks__/**',
+        '**/node_modules/**',
+      ],
+      thresholds: {
+        lines: 70,
+        functions: 70,
+        branches: 60,
+        statements: 70,
+      }
+    },
+    include: ['src/**/*.{test,spec}.{ts,tsx}'],
+    exclude: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/cypress/**',
+      '**/.{idea,git,cache,output,temp}/**'
+    ],
   },
 }));

@@ -80,14 +80,6 @@ export function useOptimizedRender<T>(
     };
   }, [manualControl, disableOnLowEnd, priority, delay]);
   
-  // Re-run initialization when dependencies change and component is already initialized
-  useEffect(() => {
-    if (isInitialized && !manualControl) {
-      runInitialization();
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, dependencies);
-  
   // Initialize the component
   const runInitialization = useCallback(() => {
     try {
@@ -100,6 +92,13 @@ export function useOptimizedRender<T>(
       setIsInitialized(false);
     }
   }, [initializeFn]);
+  
+  // Re-run initialization when dependencies change and component is already initialized
+  useEffect(() => {
+    if (isInitialized && !manualControl) {
+      runInitialization();
+    }
+  }, [...dependencies, isInitialized, manualControl, runInitialization]);
   
   // Manual control functions
   const initialize = useCallback(() => {

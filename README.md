@@ -16,8 +16,13 @@ This project includes comprehensive performance optimizations for Core Web Vital
 - **Critical CSS Extraction**: Inlines critical styles to improve initial page load
 - **Web Vitals Monitoring**: Real-time monitoring of performance metrics
 - **FOUC Prevention**: Prevents flashing of unstyled content during page load
+- **Automated CLS Testing**: CI/CD integration for detecting layout shifts
 
 For performance details, see the [PERFORMANCE-SUMMARY.md](./PERFORMANCE-SUMMARY.md) documentation.
+
+[![CLS Testing Status](https://github.com/michaelisrael/zerovacancy/actions/workflows/cls-testing.yml/badge.svg)](https://github.com/michaelisrael/zerovacancy/actions/workflows/cls-testing.yml)
+
+For CLS-specific development guidelines, see our [CLS-DEVELOPER-GUIDE.md](./CLS-DEVELOPER-GUIDE.md).
 
 To test performance optimizations:
 ```bash

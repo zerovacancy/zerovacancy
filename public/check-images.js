@@ -78,18 +78,6 @@
     console.groupEnd();
   });
   
-  // Create a button to manually trigger the check
-  document.addEventListener('DOMContentLoaded', () => {
-    const checkButton = document.createElement('button');
-    checkButton.textContent = '🔍 Check Images';
-    checkButton.style.cssText = 'position: fixed; bottom: 20px; right: 20px; z-index: 9999; background: purple; color: white; padding: 10px; border-radius: 5px; opacity: 0.8;';
-    
-    checkButton.addEventListener('click', () => {
-      console.group('🔍 Page Image Check (Manual)');
-      findAllImages();
-      console.groupEnd();
-    });
-    
-    document.body.appendChild(checkButton);
-  });
+  // Button creation completely disabled
+  // No floating UI elements to prevent CLS and keep UI clean
 })();

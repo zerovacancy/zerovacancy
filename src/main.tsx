@@ -1,20 +1,30 @@
 // React hooks fix applied via package.json resolutions
 // No need for complex singleton pattern
 
-
+// Import React explicitly to ensure proper singleton instance is used
+import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { ErrorBoundary } from 'react-error-boundary';
 import App from './App.tsx';
 import './index.css';
 import ErrorFallback from './components/ErrorFallback.tsx';
 import { initializePerformanceOptimizations, mobilePerformanceEnhancements } from './utils/performance-optimizations';
-import setupCSSContainment from './utils/css-optimization/init-containment';
+import { setupCSSContainment } from './utils/css-optimization/init-containment';
 
 /**
  * Initialize performance optimizations early
  */
-// Check if we're on a mobile device
-const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+// Determine if we're on a mobile device
+let isMobile = false;
+
+// Access window and navigator safely to avoid ReferenceErrors in non-browser environments
+if (typeof window !== 'undefined' && typeof navigator !== 'undefined') {
+  isMobile =
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    ) ||
+    window.innerWidth < 768;
+}
 
 // Apply performance optimizations
 if (typeof window !== 'undefined') {
@@ -65,6 +75,15 @@ try {
       <App />
     </ErrorBoundary>
   );
+  
+  // Load text-fouc-fix.js after the app is mounted and only in production
+  if (process.env.NODE_ENV === 'production') {
+    // Ensure the header is mounted before applying FOUC fix
+    setTimeout(() => {
+      import('/public/text-fouc-fix.js')
+        .catch(err => console.warn('Failed to load text-fouc-fix.js:', err));
+    }, 100);
+  }
 } catch (error) {
   console.error("Error during initial render:", error);
   
@@ -82,7 +101,11 @@ try {
 if (typeof window !== 'undefined') {
   // Use requestIdleCallback to avoid blocking main thread
   if ('requestIdleCallback' in window) {
-    (window as any).requestIdleCallback(() => {
+    // Use type assertion for requestIdleCallback
+    interface WindowWithRequestIdleCallback extends Window {
+      requestIdleCallback: (callback: () => void) => number;
+    }
+    (window as WindowWithRequestIdleCallback).requestIdleCallback(() => {
       window.performance.mark('app-init-end');
       window.performance.measure('app-initialization', 'app-init-start', 'app-init-end');
     });

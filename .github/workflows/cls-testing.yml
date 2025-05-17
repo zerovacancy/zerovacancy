@@ -1,0 +1,46 @@
+name: CLS Testing
+
+on:
+  push:
+    branches: [ main, main-refactor-overhaul ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  cls-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Run CLS linting
+      run: npm run lint:cls
+    
+    - name: Build project for testing
+      run: npm run build:test
+    
+    - name: Setup Playwright
+      uses: microsoft/playwright-github-action@v1
+    
+    - name: Run automated CLS testing
+      run: npm run test:cls
+    
+    - name: Upload CLS report
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: cls-report
+        path: |
+          cls-report/
+          cls-violations.json
+        retention-days: 30

@@ -105,22 +105,11 @@ export function optimizeFontLoading() {
 
 /**
  * Preload critical fonts
+ *
+ * NOTE: We now use Google Fonts instead of direct font files:
+ * <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet">
  */
 export function preloadCriticalFonts() {
-  if (typeof document === 'undefined') return;
-  
-  const criticalFonts = [
-    '/fonts/PlusJakartaSans-Bold.woff2',
-    '/fonts/Inter-Regular.woff2'
-  ];
-  
-  criticalFonts.forEach(fontUrl => {
-    const link = document.createElement('link');
-    link.rel = 'preload';
-    link.href = fontUrl;
-    link.as = 'font';
-    link.type = 'font/woff2';
-    link.crossOrigin = 'anonymous';
-    document.head.appendChild(link);
-  });
+  // No longer needed as we use Google Fonts
+  return;
 }

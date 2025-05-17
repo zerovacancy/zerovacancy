@@ -185,9 +185,100 @@ if (window.location.pathname.includes('/admin/')) {
   };
   
   /**
+   * Helper function to get a description of an element
+   */
+  function getElementDescription(element) {
+    if (!element) return 'unknown';
+    
+    if (element === window) return 'window';
+    if (element === document) return 'document';
+    if (element === document.body) return 'body';
+    
+    if (element instanceof HTMLElement) {
+      const id = element.id ? `#${element.id}` : '';
+      const classes = element.className && typeof element.className === 'string' 
+        ? `.${element.className.split(' ').join('.')}` 
+        : '';
+      const tag = element.tagName.toLowerCase();
+      
+      return `${tag}${id}${classes}`;
+    }
+    
+    return String(element);
+  }
+
+  /**
+   * Diagnose fixed elements, especially focusing on those with bottom values
+   */
+  window.diagnoseFixedElements = function() {
+    console.group('Fixed Element Diagnostics');
+    
+    // Get all elements
+    const allElements = document.querySelectorAll('*');
+    const fixedElements = [];
+    const bottomFixedElements = [];
+    
+    // Check each element
+    allElements.forEach(el => {
+      if (el instanceof HTMLElement) {
+        const style = window.getComputedStyle(el);
+        
+        // Check if the element has fixed positioning
+        if (style.position === 'fixed') {
+          const elementInfo = {
+            element: getElementDescription(el),
+            bottom: style.bottom,
+            top: style.top,
+            left: style.left,
+            right: style.right,
+            zIndex: style.zIndex,
+            containment: el.getAttribute('data-contain-force') || 'not set'
+          };
+          
+          fixedElements.push(elementInfo);
+          
+          // Check if it has a bottom value that is not 'auto'
+          if (style.bottom && style.bottom !== 'auto') {
+            bottomFixedElements.push(elementInfo);
+            
+            // Auto-fix any fixable elements
+            if (!el.hasAttribute('data-contain-force')) {
+              el.setAttribute('data-contain-force', 'false');
+              console.log(`[Fixed Element Fix] Applied data-contain-force="false" to ${elementInfo.element}`);
+            }
+          }
+        }
+      }
+    });
+    
+    console.log(`Total fixed elements: ${fixedElements.length}`);
+    console.group('Fixed elements with bottom value');
+    
+    if (bottomFixedElements.length > 0) {
+      bottomFixedElements.forEach(info => {
+        console.log(`- ${info.element}: bottom=${info.bottom}, z-index=${info.zIndex}, containment=${info.containment}`);
+      });
+    } else {
+      console.log('No fixed elements with bottom value found');
+    }
+    
+    console.groupEnd();
+    console.groupEnd();
+    
+    return { 
+      total: fixedElements.length, 
+      withBottom: bottomFixedElements.length,
+      bottomElements: bottomFixedElements
+    };
+  };
+
+  /**
    * Provide a method to get diagnostics report
    */
   window.getEventListenerDiagnostics = function() {
+    // Also run the fixed element diagnostics
+    const fixedElementsInfo = window.diagnoseFixedElements();
+    
     return {
       totalListeners: Object.entries(window.__eventDiagnostics.listenerCount)
         .reduce((sum, [type, count]) => sum + count, 0),
@@ -204,7 +295,8 @@ if (window.location.pathname.includes('/admin/')) {
       recentRecursiveRegistrations: window.__eventDiagnostics.recursiveRegistrations
         .slice(-5),
       maxStackDepth: window.__eventDiagnostics.maxStackDepth,
-      registrationsDuringEvents: { ...registrationsDuringEvents }
+      registrationsDuringEvents: { ...registrationsDuringEvents },
+      fixedElements: fixedElementsInfo
     };
   };
   
@@ -218,8 +310,17 @@ if (window.location.pathname.includes('/admin/')) {
     console.log('[Event Diagnostics] Restored original event listener methods');
   };
   
+  // Run fixed element diagnostics on page load
+  window.addEventListener('load', function() {
+    setTimeout(function() {
+      console.log('[Event Diagnostics] Running fixed element diagnostics');
+      window.diagnoseFixedElements();
+    }, 2000); // Delay to let the page fully render
+  });
+  
   // Report initial setup
   console.log('[Event Diagnostics] Event listener monitoring active');
   console.log('[Event Diagnostics] Use window.getEventListenerDiagnostics() to see statistics');
+  console.log('[Event Diagnostics] Use window.diagnoseFixedElements() to check fixed elements');
   console.log('[Event Diagnostics] Use window.restoreEventListeners() to restore original methods');
 })();

@@ -5,10 +5,10 @@ import { useToast } from '@/hooks/use-toast';
 // Utility function to get the appropriate redirect URL based on environment
 const getRedirectUrl = (path: string = '/auth/callback'): string => {
   const isDevelopment = window.location.hostname === 'localhost' || 
-                        window.location.hostname === '127.0.0.1';
+                      window.location.hostname === '127.0.0.1';
   
-  // Get the production URL from Supabase or use a fallback
-  const PRODUCTION_URL = 'https://zerovacancy.app'; // Replace with your actual production URL
+  // Get the production URL from environment variables
+  const PRODUCTION_URL = import.meta.env.VITE_PRODUCTION_URL || 'https://zerovacancy.app';
   
   // Choose the appropriate base URL
   const baseUrl = isDevelopment 
@@ -40,9 +40,20 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User>(null);
-  const [isLoading, setIsLoading] = useState(true);
+// Loading spinner component
+const Spinner = () => (
+  <div className="fixed inset-0 flex items-center justify-center bg-background/50 z-50">
+    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-700"></div>
+  </div>
+);
+
+// Inner AuthProvider that requires a hydrated session
+const AuthProviderInner: React.FC<{ children: ReactNode; sessionData: any }> = ({ 
+  children, 
+  sessionData 
+}) => {
+  const [user, setUser] = useState<User>(sessionData?.user || null);
+  const [isLoading, setIsLoading] = useState(false);
   const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
   const [authDialogFormType, setAuthDialogFormType] = useState<'login' | 'register'>('login');
   const { toast } = useToast();
@@ -51,66 +62,37 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const navigate = (path: string) => {
     window.location.href = path;
   };
-
-  // Check Supabase connection on component mount
-  useEffect(() => {
-    const checkSupabaseConnection = async () => {
-      try {
-        console.log("Checking Supabase connection...");
-        const { error } = await supabase.auth.getSession();
-        if (error) {
-          console.error("Supabase connection error:", error);
-          toast({
-            title: "Connection Issue",
-            description: "There was a problem connecting to the authentication service.",
-            variant: "destructive",
-          });
-        } else {
-          console.log("Supabase connection successful");
-        }
-      } catch (e) {
-        console.error("Supabase connection check failed:", e);
-      }
-    };
-    
-    checkSupabaseConnection();
-  }, [toast]);
   
-  // Check if user is authenticated
+  // Auth dialog controls
+  const openAuthDialog = (formType: 'login' | 'register' = 'login') => {
+    setAuthDialogFormType(formType);
+    setIsAuthDialogOpen(true);
+  };
+  
+  const closeAuthDialog = () => setIsAuthDialogOpen(false);
+
+  // Update user when session changes
   useEffect(() => {
-    const checkUser = async () => {
-      try {
-        setIsLoading(true);
-        const { data: { user }, error } = await supabase.auth.getUser();
-        
-        if (error) {
-          console.error("Error getting user:", error);
-          setUser(null);
-        } else {
-          console.log("User retrieved:", user ? "Authenticated" : "Not authenticated");
-          setUser(user);
-        }
-      } catch (error) {
-        console.error('Error checking user:', error);
-        setUser(null);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    checkUser();
-
+    // Update user from session if available
+    if (sessionData?.user) {
+      setUser(sessionData.user);
+    }
+    
+    // Set up auth state change listener for future changes
     const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+      console.log("Auth state changed:", !!session?.user);
       setUser(session?.user ?? null);
     });
 
     return () => {
       authListener.subscription.unsubscribe();
     };
-  }, []);
-
+  }, [sessionData]);
+  
+  // Sign in function
   const signIn = async (email: string, password: string, isAdminLogin: boolean = false): Promise<void> => {
     try {
+      setIsLoading(true);
       // Validate input only on empty values
       if (!email || !password) {
         throw new Error("Email and password are required");
@@ -120,15 +102,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const cleanEmail = String(email).trim();
       
       console.log(`Attempting to sign in with email: ${cleanEmail.substring(0, 3)}...@... (partially hidden for privacy)`);
-      console.log("User agent:", navigator.userAgent);
-      console.log("Is mobile:", /iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
-
-      // Add device specific logs for debugging
-      const isMobileDevice = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-      if (isMobileDevice) {
-        console.log("Authentication on mobile device");
-      }
-
+      
       // Normal authentication flow with timeout for mobile browsers
       let authResponse;
       try {
@@ -174,10 +148,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     } catch (error: any) {
       console.error('SignIn error:', error);
       
-      // Log additional information about the error
-      console.log("Error type:", typeof error);
-      console.log("Error properties:", Object.keys(error));
-      
       // Provide more specific error messages based on the error code
       let errorMessage = "Failed to sign in. Please check your credentials and try again.";
       
@@ -195,19 +165,21 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
       }
       
-      console.log(`Login error message: ${errorMessage}`);
-      
       toast({
         title: "Error signing in",
         description: errorMessage,
         variant: "destructive",
       });
       throw error;
+    } finally {
+      setIsLoading(false);
     }
   };
-
+  
+  // Sign up function
   const signUp = async (email: string, password: string): Promise<void> => {
     try {
+      setIsLoading(true);
       // Basic validation
       if (!email || !password) {
         throw new Error("Email and password are required");
@@ -223,16 +195,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       
       // Trim email for consistency
       const cleanEmail = String(email).trim();
-      
-      console.log(`Attempting to sign up with email: ${cleanEmail.substring(0, 3)}...@... (partially hidden for privacy)`);
-      console.log("User agent:", navigator.userAgent);
-      console.log("Is mobile:", /iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
-      
-      // Add device specific logs for debugging
-      const isMobileDevice = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-      if (isMobileDevice) {
-        console.log("Registration on mobile device");
-      }
       
       // Get the appropriate redirect URL
       const redirectUrl = getRedirectUrl();
@@ -293,10 +255,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     } catch (error: any) {
       console.error('SignUp error:', error);
       
-      // Log additional information about the error
-      console.log("Error type:", typeof error);
-      console.log("Error properties:", Object.keys(error));
-      
       // Provide more specific error messages based on the error code
       let errorMessage = "Failed to register. Please try again.";
       
@@ -314,30 +272,24 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }
       }
       
-      console.log(`Signup error message: ${errorMessage}`);
-      
       toast({
         title: "Error registering",
         description: errorMessage,
         variant: "destructive",
       });
       throw error;
+    } finally {
+      setIsLoading(false);
     }
   };
-
+  
+  // Sign in with Google function
   const signInWithGoogle = async (): Promise<void> => {
     try {
+      setIsLoading(true);
       // Get the appropriate redirect URL
       const redirectUrl = getRedirectUrl();
       console.log(`Google OAuth Redirect URL: ${redirectUrl}`);
-      console.log("User agent:", navigator.userAgent);
-      console.log("Is mobile:", /iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
-      
-      // Add device specific logs for debugging
-      const isMobileDevice = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-      if (isMobileDevice) {
-        console.log("Google OAuth on mobile device");
-      }
       
       // Google OAuth with timeout for mobile browsers
       let authResponse;
@@ -373,10 +325,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     } catch (error: any) {
       console.error('Google SignIn error:', error);
       
-      // Log additional information about the error
-      console.log("Error type:", typeof error);
-      console.log("Error properties:", Object.keys(error));
-      
       let errorMessage = "Failed to sign in with Google. Please try again.";
       
       if (error.message) {
@@ -395,12 +343,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         variant: "destructive",
       });
       throw error;
+    } finally {
+      setIsLoading(false);
     }
   };
-
-
+  
+  // Sign out function
   const signOut = async (): Promise<void> => {
     try {
+      setIsLoading(true);
       const { error } = await supabase.auth.signOut();
       
       if (error) {
@@ -421,16 +372,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         variant: "destructive",
       });
       throw error;
+    } finally {
+      setIsLoading(false);
     }
   };
-
-  const openAuthDialog = (formType: 'login' | 'register' = 'login') => {
-    setAuthDialogFormType(formType);
-    setIsAuthDialogOpen(true);
-  };
   
-  const closeAuthDialog = () => setIsAuthDialogOpen(false);
-
   const value = {
     user,
     isLoading,
@@ -447,6 +393,47 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};
+
+// Outer provider that ensures session is hydrated before rendering inner provider
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [session, setSession] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  
+  // First load the session to prevent AuthSessionMissingError
+  useEffect(() => {
+    // Hydrate the session first before rendering inner provider
+    supabase.auth.getSession().then(({ data, error }) => {
+      if (error) {
+        console.error("Session hydration error:", error);
+      } else {
+        console.log("Session hydrated successfully");
+      }
+      setSession(data.session);
+      setLoading(false);
+    });
+    
+    // Listen for auth changes
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+    
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, []);
+  
+  // Wait for session hydration before rendering inner provider
+  if (loading) {
+    return <Spinner />;
+  }
+  
+  // Once session is hydrated, render the inner provider
+  return (
+    <AuthProviderInner sessionData={session}>
+      {children}
+    </AuthProviderInner>
+  );
 };
 
 export const useAuth = (): AuthContextType => {

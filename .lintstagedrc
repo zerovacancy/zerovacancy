@@ -1,0 +1,8 @@
+{
+  "*.{js,jsx,ts,tsx}": [
+    "eslint --fix --rule 'cls/img-explicit-dimensions: error' --rule 'cls/safe-fixed-positioning: error' --rule 'cls/safe-animations: error'"
+  ],
+  "*.{css,scss}": [
+    "stylelint --fix"
+  ]
+}

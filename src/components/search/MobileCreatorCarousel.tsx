@@ -78,7 +78,7 @@ export const MobileCreatorCarousel = ({
     setCanScrollNext(index < creators.length - 1);
   };
   
-  // Handle scroll event to update the selected index - uses a more accurate calculation
+  // Enhanced scroll handler with debouncing and CLS prevention
   const handleScroll = () => {
     if (!scrollContainerRef.current) return;
     
@@ -87,42 +87,72 @@ export const MobileCreatorCarousel = ({
     const slideElements = container.querySelectorAll('[data-slide]');
     if (slideElements.length === 0) return;
     
+    // CLS Prevention: Set a CSS variable with container width for slide calculations
+    // This ensures consistent dimensions without repeated layout calculations
+    const containerWidth = containerVisible.width;
+    container.style.setProperty('--container-width', `${containerWidth}px`);
+    
     // Find which slide has the most visible area within the viewport
     let maxVisibleArea = 0;
     let maxVisibleIndex = selectedIndex;
     
-    slideElements.forEach((slideElement, index) => {
+    // Use Array.from for better performance with forEach
+    Array.from(slideElements).forEach((slideElement, index) => {
       const slideRect = slideElement.getBoundingClientRect();
       
-      // Calculate the visible area of this slide
-      const visibleLeft = Math.max(slideRect.left, containerVisible.left);
-      const visibleRight = Math.min(slideRect.right, containerVisible.right);
-      const visibleWidth = Math.max(0, visibleRight - visibleLeft);
-      const visibleArea = visibleWidth * slideRect.height;
+      // CLS Prevention: Use cached rect values to minimize layout thrashing
+      const slideLeft = slideRect.left;
+      const slideRight = slideRect.right;
+      const slideHeight = slideRect.height;
+      const containerLeft = containerVisible.left;
+      const containerRight = containerVisible.right;
       
+      // Calculate the visible area of this slide
+      const visibleLeft = Math.max(slideLeft, containerLeft);
+      const visibleRight = Math.min(slideRight, containerRight);
+      const visibleWidth = Math.max(0, visibleRight - visibleLeft);
+      const visibleArea = visibleWidth * slideHeight;
+      
+      // Record most visible slide
       if (visibleArea > maxVisibleArea) {
         maxVisibleArea = visibleArea;
         maxVisibleIndex = index;
       }
       
-      // Special case for first slide - ensure it stays in position
+      // Enhanced first slide positioning to eliminate potential CLS
       if (index === 0) {
-        const firstSlideOffset = slideRect.left - containerVisible.left - 22; // 18px padding + 4px border
+        // Use a constant value for padding to prevent layout shifts
+        // 22px = 18px padding + 4px border
+        const constantPadding = 22;
+        const firstSlideOffset = slideLeft - containerLeft - constantPadding;
         
-        // If first slide is more than 20px from its expected position, force correction
-        // But only do this when the first slide is not the currently selected one
-        // This prevents fighting with user scroll input
-        if (Math.abs(firstSlideOffset) > 20 && maxVisibleIndex !== 0) {
+        // Only make corrections for significant offsets to avoid microjitters
+        // Increased threshold to 25px to further reduce potential corrections
+        if (Math.abs(firstSlideOffset) > 25 && maxVisibleIndex !== 0) {
+          // Use requestAnimationFrame for smoother, more efficient updates
           requestAnimationFrame(() => {
-            // Only correct if we're not actively transitioning to a new slide
-            // This prevents jumpy behavior during normal navigation
-            const isTransitioning = container.style.scrollBehavior === 'smooth';
+            // Avoid fighting with intentional user scrolling or transitions
+            const isTransitioning = 
+              container.style.scrollBehavior === 'smooth' || 
+              container.getAttribute('data-transitioning') === 'true';
+              
             if (!isTransitioning) {
-              // Use a less noticeable correction to not disrupt user experience
+              // Mark container as currently making a correction to prevent multiple corrections
+              container.setAttribute('data-correcting', 'true');
+              
+              // Calculate exact scroll position
               const currentScrollLeft = container.scrollLeft;
+              const newScrollLeft = currentScrollLeft - firstSlideOffset;
+              
+              // Apply correction without animation to prevent visual jumps
               container.scrollTo({
-                left: currentScrollLeft - firstSlideOffset,
+                left: newScrollLeft,
                 behavior: 'auto'
+              });
+              
+              // Clear correction flag after animation frame
+              requestAnimationFrame(() => {
+                container.removeAttribute('data-correcting');
               });
             }
           });
@@ -131,9 +161,16 @@ export const MobileCreatorCarousel = ({
     });
     
     // Update the selected index and button states only if it changed
+    // This prevents unnecessary re-renders
     if (maxVisibleIndex !== selectedIndex) {
-      setSelectedIndex(maxVisibleIndex);
-      updateButtonStates(maxVisibleIndex);
+      // Set data attribute first for immediate visual feedback
+      container.setAttribute('data-selected-index', maxVisibleIndex.toString());
+      
+      // Update state in the next animation frame to avoid blocking current frame
+      requestAnimationFrame(() => {
+        setSelectedIndex(maxVisibleIndex);
+        updateButtonStates(maxVisibleIndex);
+      });
     }
   };
   
@@ -151,38 +188,87 @@ export const MobileCreatorCarousel = ({
     }
   };
   
-  // Set up scroll event listener with debouncing for better performance
+  // Optimized scroll event handling with RAF and debouncing for improved performance and CLS reduction
   useEffect(() => {
     const scrollContainer = scrollContainerRef.current;
     if (!scrollContainer) return;
     
-    // Debounce the scroll handler to improve performance
+    // Track both timeout and animation frame IDs for proper cleanup
     let scrollTimeout: number | null = null;
+    let rafId: number | null = null;
+    let isScrolling = false;
     
-    const debouncedScrollHandler = () => {
-      // Clear any existing timeout
+    // Use both debouncing and requestAnimationFrame for optimal performance
+    const enhancedScrollHandler = () => {
+      // Mark that scrolling is happening to avoid conflicts
+      isScrolling = true;
+      
+      // Clear existing timeout to only run after scrolling stops
       if (scrollTimeout !== null) {
         window.clearTimeout(scrollTimeout);
       }
       
-      // Set a new timeout
+      // Cancel any existing animation frame request
+      if (rafId !== null) {
+        window.cancelAnimationFrame(rafId);
+      }
+      
+      // Use RAF to sync with browser rendering cycle - smoother visual updates
+      rafId = window.requestAnimationFrame(() => {
+        // During active scrolling, only use RAF + throttled updates
+        // to avoid overwhelming the main thread and causing jank
+        if (isScrolling) {
+          handleScroll();
+        }
+        
+        rafId = null;
+      });
+      
+      // Debounce the end of scrolling to catch final position
       scrollTimeout = window.setTimeout(() => {
-        handleScroll();
+        isScrolling = false;
+        
+        // Final position check after scrolling stops
+        rafId = window.requestAnimationFrame(() => {
+          handleScroll();
+          rafId = null;
+        });
+        
         scrollTimeout = null;
-      }, 50); // 50ms debounce time - short enough to feel responsive, long enough to avoid excessive calculations
+      }, 100); // 100ms is a good balance for reliable position tracking without affecting responsiveness
     };
     
-    // Add passive scroll listener for better performance
-    scrollContainer.addEventListener('scroll', debouncedScrollHandler, { passive: true });
+    // Add container class and data attributes for CLS prevention
+    scrollContainer.classList.add('carousel-scroll-container');
+    scrollContainer.setAttribute('data-scroll-optimized', 'true');
+    scrollContainer.setAttribute('data-selected-index', selectedIndex.toString());
     
-    // Clean up the listener when component unmounts
+    // Add the passive flag for improved scrolling performance
+    // The passive option indicates scrolling won't be prevented, allowing browser optimizations
+    scrollContainer.addEventListener('scroll', enhancedScrollHandler, { passive: true });
+    
+    // Additional event for scroll end detection on touch devices
+    scrollContainer.addEventListener('touchend', () => {
+      // Small timeout to ensure scroll momentum has completed
+      setTimeout(() => {
+        if (!isScrolling) {
+          handleScroll();
+        }
+      }, 50);
+    }, { passive: true });
+    
+    // Clean up all resources when component unmounts
     return () => {
       if (scrollTimeout !== null) {
         window.clearTimeout(scrollTimeout);
       }
-      scrollContainer.removeEventListener('scroll', debouncedScrollHandler);
+      if (rafId !== null) {
+        window.cancelAnimationFrame(rafId);
+      }
+      scrollContainer.removeEventListener('scroll', enhancedScrollHandler);
+      scrollContainer.removeEventListener('touchend', enhancedScrollHandler);
     };
-  }, [selectedIndex]);
+  }, [selectedIndex, handleScroll]);
   
   // Initialize carousel with simplified positioning logic for better reliability
   useEffect(() => {
@@ -235,46 +321,121 @@ export const MobileCreatorCarousel = ({
 
   return (
     <div className="relative w-full py-space-sm px-space-xs">
-      {/* Native scroll-snap container with mobile spacing */}
+      {/* Enhanced scroll-snap container with CLS prevention and hardware acceleration */}
       <div 
         ref={scrollContainerRef}
-        className="w-full overflow-x-auto pb-space-sm hide-scrollbar mobile-contain-scroll gpu-accelerated"
+        className="w-full overflow-x-auto pb-space-sm hide-scrollbar mobile-contain-scroll gpu-accelerated mobile-creator-carousel-container"
         style={{
+          // Scroll behavior optimizations
           scrollSnapType: 'x mandatory',
           scrollBehavior: 'smooth',
           WebkitOverflowScrolling: 'touch',
+          // Force hardware acceleration for smoother scroll
+          transform: 'translateZ(0)',
+          backfaceVisibility: 'hidden',
+          WebkitBackfaceVisibility: 'hidden',
+          // Force a compositing layer
+          willChange: 'transform',
+          // Layout optimizations
           display: 'flex',
-          paddingLeft: 'var(--spacing-sm)',
-          paddingRight: 'var(--spacing-sm)',
-          paddingTop: 'var(--spacing-xs)', 
+          // Precise spacing dimensions to prevent CLS
+          paddingLeft: 'var(--spacing-sm, 16px)',
+          paddingRight: 'var(--spacing-sm, 16px)',
+          paddingTop: 'var(--spacing-xs, 8px)', 
+          paddingBottom: 'var(--spacing-sm, 16px)',
+          // Scrollbar hiding for different browsers
           msOverflowStyle: 'none',
           scrollbarWidth: 'none',
+          // Fixed borders to prevent layout shifts
           borderLeft: '4px solid transparent',
           borderRight: '4px solid transparent',
+          // Fixed dimensions with aspect ratio to prevent CLS
           width: '100%',
-          maxWidth: '100vw'
+          maxWidth: '100vw',
+          // Prevent FOUT from affecting layout
+          contentVisibility: 'auto',
+          // Prevent overflowing content from causing CLS
+          overflowY: 'hidden',
+          // Prevents pull-to-refresh on iOS which can cause CLS
+          overscrollBehavior: 'none',
+          // Box sizing to ensure consistent dimensions
+          boxSizing: 'border-box',
+          // Fixed height to prevent outer container from shifting
+          minHeight: '520px',
+          // Contain layout to prevent shifts from children
+          contain: 'layout paint'
         }}
+        data-testid="mobile-carousel-container"
       >
         {creators.map((creator, index) => (
           <div 
             key={creator.name}
             data-slide={`slide-${index}`}
-            className={`flex-none w-[88%] mr-[var(--spacing-sm)] gpu-accelerated mobile-active-state`}
+            data-index={index}
+            data-selected={selectedIndex === index ? 'true' : 'false'}
+            className={`flex-none w-[88%] mr-[var(--spacing-sm)] gpu-accelerated mobile-active-state carousel-slide`}
             style={{
+              // Scroll snap behavior with immediate stop
               scrollSnapAlign: 'center',
-              scrollSnapStop: 'normal',
+              scrollSnapStop: 'always', // Force immediate snap to prevent partial snapping
+              
+              // Mobile interaction optimizations
               WebkitTapHighlightColor: 'transparent',
-              touchAction: 'pan-x',
-              transition: 'transform 180ms ease-out, opacity 180ms ease-out',
-              transform: selectedIndex === index ? 'scale(1)' : 'scale(0.975)',
+              touchAction: 'pan-x', // Only allow horizontal swiping
+              pointerEvents: 'auto',
+              
+              // Transition only properties that don't cause layout shifts
+              transitionProperty: 'transform, opacity, box-shadow',
+              transitionDuration: '180ms',
+              transitionTimingFunction: 'ease-out',
+              
+              // Scale transform using hardware acceleration
+              // Only apply scale transform to selected item to prevent CLS
+              transform: `translateZ(0) ${selectedIndex === index ? 'scale(1)' : 'scale(0.975)'}`,
+              transformOrigin: 'center center',
+              
+              // Backface visibility to prevent flickering
+              backfaceVisibility: 'hidden',
+              WebkitBackfaceVisibility: 'hidden',
+              
+              // Fixed opacity to prevent fade transitions that might cause CLS
               opacity: 1,
+              
+              // Shadow only on non-selected items
               boxShadow: selectedIndex === index ? 'none' : '0 2px 6px rgba(0, 0, 0, 0.03)',
-              minWidth: 'calc(88% - var(--spacing-sm))',
+              
+              // Fixed width calculations to prevent CLS - explicit pixel values for width
+              // Calculate width as percentage of container but with fixed values after calculation
+              minWidth: 'calc(88% - var(--spacing-sm, 16px))',
+              width: 'calc(88% - var(--spacing-sm, 16px))',
+              maxWidth: 'calc(88% - var(--spacing-sm, 16px))',
+              
+              // Flexbox sizing to ensure consistent width
               WebkitFlexBasis: '88%',
               flexBasis: '88%',
+              flexShrink: 0,
+              flexGrow: 0,
+              
+              // Fixed height constraints to prevent vertical CLS
+              height: 'auto',
+              minHeight: '480px',
               maxHeight: '80vh',
+              
+              // Positioning for proper stacking
               position: 'relative',
-              zIndex: selectedIndex === index ? 2 : 1
+              zIndex: selectedIndex === index ? 2 : 1,
+              
+              // Force hardware acceleration and compositing
+              willChange: 'transform',
+              
+              // Box sizing to ensure consistent dimensions
+              boxSizing: 'border-box',
+              
+              // Prevent margins from causing CLS
+              margin: '0 var(--spacing-sm, 16px) 0 0',
+              
+              // Internal layout containment
+              contain: 'layout style'
             }}
           >
             <CreatorCard 

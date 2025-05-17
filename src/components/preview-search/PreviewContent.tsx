@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo, memo } from 'react';
+import React, { useState, useRef, useEffect, useMemo, memo, useCallback } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { CreatorCard } from '../creator/CreatorCard';
 import { MobileCreatorCarousel } from '../search/MobileCreatorCarousel';
@@ -107,13 +107,16 @@ export const PreviewContent: React.FC<PreviewContentProps> = ({
   }, [searchTerm]);
   
   // Add an image to the loaded set when it loads
-  const handleImageLoad = (imageSrc: string) => {
+  const handleImageLoad = useCallback((imageSrc: string) => {
     setLoadedImages(prev => {
+      // If image is already in the set, don't trigger an update
+      if (prev.has(imageSrc)) return prev;
+
       const updated = new Set(prev);
       updated.add(imageSrc);
       return updated;
     });
-  };
+  }, []);
   
   // Handle thumbnail clicks
   const handlePreviewClick = (imageSrc: string) => {
@@ -130,47 +133,55 @@ export const PreviewContent: React.FC<PreviewContentProps> = ({
     >
       {/* Skeleton loader states */}
       {(isLoading || showSkeletons) && (
-        <div className={cn(
-          "grid grid-cols-1 gap-4 md:gap-6",
-          isMobile 
-            ? "snap-x px-4 overflow-x-auto flex relative" 
-            : "md:grid-cols-3 lg:grid-cols-3"
-        )} style={{ 
-          opacity: isLoading ? 0.8 : 1,
-          paddingBottom: isMobile ? '12px' : '0'
-        }}>
-          {Array.from({ length: loadingCount }, (_, index) => (
-            <CreatorCardSkeleton key={`skeleton-${index}`} />
-          ))}
+        <div className="w-full">
+          {/* Mobile skeleton - Only visible on small screens */}
+          <div className="md:hidden snap-x px-4 overflow-x-auto flex relative gap-4"
+               style={{ opacity: isLoading ? 0.8 : 1, paddingBottom: '12px' }}>
+            {Array.from({ length: loadingCount }, (_, index) => (
+              <CreatorCardSkeleton key={`mobile-skeleton-${index}`} />
+            ))}
+          </div>
+
+          {/* Desktop skeleton grid - Hidden on mobile, 3-column grid on desktop */}
+          <div className="hidden md:grid md:grid-cols-3 gap-12 px-6 w-full"
+               style={{ opacity: isLoading ? 0.8 : 1 }}>
+            {Array.from({ length: loadingCount }, (_, index) => (
+              <div className="flex justify-center" key={`desktop-skeleton-${index}`}>
+                <CreatorCardSkeleton />
+              </div>
+            ))}
+          </div>
         </div>
       )}
       
       {/* Actual content */}
       {!isLoading && !showSkeletons && (
         <div className="w-full">
-          {isMobile ? (
-            <MobileCreatorCarousel 
+          {/* Mobile view - Only visible on small screens */}
+          <div className="md:hidden">
+            <MobileCreatorCarousel
               creators={filteredCreators}
               onImageLoad={handleImageLoad}
               loadedImages={loadedImages}
               onPreviewClick={handlePreviewClick}
             />
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6 md:gap-8 px-4 md:px-6 place-items-center justify-items-center w-full">
-              {filteredCreators.map((creator, index) => (
-                <div className="h-full flex" key={`${creator.name}-${index}`}>
-                  <MemoizedCreatorCard 
-                    creator={creator}
-                    onImageLoad={handleImageLoad}
-                    loadedImages={loadedImages}
-                    imageRef={creatorRefs[index]}
-                    onPreviewClick={handlePreviewClick}
-                    isSelected={false}
-                  />
-                </div>
-              ))}
-            </div>
-          )}
+          </div>
+
+          {/* Desktop grid - Hidden on mobile, 3-column grid on desktop */}
+          <div className="hidden md:grid md:grid-cols-3 gap-12 px-6 w-full">
+            {filteredCreators.map((creator, index) => (
+              <div className="flex justify-center" key={`${creator.name}-${index}`}>
+                <MemoizedCreatorCard
+                  creator={creator}
+                  onImageLoad={handleImageLoad}
+                  loadedImages={loadedImages}
+                  imageRef={creatorRefs[index]}
+                  onPreviewClick={handlePreviewClick}
+                  isSelected={false}
+                />
+              </div>
+            ))}
+          </div>
         </div>
       )}
 

@@ -105,27 +105,11 @@ export const CriticalPreload = () => {
       img.setAttribute('importance', 'high');
     });
 
-    // 3. Key webfonts - direct font file preloading is much faster than Google Fonts CSS
-    const criticalFonts = [
-      { 
-        href: 'https://fonts.gstatic.com/s/plusjakartasans/v8/LDIbaomQNQcsA88c7O9yZ4KMCoOg4IA6-91aHEjcWuA_KU7NSg.woff2', 
-        type: 'font/woff2'
-      },
-      { 
-        href: 'https://fonts.gstatic.com/s/inter/v13/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7.woff2', 
-        type: 'font/woff2' 
-      }
-    ];
-    
-    criticalFonts.forEach(font => {
-      const fontPreload = document.createElement('link');
-      fontPreload.rel = 'preload';
-      fontPreload.href = font.href;
-      fontPreload.as = 'font';
-      fontPreload.type = font.type;
-      fontPreload.crossOrigin = 'anonymous';
-      document.head.appendChild(fontPreload);
-    });
+    // 3. Google Fonts is now used instead of direct woff2 preloading
+    // The font import is added to the HTML head via the link tag:
+    // <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet">
+
+    // No need to preload individual font files as Google Fonts handles this
 
     // 4. Add preconnect for critical external domains
     const criticalDomains = [

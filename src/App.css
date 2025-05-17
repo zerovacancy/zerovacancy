@@ -1,4 +1,7 @@
 
+/* Import CLS-safe variables for preventing layout shifts */
+@import './styles/cls-variables.css';
+
 #root {
     max-width: 1280px;
     margin: 0 auto;

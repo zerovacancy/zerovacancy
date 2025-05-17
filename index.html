@@ -1,9 +1,39 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="cls-pre-stabilization">
   <head>
     <meta charset="UTF-8" />
+    <!-- Debug script -->
+    <script src="/debug-blank-page.js"></script>
+    <script>
+      // Add loading class but make sure it's removed within 1 second
+      document.documentElement.classList.add('loading');
+      setTimeout(function() {
+        document.documentElement.classList.remove('loading');
+        document.documentElement.classList.add('content-loaded');
+      }, 1000);
+    </script>
+    <style>
+      /* Hide just heroparallax elements which are known to cause problems */
+      [src*="heroparallax"] { display: none !important; }
+    </style>
     <link rel="icon" type="image/png" href="/favicon.png" />
+    
+    <!-- Fix to remove carousel indicators -->
+    <style>
+      /* Hide carousel indicators at bottom of creator cards */
+      section#find-creators .flex.justify-center.mt-space-md.space-x-space-xs,
+      .mt-space-md.space-x-space-xs,
+      div[class*="mt-space-md"][class*="space-x-space-xs"] {
+        display: none !important;
+        height: 0 !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+      }
+    </style>
     
     <!-- Inline critical CSS to prevent FOUC / Visual Jump -->
     <style>
@@ -36,8 +66,26 @@
         z-index: 10;
       }
       
+      /* Ensure header is sticky on mobile with higher z-index than hero */
+      @media (max-width: 768px) {
+        header, 
+        header[role="banner"],
+        .header, 
+        .mobile-header, 
+        nav[role="navigation"] {
+          position: fixed !important;
+          top: 0 !important;
+          left: 0 !important;
+          right: 0 !important;
+          width: 100% !important;
+          z-index: 1000 !important; /* Higher than anything else */
+          background-color: white !important;
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08) !important;
+        }
+      }
+      
       /* Critical hero section styles */
-      .hero, section[class*="hero"] {
+      .hero, section[class*="hero"], section#hero {
         min-height: 60vh;
         display: flex;
         flex-direction: column;
@@ -45,6 +93,54 @@
         justify-content: center;
         text-align: center;
         padding: 2rem 1rem;
+        /* Modified containment to prevent interfering with header */
+        contain: style paint;
+        position: relative;
+        z-index: 1; /* Lower than header z-index */
+      }
+      
+      /* Mobile hero specific fixes to prevent CLS */
+      @media (max-width: 768px) {
+        section#hero, div[data-hero-section="true"], section[data-hero-section="true"], .hero, section[class*="hero"] {
+          /* Explicit fixed height for mobile for stability */
+          height: 450px !important;
+          min-height: 450px !important;
+          max-height: 450px !important;
+          
+          /* Override any lazy loading or animations causing shifts */
+          transition: none !important;
+          animation: none !important;
+        }
+        
+        /* Mobile hero title container with stable height */
+        #hero-title, h1#hero-title {
+          min-height: 120px !important;
+          height: auto !important;
+          position: relative !important;
+          margin-top: 0 !important;
+          width: 100% !important;
+        }
+        
+        /* Mobile hero rotating text container */
+        #hero-title > div, .text-rotate-container {
+          height: 60px !important;
+          min-height: 60px !important;
+          max-height: 60px !important;
+          width: 100% !important;
+          position: relative !important;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+        }
+        
+        /* Pre-allocate mobile CTA button space */
+        .mobile-cta-button, #mobile-hero-cta-section, .hero-cta-container {
+          width: 100% !important;
+          max-width: 280px !important;
+          min-height: 54px !important;
+          display: block !important;
+          margin: 0 auto !important;
+        }
       }
       
       /* Critical button styles */
@@ -63,7 +159,7 @@
       img {
         width: 100%;
         height: auto;
-        opacity: 1; /* Changed from 0 to 1 to ensure images are visible immediately */
+        opacity: 1; /* Keep images visible while debugging */
         transition: opacity 0.3s ease;
       }
       
@@ -93,6 +189,12 @@
         /* Animation handled directly in JS for better synchronization with page load */
       }
     </style>
+    
+    <!-- Early CLS prevention styles - Load before any rendering -->
+    <link rel="stylesheet" href="/cls-prevention.css">
+    
+    <!-- Viewport height fix for CLS prevention - Load early -->
+    <script src="/viewport-height-fix.js"></script>
     
     <!-- Optimized loading indicator - simplified implementation -->
     <script>
@@ -234,6 +336,7 @@
     <!-- Resource hints - optimized for performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet">
     <link rel="preconnect" href="https://pozblfzhjqlsxkakhowp.supabase.co" crossorigin />
     <link rel="dns-prefetch" href="https://pozblfzhjqlsxkakhowp.supabase.co" />
     <link rel="preconnect" href="https://js.stripe.com" crossorigin />
@@ -280,7 +383,10 @@
       }
     </script>
     
-    <!-- Event listener monitoring and protection - runs FIRST to catch all listener registrations -->
+    <!-- Emergency header fix with viewport height integration for CLS prevention -->
+    <script src="/text-fouc-fix.js"></script>
+    
+    <!-- Event listener monitoring and protection -->
     <script src="/event-listener-guard.js"></script>
     <script src="/event-listener-diagnostics.js"></script>
     
@@ -290,17 +396,13 @@
     <!-- Ultra-fast mobile optimization script - runs immediately -->
     <script src="/quick-perf.js"></script>
     
-    <!-- Development-only image path checker -->
-    <script>
-      // Only load image checker in development
-      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        const imageChecker = document.createElement('script');
-        imageChecker.src = '/check-images.js';
-        imageChecker.async = true;
-        document.head.appendChild(imageChecker);
-        console.info('Image path checker enabled (development only)');
-      }
-    </script>
+    <!-- CLS verification and monitoring tools -->
+    <script src="/verify-cls-improvements.js"></script>
+    <script src="/verify-cls-prevention.js"></script>
+    <script src="/cls-display.js"></script>
+    
+    <!-- Development-only image path checker removed to prevent floating UI elements -->
+    <!-- No image checker to prevent CLS and clean up UI -->
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
@@ -341,7 +443,7 @@
       .below-fold {
         content-visibility: var(--cv-value, auto);
         contain-intrinsic-size: 1px 5000px;
-        contain: layout style paint;
+        /* Removed contain property to avoid stacking context issues */
       }
       
       /* Optimize rendering with will-change for hardware acceleration */
@@ -354,7 +456,8 @@
       .hero, section[class*="hero"] {
         min-height: 70vh;
         position: relative;
-        contain: layout style;
+        /* Removed contain property entirely to avoid stacking context issues */
+        z-index: 1; /* Lower than header z-index */
       }
       
       /* Desktop-specific hero sizing */
@@ -412,33 +515,28 @@
         isolation: isolate;
       }
       
-      /* Loading spinner */
-      .page-loader {
-        position: fixed;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: #fff;
-        z-index: 9999;
-      }
-      
-      .spinner {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        border: 4px solid #f5f5f5;
-        border-top-color: #6633ff;
-        animation: spin 1s linear infinite;
-      }
-      
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+      /* Spinner styles removed to eliminate CLS */
+      .page-loader, .spinner {
+        display: none !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        position: absolute !important;
+        height: 0 !important;
+        width: 0 !important;
+        overflow: hidden !important;
+        clip: rect(0, 0, 0, 0) !important;
+        margin: -1px !important;
+        padding: 0 !important;
+        border: 0 !important;
       }
       
       /* Mobile performance and layout fixes */
       @media (max-width: 767px) {
+        /* Add padding to body for fixed header */
+        body {
+          padding-top: 60px !important; /* Match header height */
+        }
+        
         /* Standardize section spacing */
         section {
           padding-top: 16px !important;
@@ -493,6 +591,83 @@
       }
     </style>
     
+    <!-- Unregister service worker in any non-production environment to prevent fetch errors -->
+    <script>
+      // Helper function to determine if we're in a production environment
+      function isProductionEnvironment() {
+        const hostname = window.location.hostname;
+        const port = window.location.port;
+        
+        // Check for production indicators
+        const isProduction = 
+          // Must be https
+          window.location.protocol === 'https:' &&
+          // Not localhost or 127.0.0.1
+          hostname !== 'localhost' && 
+          !hostname.match(/^127\.0\.0\.1$/) &&
+          // Not a .local domain
+          !hostname.endsWith('.local') &&
+          // Not a .test domain
+          !hostname.endsWith('.test') &&
+          // Not a dev subdomain
+          !hostname.match(/^dev\.|\.dev\.|staging\.|\.staging\.|test\.|\.test\./) &&
+          // Not using development ports
+          !['3000', '8080', '8081', '5173', '5174', '3001', '4000', '4001', '8000', '8888', '9000'].includes(port);
+          
+        return isProduction;
+      }
+      
+      // Log the environment detection
+      const envType = isProductionEnvironment() ? 'PRODUCTION' : 'DEVELOPMENT/STAGING';
+      console.log(`Environment detected: ${envType}`);
+      
+      // Unregister service workers in ANY non-production environment
+      if ('serviceWorker' in navigator && !isProductionEnvironment()) {
+        console.log('Non-production environment detected - unregistering all service workers');
+        
+        // First unregister all service workers
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          if (registrations.length === 0) {
+            console.log('No service workers found to unregister');
+            return Promise.resolve();
+          }
+          
+          const unregisterPromises = registrations.map(registration => {
+            console.log('Unregistering service worker:', registration.scope);
+            return registration.unregister();
+          });
+          
+          // After all are unregistered, clear caches to ensure clean state
+          return Promise.all(unregisterPromises).then(() => {
+            if ('caches' in window) {
+              return caches.keys().then(function(cacheNames) {
+                if (cacheNames.length === 0) {
+                  console.log('No caches found to clear');
+                  return;
+                }
+                
+                return Promise.all(
+                  cacheNames.map(function(cacheName) {
+                    console.log('Clearing cache:', cacheName);
+                    return caches.delete(cacheName);
+                  })
+                ).then(() => {
+                  console.log('All caches cleared successfully');
+                });
+              });
+            }
+          }).then(() => {
+            console.log('All service workers unregistered and caches cleared');
+          });
+        }).catch(error => {
+          console.error('Error unregistering service workers:', error);
+        });
+      }
+      
+      // Make isProductionEnvironment available for the service worker registration script below
+      window.__isProductionEnvironment = isProductionEnvironment;
+    </script>
+    
     <!-- Stripe JavaScript SDK - optimized loading -->
     <script defer src="https://js.stripe.com/v3/" data-load-delay="2000" onload="if(window.Stripe){console.log('Stripe loaded successfully');}" onerror="console.error('Error loading Stripe');"></script>
     <script>
@@ -514,16 +689,8 @@
     </script>
   </head>
   <body>
-    <!-- Initial loading state - visible immediately -->
-    <div id="page-loader" class="page-loader">
-      <div class="spinner"></div>
-      <!-- Add branded elements to enhance loading experience -->
-      <div style="text-align: center; margin-top: 20px; opacity: 0.8;">
-        <div style="font-family: system-ui, -apple-system, sans-serif; font-size: 16px; color: #6741d9; margin-top: 16px;">
-          Loading ZeroVacancy...
-        </div>
-      </div>
-    </div>
+    <!-- Loading elements completely removed to eliminate CLS -->
+    <!-- No spinners or loaders to prevent layout shifts -->
     
     <div id="root"></div>
     
@@ -587,47 +754,11 @@
         }
       })();
       
-      // Simpler, more reliable loader handling that doesn't interfere with React
-      const hideLoader = () => {
-        const loader = document.getElementById('page-loader');
-        if (!loader) return;
-        
-        // Wait briefly to ensure the page starts rendering
-        setTimeout(() => {
-          if (loader) {
-            // Add transition if it doesn't exist
-            if (!loader.style.transition) {
-              loader.style.transition = 'opacity 0.5s ease';
-            }
-            
-            // Start fade out
-            loader.style.opacity = '0';
-            
-            // Remove from DOM after animation completes
-            loader.addEventListener('transitionend', () => {
-              if (loader.parentNode) {
-                loader.parentNode.removeChild(loader);
-              }
-            }, { once: true });
-          }
-        }, 500); // Short delay to allow React initialization
-      };
-      
-      // Apply loader handling after DOM is initially ready
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', hideLoader);
-      } else {
-        hideLoader();
-      }
-      
-      // Backup timeout to ensure loader disappears even if animation fails
-      setTimeout(() => {
-        const loader = document.getElementById('page-loader');
-        if (loader && loader.parentNode) {
-          loader.parentNode.removeChild(loader);
-        }
-      }, 3000);
+      // Loader code completely removed to eliminate CLS
     </script>
+    
+    <!-- Simple debug script -->
+    <script src="/debug-page.js"></script>
     
     <!-- Efficiently load the main script -->
     <script type="module" src="/src/main.tsx"></script>
@@ -657,20 +788,50 @@
     
     <!-- Performance monitoring - included only in development -->
     <script>
-      // Only load in development environments
-      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        const perfScript = document.createElement('script');
-        perfScript.src = '/performance-monitor.js';
-        perfScript.async = true;
-        document.head.appendChild(perfScript);
-        console.info('Performance monitoring enabled (development only)');
+      // Performance monitoring enabled in development and via URL parameter
+      if (window.location.hostname === 'localhost' || 
+          window.location.hostname === '127.0.0.1' || 
+          window.location.search.includes('debug=')) {
+        console.info('Performance monitoring enabled');
+        
+        // Enable CLS monitoring
+        if (typeof window.__clsMonitoring === 'undefined' && typeof window.__enableClsMonitoring === 'function') {
+          // Call the function exposed by text-fouc-fix.js
+          window.__enableClsMonitoring();
+          console.info('CLS monitoring enabled. Access with window.__clsMonitoring in console.');
+        } else {
+          console.info('CLS monitoring already initialized by text-fouc-fix.js');
+        }
+        
+        if (window.location.search.includes('debug=cls') || window.location.search.includes('debug=all')) {
+          // Add debug class to body for visual indicators
+          document.body.classList.add('cls-debug');
+          console.info('CLS debug mode enabled. Elements causing shifts will be highlighted.');
+        }
       }
     </script>
     
-    <!-- Enhanced service worker registration with desktop optimization -->
+    <!-- Cookie consent positioning fix -->
     <script>
-      // Service worker with improved cache control
-      if ('serviceWorker' in navigator) {
+      // Fix cookie consent positioning
+      document.addEventListener('DOMContentLoaded', function() {
+        // Wait for the cookie consent to be added to the DOM
+        setTimeout(function() {
+          const cookieConsent = document.querySelector('.cookie-consent-container');
+          if (cookieConsent) {
+            cookieConsent.setAttribute('data-position', 'bottom');
+            cookieConsent.setAttribute('data-contain-force', 'false');
+            console.log('Cookie consent container fixed');
+          }
+        }, 1000);
+      });
+    </script>
+    
+    <!-- Enhanced service worker registration with desktop optimization - PRODUCTION ONLY -->
+    <script>
+      // Service worker with improved cache control - STRICTLY PRODUCTION ONLY
+      // Use the shared isProductionEnvironment function for consistent environment detection
+      if ('serviceWorker' in navigator && window.__isProductionEnvironment()) {
         // Detect if desktop for enhanced caching
         const isDesktop = window.innerWidth >= 768 && 
                         !(/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
@@ -747,6 +908,22 @@
             });
         });
       }
+    </script>
+    
+    <!-- Remove loading class when content is loaded -->
+    <script>
+      window.addEventListener('load', function() {
+        // Remove loading class to show images
+        document.documentElement.classList.remove('loading');
+        // Add content-loaded class
+        document.documentElement.classList.add('content-loaded');
+      });
+      
+      // Fallback - force show images after 2 seconds regardless of load event
+      setTimeout(function() {
+        document.documentElement.classList.remove('loading');
+        document.documentElement.classList.add('content-loaded');
+      }, 2000);
     </script>
   </body>
 </html>

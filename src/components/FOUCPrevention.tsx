@@ -4,7 +4,7 @@
  * This component prevents Flash of Unstyled Content (FOUC) on page load, particularly
  * focusing on preventing old images appearing briefly during mobile page load.
  */
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 export function FOUCPrevention() {
   useEffect(() => {
@@ -108,15 +108,14 @@ export function FOUCPrevention() {
     document.addEventListener('DOMContentLoaded', removeHeroparallaxImages);
     
     // And once more after everything is loaded (belt and suspenders)
-    window.addEventListener('load', () => {
-      setTimeout(removeHeroparallaxImages, 100);
-    });
+    const delayedCleanup = () => setTimeout(removeHeroparallaxImages, 100);
+    window.addEventListener('load', delayedCleanup);
 
     // 6. Monitor and handle any dynamically added images
     const observer = new MutationObserver((mutations) => {
       let heroImageFound = false;
       
-      for (let mutation of mutations) {
+      for (const mutation of mutations) {
         if (mutation.type === 'childList') {
           mutation.addedNodes.forEach(node => {
             // Check if it's an element and then look for heroparallax images
@@ -166,7 +165,8 @@ export function FOUCPrevention() {
     // 7. Add debug info for development
     if (process.env.NODE_ENV === 'development') {
       const debugInfo = document.createElement('div');
-      debugInfo.style.cssText = 'position:fixed;bottom:0;right:0;background:rgba(0,0,0,0.7);color:white;padding:10px;z-index:9999;font-size:12px;';
+      debugInfo.style.cssText = 'position:fixed;top:auto;bottom:0;right:0;background:rgba(0,0,0,0.7);color:white;padding:10px;z-index:9999;font-size:12px;transform:translateZ(0);contain:none;';
+      debugInfo.setAttribute('data-contain-force', 'false');
       debugInfo.textContent = 'FOUC Prevention Active';
       document.body.appendChild(debugInfo);
     }
@@ -175,7 +175,7 @@ export function FOUCPrevention() {
     return () => {
       window.removeEventListener('load', markAsLoaded);
       document.removeEventListener('DOMContentLoaded', removeHeroparallaxImages);
-      window.removeEventListener('load', () => setTimeout(removeHeroparallaxImages, 100));
+      window.removeEventListener('load', delayedCleanup);
       observer.disconnect();
       
       // Remove the style element

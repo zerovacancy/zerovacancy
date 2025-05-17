@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 /**
  * Web Vitals Monitoring - Core Performance Improvement
@@ -50,8 +50,15 @@ export function reportWebVitals(onPerfEntry?: (metric: Metric) => void, config?:
   if (typeof window === 'undefined') return;
 
   // Dynamically import the web-vitals library
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let webVitalsLib: any = null;
+  // Use a more specific type for the web-vitals library
+  let webVitalsLib: {
+    onCLS: (cb: (metric: Metric) => void) => void;
+    onFID: (cb: (metric: Metric) => void) => void;
+    onLCP: (cb: (metric: Metric) => void) => void;
+    onINP: (cb: (metric: Metric) => void) => void;
+    onTTFB: (cb: (metric: Metric) => void) => void;
+    onFCP: (cb: (metric: Metric) => void) => void;
+  } | null = null;
   
   try {
     // Use dynamic import instead of require to avoid ESLint errors
@@ -294,7 +301,115 @@ export function getCurrentMetrics() {
  * @param delay Optional delay between calls (defaults to rAF timing)
  * @returns A throttled event handler function
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
+/**
+ * Utility to detect and report layout shifts in real-time
+ * for improved debugging of CLS issues
+ */
+export function monitorLayoutShift(options: {
+  debugMode?: boolean; 
+  reportCallback?: (shift: {value: number, elements: string[]}) => void;
+} = {}) {
+  const { debugMode = false, reportCallback } = options;
+  
+  if (typeof window === 'undefined') return;
+  
+  // Keep track of cumulative layout shift
+  let cumulativeLayoutShift = 0;
+  let observer: PerformanceObserver | null = null;
+  
+  try {
+    // Create a PerformanceObserver instance
+    observer = new PerformanceObserver((entryList) => {
+      for (const entry of entryList.getEntries() as PerformanceEntry[]) {
+        // Make sure it's a layout-shift entry
+        if (entry.entryType === 'layout-shift' && !((entry as any).hadRecentInput)) {
+          const shiftValue = (entry as any).value;
+          cumulativeLayoutShift += shiftValue;
+          
+          // Get impacted elements if possible
+          const nodes: string[] = [];
+          const nodeNames: string[] = [];
+          
+          try {
+            if ((entry as any).sources) {
+              for (const source of (entry as any).sources) {
+                if (source.node) {
+                  const nodeName = source.node.nodeName || 'unknown';
+                  const nodeId = source.node.id ? `#${source.node.id}` : '';
+                  const className = source.node.className ? 
+                    `.${source.node.className.split(' ').join('.')}` : '';
+                  
+                  const nodeIdentifier = `${nodeName}${nodeId}${className}`;
+                  nodeNames.push(nodeIdentifier);
+                  
+                  // Only in debug mode, we highlight the problematic elements
+                  if (debugMode) {
+                    // Temporarily highlight the element that shifted
+                    const originalOutline = source.node.style.outline;
+                    const originalZIndex = source.node.style.zIndex;
+                    
+                    source.node.style.outline = '3px solid red';
+                    source.node.style.zIndex = '10000';
+                    
+                    setTimeout(() => {
+                      source.node.style.outline = originalOutline;
+                      source.node.style.zIndex = originalZIndex;
+                    }, 1000);
+                  }
+                }
+              }
+            }
+          } catch (e) {
+            // Safely handle any errors in accessing source nodes
+          }
+          
+          // Log to console if debug mode is enabled
+          if (debugMode) {
+            console.warn(`Layout shift detected: ${shiftValue.toFixed(5)}`, {
+              cumulativeLayoutShift: cumulativeLayoutShift.toFixed(5),
+              elements: nodeNames.length ? nodeNames : 'Unknown elements',
+              timestamp: new Date().toISOString()
+            });
+          }
+          
+          // Call the report callback if provided
+          if (reportCallback) {
+            reportCallback({
+              value: shiftValue,
+              elements: nodeNames
+            });
+          }
+        }
+      }
+    });
+    
+    // Start observing layout-shift entries
+    observer.observe({ type: 'layout-shift', buffered: true });
+    
+  } catch (e) {
+    if (debugMode) {
+      console.error('Layout Shift monitoring not supported in this browser', e);
+    }
+  }
+  
+  // Return a function that can be called to stop monitoring
+  return function stopMonitoring() {
+    if (observer) {
+      observer.disconnect();
+      observer = null;
+    }
+  };
+}
+
+/**
+ * Creates a properly throttled scroll event handler for performance
+ * using requestAnimationFrame for better performance than setTimeout
+ * 
+ * @param callback The function to call when scroll event fires
+ * @param delay Optional delay between calls (defaults to rAF timing)
+ * @returns A throttled event handler function
+ */
 export function createThrottledScrollHandler<T extends (...args: unknown[]) => unknown>(
   callback: T, 
   delay?: number
@@ -332,7 +447,7 @@ export function createThrottledScrollHandler<T extends (...args: unknown[]) => u
  * @param delay Optional delay between calls (in ms)
  * @param deps Dependencies array for the callback
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 export function useThrottledScroll<T extends (...args: unknown[]) => unknown>(
   callback: T,
   delay?: number,
@@ -342,10 +457,9 @@ export function useThrottledScroll<T extends (...args: unknown[]) => unknown>(
   const callbackRef = useRef(callback);
   
   // Update the callback ref when dependencies change
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     callbackRef.current = callback;
-  }, [callback, ...deps]);
+  }, [callback, ...(deps || [])]);
   
   // Memoize the throttled handler
   const throttledHandler = useCallback(
@@ -375,7 +489,7 @@ export function useThrottledScroll<T extends (...args: unknown[]) => unknown>(
  * @param delay Optional delay between calls (in ms)
  * @returns A throttled event handler function
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+ 
 export function createThrottledResizeHandler<T extends (...args: unknown[]) => unknown>(
   callback: T,
   delay = 100
@@ -432,6 +546,226 @@ export function smoothScrollTo(elementId: string, offset = 0, duration = 800): v
  * @param _sectionsCount Total number of sections (currently unused, but kept for API compatibility)
  * @returns Object with section style utilities
  */
+/**
+ * A React hook that provides stable viewport height measurements
+ * to prevent layout shifts caused by mobile browser UI changes
+ * 
+ * @returns An object with:
+ * - vh: CSS vh unit value in pixels (1% of viewport height)
+ * - windowHeight: Current stable window height
+ * - setStableHeight: Function to manually update height
+ * - isStabilized: Boolean indicating if height has been stabilized
+ * - fixBottomNav: Function to adjust bottom nav spacing
+ */
+export function useStableViewportHeight() {
+  const [vh, setVh] = useState<number>(
+    typeof window !== 'undefined' ? window.innerHeight * 0.01 : 0
+  );
+  const [windowHeight, setWindowHeight] = useState<number>(
+    typeof window !== 'undefined' ? window.innerHeight : 0
+  );
+  const [isStabilized, setIsStabilized] = useState<boolean>(false);
+  
+  const resizeTimeoutRef = useRef<number | null>(null);
+  const orientationTimeoutRef = useRef<number | null>(null);
+  const initialHeightRef = useRef<number>(windowHeight);
+  const lastWidthRef = useRef<number>(typeof window !== 'undefined' ? window.innerWidth : 0);
+  
+  // Set initial values on mount
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    initialHeightRef.current = window.innerHeight;
+    lastWidthRef.current = window.innerWidth;
+    setVh(window.innerHeight * 0.01);
+    setWindowHeight(window.innerHeight);
+    
+    // Also set CSS variables for use in stylesheets
+    document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+    document.documentElement.style.setProperty('--window-height', `${window.innerHeight}px`);
+    document.documentElement.style.setProperty('--viewport-width', `${window.innerWidth}px`);
+    
+    // Calculate and set hero height variables
+    const isMobile = window.innerWidth < 768;
+    const heroMobileHeight = isMobile ? Math.round(window.innerHeight * 0.7) : 450;
+    document.documentElement.style.setProperty('--hero-mobile-height', `${heroMobileHeight}px`);
+    document.documentElement.style.setProperty('--hero-min-mobile-height', `${heroMobileHeight}px`);
+    
+    // Mark as stabilized after initial values are set
+    setTimeout(() => {
+      setIsStabilized(true);
+    }, 50);
+    
+    const handleResize = () => {
+      // Clear any existing timeout
+      if (resizeTimeoutRef.current !== null) {
+        window.clearTimeout(resizeTimeoutRef.current);
+      }
+      
+      // Store current dimensions
+      const currentHeight = window.innerHeight;
+      const currentWidth = window.innerWidth;
+      
+      // Check if this is an orientation change or just a UI change
+      const isOrientationChange = 
+        (lastWidthRef.current !== currentWidth) && 
+        Math.abs(lastWidthRef.current - currentWidth) > 100;
+      
+      // For orientation changes we need special handling
+      if (isOrientationChange) {
+        // Immediately update width reference
+        lastWidthRef.current = currentWidth;
+        
+        // For orientation changes, we need to update immediately to prevent major layout shifts
+        document.documentElement.style.setProperty('--viewport-width', `${currentWidth}px`);
+        
+        // Then we'll do multiple updates to catch the height as it settles
+        // Clear any pending orientation timeout
+        if (orientationTimeoutRef.current !== null) {
+          window.clearTimeout(orientationTimeoutRef.current);
+        }
+        
+        // Initial update (immediate)
+        updateVhValues(currentHeight);
+        
+        // Second update after a short delay to catch iOS toolbar adjustments
+        orientationTimeoutRef.current = window.setTimeout(() => {
+          updateVhValues(window.innerHeight);
+          
+          // Final update after the browser has fully adjusted
+          orientationTimeoutRef.current = window.setTimeout(() => {
+            updateVhValues(window.innerHeight);
+            orientationTimeoutRef.current = null;
+          }, 300);
+        }, 100);
+        
+        return;
+      }
+      
+      // For normal resize events (not orientation changes)
+      // Only trigger an update if height changes significantly (>3%)
+      // This prevents rapid flickering updates from browser UI
+      const heightDiff = Math.abs(currentHeight - initialHeightRef.current);
+      const threshold = initialHeightRef.current * 0.03; // 3% threshold (more sensitive than before)
+      
+      if (heightDiff > threshold) {
+        // Debounce the update to handle rapid changes
+        resizeTimeoutRef.current = window.setTimeout(() => {
+          updateVhValues(currentHeight);
+          resizeTimeoutRef.current = null;
+        }, 150); // Slightly faster updates for better responsiveness
+      }
+    };
+    
+    // Helper function to update all vh-related values
+    const updateVhValues = (height: number) => {
+      const newVh = height * 0.01;
+      setVh(newVh);
+      setWindowHeight(height);
+      
+      // Update CSS variables
+      document.documentElement.style.setProperty('--vh', `${newVh}px`);
+      document.documentElement.style.setProperty('--window-height', `${height}px`);
+      
+      // Update hero height for mobile
+      const isMobile = window.innerWidth < 768;
+      if (isMobile) {
+        const heroHeight = Math.round(height * 0.7);
+        document.documentElement.style.setProperty('--hero-mobile-height', `${heroHeight}px`);
+        document.documentElement.style.setProperty('--hero-min-mobile-height', `${heroHeight}px`);
+      }
+      
+      // Update the reference value
+      initialHeightRef.current = height;
+    };
+    
+    // Set up event listeners
+    window.addEventListener('resize', handleResize, { passive: true });
+    window.addEventListener('orientationchange', () => {
+      // Mark as unstabilized during orientation change
+      setIsStabilized(false);
+      
+      // Re-stabilize after orientation change is complete
+      setTimeout(() => {
+        setIsStabilized(true);
+      }, 500);
+      
+      // Force handler to run on orientation change
+      handleResize();
+    }, { passive: true });
+    
+    // Clean up listeners
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('orientationchange', handleResize);
+      
+      if (resizeTimeoutRef.current !== null) {
+        window.clearTimeout(resizeTimeoutRef.current);
+      }
+      
+      if (orientationTimeoutRef.current !== null) {
+        window.clearTimeout(orientationTimeoutRef.current);
+      }
+    };
+  }, []);
+  
+  // Function to manually update the height (useful for orientation changes)
+  const setStableHeight = useCallback(() => {
+    if (typeof window === 'undefined') return;
+    
+    const newVh = window.innerHeight * 0.01;
+    setVh(newVh);
+    setWindowHeight(window.innerHeight);
+    
+    // Update CSS variables
+    document.documentElement.style.setProperty('--vh', `${newVh}px`);
+    document.documentElement.style.setProperty('--window-height', `${window.innerHeight}px`);
+    document.documentElement.style.setProperty('--viewport-width', `${window.innerWidth}px`);
+    
+    // Update hero height variables for mobile
+    const isMobile = window.innerWidth < 768;
+    if (isMobile) {
+      const heroHeight = Math.round(window.innerHeight * 0.7);
+      document.documentElement.style.setProperty('--hero-mobile-height', `${heroHeight}px`);
+      document.documentElement.style.setProperty('--hero-min-mobile-height', `${heroHeight}px`);
+    }
+    
+    // Update the reference value
+    initialHeightRef.current = window.innerHeight;
+    lastWidthRef.current = window.innerWidth;
+    
+    // Mark as stabilized
+    setIsStabilized(true);
+  }, []);
+  
+  // Function to specifically fix bottom nav placement and spacing
+  const fixBottomNav = useCallback(() => {
+    if (typeof window === 'undefined') return;
+    
+    // Update bottom nav specific variables
+    const bottomNav = document.querySelector('.bottom-nav-container');
+    if (bottomNav) {
+      const height = bottomNav.getBoundingClientRect().height;
+      if (height > 0) {
+        document.documentElement.style.setProperty('--mobile-bottom-nav-height', `${height}px`);
+        
+        // Check if we need to add safe area inset
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+        if (isIOS) {
+          document.documentElement.style.setProperty(
+            '--content-bottom-padding', 
+            `calc(${height}px + env(safe-area-inset-bottom, 0px))`
+          );
+        } else {
+          document.documentElement.style.setProperty('--content-bottom-padding', `${height}px`);
+        }
+      }
+    }
+  }, []);
+  
+  return { vh, windowHeight, setStableHeight, isStabilized, fixBottomNav };
+}
+
 export function useSectionStyles(_sectionsCount: number) {
   /**
    * Get CSS transition string for consistent section transitions

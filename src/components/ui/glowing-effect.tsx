@@ -34,20 +34,57 @@ const GlowingEffect = memo(
     const lastPosition = useRef({ x: 0, y: 0 });
     const animationFrameRef = useRef<number>(0);
     const [isMobile, setIsMobile] = useState(false);
+    const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+    const [isInitialized, setIsInitialized] = useState(false);
     
-    // Check if mobile on mount
+    // Check if mobile on mount and set up resize observer
     useEffect(() => {
       const checkMobile = () => {
         setIsMobile(window.innerWidth < 768);
       };
       
+      // Initial check
       checkMobile();
-      window.addEventListener('resize', checkMobile);
       
+      // Set up event listeners
+      window.addEventListener('resize', checkMobile, { passive: true });
+      
+      // Set up ResizeObserver to monitor size changes
+      if (containerRef.current) {
+        const resizeObserver = new ResizeObserver(entries => {
+          for (const entry of entries) {
+            // Get the new dimensions
+            const width = entry.contentRect.width;
+            const height = entry.contentRect.height;
+            
+            // Only update if there's a significant change (prevents thrashing)
+            if (
+              Math.abs(dimensions.width - width) > 1 || 
+              Math.abs(dimensions.height - height) > 1
+            ) {
+              setDimensions({ width, height });
+            }
+          }
+        });
+        
+        // Start observing
+        resizeObserver.observe(containerRef.current);
+        
+        // Mark as initialized after first measurements
+        setIsInitialized(true);
+        
+        // Clean up
+        return () => {
+          window.removeEventListener('resize', checkMobile);
+          resizeObserver.disconnect();
+        };
+      }
+      
+      // Fallback cleanup if no containerRef
       return () => {
         window.removeEventListener('resize', checkMobile);
       };
-    }, []);
+    }, [dimensions.width, dimensions.height]);
     
     // If on mobile, don't process any animations
     if (isMobile) {
@@ -56,56 +93,72 @@ const GlowingEffect = memo(
 
     const handleMove = useCallback(
       (e?: MouseEvent | { x: number; y: number }) => {
-        if (!containerRef.current || disabled) return;
+        if (!containerRef.current || disabled || !isInitialized) return;
 
+        // Cancel any existing animation frame to prevent jank
         if (animationFrameRef.current) {
           cancelAnimationFrame(animationFrameRef.current);
         }
 
+        // Use requestAnimationFrame for smooth animation
         animationFrameRef.current = requestAnimationFrame(() => {
           const element = containerRef.current;
           if (!element) return;
 
-          const { left, top, width, height } = element.getBoundingClientRect();
+          // Get element bounds with cached values if available
+          const elementWidth = dimensions.width || element.offsetWidth;
+          const elementHeight = dimensions.height || element.offsetHeight;
+          const { left, top } = element.getBoundingClientRect();
+          
+          // Get mouse position
           const mouseX = e?.x ?? lastPosition.current.x;
           const mouseY = e?.y ?? lastPosition.current.y;
 
+          // Update last position if new coords provided
           if (e) {
             lastPosition.current = { x: mouseX, y: mouseY };
           }
 
-          const center = [left + width * 0.5, top + height * 0.5];
+          // Calculate center point
+          const center = [left + elementWidth * 0.5, top + elementHeight * 0.5];
           const distanceFromCenter = Math.hypot(
             mouseX - center[0],
             mouseY - center[1]
           );
-          const inactiveRadius = 0.5 * Math.min(width, height) * inactiveZone;
+          const inactiveRadius = 0.5 * Math.min(elementWidth, elementHeight) * inactiveZone;
 
+          // Disable glow effect if mouse is in the inactive zone
           if (distanceFromCenter < inactiveRadius) {
             element.style.setProperty("--active", "0");
             return;
           }
 
+          // Check if mouse is within proximity of the element
           const isActive =
             mouseX > left - proximity &&
-            mouseX < left + width + proximity &&
+            mouseX < left + elementWidth + proximity &&
             mouseY > top - proximity &&
-            mouseY < top + height + proximity;
+            mouseY < top + elementHeight + proximity;
 
+          // Set active state
           element.style.setProperty("--active", isActive ? "1" : "0");
 
+          // Exit if not active
           if (!isActive) return;
 
+          // Calculate glow angle
           const currentAngle =
             parseFloat(element.style.getPropertyValue("--start")) || 0;
-          let targetAngle =
+          const targetAngle =
             (180 * Math.atan2(mouseY - center[1], mouseX - center[0])) /
               Math.PI +
             90;
 
+          // Find the shortest angle path
           const angleDiff = ((targetAngle - currentAngle + 180) % 360) - 180;
           const newAngle = currentAngle + angleDiff;
 
+          // Animate the glow effect using transform only (CLS-safe)
           animate(currentAngle, newAngle, {
             duration: movementDuration,
             ease: [0.16, 1, 0.3, 1],
@@ -115,40 +168,66 @@ const GlowingEffect = memo(
           });
         });
       },
-      [inactiveZone, proximity, movementDuration, disabled]
+      [inactiveZone, proximity, movementDuration, disabled, isInitialized, dimensions]
     );
 
+    // Set up and clean up event listeners
     useEffect(() => {
-      if (disabled) return;
+      if (disabled || !isInitialized) return;
 
-      const handleScroll = () => handleMove();
+      // Create a throttled scroll handler for better performance
+      const handleScroll = () => {
+        if (animationFrameRef.current) return; // Skip if animation frame is pending
+        
+        // Queue frame for next available slot
+        animationFrameRef.current = requestAnimationFrame(() => {
+          handleMove();
+          animationFrameRef.current = 0;
+        });
+      };
+      
+      // Pointer movement handler
       const handlePointerMove = (e: PointerEvent) => handleMove(e);
 
+      // Add event listeners with passive flag for better performance
       window.addEventListener("scroll", handleScroll, { passive: true });
       document.body.addEventListener("pointermove", handlePointerMove, {
         passive: true,
       });
 
+      // Cleanup
       return () => {
         if (animationFrameRef.current) {
           cancelAnimationFrame(animationFrameRef.current);
+          animationFrameRef.current = 0;
         }
         window.removeEventListener("scroll", handleScroll);
         document.body.removeEventListener("pointermove", handlePointerMove);
       };
-    }, [handleMove, disabled]);
+    }, [handleMove, disabled, isInitialized]);
 
     return (
       <>
+        {/* Glow border container - appears when 'glow' is true */}
         <div
           className={cn(
-            "pointer-events-none absolute -inset-px hidden rounded-[inherit] border opacity-0 transition-opacity",
+            "pointer-events-none absolute -inset-px hidden rounded-[inherit] border opacity-0 transition-opacity duration-300",
             glow && "opacity-100",
             variant === "white" && "border-white",
             disabled && "!block",
             isMobile && "hidden" // Hide on mobile
           )}
+          style={{
+            // CLS prevention - ensure GPU acceleration and containment
+            transform: "translateZ(0)",
+            backfaceVisibility: "hidden",
+            WebkitBackfaceVisibility: "hidden",
+            contain: "paint style"
+          }}
+          aria-hidden="true" // Decorative element
         />
+        
+        {/* Main effect container */}
         <div
           ref={containerRef}
           style={
@@ -178,16 +257,26 @@ const GlowingEffect = memo(
                   #4c7894 calc(75% / var(--repeating-conic-gradient-times)),
                   #dd7bbb calc(100% / var(--repeating-conic-gradient-times))
                 )`,
+              // CLS prevention - hardware acceleration
+              transform: "translateZ(0)",
+              backfaceVisibility: "hidden",
+              WebkitBackfaceVisibility: "hidden",
+              // Ensure transitions only affect opacity, not layout
+              transition: "opacity 0.3s ease-in-out",
+              // Prevent any layout shifts from animations
+              willChange: "opacity, transform"
             } as React.CSSProperties
           }
           className={cn(
             "pointer-events-none absolute inset-0 rounded-[inherit] opacity-100 transition-opacity",
             glow && "opacity-100",
-            blur > 0 && "blur-[var(--blur)] ",
+            blur > 0 && "blur-[var(--blur)]",
             className,
             disabled && "!hidden",
-            isMobile && "hidden" // Hide on mobile
+            isMobile && "hidden", // Hide on mobile
+            "gpu-accelerated" // Add our utility class for hardware acceleration
           )}
+          aria-hidden="true" // Decorative element
         >
           <div
             className={cn(
@@ -196,10 +285,13 @@ const GlowingEffect = memo(
               'after:content-[""] after:rounded-[inherit] after:absolute after:inset-[calc(-1*var(--glowingeffect-border-width))]',
               "after:[border:var(--glowingeffect-border-width)_solid_transparent]",
               "after:[background:var(--gradient)] after:[background-attachment:fixed]",
+              // CLS-safe animation that only affects opacity
               "after:opacity-[var(--active)] after:transition-opacity after:duration-300",
               "after:[mask-clip:padding-box,border-box]",
               "after:[mask-composite:intersect]",
-              "after:[mask-image:linear-gradient(#0000,#0000),conic-gradient(from_calc((var(--start)-var(--spread))*1deg),#00000000_0deg,#fff,#00000000_calc(var(--spread)*2deg))]"
+              "after:[mask-image:linear-gradient(#0000,#0000),conic-gradient(from_calc((var(--start)-var(--spread))*1deg),#00000000_0deg,#fff,#00000000_calc(var(--spread)*2deg))]",
+              // Hardware acceleration for the pseudo-element
+              "after:transform-gpu after:backface-hidden"
             )}
           />
         </div>

@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Run CLS linting on staged files
+echo "Running CLS linting on staged files..."
+FILES=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '\.(tsx|jsx|js|ts|css|scss)$')
+
+if [ -n "$FILES" ]; then
+  # Only check staged files
+  echo "$FILES" | xargs npx eslint --rule 'cls/img-explicit-dimensions: error' --rule 'cls/safe-fixed-positioning: error' --rule 'cls/safe-animations: error'
+  
+  # Additional CLS warnings that shouldn't fail the commit
+  node scripts/lint-cls-problems.js --staged-only --warning
+fi
+
+# Normal linting
+npm run lint
+npm run typecheck

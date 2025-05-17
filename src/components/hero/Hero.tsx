@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useRef, useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useViewportHeight } from "@/hooks/use-viewport-height";
 import { cn } from "@/lib/utils";
 import { WaitlistCTA } from "../ui/waitlist-cta";
 import { WaitlistCreatorCTA } from "../ui/waitlist-creator-cta";
@@ -13,6 +14,9 @@ import { supabase } from "@/integrations/supabase/client";
 import confetti from "canvas-confetti";
 import { heroPatternDotMatrix } from "@/utils/background-patterns";
 import { mobileOptimizationClasses } from "@/utils/mobile-optimization";
+
+// Import consolidated CLS prevention styles
+import "./hero-cls-prevention.css";
 
 // Hero CTA with email form for mobile that transitions from button to form
 // Uses an inline success message instead of a modal dialog for better mobile compatibility
@@ -148,7 +152,22 @@ const MobileHeroCTA = () => {
   if (showInlineSuccess) {
     return (
       <>
-        <div className="mobile-card w-full max-w-[250px] py-space-md px-space-sm mobile-card-gradient text-white relative flex flex-col items-center justify-center animate-fade-in gpu-accelerated">
+        <div 
+          className="mobile-card w-full max-w-[250px] py-space-md px-space-sm mobile-card-gradient text-white relative flex flex-col items-center justify-center animate-fade-in gpu-accelerated"
+          style={{
+            // CLS-CRITICAL: Fixed dimensions to match initial button
+            height: '54px',
+            minHeight: '54px',
+            // Hardware acceleration
+            transform: 'translateZ(0)',
+            backfaceVisibility: 'hidden',
+            WebkitBackfaceVisibility: 'hidden',
+            // Animation only affects opacity, not layout
+            transition: 'opacity 0.3s ease-in-out',
+            // Consistent borders
+            borderRadius: 'var(--mobile-border-radius, 12px)'
+          }}
+        >
           <div className="h-14 w-14 bg-purple-50/20 rounded-full flex items-center justify-center mb-space-xs">
             <CheckCircle className="h-7 w-7 text-white" />
           </div>
@@ -181,7 +200,18 @@ const MobileHeroCTA = () => {
           "gpu-accelerated"
         )}
         style={{
-          paddingLeft: '52px'
+          paddingLeft: '52px',
+          // CLS-CRITICAL: Fixed dimensions for button
+          height: '54px',
+          minHeight: '54px',
+          // Hardware acceleration
+          transform: 'translateZ(0)',
+          backfaceVisibility: 'hidden',
+          WebkitBackfaceVisibility: 'hidden',
+          // Animation only affects opacity
+          transition: 'opacity 0.3s ease, transform 0.2s ease',
+          // Avoid any layout shifts
+          position: 'relative'
         }}
       >
         {/* Icon container */}
@@ -207,9 +237,39 @@ const MobileHeroCTA = () => {
       <form 
         onSubmit={handleSubmit}
         className="w-full max-w-[250px] mx-auto relative animate-fade-in gpu-accelerated z-30"
+        style={{
+          // CLS-CRITICAL: Consistent dimensions with button
+          height: 'var(--cta-button-mobile-height, 54px)',
+          minHeight: 'var(--cta-button-mobile-height, 54px)',
+          // Hardware acceleration
+          transform: 'translateZ(0)',
+          backfaceVisibility: 'hidden',
+          WebkitBackfaceVisibility: 'hidden',
+          // Prevent any layout shifts
+          position: 'relative',
+          // Transitions that don't affect layout
+          transition: 'opacity 0.3s ease-in-out',
+          // Fixed containment to prevent any external impact
+          contain: 'layout style',
+          // Explicit width matching the button
+          width: '100%',
+          maxWidth: '250px'
+        }}
       >
-        <div className="flex flex-col w-full shadow-lg">
-          <div className="relative">
+        <div 
+          className="flex flex-col w-full shadow-lg"
+          style={{
+            // Fixed height to match button for smooth transition
+            height: 'var(--cta-button-mobile-height, 54px)',
+            // Hardware acceleration
+            transform: 'translateZ(0)',
+            backfaceVisibility: 'hidden',
+            WebkitBackfaceVisibility: 'hidden',
+            // Ensure stable rendering
+            position: 'relative'
+          }}
+        >
+          <div className="relative h-full">
             {/* Email input with mobile styling */}
             <input
               ref={inputRef}
@@ -219,7 +279,12 @@ const MobileHeroCTA = () => {
               placeholder="Enter your email"
               className="mobile-input w-full rounded-t-[var(--mobile-border-radius)] rounded-b-none text-gray-800 border border-purple-200/70 border-b-0 focus:outline-none focus:ring-2 focus:ring-purple-400/40"
               style={{
-                backgroundColor: 'white'
+                backgroundColor: 'white',
+                // Prevent height changes during focus
+                height: 'calc(var(--cta-button-mobile-height, 54px) / 2)',
+                minHeight: 'calc(var(--cta-button-mobile-height, 54px) / 2)',
+                // Prevent unexpected layout changes
+                boxSizing: 'border-box'
               }}
               disabled={isLoading}
               required
@@ -227,7 +292,15 @@ const MobileHeroCTA = () => {
             
             {/* Check mark for valid email */}
             {isValid && (
-              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-green-500 z-10">
+              <div 
+                className="absolute right-3 top-1/4 transform -translate-y-1/2 text-green-500 z-10"
+                style={{
+                  // Hardware acceleration
+                  transform: 'translateY(-50%) translateZ(0)',
+                  willChange: 'opacity',
+                  transition: 'opacity 0.2s ease'
+                }}
+              >
                 <CheckCircle className="h-5 w-5" />
               </div>
             )}
@@ -238,17 +311,39 @@ const MobileHeroCTA = () => {
             type="submit"
             disabled={isLoading}
             className="mobile-button bg-gradient-to-b from-[#8A42F5] to-[#7837DB] text-white font-semibold rounded-t-none rounded-b-[var(--mobile-border-radius)] flex items-center justify-center"
+            style={{
+              // Fixed height for the bottom half of the form
+              height: 'calc(var(--cta-button-mobile-height, 54px) / 2)',
+              minHeight: 'calc(var(--cta-button-mobile-height, 54px) / 2)',
+              // Prevent padding from changing height
+              boxSizing: 'border-box',
+              // Hardware acceleration
+              transform: 'translateZ(0)',
+              backfaceVisibility: 'hidden',
+              WebkitBackfaceVisibility: 'hidden',
+              // Only animate properties that don't affect layout
+              transition: 'opacity 0.3s ease, background-color 0.3s ease'
+            }}
           >
             {isLoading ? (
               <>
-                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                <Loader2 
+                  className="w-5 h-5 mr-2 animate-spin" 
+                  style={{ flexShrink: 0 }}
+                />
                 <span className="mobile-text-base">Joining...</span>
               </>
             ) : (
               <>
-                <ShieldCheck className="w-5 h-5 mr-2" />
+                <ShieldCheck 
+                  className="w-5 h-5 mr-2" 
+                  style={{ flexShrink: 0 }}
+                />
                 <span className="mobile-text-base">JOIN WAITLIST</span>
-                <ArrowRight className="w-4 h-4 ml-2" />
+                <ArrowRight 
+                  className="w-4 h-4 ml-2" 
+                  style={{ flexShrink: 0 }}
+                />
               </>
             )}
           </button>
@@ -257,7 +352,16 @@ const MobileHeroCTA = () => {
       
       {/* Fire confetti when showConfetti is true */}
       {showConfetti && (
-        <div className="fixed inset-0 pointer-events-none z-[5000]">
+        <div 
+          className="fixed inset-0 pointer-events-none z-[5000]"
+          style={{
+            // Prevent any layout impact
+            pointerEvents: 'none',
+            // Hardware acceleration
+            transform: 'translateZ(0)',
+            willChange: 'opacity'
+          }}
+        >
           {/* Confetti handled via the confetti library */}
         </div>
       )}
@@ -273,6 +377,13 @@ export const Hero = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const [isInView, setIsInView] = useState(false);
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
+  
+  // Initialize the viewport height custom property
+  useViewportHeight();
+  
+  // Text rotation state references
+  const rotatingContainerRef = useRef<HTMLDivElement>(null);
+  const [rotatingContainerStable, setRotatingContainerStable] = useState(false);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -289,153 +400,180 @@ export const Hero = () => {
     };
   }, [isInView, isMobile]);
   
-  // Add a MutationObserver to catch any style changes and override them
+  // Use ResizeObserver to ensure rotation container stability
   useEffect(() => {
-    if (!sectionRef.current) return;
+    // Get the rotating text container by attribute
+    const rotatingContainer = sectionRef.current?.querySelector('[data-rotating-text="true"]');
+    if (!rotatingContainer || !(rotatingContainer instanceof HTMLElement)) return;
     
-    // Create a function that will force our styles
-    const forceHeightStyles = () => {
-      if (!sectionRef.current) return;
-      
-      // Chrome-specific fix for desktop
-      if (!isMobile && navigator.userAgent.indexOf('Chrome') > -1) {
-        sectionRef.current.style.setProperty('height', 'auto', 'important');
-        sectionRef.current.style.setProperty('min-height', 'auto', 'important');
-        sectionRef.current.style.setProperty('padding-top', '30px', 'important');
-        sectionRef.current.style.setProperty('padding-bottom', '30px', 'important');
+    // Set the reference
+    rotatingContainerRef.current = rotatingContainer;
+    
+    // Create a ResizeObserver to detect and handle any size changes
+    const resizeObserver = new ResizeObserver(entries => {
+      for (const entry of entries) {
+        const target = entry.target as HTMLElement;
+        const expectedHeight = isMobile
+          ? parseInt(getComputedStyle(document.documentElement).getPropertyValue('--rotating-text-height-mobile') || '44')
+          : parseInt(getComputedStyle(document.documentElement).getPropertyValue('--rotating-text-height-desktop') || '64');
         
-        // Ensure proper button container alignment in Chrome
-        const ctaSection = sectionRef.current.querySelector('#hero-cta-section');
-        if (ctaSection && ctaSection instanceof HTMLElement) {
-          ctaSection.style.setProperty('display', 'flex', 'important');
-          ctaSection.style.setProperty('flex-direction', 'column', 'important');
-          ctaSection.style.setProperty('align-items', 'center', 'important');
-          ctaSection.style.setProperty('justify-content', 'center', 'important');
-          ctaSection.style.setProperty('width', '100%', 'important');
-          ctaSection.style.setProperty('text-align', 'center', 'important');
+        // When height changes, enforce our defined height
+        if (Math.abs(entry.contentRect.height - expectedHeight) > 1) {
+          const heightVar = isMobile
+            ? 'var(--rotating-text-height-mobile, 44px)'
+            : 'var(--rotating-text-height-desktop, 64px)';
+            
+          target.style.setProperty('height', heightVar, 'important');
+          target.style.setProperty('min-height', heightVar, 'important');
+          target.style.setProperty('max-height', heightVar, 'important');
         }
       }
-    };
-    
-    // Create a MutationObserver to watch for style changes
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.attributeName === 'style') {
-          // Re-apply our styles if they've been changed
-          forceHeightStyles();
-        }
-      });
+      
+      // Mark as stable after observing
+      if (!rotatingContainerStable) {
+        setRotatingContainerStable(true);
+      }
     });
     
-    // Start observing style changes on the hero element
-    observer.observe(sectionRef.current, { 
-      attributes: true, 
-      attributeFilter: ['style'] 
-    });
+    // Start observing the container
+    resizeObserver.observe(rotatingContainer);
     
-    // Apply immediately
-    forceHeightStyles();
-    
-    // Clean up
+    // Clean up the observer
     return () => {
-      observer.disconnect();
+      resizeObserver.disconnect();
     };
-  }, [isMobile]);
-
+  }, [isMobile, rotatingContainerStable]);
+  
+  // Consolidated effect for style management and CLS prevention
   useEffect(() => {
     if (!sectionRef.current) return;
-
-    // Function to force our styles
-    const forceStyles = () => {
+    
+    // Function to apply styles with !important to override any conflicting styles
+    const applyStyle = (el: HTMLElement, prop: string, value: string) => {
+      el.style.setProperty(prop, value, 'important');
+    };
+    
+    // Consolidated function to enforce CLS-preventing styles
+    const enforceCLSPreventionStyles = () => {
       if (!sectionRef.current) return;
       
-      // Apply styles with !important to override any conflicting styles
-      const applyStyle = (el: HTMLElement, prop: string, value: string) => {
-        el.style.setProperty(prop, value, 'important');
-      };
-      
-      // Main hero element - simplified proper spacing
+      // Get the hero element
       const hero = sectionRef.current;
       
-      // Basic clean structure for both mobile and desktop
+      // 1. CORE LAYOUT STRUCTURE - essential for preventing CLS
+      // ------------------------------------------------------
+      
+      // Basic structure for both mobile and desktop
       applyStyle(hero, 'display', 'flex');
       applyStyle(hero, 'flex-direction', 'column');
       applyStyle(hero, 'align-items', 'center');
-      applyStyle(hero, 'height', 'auto');
-      applyStyle(hero, 'min-height', 'auto');
-      applyStyle(hero, 'max-height', 'none');
       applyStyle(hero, 'margin', '0');
       
+      // Handle viewport height with CSS variables
       if (isMobile) {
-        // Mobile-specific padding for navbar
+        // Mobile uses viewport-height variables for consistency across browsers
+        applyStyle(hero, 'height', 'var(--hero-mobile-height, 450px)');
+        applyStyle(hero, 'min-height', 'var(--hero-mobile-height, 450px)');
+        applyStyle(hero, 'max-height', 'var(--hero-vh-height, 100vh)');
         applyStyle(hero, 'padding-top', '80px');
         applyStyle(hero, 'padding-bottom', '60px');
         applyStyle(hero, 'justify-content', 'flex-start');
       } else {
-        // Desktop padding
+        // Desktop uses simpler auto-height approach
+        applyStyle(hero, 'height', 'auto');
+        applyStyle(hero, 'min-height', 'auto');
+        applyStyle(hero, 'max-height', 'none');
         applyStyle(hero, 'padding-top', '60px');
         applyStyle(hero, 'padding-bottom', '60px');
         applyStyle(hero, 'justify-content', 'center');
       }
-
-      // Remove any min-height from all containers
-      const containers = hero.querySelectorAll('div');
-      containers.forEach(container => {
-        if (container instanceof HTMLElement) {
+      
+      // 2. CLS PREVENTION FOR NESTED ELEMENTS
+      // ------------------------------------------------------
+      
+      // Reset heights on all containers to avoid unexpected constraints
+      hero.querySelectorAll('div').forEach(container => {
+        if (container instanceof HTMLElement && 
+            !container.classList.contains('rotating-text-container') && 
+            !container.hasAttribute('data-rotating-text')) {
           applyStyle(container, 'min-height', 'auto');
         }
       });
       
-      // Fix title styling - no negative margins
+      // 3. HERO TITLE CONTAINER - critical for CLS
+      // ------------------------------------------------------
       const heroTitle = hero.querySelector('#hero-title');
       if (heroTitle && heroTitle instanceof HTMLElement) {
         applyStyle(heroTitle, 'margin', '0 0 30px 0');
         applyStyle(heroTitle, 'padding', '0');
         applyStyle(heroTitle, 'width', '100%');
-        applyStyle(heroTitle, 'min-height', 'auto');
         applyStyle(heroTitle, 'text-align', 'center');
-      }
-      
-      // Fix rotating text container
-      const textRotateContainer = hero.querySelector('[style*="height"]');
-      if (textRotateContainer && textRotateContainer instanceof HTMLElement) {
+        
+        // Use explicit height only on mobile
         if (isMobile) {
-          applyStyle(textRotateContainer, 'margin-bottom', '0');
-          applyStyle(textRotateContainer, 'margin-top', '0');
-          applyStyle(textRotateContainer, 'height', '50px');
-          applyStyle(textRotateContainer, 'min-height', '50px');
-          applyStyle(textRotateContainer, 'width', '100%');
-          applyStyle(textRotateContainer, 'padding', '0');
+          applyStyle(heroTitle, 'min-height', 'calc(var(--rotating-text-height-mobile, 44px) + 48px)');
         } else {
-          applyStyle(textRotateContainer, 'margin-bottom', '0');
-          applyStyle(textRotateContainer, 'margin-top', '0');
-          applyStyle(textRotateContainer, 'height', '60px');
-          applyStyle(textRotateContainer, 'min-height', '60px');
-          applyStyle(textRotateContainer, 'padding', '0');
+          applyStyle(heroTitle, 'min-height', 'auto');
         }
       }
       
-      // Fix paragraph spacing
+      // 4. ROTATING TEXT CONTAINER - most critical for CLS
+      // ------------------------------------------------------
+      const rotatingTextContainer = hero.querySelector('[data-rotating-text="true"]');
+      if (rotatingTextContainer && rotatingTextContainer instanceof HTMLElement) {
+        // Critical: fixed height based on device
+        if (isMobile) {
+          applyStyle(rotatingTextContainer, 'height', 'var(--rotating-text-height-mobile, 44px)');
+          applyStyle(rotatingTextContainer, 'min-height', 'var(--rotating-text-height-mobile, 44px)');
+          applyStyle(rotatingTextContainer, 'max-height', 'var(--rotating-text-height-mobile, 44px)');
+        } else {
+          applyStyle(rotatingTextContainer, 'height', 'var(--rotating-text-height-desktop, 64px)');
+          applyStyle(rotatingTextContainer, 'min-height', 'var(--rotating-text-height-desktop, 64px)');
+          applyStyle(rotatingTextContainer, 'max-height', 'var(--rotating-text-height-desktop, 64px)');
+        }
+        
+        // Ensure proper centering and overflow handling
+        applyStyle(rotatingTextContainer, 'margin-top', '4px');
+        applyStyle(rotatingTextContainer, 'margin-bottom', '8px');
+        applyStyle(rotatingTextContainer, 'width', '100%');
+        applyStyle(rotatingTextContainer, 'padding', '0');
+        applyStyle(rotatingTextContainer, 'position', 'relative');
+        applyStyle(rotatingTextContainer, 'overflow', 'visible');
+        
+        // Hardware acceleration for smooth animations
+        applyStyle(rotatingTextContainer, 'transform', 'translateZ(0)');
+        applyStyle(rotatingTextContainer, 'backface-visibility', 'hidden');
+        applyStyle(rotatingTextContainer, '-webkit-backface-visibility', 'hidden');
+        
+        // Contain style to prevent layout shifts
+        applyStyle(rotatingTextContainer, 'contain', 'paint style');
+      }
+      
+      // 5. HERO DESCRIPTION - controlled spacing to prevent shifts
+      // ------------------------------------------------------
       const paragraphs = hero.querySelectorAll('p');
       paragraphs.forEach(el => {
         if (el instanceof HTMLElement) {
+          // Basic text styling
+          applyStyle(el, 'line-height', '1.5');
+          
           if (isMobile) {
-            applyStyle(el, 'margin-top', '24px'); // MORE space from the heading
-            applyStyle(el, 'margin-bottom', '32px'); // MORE space before buttons
-            applyStyle(el, 'line-height', '1.5');
+            applyStyle(el, 'margin-top', '24px');
+            applyStyle(el, 'margin-bottom', '32px');
             applyStyle(el, 'text-align', 'center');
             applyStyle(el, 'font-size', '0.95rem');
             applyStyle(el, 'padding', '0 16px');
+            applyStyle(el, 'max-width', '310px'); // Control line length for readability
           } else {
-            applyStyle(el, 'margin-top', '24px'); // MORE space from the heading
-            applyStyle(el, 'margin-bottom', '32px'); // MORE space before buttons
-            applyStyle(el, 'line-height', '1.5');
+            applyStyle(el, 'margin-top', '24px');
+            applyStyle(el, 'margin-bottom', '32px');
             applyStyle(el, 'padding', '0 16px');
           }
         }
       });
       
-      // Fix mobile CTA container
+      // 6. CTA SECTIONS - ensure consistent dimensions
+      // ------------------------------------------------------
       if (isMobile) {
         const mobileCTASection = hero.querySelector('#mobile-hero-cta-section');
         if (mobileCTASection && mobileCTASection instanceof HTMLElement) {
@@ -443,56 +581,71 @@ export const Hero = () => {
           applyStyle(mobileCTASection, 'max-width', '280px');
           applyStyle(mobileCTASection, 'margin', '0 auto');
           applyStyle(mobileCTASection, 'padding', '0');
-          applyStyle(mobileCTASection, 'min-height', 'auto');
+          applyStyle(mobileCTASection, 'min-height', 'var(--cta-button-mobile-height, 54px)');
+          applyStyle(mobileCTASection, 'height', 'var(--cta-button-mobile-height, 54px)');
+          
+          // Hardware acceleration
+          applyStyle(mobileCTASection, 'transform', 'translateZ(0)');
+          applyStyle(mobileCTASection, 'backface-visibility', 'hidden');
+          applyStyle(mobileCTASection, '-webkit-backface-visibility', 'hidden');
         }
-      }
-      
-      // Fix desktop CTA section
-      const ctaSection = hero.querySelector('#hero-cta-section');
-      if (ctaSection && ctaSection instanceof HTMLElement && !isMobile) {
-        applyStyle(ctaSection, 'width', '100%');
-        applyStyle(ctaSection, 'max-width', '680px');
-        applyStyle(ctaSection, 'margin', '0 auto');
-        applyStyle(ctaSection, 'padding', '0');
-        applyStyle(ctaSection, 'min-height', 'auto');
-        
-        // Fix button container
-        const buttonContainer = ctaSection.querySelector('.flex.flex-row');
-        if (buttonContainer && buttonContainer instanceof HTMLElement) {
-          applyStyle(buttonContainer, 'display', 'flex');
-          applyStyle(buttonContainer, 'justify-content', 'center');
-          applyStyle(buttonContainer, 'align-items', 'center');
-          applyStyle(buttonContainer, 'gap', '24px');
-          applyStyle(buttonContainer, 'margin-bottom', '16px');
-        }
-        
-        // Fix social proof
-        const socialProof = ctaSection.querySelector('.flex.justify-center');
-        if (socialProof && socialProof instanceof HTMLElement) {
-          applyStyle(socialProof, 'margin-top', '20px'); // Increased spacing from buttons
-          applyStyle(socialProof, 'margin-bottom', '16px'); // Add space at bottom
+      } else {
+        const ctaSection = hero.querySelector('#hero-cta-section');
+        if (ctaSection && ctaSection instanceof HTMLElement) {
+          applyStyle(ctaSection, 'width', '100%');
+          applyStyle(ctaSection, 'max-width', '680px');
+          applyStyle(ctaSection, 'margin', '0 auto');
+          applyStyle(ctaSection, 'padding', '0');
+          applyStyle(ctaSection, 'min-height', 'auto');
+          
+          // CLS prevention for desktop button container
+          const buttonContainer = ctaSection.querySelector('.flex.flex-row');
+          if (buttonContainer && buttonContainer instanceof HTMLElement) {
+            applyStyle(buttonContainer, 'display', 'flex');
+            applyStyle(buttonContainer, 'justify-content', 'center');
+            applyStyle(buttonContainer, 'align-items', 'center');
+            applyStyle(buttonContainer, 'gap', '24px');
+            applyStyle(buttonContainer, 'margin-bottom', '16px');
+          }
+          
+          // Consistent spacing for social proof
+          const socialProof = ctaSection.querySelector('.flex.justify-center');
+          if (socialProof && socialProof instanceof HTMLElement) {
+            applyStyle(socialProof, 'margin-top', '20px');
+            applyStyle(socialProof, 'margin-bottom', '16px');
+          }
         }
       }
     };
     
     // Apply styles immediately
-    forceStyles();
+    enforceCLSPreventionStyles();
+    
+    // Create a single MutationObserver to reinforce styles if they change
+    const styleObserver = new MutationObserver(() => {
+      enforceCLSPreventionStyles();
+    });
+    
+    // Start observing style and class attribute changes
+    styleObserver.observe(sectionRef.current, { 
+      attributes: true, 
+      attributeFilter: ['style', 'class'] 
+    });
+    
+    // Set up resize listener to reapply styles on viewport changes
+    window.addEventListener('resize', enforceCLSPreventionStyles, { passive: true });
     
     // Apply after load to override any other scripts
-    window.addEventListener('load', forceStyles);
+    window.addEventListener('load', enforceCLSPreventionStyles);
     
-    // Also apply on resize in case of orientation change
-    window.addEventListener('resize', forceStyles);
-    
-    // Regular intersection observer functionality
-    const observer = new IntersectionObserver(
+    // Set up intersection observer for visibility detection
+    const intersectionObserver = new IntersectionObserver(
       (entries) => {
         const [entry] = entries;
         if (entry.isIntersecting) {
           setIsInView(true);
           // Apply styles again when visible
-          forceStyles();
-          observer.disconnect();
+          enforceCLSPreventionStyles();
         }
       },
       {
@@ -501,12 +654,15 @@ export const Hero = () => {
       }
     );
 
-    observer.observe(sectionRef.current);
+    // Start observing visibility
+    intersectionObserver.observe(sectionRef.current);
 
+    // Cleanup
     return () => {
-      observer.disconnect();
-      window.removeEventListener('load', forceStyles);
-      window.removeEventListener('resize', forceStyles);
+      styleObserver.disconnect();
+      intersectionObserver.disconnect();
+      window.removeEventListener('load', enforceCLSPreventionStyles);
+      window.removeEventListener('resize', enforceCLSPreventionStyles);
     };
   }, [isMobile]);
 
@@ -514,11 +670,31 @@ export const Hero = () => {
     <section
       id="hero" 
       ref={sectionRef}
+      data-hero-section="true"
       className={cn(
         "flex flex-col items-center w-full bg-[#F9F6EC] relative",
         isMobile ? "pt-[var(--mobile-header-height)] pb-space-xl" : "pt-[60px] pb-[60px]",
         "gpu-accelerated"
       )}
+      style={{
+        // CLS prevention with explicit dimensions using CSS variables
+        height: isMobile ? 'var(--hero-mobile-height, 450px)' : 'auto',
+        minHeight: isMobile ? 'var(--hero-mobile-height, 450px)' : 'var(--hero-desktop-height, 650px)',
+        // Use viewport height when available via CSS variable
+        maxHeight: isMobile ? 'var(--hero-vh-height, 100vh)' : 'none',
+        // Hardware acceleration for smoother rendering
+        transform: 'translateZ(0)',
+        backfaceVisibility: 'hidden',
+        WebkitBackfaceVisibility: 'hidden',
+        // Force immediate paint for critical content
+        contentVisibility: 'visible',
+        // Prevent layout shifts with stable contain value
+        contain: 'paint style layout',
+        // Ensure proper box sizing
+        boxSizing: 'border-box',
+        // Ensure stable stacking context
+        zIndex: 1
+      }}
       aria-labelledby="hero-title"
     >
       <div 
@@ -539,7 +715,16 @@ export const Hero = () => {
             "tracking-tight font-bold text-center w-full flex flex-col items-center",
             "mobile-heading",
             isMobile ? "mb-space-md" : "mb-[30px]"
-          )}>
+          )}
+          data-hero-title="true"
+          style={{
+            // CLS-CRITICAL: Consistent height for hero title container
+            minHeight: isMobile ? 'var(--title-container-height, 120px)' : 'auto',
+            // Hardware acceleration for smooth rendering
+            transform: 'translateZ(0)',
+            backfaceVisibility: 'hidden',
+            WebkitBackfaceVisibility: 'hidden'
+          }}>
             <span 
               className={cn(
                 isMobile ? "mobile-text-2xl" : "text-4xl sm:text-5xl lg:text-6xl",
@@ -555,38 +740,92 @@ export const Hero = () => {
             </span>
 
             <div 
-              className="flex justify-center w-full text-center"
+              className="flex justify-center w-full text-center rotating-text-container"
               style={{ 
-                height: isMobile ? "60px" : "70px"
+                // CLS-CRITICAL: Explicit fixed dimensions for text rotation container
+                height: isMobile ? "var(--rotating-text-height-mobile, 44px)" : "var(--rotating-text-height-desktop, 64px)",
+                minHeight: isMobile ? "var(--rotating-text-height-mobile, 44px)" : "var(--rotating-text-height-desktop, 64px)",
+                maxHeight: isMobile ? "var(--rotating-text-height-mobile, 44px)" : "var(--rotating-text-height-desktop, 64px)",
+                width: '100%',
+                // Hardware acceleration
+                transform: 'translateZ(0)',
+                backfaceVisibility: 'hidden',
+                WebkitBackfaceVisibility: 'hidden',
+                // Layout stability
+                position: 'relative',
+                overflow: 'visible',
+                // Prevent content shifts
+                contain: 'paint style',
+                // CLS-safe animations
+                transition: 'opacity var(--animation-duration-normal, 0.3s) ease-in-out'
               }}
+              data-rotating-text="true"
             >
               <TextRotate
                 texts={TITLES}
                 mainClassName="flex justify-center items-center h-auto"
                 staggerFrom="last"
-                initial={{ opacity: 1 }}
+                // CLS-CRITICAL: ONLY animate opacity, nothing that affects layout
+                initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
+                // Disable staggering to prevent any timing-related layout shifts
                 staggerDuration={0}
-                rotationInterval={3000}
-                splitLevelClassName="overflow-visible"
+                // Use device-appropriate interval
+                rotationInterval={isMobile ? 3500 : 3000}
+                // Ensure consistent positioning and overflow handling
+                splitLevelClassName="overflow-visible absolute inset-0 flex items-center justify-center"
+                // Combine classes with device-specific typography
                 elementLevelClassName={cn(
+                  // CRITICAL: Use mobile-specific text size
                   isMobile ? "mobile-text-3xl" : "text-4xl sm:text-5xl lg:text-6xl",
+                  // Typography that won't cause shifts
                   "font-bold font-jakarta tracking-[-0.03em]",
+                  // Gradient text that won't affect layout
                   "bg-clip-text text-transparent", 
                   "bg-gradient-to-r from-[#4A2DD9] via-[#8A2BE2] to-[#4169E1]",
+                  // Visual effects that don't affect layout
                   "animate-shimmer-slide bg-size-200",
                   "drop-shadow-[0_1px_2px_rgba(74,45,217,0.2)]",
                   "filter brightness-110",
-                  "leading-[1.3]"
+                  // Fixed line height to prevent text height variations
+                  "leading-[1.3]",
+                  // Essential hardware acceleration
+                  "gpu-accelerated transform-gpu backface-hidden"
                 )}
-                // Simpler tween animation for mobile
+                // CLS-CRITICAL: Animation that ONLY affects opacity, with consistent timing
                 transition={{ 
                   type: "tween", 
                   duration: 0.3,
-                  ease: "easeInOut"
+                  ease: "easeInOut",
+                  // Only animate opacity
+                  opacity: { duration: 0.3 }
                 }}
+                // Use automatic rotation
                 auto={true}
+                // CRITICAL: Fixed dimensions and hardware acceleration
+                containerStyle={{
+                  // Static positioning
+                  position: 'relative',
+                  // Explicit dimensions
+                  width: '100%',
+                  height: '100%',
+                  // Fixed content height that matches CSS variable
+                  minHeight: isMobile ? 'var(--rotating-text-height-mobile, 44px)' : 'var(--rotating-text-height-desktop, 64px)',
+                  maxHeight: isMobile ? 'var(--rotating-text-height-mobile, 44px)' : 'var(--rotating-text-height-desktop, 64px)',
+                  // Hardware acceleration
+                  transform: 'translateZ(0)',
+                  backfaceVisibility: 'hidden',
+                  WebkitBackfaceVisibility: 'hidden',
+                  // Ensure visibility without overflow impact
+                  overflow: 'visible',
+                  // Contain to prevent impact on other elements
+                  contain: 'paint style',
+                  // Transitions that don't affect layout
+                  transition: 'opacity 0.3s ease-in-out',
+                }}
+                // Reference for ResizeObserver to maintain stability
+                ref={rotatingContainerRef}
               />
             </div>
           </h1>
@@ -665,7 +904,14 @@ export const Hero = () => {
             <div className="flex flex-col items-center w-full gap-space-sm" 
               id="mobile-hero-cta-section"
               style={{ 
-                maxWidth: '280px'
+                maxWidth: '280px',
+                // CLS-CRITICAL: Fixed consistent height for mobile CTA section
+                minHeight: 'var(--cta-button-mobile-height, 54px)',
+                height: 'var(--cta-button-mobile-height, 54px)',
+                // Hardware acceleration for smooth rendering
+                transform: 'translateZ(0)',
+                backfaceVisibility: 'hidden',
+                WebkitBackfaceVisibility: 'hidden'
               }}
             >
               {/* Mobile CTA with inline email form expansion */}

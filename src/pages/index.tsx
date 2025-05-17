@@ -504,9 +504,10 @@ const Index = () => {
          style={{
            width: isMobile ? '100vw' : '100%',
            maxWidth: isMobile ? '100vw' : '100%',
-           overflow: 'hidden',
+           overflow: 'visible', // CRITICAL: Must be visible to allow fixed header
            margin: 0,
            padding: 0,
+           paddingTop: 0, // Removed padding to eliminate gap with banner
            backgroundColor: '#F9F6EC' // Tan/gold background for consistency
          }}>
       {/* Fix for fixed element bottom value issue */}
@@ -528,7 +529,7 @@ const Index = () => {
         #root > div > .fixed,
         main > .fixed,
         [data-hero-section="true"] ~ .fixed,
-        .fixed[style*="bottom:"],
+        .fixed[style*="bottom:"]:not([class*="cookie-consent"]):not([data-position="bottom"]),
         .fixed[style*="bottom"] {
           bottom: auto !important;
           top: auto !important;
@@ -603,7 +604,7 @@ const Index = () => {
             layout="complex" 
             isClosable 
             onClose={() => setShowBanner(false)} 
-            className="animate-in fade-in slide-in-from-top duration-500 relative overflow-hidden min-h-[3.25rem] sm:min-h-[3.5rem] my-0 py-0"
+            className="animate-in fade-in slide-in-from-top duration-500 relative overflow-hidden min-h-[3.25rem] sm:min-h-[3.5rem] my-0 py-0 -mt-[1px]"
           >
             <div className="flex items-center justify-left gap-3 sm:gap-4 relative z-10">
               <Star className="h-5 w-5 sm:h-6 sm:w-6 text-yellow-300 animate-pulse" />
@@ -626,7 +627,7 @@ const Index = () => {
              style={{
                width: isMobile ? '100vw' : '100%',
                maxWidth: isMobile ? '100vw' : '100%',
-               overflow: 'hidden',
+               overflow: 'visible', // CRITICAL: Changed from hidden to visible
                margin: 0,
                padding: 0,
                backgroundColor: '#F9F6EC' // Tan/gold background for consistency 
