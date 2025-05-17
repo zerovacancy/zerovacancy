@@ -3,6 +3,27 @@
 <html lang="en" class="cls-pre-stabilization">
   <head>
     <meta charset="UTF-8" />
+    <!-- EMERGENCY FIX: Immediately unregister any service workers to prevent blank page -->
+    <script>
+      // Immediate, synchronous check to prevent blank page
+      if ('serviceWorker' in navigator) {
+        console.log('EMERGENCY FIX: Immediately unregistering all service workers');
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          registrations.forEach(function(registration) {
+            registration.unregister();
+            console.log('Service worker unregistered via emergency fix');
+          });
+          if ('caches' in window) {
+            caches.keys().then(function(cacheNames) {
+              cacheNames.forEach(function(cacheName) {
+                caches.delete(cacheName);
+                console.log('Cache cleared via emergency fix:', cacheName);
+              });
+            });
+          }
+        });
+      }
+    </script>
     <!-- Debug script -->
     <script src="/debug-blank-page.js"></script>
     <script>
@@ -16,6 +37,19 @@
     <style>
       /* Hide just heroparallax elements which are known to cause problems */
       [src*="heroparallax"] { display: none !important; }
+      
+      /* EMERGENCY FIX: Ensure content is always visible regardless of loading state */
+      html.loading * {
+        visibility: visible !important;
+        opacity: 1 !important;
+      }
+      
+      /* Ensure the root element is always visible */
+      #root {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+      }
     </style>
     <link rel="icon" type="image/png" href="/favicon.png" />
     
@@ -760,6 +794,37 @@
     <!-- Simple debug script -->
     <script src="/debug-page.js"></script>
     
+    <!-- EMERGENCY FIX: Ensure React app is loaded with fallbacks -->
+    <script>
+      // Create a recovery div that will show if React doesn't load
+      document.addEventListener('DOMContentLoaded', function() {
+        const root = document.getElementById('root');
+        if (root) {
+          const recoveryDiv = document.createElement('div');
+          recoveryDiv.id = 'emergency-content';
+          recoveryDiv.style.display = 'none';
+          recoveryDiv.innerHTML = `
+            <div style="padding: 20px; font-family: system-ui, sans-serif; max-width: 600px; margin: 100px auto; text-align: center;">
+              <h1>ZeroVacancy</h1>
+              <p>Connect with elite content creators who transform your spaces into compelling visual stories</p>
+              <div style="margin: 20px 0;">
+                <a href="/" style="display: inline-block; padding: 10px 20px; background: #6741d9; color: white; text-decoration: none; border-radius: 4px;">Refresh Page</a>
+              </div>
+            </div>
+          `;
+          root.appendChild(recoveryDiv);
+          
+          // Show recovery content if React doesn't render within 5 seconds
+          setTimeout(function() {
+            if (root.children.length <= 1) { // Only the recovery div exists
+              recoveryDiv.style.display = 'block';
+              console.log('Emergency content displayed - React failed to load');
+            }
+          }, 5000);
+        }
+      });
+    </script>
+    
     <!-- Efficiently load the main script -->
     <script type="module" src="/src/main.tsx"></script>
     
@@ -831,7 +896,7 @@
     <script>
       // Service worker with improved cache control - STRICTLY PRODUCTION ONLY
       // Use the shared isProductionEnvironment function for consistent environment detection
-      if ('serviceWorker' in navigator && window.__isProductionEnvironment()) {
+      if ('serviceWorker' in navigator && typeof isProductionEnvironment === 'function' && isProductionEnvironment()) {
         // Detect if desktop for enhanced caching
         const isDesktop = window.innerWidth >= 768 && 
                         !(/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
