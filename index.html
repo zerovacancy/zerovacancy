@@ -370,12 +370,31 @@
     <title>ZeroVacancy - AI-Driven Property Marketing & Content Creator Marketplace</title>
     <meta name="description" content="Connect with elite content creators who transform your spaces into compelling visual stories">
     
-    <!-- Critical preloads - optimized for First Contentful Paint -->
+    <!-- EMERGENCY FIX: Direct CSS loading without preload to ensure styles are applied -->
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="/dist/assets/index.css">
+    
+    <!-- Try multiple possible CSS paths for production builds -->
+    <script>
+      // Load all possible CSS files to ensure styles are applied
+      [
+        '/assets/index.css',
+        '/dist/assets/css/styles.css',
+        '/dist/assets/index.css',
+        '/dist/styles.css',
+        '/styles.css'
+      ].forEach(cssPath => {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = cssPath;
+        document.head.appendChild(link);
+      });
+    </script>
+    
+    <!-- Fallback image loading -->
     <link rel="preload" href="/logo.png" as="image" fetchpriority="high" />
-    <!-- Preload and immediately apply main stylesheet to prevent FOUC -->
-    <link rel="preload" href="/assets/css/styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript>
-      <link rel="stylesheet" href="/assets/css/styles.css">
+      <img src="/logo.png" alt="ZeroVacancy Logo" style="display:none;">
     </noscript>
     
     <!-- Module preloads for critical JavaScript - simplified for mobile compatibility -->
@@ -881,30 +900,74 @@
       });
     </script>
     
-    <!-- Efficiently load the main script -->
-    <script type="module" src="/src/main.tsx"></script>
-    
-    <!-- Alternate script loading if needed -->
+    <!-- PRODUCTION ONLY: Direct load of bundled JS assets -->
     <script>
-      // Backup script loading in case the module fails
-      window.addEventListener('error', function(e) {
-        // Check if it's a module loading error
-        if (e.filename && e.filename.includes('main.tsx')) {
-          console.warn('Module loading failed, trying alternative approach');
+      // Production direct asset loading
+      const isProduction = window.location.hostname !== 'localhost' && 
+                          window.location.hostname !== '127.0.0.1';
+      
+      if (isProduction) {
+        // In production, load the bundled JS assets directly
+        console.log('Production environment detected - loading bundled assets directly');
+        
+        // Load main JS bundle with fallbacks
+        const loadMainBundle = () => {
+          // Try loading from common bundle locations
+          const possibleBundles = [
+            '/assets/js/main.js',
+            '/assets/js/index.js',
+            '/assets/js/app.js',
+            '/dist/assets/index.js',
+            '/dist/assets/main.js',
+            '/assets/main.js',
+            '/assets/app.js',
+            '/assets/index.js'
+          ];
           
-          setTimeout(function() {
-            // If the page is still blank after a short delay, try loading the transpiled JS directly
-            if (!document.getElementById('react-root-content')) {
-              const assetScript = document.createElement('script');
-              assetScript.src = `/assets/js/index-DmlVYhOn.js?nocache=${Date.now()}`;
-              assetScript.onerror = function() {
-                console.error('Failed to load fallback script');
-              };
-              document.body.appendChild(assetScript);
+          // Try each possible bundle location
+          let loadedAny = false;
+          possibleBundles.forEach(bundlePath => {
+            const script = document.createElement('script');
+            script.src = bundlePath + '?t=' + Date.now(); // Cache busting
+            script.type = 'text/javascript';
+            script.async = false;
+            script.onerror = () => console.log('Failed to load bundle from:', bundlePath);
+            script.onload = () => {
+              console.log('Successfully loaded bundle from:', bundlePath);
+              loadedAny = true;
+            };
+            document.body.appendChild(script);
+          });
+          
+          // Final fallback - get any JS files in the assets directory
+          setTimeout(() => {
+            if (!loadedAny) {
+              console.log('Attempting emergency asset scan');
+              // We have to hardcode some likely asset paths since we can't scan the directory
+              [
+                '/assets/js/index-DmlVYhOn.js',
+                '/assets/index.js',
+                '/assets/main.js',
+                '/main.js'
+              ].forEach(path => {
+                const script = document.createElement('script');
+                script.src = path + '?fallback=true&t=' + Date.now();
+                document.body.appendChild(script);
+              });
             }
           }, 2000);
-        }
-      }, true);
+        };
+        
+        // Start loading bundles
+        loadMainBundle();
+      } else {
+        // In development, use the Vite dev server
+        console.log('Development environment - using Vite dev server');
+        const script = document.createElement('script');
+        script.type = 'module';
+        script.src = '/src/main.tsx';
+        document.body.appendChild(script);
+      }
     </script>
     
     <!-- Performance monitoring - included only in development -->
