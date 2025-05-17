@@ -101,7 +101,11 @@ try {
 if (typeof window !== 'undefined') {
   // Use requestIdleCallback to avoid blocking main thread
   if ('requestIdleCallback' in window) {
-    (window as any).requestIdleCallback(() => {
+    // Use type assertion for requestIdleCallback
+    interface WindowWithRequestIdleCallback extends Window {
+      requestIdleCallback: (callback: () => void) => number;
+    }
+    (window as WindowWithRequestIdleCallback).requestIdleCallback(() => {
       window.performance.mark('app-init-end');
       window.performance.measure('app-initialization', 'app-init-start', 'app-init-end');
     });

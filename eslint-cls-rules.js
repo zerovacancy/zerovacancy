@@ -131,9 +131,9 @@ export const rules = {
             
             // Check for problematic bottom value in the same style object
             const hasProblematicBottom = styleObj.properties.some(prop => 
-              prop.key.name === 'bottom' && 
-              prop.value.value !== 'auto' && 
-              prop.value.value !== undefined
+              prop.key && prop.key.name === 'bottom' && 
+              prop.value && prop.value.value !== 'auto' && 
+              prop.value && prop.value.value !== undefined
             );
             
             // Check if this is a header or similar element
@@ -176,17 +176,17 @@ export const rules = {
             
             // Check for position: fixed
             const hasFixedPosition = styleObj.properties.some(prop => 
-              prop.key.name === 'position' && 
-              prop.value.value === 'fixed'
+              prop.key && prop.key.name === 'position' && 
+              prop.value && prop.value.value === 'fixed'
             );
             
             if (!hasFixedPosition) return;
             
             // Check for problematic bottom value
             const hasProblematicBottom = styleObj.properties.some(prop => 
-              prop.key.name === 'bottom' && 
-              prop.value.value !== 'auto' && 
-              prop.value.value !== undefined
+              prop.key && prop.key.name === 'bottom' && 
+              prop.value && prop.value.value !== 'auto' && 
+              prop.value && prop.value.value !== undefined
             );
             
             // Check if this is a header element
