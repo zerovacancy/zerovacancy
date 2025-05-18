@@ -4,6 +4,19 @@
   <head>
     <meta charset="UTF-8" />
     
+    <!-- Debug script to log errors in production -->
+    <script>
+      // Log any errors to the console
+      window.addEventListener('error', function(e) {
+        console.error('Global error:', e.message, e.error);
+      });
+      
+      // Log unhandled promise rejections
+      window.addEventListener('unhandledrejection', function(e) {
+        console.error('Unhandled rejection:', e.reason);
+      });
+    </script>
+    
     <!-- Service worker management - normal operation -->
     <script>
       // Service worker management for production

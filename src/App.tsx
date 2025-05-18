@@ -4,6 +4,8 @@ import { ErrorBoundary } from 'react-error-boundary';
 import ErrorFallback from './components/ErrorFallback';
 import { Toaster } from '@/components/ui/toaster';
 import { Toaster as SonnerToaster } from 'sonner';
+// Import our temporary environment checker (dev only)
+import EnvChecker from './check-env-browser';
 // Import from mobile utils for better SSR compatibility 
 import { isMobileDevice } from '@/utils/mobile-optimization';
 import { reduceAnimationComplexity } from '@/utils/mobile-optimization';
@@ -396,6 +398,8 @@ function App() {
 
   return (
     <SEOProvider>
+      {/* Only render EnvChecker in development */}
+      {import.meta.env.DEV && <EnvChecker />}
       <Router>
         <AuthProvider>
           {/* Only wrap the CLS reporter with an ErrorBoundary */}
@@ -480,6 +484,8 @@ function App() {
                 duration: 3000
               }}
             />
+            {/* Temporary environment checker */}
+            <EnvChecker />
             <AuthForms />
 
             {/* Analytics with its own error boundary */}
