@@ -2,6 +2,13 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
+// Declare the supabase client at the module level (will be assigned later)
+// Use proper type from Supabase client
+let supabase: ReturnType<typeof createClient<Database>>;
+
+// Export the supabase client
+export { supabase };
+
 // HARDCODED FALLBACKS - will be used if env vars are missing
 const FALLBACK_SUPABASE_URL = 'https://pozblfzhjqlsxkakhowp.supabase.co';
 const FALLBACK_SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBvemJsZnpoanFsc3hrYWtob3dwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDAxMDM0MDUsImV4cCI6MjA1NTY3OTQwNX0.qICEbtyj5hsnu489FuQFiwfFgAJbQ0zmul4sQX5ODbM';
@@ -116,8 +123,8 @@ try {
     throw new Error('Supabase client creation failed - client or client.auth is undefined');
   }
   
-  // Export the client
-  export const supabase = client;
+  // Assign to the module-level supabase variable
+  supabase = client;
   
   // Log success
   console.log('[SUPABASE] ✅ Client initialized successfully');
@@ -125,7 +132,7 @@ try {
   console.error('[SUPABASE] 🔴 CRITICAL ERROR creating Supabase client:', error);
   
   // Create a dummy client with methods that throw errors to prevent undefined errors
-  export const supabase = {
+  supabase = {
     auth: {
       getSession: () => Promise.reject(new Error('Supabase client initialization failed')),
       getUser: () => Promise.reject(new Error('Supabase client initialization failed')),
