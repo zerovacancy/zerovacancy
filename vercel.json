@@ -13,7 +13,7 @@
       ]
     }
   ],
-  "buildCommand": "node vercel-build.cjs && vite build",
+  "buildCommand": "bash ./emergency-inject.sh",
   "outputDirectory": "dist",
-  "framework": "vite"
+  "framework": null
 }

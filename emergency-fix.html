@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZeroVacancy - AI-Driven Property Marketing & Content Creator Marketplace</title>
+  
+  <!-- Hardcoded Supabase environment variables -->
+  <script>
+    // CRITICAL: This provides the Supabase credentials directly in the HTML
+    window.HARDCODED_SUPABASE_URL = "https://pozblfzhjqlsxkakhowp.supabase.co";
+    window.HARDCODED_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBvemJsZnpoanFsc3hrYWtob3dwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDAxMDM0MDUsImV4cCI6MjA1NTY3OTQwNX0.qICEbtyj5hsnu489FuQFiwfFgAJbQ0zmul4sQX5ODbM";
+    
+    // Override the env object
+    window.env = {
+      VITE_SUPABASE_URL: window.HARDCODED_SUPABASE_URL,
+      VITE_SUPABASE_ANON_KEY: window.HARDCODED_SUPABASE_ANON_KEY
+    };
+    
+    // Also patch import.meta.env
+    try {
+      if (typeof window.importMetaEnv === 'undefined') {
+        window.importMetaEnv = {};
+      }
+      window.importMetaEnv.VITE_SUPABASE_URL = window.HARDCODED_SUPABASE_URL;
+      window.importMetaEnv.VITE_SUPABASE_ANON_KEY = window.HARDCODED_SUPABASE_ANON_KEY;
+    } catch(e) {
+      console.warn('Failed to patch import.meta.env', e);
+    }
+    
+    // Direct fix for Supabase client
+    document.addEventListener('DOMContentLoaded', function() {
+      // Patch the error in the Supabase client creation
+      try {
+        // Create a patch function to inject into the page
+        var patch = function() {
+          // Try to patch the createClient function
+          if (window.supabase && window.supabase.createClient) {
+            console.log('[EMERGENCY] Patching Supabase createClient function');
+            var originalCreateClient = window.supabase.createClient;
+            window.supabase.createClient = function(url, key, options) {
+              url = url || window.HARDCODED_SUPABASE_URL;
+              key = key || window.HARDCODED_SUPABASE_ANON_KEY;
+              return originalCreateClient(url, key, options);
+            };
+          }
+        };
+        
+        // Inject this into the page
+        var script = document.createElement('script');
+        script.textContent = '(' + patch.toString() + ')();';
+        document.head.appendChild(script);
+      } catch(e) {
+        console.warn('Failed to patch Supabase client', e);
+      }
+    });
+    
+    // Error logging
+    window.addEventListener('error', function(e) {
+      console.error('GLOBAL ERROR:', e.message, e);
+      
+      // Display errors on page for debugging
+      var errorDiv = document.getElementById('error-display');
+      if (errorDiv) {
+        errorDiv.style.display = 'block';
+        errorDiv.innerHTML += '<p><strong>Error:</strong> ' + e.message + '</p>';
+      }
+    });
+  </script>
+  
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, system-ui, sans-serif;
+    }
+    
+    .app-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    .emergency-header {
+      background-color: #6741d9;
+      color: white;
+      padding: 1rem;
+      margin-bottom: 2rem;
+      border-radius: 4px;
+    }
+    
+    .action-button {
+      display: inline-block;
+      background: linear-gradient(135deg, #6741d9 0%, #8a57de 100%);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      text-decoration: none;
+      margin-top: 1rem;
+    }
+    
+    #error-display {
+      display: none;
+      background: #fff0f0;
+      color: #d32f2f;
+      padding: 1rem;
+      margin-top: 2rem;
+      border-radius: 4px;
+      border: 1px solid #ffcdd2;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <div class="emergency-header">
+      <h1>ZeroVacancy</h1>
+      <p>AI-Driven Property Marketing & Content Creator Marketplace</p>
+    </div>
+    
+    <div>
+      <h2>We're performing scheduled maintenance</h2>
+      <p>Our team is currently working on some performance improvements. We'll be back shortly!</p>
+      <p>If you need immediate assistance, please contact our support team.</p>
+      
+      <a href="javascript:void(0);" class="action-button" id="retry-button">Retry Main Application</a>
+    </div>
+    
+    <!-- Error display -->
+    <div id="error-display"></div>
+  </div>
+  
+  <script>
+    // Retry button functionality
+    document.getElementById('retry-button').addEventListener('click', function() {
+      // Set a flag in localStorage to indicate we're trying to load the main app
+      localStorage.setItem('ZEROVACANCY_RETRY_MAIN_APP', 'true');
+      
+      // Reload the page
+      window.location.reload();
+    });
+    
+    // Check if we should try to load the main app
+    if (localStorage.getItem('ZEROVACANCY_RETRY_MAIN_APP') === 'true') {
+      // Clear the flag
+      localStorage.removeItem('ZEROVACANCY_RETRY_MAIN_APP');
+      
+      // Try to load the main application script
+      var script = document.createElement('script');
+      script.type = 'module';
+      script.src = '/assets/index-qXX4_5gO.js'; // Use the name from your error message
+      script.onerror = function(e) {
+        console.error('Failed to load main application script', e);
+        document.getElementById('error-display').style.display = 'block';
+        document.getElementById('error-display').innerHTML = '<p>Failed to load main application. Please try again later.</p>';
+      };
+      document.body.appendChild(script);
+    }
+  </script>
+</body>
+</html>
