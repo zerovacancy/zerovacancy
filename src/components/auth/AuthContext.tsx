@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { supabaseDirect } from '@/integrations/supabase/client-direct'; // Fallback client
+import { supabaseRuntime } from '@/integrations/supabase/client-runtime'; // Runtime-safe client
 import { useToast } from '@/hooks/use-toast';
 
 // Utility function to get the appropriate redirect URL based on environment
@@ -21,9 +22,18 @@ const getRedirectUrl = (path: string = '/auth/callback'): string => {
 
 // Get the appropriate Supabase client - handle environment variable issues
 const getClient = () => {
+  // First try our new runtime client which checks window.env
   try {
-    // First, try to access the standard client's auth property
-    // If this throws an error, we know the client was not properly initialized
+    if (typeof window !== 'undefined' && window.env) {
+      console.log('[AUTH] Using runtime Supabase client with window.env');
+      return supabaseRuntime;
+    }
+  } catch (err) {
+    console.warn('[AUTH] Error accessing runtime Supabase client:', err);
+  }
+  
+  // Next, try to access the standard client's auth property
+  try {
     if (supabase && typeof supabase.auth === 'object') {
       console.log('[AUTH] Using standard Supabase client');
       return supabase;
