@@ -1,12 +1,16 @@
-// Service Worker with improved CSS handling
-const CACHE_NAME = 'zerovacancy-cache-v2';
+// Service Worker with improved CSS handling - fixed pre-cache list
+const CACHE_NAME = 'zerovacancy-cache-v3';
 
 // Assets that need special handling
 const CRITICAL_ASSETS = [
-  '/index.html',
+  '/fallback-index.html',
   '/logo.png',
-  '/src/main.tsx',
-  '/assets/css/styles.css'
+  '/logo.webp',
+  '/env-config.js',
+  '/cls-prevention.css',
+  '/favicon.ico',
+  '/assets/index-BJSqvJX-.css',
+  '/assets/index-CZ68XO5X.css'
 ];
 
 // Install event - precache critical assets
