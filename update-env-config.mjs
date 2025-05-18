@@ -1,9 +1,14 @@
 // This script runs after build in Vercel to inject env variables into env-config.js
-// Note: This is a CommonJS module to avoid ES module issues
-const fs = require('fs');
-const path = require('path');
+// Uses ES module syntax
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-console.log('Running update-env-config.js...');
+// Get __dirname equivalent in ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+console.log('Running update-env-config.mjs...');
 
 // Get environment variables from process.env
 const supabaseUrl = process.env.VITE_SUPABASE_URL || '';
@@ -30,4 +35,4 @@ try {
   console.log(`Successfully wrote environment variables to ${envConfigPath}`);
 } catch (error) {
   console.error('Error writing environment config:', error);
-};
+}
