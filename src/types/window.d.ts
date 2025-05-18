@@ -6,6 +6,13 @@ interface Window {
     VITE_SUPABASE_ANON_KEY?: string;
     [key: string]: string | undefined;
   };
+  
+  // Runtime environment variables (simpler approach)
+  RUNTIME_ENV?: {
+    VITE_SUPABASE_URL?: string;
+    VITE_SUPABASE_ANON_KEY?: string;
+    [key: string]: string | undefined;
+  };
 
   celebrateSuccess?: (isMobile?: boolean) => void;
   

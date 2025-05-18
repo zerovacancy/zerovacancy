@@ -1,57 +1,60 @@
-// Supabase client configuration
+// Simple Supabase client with clear fallback handling
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-// Safely extract environment variables with multiple fallbacks
-let SUPABASE_URL = '';
-let SUPABASE_ANON_KEY = '';
-
-// First try with import.meta.env
-try {
-  SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || '';
-  SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+// Get environment variables with straightforward fallbacks
+function getSupabaseConfig() {
+  // Priority 1: Check build-time injected variables
+  let supabaseUrl = '';
+  let supabaseKey = '';
   
-  // Log debug info to help diagnose issues
-  console.log('Supabase URL from import.meta.env:', SUPABASE_URL ? 'Found' : 'Not found');
-  console.log('Supabase key from import.meta.env:', SUPABASE_ANON_KEY ? 'Found' : 'Not found');
-} catch (err) {
-  console.warn('Error accessing import.meta.env:', err);
-}
-
-// If still not set, try with process.env (for SSR contexts)
-if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
   try {
-    if (typeof process !== 'undefined' && process.env) {
-      SUPABASE_URL = process.env.VITE_SUPABASE_URL || '';
-      SUPABASE_ANON_KEY = process.env.VITE_SUPABASE_ANON_KEY || '';
-      console.log('Trying process.env fallback for Supabase config');
+    // First try build-time injected variables (import.meta.env)
+    supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+    
+    if (supabaseUrl && supabaseKey) {
+      console.log('[SUPABASE] Using build-time environment variables');
+      return { supabaseUrl, supabaseKey };
     }
   } catch (err) {
-    console.warn('Error accessing process.env:', err);
+    console.warn('[SUPABASE] Error accessing import.meta.env:', err);
   }
-}
-
-// Last resort - use hardcoded test values for development only
-if ((!SUPABASE_URL || !SUPABASE_ANON_KEY) && 
-    (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'))) {
-  console.warn('Using development fallback for Supabase config - ONLY FOR LOCAL TESTING');
-  SUPABASE_URL = 'https://pozblfzhjqlsxkakhowp.supabase.co';
-  SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBvemJsZnpoanFsc3hrYWtob3dwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDAxMDM0MDUsImV4cCI6MjA1NTY3OTQwNX0.qICEbtyj5hsnu489FuQFiwfFgAJbQ0zmul4sQX5ODbM';
-}
-
-// Validate environment variables 
-if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-  const error = 'Missing Supabase environment variables. Make sure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are set in your .env file.';
-  console.error(error);
-  // In development, display a more helpful message
-  if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-    console.error('Solution: Add these to your .env file:');
-    console.error('VITE_SUPABASE_URL=https://pozblfzhjqlsxkakhowp.supabase.co');
-    console.error('VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBvemJsZnpoanFsc3hrYWtob3dwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDAxMDM0MDUsImV4cCI6MjA1NTY3OTQwNX0.qICEbtyj5hsnu489FuQFiwfFgAJbQ0zmul4sQX5ODbM');
+  
+  // Priority 2: Check window.RUNTIME_ENV
+  try {
+    if (typeof window !== 'undefined' && window.RUNTIME_ENV) {
+      supabaseUrl = window.RUNTIME_ENV.VITE_SUPABASE_URL;
+      supabaseKey = window.RUNTIME_ENV.VITE_SUPABASE_ANON_KEY;
+      
+      if (supabaseUrl && supabaseKey) {
+        console.log('[SUPABASE] Using window.RUNTIME_ENV variables');
+        return { supabaseUrl, supabaseKey };
+      }
+    }
+  } catch (err) {
+    console.warn('[SUPABASE] Error accessing window.RUNTIME_ENV:', err);
   }
+  
+  // Priority 3: Use fallback values (only for development)
+  if (process.env.NODE_ENV !== 'production') {
+    console.warn('[SUPABASE] Using fallback values (DEVELOPMENT ONLY)');
+    return {
+      supabaseUrl: 'https://pozblfzhjqlsxkakhowp.supabase.co',
+      supabaseKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBvemJsZnpoanFsc3hrYWtob3dwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDAxMDM0MDUsImV4cCI6MjA1NTY3OTQwNX0.qICEbtyj5hsnu489FuQFiwfFgAJbQ0zmul4sQX5ODbM'
+    };
+  }
+  
+  // In production, if we get here, we have a problem
+  console.error('[SUPABASE] No Supabase credentials available');
+  return { supabaseUrl: '', supabaseKey: '' };
 }
 
-// Import the supabase client like this:
-// import { supabase } from "@/integrations/supabase/client";
+// Get the configuration
+const { supabaseUrl, supabaseKey } = getSupabaseConfig();
 
-export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_ANON_KEY);
+// Create and export the client
+export const supabase = createClient<Database>(supabaseUrl, supabaseKey);
+
+// Log initialization (but not credentials)
+console.log(`[SUPABASE] Client initialized with URL: ${supabaseUrl ? (supabaseUrl.substring(0, 10) + '...') : 'MISSING'}`);

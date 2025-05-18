@@ -13,7 +13,7 @@
       ]
     }
   ],
-  "buildCommand": "bash ./emergency-inject.sh",
+  "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "framework": null
+  "framework": "vite"
 }

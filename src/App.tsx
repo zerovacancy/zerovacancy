@@ -6,6 +6,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { Toaster as SonnerToaster } from 'sonner';
 // Import our temporary environment checker (dev only)
 import EnvChecker from './check-env-browser';
+import EnvDebug from './components/debug/EnvDebug';
 // Import from mobile utils for better SSR compatibility 
 import { isMobileDevice } from '@/utils/mobile-optimization';
 import { reduceAnimationComplexity } from '@/utils/mobile-optimization';
@@ -484,8 +485,9 @@ function App() {
                 duration: 3000
               }}
             />
-            {/* Temporary environment checker */}
-            <EnvChecker />
+            {/* Environment debugging tools */}
+            {import.meta.env.DEV && <EnvChecker />}
+            <EnvDebug />
             <AuthForms />
 
             {/* Analytics with its own error boundary */}
