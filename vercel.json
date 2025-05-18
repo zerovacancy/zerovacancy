@@ -10,11 +10,6 @@
       ]
     }
   ],
-  "rewrites": [
-    { "source": "/assets/(.*)", "destination": "/assets/$1" },
-    { "source": "/(.*\\.(js|css|png|jpg|jpeg|gif|webp|svg|ico|json|woff|woff2|ttf|otf|mp4|webm|ogg|mp3|wav|pdf|avif|wasm))", "destination": "/$1" },
-    { "source": "/(.*)", "destination": "/index.html" }
-  ],
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "framework": "vite"
