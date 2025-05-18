@@ -15,10 +15,24 @@ const AuthCallback = () => {
         setLoading(true);
         console.log("Auth callback page loaded");
         
-        // Get the URL parameters
-        const url = new URL(window.location.href);
-        const hashParams = url.hash;
-        const queryParams = url.search;
+        // Get the URL parameters (with validation)
+        let url;
+        let hashParams = '';
+        let queryParams = '';
+        
+        try {
+          // Ensure we have a valid URL string
+          if (window.location.href && typeof window.location.href === 'string') {
+            url = new URL(window.location.href);
+            hashParams = url.hash;
+            queryParams = url.search;
+          } else {
+            console.warn("Invalid location href:", window.location.href);
+          }
+        } catch (urlError) {
+          console.error("Error parsing URL:", urlError);
+          // Continue without URL parameters
+        }
         
         console.log("URL params:", { 
           url: window.location.href, 

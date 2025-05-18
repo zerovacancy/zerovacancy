@@ -958,46 +958,39 @@
         // Try loading the standard Vite output assets
         const loadProductionAssets = () => {
           try {
-            // Common paths Vite might generate (without specific hashes)
-            const bundles = [
-              // Common Vite output patterns (without hashes)
-              '/assets/index.js',
-              '/assets/main.js',
-              // Fallback patterns
-              '/assets/js/index.js',
-              '/assets/js/main.js'
-            ];
-            
+            // Let Vite handle script loading during build - don't try to manually load scripts
             // Look for the entry point script in the HTML - this is what Vite generates
-            const scripts = document.querySelectorAll('script[src*="assets"]');
-            if (scripts && scripts.length > 0) {
-              console.log('Found Vite-generated scripts:', scripts.length);
+            const viteScripts = document.querySelectorAll('script[src*="assets"]');
+            if (viteScripts && viteScripts.length > 0) {
+              console.log('Found Vite-generated scripts:', viteScripts.length);
               
               // Use those scripts first
-              scripts.forEach(script => {
+              viteScripts.forEach(script => {
                 if (script && script.src) {
                   console.log('Using existing Vite script:', script.src);
                 }
               });
             } else {
-              // If no scripts found, try to load from common paths
-              console.log('No Vite scripts found, trying common paths');
+              // If no scripts found, log warning but don't try to load additional scripts
+              console.warn('No Vite-generated scripts found. This is likely a build configuration issue.');
               
-              // Use non-module script tags for production bundles
-              bundles.forEach(bundle => {
-                if (bundle) {
-                  loadScript(bundle, 'text/javascript', false);
-                }
-              });
+              // Alert developer through console - don't try to load non-existent files
+              console.error('IMPORTANT: Check that Vite has correctly generated JS outputs');
             }
           } catch (assetErr) {
             console.warn('Error loading production assets (non-critical):', assetErr);
             
-            // Fallback: just try a few key paths
+            // Log error but don't try to load specific scripts that may not exist
+            console.error('Could not load application scripts - check build configuration');
+            
+            // Add visible error message to DOM when possible
             try {
-              loadScript('/assets/index.js', 'text/javascript', false);
+              const rootEl = document.getElementById('root');
+              if (rootEl) {
+                rootEl.innerHTML = '<div style="padding: 20px; color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 4px; margin: 20px;">Failed to load application scripts. Please check your network connection and try again.</div>';
+              }
             } catch (e) {
-              console.warn('Fallback script loading failed (non-critical):', e);
+              console.warn('Could not display error message:', e);
             }
           }
         };
@@ -1031,10 +1024,8 @@
           if (rootContent && rootContent.children && rootContent.children.length <= 1) {
             console.log('Root still empty after timeout, trying additional loading strategies');
             
-            // For production, load a simple JS file as non-module
-            if (isProduction) {
-              loadScript('/index.js', 'text/javascript', false);
-            }
+            // Log warning that content didn't load but don't try to load non-existent files
+            console.warn('Application content failed to load within timeout window');
           }
         } catch (fallbackErr) {
           console.warn('Error in fallback script loading (non-critical):', fallbackErr);

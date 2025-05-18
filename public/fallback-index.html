@@ -122,12 +122,15 @@
       });
     }
 
-    // Try to load the main script from different possible locations
-    loadScript('/assets/index.js', [
-      '/assets/main.js',
-      '/assets/js/index.js',
-      '/assets/js/main.js',
-      '/index.js'
+    // Try to load the main script - search for dynamically named Vite output files
+    // First try to find scripts already in the document
+    const existingScripts = Array.from(document.querySelectorAll('script[src*="assets"]'));
+    if (existingScripts.length > 0) {
+      console.log('Using existing scripts in document');
+    } else {
+      // Try common patterns without specific hashes
+      loadScript('/assets/index.js', [
+        '/assets/main.js'
     ]).catch(error => {
       console.error('Failed to load application script:', error);
       document.getElementById('error-display').textContent = 'Failed to load application. Please try refreshing the page.';

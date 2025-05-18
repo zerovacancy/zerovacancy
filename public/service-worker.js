@@ -44,11 +44,16 @@ self.addEventListener('activate', (event) => {
 // Special handling for CSS files to prevent caching issues
 const handleCssRequest = async (request) => {
   // Validate request scheme before proceeding
-  const url = new URL(request.url);
-  const protocol = url.protocol;
-  if (!['http:', 'https:'].includes(protocol)) {
-    // Skip any non-HTTP(S) requests
-    console.log('Skipping CSS handling for non-HTTP request:', protocol);
+  try {
+    const url = new URL(request.url);
+    const protocol = url.protocol;
+    if (!['http:', 'https:'].includes(protocol)) {
+      // Skip any non-HTTP(S) requests
+      console.log('Skipping CSS handling for non-HTTP request:', protocol);
+      return fetch(request);
+    }
+  } catch (urlError) {
+    console.warn('Invalid URL in CSS handler:', request.url);
     return fetch(request);
   }
   
