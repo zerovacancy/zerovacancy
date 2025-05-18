@@ -81,10 +81,25 @@
   </div>
   <div id="error-display"></div>
   
-  <!-- CSS paths based on Vite outputs -->
-  <link rel="stylesheet" href="/assets/index-BJSqvJX-.css">
-  <link rel="stylesheet" href="/assets/index-CZ68XO5X.css">
-  <link rel="stylesheet" href="/assets/index-YmLxeS8U.css">
+  <!-- Dynamic CSS loading at runtime -->
+  <script>
+    // Dynamically try to load CSS based on common patterns
+    function loadCss(paths) {
+      paths.forEach(path => {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = path;
+        document.head.appendChild(link);
+      });
+    }
+    
+    // Try common CSS paths
+    loadCss([
+      '/assets/index.css',
+      '/assets/main.css',
+      '/assets/styles.css'
+    ]);
+  </script>
   
   <!-- Load assets directly from multiple potential locations -->
   <script>
@@ -108,10 +123,10 @@
     }
 
     // Try to load the main script from different possible locations
-    loadScript('/assets/index-CNnb16Gj.js', [
-      '/assets/index.js',
-      '/assets/Pricing-CtpqlAcs.js',
-      '/assets/Dashboard-B5dZRWyC.js',
+    loadScript('/assets/index.js', [
+      '/assets/main.js',
+      '/assets/js/index.js',
+      '/assets/js/main.js',
       '/index.js'
     ]).catch(error => {
       console.error('Failed to load application script:', error);

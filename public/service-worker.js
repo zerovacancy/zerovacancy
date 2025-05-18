@@ -1,16 +1,14 @@
-// Service Worker with improved CSS handling - fixed pre-cache list
-const CACHE_NAME = 'zerovacancy-cache-v3';
+// Service Worker with improved CSS handling - using build-time assets only
+const CACHE_NAME = 'zerovacancy-cache-v4';
 
-// Assets that need special handling
+// Assets that need special handling - only include files that exist at build time
 const CRITICAL_ASSETS = [
   '/fallback-index.html',
   '/logo.png',
   '/logo.webp',
   '/env-config.js',
   '/cls-prevention.css',
-  '/favicon.ico',
-  '/assets/index-BJSqvJX-.css',
-  '/assets/index-CZ68XO5X.css'
+  '/favicon.ico'
 ];
 
 // Install event - precache critical assets
@@ -128,8 +126,8 @@ self.addEventListener('fetch', (event) => {
       return; // Let browser handle admin and API requests directly
     }
     
-    // Handle CSS files specially
-    if (url.pathname.endsWith('.css') || url.pathname.includes('/assets/css/')) {
+    // Handle CSS files specially (with generalized patterns)
+    if (url.pathname.endsWith('.css') || url.pathname.includes('/assets/')) {
       event.respondWith(handleCssRequest(event.request));
       return;
     }
