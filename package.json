@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "predev": "node ensure-env.cjs",
-    "vercel-build": "node vercel-build.js && npm run build",
+    "vercel-build": "node vercel-build.cjs && npm run build",
     "dev": "vite",
     "dev:cls": "node ensure-env.cjs && node scripts/dev-cls-monitor.js && vite",
     "dev:mobile-cls": "node ensure-env.cjs && node scripts/dev-cls-monitor.js && MOBILE_TESTING=true vite",

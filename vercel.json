@@ -13,7 +13,7 @@
       ]
     }
   ],
-  "buildCommand": "npm run build",
+  "buildCommand": "node vercel-build.cjs && vite build",
   "outputDirectory": "dist",
   "framework": "vite"
 }
