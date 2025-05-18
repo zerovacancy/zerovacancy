@@ -1,6 +1,6 @@
-// Debug script to verify environment variables are correctly loaded
+// Debug script to verify environment variables are correctly loaded - Updated for redeployment
 (function() {
-  console.log('%c Environment Variables Checker ', 'background: #333; color: #00ff00; font-size: 16px; padding: 4px;');
+  console.log('%c Environment Variables Checker v2 ', 'background: #333; color: #00ff00; font-size: 16px; padding: 4px;');
 
   // Check all possible sources of environment variables
   const sources = [
