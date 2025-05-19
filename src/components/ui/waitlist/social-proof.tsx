@@ -65,8 +65,8 @@ export function SocialProof({ className, style }: SocialProofProps) {
     border: '1px solid rgba(0,0,0,0.1)',
     // Use more sophisticated shadow matching the button shadow system
     boxShadow: `${shadowStyles.standard}, inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 0 rgba(0,0,0,0.07)`,
-    // Extremely compact padding on mobile for minimal spacing
-    padding: isMobile ? '7px 6px 7px 8px' : '8px 16px',
+    // Increased padding on mobile to prevent overlap issues
+    padding: isMobile ? '7px 14px 7px 12px' : '8px 16px',
     // Add subtle animation on hover to match 3D button behavior
     transition: 'all 0.2s ease-out',
     // Allow custom style overrides from props
@@ -141,10 +141,10 @@ export function SocialProof({ className, style }: SocialProofProps) {
         onMouseEnter={handleHover}
         onMouseLeave={handleLeave}
       >
-        {/* Avatar display - static on mobile with no right margin, animated on desktop */}
+        {/* Avatar display - with proper spacing on both mobile and desktop */}
         <div className={cn(
           "flex items-center relative",
-          isMobile ? "mr-0" : "mr-0.5" // No right margin on mobile
+          isMobile ? "mr-3" : "mr-0.5" // Increased right margin on mobile to prevent overlap
         )}> 
           {isMobile ? (
             // Static row of 4 avatars for mobile - no animation
@@ -168,7 +168,7 @@ export function SocialProof({ className, style }: SocialProofProps) {
                 style={{
                   ...avatarCircle3DStyle,
                   zIndex: 3,
-                  transform: 'translateX(-6px)',
+                  transform: 'translateX(-4px)',
                   width: '19px', // Slightly smaller for 4 avatars
                   height: '19px', // Slightly smaller for 4 avatars
                   fontSize: '7.5px', // Adjusted font size
@@ -182,7 +182,7 @@ export function SocialProof({ className, style }: SocialProofProps) {
                 style={{
                   ...avatarCircle3DStyle,
                   zIndex: 2,
-                  transform: 'translateX(-12px)',
+                  transform: 'translateX(-8px)',
                   width: '19px', // Slightly smaller for 4 avatars
                   height: '19px', // Slightly smaller for 4 avatars
                   fontSize: '7.5px', // Adjusted font size
@@ -196,7 +196,7 @@ export function SocialProof({ className, style }: SocialProofProps) {
                 style={{
                   ...avatarCircle3DStyle,
                   zIndex: 1,
-                  transform: 'translateX(-18px)',
+                  transform: 'translateX(-12px)',
                   width: '19px', // Slightly smaller for 4 avatars
                   height: '19px', // Slightly smaller for 4 avatars
                   fontSize: '7.5px', // Adjusted font size
@@ -262,17 +262,17 @@ export function SocialProof({ className, style }: SocialProofProps) {
           )}
         </div>
         
-        {/* Enhanced counter and text - with extremely tight spacing on mobile */}
+        {/* Enhanced counter and text - with proper spacing on mobile to prevent overlap */}
         <div className={cn(
           "flex items-center", 
-          isMobile ? "ml-[-8px]" : "ml-0.5" // Maximum reduction of spacing on mobile
+          isMobile ? "ml-1" : "ml-0.5" // Added positive margin on mobile to increase separation
         )}>
           {isMobile ? (
             // Static version for mobile (no animation)
             <span 
               className={cn(
                 "font-jakarta font-bold text-purple-700",
-                "text-[14px] mr-1" // Reduced right margin on mobile
+                "text-[14px] mr-2.5" // Further increased right margin on mobile for better spacing
               )}
             >
               2,165+
