@@ -129,7 +129,7 @@ header {
 
 ## 📚 Further Reading
 
-- [CLS Optimization Strategy](/CLS-OPTIMIZATION-STRATEGY.md) - Complete optimization approach
-- [CLS Testing Guide](/CLS-TESTING-GUIDE.md) - Detailed testing procedures
-- [CLS Style Guide](/CLS-STYLE-GUIDE.md) - Development standards
-- [CLS Improvements Verification](/CLS-IMPROVEMENTS-VERIFICATION.md) - Documentation of fixes
+- [CLS Optimization Strategy](/docs/CLS-OPTIMIZATION-STRATEGY.md) - Complete optimization approach
+- [CLS Testing Guide](/docs/CLS-TESTING-GUIDE.md) - Detailed testing procedures
+- [CLS Style Guide](/docs/CLS-STYLE-GUIDE.md) - Development standards
+- [CLS Improvements Verification](/docs/CLS-IMPROVEMENTS-VERIFICATION.md) - Documentation of fixes

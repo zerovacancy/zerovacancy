@@ -289,9 +289,9 @@ return (
 
 Our documentation ecosystem for CLS includes:
 
-1. **[CLS Style Guide](/CLS-STYLE-GUIDE.md)**: Code standards and best practices
-2. **[CLS Testing Guide](/CLS-TESTING-GUIDE.md)**: How to test and verify CLS
-3. **[CLS Improvements Verification](/CLS-IMPROVEMENTS-VERIFICATION.md)**: Documentation of fixes and results
+1. **[CLS Style Guide](/docs/CLS-STYLE-GUIDE.md)**: Code standards and best practices
+2. **[CLS Testing Guide](/docs/CLS-TESTING-GUIDE.md)**: How to test and verify CLS
+3. **[CLS Improvements Verification](/docs/CLS-IMPROVEMENTS-VERIFICATION.md)**: Documentation of fixes and results
 4. **Automated Reports**: Generated HTML reports with detailed breakdowns
 
 ## Regression Prevention
