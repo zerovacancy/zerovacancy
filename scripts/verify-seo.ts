@@ -10,7 +10,7 @@ import path from 'path';
 import * as cheerio from 'cheerio';
 
 // Define paths
-const PUBLIC_DIR = path.resolve(__dirname, '../../public');
+const PUBLIC_DIR = path.resolve(__dirname, '../public');
 const ROBOTS_PATH = path.join(PUBLIC_DIR, 'robots.txt');
 const SITEMAP_PATH = path.join(PUBLIC_DIR, 'sitemap.xml');
 const HTML_PATHS = [

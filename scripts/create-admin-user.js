@@ -1,5 +1,5 @@
 // Script to create a new admin user in Supabase
-// Run with Node.js: node src/scripts/create-admin-user.js
+// Run with Node.js: node scripts/create-admin-user.js
 
 import { createClient } from '@supabase/supabase-js';
 import readline from 'readline';

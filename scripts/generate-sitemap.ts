@@ -6,10 +6,10 @@
 
 import { writeFileSync } from 'fs';
 import path from 'path';
-import { generateDynamicSitemap } from '../utils/seo-utils';
+import { generateDynamicSitemap } from '../src/utils/seo-utils';
 
 const BASE_URL = 'https://www.zerovacancy.ai';
-const OUTPUT_PATH = path.resolve(__dirname, '../../public/sitemap.xml');
+const OUTPUT_PATH = path.resolve(__dirname, '../public/sitemap.xml');
 
 /**
  * Generate the sitemap file

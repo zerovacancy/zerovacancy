@@ -1,5 +1,5 @@
 // Script to add "Team Zero" author to Supabase
-// Run with: node src/scripts/add-team-author.js
+// Run with: node scripts/add-team-author.js
 
 import { createClient } from '@supabase/supabase-js';
 import readline from 'readline';

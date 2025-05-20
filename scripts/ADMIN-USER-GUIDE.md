@@ -21,7 +21,7 @@ This guide explains how to create new admin users who can access the blog manage
 1. Open a terminal in your project directory
 2. Run the script:
    ```
-   node src/scripts/create-admin-user.js
+   node scripts/create-admin-user.js
    ```
 3. When prompted, enter:
    - The Supabase service role key

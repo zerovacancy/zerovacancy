@@ -24,14 +24,14 @@ For a development or internal-only system, the simplest approach is to disable R
 
 1. Log in to your Supabase dashboard
 2. Go to the SQL Editor
-3. Run the SQL from `src/scripts/fix-blog-permissions.sql`
+3. Run the SQL from `scripts/fix-blog-permissions.sql`
 4. This will disable RLS on all blog-related tables
 
 ### Option 2: Create Permissive Policies
 
 If you want to keep RLS enabled (better for security), you can create policies:
 
-1. Edit `src/scripts/fix-blog-permissions.sql`
+1. Edit `scripts/fix-blog-permissions.sql`
 2. Comment out Option 1 and uncomment Option 2
 3. Run the SQL in the Supabase SQL Editor
 4. This creates policies that allow authenticated users full access
