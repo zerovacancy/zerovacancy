@@ -26,11 +26,11 @@ This repository contains a comprehensive set of tools and resources for preventi
 
 | Document | Description |
 |----------|-------------|
-| [CLS Quick Reference](/CLS-QUICK-REFERENCE.md) | Essential commands and patterns |
-| [Testing Guide](/CLS-TESTING-GUIDE.md) | Detailed testing procedures |
-| [Style Guide](/CLS-STYLE-GUIDE.md) | Development standards and patterns |
-| [Improvements Verification](/CLS-IMPROVEMENTS-VERIFICATION.md) | Documentation of fixes and results |
-| [Optimization Strategy](/CLS-OPTIMIZATION-STRATEGY.md) | Complete approach to CLS optimization |
+| [CLS Quick Reference](/docs/CLS-QUICK-REFERENCE.md) | Essential commands and patterns |
+| [Testing Guide](/docs/CLS-TESTING-GUIDE.md) | Detailed testing procedures |
+| [Style Guide](/docs/CLS-STYLE-GUIDE.md) | Development standards and patterns |
+| [Improvements Verification](/docs/CLS-IMPROVEMENTS-VERIFICATION.md) | Documentation of fixes and results |
+| [Optimization Strategy](/docs/CLS-OPTIMIZATION-STRATEGY.md) | Complete approach to CLS optimization |
 
 ## 🚀 Getting Started
 
@@ -71,9 +71,9 @@ Our VS Code workspace includes snippets for common CLS-safe patterns:
 
 ### 4. Review CLS Documentation
 
-- Start with the [CLS Quick Reference](/CLS-QUICK-REFERENCE.md) for essential patterns
-- Read the [CLS Optimization Strategy](/CLS-OPTIMIZATION-STRATEGY.md) for the complete approach
-- Follow the [CLS Testing Guide](/CLS-TESTING-GUIDE.md) for verification procedures
+- Start with the [CLS Quick Reference](/docs/CLS-QUICK-REFERENCE.md) for essential patterns
+- Read the [CLS Optimization Strategy](/docs/CLS-OPTIMIZATION-STRATEGY.md) for the complete approach
+- Follow the [CLS Testing Guide](/docs/CLS-TESTING-GUIDE.md) for verification procedures
 
 ## 📈 CLS Scores & Progress
 
@@ -167,7 +167,7 @@ CLS testing is automatically run on:
 
 When contributing code, please follow these guidelines:
 
-1. Use CLS-safe patterns from the [Style Guide](/CLS-STYLE-GUIDE.md)
+1. Use CLS-safe patterns from the [Style Guide](/docs/CLS-STYLE-GUIDE.md)
 2. Test your changes with `npm run verify:cls`
 3. Run `npm run test:cls` before submitting PRs
 4. Address any warnings from ESLint CLS rules
@@ -178,5 +178,5 @@ When contributing code, please follow these guidelines:
 - [Web.dev CLS Guide](https://web.dev/articles/cls)
 - [Core Web Vitals Report](https://support.google.com/webmasters/answer/9205520)
 - [Layout Instability API](https://web.dev/articles/layout-instability-api)
-- [PERFORMANCE-SUMMARY.md](/PERFORMANCE-SUMMARY.md)
-- [PERFORMANCE-STRATEGY.md](/PERFORMANCE-STRATEGY.md)
+- [PERFORMANCE-SUMMARY.md](/docs/PERFORMANCE-SUMMARY.md)
+- [PERFORMANCE-STRATEGY.md](/docs/PERFORMANCE-STRATEGY.md)
